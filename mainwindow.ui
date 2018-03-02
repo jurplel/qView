@@ -34,7 +34,7 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="QGraphicsView" name="graphicsView">
+     <widget class="QVGraphicsView" name="graphicsView">
       <property name="enabled">
        <bool>true</bool>
       </property>
@@ -117,6 +117,13 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QVGraphicsView</class>
+   <extends>QGraphicsView</extends>
+   <header>qvgraphicsview.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

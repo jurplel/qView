@@ -28,13 +28,13 @@ private slots:
     void on_actionAbout_triggered();
 
 private:
-    Ui::MainWindow* ui;
+    Ui::MainWindow *ui;
 
     void PickFile();
 
-    QGraphicsScene* scene;
+    QGraphicsScene *scene;
     QPixmap loadedPixmap;
-    QGraphicsPixmapItem* loadedPixmapItem;
+    QGraphicsPixmapItem *loadedPixmapItem;
 
 };
 

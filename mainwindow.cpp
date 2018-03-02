@@ -32,7 +32,7 @@ MainWindow::~MainWindow()
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
     QMainWindow::resizeEvent(event);
-    ui->graphicsView->fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
+//    ui->graphicsView->fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
 }
 
 void MainWindow::PickFile()
@@ -49,10 +49,10 @@ void MainWindow::PickFile()
     if(loadedPixmap.isNull())
         return;
     scene->clear();
-    scene->setSceneRect(loadedPixmap.rect());
+//    scene->setSceneRect(loadedPixmap.rect());
     loadedPixmapItem = scene->addPixmap(loadedPixmap);
-    ui->graphicsView->fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
-    loadedPixmapItem->setTransformationMode(Qt::SmoothTransformation);
+//    ui->graphicsView->fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
+//    loadedPixmapItem->setTransformationMode(Qt::SmoothTransformation);
 }
 
 void MainWindow::on_actionOpen_triggered()
