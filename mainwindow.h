@@ -36,6 +36,8 @@ private:
     QPixmap loadedPixmap;
     QGraphicsPixmapItem *loadedPixmapItem;
 
+    bool isPixmapLoaded;
+
 };
 
 #endif // MAINWINDOW_H

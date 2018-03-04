@@ -14,13 +14,16 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    //default variable values
+    isPixmapLoaded = false;
+
     //context menu items
     ui->graphicsView->addAction(ui->actionOpen);
     ui->graphicsView->addAction(ui->actionAbout);
     ui->graphicsView->addAction(ui->actionAbout_Qt);
 
     //graphicsview setup
-    scene = new QGraphicsScene(this);
+    scene = new QGraphicsScene(0.0, 0.0, 100000.0, 100000.0, this);
     ui->graphicsView->setScene(scene);
 }
 
@@ -32,7 +35,10 @@ MainWindow::~MainWindow()
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
     QMainWindow::resizeEvent(event);
-//    ui->graphicsView->fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
+    if(isPixmapLoaded)
+    {
+        ui->graphicsView->fitInView(loadedPixmapItem->boundingRect(), Qt::KeepAspectRatio);
+    }
 }
 
 void MainWindow::PickFile()
@@ -49,10 +55,11 @@ void MainWindow::PickFile()
     if(loadedPixmap.isNull())
         return;
     scene->clear();
-//    scene->setSceneRect(loadedPixmap.rect());
     loadedPixmapItem = scene->addPixmap(loadedPixmap);
-//    ui->graphicsView->fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
-//    loadedPixmapItem->setTransformationMode(Qt::SmoothTransformation);
+    loadedPixmapItem->setOffset((50000.0 - loadedPixmap.width()/2), (50000.0 - loadedPixmap.height()/2));
+    ui->graphicsView->fitInView(loadedPixmapItem->boundingRect(), Qt::KeepAspectRatio);
+    loadedPixmapItem->setTransformationMode(Qt::SmoothTransformation);
+    isPixmapLoaded = true;
 }
 
 void MainWindow::on_actionOpen_triggered()
