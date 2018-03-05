@@ -16,10 +16,11 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
 
     if (DeltaY > 0)
     {
-        qDebug() << QString("zooming in");
+        scale(1.1, 1.1);
     }
     else
     {
-       qDebug() << QString("zooming out");
+       scale(0.9, 0.9);
     }
+    centerOn(scene()->height()/2, scene()->width()/2);
 }
