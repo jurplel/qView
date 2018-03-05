@@ -37,11 +37,11 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     QMainWindow::resizeEvent(event);
     if(isPixmapLoaded)
     {
-        ui->graphicsView->fitInView(loadedPixmapItem->boundingRect(), Qt::KeepAspectRatio);
+        ui->graphicsView->resetScale(loadedPixmapItem);
     }
 }
 
-void MainWindow::PickFile()
+void MainWindow::pickFile()
 {
     QString fileName = QFileDialog::getOpenFileName(this,
         tr("Open"), "",
@@ -57,14 +57,13 @@ void MainWindow::PickFile()
     scene->clear();
     loadedPixmapItem = scene->addPixmap(loadedPixmap);
     loadedPixmapItem->setOffset((50000.0 - loadedPixmap.width()/2), (50000.0 - loadedPixmap.height()/2));
-    ui->graphicsView->fitInView(loadedPixmapItem->boundingRect(), Qt::KeepAspectRatio);
+    ui->graphicsView->resetScale(loadedPixmapItem);
     loadedPixmapItem->setTransformationMode(Qt::SmoothTransformation);
     isPixmapLoaded = true;
 }
-
 void MainWindow::on_actionOpen_triggered()
 {
-    PickFile();
+    pickFile();
 }
 
 void MainWindow::on_actionAbout_Qt_triggered()

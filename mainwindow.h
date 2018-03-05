@@ -30,7 +30,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-    void PickFile();
+    void pickFile();
 
     QGraphicsScene *scene;
     QPixmap loadedPixmap;
