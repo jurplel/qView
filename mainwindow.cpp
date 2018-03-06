@@ -14,6 +14,9 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    //hide menubar for non-global applications
+    ui->menuBar->hide();
+
     //default variable values
     isPixmapLoaded = false;
 
@@ -73,5 +76,5 @@ void MainWindow::on_actionAbout_Qt_triggered()
 
 void MainWindow::on_actionAbout_triggered()
 {
-    QMessageBox::about(ui->centralWidget, QString("About"), QString("unlabeled qView alpha by jurplel"));
+    QMessageBox::about(ui->centralWidget, QString("About qView"), QString("qView alpha %1 by jurplel").arg(VERSION));
 }

@@ -62,6 +62,15 @@
       <property name="horizontalScrollBarPolicy">
        <enum>Qt::ScrollBarAlwaysOff</enum>
       </property>
+      <property name="backgroundBrush">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>15</red>
+         <green>15</green>
+         <blue>15</blue>
+        </color>
+       </brush>
+      </property>
       <property name="renderHints">
        <set>QPainter::Antialiasing|QPainter::SmoothPixmapTransform</set>
       </property>

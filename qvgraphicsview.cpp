@@ -10,7 +10,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 
 void QVGraphicsView::wheelEvent(QWheelEvent *event)
 {
-    qDebug() << getCurrentScale();
+    qDebug()<< QString("before scroll scale: ") << getCurrentScale();
 
     int DeltaY = event->angleDelta().y();
 
@@ -26,14 +26,16 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
 
     if (DeltaY > 0)
     {
-        scale(1.1, 1.1);
-        setCurrentScale(getCurrentScale()*1.1);
+        scale(1.2, 1.2);
+        setCurrentScale(getCurrentScale()*1.2);
     }
     else
     {
-       scale(0.9, 0.9);
-       setCurrentScale(getCurrentScale()*0.9);
+       scale(0.8, 0.8);
+       setCurrentScale(getCurrentScale()*0.8);
     }
+
+    qDebug() << QString("after scroll scale: ") << getCurrentScale();
 }
 
 void QVGraphicsView::resetScale(QGraphicsPixmapItem* affectedItem)
