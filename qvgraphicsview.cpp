@@ -5,7 +5,7 @@
 
 QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 {
-
+    scaleFactor = 0.2;
 }
 
 void QVGraphicsView::wheelEvent(QWheelEvent *event)
@@ -26,13 +26,13 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
 
     if (DeltaY > 0)
     {
-        scale(1.2, 1.2);
-        setCurrentScale(getCurrentScale()*1.2);
+        scale(1+scaleFactor, 1+scaleFactor);
+        setCurrentScale(getCurrentScale()+scaleFactor);
     }
     else
     {
-       scale(0.8, 0.8);
-       setCurrentScale(getCurrentScale()*0.8);
+       scale(1-scaleFactor, 1-scaleFactor);
+       setCurrentScale(getCurrentScale()-scaleFactor);
     }
 
     qDebug() << QString("after scroll scale: ") << getCurrentScale();
@@ -52,4 +52,14 @@ void QVGraphicsView::setCurrentScale(qreal newCurrentScale)
 qreal QVGraphicsView::getCurrentScale()
 {
     return currentScale;
+}
+
+void QVGraphicsView::setScaleFactor(qreal newScaleFactor)
+{
+    scaleFactor = newScaleFactor;
+}
+
+qreal QVGraphicsView::getScaleFactor()
+{
+    return scaleFactor;
 }

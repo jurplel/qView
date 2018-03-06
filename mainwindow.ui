@@ -47,6 +47,9 @@
       <property name="contextMenuPolicy">
        <enum>Qt::ActionsContextMenu</enum>
       </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
       <property name="frameShape">
        <enum>QFrame::NoFrame</enum>
       </property>
@@ -65,9 +68,9 @@
       <property name="backgroundBrush">
        <brush brushstyle="SolidPattern">
         <color alpha="255">
-         <red>15</red>
-         <green>15</green>
-         <blue>15</blue>
+         <red>21</red>
+         <green>21</green>
+         <blue>21</blue>
         </color>
        </brush>
       </property>
