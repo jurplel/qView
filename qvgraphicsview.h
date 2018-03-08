@@ -9,13 +9,18 @@ class QVGraphicsView : public QGraphicsView
 public:
     QVGraphicsView(QWidget *parent = nullptr);
 
-    void resetScale(QGraphicsPixmapItem* affectedItem);
+    void loadFile(QString fileName);
 
-    void setCurrentScale(qreal newCurrentScale);
-    qreal getCurrentScale();
+    void resetScale();
 
-    void setScaleFactor(qreal newScaleFactor);
-    qreal getScaleFactor();
+    qreal getCurrentScale() const;
+    void setCurrentScale(const qreal &value);
+
+    qreal getScaleFactor() const;
+    void setScaleFactor(const qreal &value);
+
+    QGraphicsPixmapItem *getLoadedPixmapItem() const;
+    void setLoadedPixmapItem(QGraphicsPixmapItem *value);
 
 protected:
     virtual void wheelEvent(QWheelEvent *event);
@@ -23,5 +28,8 @@ protected:
 private:
     qreal currentScale;
     qreal scaleFactor;
+
+    QPixmap loadedPixmap;
+    QGraphicsPixmapItem *loadedPixmapItem;
 };
 #endif // QVGRAPHICSVIEW_H

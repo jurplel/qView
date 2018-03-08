@@ -34,7 +34,6 @@ private:
 
     QGraphicsScene *scene;
     QPixmap loadedPixmap;
-    QGraphicsPixmapItem *loadedPixmapItem;
 
     bool isPixmapLoaded;
 

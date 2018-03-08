@@ -38,28 +38,59 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
     qDebug() << QString("after scroll scale: ") << getCurrentScale();
 }
 
-void QVGraphicsView::resetScale(QGraphicsPixmapItem* affectedItem)
+void QVGraphicsView::loadFile(QString fileName)
 {
-    fitInView(affectedItem->boundingRect(), Qt::KeepAspectRatio);
+    if (fileName.isEmpty())
+        return;
+
+    if(!loadedPixmap.load(fileName))
+        return;
+
+    if(loadedPixmap.isNull())
+        return;
+
+    scene()->clear();
+    loadedPixmapItem = scene()->addPixmap(loadedPixmap);
+    loadedPixmapItem->setOffset((50000.0 - loadedPixmap.width()/2), (50000.0 - loadedPixmap.height()/2));
+    resetScale();
+    loadedPixmapItem->setTransformationMode(Qt::SmoothTransformation);
+}
+
+void QVGraphicsView::resetScale()
+{
+    fitInView(loadedPixmapItem->boundingRect(), Qt::KeepAspectRatio);
     setCurrentScale(1.0);
 }
 
-void QVGraphicsView::setCurrentScale(qreal newCurrentScale)
+
+// getters & setters
+
+QGraphicsPixmapItem *QVGraphicsView::getLoadedPixmapItem() const
 {
-    currentScale = newCurrentScale;
+    return loadedPixmapItem;
 }
 
-qreal QVGraphicsView::getCurrentScale()
+void QVGraphicsView::setLoadedPixmapItem(QGraphicsPixmapItem *value)
+{
+    loadedPixmapItem = value;
+}
+
+qreal QVGraphicsView::getScaleFactor() const
+{
+    return scaleFactor;
+}
+
+void QVGraphicsView::setScaleFactor(const qreal &value)
+{
+    scaleFactor = value;
+}
+
+qreal QVGraphicsView::getCurrentScale() const
 {
     return currentScale;
 }
 
-void QVGraphicsView::setScaleFactor(qreal newScaleFactor)
+void QVGraphicsView::setCurrentScale(const qreal &value)
 {
-    scaleFactor = newScaleFactor;
-}
-
-qreal QVGraphicsView::getScaleFactor()
-{
-    return scaleFactor;
+    currentScale = value;
 }

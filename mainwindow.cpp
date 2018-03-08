@@ -25,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->graphicsView->addAction(ui->actionAbout);
     ui->graphicsView->addAction(ui->actionAbout_Qt);
 
-    //graphicsview setup
+    //qgraphicsscene setup
     scene = new QGraphicsScene(0.0, 0.0, 100000.0, 100000.0, this);
     ui->graphicsView->setScene(scene);
 }
@@ -40,7 +40,7 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     QMainWindow::resizeEvent(event);
     if(isPixmapLoaded)
     {
-        ui->graphicsView->resetScale(loadedPixmapItem);
+        ui->graphicsView->resetScale();
     }
 }
 
@@ -49,19 +49,8 @@ void MainWindow::pickFile()
     QString fileName = QFileDialog::getOpenFileName(this,
         tr("Open"), "",
         tr("Images (*.bmp *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm);;All Files (*)"));
-    if (fileName.isEmpty())
-        return;
 
-    if(!loadedPixmap.load(fileName))
-        return;
-
-    if(loadedPixmap.isNull())
-        return;
-    scene->clear();
-    loadedPixmapItem = scene->addPixmap(loadedPixmap);
-    loadedPixmapItem->setOffset((50000.0 - loadedPixmap.width()/2), (50000.0 - loadedPixmap.height()/2));
-    ui->graphicsView->resetScale(loadedPixmapItem);
-    loadedPixmapItem->setTransformationMode(Qt::SmoothTransformation);
+    ui->graphicsView->loadFile(fileName);
     isPixmapLoaded = true;
 }
 void MainWindow::on_actionOpen_triggered()
