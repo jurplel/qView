@@ -10,6 +10,9 @@
     <height>300</height>
    </rect>
   </property>
+  <property name="tabletTracking">
+   <bool>false</bool>
+  </property>
   <property name="windowTitle">
    <string>qView</string>
   </property>
@@ -96,7 +99,7 @@
      <x>0</x>
      <y>0</y>
      <width>400</width>
-     <height>24</height>
+     <height>20</height>
     </rect>
    </property>
    <property name="nativeMenuBar">

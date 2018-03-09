@@ -5,36 +5,44 @@
 
 QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 {
-    scaleFactor = 0.2;
+    scaleFactor = 0.25;
 }
 
 void QVGraphicsView::wheelEvent(QWheelEvent *event)
 {
     qDebug()<< QString("before scroll scale: ") << getCurrentScale();
+    qDebug()<< QString("before matrix: ") << matrix();
 
     int DeltaY = event->angleDelta().y();
 
-    if (getCurrentScale() >= 1.0)
+    if (getCurrentScale() <= 1.0)
     {
-        setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+        setTransformationAnchor(QGraphicsView::AnchorViewCenter);
     }
     else
     {
-        setTransformationAnchor(QGraphicsView::AnchorViewCenter);
-        centerOn(scene()->height()/2, scene()->width()/2);
+        setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
     }
 
     if (DeltaY > 0)
     {
-        scale(1+scaleFactor, 1+scaleFactor);
+        fittedMatrix = fittedMatrix * (scaleFactor+1);
+        setTransform(fittedMatrix);
         setCurrentScale(getCurrentScale()+scaleFactor);
     }
     else
     {
-       scale(1-scaleFactor, 1-scaleFactor);
-       setCurrentScale(getCurrentScale()-scaleFactor);
+        fittedMatrix = fittedMatrix / (scaleFactor+1);
+        setTransform(fittedMatrix);
+        setCurrentScale(getCurrentScale()-scaleFactor);
     }
 
+    if (getCurrentScale() <= 1.0)
+    {
+        centerOn(scene()->height()/2, scene()->width()/2);
+    }
+
+    qDebug()<< QString("after matrix: ") << matrix();
     qDebug() << QString("after scroll scale: ") << getCurrentScale();
 }
 
@@ -60,6 +68,7 @@ void QVGraphicsView::resetScale()
 {
     fitInView(loadedPixmapItem->boundingRect(), Qt::KeepAspectRatio);
     setCurrentScale(1.0);
+    fittedMatrix = transform();
 }
 
 
