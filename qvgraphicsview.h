@@ -31,5 +31,7 @@ private:
 
     QPixmap loadedPixmap;
     QGraphicsPixmapItem *loadedPixmapItem;
+    QTransform fittedMatrix;
+    QTransform scaledMatrix;
 };
 #endif // QVGRAPHICSVIEW_H

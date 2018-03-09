@@ -65,5 +65,5 @@ void MainWindow::on_actionAbout_Qt_triggered()
 
 void MainWindow::on_actionAbout_triggered()
 {
-    QMessageBox::about(ui->centralWidget, QString("About qView"), QString("qView alpha %1 by jurplel").arg(VERSION));
+    QMessageBox::about(ui->centralWidget, QString("About qView"), QString("qView pre-release %1 by jurplel").arg(VERSION));
 }
