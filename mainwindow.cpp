@@ -49,10 +49,15 @@ void MainWindow::pickFile()
     QString fileName = QFileDialog::getOpenFileName(this,
         tr("Open"), "",
         tr("Images (*.bmp *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm);;All Files (*)"));
+    openFile(fileName);
+}
 
+void MainWindow::openFile(QString fileName)
+{
     ui->graphicsView->loadFile(fileName);
     isPixmapLoaded = true;
 }
+
 void MainWindow::on_actionOpen_triggered()
 {
     pickFile();
