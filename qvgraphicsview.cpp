@@ -6,6 +6,39 @@
 QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 {
     scaleFactor = 0.25;
+    isPixmapLoaded = false;
+}
+
+void QVGraphicsView::resizeEvent(QResizeEvent *event)
+{
+    QGraphicsView::resizeEvent(event);
+    if(isPixmapLoaded)
+    {
+        resetScale();
+    }
+}
+
+void QVGraphicsView::dropEvent(QDropEvent *event)
+{
+    loadMimeData(event->mimeData());
+}
+
+void QVGraphicsView::dragEnterEvent(QDragEnterEvent *event)
+{
+    if(event->mimeData()->hasUrls())
+    {
+        event->acceptProposedAction();
+    }
+}
+
+void QVGraphicsView::dragMoveEvent(QDragMoveEvent *event)
+{
+    event->acceptProposedAction();
+}
+
+void QVGraphicsView::dragLeaveEvent(QDragLeaveEvent *event)
+{
+    event->accept();
 }
 
 void QVGraphicsView::wheelEvent(QWheelEvent *event)
@@ -13,7 +46,7 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
     qDebug()<< QString("before scroll scale: ") << getCurrentScale();
     qDebug()<< QString("before matrix: ") << matrix();
 
-    int DeltaY = event->angleDelta().y();
+    const int DeltaY = event->angleDelta().y();
 
     if (getCurrentScale() <= 1.0)
     {
@@ -46,6 +79,24 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
     qDebug() << QString("after scroll scale: ") << getCurrentScale();
 }
 
+void QVGraphicsView::loadMimeData(const QMimeData *mimeData)
+{
+    if (mimeData->hasUrls())
+    {
+        QStringList pathList;
+        QList<QUrl> urlList = mimeData->urls();
+
+        for (int i = 0; i < urlList.size() && i < 32; ++i)
+        {
+            pathList.append(urlList.at(i).toLocalFile());
+        }
+        if (!pathList.isEmpty())
+        {
+            loadFile(pathList.first());
+        }
+    }
+}
+
 void QVGraphicsView::loadFile(QString fileName)
 {
     if (fileName.isEmpty())
@@ -62,6 +113,7 @@ void QVGraphicsView::loadFile(QString fileName)
     loadedPixmapItem->setOffset((50000.0 - loadedPixmap.width()/2), (50000.0 - loadedPixmap.height()/2));
     resetScale();
     loadedPixmapItem->setTransformationMode(Qt::SmoothTransformation);
+    isPixmapLoaded = true;
 }
 
 void QVGraphicsView::resetScale()
@@ -72,7 +124,7 @@ void QVGraphicsView::resetScale()
 }
 
 
-// getters & setters
+// Getters & Setters
 
 QGraphicsPixmapItem *QVGraphicsView::getLoadedPixmapItem() const
 {

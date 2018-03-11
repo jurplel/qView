@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QPixmap>
 #include <QGraphicsScene>
+#include <QClipboard>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -14,14 +15,18 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    //enable drag&dropping
+    setAcceptDrops(true);
+
     //hide menubar for non-global applications
     ui->menuBar->hide();
 
-    //default variable values
-    isPixmapLoaded = false;
+    //Keyboard Shortcuts
+    ui->actionPaste->setShortcut(Qt::Key_V | Qt::CTRL);
 
     //context menu items
     ui->graphicsView->addAction(ui->actionOpen);
+    ui->graphicsView->addAction(ui->actionPaste);
     ui->graphicsView->addAction(ui->actionAbout);
     ui->graphicsView->addAction(ui->actionAbout_Qt);
 
@@ -35,15 +40,6 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::resizeEvent(QResizeEvent *event)
-{
-    QMainWindow::resizeEvent(event);
-    if(isPixmapLoaded)
-    {
-        ui->graphicsView->resetScale();
-    }
-}
-
 void MainWindow::pickFile()
 {
     QString fileName = QFileDialog::getOpenFileName(this,
@@ -55,8 +51,9 @@ void MainWindow::pickFile()
 void MainWindow::openFile(QString fileName)
 {
     ui->graphicsView->loadFile(fileName);
-    isPixmapLoaded = true;
 }
+
+// Actions
 
 void MainWindow::on_actionOpen_triggered()
 {
@@ -71,4 +68,9 @@ void MainWindow::on_actionAbout_Qt_triggered()
 void MainWindow::on_actionAbout_triggered()
 {
     QMessageBox::about(ui->centralWidget, QString("About qView"), QString("qView pre-release %1 by jurplel").arg(VERSION));
+}
+
+void MainWindow::on_actionPaste_triggered()
+{
+    ui->graphicsView->loadMimeData(QApplication::clipboard()->mimeData());
 }

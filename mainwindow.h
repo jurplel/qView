@@ -19,8 +19,8 @@ public:
 
     void openFile(QString fileName);
 
-protected:
-    void resizeEvent(QResizeEvent *event) override;
+    bool getIsPixmapLoaded() const;
+    void setIsPixmapLoaded(bool value);
 
 private slots:
     void on_actionOpen_triggered();
@@ -29,6 +29,8 @@ private slots:
 
     void on_actionAbout_triggered();
 
+    void on_actionPaste_triggered();
+
 private:
     Ui::MainWindow *ui;
 
@@ -36,9 +38,6 @@ private:
 
     QGraphicsScene *scene;
     QPixmap loadedPixmap;
-
-    bool isPixmapLoaded;
-
 };
 
 #endif // MAINWINDOW_H
