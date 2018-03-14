@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "qvoptionsdialog.h"
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QString>
@@ -27,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //context menu items
     ui->graphicsView->addAction(ui->actionOpen);
     ui->graphicsView->addAction(ui->actionPaste);
+    ui->graphicsView->addAction(ui->actionOptions);
     ui->graphicsView->addAction(ui->actionAbout);
     ui->graphicsView->addAction(ui->actionAbout_Qt);
 
@@ -73,4 +75,10 @@ void MainWindow::on_actionAbout_triggered()
 void MainWindow::on_actionPaste_triggered()
 {
     ui->graphicsView->loadMimeData(QApplication::clipboard()->mimeData());
+}
+
+void MainWindow::on_actionOptions_triggered()
+{
+    QVOptionsDialog *options = new QVOptionsDialog(this);
+    options->show();
 }
