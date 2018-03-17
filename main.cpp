@@ -6,6 +6,9 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    a.setOrganizationName("qView");
+    a.setApplicationName(QString("qView"));
+    a.setApplicationVersion(QString::number(VERSION));
     QCommandLineParser parser;
     parser.addHelpOption();
     parser.addVersionOption();

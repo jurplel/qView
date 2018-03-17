@@ -9,6 +9,7 @@
 #include <QPixmap>
 #include <QGraphicsScene>
 #include <QClipboard>
+#include <QCoreApplication>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -23,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->menuBar->hide();
 
     //Keyboard Shortcuts
+    ui->actionOpen->setShortcut(Qt::Key_O | Qt::CTRL);
     ui->actionPaste->setShortcut(Qt::Key_V | Qt::CTRL);
 
     //context menu items
