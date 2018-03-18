@@ -10,12 +10,16 @@
 #include <QGraphicsScene>
 #include <QClipboard>
 #include <QCoreApplication>
+#include <QFileSystemWatcher>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    //load settings from file
+    loadSettings();
 
     //enable drag&dropping
     setAcceptDrops(true);
@@ -57,6 +61,24 @@ void MainWindow::openFile(QString fileName)
     ui->graphicsView->loadFile(fileName);
 }
 
+
+void MainWindow::loadSettings()
+{
+    QSettings settings;
+    QBrush newBrush;
+    newBrush.setStyle(Qt::SolidPattern);
+    if (!((settings.value("bgcolorenabled", true).toBool())))
+    {
+        newBrush.setColor(QColor("#00000000"));
+    }
+    else
+    {
+        QColor newColor;
+        newColor.setNamedColor(settings.value("bgcolor", QString("#212121")).toString());
+        newBrush.setColor(newColor);
+    }
+    ui->graphicsView->setBackgroundBrush(newBrush);
+}
 // Actions
 
 void MainWindow::on_actionOpen_triggered()
@@ -83,4 +105,5 @@ void MainWindow::on_actionOptions_triggered()
 {
     QVOptionsDialog *options = new QVOptionsDialog(this);
     options->show();
+    connect(options, SIGNAL(optionsSaved()), this, SLOT(loadSettings()));
 }

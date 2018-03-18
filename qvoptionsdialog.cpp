@@ -28,6 +28,7 @@ void QVOptionsDialog::saveSettings()
     QSettings settings;
     settings.setValue("bgcolor", transientSettings.bgcolor);
     settings.setValue("bgcolorenabled", transientSettings.bgcolorenabled);
+    emit optionsSaved();
 }
 
 void QVOptionsDialog::loadSettings()
@@ -55,7 +56,7 @@ void QVOptionsDialog::loadSettings()
 
 void QVOptionsDialog::on_bgColorButton_clicked()
 {
-    QColor selectedColor = QColorDialog::getColor(loadedColor);
+    QColor selectedColor = QColorDialog::getColor(loadedColor, this);
 
     if (!selectedColor.isValid())
         return;
@@ -69,6 +70,7 @@ void QVOptionsDialog::setBgColorButtonColor(QColor newColor)
     QPalette newPalette = ui->bgColorButton->palette();
     newPalette.setColor(QPalette::Button, newColor);
     ui->bgColorButton->setPalette(newPalette);
+    ui->bgColorButton->setText(newColor.name());
 }
 
 

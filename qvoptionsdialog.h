@@ -19,6 +19,9 @@ public:
 
     void setBgColorButtonColor(QColor newColor);
 
+signals:
+    void optionsSaved();
+
 private slots:
     void on_bgColorButton_clicked();
 

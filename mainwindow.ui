@@ -70,7 +70,7 @@
       </property>
       <property name="backgroundBrush">
        <brush brushstyle="SolidPattern">
-        <color alpha="255">
+        <color alpha="0">
          <red>21</red>
          <green>21</green>
          <blue>21</blue>
@@ -99,7 +99,7 @@
      <x>0</x>
      <y>0</y>
      <width>400</width>
-     <height>20</height>
+     <height>22</height>
     </rect>
    </property>
    <property name="nativeMenuBar">

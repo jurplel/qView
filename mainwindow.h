@@ -23,6 +23,8 @@ public:
     void setIsPixmapLoaded(bool value);
 
 private slots:
+    void loadSettings();
+
     void on_actionOpen_triggered();
 
     void on_actionAbout_Qt_triggered();
