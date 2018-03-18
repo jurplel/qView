@@ -9,6 +9,9 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     isPixmapLoaded = false;
 }
 
+
+// Events
+
 void QVGraphicsView::resizeEvent(QResizeEvent *event)
 {
     QGraphicsView::resizeEvent(event);
@@ -20,11 +23,13 @@ void QVGraphicsView::resizeEvent(QResizeEvent *event)
 
 void QVGraphicsView::dropEvent(QDropEvent *event)
 {
+    QGraphicsView::dropEvent(event);
     loadMimeData(event->mimeData());
 }
 
 void QVGraphicsView::dragEnterEvent(QDragEnterEvent *event)
 {
+    QGraphicsView::dragEnterEvent(event);
     if(event->mimeData()->hasUrls())
     {
         event->acceptProposedAction();
@@ -33,19 +38,34 @@ void QVGraphicsView::dragEnterEvent(QDragEnterEvent *event)
 
 void QVGraphicsView::dragMoveEvent(QDragMoveEvent *event)
 {
+    QGraphicsView::dragMoveEvent(event);
     event->acceptProposedAction();
 }
 
 void QVGraphicsView::dragLeaveEvent(QDragLeaveEvent *event)
 {
+    QGraphicsView::dragLeaveEvent(event);
     event->accept();
+}
+
+void QVGraphicsView::enterEvent(QEvent *event)
+{
+    QGraphicsView::enterEvent(event);
+    if (!getIsCursorEnabled())
+        return;
+    viewport()->setCursor(Qt::ArrowCursor);
+}
+
+void QVGraphicsView::mouseReleaseEvent(QMouseEvent *event)
+{
+    QGraphicsView::mouseReleaseEvent(event);
+    if (!getIsCursorEnabled())
+        return;
+    viewport()->setCursor(Qt::ArrowCursor);
 }
 
 void QVGraphicsView::wheelEvent(QWheelEvent *event)
 {
-    qDebug()<< QString("before scroll scale: ") << getCurrentScale();
-    qDebug()<< QString("before matrix: ") << matrix();
-
     const int DeltaY = event->angleDelta().y();
 
     if (getCurrentScale() <= 1.0)
@@ -74,10 +94,10 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
     {
         centerOn(scene()->height()/2, scene()->width()/2);
     }
-
-    qDebug()<< QString("after matrix: ") << matrix();
-    qDebug() << QString("after scroll scale: ") << getCurrentScale();
 }
+
+
+// Functions
 
 void QVGraphicsView::loadMimeData(const QMimeData *mimeData)
 {
@@ -154,4 +174,14 @@ qreal QVGraphicsView::getCurrentScale() const
 void QVGraphicsView::setCurrentScale(const qreal &value)
 {
     currentScale = value;
+}
+
+bool QVGraphicsView::getIsCursorEnabled() const
+{
+    return isCursorEnabled;
+}
+
+void QVGraphicsView::setIsCursorEnabled(bool value)
+{
+    isCursorEnabled = value;
 }

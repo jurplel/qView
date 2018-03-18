@@ -25,10 +25,13 @@ public:
     QGraphicsPixmapItem *getLoadedPixmapItem() const;
     void setLoadedPixmapItem(QGraphicsPixmapItem *value);
 
-protected:
-    virtual void wheelEvent(QWheelEvent *event);
+    bool getIsCursorEnabled() const;
+    void setIsCursorEnabled(bool value);
 
-    void resizeEvent(QResizeEvent *event);
+protected:
+    void wheelEvent(QWheelEvent *event) override;
+
+    void resizeEvent(QResizeEvent *event) override;
 
     void dropEvent(QDropEvent *event) override;
 
@@ -37,6 +40,10 @@ protected:
     void dragMoveEvent(QDragMoveEvent *event) override;
 
     void dragLeaveEvent(QDragLeaveEvent *event) override;
+
+    void enterEvent(QEvent *event) override;
+
+    void mouseReleaseEvent(QMouseEvent *event) override;
 
 private:
     qreal currentScale;
@@ -48,5 +55,6 @@ private:
     QTransform scaledMatrix;
 
     bool isPixmapLoaded;
+    bool isCursorEnabled;
 };
 #endif // QVGRAPHICSVIEW_H

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>301</width>
     <height>300</height>
    </rect>
   </property>
@@ -49,9 +49,12 @@
       </attribute>
       <layout class="QFormLayout" name="formLayout">
        <item row="2" column="0">
-        <widget class="QCheckBox" name="checkBox">
+        <widget class="QCheckBox" name="cursorCheckbox">
          <property name="text">
-          <string>Use standard cursor</string>
+          <string>Use regular cursor when not dragging</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
          </property>
          <property name="tristate">
           <bool>false</bool>

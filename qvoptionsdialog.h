@@ -29,6 +29,8 @@ private slots:
 
     void on_buttonBox_clicked(QAbstractButton *button);
 
+    void on_cursorCheckbox_stateChanged(int arg1);
+
 protected:
     virtual void showEvent(QShowEvent *event);
 
@@ -43,6 +45,7 @@ private:
     {
         QString bgcolor;
         bool bgcolorenabled;
+        bool cursorenabled;
     };
 
     STransientSettings transientSettings;

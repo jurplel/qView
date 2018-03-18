@@ -65,6 +65,8 @@ void MainWindow::openFile(QString fileName)
 void MainWindow::loadSettings()
 {
     QSettings settings;
+
+    //bgcolor
     QBrush newBrush;
     newBrush.setStyle(Qt::SolidPattern);
     if (!((settings.value("bgcolorenabled", true).toBool())))
@@ -78,6 +80,9 @@ void MainWindow::loadSettings()
         newBrush.setColor(newColor);
     }
     ui->graphicsView->setBackgroundBrush(newBrush);
+
+    //mousethingy
+    ui->graphicsView->setIsCursorEnabled(settings.value("cursorenabled", true).toBool());
 }
 // Actions
 

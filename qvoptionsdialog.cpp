@@ -19,6 +19,7 @@ QVOptionsDialog::~QVOptionsDialog()
 
 void QVOptionsDialog::showEvent(QShowEvent *event)
 {
+    QDialog::showEvent(event);
     loadSettings();
 }
 
@@ -28,6 +29,7 @@ void QVOptionsDialog::saveSettings()
     QSettings settings;
     settings.setValue("bgcolor", transientSettings.bgcolor);
     settings.setValue("bgcolorenabled", transientSettings.bgcolorenabled);
+    settings.setValue("cursorenabled", transientSettings.cursorenabled);
     emit optionsSaved();
 }
 
@@ -35,6 +37,7 @@ void QVOptionsDialog::loadSettings()
 {
     QSettings settings;
 
+    //bgcolor
     transientSettings.bgcolor = settings.value("bgcolor", QString("#212121")).toString();
     loadedColor.setNamedColor(transientSettings.bgcolor);
     setBgColorButtonColor(loadedColor);
@@ -51,6 +54,9 @@ void QVOptionsDialog::loadSettings()
         ui->bgColorLabel->setEnabled(false);
     }
 
+    //mousecursor
+    transientSettings.cursorenabled = settings.value("cursorenabled", true).toBool();
+    ui->cursorCheckbox->setChecked(transientSettings.cursorenabled);
 }
 
 
@@ -73,6 +79,13 @@ void QVOptionsDialog::setBgColorButtonColor(QColor newColor)
     ui->bgColorButton->setText(newColor.name());
 }
 
+void QVOptionsDialog::on_buttonBox_clicked(QAbstractButton *button)
+{
+    if (ui->buttonBox->buttonRole(button) == 8 || ui->buttonBox->buttonRole(button) == 0)
+    {
+        saveSettings();
+    }
+}
 
 void QVOptionsDialog::on_bgColorCheckbox_stateChanged(int arg1)
 {
@@ -90,10 +103,14 @@ void QVOptionsDialog::on_bgColorCheckbox_stateChanged(int arg1)
     }
 }
 
-void QVOptionsDialog::on_buttonBox_clicked(QAbstractButton *button)
+void QVOptionsDialog::on_cursorCheckbox_stateChanged(int arg1)
 {
-    if (ui->buttonBox->buttonRole(button) == 8 || ui->buttonBox->buttonRole(button) == 0)
+    if (arg1 > 0)
     {
-        saveSettings();
+        transientSettings.cursorenabled = true;
+    }
+    else
+    {
+        transientSettings.cursorenabled = false;
     }
 }
