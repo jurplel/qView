@@ -55,6 +55,13 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    QSettings settings;
+    settings.setValue("geometry", saveGeometry());
+    QMainWindow::closeEvent(event);
+}
+
 void MainWindow::pickFile()
 {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open"), "", tr("Images (*.bmp *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm);;All Files (*)"));
@@ -70,6 +77,9 @@ void MainWindow::openFile(QString fileName)
 void MainWindow::loadSettings()
 {
     QSettings settings;
+
+    //geometry
+    restoreGeometry(settings.value("geometry").toByteArray());
 
     //bgcolor
     QBrush newBrush;

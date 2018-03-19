@@ -22,8 +22,10 @@ public:
     bool getIsPixmapLoaded() const;
     void setIsPixmapLoaded(bool value);
 
-private slots:
+protected:
+    void closeEvent(QCloseEvent *event) override;
 
+private slots:
     void loadSettings();
 
     void on_actionOpen_triggered();
