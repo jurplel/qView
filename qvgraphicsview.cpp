@@ -153,8 +153,6 @@ void QVGraphicsView::resetScale()
 
 void QVGraphicsView::nextFile()
 {
-    qDebug() << "before next: " << loadedFileFolderIndex;
-    qDebug() << "size: " << loadedFileFolder.size();
     if (loadedFileFolder.isEmpty())
         return;
 
@@ -172,13 +170,10 @@ void QVGraphicsView::nextFile()
         return;
 
     loadFile(nextImage.filePath());
-    qDebug() << "after next: " << loadedFileFolderIndex;
 }
 
 void QVGraphicsView::previousFile()
 {
-    qDebug() << "before prev: " << loadedFileFolderIndex;
-    qDebug() << "size: " << loadedFileFolder.size();
     if (loadedFileFolder.isEmpty())
         return;
 
@@ -196,7 +191,6 @@ void QVGraphicsView::previousFile()
         return;
 
     loadFile(previousImage.filePath());
-    qDebug() << "after prev: " << loadedFileFolderIndex;
 }
 
 // Getters & Setters

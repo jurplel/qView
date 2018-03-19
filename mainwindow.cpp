@@ -28,11 +28,15 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->menuBar->hide();
 
     //Keyboard Shortcuts
-    ui->actionOpen->setShortcut(Qt::Key_O | Qt::CTRL);
-    ui->actionPaste->setShortcut(Qt::Key_V | Qt::CTRL);
+    ui->actionOpen->setShortcut(QKeySequence::Open);
+    ui->actionNext_File->setShortcut(Qt::Key_Right);
+    ui->actionPrevious_File->setShortcut(Qt::Key_Left);
+    ui->actionPaste->setShortcut(QKeySequence::Paste);
 
     //context menu items
     ui->graphicsView->addAction(ui->actionOpen);
+    ui->graphicsView->addAction(ui->actionNext_File);
+    ui->graphicsView->addAction(ui->actionPrevious_File);
     ui->graphicsView->addAction(ui->actionPaste);
     ui->graphicsView->addAction(ui->actionOptions);
     ui->graphicsView->addAction(ui->actionAbout);
