@@ -3,6 +3,7 @@
 
 #include <QGraphicsView>
 #include <QMimeData>
+#include <QDir>
 
 class QVGraphicsView : public QGraphicsView
 {
@@ -15,6 +16,9 @@ public:
     void resetScale();
 
     void loadMimeData(const QMimeData *mimeData);
+
+    void nextFile();
+    void previousFile();
 
     qreal getCurrentScale() const;
     void setCurrentScale(const qreal &value);
@@ -56,5 +60,11 @@ private:
 
     bool isPixmapLoaded;
     bool isCursorEnabled;
+
+    QFileInfoList loadedFileFolder;
+
+    int loadedFileFolderIndex;
+
+    const QStringList filterList = (QStringList() << "*.bmp" << "*.gif" << "*.jpg" << "*.jpeg" << "*.png" << "*.pbm" << "*.pgm" << "*.ppm" << "*.xbm" << "*.xpm");
 };
 #endif // QVGRAPHICSVIEW_H

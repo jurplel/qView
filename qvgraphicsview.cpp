@@ -104,7 +104,7 @@ void QVGraphicsView::loadMimeData(const QMimeData *mimeData)
     if (mimeData->hasUrls())
     {
         QStringList pathList;
-        QList<QUrl> urlList = mimeData->urls();
+        const QList<QUrl> urlList = mimeData->urls();
 
         for (int i = 0; i < urlList.size() && i < 32; ++i)
         {
@@ -134,6 +134,14 @@ void QVGraphicsView::loadFile(QString fileName)
     resetScale();
     loadedPixmapItem->setTransformationMode(Qt::SmoothTransformation);
     isPixmapLoaded = true;
+
+    const QFileInfo selectedFileInfo = QFileInfo(fileName);
+
+    const QDir fileDir = QDir(selectedFileInfo.path());
+
+    loadedFileFolder = fileDir.entryInfoList(filterList, QDir::Files);
+
+    loadedFileFolderIndex = loadedFileFolder.indexOf(selectedFileInfo);
 }
 
 void QVGraphicsView::resetScale()
@@ -143,6 +151,53 @@ void QVGraphicsView::resetScale()
     fittedMatrix = transform();
 }
 
+void QVGraphicsView::nextFile()
+{
+    qDebug() << "before next: " << loadedFileFolderIndex;
+    qDebug() << "size: " << loadedFileFolder.size();
+    if (loadedFileFolder.isEmpty())
+        return;
+
+    if (loadedFileFolder.size()-1 == loadedFileFolderIndex)
+    {
+        loadedFileFolderIndex = 0;
+    }
+    else
+    {
+        loadedFileFolderIndex++;
+    }
+
+    const QFileInfo nextImage = loadedFileFolder.value(loadedFileFolderIndex);
+    if (!nextImage.isFile())
+        return;
+
+    loadFile(nextImage.filePath());
+    qDebug() << "after next: " << loadedFileFolderIndex;
+}
+
+void QVGraphicsView::previousFile()
+{
+    qDebug() << "before prev: " << loadedFileFolderIndex;
+    qDebug() << "size: " << loadedFileFolder.size();
+    if (loadedFileFolder.isEmpty())
+        return;
+
+    if (loadedFileFolderIndex == 0)
+    {
+        loadedFileFolderIndex = loadedFileFolder.size()-1;
+    }
+    else
+    {
+        loadedFileFolderIndex--;
+    }
+
+    const QFileInfo previousImage = loadedFileFolder.value(loadedFileFolderIndex);
+    if (!previousImage.isFile())
+        return;
+
+    loadFile(previousImage.filePath());
+    qDebug() << "after prev: " << loadedFileFolderIndex;
+}
 
 // Getters & Setters
 

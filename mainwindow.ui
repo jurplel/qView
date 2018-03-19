@@ -110,6 +110,8 @@
      <string>&amp;File</string>
     </property>
     <addaction name="actionOpen"/>
+    <addaction name="actionPrevious_File"/>
+    <addaction name="actionNext_File"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -158,6 +160,16 @@
   <action name="actionOptions">
    <property name="text">
     <string>Options</string>
+   </property>
+  </action>
+  <action name="actionPrevious_File">
+   <property name="text">
+    <string>Previous File</string>
+   </property>
+  </action>
+  <action name="actionNext_File">
+   <property name="text">
+    <string>Next File</string>
    </property>
   </action>
  </widget>

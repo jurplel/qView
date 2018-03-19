@@ -50,9 +50,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::pickFile()
 {
-    QString fileName = QFileDialog::getOpenFileName(this,
-        tr("Open"), "",
-        tr("Images (*.bmp *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm);;All Files (*)"));
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open"), "", tr("Images (*.bmp *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm);;All Files (*)"));
     openFile(fileName);
 }
 
@@ -111,4 +109,14 @@ void MainWindow::on_actionOptions_triggered()
     QVOptionsDialog *options = new QVOptionsDialog(this);
     options->show();
     connect(options, SIGNAL(optionsSaved()), this, SLOT(loadSettings()));
+}
+
+void MainWindow::on_actionPrevious_File_triggered()
+{
+    ui->graphicsView->previousFile();
+}
+
+void MainWindow::on_actionNext_File_triggered()
+{
+    ui->graphicsView->nextFile();
 }

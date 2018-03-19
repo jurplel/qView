@@ -35,6 +35,10 @@ private slots:
 
     void on_actionOptions_triggered();
 
+    void on_actionPrevious_File_triggered();
+
+    void on_actionNext_File_triggered();
+
 private:
     Ui::MainWindow *ui;
 
