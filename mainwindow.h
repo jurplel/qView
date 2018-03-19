@@ -23,6 +23,7 @@ public:
     void setIsPixmapLoaded(bool value);
 
 private slots:
+
     void loadSettings();
 
     void on_actionOpen_triggered();

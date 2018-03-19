@@ -35,12 +35,14 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     qvgraphicsview.cpp \
-    qvoptionsdialog.cpp
+    qvoptionsdialog.cpp \
+    qvapplication.cpp
 
 HEADERS += \
         mainwindow.h \
     qvgraphicsview.h \
-    qvoptionsdialog.h
+    qvoptionsdialog.h \
+    qvapplication.h
 
 FORMS += \
         mainwindow.ui \

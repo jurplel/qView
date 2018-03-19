@@ -1,11 +1,11 @@
 #include "mainwindow.h"
-#include <QApplication>
+#include "qvapplication.h"
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    QVApplication a(argc, argv);
     a.setOrganizationName("qView");
     a.setApplicationName(QString("qView"));
     a.setApplicationVersion(QString::number(VERSION));

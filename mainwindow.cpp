@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "qvoptionsdialog.h"
+#include "qvapplication.h"
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QString>
@@ -17,6 +18,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    //For opening on macOS, we must hook into the QApplication's QOpenFileEvent
 
     //load settings from file
     loadSettings();
