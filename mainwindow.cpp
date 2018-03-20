@@ -57,8 +57,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    QSettings settings;
-    settings.setValue("geometry", saveGeometry());
+    saveGeometrySettings();
     QMainWindow::closeEvent(event);
 }
 
@@ -91,13 +90,19 @@ void MainWindow::loadSettings()
     else
     {
         QColor newColor;
-        newColor.setNamedColor(settings.value("bgcolor", QString("#212121")).toString());
+        newColor.setNamedColor(settings.value("bgcolor", QString("#151515")).toString());
         newBrush.setColor(newColor);
     }
     ui->graphicsView->setBackgroundBrush(newBrush);
 
     //mousethingy
     ui->graphicsView->setIsCursorEnabled(settings.value("cursorenabled", true).toBool());
+}
+
+void MainWindow::saveGeometrySettings()
+{
+    QSettings settings;
+    settings.setValue("geometry", saveGeometry());
 }
 // Actions
 
@@ -125,6 +130,7 @@ void MainWindow::on_actionOptions_triggered()
 {
     QVOptionsDialog *options = new QVOptionsDialog(this);
     options->show();
+    connect(options, SIGNAL(optionsSaved()), this, SLOT(saveGeometrySettings()));
     connect(options, SIGNAL(optionsSaved()), this, SLOT(loadSettings()));
 }
 
