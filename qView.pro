@@ -17,6 +17,7 @@ DEFINES += "VERSION=$$VERSION"
 
 QMAKE_TARGET_BUNDLE_PREFIX = "com.qview"
 QMAKE_INFO_PLIST = "Info.plist"
+ICON = "qView.icns"
 
 
 # The following define makes your compiler emit warnings if you use
@@ -46,4 +47,5 @@ HEADERS += \
 
 FORMS += \
         mainwindow.ui \
-    qvoptionsdialog.ui
+    qvoptionsdialog.ui \
+    qvaboutdialog.ui
