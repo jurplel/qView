@@ -15,9 +15,11 @@ TEMPLATE = app
 # allows use of version variable elsewhere
 DEFINES += "VERSION=$$VERSION"
 
+#macos specific stuff
 QMAKE_TARGET_BUNDLE_PREFIX = "com.qview"
 QMAKE_INFO_PLIST = "Info.plist"
-ICON = "QView.icns"
+ICON = "images/QView.icns"
+
 
 
 # The following define makes your compiler emit warnings if you use

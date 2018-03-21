@@ -1,0 +1,8 @@
+<Application xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
+  <VisualElements
+      ShowNameOnSquare150x150Logo='on'
+      Square150x150Logo='QView_tile_150.png'
+      Square70x70Logo='QView_tile_70.png'
+      ForegroundText='light'
+      BackgroundColor='#0078D7'/>
+</Application>
