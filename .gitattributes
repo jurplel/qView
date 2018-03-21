@@ -1,1 +1,4 @@
 *.ai filter=lfs diff=lfs merge=lfs -text
+*.png filter=lfs diff=lfs merge=lfs -text
+*.icns filter=lfs diff=lfs merge=lfs -text
+*.icn filter=lfs diff=lfs merge=lfs -text
