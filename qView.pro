@@ -4,11 +4,11 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = qView
+TARGET = QView
 VERSION = 0.4 # major.minor
 TEMPLATE = app
 
@@ -17,7 +17,7 @@ DEFINES += "VERSION=$$VERSION"
 
 QMAKE_TARGET_BUNDLE_PREFIX = "com.qview"
 QMAKE_INFO_PLIST = "Info.plist"
-ICON = "qView.icns"
+ICON = "QView.icns"
 
 
 # The following define makes your compiler emit warnings if you use
