@@ -19,8 +19,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    //For opening on macOS, we must hook into the QApplication's QOpenFileEvent
-
     //load settings from file
     loadSettings();
 
@@ -118,7 +116,7 @@ void MainWindow::on_actionAbout_Qt_triggered()
 
 void MainWindow::on_actionAbout_triggered()
 {
-    QMessageBox::about(ui->centralWidget, QString("About qView"), QString("qView pre-release %1 by jurplel").arg(VERSION));
+    QMessageBox::about(ui->centralWidget, QString("About QView"), QString("QView pre-release %1 by jurplel").arg(VERSION));
 }
 
 void MainWindow::on_actionPaste_triggered()
