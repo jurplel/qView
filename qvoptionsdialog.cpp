@@ -9,6 +9,7 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     ui(new Ui::QVOptionsDialog)
 {
     ui->setupUi(this);
+    setWindowFlag(Qt::Tool);
 }
 
 QVOptionsDialog::~QVOptionsDialog()
@@ -38,7 +39,7 @@ void QVOptionsDialog::loadSettings()
     QSettings settings;
 
     //bgcolor
-    transientSettings.bgcolor = settings.value("bgcolor", QString("#151515")).toString();
+    transientSettings.bgcolor = settings.value("bgcolor", QString("#212121")).toString();
     loadedColor.setNamedColor(transientSettings.bgcolor);
     setBgColorButtonColor(loadedColor);
 

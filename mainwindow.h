@@ -32,8 +32,6 @@ private slots:
 
     void on_actionOpen_triggered();
 
-    void on_actionAbout_Qt_triggered();
-
     void on_actionAbout_triggered();
 
     void on_actionPaste_triggered();

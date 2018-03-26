@@ -14,7 +14,7 @@
    <bool>false</bool>
   </property>
   <property name="windowTitle">
-   <string>QView</string>
+   <string>qView</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <property name="contextMenuPolicy">
@@ -118,7 +118,6 @@
      <string>&amp;Help</string>
     </property>
     <addaction name="actionAbout"/>
-    <addaction name="actionAbout_Qt"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -145,11 +144,6 @@
   <action name="actionAbout">
    <property name="text">
     <string>&amp;About</string>
-   </property>
-  </action>
-  <action name="actionAbout_Qt">
-   <property name="text">
-    <string>About &amp;Qt</string>
    </property>
   </action>
   <action name="actionPaste">

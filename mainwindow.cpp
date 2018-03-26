@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "qvoptionsdialog.h"
+#include "qvaboutdialog.h"
 #include "qvapplication.h"
 #include <QFileDialog>
 #include <QMessageBox>
@@ -41,7 +42,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->graphicsView->addAction(ui->actionPaste);
     ui->graphicsView->addAction(ui->actionOptions);
     ui->graphicsView->addAction(ui->actionAbout);
-    ui->graphicsView->addAction(ui->actionAbout_Qt);
 
     //qgraphicsscene setup
     scene = new QGraphicsScene(0.0, 0.0, 100000.0, 100000.0, this);
@@ -88,7 +88,7 @@ void MainWindow::loadSettings()
     else
     {
         QColor newColor;
-        newColor.setNamedColor(settings.value("bgcolor", QString("#151515")).toString());
+        newColor.setNamedColor(settings.value("bgcolor", QString("#212121")).toString());
         newBrush.setColor(newColor);
     }
     ui->graphicsView->setBackgroundBrush(newBrush);
@@ -109,14 +109,11 @@ void MainWindow::on_actionOpen_triggered()
     pickFile();
 }
 
-void MainWindow::on_actionAbout_Qt_triggered()
-{
-    QMessageBox::aboutQt(ui->centralWidget, QString("About Qt"));
-}
-
 void MainWindow::on_actionAbout_triggered()
 {
-    QMessageBox::about(ui->centralWidget, QString("About QView"), QString("QView pre-release %1 by jurplel").arg(VERSION));
+    QVAboutDialog *about = new QVAboutDialog(this);
+    about->show();
+    // QMessageBox::about(ui->centralWidget, QString("About qView"), QString("qView pre-release %1 by jurplel").arg(VERSION));
 }
 
 void MainWindow::on_actionPaste_triggered()
@@ -127,7 +124,7 @@ void MainWindow::on_actionPaste_triggered()
 void MainWindow::on_actionOptions_triggered()
 {
     QVOptionsDialog *options = new QVOptionsDialog(this);
-    options->show();
+    options->open();
     connect(options, SIGNAL(optionsSaved()), this, SLOT(saveGeometrySettings()));
     connect(options, SIGNAL(optionsSaved()), this, SLOT(loadSettings()));
 }

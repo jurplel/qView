@@ -8,7 +8,7 @@ QT += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = QView
+TARGET = qView
 VERSION = 0.4 # major.minor
 TEMPLATE = app
 
@@ -18,8 +18,7 @@ DEFINES += "VERSION=$$VERSION"
 #macos specific stuff
 QMAKE_TARGET_BUNDLE_PREFIX = "com.qview"
 QMAKE_INFO_PLIST = "Info.plist"
-ICON = "images/QView.icns"
-
+ICON = "images/qView.icns"
 
 
 # The following define makes your compiler emit warnings if you use
@@ -39,15 +38,20 @@ SOURCES += \
         mainwindow.cpp \
     qvgraphicsview.cpp \
     qvoptionsdialog.cpp \
-    qvapplication.cpp
+    qvapplication.cpp \
+    qvaboutdialog.cpp
 
 HEADERS += \
         mainwindow.h \
     qvgraphicsview.h \
     qvoptionsdialog.h \
-    qvapplication.h
+    qvapplication.h \
+    qvaboutdialog.h
 
 FORMS += \
         mainwindow.ui \
     qvoptionsdialog.ui \
     qvaboutdialog.ui
+
+RESOURCES += \
+    resources.qrc
