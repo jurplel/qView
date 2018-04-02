@@ -9,7 +9,8 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     ui(new Ui::QVOptionsDialog)
 {
     ui->setupUi(this);
-    setWindowFlag(Qt::Tool);
+
+    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 }
 
 QVOptionsDialog::~QVOptionsDialog()

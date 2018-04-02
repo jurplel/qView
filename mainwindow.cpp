@@ -112,8 +112,7 @@ void MainWindow::on_actionOpen_triggered()
 void MainWindow::on_actionAbout_triggered()
 {
     QVAboutDialog *about = new QVAboutDialog(this);
-    about->show();
-    // QMessageBox::about(ui->centralWidget, QString("About qView"), QString("qView pre-release %1 by jurplel").arg(VERSION));
+    about->exec();
 }
 
 void MainWindow::on_actionPaste_triggered()
