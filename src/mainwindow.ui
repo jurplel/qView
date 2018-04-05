@@ -172,7 +172,7 @@
   <customwidget>
    <class>QVGraphicsView</class>
    <extends>QGraphicsView</extends>
-   <header>qvgraphicsview.h</header>
+   <header>src/qvgraphicsview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

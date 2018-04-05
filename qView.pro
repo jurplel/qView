@@ -17,6 +17,7 @@ DEFINES += "VERSION=$$VERSION"
 
 # build options
 win32:CONFIG += static # build static on windows
+macx:CONFIG += static # and macOS too
 
 # build folder organization
 DESTDIR = bin
