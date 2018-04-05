@@ -15,12 +15,27 @@ TEMPLATE = app
 # allows use of version variable elsewhere
 DEFINES += "VERSION=$$VERSION"
 
-#macos specific stuff
+# build options
+win32:CONFIG += static # build static on windows
+
+# build folder organization
+DESTDIR = bin
+OBJECTS_DIR = intermediate
+MOC_DIR = intermediate
+UI_DIR = intermediate
+RCC_DIR = intermediate
+win32:CONFIG -= debug_and_release debug_and_release_target
+
+
+# macOS specific stuff
 QMAKE_TARGET_BUNDLE_PREFIX = "com.qview"
 QMAKE_INFO_PLIST = "Info.plist"
-ICON = "images/qView.icns"
-RC_ICONS = "images/qView.ico"
+ICON = "src/images/qView.icns"
 
+#Windows specific stuff
+RC_ICONS = "src/images/qView.ico"
+QMAKE_TARGET_COPYRIGHT = "Copyright © 2018 jurplel and qView contributors"
+QMAKE_TARGET_DESCRIPTION = "qView"
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
@@ -35,24 +50,24 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
-        main.cpp \
-        mainwindow.cpp \
-    qvgraphicsview.cpp \
-    qvoptionsdialog.cpp \
-    qvapplication.cpp \
-    qvaboutdialog.cpp
+        src/main.cpp \
+        src/mainwindow.cpp \
+    src/qvgraphicsview.cpp \
+    src/qvoptionsdialog.cpp \
+    src/qvapplication.cpp \
+    src/qvaboutdialog.cpp
 
 HEADERS += \
-        mainwindow.h \
-    qvgraphicsview.h \
-    qvoptionsdialog.h \
-    qvapplication.h \
-    qvaboutdialog.h
+        src/mainwindow.h \
+    src/qvgraphicsview.h \
+    src/qvoptionsdialog.h \
+    src/qvapplication.h \
+    src/qvaboutdialog.h
 
 FORMS += \
-        mainwindow.ui \
-    qvoptionsdialog.ui \
-    qvaboutdialog.ui
+        src/mainwindow.ui \
+    src/qvoptionsdialog.ui \
+    src/qvaboutdialog.ui
 
 RESOURCES += \
-    resources.qrc
+    src/resources.qrc
