@@ -2,6 +2,7 @@
 #include "ui_qvaboutdialog.h"
 #include <QFontDatabase>
 #include <QDate>
+#include <QDebug>
 
 QVAboutDialog::QVAboutDialog(QWidget *parent) :
     QDialog(parent),
@@ -10,12 +11,14 @@ QVAboutDialog::QVAboutDialog(QWidget *parent) :
     ui->setupUi(this);
 
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
+
     // add fonts
     QFontDatabase fontDatabase;
     fontDatabase.addApplicationFont(":/fonts/fonts/Lato-Light.ttf");
     fontDatabase.addApplicationFont(":/fonts/fonts/Lato-Regular.ttf");
+
     //set main title font
-    const QFont font1 = QFont("Lato", 96, QFont::Light);
+    const QFont font1 = QFont("Lato Light", 96, QFont::Light);
     ui->logoLabel->setFont(font1);
 
     //set subtitle font & text

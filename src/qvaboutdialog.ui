@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>315</width>
+    <width>401</width>
     <height>312</height>
    </rect>
   </property>
@@ -82,6 +82,9 @@
   </property>
   <property name="windowTitle">
    <string>About qView</string>
+  </property>
+  <property name="sizeGripEnabled">
+   <bool>false</bool>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_3">
    <item>
