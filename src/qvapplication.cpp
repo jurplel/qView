@@ -18,8 +18,7 @@ bool QVApplication::event(QEvent *event)
 MainWindow *QVApplication::getMainWindow()
 {
     foreach (QWidget *w, qApp->topLevelWidgets())
-        if (QMainWindow* mainWin = qobject_cast<QMainWindow*>(w))
-            if (MainWindow* mainWin = qobject_cast<MainWindow*>(w))
-                return mainWin;
+        if (MainWindow* mainWin = qobject_cast<MainWindow*>(w))
+            return mainWin;
     return nullptr;
 }
