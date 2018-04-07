@@ -65,6 +65,6 @@ private:
 
     int loadedFileFolderIndex;
 
-    const QStringList filterList = (QStringList() << "*.bmp" << "*.gif" << "*.jpg" << "*.jpeg" << "*.png" << "*.pbm" << "*.pgm" << "*.ppm" << "*.xbm" << "*.xpm");
+    const QStringList filterList = (QStringList() << "*.svg" << "*.bmp" << "*.gif" << "*.jpg" << "*.jpeg" << "*.png" << "*.pbm" << "*.pgm" << "*.ppm" << "*.xbm" << "*.xpm");
 };
 #endif // QVGRAPHICSVIEW_H

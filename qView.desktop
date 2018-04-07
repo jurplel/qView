@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=qView
+GenericName=Image Viewer
+Type=Application
+Exec=qview %U
+Icon=qview
+Comment=Simple Qt Image Viewer
+Categories=Qt;Graphics;Viewer;Photography
+Terminal=false
+MimeType=image/svg+xml;image/bmp;image/gif;image/jpg;image/jpeg;image/png;image/pbm;image/pgm;image/ppm;image/xbm;image/xpm

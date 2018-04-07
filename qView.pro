@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT += core gui
+QT += core gui svg
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -32,10 +32,20 @@ QMAKE_TARGET_BUNDLE_PREFIX = "com.qview"
 QMAKE_INFO_PLIST = "Info.plist"
 ICON = "src/images/qView.icns"
 
-#Windows specific stuff
+# Windows specific stuff
 RC_ICONS = "src/images/qView.ico"
 QMAKE_TARGET_COPYRIGHT = "Copyright © 2018 jurplel and qView contributors"
 QMAKE_TARGET_DESCRIPTION = "qView"
+
+# Linux specific stuff
+binary.path = /usr/bin
+binary.files = bin/qview
+desktop.path = /usr/share/applications
+desktop.files = qView.desktop
+
+unix:INSTALLS += binary desktop
+
+unix:!macx:TARGET = qview
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings

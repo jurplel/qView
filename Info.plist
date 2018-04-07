@@ -27,6 +27,7 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
+                                <string>svg</string>
 				<string>bmp</string>
 				<string>gif</string>
 				<string>jpg</string>
