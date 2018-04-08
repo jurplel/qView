@@ -1,3 +1,4 @@
+#!/usr/bin/env xdg-open
 [Desktop Entry]
 Name=qView
 GenericName=Image Viewer
@@ -7,4 +8,4 @@ Icon=qview
 Comment=Simple Qt Image Viewer
 Categories=Qt;Graphics;Viewer;Photography
 Terminal=false
-MimeType=image/svg+xml;image/bmp;image/gif;image/jpg;image/jpeg;image/png;image/pbm;image/pgm;image/ppm;image/xbm;image/xpm
+MimeType=image/svg+xml;image/bmp;image/gif;image/jpg;image/jpeg;image/png;image/x-portable-bitmap;image/x-portable-graymap;image/x-portable-pixmap;image/x-xbitmap;image/x-xpixmap

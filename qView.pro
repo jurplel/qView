@@ -42,8 +42,21 @@ binary.path = /usr/bin
 binary.files = bin/qview
 desktop.path = /usr/share/applications
 desktop.files = qView.desktop
+icon16.path = /usr/share/icons/hicolor/16x16/apps/
+icon16.files = src/images/linux/hicolor/16x16/apps/qview.png
+icon32.path = /usr/share/icons/hicolor/32x32/apps/
+icon32.files = src/images/linux/hicolor/32x32/apps/qview.png
+icon64.path = /usr/share/icons/hicolor/64x64/apps/
+icon64.files = src/images/linux/hicolor/64x64/apps/qview.png
+icon128.path = /usr/share/icons/hicolor/128x128/apps/
+icon128.files = src/images/linux/hicolor/128x128/apps/qview.png
+icon256.path = /usr/share/icons/hicolor/256x256/apps/
+icon256.files = src/images/linux/hicolor/256x256/apps/qview.png
+iconsvg.path = /usr/share/icons/hicolor/scalable/apps/
+iconsvg.files = src/images/linux/hicolor/scalable/apps/qview.svg
 
-unix:INSTALLS += binary desktop
+
+unix:!macx:INSTALLS += binary desktop icon16 icon32 icon64 icon128 icon256 iconsvg
 
 unix:!macx:TARGET = qview
 
