@@ -80,9 +80,6 @@ void QVOptionsDialog::on_bgColorButton_clicked()
 
 void QVOptionsDialog::setBgColorButtonColor(QColor newColor)
 {
-    QPalette newPalette = ui->bgColorButton->palette();
-    newPalette.setColor(QPalette::Button, newColor);
-    ui->bgColorButton->setPalette(newPalette);
     ui->bgColorButton->setText(newColor.name());
 }
 
