@@ -31,6 +31,8 @@ private slots:
 
     void on_cursorCheckbox_stateChanged(int arg1);
 
+    void on_filteringCheckbox_stateChanged(int arg1);
+
 protected:
     virtual void showEvent(QShowEvent *event);
 
@@ -46,6 +48,7 @@ private:
         QString bgcolor;
         bool bgcolorenabled;
         bool cursorenabled;
+        bool filteringenabled;
     };
 
     STransientSettings transientSettings;

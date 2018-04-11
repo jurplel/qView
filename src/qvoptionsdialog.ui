@@ -40,12 +40,12 @@
      <property name="tabBarAutoHide">
       <bool>false</bool>
      </property>
-     <widget class="QWidget" name="appearance">
+     <widget class="QWidget" name="interface_2">
       <property name="layoutDirection">
        <enum>Qt::LeftToRight</enum>
       </property>
       <attribute name="title">
-       <string>Appearance</string>
+       <string>Interface</string>
       </attribute>
       <layout class="QFormLayout" name="formLayout">
        <item row="2" column="0">
@@ -113,6 +113,23 @@
          </property>
          <property name="tristate">
           <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="image">
+      <attribute name="title">
+       <string>Image</string>
+      </attribute>
+      <layout class="QFormLayout" name="formLayout_3">
+       <item row="0" column="0">
+        <widget class="QCheckBox" name="filteringCheckbox">
+         <property name="text">
+          <string>Bilinear filtering</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
          </property>
         </widget>
        </item>

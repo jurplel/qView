@@ -133,7 +133,14 @@ void QVGraphicsView::loadFile(QString fileName)
     loadedPixmapItem = scene()->addPixmap(loadedPixmap);
     loadedPixmapItem->setOffset((50000.0 - loadedPixmap.width()/2), (50000.0 - loadedPixmap.height()/2));
     resetScale();
-    loadedPixmapItem->setTransformationMode(Qt::SmoothTransformation);
+    if (isFilteringEnabled)
+    {
+        loadedPixmapItem->setTransformationMode(Qt::SmoothTransformation);
+    }
+    else
+    {
+        loadedPixmapItem->setTransformationMode(Qt::FastTransformation);
+    }
     isPixmapLoaded = true;
 
     selectedFileInfo = QFileInfo(fileName);
@@ -254,4 +261,14 @@ bool QVGraphicsView::getIsPixmapLoaded() const
 void QVGraphicsView::setIsPixmapLoaded(bool value)
 {
     isPixmapLoaded = value;
+}
+
+bool QVGraphicsView::getIsFilteringEnabled() const
+{
+    return isFilteringEnabled;
+}
+
+void QVGraphicsView::setIsFilteringEnabled(bool value)
+{
+    isFilteringEnabled = value;
 }

@@ -30,6 +30,14 @@ MainWindow::MainWindow(QWidget *parent) :
     //hide menubar for non-global applications
     ui->menuBar->hide();
 
+    //change show in explorer text based on operating system
+
+    #if defined(Q_OS_WIN)
+    ui->actionShow_in_File_Explorer->setText("Show in Explorer");
+    #elif defined(Q_OS_MACX)
+    ui->actionShow_in_File_Explorer->setText("Show in Finder");
+    #endif
+
     //Keyboard Shortcuts
     ui->actionOpen->setShortcut(QKeySequence::Open);
     ui->actionNext_File->setShortcut(Qt::Key_Right);
@@ -38,7 +46,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //context menu items
     ui->graphicsView->addAction(ui->actionOpen);
-    ui->graphicsView->addAction(ui->actionView_in_File_Explorer);
+    ui->graphicsView->addAction(ui->actionShow_in_File_Explorer);
     ui->graphicsView->addAction(ui->actionNext_File);
     ui->graphicsView->addAction(ui->actionPrevious_File);
     ui->graphicsView->addAction(ui->actionPaste);
@@ -63,7 +71,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::pickFile()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open"), "", tr("Images (*.bmp *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm);;All Files (*)"));
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open"), "", tr("Images (*.svg *.bmp *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm);;All Files (*)"));
     openFile(fileName);
 }
 
@@ -95,8 +103,23 @@ void MainWindow::loadSettings()
     }
     ui->graphicsView->setBackgroundBrush(newBrush);
 
-    //mousethingy
+    //mousecursor
     ui->graphicsView->setIsCursorEnabled(settings.value("cursorenabled", true).toBool());
+
+    //filtering
+    ui->graphicsView->setIsFilteringEnabled(settings.value("filteringenabled", true).toBool());
+
+    if (ui->graphicsView->getIsPixmapLoaded())
+    {
+        if (ui->graphicsView->getIsFilteringEnabled())
+        {
+            ui->graphicsView->getLoadedPixmapItem()->setTransformationMode(Qt::SmoothTransformation);
+        }
+        else
+        {
+            ui->graphicsView->getLoadedPixmapItem()->setTransformationMode(Qt::FastTransformation);
+        }
+    }
 }
 
 void MainWindow::saveGeometrySettings()
@@ -140,29 +163,24 @@ void MainWindow::on_actionNext_File_triggered()
     ui->graphicsView->nextFile();
 }
 
-void MainWindow::on_actionView_in_File_Explorer_triggered()
+void MainWindow::on_actionShow_in_File_Explorer_triggered()
 {
     if (!ui->graphicsView->getIsPixmapLoaded())
         return;
 
     const QFileInfo selectedFileInfo = ui->graphicsView->getSelectedFileInfo();
 
-    #if defined(Q_OS_WIN)
-
     QProcess process;
+
+    #if defined(Q_OS_WIN)
     process.startDetached("explorer", QStringList() << "/select," << QDir::toNativeSeparators(selectedFileInfo.absoluteFilePath()));
-    return;
     #elif defined(Q_OS_MACX)
-
-//    QProcess process;
-//    process.execute("/usr/bin/osascript", QStringList() << );
-
+    process.execute("open", QStringList() << "-R" << selectedFileInfo.absoluteFilePath());
     #elif defined(Q_OS_LINUX)
-
-
-
 
     #else
         QDesktopServices::openUrl(QUrl::fromLocalFile(fileDir.path()));
     #endif
+
+    return;
 }

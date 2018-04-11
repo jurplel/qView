@@ -40,6 +40,9 @@ public:
     QFileInfo getSelectedFileInfo() const;
     void setSelectedFileInfo(const QFileInfo &value);
 
+    bool getIsFilteringEnabled() const;
+    void setIsFilteringEnabled(bool value);
+
 protected:
     void wheelEvent(QWheelEvent *event) override;
 
@@ -68,6 +71,7 @@ private:
 
     bool isPixmapLoaded;
     bool isCursorEnabled;
+    bool isFilteringEnabled;
 
     QFileInfo selectedFileInfo;
 
