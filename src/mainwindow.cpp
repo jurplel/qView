@@ -13,6 +13,7 @@
 #include <QClipboard>
 #include <QCoreApplication>
 #include <QFileSystemWatcher>
+#include <QProcess>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -37,6 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //context menu items
     ui->graphicsView->addAction(ui->actionOpen);
+    ui->graphicsView->addAction(ui->actionView_in_File_Explorer);
     ui->graphicsView->addAction(ui->actionNext_File);
     ui->graphicsView->addAction(ui->actionPrevious_File);
     ui->graphicsView->addAction(ui->actionPaste);
@@ -136,4 +138,31 @@ void MainWindow::on_actionPrevious_File_triggered()
 void MainWindow::on_actionNext_File_triggered()
 {
     ui->graphicsView->nextFile();
+}
+
+void MainWindow::on_actionView_in_File_Explorer_triggered()
+{
+    if (!ui->graphicsView->getIsPixmapLoaded())
+        return;
+
+    const QFileInfo selectedFileInfo = ui->graphicsView->getSelectedFileInfo();
+
+    #if defined(Q_OS_WIN)
+
+    QProcess process;
+    process.startDetached("explorer", QStringList() << "/select," << QDir::toNativeSeparators(selectedFileInfo.absoluteFilePath()));
+    return;
+    #elif defined(Q_OS_MACX)
+
+//    QProcess process;
+//    process.execute("/usr/bin/osascript", QStringList() << );
+
+    #elif defined(Q_OS_LINUX)
+
+
+
+
+    #else
+        QDesktopServices::openUrl(QUrl::fromLocalFile(fileDir.path()));
+    #endif
 }

@@ -20,6 +20,8 @@ public:
     void nextFile();
     void previousFile();
 
+    void viewInFileExplorer();
+
     qreal getCurrentScale() const;
     void setCurrentScale(const qreal &value);
 
@@ -31,6 +33,12 @@ public:
 
     bool getIsCursorEnabled() const;
     void setIsCursorEnabled(bool value);
+
+    bool getIsPixmapLoaded() const;
+    void setIsPixmapLoaded(bool value);
+
+    QFileInfo getSelectedFileInfo() const;
+    void setSelectedFileInfo(const QFileInfo &value);
 
 protected:
     void wheelEvent(QWheelEvent *event) override;
@@ -61,8 +69,9 @@ private:
     bool isPixmapLoaded;
     bool isCursorEnabled;
 
-    QFileInfoList loadedFileFolder;
+    QFileInfo selectedFileInfo;
 
+    QFileInfoList loadedFileFolder;
     int loadedFileFolderIndex;
 
     const QStringList filterList = (QStringList() << "*.svg" << "*.bmp" << "*.gif" << "*.jpg" << "*.jpeg" << "*.png" << "*.pbm" << "*.pgm" << "*.ppm" << "*.xbm" << "*.xpm");

@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QWheelEvent>
 #include <QGraphicsPixmapItem>
+#include <QDesktopServices>
 
 QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 {
@@ -15,7 +16,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 void QVGraphicsView::resizeEvent(QResizeEvent *event)
 {
     QGraphicsView::resizeEvent(event);
-    if(isPixmapLoaded)
+    if (isPixmapLoaded)
     {
         resetScale();
     }
@@ -135,7 +136,7 @@ void QVGraphicsView::loadFile(QString fileName)
     loadedPixmapItem->setTransformationMode(Qt::SmoothTransformation);
     isPixmapLoaded = true;
 
-    const QFileInfo selectedFileInfo = QFileInfo(fileName);
+    selectedFileInfo = QFileInfo(fileName);
 
     const QDir fileDir = QDir(selectedFileInfo.path());
 
@@ -233,4 +234,24 @@ bool QVGraphicsView::getIsCursorEnabled() const
 void QVGraphicsView::setIsCursorEnabled(bool value)
 {
     isCursorEnabled = value;
+}
+
+QFileInfo QVGraphicsView::getSelectedFileInfo() const
+{
+    return selectedFileInfo;
+}
+
+void QVGraphicsView::setSelectedFileInfo(const QFileInfo &value)
+{
+    selectedFileInfo = value;
+}
+
+bool QVGraphicsView::getIsPixmapLoaded() const
+{
+    return isPixmapLoaded;
+}
+
+void QVGraphicsView::setIsPixmapLoaded(bool value)
+{
+    isPixmapLoaded = value;
 }

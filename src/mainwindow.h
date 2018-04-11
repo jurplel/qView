@@ -42,6 +42,8 @@ private slots:
 
     void on_actionNext_File_triggered();
 
+    void on_actionView_in_File_Explorer_triggered();
+
 private:
     Ui::MainWindow *ui;
 

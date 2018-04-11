@@ -15,16 +15,13 @@ TEMPLATE = app
 # allows use of version variable elsewhere
 DEFINES += "VERSION=$$VERSION"
 
-# build options
-win32:CONFIG += static # build static on windows
-
 # build folder organization
 DESTDIR = bin
 OBJECTS_DIR = intermediate
 MOC_DIR = intermediate
 UI_DIR = intermediate
 RCC_DIR = intermediate
-win32:CONFIG -= debug_and_release debug_and_release_target
+CONFIG -= debug_and_release debug_and_release_target
 
 
 # macOS specific stuff

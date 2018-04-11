@@ -99,7 +99,7 @@
      <x>0</x>
      <y>0</y>
      <width>640</width>
-     <height>22</height>
+     <height>20</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -112,6 +112,7 @@
     <addaction name="actionOpen"/>
     <addaction name="actionPrevious_File"/>
     <addaction name="actionNext_File"/>
+    <addaction name="actionView_in_File_Explorer"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -164,6 +165,11 @@
   <action name="actionNext_File">
    <property name="text">
     <string>Next File</string>
+   </property>
+  </action>
+  <action name="actionView_in_File_Explorer">
+   <property name="text">
+    <string>View in File Explorer</string>
    </property>
   </action>
  </widget>
