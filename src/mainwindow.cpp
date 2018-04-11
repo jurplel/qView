@@ -14,6 +14,7 @@
 #include <QCoreApplication>
 #include <QFileSystemWatcher>
 #include <QProcess>
+#include <QDesktopServices>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -33,9 +34,9 @@ MainWindow::MainWindow(QWidget *parent) :
     //change show in explorer text based on operating system
 
     #if defined(Q_OS_WIN)
-    ui->actionShow_in_File_Explorer->setText("Show in Explorer");
+    ui->actionOpen_Containing_Folder->setText("Show in Explorer");
     #elif defined(Q_OS_MACX)
-    ui->actionShow_in_File_Explorer->setText("Show in Finder");
+    ui->actionOpen_Containing_Folder->setText("Show in Finder");
     #endif
 
     //Keyboard Shortcuts
@@ -46,9 +47,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //context menu items
     ui->graphicsView->addAction(ui->actionOpen);
-    ui->graphicsView->addAction(ui->actionShow_in_File_Explorer);
     ui->graphicsView->addAction(ui->actionNext_File);
     ui->graphicsView->addAction(ui->actionPrevious_File);
+    ui->graphicsView->addAction(ui->actionOpen_Containing_Folder);
     ui->graphicsView->addAction(ui->actionPaste);
     ui->graphicsView->addAction(ui->actionOptions);
     ui->graphicsView->addAction(ui->actionAbout);
@@ -163,7 +164,7 @@ void MainWindow::on_actionNext_File_triggered()
     ui->graphicsView->nextFile();
 }
 
-void MainWindow::on_actionShow_in_File_Explorer_triggered()
+void MainWindow::on_actionOpen_Containing_Folder_triggered()
 {
     if (!ui->graphicsView->getIsPixmapLoaded())
         return;
@@ -176,10 +177,8 @@ void MainWindow::on_actionShow_in_File_Explorer_triggered()
     process.startDetached("explorer", QStringList() << "/select," << QDir::toNativeSeparators(selectedFileInfo.absoluteFilePath()));
     #elif defined(Q_OS_MACX)
     process.execute("open", QStringList() << "-R" << selectedFileInfo.absoluteFilePath());
-    #elif defined(Q_OS_LINUX)
-
     #else
-        QDesktopServices::openUrl(QUrl::fromLocalFile(fileDir.path()));
+        QDesktopServices::openUrl(selectedFileInfo.absolutePath());
     #endif
 
     return;

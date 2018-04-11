@@ -42,7 +42,7 @@ private slots:
 
     void on_actionNext_File_triggered();
 
-    void on_actionShow_in_File_Explorer_triggered();
+    void on_actionOpen_Containing_Folder_triggered();
 
 private:
     Ui::MainWindow *ui;

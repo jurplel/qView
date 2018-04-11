@@ -2,7 +2,6 @@
 #include <QDebug>
 #include <QWheelEvent>
 #include <QGraphicsPixmapItem>
-#include <QDesktopServices>
 
 QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 {

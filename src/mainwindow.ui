@@ -99,7 +99,7 @@
      <x>0</x>
      <y>0</y>
      <width>640</width>
-     <height>22</height>
+     <height>24</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -112,7 +112,7 @@
     <addaction name="actionOpen"/>
     <addaction name="actionPrevious_File"/>
     <addaction name="actionNext_File"/>
-    <addaction name="actionShow_in_File_Explorer"/>
+    <addaction name="actionOpen_Containing_Folder"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -122,13 +122,13 @@
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
-     <string>Edit</string>
+     <string>&amp;Edit</string>
     </property>
     <addaction name="actionPaste"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
-     <string>Tools</string>
+     <string>&amp;Tools</string>
     </property>
     <addaction name="actionOptions"/>
    </widget>
@@ -154,25 +154,28 @@
   </action>
   <action name="actionOptions">
    <property name="text">
-    <string>Options</string>
+    <string>&amp;Options</string>
    </property>
   </action>
   <action name="actionPrevious_File">
    <property name="text">
-    <string>Previous File</string>
+    <string>&amp;Previous File</string>
    </property>
   </action>
   <action name="actionNext_File">
    <property name="text">
-    <string>Next File</string>
+    <string>&amp;Next File</string>
    </property>
   </action>
-  <action name="actionShow_in_File_Explorer">
+  <action name="actionOpen_Containing_Folder">
    <property name="text">
-    <string>Show in File Explorer</string>
+    <string>&amp;Open Containing Folder</string>
+   </property>
+   <property name="iconText">
+    <string>Open Containing Folder</string>
    </property>
    <property name="toolTip">
-    <string>Show in File Explorer</string>
+    <string>Open Containing Folder</string>
    </property>
   </action>
  </widget>
