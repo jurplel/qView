@@ -63,7 +63,7 @@ void QVOptionsDialog::loadSettings()
 
     //filtering
     transientSettings.filteringenabled = settings.value("filteringenabled", true).toBool();
-    ui->cursorCheckbox->setChecked(transientSettings.filteringenabled);
+    ui->filteringCheckbox->setChecked(transientSettings.filteringenabled);
 }
 
 

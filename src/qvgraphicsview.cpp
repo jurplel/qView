@@ -67,7 +67,6 @@ void QVGraphicsView::mouseReleaseEvent(QMouseEvent *event)
 
 void QVGraphicsView::wheelEvent(QWheelEvent *event)
 {
-    qDebug() << fittedMatrix;
     const int DeltaY = event->angleDelta().y();
 
     if (getCurrentScale() < 1.0)
@@ -96,7 +95,6 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
     {
         centerOn(scene()->height()/2, scene()->width()/2);
     }
-    qDebug() << fittedMatrix;
 }
 
 
