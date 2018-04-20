@@ -7,6 +7,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 {
     scaleFactor = 0.25;
     isPixmapLoaded = false;
+    setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
 }
 
 
@@ -66,9 +67,10 @@ void QVGraphicsView::mouseReleaseEvent(QMouseEvent *event)
 
 void QVGraphicsView::wheelEvent(QWheelEvent *event)
 {
+    qDebug() << fittedMatrix;
     const int DeltaY = event->angleDelta().y();
 
-    if (getCurrentScale() <= 1.0)
+    if (getCurrentScale() < 1.0)
     {
         setTransformationAnchor(QGraphicsView::AnchorViewCenter);
     }
@@ -94,6 +96,7 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
     {
         centerOn(scene()->height()/2, scene()->width()/2);
     }
+    qDebug() << fittedMatrix;
 }
 
 
