@@ -208,7 +208,7 @@ void QVGraphicsView::fitInViewMarginless(const QRectF &rect, Qt::AspectRatioMode
         return;
     scale(1 / unity.width(), 1 / unity.height());
     // Find the ideal x / y scaling ratio to fit \a rect in the view.
-    int margin = 0;
+    int margin = -2;
     QRectF viewRect = viewport()->rect().adjusted(margin, margin, -margin, -margin);
     if (viewRect.isEmpty())
         return;
