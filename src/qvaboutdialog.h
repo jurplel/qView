@@ -2,6 +2,7 @@
 #define QVABOUTDIALOG_H
 
 #include <QDialog>
+#include <QtNetwork>
 
 namespace Ui {
 class QVAboutDialog;
@@ -15,7 +16,11 @@ public:
     explicit QVAboutDialog(QWidget *parent = 0);
     ~QVAboutDialog();
 
+private slots:
+    void checkUpdates(QNetworkReply* reply);
+
 private:
+    void requestUpdates();
     Ui::QVAboutDialog *ui;
 };
 
