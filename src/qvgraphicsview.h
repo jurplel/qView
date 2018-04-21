@@ -31,9 +31,6 @@ public:
     QGraphicsPixmapItem *getLoadedPixmapItem() const;
     void setLoadedPixmapItem(QGraphicsPixmapItem *value);
 
-    bool getIsCursorEnabled() const;
-    void setIsCursorEnabled(bool value);
-
     bool getIsPixmapLoaded() const;
     void setIsPixmapLoaded(bool value);
 
@@ -60,6 +57,8 @@ protected:
 
     void mouseReleaseEvent(QMouseEvent *event) override;
 
+    void fitInViewMarginless(const QRectF &rect, Qt::AspectRatioMode aspectRatioMode);
+
 private:
     qreal currentScale;
     qreal scaleFactor;
@@ -70,7 +69,6 @@ private:
     QTransform scaledMatrix;
 
     bool isPixmapLoaded;
-    bool isCursorEnabled;
     bool isFilteringEnabled;
 
     QFileInfo selectedFileInfo;

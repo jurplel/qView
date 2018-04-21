@@ -104,9 +104,6 @@ void MainWindow::loadSettings()
     }
     ui->graphicsView->setBackgroundBrush(newBrush);
 
-    //mousecursor
-    ui->graphicsView->setIsCursorEnabled(settings.value("cursorenabled", true).toBool());
-
     //filtering
     ui->graphicsView->setIsFilteringEnabled(settings.value("filteringenabled", true).toBool());
 

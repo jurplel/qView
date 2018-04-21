@@ -29,8 +29,6 @@ private slots:
 
     void on_buttonBox_clicked(QAbstractButton *button);
 
-    void on_cursorCheckbox_stateChanged(int arg1);
-
     void on_filteringCheckbox_stateChanged(int arg1);
 
 protected:
@@ -47,7 +45,6 @@ private:
     {
         QString bgcolor;
         bool bgcolorenabled;
-        bool cursorenabled;
         bool filteringenabled;
     };
 

@@ -48,10 +48,10 @@
        <string>Interface</string>
       </attribute>
       <layout class="QFormLayout" name="formLayout">
-       <item row="2" column="0">
-        <widget class="QCheckBox" name="cursorCheckbox">
+       <item row="0" column="0">
+        <widget class="QCheckBox" name="bgColorCheckbox">
          <property name="text">
-          <string>Use regular cursor when not dragging</string>
+          <string>Use background color</string>
          </property>
          <property name="checked">
           <bool>true</bool>
@@ -102,19 +102,6 @@
           </widget>
          </item>
         </layout>
-       </item>
-       <item row="0" column="0">
-        <widget class="QCheckBox" name="bgColorCheckbox">
-         <property name="text">
-          <string>Use background color</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-         <property name="tristate">
-          <bool>false</bool>
-         </property>
-        </widget>
        </item>
       </layout>
      </widget>

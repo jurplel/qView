@@ -52,16 +52,12 @@ void QVGraphicsView::dragLeaveEvent(QDragLeaveEvent *event)
 void QVGraphicsView::enterEvent(QEvent *event)
 {
     QGraphicsView::enterEvent(event);
-    if (!getIsCursorEnabled())
-        return;
     viewport()->setCursor(Qt::ArrowCursor);
 }
 
 void QVGraphicsView::mouseReleaseEvent(QMouseEvent *event)
 {
     QGraphicsView::mouseReleaseEvent(event);
-    if (!getIsCursorEnabled())
-        return;
     viewport()->setCursor(Qt::ArrowCursor);
 }
 
@@ -154,7 +150,7 @@ void QVGraphicsView::loadFile(QString fileName)
 
 void QVGraphicsView::resetScale()
 {
-    fitInView(loadedPixmapItem->boundingRect(), Qt::KeepAspectRatio);
+    fitInViewMarginless(loadedPixmapItem->boundingRect(), Qt::KeepAspectRatio);
     setCurrentScale(1.0);
     fittedMatrix = transform();
 }
@@ -201,6 +197,44 @@ void QVGraphicsView::previousFile()
     loadFile(previousImage.filePath());
 }
 
+void QVGraphicsView::fitInViewMarginless(const QRectF &rect, Qt::AspectRatioMode aspectRatioMode)
+{
+    if (!scene() || rect.isNull())
+        return;
+
+    // Reset the view scale to 1:1.
+    QRectF unity = matrix().mapRect(QRectF(0, 0, 1, 1));
+    if (unity.isEmpty())
+        return;
+    scale(1 / unity.width(), 1 / unity.height());
+    // Find the ideal x / y scaling ratio to fit \a rect in the view.
+    int margin = 0;
+    QRectF viewRect = viewport()->rect().adjusted(margin, margin, -margin, -margin);
+    if (viewRect.isEmpty())
+        return;
+    QRectF sceneRect = matrix().mapRect(rect);
+    if (sceneRect.isEmpty())
+        return;
+    qreal xratio = viewRect.width() / sceneRect.width();
+    qreal yratio = viewRect.height() / sceneRect.height();
+
+    // Respect the aspect ratio mode.
+    switch (aspectRatioMode) {
+    case Qt::KeepAspectRatio:
+        xratio = yratio = qMin(xratio, yratio);
+        break;
+    case Qt::KeepAspectRatioByExpanding:
+        xratio = yratio = qMax(xratio, yratio);
+        break;
+    case Qt::IgnoreAspectRatio:
+        break;
+    }
+
+    // Scale and center on the center of \a rect.
+    scale(xratio, yratio);
+    centerOn(rect.center());
+}
+
 // Getters & Setters
 
 QGraphicsPixmapItem *QVGraphicsView::getLoadedPixmapItem() const
@@ -231,16 +265,6 @@ qreal QVGraphicsView::getCurrentScale() const
 void QVGraphicsView::setCurrentScale(const qreal &value)
 {
     currentScale = value;
-}
-
-bool QVGraphicsView::getIsCursorEnabled() const
-{
-    return isCursorEnabled;
-}
-
-void QVGraphicsView::setIsCursorEnabled(bool value)
-{
-    isCursorEnabled = value;
 }
 
 QFileInfo QVGraphicsView::getSelectedFileInfo() const

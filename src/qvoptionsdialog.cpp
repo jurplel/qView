@@ -31,7 +31,6 @@ void QVOptionsDialog::saveSettings()
     QSettings settings;
     settings.setValue("bgcolor", transientSettings.bgcolor);
     settings.setValue("bgcolorenabled", transientSettings.bgcolorenabled);
-    settings.setValue("cursorenabled", transientSettings.cursorenabled);
     settings.setValue("filteringenabled", transientSettings.filteringenabled);
     emit optionsSaved();
 }
@@ -56,10 +55,6 @@ void QVOptionsDialog::loadSettings()
         ui->bgColorButton->setEnabled(false);
         ui->bgColorLabel->setEnabled(false);
     }
-
-    //mousecursor
-    transientSettings.cursorenabled = settings.value("cursorenabled", true).toBool();
-    ui->cursorCheckbox->setChecked(transientSettings.cursorenabled);
 
     //filtering
     transientSettings.filteringenabled = settings.value("filteringenabled", true).toBool();
@@ -104,18 +99,6 @@ void QVOptionsDialog::on_bgColorCheckbox_stateChanged(int arg1)
         transientSettings.bgcolorenabled = false;
         ui->bgColorButton->setEnabled(false);
         ui->bgColorLabel->setEnabled(false);
-    }
-}
-
-void QVOptionsDialog::on_cursorCheckbox_stateChanged(int arg1)
-{
-    if (arg1 > 0)
-    {
-        transientSettings.cursorenabled = true;
-    }
-    else
-    {
-        transientSettings.cursorenabled = false;
     }
 }
 
