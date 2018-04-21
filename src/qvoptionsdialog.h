@@ -31,6 +31,8 @@ private slots:
 
     void on_filteringCheckbox_stateChanged(int arg1);
 
+    void on_scalingCheckbox_stateChanged(int arg1);
+
 protected:
     virtual void showEvent(QShowEvent *event);
 
@@ -46,6 +48,7 @@ private:
         QString bgcolor;
         bool bgcolorenabled;
         bool filteringenabled;
+        bool scalingenabled;
     };
 
     STransientSettings transientSettings;

@@ -107,17 +107,8 @@ void MainWindow::loadSettings()
     //filtering
     ui->graphicsView->setIsFilteringEnabled(settings.value("filteringenabled", true).toBool());
 
-    if (ui->graphicsView->getIsPixmapLoaded())
-    {
-        if (ui->graphicsView->getIsFilteringEnabled())
-        {
-            ui->graphicsView->getLoadedPixmapItem()->setTransformationMode(Qt::SmoothTransformation);
-        }
-        else
-        {
-            ui->graphicsView->getLoadedPixmapItem()->setTransformationMode(Qt::FastTransformation);
-        }
-    }
+    //scaling
+    ui->graphicsView->setIsScalingEnabled(settings.value("scalingenabled", true).toBool());
 }
 
 void MainWindow::saveGeometrySettings()

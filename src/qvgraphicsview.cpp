@@ -74,17 +74,38 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
         setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
     }
 
-    if (DeltaY > 0)
+    if (getCurrentScale() <= 1.0 && getIsScalingEnabled())
     {
-        fittedMatrix = fittedMatrix * (scaleFactor+1);
-        setTransform(fittedMatrix);
-        setCurrentScale(getCurrentScale()+scaleFactor);
+        float oldPixmapItemHeight = loadedPixmapItem->pixmap().height();
+        float oldPixmapItemWidth = loadedPixmapItem->pixmap().width();
+        QPixmap scaledPixmap;
+        if (DeltaY > 0)
+        {
+            scaledPixmap = loadedPixmap.scaledToHeight(oldPixmapItemHeight * (scaleFactor+1), Qt::SmoothTransformation);
+            setCurrentScale(getCurrentScale()+scaleFactor);
+        }
+        else
+        {
+            scaledPixmap = loadedPixmap.scaledToHeight(oldPixmapItemHeight / (scaleFactor+1), Qt::SmoothTransformation);
+            setCurrentScale(getCurrentScale()-scaleFactor);
+        }
+        loadedPixmapItem->setPixmap(scaledPixmap);
+        loadedPixmapItem->moveBy((oldPixmapItemWidth-loadedPixmapItem->pixmap().width())/2, (oldPixmapItemHeight-loadedPixmapItem->pixmap().height())/2);
     }
     else
     {
-        fittedMatrix = fittedMatrix / (scaleFactor+1);
-        setTransform(fittedMatrix);
-        setCurrentScale(getCurrentScale()-scaleFactor);
+        if (DeltaY > 0)
+        {
+            fittedMatrix = fittedMatrix * (scaleFactor+1);
+            setTransform(fittedMatrix);
+            setCurrentScale(getCurrentScale()+scaleFactor);
+        }
+        else
+        {
+            fittedMatrix = fittedMatrix / (scaleFactor+1);
+            setTransform(fittedMatrix);
+            setCurrentScale(getCurrentScale()-scaleFactor);
+        }
     }
 
     if (getCurrentScale() <= 1.0)
@@ -129,7 +150,7 @@ void QVGraphicsView::loadFile(QString fileName)
     loadedPixmapItem = scene()->addPixmap(loadedPixmap);
     loadedPixmapItem->setOffset((50000.0 - loadedPixmap.width()/2), (50000.0 - loadedPixmap.height()/2));
     resetScale();
-    if (isFilteringEnabled)
+    if (getIsFilteringEnabled())
     {
         loadedPixmapItem->setTransformationMode(Qt::SmoothTransformation);
     }
@@ -150,6 +171,8 @@ void QVGraphicsView::loadFile(QString fileName)
 
 void QVGraphicsView::resetScale()
 {
+    loadedPixmapItem->setPixmap(loadedPixmap);
+    loadedPixmapItem->setPos(0,0);
     fitInViewMarginless(loadedPixmapItem->boundingRect(), Qt::KeepAspectRatio);
     setCurrentScale(1.0);
     fittedMatrix = transform();
@@ -295,4 +318,30 @@ bool QVGraphicsView::getIsFilteringEnabled() const
 void QVGraphicsView::setIsFilteringEnabled(bool value)
 {
     isFilteringEnabled = value;
+
+    if (getIsPixmapLoaded())
+    {
+        if (value)
+        {
+            getLoadedPixmapItem()->setTransformationMode(Qt::SmoothTransformation);
+        }
+        else
+        {
+            getLoadedPixmapItem()->setTransformationMode(Qt::FastTransformation);
+        }
+    }
+}
+
+bool QVGraphicsView::getIsScalingEnabled() const
+{
+    return isScalingEnabled;
+}
+
+void QVGraphicsView::setIsScalingEnabled(bool value)
+{
+    isScalingEnabled = value;
+    if (getIsPixmapLoaded())
+    {
+        resetScale();
+    }
 }

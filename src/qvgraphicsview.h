@@ -40,6 +40,9 @@ public:
     bool getIsFilteringEnabled() const;
     void setIsFilteringEnabled(bool value);
 
+    bool getIsScalingEnabled() const;
+    void setIsScalingEnabled(bool value);
+
 protected:
     void wheelEvent(QWheelEvent *event) override;
 
@@ -70,6 +73,7 @@ private:
 
     bool isPixmapLoaded;
     bool isFilteringEnabled;
+    bool isScalingEnabled;
 
     QFileInfo selectedFileInfo;
 

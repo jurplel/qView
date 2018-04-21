@@ -32,6 +32,7 @@ void QVOptionsDialog::saveSettings()
     settings.setValue("bgcolor", transientSettings.bgcolor);
     settings.setValue("bgcolorenabled", transientSettings.bgcolorenabled);
     settings.setValue("filteringenabled", transientSettings.filteringenabled);
+    settings.setValue("scalingenabled", transientSettings.scalingenabled);
     emit optionsSaved();
 }
 
@@ -59,6 +60,10 @@ void QVOptionsDialog::loadSettings()
     //filtering
     transientSettings.filteringenabled = settings.value("filteringenabled", true).toBool();
     ui->filteringCheckbox->setChecked(transientSettings.filteringenabled);
+
+    //scaling
+    transientSettings.scalingenabled = settings.value("scalingenabled", true).toBool();
+    ui->scalingCheckbox->setChecked(transientSettings.scalingenabled);
 }
 
 
@@ -111,5 +116,17 @@ void QVOptionsDialog::on_filteringCheckbox_stateChanged(int arg1)
     else
     {
         transientSettings.filteringenabled = false;
+    }
+}
+
+void QVOptionsDialog::on_scalingCheckbox_stateChanged(int arg1)
+{
+    if (arg1 > 0)
+    {
+        transientSettings.scalingenabled = true;
+    }
+    else
+    {
+        transientSettings.scalingenabled = false;
     }
 }
