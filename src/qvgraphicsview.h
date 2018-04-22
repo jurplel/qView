@@ -4,23 +4,31 @@
 #include <QGraphicsView>
 #include <QMimeData>
 #include <QDir>
+#include <QTimer>
 
 class QVGraphicsView : public QGraphicsView
 {
+    Q_OBJECT
 
 public:
     QVGraphicsView(QWidget *parent = nullptr);
 
-    void loadFile(QString fileName);
-
-    void resetScale();
+    enum class scaleMode
+    {
+       resetScale,
+       zoomIn,
+       zoomOut
+    };
+    Q_ENUM(scaleMode)
 
     void loadMimeData(const QMimeData *mimeData);
+    void loadFile(QString fileName);
+
+    void resetScale(bool timed);
+    void scaleExpensively(scaleMode mode);
 
     void nextFile();
     void previousFile();
-
-    void viewInFileExplorer();
 
     qreal getCurrentScale() const;
     void setCurrentScale(const qreal &value);
@@ -62,7 +70,13 @@ protected:
 
     void fitInViewMarginless(const QRectF &rect, Qt::AspectRatioMode aspectRatioMode);
 
+
+
+private slots:
+    void timerExpired();
+
 private:
+
     qreal currentScale;
     qreal scaleFactor;
 
@@ -70,6 +84,7 @@ private:
     QGraphicsPixmapItem *loadedPixmapItem;
     QTransform fittedMatrix;
     QTransform scaledMatrix;
+    QTimer *timer;
 
     bool isPixmapLoaded;
     bool isFilteringEnabled;
