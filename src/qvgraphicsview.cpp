@@ -72,6 +72,17 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
 
     const int DeltaY = event->angleDelta().y();
 
+    if (DeltaY > 0)
+    {
+        if (getCurrentScale() >= 8)
+        return;
+    }
+    else
+    {
+        if (getCurrentScale() <= -4)
+        return;
+    }
+
     if (getCurrentScale() < 1.0)
     {
         setTransformationAnchor(QGraphicsView::AnchorViewCenter);
@@ -126,6 +137,7 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
     {
         centerOn(loadedPixmapItem->boundingRect().center());
     }
+    qDebug() << getCurrentScale();
 }
 
 
