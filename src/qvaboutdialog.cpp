@@ -19,7 +19,7 @@ QVAboutDialog::QVAboutDialog(QWidget *parent) :
     fontDatabase.addApplicationFont(":/fonts/fonts/Lato-Regular.ttf");
 
     //set main title font
-    #if defined(Q_OS_MACX) || (Q_OS_WIN)
+    #if (defined Q_OS_MACX) || (defined Q_OS_WIN)
     const QFont font1 = QFont("Lato", 96, QFont::Light);
     #else
     const QFont font1 = QFont("Lato Light", 96, QFont::Light);

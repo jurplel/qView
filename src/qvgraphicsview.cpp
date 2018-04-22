@@ -10,7 +10,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
     timer = new QTimer(this);
     timer->setSingleShot(true);
-    timer->setInterval(75);
+    timer->setInterval(10);
     connect(timer, SIGNAL(timeout()), this, SLOT(timerExpired()));
 }
 
@@ -20,10 +20,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 void QVGraphicsView::resizeEvent(QResizeEvent *event)
 {
     QGraphicsView::resizeEvent(event);
-    if (getIsPixmapLoaded())
-    {
-        resetScale(true);
-    }
+    resetScale(true);
 }
 
 void QVGraphicsView::dropEvent(QDropEvent *event)
@@ -115,7 +112,6 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
         if (!(loadedPixmapItem->pixmap().height() == loadedPixmap.height()))
         {
             loadedPixmapItem->setPixmap(loadedPixmap);
-            loadedPixmapItem->setPos(0,0);
             fitInViewMarginless(loadedPixmapItem->boundingRect(), Qt::KeepAspectRatio);
             fittedMatrix = transform();
         }
@@ -137,7 +133,6 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
     {
         centerOn(loadedPixmapItem->boundingRect().center());
     }
-    qDebug() << getCurrentScale();
 }
 
 
@@ -174,6 +169,7 @@ void QVGraphicsView::loadFile(QString fileName)
 
     scene()->clear();
     loadedPixmapItem = scene()->addPixmap(loadedPixmap);
+    setIsPixmapLoaded(true);
     loadedPixmapItem->setOffset((50000.0 - loadedPixmap.width()/2), (50000.0 - loadedPixmap.height()/2));
     resetScale(true);
     if (getIsFilteringEnabled())
@@ -184,7 +180,6 @@ void QVGraphicsView::loadFile(QString fileName)
     {
         loadedPixmapItem->setTransformationMode(Qt::FastTransformation);
     }
-    isPixmapLoaded = true;
 
     selectedFileInfo = QFileInfo(fileName);
 
@@ -197,13 +192,18 @@ void QVGraphicsView::loadFile(QString fileName)
 
 void QVGraphicsView::resetScale(bool timed)
 {
-    loadedPixmapItem->setPixmap(loadedPixmap);
-    loadedPixmapItem->setPos(0,0);
+    if (!getIsPixmapLoaded())
+        return;
+
+    if (!getIsScalingEnabled())
+        loadedPixmapItem->setPixmap(loadedPixmap);
+
     fitInViewMarginless(loadedPixmapItem->boundingRect(), Qt::KeepAspectRatio);
-    setCurrentScale(1.0);
-    fittedMatrix = transform();
-    if (timed)
-        timer->start();
+
+    if (!getIsScalingEnabled())
+        return;
+
+    timer->start();
 }
 
 void QVGraphicsView::timerExpired()
@@ -222,9 +222,9 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
     switch (mode) {
     case scaleMode::resetScale:
     {
-        if (transform().m22() > 1.0)
-            return;
-        scaledPixmap = loadedPixmap.scaledToHeight(oldPixmapItemHeight * transform().m22(), Qt::SmoothTransformation);
+        loadedPixmapItem->setPixmap(loadedPixmap);
+        fitInViewMarginless(loadedPixmapItem->boundingRect(), Qt::KeepAspectRatio);
+        scaledPixmap = loadedPixmap.scaledToHeight(loadedPixmap.height() * transform().m22(), Qt::SmoothTransformation);
         break;
     }
     case scaleMode::zoomIn:
@@ -248,7 +248,6 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
     if (mode == scaleMode::resetScale)
     {
         fitInViewMarginless(loadedPixmapItem->boundingRect(), Qt::KeepAspectRatio);
-        fittedMatrix = transform();
     }
 }
 
@@ -330,6 +329,9 @@ void QVGraphicsView::fitInViewMarginless(const QRectF &rect, Qt::AspectRatioMode
     // Scale and center on the center of \a rect.
     scale(xratio, yratio);
     centerOn(rect.center());
+
+    fittedMatrix = transform();
+    setCurrentScale(1.0);
 }
 
 // Getters & Setters
