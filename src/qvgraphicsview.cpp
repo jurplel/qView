@@ -20,7 +20,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 void QVGraphicsView::resizeEvent(QResizeEvent *event)
 {
     QGraphicsView::resizeEvent(event);
-    resetScale(true);
+    resetScale();
 }
 
 void QVGraphicsView::dropEvent(QDropEvent *event)
@@ -100,7 +100,7 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
         {
             if (getCurrentScale() == scaleFactor+1)
             {
-                resetScale(true);
+                resetScale();
                 return;
             }
             scaleExpensively(scaleMode::zoomOut);
@@ -171,7 +171,7 @@ void QVGraphicsView::loadFile(QString fileName)
     loadedPixmapItem = scene()->addPixmap(loadedPixmap);
     setIsPixmapLoaded(true);
     loadedPixmapItem->setOffset((50000.0 - loadedPixmap.width()/2), (50000.0 - loadedPixmap.height()/2));
-    resetScale(true);
+    resetScale();
     if (getIsFilteringEnabled())
     {
         loadedPixmapItem->setTransformationMode(Qt::SmoothTransformation);
@@ -190,7 +190,7 @@ void QVGraphicsView::loadFile(QString fileName)
     loadedFileFolderIndex = loadedFileFolder.indexOf(selectedFileInfo);
 }
 
-void QVGraphicsView::resetScale(bool timed)
+void QVGraphicsView::resetScale()
 {
     if (!getIsPixmapLoaded())
         return;
@@ -418,6 +418,6 @@ void QVGraphicsView::setIsScalingEnabled(bool value)
     isScalingEnabled = value;
     if (getIsPixmapLoaded())
     {
-        resetScale(true);
+        resetScale();
     }
 }

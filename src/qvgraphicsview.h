@@ -24,7 +24,7 @@ public:
     void loadMimeData(const QMimeData *mimeData);
     void loadFile(QString fileName);
 
-    void resetScale(bool timed);
+    void resetScale();
     void scaleExpensively(scaleMode mode);
 
     void nextFile();
