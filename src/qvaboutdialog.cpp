@@ -18,28 +18,32 @@ QVAboutDialog::QVAboutDialog(QWidget *parent) :
     fontDatabase.addApplicationFont(":/fonts/fonts/Lato-Light.ttf");
     fontDatabase.addApplicationFont(":/fonts/fonts/Lato-Regular.ttf");
 
+    int modifier = 0;
     //set main title font
-    #if (defined Q_OS_MACX) || (defined Q_OS_WIN)
+    #if (defined Q_OS_WIN)
     const QFont font1 = QFont("Lato", 72, QFont::Light);
+    #elif (defined Q_OS_MACX)
+    const QFont font1 = QFont("Lato", 96, QFont::Light);
+    modifier = 2;
     #else
     const QFont font1 = QFont("Lato Light", 72, QFont::Light);
     #endif
     ui->logoLabel->setFont(font1);
 
     //set subtitle font & text
-    const QFont font2 = QFont("Lato", 18, QFont::Normal);
+    const QFont font2 = QFont("Lato", 18 + modifier, QFont::Normal);
     const QString subtitleText = QString("version %1").arg(VERSION);
     ui->subtitleLabel->setFont(font2);
     ui->subtitleLabel->setText(subtitleText);
 
     //set update font & text
-    const QFont font3 = QFont("Lato", 10, QFont::Normal);
+    const QFont font3 = QFont("Lato", 10 + modifier, QFont::Normal);
     const QString updateText = QString("Checking for updates...");
     ui->updateLabel->setFont(font3);
     ui->updateLabel->setText(updateText);
 
     //set infolabel2 font, text, and properties
-    const QFont font5 = QFont("Lato", 8, QFont::Normal);
+    const QFont font5 = QFont("Lato", 8 + modifier, QFont::Normal);
     const QString labelText2 = QString("Built with Qt %2<br>Source code available under GPLv3 at <a style=\"color: #03A9F4; text-decoration:none;\" href=\"https://github.com/jeep70/qView\">Github</a><br>Icon glyph created by Guilhem from the Noun Project<br>Copyright © 2018-%1, jurplel and qView contributors").arg(QDate::currentDate().year()).arg(QT_VERSION_STR);
     ui->infoLabel2->setFont(font5);
     ui->infoLabel2->setText(labelText2);
