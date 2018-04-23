@@ -39,7 +39,7 @@ QVAboutDialog::QVAboutDialog(QWidget *parent) :
     ui->updateLabel->setText(updateText);
 
     //set infolabel2 font, text, and properties
-    const QFont font5 = QFont("Lato", 7, QFont::Normal);
+    const QFont font5 = QFont("Lato", 8, QFont::Normal);
     const QString labelText2 = QString("Built with Qt %2<br>Source code available under GPLv3 at <a style=\"color: #03A9F4; text-decoration:none;\" href=\"https://github.com/jeep70/qView\">Github</a><br>Icon glyph created by Guilhem from the Noun Project<br>Copyright © 2018-%1, jurplel and qView contributors").arg(QDate::currentDate().year()).arg(QT_VERSION_STR);
     ui->infoLabel2->setFont(font5);
     ui->infoLabel2->setText(labelText2);
