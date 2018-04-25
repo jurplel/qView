@@ -1,4 +1,4 @@
 # qView
-Simple Qt image viewer
+Practical and Minimal Image Viewer
 
-Not ready for production yet, intended to be similar to pViewer but cross-platform.
+http://interverse.tk/qview/
