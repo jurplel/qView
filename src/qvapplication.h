@@ -7,10 +7,12 @@
 
 class QVApplication : public QApplication
 {
+    Q_OBJECT
+
 public:
     QVApplication(int &argc, char **argv);
 
-    bool event(QEvent *event);
+    bool event(QEvent *event) override;
 
     MainWindow* getMainWindow();
 };

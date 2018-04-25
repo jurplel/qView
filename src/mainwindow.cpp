@@ -72,8 +72,11 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::pickFile()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open"), "", tr("Images (*.svg *.bmp *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm);;All Files (*)"));
-    openFile(fileName);
+//    QString fileName = QFileDialog::getOpenFileName(this, tr("Open"), "", tr("Images (*.svg *.bmp *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm);;All Files (*)"));
+
+    QFileDialog *fileDialog = new QFileDialog(this, tr("Open"), "", tr("Images (*.svg *.bmp *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm);;All Files (*)"));
+    fileDialog->open();
+    connect(fileDialog, &QFileDialog::fileSelected, this, &MainWindow::openFile);
 }
 
 void MainWindow::openFile(QString fileName)

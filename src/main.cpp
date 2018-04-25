@@ -2,6 +2,7 @@
 #include "qvapplication.h"
 #include <QCommandLineParser>
 #include <QCommandLineOption>
+#include <QMenu>
 
 int main(int argc, char *argv[])
 {
@@ -17,6 +18,7 @@ int main(int argc, char *argv[])
 
     MainWindow w;
     w.show();
+
     if (!parser.positionalArguments().isEmpty())
         w.openFile(parser.positionalArguments().first());
 

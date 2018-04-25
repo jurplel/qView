@@ -17,15 +17,17 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    void openFile(QString fileName);
-
     bool getIsPixmapLoaded() const;
     void setIsPixmapLoaded(bool value);
+
+public slots:
+    void openFile(QString fileName);
 
 protected:
     void closeEvent(QCloseEvent *event) override;
 
 private slots:
+
     void loadSettings();
 
     void saveGeometrySettings();
