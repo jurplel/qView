@@ -1,4 +1,4 @@
 # qView
-Simple Qt image viewer
+Practical and Minimal Image Viewer
 
 http://interverse.tk/qview/
