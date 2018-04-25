@@ -1,3 +1,4 @@
+#include "mainwindow.h"
 #include "qvgraphicsview.h"
 #include <QDebug>
 #include <QWheelEvent>
@@ -166,6 +167,8 @@ void QVGraphicsView::loadFile(QString fileName)
 
     if(loadedPixmap.isNull())
         return;
+
+    ((MainWindow*)parentWidget()->parentWidget())->setWindowTitle("qView (" + fileName + ") (" + QString::number(loadedPixmap.width()) + " x " + QString::number(loadedPixmap.height()) +")");
 
     scene()->clear();
     loadedPixmapItem = scene()->addPixmap(loadedPixmap);
