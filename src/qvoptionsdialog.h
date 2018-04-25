@@ -17,8 +17,6 @@ public:
     explicit QVOptionsDialog(QWidget *parent = 0);
     ~QVOptionsDialog();
 
-    void setBgColorButtonColor(QColor newColor);
-
 signals:
     void optionsSaved();
 
@@ -33,6 +31,8 @@ private slots:
 
     void on_scalingCheckbox_stateChanged(int arg1);
 
+    void on_titlebarModeComboBox_currentIndexChanged(int index);
+
 protected:
     virtual void showEvent(QShowEvent *event);
 
@@ -45,10 +45,11 @@ private:
 
     struct STransientSettings
     {
-        QString bgcolor;
-        bool bgcolorenabled;
-        bool filteringenabled;
-        bool scalingenabled;
+        QString bgColor;
+        bool bgColorEnabled;
+        bool filteringEnabled;
+        bool scalingEnabled;
+        int titlebarMode;
     };
 
     STransientSettings transientSettings;

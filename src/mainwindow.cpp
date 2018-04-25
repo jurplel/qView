@@ -112,6 +112,9 @@ void MainWindow::loadSettings()
 
     //scaling
     ui->graphicsView->setIsScalingEnabled(settings.value("scalingenabled", true).toBool());
+
+    //titlebar
+    ui->graphicsView->setTitlebarMode(settings.value("titlebarmode", 1).toInt());
 }
 
 void MainWindow::saveGeometrySettings()

@@ -29,10 +29,11 @@ void QVOptionsDialog::showEvent(QShowEvent *event)
 void QVOptionsDialog::saveSettings()
 {
     QSettings settings;
-    settings.setValue("bgcolor", transientSettings.bgcolor);
-    settings.setValue("bgcolorenabled", transientSettings.bgcolorenabled);
-    settings.setValue("filteringenabled", transientSettings.filteringenabled);
-    settings.setValue("scalingenabled", transientSettings.scalingenabled);
+    settings.setValue("bgcolor", transientSettings.bgColor);
+    settings.setValue("bgcolorenabled", transientSettings.bgColorEnabled);
+    settings.setValue("filteringenabled", transientSettings.filteringEnabled);
+    settings.setValue("scalingenabled", transientSettings.scalingEnabled);
+    settings.setValue("titlebarmode", transientSettings.titlebarMode);
     emit optionsSaved();
 }
 
@@ -41,12 +42,12 @@ void QVOptionsDialog::loadSettings()
     QSettings settings;
 
     //bgcolor
-    transientSettings.bgcolor = settings.value("bgcolor", QString("#212121")).toString();
-    loadedColor.setNamedColor(transientSettings.bgcolor);
-    setBgColorButtonColor(loadedColor);
+    transientSettings.bgColor = settings.value("bgcolor", QString("#212121")).toString();
+    loadedColor.setNamedColor(transientSettings.bgColor);
+    ui->bgColorButton->setText(loadedColor.name());
 
-    transientSettings.bgcolorenabled = settings.value("bgcolorenabled", true).toBool();
-    if (transientSettings.bgcolorenabled)
+    transientSettings.bgColorEnabled = settings.value("bgcolorenabled", true).toBool();
+    if (transientSettings.bgColorEnabled)
     {
         ui->bgColorCheckbox->setChecked(true);
     }
@@ -58,12 +59,16 @@ void QVOptionsDialog::loadSettings()
     }
 
     //filtering
-    transientSettings.filteringenabled = settings.value("filteringenabled", true).toBool();
-    ui->filteringCheckbox->setChecked(transientSettings.filteringenabled);
+    transientSettings.filteringEnabled = settings.value("filteringenabled", true).toBool();
+    ui->filteringCheckbox->setChecked(transientSettings.filteringEnabled);
 
     //scaling
-    transientSettings.scalingenabled = settings.value("scalingenabled", true).toBool();
-    ui->scalingCheckbox->setChecked(transientSettings.scalingenabled);
+    transientSettings.scalingEnabled = settings.value("scalingenabled", true).toBool();
+    ui->scalingCheckbox->setChecked(transientSettings.scalingEnabled);
+
+    //titlebar
+    transientSettings.titlebarMode = settings.value("titlebarmode", 1).toInt();
+    ui->titlebarModeComboBox->setCurrentIndex(transientSettings.titlebarMode);
 }
 
 
@@ -74,13 +79,8 @@ void QVOptionsDialog::on_bgColorButton_clicked()
     if (!selectedColor.isValid())
         return;
 
-    transientSettings.bgcolor = selectedColor.name();
-    setBgColorButtonColor(selectedColor);
-}
-
-void QVOptionsDialog::setBgColorButtonColor(QColor newColor)
-{
-    ui->bgColorButton->setText(newColor.name());
+    transientSettings.bgColor = selectedColor.name();
+    ui->bgColorButton->setText(selectedColor.name());
 }
 
 void QVOptionsDialog::on_buttonBox_clicked(QAbstractButton *button)
@@ -95,13 +95,13 @@ void QVOptionsDialog::on_bgColorCheckbox_stateChanged(int arg1)
 {
     if (arg1 > 0)
     {
-        transientSettings.bgcolorenabled = true;
+        transientSettings.bgColorEnabled = true;
         ui->bgColorButton->setEnabled(true);
         ui->bgColorLabel->setEnabled(true);
     }
     else
     {
-        transientSettings.bgcolorenabled = false;
+        transientSettings.bgColorEnabled = false;
         ui->bgColorButton->setEnabled(false);
         ui->bgColorLabel->setEnabled(false);
     }
@@ -111,11 +111,11 @@ void QVOptionsDialog::on_filteringCheckbox_stateChanged(int arg1)
 {
     if (arg1 > 0)
     {
-        transientSettings.filteringenabled = true;
+        transientSettings.filteringEnabled = true;
     }
     else
     {
-        transientSettings.filteringenabled = false;
+        transientSettings.filteringEnabled = false;
     }
 }
 
@@ -123,10 +123,15 @@ void QVOptionsDialog::on_scalingCheckbox_stateChanged(int arg1)
 {
     if (arg1 > 0)
     {
-        transientSettings.scalingenabled = true;
+        transientSettings.scalingEnabled = true;
     }
     else
     {
-        transientSettings.scalingenabled = false;
+        transientSettings.scalingEnabled = false;
     }
+}
+
+void QVOptionsDialog::on_titlebarModeComboBox_currentIndexChanged(int index)
+{
+    transientSettings.titlebarMode = index;
 }

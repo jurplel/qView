@@ -23,6 +23,7 @@ public:
 
     void loadMimeData(const QMimeData *mimeData);
     void loadFile(QString fileName);
+    void setWindowTitle();
 
     void resetScale();
     void scaleExpensively(scaleMode mode);
@@ -50,6 +51,9 @@ public:
 
     bool getIsScalingEnabled() const;
     void setIsScalingEnabled(bool value);
+
+    int getTitlebarMode() const;
+    void setTitlebarMode(int value);
 
 protected:
     void wheelEvent(QWheelEvent *event) override;
@@ -89,6 +93,7 @@ private:
     bool isPixmapLoaded;
     bool isFilteringEnabled;
     bool isScalingEnabled;
+    int titlebarMode;
 
     QFileInfo selectedFileInfo;
 

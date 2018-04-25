@@ -168,8 +168,6 @@ void QVGraphicsView::loadFile(QString fileName)
     if(loadedPixmap.isNull())
         return;
 
-    ((MainWindow*)parentWidget()->parentWidget())->setWindowTitle("qView (" + fileName + ") (" + QString::number(loadedPixmap.width()) + " x " + QString::number(loadedPixmap.height()) +")");
-
     scene()->clear();
     loadedPixmapItem = scene()->addPixmap(loadedPixmap);
     setIsPixmapLoaded(true);
@@ -191,6 +189,36 @@ void QVGraphicsView::loadFile(QString fileName)
     loadedFileFolder = fileDir.entryInfoList(filterList, QDir::Files);
 
     loadedFileFolderIndex = loadedFileFolder.indexOf(selectedFileInfo);
+
+    setWindowTitle();
+}
+
+void QVGraphicsView::setWindowTitle()
+{
+    MainWindow *parentMainWindow = ((MainWindow*)parentWidget()->parentWidget());
+
+
+    switch (getTitlebarMode()) {
+    case 0:
+    {
+        parentMainWindow->setWindowTitle("qView");
+        break;
+    }
+    case 1:
+    {
+        if (isPixmapLoaded)
+            parentMainWindow->setWindowTitle(selectedFileInfo.fileName());
+        break;
+    }
+    case 2:
+    {
+        if (isPixmapLoaded)
+            parentMainWindow->setWindowTitle("qView (" + selectedFileInfo.filePath() + ") (" + QString::number(loadedPixmap.width()) + "x" + QString::number(loadedPixmap.height()) + ")");
+        break;
+    }
+    default:
+        break;
+    }
 }
 
 void QVGraphicsView::resetScale()
@@ -423,4 +451,15 @@ void QVGraphicsView::setIsScalingEnabled(bool value)
     {
         resetScale();
     }
+}
+
+int QVGraphicsView::getTitlebarMode() const
+{
+    return titlebarMode;
+}
+
+void QVGraphicsView::setTitlebarMode(int value)
+{
+    titlebarMode = value;
+    setWindowTitle();
 }
