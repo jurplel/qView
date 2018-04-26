@@ -2,7 +2,6 @@
 #include "ui_qvaboutdialog.h"
 #include <QFontDatabase>
 #include <QDate>
-#include <QDebug>
 #include <QJsonDocument>
 
 QVAboutDialog::QVAboutDialog(QWidget *parent) :
@@ -11,6 +10,7 @@ QVAboutDialog::QVAboutDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    setAttribute(Qt::WA_DeleteOnClose);
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
     // add fonts

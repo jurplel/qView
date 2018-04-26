@@ -24,6 +24,8 @@ public slots:
     void openFile(QString fileName);
 
 protected:
+    void showEvent(QShowEvent *event) override;
+
     void closeEvent(QCloseEvent *event) override;
 
 private slots:
@@ -45,6 +47,8 @@ private slots:
     void on_actionNext_File_triggered();
 
     void on_actionOpen_Containing_Folder_triggered();
+
+    void on_actionWelcome_triggered();
 
 private:
     Ui::MainWindow *ui;

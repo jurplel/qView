@@ -10,6 +10,7 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    setAttribute(Qt::WA_DeleteOnClose);
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 }
 
@@ -24,7 +25,6 @@ void QVOptionsDialog::showEvent(QShowEvent *event)
     QDialog::showEvent(event);
     loadSettings();
 }
-
 
 void QVOptionsDialog::saveSettings()
 {

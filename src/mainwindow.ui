@@ -99,7 +99,7 @@
      <x>0</x>
      <y>0</y>
      <width>640</width>
-     <height>24</height>
+     <height>22</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -118,6 +118,7 @@
     <property name="title">
      <string>&amp;Help</string>
     </property>
+    <addaction name="actionWelcome"/>
     <addaction name="actionAbout"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
@@ -176,6 +177,14 @@
    </property>
    <property name="toolTip">
     <string>Open Containing Folder</string>
+   </property>
+  </action>
+  <action name="actionWelcome">
+   <property name="text">
+    <string>&amp;Welcome</string>
+   </property>
+   <property name="toolTip">
+    <string>Welcome</string>
    </property>
   </action>
  </widget>

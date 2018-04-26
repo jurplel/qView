@@ -172,7 +172,6 @@ void QVGraphicsView::loadFile(QString fileName)
     loadedPixmapItem = scene()->addPixmap(loadedPixmap);
     setIsPixmapLoaded(true);
     loadedPixmapItem->setOffset((50000.0 - loadedPixmap.width()/2), (50000.0 - loadedPixmap.height()/2));
-    resetScale();
     if (getIsFilteringEnabled())
     {
         loadedPixmapItem->setTransformationMode(Qt::SmoothTransformation);
@@ -181,6 +180,8 @@ void QVGraphicsView::loadFile(QString fileName)
     {
         loadedPixmapItem->setTransformationMode(Qt::FastTransformation);
     }
+
+    resetScale();
 
     selectedFileInfo = QFileInfo(fileName);
 
@@ -195,8 +196,10 @@ void QVGraphicsView::loadFile(QString fileName)
 
 void QVGraphicsView::setWindowTitle()
 {
-    MainWindow *parentMainWindow = ((MainWindow*)parentWidget()->parentWidget());
+    if (!isPixmapLoaded)
+        return;
 
+    MainWindow *parentMainWindow = ((MainWindow*)parentWidget()->parentWidget());
 
     switch (getTitlebarMode()) {
     case 0:
@@ -206,13 +209,11 @@ void QVGraphicsView::setWindowTitle()
     }
     case 1:
     {
-        if (isPixmapLoaded)
             parentMainWindow->setWindowTitle(selectedFileInfo.fileName());
         break;
     }
     case 2:
     {
-        if (isPixmapLoaded)
             parentMainWindow->setWindowTitle("qView (" + selectedFileInfo.filePath() + ") (" + QString::number(loadedPixmap.width()) + "x" + QString::number(loadedPixmap.height()) + ")");
         break;
     }

@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "qvoptionsdialog.h"
 #include "qvaboutdialog.h"
+#include "qvwelcomedialog.h"
 #include "qvapplication.h"
 #include <QFileDialog>
 #include <QMessageBox>
@@ -52,6 +53,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->graphicsView->addAction(ui->actionOpen_Containing_Folder);
     ui->graphicsView->addAction(ui->actionPaste);
     ui->graphicsView->addAction(ui->actionOptions);
+    ui->graphicsView->addAction(ui->actionWelcome);
     ui->graphicsView->addAction(ui->actionAbout);
 
     //qgraphicsscene setup
@@ -64,6 +66,18 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::showEvent(QShowEvent *event)
+{
+    QMainWindow::showEvent(event);
+
+    QSettings settings;
+    if (settings.value("firstlaunch", false).toBool())
+        return;
+
+    settings.setValue("firstlaunch", true);
+    QTimer::singleShot(100, this, &MainWindow::on_actionWelcome_triggered);
+}
+
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     saveGeometrySettings();
@@ -72,8 +86,6 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::pickFile()
 {
-//    QString fileName = QFileDialog::getOpenFileName(this, tr("Open"), "", tr("Images (*.svg *.bmp *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm);;All Files (*)"));
-
     QFileDialog *fileDialog = new QFileDialog(this, tr("Open"), "", tr("Images (*.svg *.bmp *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm);;All Files (*)"));
     fileDialog->open();
     connect(fileDialog, &QFileDialog::fileSelected, this, &MainWindow::openFile);
@@ -122,6 +134,7 @@ void MainWindow::saveGeometrySettings()
     QSettings settings;
     settings.setValue("geometry", saveGeometry());
 }
+
 // Actions
 
 void MainWindow::on_actionOpen_triggered()
@@ -144,8 +157,9 @@ void MainWindow::on_actionOptions_triggered()
 {
     QVOptionsDialog *options = new QVOptionsDialog(this);
     options->open();
-    connect(options, SIGNAL(optionsSaved()), this, SLOT(saveGeometrySettings()));
-    connect(options, SIGNAL(optionsSaved()), this, SLOT(loadSettings()));
+
+    connect(options, &QVOptionsDialog::optionsSaved, this, &MainWindow::saveGeometrySettings);
+    connect(options, &QVOptionsDialog::optionsSaved, this, &MainWindow::loadSettings);
 }
 
 void MainWindow::on_actionPrevious_File_triggered()
@@ -176,4 +190,10 @@ void MainWindow::on_actionOpen_Containing_Folder_triggered()
     #endif
 
     return;
+}
+
+void MainWindow::on_actionWelcome_triggered()
+{
+    QVWelcomeDialog *welcome = new QVWelcomeDialog(this);
+    welcome->exec();
 }

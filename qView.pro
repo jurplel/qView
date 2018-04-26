@@ -75,19 +75,22 @@ SOURCES += \
     src/qvgraphicsview.cpp \
     src/qvoptionsdialog.cpp \
     src/qvapplication.cpp \
-    src/qvaboutdialog.cpp
+    src/qvaboutdialog.cpp \
+    src/qvwelcomedialog.cpp
 
 HEADERS += \
         src/mainwindow.h \
     src/qvgraphicsview.h \
     src/qvoptionsdialog.h \
     src/qvapplication.h \
-    src/qvaboutdialog.h
+    src/qvaboutdialog.h \
+    src/qvwelcomedialog.h
 
 FORMS += \
         src/mainwindow.ui \
     src/qvoptionsdialog.ui \
-    src/qvaboutdialog.ui
+    src/qvaboutdialog.ui \
+    src/qvwelcomedialog.ui
 
 RESOURCES += \
     src/resources.qrc
