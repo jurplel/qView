@@ -56,6 +56,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->graphicsView->addAction(ui->actionPaste);
     ui->graphicsView->addAction(ui->actionRotate_Right);
     ui->graphicsView->addAction(ui->actionRotate_Left);
+    ui->graphicsView->addAction(ui->actionFlip_Horizontally);
+    ui->graphicsView->addAction(ui->actionFlip_Vertically);
     ui->graphicsView->addAction(ui->actionOptions);
     ui->graphicsView->addAction(ui->actionWelcome);
     ui->graphicsView->addAction(ui->actionAbout);
@@ -214,3 +216,13 @@ void MainWindow::on_actionWelcome_triggered()
     welcome->exec();
 }
 
+
+void MainWindow::on_actionFlip_Horizontally_triggered()
+{
+    ui->graphicsView->scale(-1, 1);
+}
+
+void MainWindow::on_actionFlip_Vertically_triggered()
+{
+    ui->graphicsView->scale(1, -1);
+}

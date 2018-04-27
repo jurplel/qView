@@ -139,6 +139,8 @@
     </property>
     <addaction name="actionRotate_Right"/>
     <addaction name="actionRotate_Left"/>
+    <addaction name="actionFlip_Horizontally"/>
+    <addaction name="actionFlip_Vertically"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -203,6 +205,16 @@
   <action name="actionRotate_Left">
    <property name="text">
     <string>Rotate Left</string>
+   </property>
+  </action>
+  <action name="actionFlip_Horizontally">
+   <property name="text">
+    <string>Flip Horizontally</string>
+   </property>
+  </action>
+  <action name="actionFlip_Vertically">
+   <property name="text">
+    <string>Flip Vertically</string>
    </property>
   </action>
  </widget>
