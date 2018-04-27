@@ -45,6 +45,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionNext_File->setShortcut(Qt::Key_Right);
     ui->actionPrevious_File->setShortcut(Qt::Key_Left);
     ui->actionPaste->setShortcut(QKeySequence::Paste);
+    ui->actionRotate_Right->setShortcut(Qt::Key_Up);
+    ui->actionRotate_Left->setShortcut(Qt::Key_Down);
 
     //context menu items
     ui->graphicsView->addAction(ui->actionOpen);
@@ -52,6 +54,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->graphicsView->addAction(ui->actionPrevious_File);
     ui->graphicsView->addAction(ui->actionOpen_Containing_Folder);
     ui->graphicsView->addAction(ui->actionPaste);
+    ui->graphicsView->addAction(ui->actionRotate_Right);
+    ui->graphicsView->addAction(ui->actionRotate_Left);
     ui->graphicsView->addAction(ui->actionOptions);
     ui->graphicsView->addAction(ui->actionWelcome);
     ui->graphicsView->addAction(ui->actionAbout);
@@ -162,14 +166,14 @@ void MainWindow::on_actionOptions_triggered()
     connect(options, &QVOptionsDialog::optionsSaved, this, &MainWindow::loadSettings);
 }
 
-void MainWindow::on_actionPrevious_File_triggered()
-{
-    ui->graphicsView->previousFile();
-}
-
 void MainWindow::on_actionNext_File_triggered()
 {
     ui->graphicsView->nextFile();
+}
+
+void MainWindow::on_actionPrevious_File_triggered()
+{
+    ui->graphicsView->previousFile();
 }
 
 void MainWindow::on_actionOpen_Containing_Folder_triggered()
@@ -192,8 +196,21 @@ void MainWindow::on_actionOpen_Containing_Folder_triggered()
     return;
 }
 
+void MainWindow::on_actionRotate_Right_triggered()
+{
+    ui->graphicsView->rotate(90);
+    ui->graphicsView->resetScale();
+}
+
+void MainWindow::on_actionRotate_Left_triggered()
+{
+    ui->graphicsView->rotate(-90);
+    ui->graphicsView->resetScale();
+}
+
 void MainWindow::on_actionWelcome_triggered()
 {
     QVWelcomeDialog *welcome = new QVWelcomeDialog(this);
     welcome->exec();
 }
+

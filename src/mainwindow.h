@@ -50,6 +50,10 @@ private slots:
 
     void on_actionWelcome_triggered();
 
+    void on_actionRotate_Right_triggered();
+
+    void on_actionRotate_Left_triggered();
+
 private:
     Ui::MainWindow *ui;
 

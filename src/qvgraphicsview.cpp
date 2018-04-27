@@ -250,13 +250,17 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
 
     float oldPixmapItemHeight = loadedPixmapItem->pixmap().height();
     QPixmap scaledPixmap;
-
     switch (mode) {
     case scaleMode::resetScale:
     {
-        loadedPixmapItem->setPixmap(loadedPixmap);
-        fitInViewMarginless(loadedPixmapItem->boundingRect(), Qt::KeepAspectRatio);
-        scaledPixmap = loadedPixmap.scaledToHeight(loadedPixmap.height() * transform().m22(), Qt::SmoothTransformation);
+        if (height() < width())
+        {
+            scaledPixmap = loadedPixmap.scaledToHeight(height(), Qt::SmoothTransformation);
+        }
+        else
+        {
+            scaledPixmap = loadedPixmap.scaledToWidth(width(), Qt::SmoothTransformation);
+        }
         break;
     }
     case scaleMode::zoomIn:
@@ -274,8 +278,6 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
     }
 
     loadedPixmapItem->setPixmap(scaledPixmap);
-    loadedPixmapItem->boundingRect().setWidth(loadedPixmapItem->pixmap().width());
-    loadedPixmapItem->boundingRect().setHeight(loadedPixmapItem->pixmap().height());
 
     if (mode == scaleMode::resetScale)
     {
