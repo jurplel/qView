@@ -4,5 +4,5 @@
 
 <p align=center>
 <a href="https://interverse.tk/qview">Website</a> | 
-<a href="https://github.com/lhc70000/iina/releases">Releases</a>
+<a href="https://github.com/jeep70/qView/releases">Releases</a>
 </p>
