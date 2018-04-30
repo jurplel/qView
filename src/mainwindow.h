@@ -73,6 +73,7 @@ private:
 
     QGraphicsScene *scene;
     QPixmap loadedPixmap;
+    QMenu *menu;
 };
 
 #endif // MAINWINDOW_H

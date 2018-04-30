@@ -49,21 +49,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionRotate_Right->setShortcut(Qt::Key_Up);
     ui->actionRotate_Left->setShortcut(Qt::Key_Down);
 
-    //qgraphicsscene setup
-    scene = new QGraphicsScene(0.0, 0.0, 100000.0, 100000.0, this);
-    ui->graphicsView->setScene(scene);
-}
-
-MainWindow::~MainWindow()
-{
-    delete ui;
-}
-
-void MainWindow::contextMenuEvent(QContextMenuEvent *event)
-{
-    QMainWindow::contextMenuEvent(event);
-
-    QMenu *menu = new QMenu(this);
+    //Context menu
+    menu = new QMenu(this);
 
     menu->addAction(ui->actionOpen);
     menu->addAction(ui->actionNext_File);
@@ -96,6 +83,19 @@ void MainWindow::contextMenuEvent(QContextMenuEvent *event)
     help->addAction(ui->actionWelcome);
     menu->addMenu(help);
 
+    //qgraphicsscene setup
+    scene = new QGraphicsScene(0.0, 0.0, 100000.0, 100000.0, this);
+    ui->graphicsView->setScene(scene);
+}
+
+MainWindow::~MainWindow()
+{
+    delete ui;
+}
+
+void MainWindow::contextMenuEvent(QContextMenuEvent *event)
+{
+    QMainWindow::contextMenuEvent(event);
     menu->exec(event->globalPos());
 }
 
