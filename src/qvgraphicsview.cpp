@@ -65,10 +65,16 @@ void QVGraphicsView::mouseReleaseEvent(QMouseEvent *event)
 
 void QVGraphicsView::wheelEvent(QWheelEvent *event)
 {
+    zoom(event->angleDelta().y());
+}
+
+
+// Functions
+
+void QVGraphicsView::zoom(int DeltaY)
+{
     if (!loadedPixmapItem)
         return;
-
-    const int DeltaY = event->angleDelta().y();
 
     if (DeltaY > 0)
     {
@@ -135,9 +141,6 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
         centerOn(loadedPixmapItem->boundingRect().center());
     }
 }
-
-
-// Functions
 
 void QVGraphicsView::loadMimeData(const QMimeData *mimeData)
 {

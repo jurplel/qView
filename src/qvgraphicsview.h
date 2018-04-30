@@ -21,6 +21,8 @@ public:
     };
     Q_ENUM(scaleMode)
 
+    void zoom(int DeltaY);
+
     void loadMimeData(const QMimeData *mimeData);
     void loadFile(QString fileName);
     void setWindowTitle();

@@ -116,8 +116,13 @@
     <property name="title">
      <string>View</string>
     </property>
+    <addaction name="actionZoom_In"/>
+    <addaction name="actionZoom_Out"/>
+    <addaction name="actionReset_Zoom"/>
+    <addaction name="separator"/>
     <addaction name="actionRotate_Right"/>
     <addaction name="actionRotate_Left"/>
+    <addaction name="separator"/>
     <addaction name="actionFlip_Horizontally"/>
     <addaction name="actionFlip_Vertically"/>
    </widget>
@@ -185,6 +190,21 @@
   <action name="actionFlip_Vertically">
    <property name="text">
     <string>Flip Vertically</string>
+   </property>
+  </action>
+  <action name="actionZoom_In">
+   <property name="text">
+    <string>Zoom In</string>
+   </property>
+  </action>
+  <action name="actionZoom_Out">
+   <property name="text">
+    <string>Zoom Out</string>
+   </property>
+  </action>
+  <action name="actionReset_Zoom">
+   <property name="text">
+    <string>Reset Zoom</string>
    </property>
   </action>
  </widget>

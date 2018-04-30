@@ -71,10 +71,23 @@ void MainWindow::contextMenuEvent(QContextMenuEvent *event)
     menu->addAction(ui->actionOpen_Containing_Folder);
     menu->addAction(ui->actionPaste);
     menu->addSeparator();
-    menu->addAction(ui->actionRotate_Right);
-    menu->addAction(ui->actionRotate_Left);
-    menu->addAction(ui->actionFlip_Horizontally);
-    menu->addAction(ui->actionFlip_Vertically);
+
+    QMenu *zoom = new QMenu("Zoom", this);
+    zoom->addAction(ui->actionZoom_In);
+    zoom->addAction(ui->actionZoom_Out);
+    zoom->addAction(ui->actionReset_Zoom);
+    menu->addMenu(zoom);
+
+    QMenu *rotate = new QMenu("Rotate", this);
+    rotate->addAction(ui->actionRotate_Right);
+    rotate->addAction(ui->actionRotate_Left);
+    menu->addMenu(rotate);
+
+    QMenu *flip = new QMenu("Flip", this);
+    flip->addAction(ui->actionFlip_Horizontally);
+    flip->addAction(ui->actionFlip_Vertically);
+    menu->addMenu(flip);
+
     menu->addSeparator();
     menu->addAction(ui->actionOptions);
 
@@ -239,4 +252,19 @@ void MainWindow::on_actionFlip_Horizontally_triggered()
 void MainWindow::on_actionFlip_Vertically_triggered()
 {
     ui->graphicsView->scale(1, -1);
+}
+
+void MainWindow::on_actionZoom_In_triggered()
+{
+    ui->graphicsView->zoom(120);
+}
+
+void MainWindow::on_actionZoom_Out_triggered()
+{
+    ui->graphicsView->zoom(-120);
+}
+
+void MainWindow::on_actionReset_Zoom_triggered()
+{
+    ui->graphicsView->resetScale();
 }
