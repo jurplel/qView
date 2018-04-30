@@ -24,6 +24,8 @@ public slots:
     void openFile(QString fileName);
 
 protected:
+    void contextMenuEvent(QContextMenuEvent *event) override;
+
     void showEvent(QShowEvent *event) override;
 
     void closeEvent(QCloseEvent *event) override;

@@ -10,16 +10,13 @@
     <height>480</height>
    </rect>
   </property>
-  <property name="tabletTracking">
-   <bool>false</bool>
+  <property name="contextMenuPolicy">
+   <enum>Qt::DefaultContextMenu</enum>
   </property>
   <property name="windowTitle">
    <string>qView</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <property name="contextMenuPolicy">
-    <enum>Qt::DefaultContextMenu</enum>
-   </property>
    <property name="layoutDirection">
     <enum>Qt::LeftToRight</enum>
    </property>
@@ -41,17 +38,8 @@
       <property name="enabled">
        <bool>true</bool>
       </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
       <property name="contextMenuPolicy">
-       <enum>Qt::ActionsContextMenu</enum>
-      </property>
-      <property name="autoFillBackground">
-       <bool>false</bool>
+       <enum>Qt::NoContextMenu</enum>
       </property>
       <property name="frameShape">
        <enum>QFrame::NoFrame</enum>
@@ -67,15 +55,6 @@
       </property>
       <property name="horizontalScrollBarPolicy">
        <enum>Qt::ScrollBarAlwaysOff</enum>
-      </property>
-      <property name="backgroundBrush">
-       <brush brushstyle="SolidPattern">
-        <color alpha="0">
-         <red>21</red>
-         <green>21</green>
-         <blue>21</blue>
-        </color>
-       </brush>
       </property>
       <property name="renderHints">
        <set>QPainter::Antialiasing|QPainter::SmoothPixmapTransform</set>
@@ -118,8 +97,8 @@
     <property name="title">
      <string>&amp;Help</string>
     </property>
-    <addaction name="actionWelcome"/>
     <addaction name="actionAbout"/>
+    <addaction name="actionWelcome"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -182,19 +161,10 @@
    <property name="text">
     <string>&amp;Open Containing Folder</string>
    </property>
-   <property name="iconText">
-    <string>Open Containing Folder</string>
-   </property>
-   <property name="toolTip">
-    <string>Open Containing Folder</string>
-   </property>
   </action>
   <action name="actionWelcome">
    <property name="text">
     <string>&amp;Welcome</string>
-   </property>
-   <property name="toolTip">
-    <string>Welcome</string>
    </property>
   </action>
   <action name="actionRotate_Right">

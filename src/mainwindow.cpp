@@ -16,6 +16,7 @@
 #include <QFileSystemWatcher>
 #include <QProcess>
 #include <QDesktopServices>
+#include <QContextMenuEvent>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -48,20 +49,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionRotate_Right->setShortcut(Qt::Key_Up);
     ui->actionRotate_Left->setShortcut(Qt::Key_Down);
 
-    //context menu items
-    ui->graphicsView->addAction(ui->actionOpen);
-    ui->graphicsView->addAction(ui->actionNext_File);
-    ui->graphicsView->addAction(ui->actionPrevious_File);
-    ui->graphicsView->addAction(ui->actionOpen_Containing_Folder);
-    ui->graphicsView->addAction(ui->actionPaste);
-    ui->graphicsView->addAction(ui->actionRotate_Right);
-    ui->graphicsView->addAction(ui->actionRotate_Left);
-    ui->graphicsView->addAction(ui->actionFlip_Horizontally);
-    ui->graphicsView->addAction(ui->actionFlip_Vertically);
-    ui->graphicsView->addAction(ui->actionOptions);
-    ui->graphicsView->addAction(ui->actionWelcome);
-    ui->graphicsView->addAction(ui->actionAbout);
-
     //qgraphicsscene setup
     scene = new QGraphicsScene(0.0, 0.0, 100000.0, 100000.0, this);
     ui->graphicsView->setScene(scene);
@@ -70,6 +57,33 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::contextMenuEvent(QContextMenuEvent *event)
+{
+    QMainWindow::contextMenuEvent(event);
+
+    QMenu *menu = new QMenu(this);
+
+    menu->addAction(ui->actionOpen);
+    menu->addAction(ui->actionNext_File);
+    menu->addAction(ui->actionPrevious_File);
+    menu->addAction(ui->actionOpen_Containing_Folder);
+    menu->addAction(ui->actionPaste);
+    menu->addSeparator();
+    menu->addAction(ui->actionRotate_Right);
+    menu->addAction(ui->actionRotate_Left);
+    menu->addAction(ui->actionFlip_Horizontally);
+    menu->addAction(ui->actionFlip_Vertically);
+    menu->addSeparator();
+    menu->addAction(ui->actionOptions);
+
+    QMenu *help = new QMenu("Help", this);
+    help->addAction(ui->actionAbout);
+    help->addAction(ui->actionWelcome);
+    menu->addMenu(help);
+
+    menu->exec(event->globalPos());
 }
 
 void MainWindow::showEvent(QShowEvent *event)
