@@ -10,7 +10,6 @@
 #include <QGraphicsPixmapItem>
 #include <QDebug>
 #include <QPixmap>
-#include <QGraphicsScene>
 #include <QClipboard>
 #include <QCoreApplication>
 #include <QFileSystemWatcher>
@@ -53,6 +52,25 @@ MainWindow::MainWindow(QWidget *parent) :
     menu = new QMenu(this);
 
     menu->addAction(ui->actionOpen);
+
+    QMenu *files = new QMenu("Open Recent");
+
+    int index = 0;
+
+    for ( int i = 0; i <= 9; i++ )
+    {
+        actions.append(new QAction("error", this));
+    }
+
+    foreach(QAction* action, actions)
+    {
+        connect(action, &QAction::triggered, [this,index]() { openRecent(index); });
+        files->addAction(action);
+        index++;
+    }
+
+    menu->addMenu(files);
+
     menu->addAction(ui->actionNext_File);
     menu->addAction(ui->actionPrevious_File);
     menu->addAction(ui->actionOpen_Containing_Folder);
@@ -83,9 +101,11 @@ MainWindow::MainWindow(QWidget *parent) :
     help->addAction(ui->actionWelcome);
     menu->addMenu(help);
 
-    //qgraphicsscene setup
-    scene = new QGraphicsScene(0.0, 0.0, 100000.0, 100000.0, this);
-    ui->graphicsView->setScene(scene);
+    //add recent items to other places
+    ui->menuFile->insertMenu(ui->actionNext_File, files);
+    qt_mac_set_dock_menu(files);
+
+    updateMenus();
 }
 
 MainWindow::~MainWindow()
@@ -103,7 +123,6 @@ void MainWindow::showEvent(QShowEvent *event)
 {
     QMainWindow::showEvent(event);
 
-    QSettings settings;
     if (settings.value("firstlaunch", false).toBool())
         return;
 
@@ -132,7 +151,6 @@ void MainWindow::openFile(QString fileName)
 
 void MainWindow::loadSettings()
 {
-    QSettings settings;
 
     //geometry
     restoreGeometry(settings.value("geometry").toByteArray());
@@ -164,8 +182,18 @@ void MainWindow::loadSettings()
 
 void MainWindow::saveGeometrySettings()
 {
-    QSettings settings;
     settings.setValue("geometry", saveGeometry());
+}
+
+void MainWindow::updateMenus()
+{
+    int index = 0;
+    foreach(QAction* action, actions)
+    {
+        QString newFileName = "filename" + QString::number(index);
+        action->setText(settings.value(newFileName).toString());
+        index++;
+    }
 }
 
 // Actions
@@ -243,7 +271,6 @@ void MainWindow::on_actionWelcome_triggered()
     welcome->exec();
 }
 
-
 void MainWindow::on_actionFlip_Horizontally_triggered()
 {
     ui->graphicsView->scale(-1, 1);
@@ -267,4 +294,9 @@ void MainWindow::on_actionZoom_Out_triggered()
 void MainWindow::on_actionReset_Zoom_triggered()
 {
     ui->graphicsView->resetScale();
+}
+
+void MainWindow::openRecent(int i)
+{
+    ui->graphicsView->loadFile(settings.value("file" + QString::number(i)).toString());
 }

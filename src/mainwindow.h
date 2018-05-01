@@ -2,8 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QGraphicsScene>
 #include <QPixmap>
+#include <QSettings>
 
 namespace Ui {
 class MainWindow;
@@ -17,8 +17,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    bool getIsPixmapLoaded() const;
-    void setIsPixmapLoaded(bool value);
+    void updateMenus();
 
 public slots:
     void openFile(QString fileName);
@@ -66,14 +65,17 @@ private slots:
 
     void on_actionReset_Zoom_triggered();
 
+    void openRecent(int i);
+
 private:
     Ui::MainWindow *ui;
 
     void pickFile();
 
-    QGraphicsScene *scene;
-    QPixmap loadedPixmap;
+    QSettings settings;
     QMenu *menu;
+
+    QList<QAction*> actions;
 };
 
 #endif // MAINWINDOW_H

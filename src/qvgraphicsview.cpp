@@ -3,9 +3,15 @@
 #include <QDebug>
 #include <QWheelEvent>
 #include <QGraphicsPixmapItem>
+#include <QGraphicsScene>
+#include <QSettings>
 
 QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 {
+    //qgraphicsscene setup
+    QGraphicsScene *scene = new QGraphicsScene(0.0, 0.0, 100000.0, 100000.0, this);
+    setScene(scene);
+
     scaleFactor = 0.25;
     isPixmapLoaded = false;
     setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
@@ -187,12 +193,22 @@ void QVGraphicsView::loadFile(QString fileName)
     resetScale();
 
     selectedFileInfo = QFileInfo(fileName);
-
     const QDir fileDir = QDir(selectedFileInfo.path());
-
     loadedFileFolder = fileDir.entryInfoList(filterList, QDir::Files);
-
     loadedFileFolderIndex = loadedFileFolder.indexOf(selectedFileInfo);
+
+    QSettings settings;
+    MainWindow *parentMainWindow = ((MainWindow*)parentWidget()->parentWidget());
+
+    for ( int i = 9; i >= 0; i-- ) {
+        settings.setValue("file" + QString::number(i), settings.value("file" + QString::number(i-1)).toString());
+        settings.setValue("filename" + QString::number(i), settings.value("filename" + QString::number(i-1)).toString());
+    }
+
+    settings.setValue("file0", fileName);
+    settings.setValue("filename0", selectedFileInfo.fileName());
+
+    parentMainWindow->updateMenus();
 
     setWindowTitle();
 }
