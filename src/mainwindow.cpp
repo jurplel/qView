@@ -200,11 +200,10 @@ void MainWindow::updateMenus()
         {
             action->setVisible(true);
             action->setText(newText);
-            for (int i = 0; i <= 9; i++ )
+            for (int i = index-1; i >= 0; i-- )
             {
-                if(index != 0 && newText == recentItems[i]->text())
+                if(newText == recentItems[i]->text())
                 {
-                    if (index != i)
                         action->setVisible(false);
                 }
             }
