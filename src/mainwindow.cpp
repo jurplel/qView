@@ -317,11 +317,11 @@ void MainWindow::openRecent(int i)
 void MainWindow::clearRecent()
 {
     QSettings settings;
-    int index = 0;
-    foreach(QAction* action, recentItems)
+    for (int i = 0; i < 9; i++)
     {
-        settings.remove("filename" + QString::number(index));
-        index++;
+        settings.remove("filename" + QString::number(i));
     }
+    settings.setValue("file0", ui->graphicsView->getSelectedFileInfo().filePath());
+    settings.setValue("filename0", ui->graphicsView->getSelectedFileInfo().fileName());
     updateMenus();
 }
