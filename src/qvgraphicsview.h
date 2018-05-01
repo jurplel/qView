@@ -5,6 +5,7 @@
 #include <QMimeData>
 #include <QDir>
 #include <QTimer>
+#include <QFileInfo>
 
 class QVGraphicsView : public QGraphicsView
 {

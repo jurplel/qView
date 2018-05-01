@@ -76,6 +76,7 @@ private:
 
     QSettings settings;
     QMenu *menu;
+    QMenu *dockmenu;
 
     QList<QAction*> recentItems;
 };

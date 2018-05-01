@@ -59,7 +59,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     for ( int i = 0; i <= 9; i++ )
     {
-        recentItems.append(new QAction("error", this));
+        recentItems.append(new QAction("Empty", this));
     }
 
     foreach(QAction *action, recentItems)
@@ -191,28 +191,20 @@ void MainWindow::saveGeometrySettings()
 
 void MainWindow::updateMenus()
 {
-    int index = 0;
-    foreach(QAction* action, recentItems)
+    QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
+
+    for (int i = 0; i <= 9; i++ )
     {
-        QString newFileName = "filename" + QString::number(index);
-        QString newText = settings.value(newFileName).toString();
-        if (!newText.isEmpty())
+        if (i < recentFiles.size())
         {
-            action->setVisible(true);
-            action->setText(newText);
-            for (int i = index-1; i >= 0; i-- )
-            {
-                if(newText == recentItems[i]->text())
-                {
-                        action->setVisible(false);
-                }
-            }
+            recentItems[i]->setVisible(true);
+            recentItems[i]->setText(recentFiles[i].toList().first().toString());
         }
         else
         {
-            action->setVisible(false);
+            recentItems[i]->setVisible(false);
+            recentItems[i]->setText("Empty");
         }
-        index++;
     }
 }
 
@@ -318,17 +310,27 @@ void MainWindow::on_actionReset_Zoom_triggered()
 
 void MainWindow::openRecent(int i)
 {
-    ui->graphicsView->loadFile(settings.value("file" + QString::number(i)).toString());
+    QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
+    ui->graphicsView->loadFile(recentFiles[i].toList().last().toString());
 }
 
 void MainWindow::clearRecent()
 {
     QSettings settings;
-    for (int i = 1; i <= 9; i++)
+    QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
+    for (int i = 0; i <= 9; i++)
     {
-        settings.remove("filename" + QString::number(i));
+        if (recentFiles.size() > 1)
+        {
+            recentFiles.removeAt(1);
+        }
+        else
+        {
+            if (!ui->graphicsView->getIsPixmapLoaded())
+                recentFiles.removeAt(0);
+        }
     }
-    settings.setValue("file0", ui->graphicsView->getSelectedFileInfo().filePath());
-    settings.setValue("filename0", ui->graphicsView->getSelectedFileInfo().fileName());
+    settings.setValue("recentFiles", recentFiles);
+
     updateMenus();
 }

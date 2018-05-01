@@ -200,13 +200,20 @@ void QVGraphicsView::loadFile(QString fileName)
     QSettings settings;
     MainWindow *parentMainWindow = ((MainWindow*)parentWidget()->parentWidget());
 
-    for ( int i = 9; i >= 0; i-- ) {
-        settings.setValue("file" + QString::number(i), settings.value("file" + QString::number(i-1)).toString());
-        settings.setValue("filename" + QString::number(i), settings.value("filename" + QString::number(i-1)).toString());
-    }
+    //Update recent files list
+    QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
 
-    settings.setValue("file0", fileName);
-    settings.setValue("filename0", selectedFileInfo.fileName());
+    QStringList fileInfo;
+    fileInfo << selectedFileInfo.fileName() << fileName;
+
+    recentFiles.removeAll(fileInfo);
+    recentFiles.prepend(fileInfo);
+    if(recentFiles.size() > 10)
+    {
+        recentFiles.removeLast();
+    }
+    settings.setValue("recentFiles", recentFiles);
+
 
     parentMainWindow->updateMenus();
 
