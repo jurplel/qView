@@ -200,6 +200,14 @@ void MainWindow::updateMenus()
         {
             action->setVisible(true);
             action->setText(newText);
+            for (int i = 0; i <= 9; i++ )
+            {
+                if(index != 0 && newText == recentItems[i]->text())
+                {
+                    if (index != i)
+                        action->setVisible(false);
+                }
+            }
         }
         else
         {
@@ -317,7 +325,7 @@ void MainWindow::openRecent(int i)
 void MainWindow::clearRecent()
 {
     QSettings settings;
-    for (int i = 0; i < 9; i++)
+    for (int i = 1; i <= 9; i++)
     {
         settings.remove("filename" + QString::number(i));
     }
