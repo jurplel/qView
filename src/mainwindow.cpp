@@ -105,9 +105,13 @@ MainWindow::MainWindow(QWidget *parent) :
     help->addAction(ui->actionWelcome);
     menu->addMenu(help);
 
-    //add recent items to other places
+    //add recent items to menubar
     ui->menuFile->insertMenu(ui->actionNext_File, files);
-    files->setAsDockMenu();
+
+    //macOS dock menu
+    dockMenu = new QMenu(this);
+    dockMenu->setAsDockMenu();
+    dockMenu->addAction(ui->actionOpen);
 
     updateMenus();
 }
@@ -193,12 +197,14 @@ void MainWindow::updateMenus()
 {
     QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
 
+    dockMenu->clear();
     for (int i = 0; i <= 9; i++ )
     {
         if (i < recentFiles.size())
         {
             recentItems[i]->setVisible(true);
             recentItems[i]->setText(recentFiles[i].toList().first().toString());
+            dockMenu->addAction(recentItems[i]);
         }
         else
         {
@@ -206,6 +212,8 @@ void MainWindow::updateMenus()
             recentItems[i]->setText("Empty");
         }
     }
+    dockMenu->addAction(ui->actionOpen);
+    dockMenu->insertSeparator(ui->actionOpen);
 }
 
 // Actions
