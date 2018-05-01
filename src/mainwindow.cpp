@@ -59,15 +59,19 @@ MainWindow::MainWindow(QWidget *parent) :
 
     for ( int i = 0; i <= 9; i++ )
     {
-        actions.append(new QAction("error", this));
+        recentItems.append(new QAction("error", this));
     }
 
-    foreach(QAction* action, actions)
+    foreach(QAction *action, recentItems)
     {
         connect(action, &QAction::triggered, [this,index]() { openRecent(index); });
         files->addAction(action);
         index++;
     }
+    files->addSeparator();
+    QAction *clearMenu = new QAction("Clear Menu", this);
+    connect(clearMenu, &QAction::triggered, this, &MainWindow::clearRecent);
+    files->addAction(clearMenu);
 
     menu->addMenu(files);
 
@@ -103,7 +107,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //add recent items to other places
     ui->menuFile->insertMenu(ui->actionNext_File, files);
-    qt_mac_set_dock_menu(files);
+    files->setAsDockMenu();
 
     updateMenus();
 }
@@ -188,10 +192,19 @@ void MainWindow::saveGeometrySettings()
 void MainWindow::updateMenus()
 {
     int index = 0;
-    foreach(QAction* action, actions)
+    foreach(QAction* action, recentItems)
     {
         QString newFileName = "filename" + QString::number(index);
-        action->setText(settings.value(newFileName).toString());
+        QString newText = settings.value(newFileName).toString();
+        if (!newText.isEmpty())
+        {
+            action->setVisible(true);
+            action->setText(newText);
+        }
+        else
+        {
+            action->setVisible(false);
+        }
         index++;
     }
 }
@@ -299,4 +312,16 @@ void MainWindow::on_actionReset_Zoom_triggered()
 void MainWindow::openRecent(int i)
 {
     ui->graphicsView->loadFile(settings.value("file" + QString::number(i)).toString());
+}
+
+void MainWindow::clearRecent()
+{
+    QSettings settings;
+    int index = 0;
+    foreach(QAction* action, recentItems)
+    {
+        settings.remove("filename" + QString::number(index));
+        index++;
+    }
+    updateMenus();
 }

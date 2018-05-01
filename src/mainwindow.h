@@ -67,6 +67,8 @@ private slots:
 
     void openRecent(int i);
 
+    void clearRecent();
+
 private:
     Ui::MainWindow *ui;
 
@@ -75,7 +77,7 @@ private:
     QSettings settings;
     QMenu *menu;
 
-    QList<QAction*> actions;
+    QList<QAction*> recentItems;
 };
 
 #endif // MAINWINDOW_H
