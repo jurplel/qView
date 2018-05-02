@@ -153,16 +153,25 @@
    </property>
   </action>
   <action name="actionPrevious_File">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>&amp;Previous File</string>
    </property>
   </action>
   <action name="actionNext_File">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>&amp;Next File</string>
    </property>
   </action>
   <action name="actionOpen_Containing_Folder">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>&amp;Open Containing Folder</string>
    </property>
@@ -173,36 +182,57 @@
    </property>
   </action>
   <action name="actionRotate_Right">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Rotate Right</string>
    </property>
   </action>
   <action name="actionRotate_Left">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Rotate Left</string>
    </property>
   </action>
   <action name="actionFlip_Horizontally">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Flip Horizontally</string>
    </property>
   </action>
   <action name="actionFlip_Vertically">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Flip Vertically</string>
    </property>
   </action>
   <action name="actionZoom_In">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Zoom In</string>
    </property>
   </action>
   <action name="actionZoom_Out">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Zoom Out</string>
    </property>
   </action>
   <action name="actionReset_Zoom">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Reset Zoom</string>
    </property>

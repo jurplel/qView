@@ -82,17 +82,20 @@ MainWindow::MainWindow(QWidget *parent) :
     menu->addSeparator();
 
     QMenu *zoom = new QMenu("Zoom", this);
+    zoom->menuAction()->setEnabled(false);
     zoom->addAction(ui->actionZoom_In);
     zoom->addAction(ui->actionZoom_Out);
     zoom->addAction(ui->actionReset_Zoom);
     menu->addMenu(zoom);
 
     QMenu *rotate = new QMenu("Rotate", this);
+    rotate->menuAction()->setEnabled(false);
     rotate->addAction(ui->actionRotate_Right);
     rotate->addAction(ui->actionRotate_Left);
     menu->addMenu(rotate);
 
     QMenu *flip = new QMenu("Flip", this);
+    flip->menuAction()->setEnabled(false);
     flip->addAction(ui->actionFlip_Horizontally);
     flip->addAction(ui->actionFlip_Vertically);
     menu->addMenu(flip);
@@ -195,10 +198,22 @@ void MainWindow::saveGeometrySettings()
 
 void MainWindow::updateMenus()
 {
+    if (ui->graphicsView->getIsPixmapLoaded() && !ui->actionOpen_Containing_Folder->isEnabled())
+    {
+        foreach(QAction* action, ui->menuView->actions())
+        {
+            action->setEnabled(true);
+        }
+        foreach(QAction* action, menu->actions())
+        {
+            action->setEnabled(true);
+        }
+    }
+
     QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
 
     dockMenu->clear();
-    for (int i = 0; i <= 9; i++ )
+    for (int i = 0; i <= 9; i++)
     {
         if (i < recentFiles.size())
         {
