@@ -47,6 +47,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionPaste->setShortcut(QKeySequence::Paste);
     ui->actionRotate_Right->setShortcut(Qt::Key_Up);
     ui->actionRotate_Left->setShortcut(Qt::Key_Down);
+    ui->actionZoom_In->setShortcut(QKeySequence::ZoomIn);
+    ui->actionZoom_Out->setShortcut(QKeySequence::ZoomOut);
+    ui->actionReset_Zoom->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_0));
 
     //Context menu
     menu = new QMenu(this);
@@ -150,6 +153,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::pickFile()
 {
     QFileDialog *fileDialog = new QFileDialog(this, tr("Open"), "", tr("Images (*.svg *.bmp *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm);;All Files (*)"));
+    fileDialog->setDirectory(settings.value("lastFileDialogDir", QDir::home().path()).toString());
     fileDialog->open();
     connect(fileDialog, &QFileDialog::fileSelected, this, &MainWindow::openFile);
 }
@@ -157,6 +161,7 @@ void MainWindow::pickFile()
 void MainWindow::openFile(QString fileName)
 {
     ui->graphicsView->loadFile(fileName);
+    settings.setValue("lastFileDialogDir", QDir(fileName).path());
 }
 
 
@@ -339,7 +344,6 @@ void MainWindow::openRecent(int i)
 
 void MainWindow::clearRecent()
 {
-    QSettings settings;
     QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
     for (int i = 0; i <= 9; i++)
     {
