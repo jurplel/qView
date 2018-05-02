@@ -5,6 +5,7 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
 #include <QSettings>
+#include <QMessageBox>
 
 QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 {
@@ -168,27 +169,32 @@ void QVGraphicsView::loadMimeData(const QMimeData *mimeData)
 
 void QVGraphicsView::loadFile(QString fileName)
 {
+
     if (fileName.isEmpty())
+    {
+        QMessageBox::critical(this, "qView Error", "Error: No filepath given");
         return;
-
-    if(!loadedPixmap.load(fileName))
+    }
+    else if (!loadedPixmap.load(fileName))
+    {
+        QMessageBox::critical(this, "qView Error", "Error: Failed to load file");
         return;
-
-    if(loadedPixmap.isNull())
+    }
+    else if (loadedPixmap.isNull())
+    {
+        QMessageBox::critical(this, "qView Error", "Error: Null pixmap");
         return;
+    }
 
     scene()->clear();
     loadedPixmapItem = scene()->addPixmap(loadedPixmap);
     setIsPixmapLoaded(true);
     loadedPixmapItem->setOffset((50000.0 - loadedPixmap.width()/2), (50000.0 - loadedPixmap.height()/2));
+
     if (getIsFilteringEnabled())
-    {
         loadedPixmapItem->setTransformationMode(Qt::SmoothTransformation);
-    }
     else
-    {
         loadedPixmapItem->setTransformationMode(Qt::FastTransformation);
-    }
 
     resetScale();
 
@@ -197,25 +203,23 @@ void QVGraphicsView::loadFile(QString fileName)
     loadedFileFolder = fileDir.entryInfoList(filterList, QDir::Files);
     loadedFileFolderIndex = loadedFileFolder.indexOf(selectedFileInfo);
 
-    QSettings settings;
-    MainWindow *parentMainWindow = ((MainWindow*)parentWidget()->parentWidget());
 
     //Update recent files list
+    QSettings settings;
     QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
-
     QStringList fileInfo;
+
     fileInfo << selectedFileInfo.fileName() << fileName;
 
     recentFiles.removeAll(fileInfo);
     recentFiles.prepend(fileInfo);
+
     if(recentFiles.size() > 10)
     {
         recentFiles.removeLast();
     }
+
     settings.setValue("recentFiles", recentFiles);
-
-
-    parentMainWindow->updateMenus();
 
     setWindowTitle();
 }
@@ -226,6 +230,8 @@ void QVGraphicsView::setWindowTitle()
         return;
 
     MainWindow *parentMainWindow = ((MainWindow*)parentWidget()->parentWidget());
+
+    parentMainWindow->updateMenus();
 
     switch (getTitlebarMode()) {
     case 0:
@@ -249,7 +255,7 @@ void QVGraphicsView::setWindowTitle()
 }
 
 void QVGraphicsView::resetScale()
-{
+{ 
     if (!getIsPixmapLoaded())
         return;
 
@@ -279,13 +285,16 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
     switch (mode) {
     case scaleMode::resetScale:
     {
-        if (height() < width())
+        //4 is added to these numbers to take into account the -2 margin from fitInViewMarginless (kind of a misnomer, eh?)
+        qreal marginHeight = (height()-loadedPixmapItem->boundingRect().height()*transform().m22())+4;
+        qreal marginWidth = (width()-loadedPixmapItem->boundingRect().width()*transform().m11())+4;
+        if (marginWidth < marginHeight)
         {
-            scaledPixmap = loadedPixmap.scaledToHeight(height(), Qt::SmoothTransformation);
+            scaledPixmap = loadedPixmap.scaledToWidth(width()+4, Qt::SmoothTransformation);
         }
         else
         {
-            scaledPixmap = loadedPixmap.scaledToWidth(width(), Qt::SmoothTransformation);
+            scaledPixmap = loadedPixmap.scaledToHeight(height()+4, Qt::SmoothTransformation);
         }
         break;
     }
