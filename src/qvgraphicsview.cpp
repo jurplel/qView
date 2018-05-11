@@ -246,7 +246,7 @@ void QVGraphicsView::setWindowTitle()
     }
     case 2:
     {
-            parentMainWindow->setWindowTitle("qView (" + selectedFileInfo.filePath() + ") (" + QString::number(loadedPixmap.width()) + "x" + QString::number(loadedPixmap.height()) + ")");
+            parentMainWindow->setWindowTitle("qView (" + QDir::toNativeSeparators(selectedFileInfo.filePath()) + ") (" + QString::number(loadedPixmap.width()) + "x" + QString::number(loadedPixmap.height()) + ")");
         break;
     }
     default:
