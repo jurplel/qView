@@ -231,7 +231,7 @@ void QVGraphicsView::setWindowTitle()
 
     MainWindow *parentMainWindow = ((MainWindow*)parentWidget()->parentWidget());
 
-    parentMainWindow->updateMenus();
+    parentMainWindow->updateRecentMenu();
 
     switch (getTitlebarMode()) {
     case 0:

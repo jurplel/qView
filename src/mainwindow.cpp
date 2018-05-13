@@ -32,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //hide menubar for non-global applications
     ui->menuBar->hide();
 
-    //change show in explorer text based on operating system
+    //change show in file explorer text based on operating system
 
     #if defined(Q_OS_WIN)
     ui->actionOpen_Containing_Folder->setText("Show in Explorer");
@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionPaste->setShortcut(QKeySequence::Paste);
     ui->actionRotate_Right->setShortcut(Qt::Key_Up);
     ui->actionRotate_Left->setShortcut(Qt::Key_Down);
-    ui->actionZoom_In->setShortcut(QKeySequence::ZoomIn);
+    ui->actionZoom_In->setShortcuts(QList<QKeySequence>({QKeySequence(Qt::CTRL + Qt::Key_Equal), QKeySequence::ZoomIn}));
     ui->actionZoom_Out->setShortcut(QKeySequence::ZoomOut);
     ui->actionReset_Zoom->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_0));
 
@@ -78,10 +78,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     menu->addMenu(files);
 
-    menu->addAction(ui->actionNext_File);
-    menu->addAction(ui->actionPrevious_File);
     menu->addAction(ui->actionOpen_Containing_Folder);
     menu->addAction(ui->actionPaste);
+    menu->addSeparator();
+    menu->addAction(ui->actionNext_File);
+    menu->addAction(ui->actionPrevious_File);
     menu->addSeparator();
 
     QMenu *zoom = new QMenu("Zoom", this);
@@ -121,7 +122,13 @@ MainWindow::MainWindow(QWidget *parent) :
     dockMenu->addAction(ui->actionOpen);
     #endif
 
-    updateMenus();
+    //add to mainwindow's action list so keyboard shortcuts work without a menubar
+    foreach(QAction *action, menu->actions())
+    {
+        addAction(action);
+    }
+
+    updateRecentMenu();
 }
 
 MainWindow::~MainWindow()
@@ -203,7 +210,7 @@ void MainWindow::saveGeometrySettings()
     settings.setValue("geometry", saveGeometry());
 }
 
-void MainWindow::updateMenus()
+void MainWindow::updateRecentMenu()
 {
     if (ui->graphicsView->getIsPixmapLoaded() && !ui->actionOpen_Containing_Folder->isEnabled())
     {
@@ -367,5 +374,5 @@ void MainWindow::clearRecent()
     }
     settings.setValue("recentFiles", recentFiles);
 
-    updateMenus();
+    updateRecentMenu();
 }

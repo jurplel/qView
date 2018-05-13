@@ -17,7 +17,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    void updateMenus();
+    void updateRecentMenu();
 
 public slots:
     void openFile(QString fileName);
