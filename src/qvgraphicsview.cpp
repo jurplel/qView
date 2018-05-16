@@ -178,11 +178,13 @@ void QVGraphicsView::loadFile(QString fileName)
     else if (!loadedPixmap.load(fileName))
     {
         QMessageBox::critical(this, "qView Error", "Error: Failed to load file");
+        loadedPixmap.load(selectedFileInfo.filePath());
         return;
     }
     else if (loadedPixmap.isNull())
     {
         QMessageBox::critical(this, "qView Error", "Error: Null pixmap");
+        loadedPixmap.load(selectedFileInfo.filePath());
         return;
     }
 
