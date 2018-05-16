@@ -170,6 +170,12 @@ void QVGraphicsView::loadMimeData(const QMimeData *mimeData)
 void QVGraphicsView::loadFile(QString fileName)
 {
 
+    if (!QFile::exists(fileName))
+    {
+        QMessageBox::critical(this, "qView Error", "Error: File does not exist");
+        updateRecentFiles(QFileInfo(fileName));
+        return;
+    }
     if (fileName.isEmpty())
     {
         QMessageBox::critical(this, "qView Error", "Error: No filepath given");
@@ -206,15 +212,21 @@ void QVGraphicsView::loadFile(QString fileName)
     loadedFileFolderIndex = loadedFileFolder.indexOf(selectedFileInfo);
 
 
-    //Update recent files list
+    updateRecentFiles(selectedFileInfo);
+    setWindowTitle();
+}
+
+void QVGraphicsView::updateRecentFiles(QFileInfo file)
+{
     QSettings settings;
     QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
     QStringList fileInfo;
 
-    fileInfo << selectedFileInfo.fileName() << fileName;
+    fileInfo << file.fileName() << file.filePath();
 
     recentFiles.removeAll(fileInfo);
-    recentFiles.prepend(fileInfo);
+    if (QFile::exists(file.filePath()))
+        recentFiles.prepend(fileInfo);
 
     if(recentFiles.size() > 10)
     {
@@ -223,7 +235,9 @@ void QVGraphicsView::loadFile(QString fileName)
 
     settings.setValue("recentFiles", recentFiles);
 
-    setWindowTitle();
+    MainWindow *parentMainWindow = ((MainWindow*)parentWidget()->parentWidget());
+
+    parentMainWindow->updateRecentMenu();
 }
 
 void QVGraphicsView::setWindowTitle()
@@ -232,8 +246,6 @@ void QVGraphicsView::setWindowTitle()
         return;
 
     MainWindow *parentMainWindow = ((MainWindow*)parentWidget()->parentWidget());
-
-    parentMainWindow->updateRecentMenu();
 
     switch (getTitlebarMode()) {
     case 0:

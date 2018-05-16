@@ -26,6 +26,7 @@ public:
 
     void loadMimeData(const QMimeData *mimeData);
     void loadFile(QString fileName);
+    void updateRecentFiles(QFileInfo file);
     void setWindowTitle();
 
     void resetScale();
