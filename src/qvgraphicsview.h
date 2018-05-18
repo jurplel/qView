@@ -1,7 +1,9 @@
 #ifndef QVGRAPHICSVIEW_H
 #define QVGRAPHICSVIEW_H
 
+#include "mainwindow.h"
 #include <QGraphicsView>
+#include <QImageReader>
 #include <QMimeData>
 #include <QDir>
 #include <QTimer>
@@ -85,9 +87,12 @@ private slots:
 
 private:
 
+    MainWindow *parentMainWindow;
+
     qreal currentScale;
     qreal scaleFactor;
 
+    QImageReader reader;
     QPixmap loadedPixmap;
     QGraphicsPixmapItem *loadedPixmapItem;
     QTransform fittedMatrix;

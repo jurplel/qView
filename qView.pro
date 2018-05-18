@@ -15,6 +15,7 @@ TEMPLATE = app
 # allows use of version variable elsewhere
 DEFINES += "VERSION=$$VERSION"
 
+
 # build folder organization
 DESTDIR = bin
 OBJECTS_DIR = intermediate
@@ -24,15 +25,16 @@ RCC_DIR = intermediate
 CONFIG -= debug_and_release debug_and_release_target
 
 
+# Windows specific stuff
+win32:CONFIG += static
+RC_ICONS = "src/images/qView.ico"
+QMAKE_TARGET_COPYRIGHT = "Copyright © 2018 jurplel and qView contributors"
+QMAKE_TARGET_DESCRIPTION = "qView"
+
 # macOS specific stuff
 QMAKE_TARGET_BUNDLE_PREFIX = "com.qview"
 QMAKE_INFO_PLIST = "Info.plist"
 ICON = "src/images/qView.icns"
-
-# Windows specific stuff
-RC_ICONS = "src/images/qView.ico"
-QMAKE_TARGET_COPYRIGHT = "Copyright © 2018 jurplel and qView contributors"
-QMAKE_TARGET_DESCRIPTION = "qView"
 
 # Linux specific stuff
 binary.path = /usr/bin
@@ -52,9 +54,7 @@ icon256.files = src/images/linux/hicolor/256x256/apps/qview.png
 iconsvg.path = /usr/share/icons/hicolor/scalable/apps/
 iconsvg.files = src/images/linux/hicolor/scalable/apps/qview.svg
 
-
 unix:!macx:INSTALLS += binary desktop icon16 icon32 icon64 icon128 icon256 iconsvg
-
 unix:!macx:TARGET = qview
 
 # The following define makes your compiler emit warnings if you use
@@ -76,7 +76,7 @@ SOURCES += \
     src/qvoptionsdialog.cpp \
     src/qvapplication.cpp \
     src/qvaboutdialog.cpp \
-    src/qvwelcomedialog.cpp
+    src/qvwelcomedialog.cpp \
 
 HEADERS += \
         src/mainwindow.h \
@@ -84,13 +84,13 @@ HEADERS += \
     src/qvoptionsdialog.h \
     src/qvapplication.h \
     src/qvaboutdialog.h \
-    src/qvwelcomedialog.h
+    src/qvwelcomedialog.h \
 
 FORMS += \
         src/mainwindow.ui \
     src/qvoptionsdialog.ui \
     src/qvaboutdialog.ui \
-    src/qvwelcomedialog.ui
+    src/qvwelcomedialog.ui \
 
 RESOURCES += \
     src/resources.qrc

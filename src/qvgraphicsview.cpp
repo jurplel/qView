@@ -1,5 +1,5 @@
-#include "mainwindow.h"
 #include "qvgraphicsview.h"
+
 #include <QDebug>
 #include <QWheelEvent>
 #include <QGraphicsPixmapItem>
@@ -16,10 +16,15 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     scaleFactor = 0.25;
     isPixmapLoaded = false;
     setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+
     timer = new QTimer(this);
     timer->setSingleShot(true);
     timer->setInterval(10);
     connect(timer, SIGNAL(timeout()), this, SLOT(timerExpired()));
+
+    reader.setDecideFormatFromContent(true);
+
+    parentMainWindow = ((MainWindow*)parentWidget()->parentWidget());
 }
 
 
@@ -169,28 +174,30 @@ void QVGraphicsView::loadMimeData(const QMimeData *mimeData)
 
 void QVGraphicsView::loadFile(QString fileName)
 {
-
+    reader.setFileName(fileName);
     if (!QFile::exists(fileName))
     {
         QMessageBox::critical(this, "qView Error", "Error: File does not exist");
         updateRecentFiles(QFileInfo(fileName));
         return;
     }
-    if (fileName.isEmpty())
+    else if (fileName.isEmpty())
     {
         QMessageBox::critical(this, "qView Error", "Error: No filepath given");
         return;
     }
-    else if (!loadedPixmap.load(fileName))
+    else if (!loadedPixmap.convertFromImage(reader.read()))
     {
         QMessageBox::critical(this, "qView Error", "Error: Failed to load file");
-        loadedPixmap.load(selectedFileInfo.filePath());
+        if (getIsPixmapLoaded())
+            loadFile(selectedFileInfo.filePath());
         return;
     }
     else if (loadedPixmap.isNull())
     {
         QMessageBox::critical(this, "qView Error", "Error: Null pixmap");
-        loadedPixmap.load(selectedFileInfo.filePath());
+        if (getIsPixmapLoaded())
+            loadFile(selectedFileInfo.filePath());
         return;
     }
 
@@ -235,8 +242,6 @@ void QVGraphicsView::updateRecentFiles(QFileInfo file)
 
     settings.setValue("recentFiles", recentFiles);
 
-    MainWindow *parentMainWindow = ((MainWindow*)parentWidget()->parentWidget());
-
     parentMainWindow->updateRecentMenu();
 }
 
@@ -244,8 +249,6 @@ void QVGraphicsView::setWindowTitle()
 {
     if (!isPixmapLoaded)
         return;
-
-    MainWindow *parentMainWindow = ((MainWindow*)parentWidget()->parentWidget());
 
     switch (getTitlebarMode()) {
     case 0:
