@@ -22,9 +22,10 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     timer->setInterval(10);
     connect(timer, SIGNAL(timeout()), this, SLOT(timerExpired()));
 
-    reader.setDecideFormatFromContent(true);
-
     parentMainWindow = ((MainWindow*)parentWidget()->parentWidget());
+
+    reader.setDecideFormatFromContent(true);
+    qDebug() << QImageReader::supportedImageFormats();
 }
 
 
