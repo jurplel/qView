@@ -25,7 +25,6 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     parentMainWindow = ((MainWindow*)parentWidget()->parentWidget());
 
     reader.setDecideFormatFromContent(true);
-    qDebug() << QImageReader::supportedImageFormats();
 }
 
 
