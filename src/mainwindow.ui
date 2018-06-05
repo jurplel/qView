@@ -78,7 +78,7 @@
      <x>0</x>
      <y>0</y>
      <width>640</width>
-     <height>22</height>
+     <height>20</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -92,6 +92,7 @@
     <addaction name="actionNext_File"/>
     <addaction name="actionPrevious_File"/>
     <addaction name="actionOpen_Containing_Folder"/>
+    <addaction name="actionProperties"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -235,6 +236,11 @@
    </property>
    <property name="text">
     <string>Reset Zoom</string>
+   </property>
+  </action>
+  <action name="actionProperties">
+   <property name="text">
+    <string>Show File Info</string>
    </property>
   </action>
  </widget>

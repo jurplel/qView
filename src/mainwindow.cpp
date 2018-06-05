@@ -3,6 +3,7 @@
 #include "qvoptionsdialog.h"
 #include "qvaboutdialog.h"
 #include "qvwelcomedialog.h"
+#include "qvinfodialog.h"
 #include "qvapplication.h"
 #include <QFileDialog>
 #include <QMessageBox>
@@ -79,6 +80,7 @@ MainWindow::MainWindow(QWidget *parent) :
     menu->addMenu(files);
 
     menu->addAction(ui->actionOpen_Containing_Folder);
+    menu->addAction(ui->actionProperties);
     menu->addAction(ui->actionPaste);
     menu->addSeparator();
     menu->addAction(ui->actionNext_File);
@@ -349,6 +351,13 @@ void MainWindow::on_actionZoom_Out_triggered()
 void MainWindow::on_actionReset_Zoom_triggered()
 {
     ui->graphicsView->resetScale();
+}
+
+void MainWindow::on_actionProperties_triggered()
+{
+    QVInfoDialog *info = new QVInfoDialog(this);
+    info->setSelectedFileInfo(ui->graphicsView->getSelectedFileInfo());
+    info->show();
 }
 
 void MainWindow::openRecent(int i)

@@ -69,6 +69,8 @@ private slots:
 
     void clearRecent();
 
+    void on_actionProperties_triggered();
+
 private:
     Ui::MainWindow *ui;
 
