@@ -33,6 +33,8 @@ private slots:
 
     void on_titlebarModeComboBox_currentIndexChanged(int index);
 
+    void on_menubarCheckbox_stateChanged(int arg1);
+
 protected:
     virtual void showEvent(QShowEvent *event);
 
@@ -50,6 +52,7 @@ private:
         bool filteringEnabled;
         bool scalingEnabled;
         int titlebarMode;
+        bool menubarEnabled;
     };
 
     STransientSettings transientSettings;

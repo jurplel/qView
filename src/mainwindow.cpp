@@ -29,9 +29,6 @@ MainWindow::MainWindow(QWidget *parent) :
     //enable drag&dropping
     setAcceptDrops(true);
 
-    //hide menubar for non-global applications
-    ui->menuBar->hide();
-
     //make info dialog
     info = new QVInfoDialog(this);
 
@@ -116,7 +113,7 @@ MainWindow::MainWindow(QWidget *parent) :
     menu->addMenu(help);
 
     //add recent items to menubar
-    ui->menuFile->insertMenu(ui->actionNext_File, files);
+    ui->menuFile->insertMenu(ui->actionOpen_Containing_Folder, files);
 
     #ifdef Q_OS_MACX
     //macOS dock menu
@@ -206,6 +203,16 @@ void MainWindow::loadSettings()
 
     //titlebar
     ui->graphicsView->setTitlebarMode(settings.value("titlebarmode", 1).toInt());
+
+    //menubar
+    if (settings.value("menubarenabled", false).toBool())
+    {
+        ui->menuBar->show();
+    }
+    else
+    {
+        ui->menuBar->hide();
+    }
 }
 
 void MainWindow::saveGeometrySettings()

@@ -51,7 +51,7 @@
        <string>Interface</string>
       </attribute>
       <layout class="QFormLayout" name="formLayout">
-       <item row="1" column="0">
+       <item row="4" column="0">
         <widget class="QCheckBox" name="bgColorCheckbox">
          <property name="text">
           <string>Use background color</string>
@@ -64,7 +64,7 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="0">
+       <item row="5" column="0">
         <layout class="QHBoxLayout" name="bgColorLayout">
          <item>
           <widget class="QLabel" name="bgColorLabel">
@@ -106,7 +106,7 @@
          </item>
         </layout>
        </item>
-       <item row="0" column="0">
+       <item row="2" column="0">
         <layout class="QHBoxLayout" name="horizontalLayout">
          <property name="leftMargin">
           <number>0</number>
@@ -141,6 +141,13 @@
           </widget>
          </item>
         </layout>
+       </item>
+       <item row="1" column="0">
+        <widget class="QCheckBox" name="menubarCheckbox">
+         <property name="text">
+          <string>Enable Menubar</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

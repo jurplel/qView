@@ -89,10 +89,10 @@
      <string>&amp;File</string>
     </property>
     <addaction name="actionOpen"/>
-    <addaction name="actionNext_File"/>
-    <addaction name="actionPrevious_File"/>
     <addaction name="actionOpen_Containing_Folder"/>
     <addaction name="actionProperties"/>
+    <addaction name="actionNext_File"/>
+    <addaction name="actionPrevious_File"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">

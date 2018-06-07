@@ -34,6 +34,7 @@ void QVOptionsDialog::saveSettings()
     settings.setValue("filteringenabled", transientSettings.filteringEnabled);
     settings.setValue("scalingenabled", transientSettings.scalingEnabled);
     settings.setValue("titlebarmode", transientSettings.titlebarMode);
+    settings.setValue("menubarenabled", transientSettings.menubarEnabled);
     emit optionsSaved();
 }
 
@@ -69,6 +70,10 @@ void QVOptionsDialog::loadSettings()
     //titlebar
     transientSettings.titlebarMode = settings.value("titlebarmode", 1).toInt();
     ui->titlebarModeComboBox->setCurrentIndex(transientSettings.titlebarMode);
+
+    //menubar
+    transientSettings.menubarEnabled = settings.value("menubarenabled", false).toBool();
+    ui->menubarCheckbox->setChecked(transientSettings.menubarEnabled);
 }
 
 
@@ -130,6 +135,19 @@ void QVOptionsDialog::on_scalingCheckbox_stateChanged(int arg1)
         transientSettings.scalingEnabled = false;
     }
 }
+
+void QVOptionsDialog::on_menubarCheckbox_stateChanged(int arg1)
+{
+    if (arg1 > 0)
+    {
+        transientSettings.menubarEnabled = true;
+    }
+    else
+    {
+        transientSettings.menubarEnabled = false;
+    }
+}
+
 
 void QVOptionsDialog::on_titlebarModeComboBox_currentIndexChanged(int index)
 {
