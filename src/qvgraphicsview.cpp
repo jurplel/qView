@@ -250,6 +250,8 @@ void QVGraphicsView::setWindowTitle()
     if (!isPixmapLoaded)
         return;
 
+    parentMainWindow->refreshProperties();
+
     switch (getTitlebarMode()) {
     case 0:
     {

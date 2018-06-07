@@ -3,7 +3,6 @@
 #include "qvoptionsdialog.h"
 #include "qvaboutdialog.h"
 #include "qvwelcomedialog.h"
-#include "qvinfodialog.h"
 #include "qvapplication.h"
 #include <QFileDialog>
 #include <QMessageBox>
@@ -33,8 +32,10 @@ MainWindow::MainWindow(QWidget *parent) :
     //hide menubar for non-global applications
     ui->menuBar->hide();
 
-    //change show in file explorer text based on operating system
+    //make info dialog
+    info = new QVInfoDialog(this);
 
+    //change show in file explorer text based on operating system
     #if defined(Q_OS_WIN)
     ui->actionOpen_Containing_Folder->setText("Show in Explorer");
     #elif defined(Q_OS_MACX)
@@ -355,10 +356,13 @@ void MainWindow::on_actionReset_Zoom_triggered()
 
 void MainWindow::on_actionProperties_triggered()
 {
-    QVInfoDialog *info = new QVInfoDialog(this);
-    info->setInfo(ui->graphicsView->getSelectedFileInfo(), ui->graphicsView->getImageWidth(), ui->graphicsView->getImageHeight());
-
+    refreshProperties();
     info->show();
+}
+
+void MainWindow::refreshProperties()
+{
+    info->setInfo(ui->graphicsView->getSelectedFileInfo(), ui->graphicsView->getImageWidth(), ui->graphicsView->getImageHeight());
 }
 
 void MainWindow::openRecent(int i)

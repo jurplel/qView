@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "qvinfodialog.h"
 #include <QMainWindow>
 #include <QPixmap>
 #include <QSettings>
@@ -18,6 +19,8 @@ public:
     ~MainWindow();
 
     void updateRecentMenu();
+
+    void refreshProperties();
 
 public slots:
     void openFile(QString fileName);
@@ -81,6 +84,8 @@ private:
     QMenu *dockMenu;
 
     QList<QAction*> recentItems;
+
+    QVInfoDialog *info;
 };
 
 #endif // MAINWINDOW_H
