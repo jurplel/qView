@@ -49,6 +49,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionZoom_In->setShortcuts(QList<QKeySequence>({QKeySequence(Qt::CTRL + Qt::Key_Equal), QKeySequence::ZoomIn}));
     ui->actionZoom_Out->setShortcut(QKeySequence::ZoomOut);
     ui->actionReset_Zoom->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_0));
+    ui->actionFull_Screen->setShortcut(QKeySequence::FullScreen);
 
     //Context menu
     menu = new QMenu(this);
@@ -104,6 +105,7 @@ MainWindow::MainWindow(QWidget *parent) :
     flip->addAction(ui->actionFlip_Vertically);
     menu->addMenu(flip);
 
+    menu->addAction(ui->actionFull_Screen);
     menu->addSeparator();
     menu->addAction(ui->actionOptions);
 
@@ -396,4 +398,16 @@ void MainWindow::clearRecent()
     settings.setValue("recentFiles", recentFiles);
 
     updateRecentMenu();
+}
+
+void MainWindow::on_actionFull_Screen_triggered()
+{
+    if (windowState() == Qt::WindowFullScreen)
+    {
+        showNormal();
+    }
+    else
+    {
+        showFullScreen();
+    }
 }

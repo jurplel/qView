@@ -126,6 +126,7 @@
     <addaction name="separator"/>
     <addaction name="actionFlip_Horizontally"/>
     <addaction name="actionFlip_Vertically"/>
+    <addaction name="actionFull_Screen"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -244,6 +245,11 @@
    </property>
    <property name="text">
     <string>&amp;Show File Info</string>
+   </property>
+  </action>
+  <action name="actionFull_Screen">
+   <property name="text">
+    <string>Full Screen</string>
    </property>
   </action>
  </widget>
