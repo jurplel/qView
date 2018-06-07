@@ -78,7 +78,7 @@
      <x>0</x>
      <y>0</y>
      <width>640</width>
-     <height>20</height>
+     <height>24</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -115,7 +115,7 @@
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
-     <string>View</string>
+     <string>&amp;View</string>
     </property>
     <addaction name="actionZoom_In"/>
     <addaction name="actionZoom_Out"/>
@@ -174,7 +174,7 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>&amp;Open Containing Folder</string>
+    <string>Open &amp;Containing Folder</string>
    </property>
   </action>
   <action name="actionWelcome">
@@ -187,7 +187,7 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Rotate Right</string>
+    <string>Rotat&amp;e Right</string>
    </property>
   </action>
   <action name="actionRotate_Left">
@@ -195,7 +195,7 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Rotate Left</string>
+    <string>Rotate &amp;Left</string>
    </property>
   </action>
   <action name="actionFlip_Horizontally">
@@ -203,7 +203,7 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Flip Horizontally</string>
+    <string>&amp;Flip Horizontally</string>
    </property>
   </action>
   <action name="actionFlip_Vertically">
@@ -211,7 +211,7 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Flip Vertically</string>
+    <string>Flip &amp;Vertically</string>
    </property>
   </action>
   <action name="actionZoom_In">
@@ -219,7 +219,7 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Zoom In</string>
+    <string>&amp;Zoom In</string>
    </property>
   </action>
   <action name="actionZoom_Out">
@@ -227,7 +227,7 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Zoom Out</string>
+    <string>Zoom &amp;Out</string>
    </property>
   </action>
   <action name="actionReset_Zoom">
@@ -235,12 +235,15 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Reset Zoom</string>
+    <string>&amp;Reset Zoom</string>
    </property>
   </action>
   <action name="actionProperties">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
-    <string>Show File Info</string>
+    <string>&amp;Show File Info</string>
    </property>
   </action>
  </widget>

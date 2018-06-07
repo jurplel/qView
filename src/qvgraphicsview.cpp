@@ -422,26 +422,6 @@ void QVGraphicsView::fitInViewMarginless(const QRectF &rect, Qt::AspectRatioMode
 
 // Getters & Setters
 
-QGraphicsPixmapItem *QVGraphicsView::getLoadedPixmapItem() const
-{
-    return loadedPixmapItem;
-}
-
-void QVGraphicsView::setLoadedPixmapItem(QGraphicsPixmapItem *value)
-{
-    loadedPixmapItem = value;
-}
-
-qreal QVGraphicsView::getScaleFactor() const
-{
-    return scaleFactor;
-}
-
-void QVGraphicsView::setScaleFactor(const qreal &value)
-{
-    scaleFactor = value;
-}
-
 qreal QVGraphicsView::getCurrentScale() const
 {
     return currentScale;
@@ -485,11 +465,11 @@ void QVGraphicsView::setIsFilteringEnabled(bool value)
     {
         if (value)
         {
-            getLoadedPixmapItem()->setTransformationMode(Qt::SmoothTransformation);
+            loadedPixmapItem->setTransformationMode(Qt::SmoothTransformation);
         }
         else
         {
-            getLoadedPixmapItem()->setTransformationMode(Qt::FastTransformation);
+            loadedPixmapItem->setTransformationMode(Qt::FastTransformation);
         }
     }
 }
@@ -517,4 +497,28 @@ void QVGraphicsView::setTitlebarMode(int value)
 {
     titlebarMode = value;
     setWindowTitle();
+}
+
+int QVGraphicsView::getImageHeight()
+{
+    if (isPixmapLoaded)
+    {
+        return loadedPixmap.height();
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+int QVGraphicsView::getImageWidth()
+{
+    if (isPixmapLoaded)
+    {
+        return loadedPixmap.width();
+    }
+    else
+    {
+        return 0;
+    }
 }

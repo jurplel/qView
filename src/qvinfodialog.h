@@ -16,13 +16,19 @@ public:
     explicit QVInfoDialog(QWidget *parent = 0);
     ~QVInfoDialog();
 
-    QFileInfo getSelectedFileInfo() const;
-    void setSelectedFileInfo(const QFileInfo &value);
+    void setInfo(const QFileInfo &value, const int &value2, const int &value3);
+
+    void updateInfo();
+
+private slots:
+    void on_actionRefresh_triggered();
 
 private:
     Ui::QVInfoDialog *ui;
 
     QFileInfo selectedFileInfo;
+    int width;
+    int height;
 };
 
 #endif // QVINFODIALOG_H

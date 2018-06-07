@@ -40,12 +40,6 @@ public:
     qreal getCurrentScale() const;
     void setCurrentScale(const qreal &value);
 
-    qreal getScaleFactor() const;
-    void setScaleFactor(const qreal &value);
-
-    QGraphicsPixmapItem *getLoadedPixmapItem() const;
-    void setLoadedPixmapItem(QGraphicsPixmapItem *value);
-
     bool getIsPixmapLoaded() const;
     void setIsPixmapLoaded(bool value);
 
@@ -60,6 +54,9 @@ public:
 
     int getTitlebarMode() const;
     void setTitlebarMode(int value);
+
+    int getImageHeight();
+    int getImageWidth();
 
 protected:
     void wheelEvent(QWheelEvent *event) override;
@@ -95,6 +92,8 @@ private:
     QImageReader reader;
     QPixmap loadedPixmap;
     QGraphicsPixmapItem *loadedPixmapItem;
+
+
     QTransform fittedMatrix;
     QTransform scaledMatrix;
     QTimer *timer;

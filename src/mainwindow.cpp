@@ -164,7 +164,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::pickFile()
 {
     QFileDialog *fileDialog = new QFileDialog(this, tr("Open"), "", tr("Supported Files (*.bmp *.cur *.gif *.icns *.ico *.jpeg *.jpg *.pbm *.pgm *.png *.ppm *.svg *.svgz *.tif *.tiff *.wbmp *.webp *.xbm *.xpm);;All Files (*)"));
-    fileDialog->setDirectory(settings.value("lastFileDialogDir", QDir::home().path()).toString());
+    fileDialog->setDirectory(settings.value("lastFileDialogDir", QDir::homePath()).toString());
     fileDialog->open();
     connect(fileDialog, &QFileDialog::fileSelected, this, &MainWindow::openFile);
 }
@@ -172,7 +172,7 @@ void MainWindow::pickFile()
 void MainWindow::openFile(QString fileName)
 {
     ui->graphicsView->loadFile(fileName);
-    settings.setValue("lastFileDialogDir", QDir(fileName).path());
+    settings.setValue("lastFileDialogDir", QFileInfo(fileName).path());
 }
 
 
@@ -304,7 +304,7 @@ void MainWindow::on_actionOpen_Containing_Folder_triggered()
     #elif defined(Q_OS_MACX)
     process.execute("open", QStringList() << "-R" << selectedFileInfo.absoluteFilePath());
     #else
-        QDesktopServices::openUrl(selectedFileInfo.absolutePath());
+    QDesktopServices::openUrl(selectedFileInfo.absolutePath());
     #endif
 
     return;
@@ -356,7 +356,8 @@ void MainWindow::on_actionReset_Zoom_triggered()
 void MainWindow::on_actionProperties_triggered()
 {
     QVInfoDialog *info = new QVInfoDialog(this);
-    info->setSelectedFileInfo(ui->graphicsView->getSelectedFileInfo());
+    info->setInfo(ui->graphicsView->getSelectedFileInfo(), ui->graphicsView->getImageWidth(), ui->graphicsView->getImageHeight());
+
     info->show();
 }
 
