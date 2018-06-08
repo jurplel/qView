@@ -263,6 +263,37 @@ void MainWindow::updateRecentMenu()
     #endif
 }
 
+void MainWindow::openRecent(int i)
+{
+    QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
+    ui->graphicsView->loadFile(recentFiles[i].toList().last().toString());
+}
+
+void MainWindow::clearRecent()
+{
+    QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
+    for (int i = 0; i <= 9; i++)
+    {
+        if (recentFiles.size() > 1)
+        {
+            recentFiles.removeAt(1);
+        }
+        else
+        {
+            if (!ui->graphicsView->getIsPixmapLoaded())
+                recentFiles.removeAt(0);
+        }
+    }
+    settings.setValue("recentFiles", recentFiles);
+
+    updateRecentMenu();
+}
+
+void MainWindow::refreshProperties()
+{
+    info->setInfo(ui->graphicsView->getSelectedFileInfo(), ui->graphicsView->getImageWidth(), ui->graphicsView->getImageHeight());
+}
+
 // Actions
 
 void MainWindow::on_actionOpen_triggered()
@@ -367,37 +398,6 @@ void MainWindow::on_actionProperties_triggered()
 {
     refreshProperties();
     info->show();
-}
-
-void MainWindow::refreshProperties()
-{
-    info->setInfo(ui->graphicsView->getSelectedFileInfo(), ui->graphicsView->getImageWidth(), ui->graphicsView->getImageHeight());
-}
-
-void MainWindow::openRecent(int i)
-{
-    QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
-    ui->graphicsView->loadFile(recentFiles[i].toList().last().toString());
-}
-
-void MainWindow::clearRecent()
-{
-    QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
-    for (int i = 0; i <= 9; i++)
-    {
-        if (recentFiles.size() > 1)
-        {
-            recentFiles.removeAt(1);
-        }
-        else
-        {
-            if (!ui->graphicsView->getIsPixmapLoaded())
-                recentFiles.removeAt(0);
-        }
-    }
-    settings.setValue("recentFiles", recentFiles);
-
-    updateRecentMenu();
 }
 
 void MainWindow::on_actionFull_Screen_triggered()
