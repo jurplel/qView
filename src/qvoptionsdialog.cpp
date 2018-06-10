@@ -35,6 +35,7 @@ void QVOptionsDialog::saveSettings()
     settings.setValue("scalingenabled", transientSettings.scalingEnabled);
     settings.setValue("titlebarmode", transientSettings.titlebarMode);
     settings.setValue("menubarenabled", transientSettings.menubarEnabled);
+    settings.setValue("cropmode", transientSettings.cropMode);
     emit optionsSaved();
 }
 
@@ -74,6 +75,10 @@ void QVOptionsDialog::loadSettings()
     //menubar
     transientSettings.menubarEnabled = settings.value("menubarenabled", false).toBool();
     ui->menubarCheckbox->setChecked(transientSettings.menubarEnabled);
+
+    //cropmode
+    transientSettings.cropMode = settings.value("cropmode", 0).toInt();
+    ui->cropModeComboBox->setCurrentIndex(transientSettings.cropMode);
 }
 
 
@@ -152,4 +157,9 @@ void QVOptionsDialog::on_menubarCheckbox_stateChanged(int arg1)
 void QVOptionsDialog::on_titlebarModeComboBox_currentIndexChanged(int index)
 {
     transientSettings.titlebarMode = index;
+}
+
+void QVOptionsDialog::on_cropModeComboBox_currentIndexChanged(int index)
+{
+    transientSettings.cropMode = index;
 }

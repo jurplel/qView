@@ -33,6 +33,7 @@ public:
 
     void resetScale();
     void scaleExpensively(scaleMode mode);
+    void calculateBoundingBox();
 
     void nextFile();
     void previousFile();
@@ -57,6 +58,9 @@ public:
 
     int getImageHeight();
     int getImageWidth();
+
+    int getCropMode() const;
+    void setCropMode(int value);
 
 protected:
     void wheelEvent(QWheelEvent *event) override;
@@ -92,7 +96,7 @@ private:
     QImageReader reader;
     QPixmap loadedPixmap;
     QGraphicsPixmapItem *loadedPixmapItem;
-
+    QRectF alternateBoundingBox;
 
     QTransform fittedMatrix;
     QTransform scaledMatrix;
@@ -102,6 +106,7 @@ private:
     bool isFilteringEnabled;
     bool isScalingEnabled;
     int titlebarMode;
+    int cropMode;
 
     QFileInfo selectedFileInfo;
 

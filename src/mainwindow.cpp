@@ -215,6 +215,14 @@ void MainWindow::loadSettings()
     {
         ui->menuBar->hide();
     }
+
+    //cropmode
+    ui->graphicsView->setCropMode(settings.value("cropmode", 0).toInt());
+
+    if (ui->graphicsView->getIsPixmapLoaded())
+    {
+        ui->graphicsView->resetScale();
+    }
 }
 
 void MainWindow::saveGeometrySettings()

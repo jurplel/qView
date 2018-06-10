@@ -281,7 +281,8 @@ void QVGraphicsView::resetScale()
     if (!getIsScalingEnabled())
         loadedPixmapItem->setPixmap(loadedPixmap);
 
-    fitInViewMarginless(loadedPixmapItem->boundingRect(), Qt::KeepAspectRatio);
+    calculateBoundingBox();
+    fitInViewMarginless(alternateBoundingBox, Qt::KeepAspectRatio);
 
     if (!getIsScalingEnabled())
         return;
@@ -305,8 +306,8 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
     case scaleMode::resetScale:
     {
         //4 is added to these numbers to take into account the -2 margin from fitInViewMarginless (kind of a misnomer, eh?)
-        qreal marginHeight = (height()-loadedPixmapItem->boundingRect().height()*transform().m22())+4;
-        qreal marginWidth = (width()-loadedPixmapItem->boundingRect().width()*transform().m11())+4;
+        qreal marginHeight = (height()-alternateBoundingBox.height()*transform().m22())+4;
+        qreal marginWidth = (width()-alternateBoundingBox.width()*transform().m11())+4;
         if (marginWidth < marginHeight)
         {
             scaledPixmap = loadedPixmap.scaledToWidth(width()+4, Qt::SmoothTransformation);
@@ -335,7 +336,27 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
 
     if (mode == scaleMode::resetScale)
     {
-        fitInViewMarginless(loadedPixmapItem->boundingRect(), Qt::KeepAspectRatio);
+        calculateBoundingBox();
+        fitInViewMarginless(alternateBoundingBox, Qt::KeepAspectRatio);
+    }
+}
+
+void QVGraphicsView::calculateBoundingBox()
+{
+    alternateBoundingBox = loadedPixmapItem->boundingRect();
+    switch (getCropMode()) {
+    case 1:
+    {
+        alternateBoundingBox.translate(alternateBoundingBox.width()/2, 0);
+        alternateBoundingBox.setWidth(1);
+        break;
+    }
+    case 2:
+    {
+        alternateBoundingBox.translate(0, alternateBoundingBox.height()/2);
+        alternateBoundingBox.setHeight(1);
+        break;
+    }
     }
 }
 
@@ -484,10 +505,6 @@ bool QVGraphicsView::getIsScalingEnabled() const
 void QVGraphicsView::setIsScalingEnabled(bool value)
 {
     isScalingEnabled = value;
-    if (getIsPixmapLoaded())
-    {
-        resetScale();
-    }
 }
 
 int QVGraphicsView::getTitlebarMode() const
@@ -523,4 +540,14 @@ int QVGraphicsView::getImageWidth()
     {
         return 0;
     }
+}
+
+int QVGraphicsView::getCropMode() const
+{
+    return cropMode;
+}
+
+void QVGraphicsView::setCropMode(int value)
+{
+    cropMode = value;
 }

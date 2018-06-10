@@ -35,6 +35,8 @@ private slots:
 
     void on_menubarCheckbox_stateChanged(int arg1);
 
+    void on_cropModeComboBox_currentIndexChanged(int index);
+
 protected:
     virtual void showEvent(QShowEvent *event);
 
@@ -53,6 +55,7 @@ private:
         bool scalingEnabled;
         int titlebarMode;
         bool menubarEnabled;
+        int cropMode;
     };
 
     STransientSettings transientSettings;
