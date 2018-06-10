@@ -32,19 +32,19 @@ QVAboutDialog::QVAboutDialog(QWidget *parent) :
 
     //set subtitle font & text
     const QFont font2 = QFont("Lato", 18 + modifier, QFont::Normal);
-    const QString subtitleText = "version " + QString::number(VERSION, 'f', 1);
+    const QString subtitleText = tr("version ") + QString::number(VERSION, 'f', 1);
     ui->subtitleLabel->setFont(font2);
     ui->subtitleLabel->setText(subtitleText);
 
     //set update font & text
     const QFont font3 = QFont("Lato", 10 + modifier, QFont::Normal);
-    const QString updateText = QString("Checking for updates...");
+    const QString updateText = tr("Checking for updates...");
     ui->updateLabel->setFont(font3);
     ui->updateLabel->setText(updateText);
 
     //set infolabel2 font, text, and properties
     const QFont font5 = QFont("Lato", 8 + modifier, QFont::Normal);
-    const QString labelText2 = QString("Built with Qt %2<br>Source code available under GPLv3 at <a style=\"color: #03A9F4; text-decoration:none;\" href=\"https://github.com/jeep70/qView\">Github</a><br>Icon glyph created by Guilhem from the Noun Project<br>Copyright © 2018-%1, jurplel and qView contributors").arg(QDate::currentDate().year()).arg(QT_VERSION_STR);
+    const QString labelText2 = tr("Built with Qt %2<br>Source code available under GPLv3 at <a style=\"color: #03A9F4; text-decoration:none;\" href=\"https://github.com/jeep70/qView\">Github</a><br>Icon glyph created by Guilhem from the Noun Project<br>Copyright © 2018-%1, jurplel and qView contributors").arg(QDate::currentDate().year()).arg(QT_VERSION_STR);
     ui->infoLabel2->setFont(font5);
     ui->infoLabel2->setText(labelText2);
 
@@ -75,7 +75,7 @@ void QVAboutDialog::checkUpdates(QNetworkReply* reply)
 {
     if (reply->error() != QNetworkReply::NoError)
     {
-        ui->updateLabel->setText("Error checking for updates");
+        ui->updateLabel->setText(tr("Error checking for updates"));
         return;
     }
 
@@ -84,7 +84,7 @@ void QVAboutDialog::checkUpdates(QNetworkReply* reply)
 
     if (json.isNull())
     {
-        ui->updateLabel->setText("Error checking for updates");
+        ui->updateLabel->setText(tr("Error checking for updates"));
         return;
     }
 
@@ -92,12 +92,12 @@ void QVAboutDialog::checkUpdates(QNetworkReply* reply)
 
     if (latestVersionNum == 0.0)
     {
-        ui->updateLabel->setText("Error checking for updates");
+        ui->updateLabel->setText(tr("Error checking for updates"));
         return;
     }
     if (latestVersionNum > (float)VERSION)
     {
-        const QString text = QString("<a style=\"color: #03A9F4; text-decoration:none;\" href=\"https://github.com/jeep70/qView/releases\">%1 update available!</a>").arg(latestVersionNum);
+        const QString text = tr("<a style=\"color: #03A9F4; text-decoration:none;\" href=\"https://github.com/jeep70/qView/releases\">%1 update available!</a>").arg(latestVersionNum);
         ui->updateLabel->setText(text);
         ui->updateLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
         ui->updateLabel->setOpenExternalLinks(true);
@@ -105,6 +105,6 @@ void QVAboutDialog::checkUpdates(QNetworkReply* reply)
     }
     else
     {
-        ui->updateLabel->setText("No updates available");
+        ui->updateLabel->setText(tr("No updates available"));
     }
 }

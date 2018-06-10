@@ -40,7 +40,7 @@ void QVInfoDialog::updateInfo()
     ui->nameLabel->setText(selectedFileInfo.fileName());
     ui->typeLabel->setText(mime.name());
     ui->locationLabel->setText(selectedFileInfo.path());
-    ui->sizeLabel->setText(locale.formattedDataSize(selectedFileInfo.size()) + " (" + locale.toString(selectedFileInfo.size()) + " bytes)");
+    ui->sizeLabel->setText(locale.formattedDataSize(selectedFileInfo.size()) + " (" + locale.toString(selectedFileInfo.size()) + tr(" bytes)"));
     ui->modifiedLabel->setText(selectedFileInfo.lastModified().toString(locale.dateTimeFormat()));
-    ui->dimensionsLabel->setText(QString::number(width) + " x " + QString::number(height) + " (" + QString::number(megapixels) + "MP)");
+    ui->dimensionsLabel->setText(QString::number(width) + " x " + QString::number(height) + " (" + QString::number(megapixels) + tr("MP)"));
 }

@@ -183,25 +183,25 @@ void QVGraphicsView::loadFile(QString fileName)
     reader.setFileName(fileName);
     if (!QFile::exists(fileName))
     {
-        QMessageBox::critical(this, "qView Error", "Error: File does not exist");
+        QMessageBox::critical(this, tr("qView Error"), tr("Error: File does not exist"));
         updateRecentFiles(QFileInfo(fileName));
         return;
     }
     else if (fileName.isEmpty())
     {
-        QMessageBox::critical(this, "qView Error", "Error: No filepath given");
+        QMessageBox::critical(this, tr("qView Error"), tr("Error: No filepath given"));
         return;
     }
     else if (!loadedPixmap.convertFromImage(reader.read()))
     {
-        QMessageBox::critical(this, "qView Error", "Error: Failed to load file");
+        QMessageBox::critical(this, tr("qView Error"), tr("Error: Failed to load file"));
         if (getIsPixmapLoaded())
             loadFile(selectedFileInfo.filePath());
         return;
     }
     else if (loadedPixmap.isNull())
     {
-        QMessageBox::critical(this, "qView Error", "Error: Null pixmap");
+        QMessageBox::critical(this, tr("qView Error"), tr("Error: Null pixmap"));
         if (getIsPixmapLoaded())
             loadFile(selectedFileInfo.filePath());
         return;
