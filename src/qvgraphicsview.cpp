@@ -131,7 +131,8 @@ void QVGraphicsView::zoom(int DeltaY)
         if (!(loadedPixmapItem->pixmap().height() == loadedPixmap.height()))
         {
             loadedPixmapItem->setPixmap(loadedPixmap);
-            fitInViewMarginless(loadedPixmapItem->boundingRect(), Qt::KeepAspectRatio);
+            calculateBoundingBox();
+            fitInViewMarginless(alternateBoundingBox, Qt::KeepAspectRatio);
             fittedMatrix = transform();
         }
         if (DeltaY > 0)
