@@ -15,9 +15,6 @@ public:
     explicit QVWelcomeDialog(QWidget *parent = 0);
     ~QVWelcomeDialog();
 
-private slots:
-    void on_pushButton_2_clicked();
-
 private:
     Ui::QVWelcomeDialog *ui;
 };

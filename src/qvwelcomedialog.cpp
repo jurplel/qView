@@ -45,8 +45,3 @@ QVWelcomeDialog::~QVWelcomeDialog()
 {
     delete ui;
 }
-
-void QVWelcomeDialog::on_pushButton_2_clicked()
-{
-    accept();
-}
