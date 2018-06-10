@@ -79,8 +79,9 @@ protected:
 
     void mouseReleaseEvent(QMouseEvent *event) override;
 
-    void fitInViewMarginless(const QRectF &rect, Qt::AspectRatioMode aspectRatioMode);
+    void mouseDoubleClickEvent(QMouseEvent *event) override;
 
+    void fitInViewMarginless(const QRectF &rect, Qt::AspectRatioMode aspectRatioMode);
 
 
 private slots:
@@ -112,7 +113,6 @@ private:
 
     QFileInfoList loadedFileFolder;
     int loadedFileFolderIndex;
-
-    const QStringList filterList = (QStringList() << "*.svg" << "*.bmp" << "*.gif" << "*.jpg" << "*.jpeg" << "*.png" << "*.pbm" << "*.pgm" << "*.ppm" << "*.xbm" << "*.xpm");
+    const QStringList filterList = (QStringList() << "*.bmp" << "*.cur" << ".gif" << ".icns" << "*.ico" << "*.jpeg" << "*.jpe" << "*.jpg" << "*.pbm" << "*.pgm" << "*.png" << "*.ppm" << "*.svg" << "*.svgz" << "*.tif" << "*.tiff" << "*.wbmp" << "*.webp" << "*.xbm" << "*.xpm"  << "*.BMP" << "*.CUR" << ".GIF" << ".ICNS" << "*.ICO" << "*.JPEG" << "*.JPE" << "*.JPG" << "*.PBM" << "*.PGM" << "*.PNG" << "*.PPM" << "*.SVG" << "*.SVGZ" << "*.TIF" << "*.TIFF" << "*.WBMP" << "*.WEBP" << "*.XBM" << "*.XPM"  << "*.Bmp" << "*.Cur" << ".Gif" << ".Icns" << "*.Ico" << "*.Jpeg" << "*.Jpe" << "*.Jpg" << "*.Pbm" << "*.Pgm" << "*.Png" << "*.Ppm" << "*.Svg" << "*.Svgz" << "*.Tif" << "*.Tiff" << "*.Wbmp" << "*.Webp" << "*.Xbm" << "*.Xpm");
 };
 #endif // QVGRAPHICSVIEW_H

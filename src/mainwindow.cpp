@@ -163,7 +163,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::pickFile()
 {
-    QFileDialog *fileDialog = new QFileDialog(this, tr("Open"), "", tr("Supported Files (*.bmp *.cur *.gif *.icns *.ico *.jpeg *.jpg *.pbm *.pgm *.png *.ppm *.svg *.svgz *.tif *.tiff *.wbmp *.webp *.xbm *.xpm);;All Files (*)"));
+    QFileDialog *fileDialog = new QFileDialog(this, tr("Open"), "", tr("Supported Files (*.bmp *.cur *.gif *.icns *.ico *.jpeg *.jpe *.jpg *.pbm *.pgm *.png *.ppm *.svg *.svgz *.tif *.tiff *.wbmp *.webp *.xbm *.xpm *.BMP *.CUR *.GIF *.ICNS *.ICO *.JPEG *.JPE *.JPG *.PBM *.PGM *.PNG *.PPM *.SVG *.SVGZ *.TIF *.TIFF *.WBMP *.WEBP *.XBM *.XPM *.Bmp *.Cur *.Gif *.Icns *.Ico *.Jpeg *.Jpe *.Jpg *.Pbm *.Pgm *.Png *.Ppm *.Svg *.Svgz *.Tif *.Tiff *.Wbmp *.Webp *.Xbm *.Xpm);;All Files (*)"));
     fileDialog->setDirectory(settings.value("lastFileDialogDir", QDir::homePath()).toString());
     fileDialog->open();
     connect(fileDialog, &QFileDialog::fileSelected, this, &MainWindow::openFile);
@@ -302,6 +302,18 @@ void MainWindow::refreshProperties()
     info->setInfo(ui->graphicsView->getSelectedFileInfo(), ui->graphicsView->getImageWidth(), ui->graphicsView->getImageHeight());
 }
 
+void MainWindow::toggleFullScreen()
+{
+    if (windowState() == Qt::WindowFullScreen)
+    {
+        showNormal();
+    }
+    else
+    {
+        showFullScreen();
+    }
+}
+
 // Actions
 
 void MainWindow::on_actionOpen_triggered()
@@ -410,12 +422,5 @@ void MainWindow::on_actionProperties_triggered()
 
 void MainWindow::on_actionFull_Screen_triggered()
 {
-    if (windowState() == Qt::WindowFullScreen)
-    {
-        showNormal();
-    }
-    else
-    {
-        showFullScreen();
-    }
+    toggleFullScreen();
 }

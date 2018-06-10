@@ -75,6 +75,11 @@ void QVGraphicsView::mouseReleaseEvent(QMouseEvent *event)
     viewport()->setCursor(Qt::ArrowCursor);
 }
 
+void QVGraphicsView::mouseDoubleClickEvent(QMouseEvent *event)
+{
+    QGraphicsView::mouseDoubleClickEvent(event);
+    parentMainWindow->toggleFullScreen();
+}
 void QVGraphicsView::wheelEvent(QWheelEvent *event)
 {
     zoom(event->angleDelta().y());

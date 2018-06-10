@@ -22,6 +22,8 @@ public:
 
     void refreshProperties();
 
+    void toggleFullScreen();
+
 public slots:
     void openFile(QString fileName);
 
