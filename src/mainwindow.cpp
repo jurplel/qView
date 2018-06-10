@@ -217,7 +217,7 @@ void MainWindow::loadSettings()
     }
 
     //cropmode
-    ui->graphicsView->setCropMode(settings.value("cropmode", 0).toInt());
+    ui->graphicsView->setCropMode(settings.value("cropmode", 1).toInt());
 
     if (ui->graphicsView->getIsPixmapLoaded())
     {
