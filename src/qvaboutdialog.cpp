@@ -32,7 +32,7 @@ QVAboutDialog::QVAboutDialog(QWidget *parent) :
 
     //set subtitle font & text
     const QFont font2 = QFont("Lato", 18 + modifier, QFont::Normal);
-    const QString subtitleText = QString("version %1").arg(VERSION);
+    const QString subtitleText = "version " + QString::number(VERSION, 'f', 1);
     ui->subtitleLabel->setFont(font2);
     ui->subtitleLabel->setText(subtitleText);
 
