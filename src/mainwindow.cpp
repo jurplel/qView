@@ -51,6 +51,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionReset_Zoom->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_0));
     ui->actionFull_Screen->setShortcut(QKeySequence::FullScreen);
     ui->actionOriginal_Size->setShortcut(Qt::Key_O);
+    ui->actionNew_Window->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_N));
 
     //Context menu
     menu = new QMenu(this);
@@ -121,10 +122,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
     #ifdef Q_OS_MACX
     //macOS dock menu
-    dockMenu = new QMenu(this);
-    dockMenu->setAsDockMenu();
-    dockMenu->addAction(ui->actionOpen);
     ui->menuView->removeAction(ui->actionFull_Screen);
+    ui->actionNew_Window->setVisible(true);
+    if (!qobject_cast<QVApplication*>qApp->isMoreThanOneWindow)
+    {
+        dockMenu = new QMenu(this);
+        dockMenu->setAsDockMenu();
+        dockMenu->addAction(ui->actionNew_Window);
+        dockMenu->addAction(ui->actionOpen);
+    }
     #endif
 
     //add to mainwindow's action list so keyboard shortcuts work without a menubar
@@ -250,7 +256,8 @@ void MainWindow::updateRecentMenu()
     QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
 
     #ifdef Q_OS_MACX
-    dockMenu->clear();
+    if (!qobject_cast<QVApplication*>qApp->isMoreThanOneWindow)
+        dockMenu->clear();
     #endif
     for (int i = 0; i <= 9; i++)
     {
@@ -259,7 +266,8 @@ void MainWindow::updateRecentMenu()
             recentItems[i]->setVisible(true);
             recentItems[i]->setText(recentFiles[i].toList().first().toString());
             #ifdef Q_OS_MACX
-            dockMenu->addAction(recentItems[i]);
+            if (!qobject_cast<QVApplication*>qApp->isMoreThanOneWindow)
+                dockMenu->addAction(recentItems[i]);
             #endif
         }
         else
@@ -269,8 +277,12 @@ void MainWindow::updateRecentMenu()
         }
     }
     #ifdef Q_OS_MACX
-    dockMenu->addAction(ui->actionOpen);
-    dockMenu->insertSeparator(ui->actionOpen);
+    if (!qobject_cast<QVApplication*>qApp->isMoreThanOneWindow)
+    {
+        dockMenu->addAction(ui->actionNew_Window);
+        dockMenu->addAction(ui->actionOpen);
+        dockMenu->insertSeparator(ui->actionNew_Window);
+    }
     #endif
 }
 
@@ -431,4 +443,14 @@ void MainWindow::on_actionFull_Screen_triggered()
 void MainWindow::on_actionOriginal_Size_triggered()
 {
     ui->graphicsView->originalSize();
+}
+
+void MainWindow::on_actionNew_Window_triggered()
+{
+    qobject_cast<QVApplication*>qApp->newWindow();
+}
+
+bool MainWindow::getIsPixmapLoaded()
+{
+    return ui->graphicsView->getIsPixmapLoaded();
 }

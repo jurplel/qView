@@ -1,4 +1,5 @@
 #include "qvgraphicsview.h"
+#include "qvapplication.h"
 
 #include <QDebug>
 #include <QWheelEvent>
@@ -255,7 +256,7 @@ void QVGraphicsView::updateRecentFiles(QFileInfo file)
 
     settings.setValue("recentFiles", recentFiles);
 
-    parentMainWindow->updateRecentMenu();
+    qobject_cast<QVApplication*>qApp->updateRecentMenus();
 }
 
 void QVGraphicsView::setWindowTitle()

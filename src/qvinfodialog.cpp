@@ -10,6 +10,7 @@ QVInfoDialog::QVInfoDialog(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->scrollAreaWidgetContents->addAction(ui->actionRefresh);
+    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 }
 
 QVInfoDialog::~QVInfoDialog()

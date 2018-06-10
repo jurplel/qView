@@ -14,7 +14,15 @@ public:
 
     bool event(QEvent *event) override;
 
-    MainWindow* getMainWindow();
+    void openFile(QString file);
+
+    MainWindow *newWindow();
+
+    MainWindow *getMainWindow();
+
+    void updateRecentMenus();
+
+    bool isMoreThanOneWindow;
 };
 
 #endif // QVAPPLICATION_H

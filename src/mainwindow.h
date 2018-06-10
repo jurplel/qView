@@ -24,6 +24,8 @@ public:
 
     void toggleFullScreen();
 
+    bool getIsPixmapLoaded();
+
 public slots:
     void openFile(QString fileName);
 
@@ -79,6 +81,8 @@ private slots:
     void on_actionFull_Screen_triggered();
 
     void on_actionOriginal_Size_triggered();
+
+    void on_actionNew_Window_triggered();
 
 private:
     Ui::MainWindow *ui;
