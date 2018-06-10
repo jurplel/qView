@@ -91,6 +91,7 @@ MainWindow::MainWindow(QWidget *parent) :
     zoom->addAction(ui->actionZoom_In);
     zoom->addAction(ui->actionZoom_Out);
     zoom->addAction(ui->actionReset_Zoom);
+    zoom->addAction(ui->actionOriginal_Size);
     menu->addMenu(zoom);
 
     QMenu *rotate = new QMenu("Rotate", this);
@@ -423,4 +424,9 @@ void MainWindow::on_actionProperties_triggered()
 void MainWindow::on_actionFull_Screen_triggered()
 {
     toggleFullScreen();
+}
+
+void MainWindow::on_actionOriginal_Size_triggered()
+{
+    ui->graphicsView->originalSize();
 }

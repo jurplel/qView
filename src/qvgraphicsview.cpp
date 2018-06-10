@@ -93,6 +93,13 @@ void QVGraphicsView::zoom(int DeltaY)
     if (!loadedPixmapItem)
         return;
 
+    if (isOriginalSize)
+    {
+        isOriginalSize = false;
+        resetScale();
+        return;
+    }
+
     if (DeltaY > 0)
     {
         if (getCurrentScale() >= 8)
@@ -288,6 +295,7 @@ void QVGraphicsView::resetScale()
     if (!getIsScalingEnabled())
         loadedPixmapItem->setPixmap(loadedPixmap);
 
+    isOriginalSize = false;
     calculateBoundingBox();
     fitInViewMarginless(alternateBoundingBox, Qt::KeepAspectRatio);
 
@@ -365,6 +373,14 @@ void QVGraphicsView::calculateBoundingBox()
         break;
     }
     }
+}
+
+void QVGraphicsView::originalSize()
+{
+    loadedPixmapItem->setPixmap(loadedPixmap);
+    scale(1,1);
+    centerOn(loadedPixmapItem);
+    isOriginalSize = true;
 }
 
 void QVGraphicsView::nextFile()

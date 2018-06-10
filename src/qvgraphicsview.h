@@ -34,6 +34,7 @@ public:
     void resetScale();
     void scaleExpensively(scaleMode mode);
     void calculateBoundingBox();
+    void originalSize();
 
     void nextFile();
     void previousFile();
@@ -93,6 +94,7 @@ private:
 
     qreal currentScale;
     qreal scaleFactor;
+    bool isOriginalSize;
 
     QImageReader reader;
     QPixmap loadedPixmap;
