@@ -124,6 +124,7 @@ MainWindow::MainWindow(QWidget *parent) :
     dockMenu = new QMenu(this);
     dockMenu->setAsDockMenu();
     dockMenu->addAction(ui->actionOpen);
+    ui->menuView->removeAction(ui->actionFull_Screen);
     #endif
 
     //add to mainwindow's action list so keyboard shortcuts work without a menubar
@@ -165,7 +166,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::pickFile()
 {
-    QFileDialog *fileDialog = new QFileDialog(this, tr("Open"), "", tr("Supported Files (*.bmp *.cur *.gif *.icns *.ico *.jpeg *.jpe *.jpg *.pbm *.pgm *.png *.ppm *.svg *.svgz *.tif *.tiff *.wbmp *.webp *.xbm *.xpm *.BMP *.CUR *.GIF *.ICNS *.ICO *.JPEG *.JPE *.JPG *.PBM *.PGM *.PNG *.PPM *.SVG *.SVGZ *.TIF *.TIFF *.WBMP *.WEBP *.XBM *.XPM *.Bmp *.Cur *.Gif *.Icns *.Ico *.Jpeg *.Jpe *.Jpg *.Pbm *.Pgm *.Png *.Ppm *.Svg *.Svgz *.Tif *.Tiff *.Wbmp *.Webp *.Xbm *.Xpm);;All Files (*)"));
+    QFileDialog *fileDialog = new QFileDialog(this, tr("Open"), "", tr("Supported Files (*.bmp *.cur *.gif *.icns *.ico *.jpeg *.jpe *.jpg *.pbm *.pgm *.png *.ppm *.svg *.svgz *.tif *.tiff *.wbmp *.webp *.xbm *.xpm);;All Files (*)"));
     fileDialog->setDirectory(settings.value("lastFileDialogDir", QDir::homePath()).toString());
     fileDialog->open();
     connect(fileDialog, &QFileDialog::fileSelected, this, &MainWindow::openFile);

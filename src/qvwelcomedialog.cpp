@@ -21,8 +21,8 @@ QVWelcomeDialog::QVWelcomeDialog(QWidget *parent) :
     #if (defined Q_OS_WIN)
     const QFont font1 = QFont("Lato", 54, QFont::Light);
     #elif (defined Q_OS_MACX)
-    const QFont font1 = QFont("Lato", 56, QFont::Light);
-    modifier = 2;
+    const QFont font1 = QFont("Lato", 72, QFont::Light);
+    modifier = 4;
     #else
     const QFont font1 = QFont("Lato Light", 54, QFont::Light);
     #endif

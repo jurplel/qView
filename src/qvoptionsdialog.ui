@@ -188,16 +188,10 @@
          <item>
           <widget class="QComboBox" name="cropModeComboBox">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>120</width>
-             <height>0</height>
-            </size>
            </property>
            <item>
             <property name="text">
@@ -206,12 +200,12 @@
            </item>
            <item>
             <property name="text">
-             <string>Sides</string>
+             <string>Vertical</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Top &amp; Bottom</string>
+             <string>Horizontal</string>
             </property>
            </item>
           </widget>
