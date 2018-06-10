@@ -50,6 +50,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionZoom_Out->setShortcut(QKeySequence::ZoomOut);
     ui->actionReset_Zoom->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_0));
     ui->actionFull_Screen->setShortcut(QKeySequence::FullScreen);
+    ui->actionOriginal_Size->setShortcut(Qt::Key_O);
 
     //Context menu
     menu = new QMenu(this);
@@ -218,7 +219,7 @@ void MainWindow::loadSettings()
     }
 
     //cropmode
-    ui->graphicsView->setCropMode(settings.value("cropmode", 1).toInt());
+    ui->graphicsView->setCropMode(settings.value("cropmode", 0).toInt());
 
     if (ui->graphicsView->getIsPixmapLoaded())
     {

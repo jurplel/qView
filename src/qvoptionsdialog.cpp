@@ -77,7 +77,7 @@ void QVOptionsDialog::loadSettings()
     ui->menubarCheckbox->setChecked(transientSettings.menubarEnabled);
 
     //cropmode
-    transientSettings.cropMode = settings.value("cropmode", 1).toInt();
+    transientSettings.cropMode = settings.value("cropmode", 0).toInt();
     ui->cropModeComboBox->setCurrentIndex(transientSettings.cropMode);
 }
 
