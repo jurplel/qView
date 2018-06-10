@@ -90,7 +90,7 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
 
 void QVGraphicsView::zoom(int DeltaY)
 {
-    if (!loadedPixmapItem)
+    if (!isPixmapLoaded)
         return;
 
     if (isOriginalSize)

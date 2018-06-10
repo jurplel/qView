@@ -19,12 +19,12 @@ QVWelcomeDialog::QVWelcomeDialog(QWidget *parent) :
     int modifier = 0;
     //set main title font
     #if (defined Q_OS_WIN)
-    const QFont font1 = QFont("Lato", 56, QFont::Light);
+    const QFont font1 = QFont("Lato", 54, QFont::Light);
     #elif (defined Q_OS_MACX)
-    const QFont font1 = QFont("Lato", 60, QFont::Light);
+    const QFont font1 = QFont("Lato", 56, QFont::Light);
     modifier = 2;
     #else
-    const QFont font1 = QFont("Lato Light", 56, QFont::Light);
+    const QFont font1 = QFont("Lato Light", 54, QFont::Light);
     #endif
     ui->logoLabel->setFont(font1);
 
