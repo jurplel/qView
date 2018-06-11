@@ -37,6 +37,10 @@ private slots:
 
     void on_cropModeComboBox_currentIndexChanged(int index);
 
+    void on_slideshowTimerSpinBox_valueChanged(int arg1);
+
+    void on_slideshowDirectionComboBox_currentIndexChanged(int index);
+
 protected:
     virtual void showEvent(QShowEvent *event);
 
@@ -56,6 +60,8 @@ private:
         int titlebarMode;
         bool menubarEnabled;
         int cropMode;
+        int slideshowTimer;
+        int slideshowDirection;
     };
 
     STransientSettings transientSettings;

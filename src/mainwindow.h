@@ -29,6 +29,8 @@ public:
 public slots:
     void openFile(QString fileName);
 
+    void slideshowAction();
+
 protected:
     void contextMenuEvent(QContextMenuEvent *event) override;
 
@@ -84,6 +86,8 @@ private slots:
 
     void on_actionNew_Window_triggered();
 
+    void on_actionSlideshow_triggered();
+
 private:
     Ui::MainWindow *ui;
 
@@ -93,6 +97,7 @@ private:
     QMenu *menu;
     QMenu *dockMenu;
 
+    QTimer *slideshowTimer;
     QList<QAction*> recentItems;
 
     QVInfoDialog *info;

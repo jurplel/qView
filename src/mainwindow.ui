@@ -128,6 +128,8 @@
     <addaction name="separator"/>
     <addaction name="actionFlip_Horizontally"/>
     <addaction name="actionFlip_Vertically"/>
+    <addaction name="separator"/>
+    <addaction name="actionSlideshow"/>
     <addaction name="actionFull_Screen"/>
    </widget>
    <addaction name="menuFile"/>
@@ -271,6 +273,14 @@
    </property>
    <property name="visible">
     <bool>false</bool>
+   </property>
+  </action>
+  <action name="actionSlideshow">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Slideshow</string>
    </property>
   </action>
  </widget>

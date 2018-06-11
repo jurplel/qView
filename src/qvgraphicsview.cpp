@@ -21,7 +21,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     timer = new QTimer(this);
     timer->setSingleShot(true);
     timer->setInterval(10);
-    connect(timer, SIGNAL(timeout()), this, SLOT(timerExpired()));
+    connect(timer, &QTimer::timeout, this, &QVGraphicsView::timerExpired);
 
     parentMainWindow = ((MainWindow*)parentWidget()->parentWidget());
 

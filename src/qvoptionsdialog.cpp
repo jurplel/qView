@@ -36,6 +36,8 @@ void QVOptionsDialog::saveSettings()
     settings.setValue("titlebarmode", transientSettings.titlebarMode);
     settings.setValue("menubarenabled", transientSettings.menubarEnabled);
     settings.setValue("cropmode", transientSettings.cropMode);
+    settings.setValue("slideshowtimer", transientSettings.slideshowTimer);
+    settings.setValue("slideshowdirection", transientSettings.slideshowDirection);
     emit optionsSaved();
 }
 
@@ -79,6 +81,14 @@ void QVOptionsDialog::loadSettings()
     //cropmode
     transientSettings.cropMode = settings.value("cropmode", 0).toInt();
     ui->cropModeComboBox->setCurrentIndex(transientSettings.cropMode);
+
+    //slideshowtimer
+    transientSettings.slideshowTimer = settings.value("slideshowtimer", 5).toInt();
+    ui->slideshowTimerSpinBox->setValue(transientSettings.slideshowTimer);
+
+    //slideshowdirection
+    transientSettings.slideshowDirection = settings.value("slideshowdirection", 0).toInt();
+    ui->slideshowDirectionComboBox->setCurrentIndex(transientSettings.slideshowDirection);
 }
 
 
@@ -162,4 +172,14 @@ void QVOptionsDialog::on_titlebarModeComboBox_currentIndexChanged(int index)
 void QVOptionsDialog::on_cropModeComboBox_currentIndexChanged(int index)
 {
     transientSettings.cropMode = index;
+}
+
+void QVOptionsDialog::on_slideshowTimerSpinBox_valueChanged(int arg1)
+{
+    transientSettings.slideshowTimer = arg1;
+}
+
+void QVOptionsDialog::on_slideshowDirectionComboBox_currentIndexChanged(int index)
+{
+    transientSettings.slideshowDirection = index;
 }

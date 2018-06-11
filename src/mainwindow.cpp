@@ -23,14 +23,18 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    //load settings from file
-    loadSettings();
-
     //enable drag&dropping
     setAcceptDrops(true);
 
     //make info dialog
     info = new QVInfoDialog(this);
+
+    //timer for slideshow
+    slideshowTimer = new QTimer(this);
+    connect(slideshowTimer, &QTimer::timeout, this, &MainWindow::slideshowAction);
+
+    //load settings from file
+    loadSettings();
 
     //change show in file explorer text based on operating system
     #if defined(Q_OS_WIN)
@@ -108,6 +112,7 @@ MainWindow::MainWindow(QWidget *parent) :
     flip->addAction(ui->actionFlip_Vertically);
     menu->addMenu(flip);
 
+    menu->addAction(ui->actionSlideshow);
     menu->addAction(ui->actionFull_Screen);
     menu->addSeparator();
     menu->addAction(ui->actionOptions);
@@ -232,6 +237,9 @@ void MainWindow::loadSettings()
     {
         ui->graphicsView->resetScale();
     }
+
+    //slideshowtimer
+    slideshowTimer->setInterval(settings.value("slideshowtimer", 5).toInt()*1000);
 }
 
 void MainWindow::saveGeometrySettings()
@@ -448,6 +456,32 @@ void MainWindow::on_actionOriginal_Size_triggered()
 void MainWindow::on_actionNew_Window_triggered()
 {
     qobject_cast<QVApplication*>qApp->newWindow();
+}
+
+void MainWindow::on_actionSlideshow_triggered()
+{
+    if (slideshowTimer->isActive())
+    {
+        slideshowTimer->stop();
+        ui->actionSlideshow->setText(tr("Slideshow"));
+    }
+    else
+    {
+        slideshowTimer->start();
+        ui->actionSlideshow->setText(tr("Slideshow (active)"));
+    }
+}
+
+void MainWindow::slideshowAction()
+{
+    if(settings.value("slideshowdirection", 0).toInt() == 0)
+    {
+        ui->graphicsView->nextFile();
+    }
+    else
+    {
+        ui->graphicsView->previousFile();
+    }
 }
 
 bool MainWindow::getIsPixmapLoaded()
