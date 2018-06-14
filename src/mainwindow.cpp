@@ -44,16 +44,16 @@ MainWindow::MainWindow(QWidget *parent) :
     #endif
 
     //Keyboard Shortcuts
-    ui->actionOpen->setShortcut(QKeySequence::Open);
+    ui->actionOpen->setShortcuts(QKeySequence::Open);
     ui->actionNext_File->setShortcut(Qt::Key_Right);
     ui->actionPrevious_File->setShortcut(Qt::Key_Left);
-    ui->actionPaste->setShortcut(QKeySequence::Paste);
+    ui->actionPaste->setShortcuts(QKeySequence::Paste);
     ui->actionRotate_Right->setShortcut(Qt::Key_Up);
     ui->actionRotate_Left->setShortcut(Qt::Key_Down);
-    ui->actionZoom_In->setShortcuts(QList<QKeySequence>({QKeySequence(Qt::CTRL + Qt::Key_Equal), QKeySequence::ZoomIn}));
-    ui->actionZoom_Out->setShortcut(QKeySequence::ZoomOut);
+    ui->actionZoom_In->setShortcuts(QKeySequence::ZoomIn);
+    ui->actionZoom_Out->setShortcuts(QKeySequence::ZoomOut);
     ui->actionReset_Zoom->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_0));
-    ui->actionFull_Screen->setShortcut(QKeySequence::FullScreen);
+    ui->actionFull_Screen->setShortcuts(QKeySequence::FullScreen);
     ui->actionOriginal_Size->setShortcut(Qt::Key_O);
     ui->actionNew_Window->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_N));
 

@@ -99,13 +99,12 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
 
 void QVGraphicsView::zoom(int DeltaY)
 {
-    if (!isPixmapLoaded)
+    if (!getIsPixmapLoaded())
         return;
 
     //if original size set, cancel zoom and reset scale
     if (isOriginalSize)
     {
-        isOriginalSize = false;
         resetScale();
         return;
     }
@@ -202,14 +201,19 @@ void QVGraphicsView::loadMimeData(const QMimeData *mimeData)
 
 void QVGraphicsView::animatedFrameChange(QRect rect)
 {
+    if (!isMovieLoaded)
+        return;
+
     loadedPixmapItem->setPixmap(loadedMovie->currentPixmap());
-    fitInViewMarginless();
+    if (getCurrentScale() == 1.0)
+        fitInViewMarginless();
 }
 
 void QVGraphicsView::loadFile(QString fileName)
 {
     QPixmapCache::clear();
     reader->setFileName(fileName);
+    //error checks
     if (!QFile::exists(fileName))
     {
         QMessageBox::critical(this, tr("qView Error"), tr("Error: File does not exist"));
@@ -260,13 +264,13 @@ void QVGraphicsView::loadFile(QString fileName)
     else
         loadedPixmapItem->setTransformationMode(Qt::FastTransformation);
 
-    resetScale();
-
     //define info variables
     selectedFileInfo = QFileInfo(fileName);
     loadedFileFolder = QDir(selectedFileInfo.path()).entryInfoList(filterList, QDir::Files);
     loadedFileFolderIndex = loadedFileFolder.indexOf(selectedFileInfo);
 
+    //post-load operations
+    resetScale();
     parentMainWindow->refreshProperties();
     updateRecentFiles(selectedFileInfo);
     setWindowTitle();
@@ -296,7 +300,7 @@ void QVGraphicsView::updateRecentFiles(QFileInfo file)
 
 void QVGraphicsView::setWindowTitle()
 {
-    if (!isPixmapLoaded)
+    if (!getIsPixmapLoaded())
         return;
 
     switch (getTitlebarMode()) {
@@ -326,7 +330,7 @@ void QVGraphicsView::resetScale()
     if (!getIsPixmapLoaded())
         return;
 
-    if (!getIsScalingEnabled())
+    if (!getIsScalingEnabled() && !isMovieLoaded)
         loadedPixmapItem->setPixmap(*loadedPixmap);
 
     fitInViewMarginless();
@@ -351,7 +355,7 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
     switch (mode) {
     case scaleMode::resetScale:
     {
-        if (isMovieLoaded)
+        if (isMovieLoaded && getCurrentScale() == 1.0)
         {
             QSize size = QSize(loadedPixmapItem->pixmap().width(), loadedPixmapItem->pixmap().height());
             size.scale(width()+4, height()+4, Qt::KeepAspectRatio);
@@ -391,7 +395,14 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
 
 void QVGraphicsView::originalSize()
 {
-    loadedPixmapItem->setPixmap(*loadedPixmap);
+    if (isMovieLoaded)
+    {
+        loadedMovie->setScaledSize(loadedPixmap->size());
+    }
+    else
+    {
+        loadedPixmapItem->setPixmap(*loadedPixmap);
+    }
     scale(1,1);
     centerOn(loadedPixmapItem);
     isOriginalSize = true;
@@ -564,7 +575,7 @@ void QVGraphicsView::setTitlebarMode(int value)
 
 int QVGraphicsView::getImageHeight()
 {
-    if (isPixmapLoaded)
+    if (getIsPixmapLoaded())
     {
         return loadedPixmap->height();
     }
@@ -576,7 +587,7 @@ int QVGraphicsView::getImageHeight()
 
 int QVGraphicsView::getImageWidth()
 {
-    if (isPixmapLoaded)
+    if (getIsPixmapLoaded())
     {
         return loadedPixmap->width();
     }
