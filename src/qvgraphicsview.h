@@ -33,7 +33,6 @@ public:
 
     void resetScale();
     void scaleExpensively(scaleMode mode);
-    void calculateBoundingBox();
     void originalSize();
 
     void nextFile();
@@ -82,11 +81,13 @@ protected:
 
     void mouseDoubleClickEvent(QMouseEvent *event) override;
 
-    void fitInViewMarginless(const QRectF &rect, Qt::AspectRatioMode aspectRatioMode);
+    void fitInViewMarginless();
 
 
 private slots:
     void timerExpired();
+
+    void animatedFrameChange(QRect rect);
 
 private:
 
@@ -96,8 +97,9 @@ private:
     qreal scaleFactor;
     bool isOriginalSize;
 
-    QImageReader reader;
-    QPixmap loadedPixmap;
+    QImageReader *reader;
+    QMovie *loadedMovie;
+    QPixmap *loadedPixmap;
     QGraphicsPixmapItem *loadedPixmapItem;
     QRectF alternateBoundingBox;
 
@@ -105,6 +107,7 @@ private:
     QTransform scaledMatrix;
     QTimer *timer;
 
+    bool isMovieLoaded;
     bool isPixmapLoaded;
     bool isFilteringEnabled;
     bool isScalingEnabled;
@@ -115,6 +118,6 @@ private:
 
     QFileInfoList loadedFileFolder;
     int loadedFileFolderIndex;
-    const QStringList filterList = (QStringList() << "*.bmp" << "*.cur" << ".gif" << ".icns" << "*.ico" << "*.jpeg" << "*.jpe" << "*.jpg" << "*.pbm" << "*.pgm" << "*.png" << "*.ppm" << "*.svg" << "*.svgz" << "*.tif" << "*.tiff" << "*.wbmp" << "*.webp" << "*.xbm" << "*.xpm");
+    const QStringList filterList = (QStringList() << "*.bmp" << "*.cur" << "*.gif" << "*.icns" << "*.ico" << "*.jpeg" << "*.jpe" << "*.jpg" << "*.pbm" << "*.pgm" << "*.png" << "*.ppm" << "*.svg" << "*.svgz" << "*.tif" << "*.tiff" << "*.wbmp" << "*.webp" << "*.xbm" << "*.xpm");
 };
 #endif // QVGRAPHICSVIEW_H

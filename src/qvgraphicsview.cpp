@@ -1,12 +1,13 @@
 #include "qvgraphicsview.h"
 #include "qvapplication.h"
-
 #include <QDebug>
 #include <QWheelEvent>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
 #include <QSettings>
 #include <QMessageBox>
+#include <QMovie>
+#include <QPixmapCache>
 
 QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 {
@@ -16,6 +17,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 
     scaleFactor = 0.25;
     isPixmapLoaded = false;
+    isMovieLoaded = false;
     setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
 
     timer = new QTimer(this);
@@ -25,7 +27,13 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 
     parentMainWindow = ((MainWindow*)parentWidget()->parentWidget());
 
-    reader.setDecideFormatFromContent(true);
+    reader = new QImageReader();
+    reader->setDecideFormatFromContent(true);
+
+    loadedPixmap = new QPixmap();
+    loadedPixmapItem = new QGraphicsPixmapItem(*loadedPixmap);
+    loadedPixmapItem->setOffset((50000.0 - loadedPixmap->width()/2), (50000.0 - loadedPixmap->height()/2));
+    scene->addItem(loadedPixmapItem);
 }
 
 
@@ -94,6 +102,7 @@ void QVGraphicsView::zoom(int DeltaY)
     if (!isPixmapLoaded)
         return;
 
+    //if original size set, cancel zoom and reset scale
     if (isOriginalSize)
     {
         isOriginalSize = false;
@@ -101,6 +110,7 @@ void QVGraphicsView::zoom(int DeltaY)
         return;
     }
 
+    //don't zoom too far out, dude
     if (DeltaY > 0)
     {
         if (getCurrentScale() >= 8)
@@ -112,6 +122,7 @@ void QVGraphicsView::zoom(int DeltaY)
         return;
     }
 
+    //zoom around mouse when above window size, otherwise center
     if (getCurrentScale() < 1.0)
     {
         setTransformationAnchor(QGraphicsView::AnchorViewCenter);
@@ -121,8 +132,10 @@ void QVGraphicsView::zoom(int DeltaY)
         setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
     }
 
+    //use scaleExpensively if the scale is below 1, or below 1.25 and you are scrolling down (also scaling must be enabled)
     if (((getCurrentScale() < 1.0) || (getCurrentScale() <= (scaleFactor+1) && DeltaY < 0)) && getIsScalingEnabled())
     {
+        //zoom expensively
         if (DeltaY > 0)
         {
             scaleExpensively(scaleMode::zoomIn);
@@ -139,27 +152,28 @@ void QVGraphicsView::zoom(int DeltaY)
             setCurrentScale(getCurrentScale()-scaleFactor);
         }
     }
+    //use this cheaper scaling if none of the above conditions are met
     else
     {
-        if (!(loadedPixmapItem->pixmap().height() == loadedPixmap.height()))
+       //if the pixmap being displayed is not the full resolution, set it to be
+        if (!(loadedPixmapItem->pixmap().height() == loadedPixmap->height()))
         {
-            loadedPixmapItem->setPixmap(loadedPixmap);
-            calculateBoundingBox();
-            fitInViewMarginless(alternateBoundingBox, Qt::KeepAspectRatio);
-            fittedMatrix = transform();
+            loadedPixmapItem->setPixmap(*loadedPixmap);
+            fitInViewMarginless();
         }
+
+        //zoom using cheap matrix method
         if (DeltaY > 0)
         {
             fittedMatrix = fittedMatrix * (scaleFactor+1);
-            setTransform(fittedMatrix);
             setCurrentScale(getCurrentScale()+scaleFactor);
         }
         else
         {
             fittedMatrix = fittedMatrix / (scaleFactor+1);
-            setTransform(fittedMatrix);
             setCurrentScale(getCurrentScale()-scaleFactor);
         }
+        setTransform(fittedMatrix);
     }
 
     if (getCurrentScale() <= 1.0)
@@ -186,9 +200,16 @@ void QVGraphicsView::loadMimeData(const QMimeData *mimeData)
     }
 }
 
+void QVGraphicsView::animatedFrameChange(QRect rect)
+{
+    loadedPixmapItem->setPixmap(loadedMovie->currentPixmap());
+    fitInViewMarginless();
+}
+
 void QVGraphicsView::loadFile(QString fileName)
 {
-    reader.setFileName(fileName);
+    QPixmapCache::clear();
+    reader->setFileName(fileName);
     if (!QFile::exists(fileName))
     {
         QMessageBox::critical(this, tr("qView Error"), tr("Error: File does not exist"));
@@ -200,14 +221,14 @@ void QVGraphicsView::loadFile(QString fileName)
         QMessageBox::critical(this, tr("qView Error"), tr("Error: No filepath given"));
         return;
     }
-    else if (!loadedPixmap.convertFromImage(reader.read()))
+    else if (!loadedPixmap->convertFromImage(reader->read()))
     {
         QMessageBox::critical(this, tr("qView Error"), tr("Error: Failed to load file"));
         if (getIsPixmapLoaded())
             loadFile(selectedFileInfo.filePath());
         return;
     }
-    else if (loadedPixmap.isNull())
+    else if (loadedPixmap->isNull())
     {
         QMessageBox::critical(this, tr("qView Error"), tr("Error: Null pixmap"));
         if (getIsPixmapLoaded())
@@ -215,11 +236,25 @@ void QVGraphicsView::loadFile(QString fileName)
         return;
     }
 
-    scene()->clear();
-    loadedPixmapItem = scene()->addPixmap(loadedPixmap);
-    setIsPixmapLoaded(true);
-    loadedPixmapItem->setOffset((50000.0 - loadedPixmap.width()/2), (50000.0 - loadedPixmap.height()/2));
+    //animation detection
+    if (reader->supportsAnimation() && reader->imageCount() > 1)
+    {
+        loadedMovie = new QMovie(fileName);
+        connect(loadedMovie, &QMovie::updated, this, &QVGraphicsView::animatedFrameChange);
+        loadedMovie->start();
+        isMovieLoaded = true;
+    }
+    else if (isMovieLoaded)
+    {
+        isMovieLoaded = false;
+        loadedMovie->deleteLater();
+    }
 
+    //set pixmap and move graphicsitem
+    loadedPixmapItem->setPixmap(*loadedPixmap);
+    setIsPixmapLoaded(true);
+
+    //set filtering mode
     if (getIsFilteringEnabled())
         loadedPixmapItem->setTransformationMode(Qt::SmoothTransformation);
     else
@@ -227,12 +262,12 @@ void QVGraphicsView::loadFile(QString fileName)
 
     resetScale();
 
+    //define info variables
     selectedFileInfo = QFileInfo(fileName);
-    const QDir fileDir = QDir(selectedFileInfo.path());
-    loadedFileFolder = fileDir.entryInfoList(filterList, QDir::Files);
+    loadedFileFolder = QDir(selectedFileInfo.path()).entryInfoList(filterList, QDir::Files);
     loadedFileFolderIndex = loadedFileFolder.indexOf(selectedFileInfo);
 
-
+    parentMainWindow->refreshProperties();
     updateRecentFiles(selectedFileInfo);
     setWindowTitle();
 }
@@ -264,8 +299,6 @@ void QVGraphicsView::setWindowTitle()
     if (!isPixmapLoaded)
         return;
 
-    parentMainWindow->refreshProperties();
-
     switch (getTitlebarMode()) {
     case 0:
     {
@@ -280,7 +313,7 @@ void QVGraphicsView::setWindowTitle()
     case 2:
     {
         QLocale locale;
-        parentMainWindow->setWindowTitle("qView - "  + selectedFileInfo.fileName() + " - " + QString::number(loadedPixmap.width()) + "x" + QString::number(loadedPixmap.height()) + " - " + locale.formattedDataSize(selectedFileInfo.size()));
+        parentMainWindow->setWindowTitle("qView - "  + selectedFileInfo.fileName() + " - " + QString::number(loadedPixmap->width()) + "x" + QString::number(loadedPixmap->height()) + " - " + locale.formattedDataSize(selectedFileInfo.size()));
         break;
     }
     default:
@@ -294,11 +327,9 @@ void QVGraphicsView::resetScale()
         return;
 
     if (!getIsScalingEnabled())
-        loadedPixmapItem->setPixmap(loadedPixmap);
+        loadedPixmapItem->setPixmap(*loadedPixmap);
 
-    isOriginalSize = false;
-    calculateBoundingBox();
-    fitInViewMarginless(alternateBoundingBox, Qt::KeepAspectRatio);
+    fitInViewMarginless();
 
     if (!getIsScalingEnabled())
         return;
@@ -317,68 +348,50 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
         return;
 
     float oldPixmapItemHeight = loadedPixmapItem->pixmap().height();
-    QPixmap scaledPixmap;
     switch (mode) {
     case scaleMode::resetScale:
     {
-        //4 is added to these numbers to take into account the -2 margin from fitInViewMarginless (kind of a misnomer, eh?)
-        qreal marginHeight = (height()-alternateBoundingBox.height()*transform().m22())+4;
-        qreal marginWidth = (width()-alternateBoundingBox.width()*transform().m11())+4;
-        if (marginWidth < marginHeight)
+        if (isMovieLoaded)
         {
-            scaledPixmap = loadedPixmap.scaledToWidth(width()+4, Qt::SmoothTransformation);
+            QSize size = QSize(loadedPixmapItem->pixmap().width(), loadedPixmapItem->pixmap().height());
+            size.scale(width()+4, height()+4, Qt::KeepAspectRatio);
+            loadedMovie->setScaledSize(size);
         }
         else
         {
-            scaledPixmap = loadedPixmap.scaledToHeight(height()+4, Qt::SmoothTransformation);
+            //4 is added to these numbers to take into account the -2 margin from fitInViewMarginless (kind of a misnomer, eh?)
+            qreal marginHeight = (height()-alternateBoundingBox.height()*transform().m22())+4;
+            qreal marginWidth = (width()-alternateBoundingBox.width()*transform().m11())+4;
+            if (marginWidth < marginHeight)
+            {
+                loadedPixmapItem->setPixmap(loadedPixmap->scaledToWidth(width()+4, Qt::SmoothTransformation));
+            }
+            else
+            {
+                loadedPixmapItem->setPixmap(loadedPixmap->scaledToHeight(height()+4, Qt::SmoothTransformation));
+            }
+            fitInViewMarginless();
         }
         break;
     }
     case scaleMode::zoomIn:
     {
-        scaledPixmap = loadedPixmap.scaledToHeight(oldPixmapItemHeight * (scaleFactor+1), Qt::SmoothTransformation);
+        loadedPixmapItem->setPixmap(loadedPixmap->scaledToHeight(oldPixmapItemHeight * (scaleFactor+1), Qt::SmoothTransformation));
         break;
     }
     case scaleMode::zoomOut:
     {
-        scaledPixmap = loadedPixmap.scaledToHeight(oldPixmapItemHeight / (scaleFactor+1), Qt::SmoothTransformation);
+        loadedPixmapItem->setPixmap(loadedPixmap->scaledToHeight(oldPixmapItemHeight / (scaleFactor+1), Qt::SmoothTransformation));
         break;
     }
     default:
         break;
     }
-
-    loadedPixmapItem->setPixmap(scaledPixmap);
-
-    if (mode == scaleMode::resetScale)
-    {
-        calculateBoundingBox();
-        fitInViewMarginless(alternateBoundingBox, Qt::KeepAspectRatio);
-    }
-}
-
-void QVGraphicsView::calculateBoundingBox()
-{
-    alternateBoundingBox = loadedPixmapItem->boundingRect();
-    switch (getCropMode()) {
-    case 1:
-    {
-        alternateBoundingBox.translate(alternateBoundingBox.width()/2, 0);
-        alternateBoundingBox.setWidth(1);
-        break;
-    }
-    case 2:
-    {
-        alternateBoundingBox.translate(0, alternateBoundingBox.height()/2);
-        alternateBoundingBox.setHeight(1);
-        break;
-    }
-    }
 }
 
 void QVGraphicsView::originalSize()
 {
-    loadedPixmapItem->setPixmap(loadedPixmap);
+    loadedPixmapItem->setPixmap(*loadedPixmap);
     scale(1,1);
     centerOn(loadedPixmapItem);
     isOriginalSize = true;
@@ -426,9 +439,25 @@ void QVGraphicsView::previousFile()
     loadFile(previousImage.filePath());
 }
 
-void QVGraphicsView::fitInViewMarginless(const QRectF &rect, Qt::AspectRatioMode aspectRatioMode)
+void QVGraphicsView::fitInViewMarginless()
 {
-    if (!scene() || rect.isNull())
+    alternateBoundingBox = loadedPixmapItem->boundingRect();
+    switch (getCropMode()) {
+    case 1:
+    {
+        alternateBoundingBox.translate(alternateBoundingBox.width()/2, 0);
+        alternateBoundingBox.setWidth(1);
+        break;
+    }
+    case 2:
+    {
+        alternateBoundingBox.translate(0, alternateBoundingBox.height()/2);
+        alternateBoundingBox.setHeight(1);
+        break;
+    }
+    }
+
+    if (!scene() || alternateBoundingBox.isNull())
         return;
 
     // Reset the view scale to 1:1.
@@ -441,29 +470,20 @@ void QVGraphicsView::fitInViewMarginless(const QRectF &rect, Qt::AspectRatioMode
     QRectF viewRect = viewport()->rect().adjusted(margin, margin, -margin, -margin);
     if (viewRect.isEmpty())
         return;
-    QRectF sceneRect = matrix().mapRect(rect);
+    QRectF sceneRect = matrix().mapRect(alternateBoundingBox);
     if (sceneRect.isEmpty())
         return;
     qreal xratio = viewRect.width() / sceneRect.width();
     qreal yratio = viewRect.height() / sceneRect.height();
 
-    // Respect the aspect ratio mode.
-    switch (aspectRatioMode) {
-    case Qt::KeepAspectRatio:
-        xratio = yratio = qMin(xratio, yratio);
-        break;
-    case Qt::KeepAspectRatioByExpanding:
-        xratio = yratio = qMax(xratio, yratio);
-        break;
-    case Qt::IgnoreAspectRatio:
-        break;
-    }
+    xratio = yratio = qMin(xratio, yratio);
 
     // Scale and center on the center of \a rect.
     scale(xratio, yratio);
-    centerOn(rect.center());
+    centerOn(alternateBoundingBox.center());
 
     fittedMatrix = transform();
+    isOriginalSize = false;
     setCurrentScale(1.0);
 }
 
@@ -546,7 +566,7 @@ int QVGraphicsView::getImageHeight()
 {
     if (isPixmapLoaded)
     {
-        return loadedPixmap.height();
+        return loadedPixmap->height();
     }
     else
     {
@@ -558,7 +578,7 @@ int QVGraphicsView::getImageWidth()
 {
     if (isPixmapLoaded)
     {
-        return loadedPixmap.width();
+        return loadedPixmap->width();
     }
     else
     {
