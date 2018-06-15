@@ -41,6 +41,8 @@ private slots:
 
     void on_slideshowDirectionComboBox_currentIndexChanged(int index);
 
+    void on_scaleFactorSpinBox_valueChanged(int arg1);
+
 protected:
     virtual void showEvent(QShowEvent *event);
 
@@ -62,6 +64,8 @@ private:
         int cropMode;
         int slideshowTimer;
         int slideshowDirection;
+        int scaleFactor;
+        bool resizeScaleEnabled;
     };
 
     STransientSettings transientSettings;

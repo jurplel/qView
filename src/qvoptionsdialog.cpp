@@ -38,6 +38,7 @@ void QVOptionsDialog::saveSettings()
     settings.setValue("cropmode", transientSettings.cropMode);
     settings.setValue("slideshowtimer", transientSettings.slideshowTimer);
     settings.setValue("slideshowdirection", transientSettings.slideshowDirection);
+    settings.setValue("scalefactor", transientSettings.scaleFactor);
     emit optionsSaved();
 }
 
@@ -89,6 +90,10 @@ void QVOptionsDialog::loadSettings()
     //slideshowdirection
     transientSettings.slideshowDirection = settings.value("slideshowdirection", 0).toInt();
     ui->slideshowDirectionComboBox->setCurrentIndex(transientSettings.slideshowDirection);
+
+    //scalefactor
+    transientSettings.scaleFactor = settings.value("scalefactor", 25).toInt();
+    ui->scaleFactorSpinBox->setValue(transientSettings.scaleFactor);
 }
 
 
@@ -182,4 +187,9 @@ void QVOptionsDialog::on_slideshowTimerSpinBox_valueChanged(int arg1)
 void QVOptionsDialog::on_slideshowDirectionComboBox_currentIndexChanged(int index)
 {
     transientSettings.slideshowDirection = index;
+}
+
+void QVOptionsDialog::on_scaleFactorSpinBox_valueChanged(int arg1)
+{
+    transientSettings.scaleFactor = arg1;
 }

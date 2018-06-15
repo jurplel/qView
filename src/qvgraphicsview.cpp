@@ -18,6 +18,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     scaleFactor = 0.25;
     isPixmapLoaded = false;
     isMovieLoaded = false;
+    isOriginalSize = false;
     setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
 
     timer = new QTimer(this);
@@ -131,8 +132,9 @@ void QVGraphicsView::zoom(int DeltaY)
         setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
     }
 
-    //use scaleExpensively if the scale is below 1, or below 1.25 and you are scrolling down (also scaling must be enabled)
-    if (((getCurrentScale() < 1.0) || (getCurrentScale() <= (scaleFactor+1) && DeltaY < 0)) && getIsScalingEnabled())
+    //this is a disaster of an if statement, my apologies but here is what it does:
+    //use scaleExpensively if the scale is below 1, or below 1.25 and you are scrolling down (also scaling must be enabled and it must not be animated)
+    if (((getCurrentScale() < 1.0) || (getCurrentScale() <= (scaleFactor+1) && DeltaY < 0)) && getIsScalingEnabled() && !isMovieLoaded)
     {
         //zoom expensively
         if (DeltaY > 0)
@@ -155,7 +157,7 @@ void QVGraphicsView::zoom(int DeltaY)
     else
     {
        //if the pixmap being displayed is not the full resolution, set it to be
-        if (!(loadedPixmapItem->pixmap().height() == loadedPixmap->height()))
+        if (!(loadedPixmapItem->pixmap().height() == loadedPixmap->height()) && !isMovieLoaded)
         {
             loadedPixmapItem->setPixmap(*loadedPixmap);
             fitInViewMarginless();
@@ -175,6 +177,7 @@ void QVGraphicsView::zoom(int DeltaY)
         setTransform(fittedMatrix);
     }
 
+    //if scale is 1 or less, center the image
     if (getCurrentScale() <= 1.0)
     {
         centerOn(loadedPixmapItem->boundingRect().center());
@@ -205,8 +208,18 @@ void QVGraphicsView::animatedFrameChange(QRect rect)
         return;
 
     loadedPixmapItem->setPixmap(loadedMovie->currentPixmap());
-    if (getCurrentScale() == 1.0)
+    if (getCurrentScale() == 1.0 && !isOriginalSize)
         fitInViewMarginless();
+}
+
+qreal QVGraphicsView::getScaleFactor() const
+{
+    return scaleFactor;
+}
+
+void QVGraphicsView::setScaleFactor(const qreal &value)
+{
+    scaleFactor = value;
 }
 
 void QVGraphicsView::loadFile(QString fileName)
@@ -326,7 +339,7 @@ void QVGraphicsView::setWindowTitle()
 }
 
 void QVGraphicsView::resetScale()
-{ 
+{
     if (!getIsPixmapLoaded())
         return;
 
@@ -367,24 +380,22 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
             qreal marginHeight = (height()-alternateBoundingBox.height()*transform().m22())+4;
             qreal marginWidth = (width()-alternateBoundingBox.width()*transform().m11())+4;
             if (marginWidth < marginHeight)
-            {
                 loadedPixmapItem->setPixmap(loadedPixmap->scaledToWidth(width()+4, Qt::SmoothTransformation));
-            }
             else
-            {
                 loadedPixmapItem->setPixmap(loadedPixmap->scaledToHeight(height()+4, Qt::SmoothTransformation));
-            }
             fitInViewMarginless();
         }
         break;
     }
     case scaleMode::zoomIn:
     {
+        qDebug() << "expensive scale boy in";
         loadedPixmapItem->setPixmap(loadedPixmap->scaledToHeight(oldPixmapItemHeight * (scaleFactor+1), Qt::SmoothTransformation));
         break;
     }
     case scaleMode::zoomOut:
     {
+        qDebug() << "expensive scale boy out";
         loadedPixmapItem->setPixmap(loadedPixmap->scaledToHeight(oldPixmapItemHeight / (scaleFactor+1), Qt::SmoothTransformation));
         break;
     }
@@ -395,6 +406,7 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
 
 void QVGraphicsView::originalSize()
 {
+    isOriginalSize = true;
     if (isMovieLoaded)
     {
         loadedMovie->setScaledSize(loadedPixmap->size());
@@ -403,9 +415,8 @@ void QVGraphicsView::originalSize()
     {
         loadedPixmapItem->setPixmap(*loadedPixmap);
     }
-    scale(1,1);
-    centerOn(loadedPixmapItem);
-    isOriginalSize = true;
+    resetMatrix();
+    centerOn(loadedPixmapItem->boundingRect().center());
 }
 
 void QVGraphicsView::nextFile()
