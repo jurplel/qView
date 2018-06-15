@@ -240,6 +240,9 @@ void MainWindow::loadSettings()
 
     //slideshowtimer
     slideshowTimer->setInterval(settings.value("slideshowtimer", 5).toInt()*1000);
+
+    //scalefactor
+    ui->graphicsView->setScaleFactor(settings.value("scalefactor", 25).toInt()*0.01);
 }
 
 void MainWindow::saveGeometrySettings()

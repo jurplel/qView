@@ -62,6 +62,9 @@ public:
     int getCropMode() const;
     void setCropMode(int value);
 
+    qreal getScaleFactor() const;
+    void setScaleFactor(const qreal &value);
+
 protected:
     void wheelEvent(QWheelEvent *event) override;
 
