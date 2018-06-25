@@ -110,6 +110,7 @@ private:
     QTransform scaledMatrix;
     QTimer *timer;
 
+    bool movieCenterNeedsUpdating;
     bool isMovieLoaded;
     bool isPixmapLoaded;
     bool isFilteringEnabled;
