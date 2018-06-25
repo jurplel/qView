@@ -17,6 +17,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 
     scaleFactor = 0.25;
     isPixmapLoaded = false;
+    movieCenterNeedsUpdating = false;
     isMovieLoaded = false;
     isOriginalSize = false;
     setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
@@ -134,7 +135,7 @@ void QVGraphicsView::zoom(int DeltaY)
 
     //this is a disaster of an if statement, my apologies but here is what it does:
     //use scaleExpensively if the scale is below 1, or below 1.25 and you are scrolling down (also scaling must be enabled and it must not be animated)
-    if (((getCurrentScale() < 1.0) || (getCurrentScale() <= (scaleFactor+1) && DeltaY < 0)) && getIsScalingEnabled() && !isMovieLoaded)
+    if (((getCurrentScale() < 1.0) || (getCurrentScale() <= (scaleFactor+1) && DeltaY < 0)) && getIsScalingEnabled())
     {
         //zoom expensively
         if (DeltaY > 0)
@@ -208,8 +209,14 @@ void QVGraphicsView::animatedFrameChange(QRect rect)
         return;
 
     loadedPixmapItem->setPixmap(loadedMovie->currentPixmap());
+
     if (getCurrentScale() == 1.0 && !isOriginalSize)
         fitInViewMarginless();
+    if (movieCenterNeedsUpdating)
+    {
+        movieCenterNeedsUpdating = false;
+        centerOn(loadedPixmapItem);
+    }
 }
 
 qreal QVGraphicsView::getScaleFactor() const
@@ -260,10 +267,12 @@ void QVGraphicsView::loadFile(QString fileName)
         connect(loadedMovie, &QMovie::updated, this, &QVGraphicsView::animatedFrameChange);
         loadedMovie->start();
         isMovieLoaded = true;
+        movieCenterNeedsUpdating = true;
     }
     else if (isMovieLoaded)
     {
         isMovieLoaded = false;
+        movieCenterNeedsUpdating = false;
         loadedMovie->deleteLater();
     }
 
@@ -364,15 +373,17 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
     if (!getIsPixmapLoaded() || !getIsScalingEnabled())
         return;
 
+    float oldPixmapItemWidth = loadedPixmapItem->pixmap().width();
     float oldPixmapItemHeight = loadedPixmapItem->pixmap().height();
     switch (mode) {
     case scaleMode::resetScale:
     {
-        if (isMovieLoaded && getCurrentScale() == 1.0)
+        if (isMovieLoaded)
         {
-            QSize size = QSize(loadedPixmapItem->pixmap().width(), loadedPixmapItem->pixmap().height());
+            QSize size = QSize(loadedPixmap->width(), loadedPixmap->height());
             size.scale(width()+4, height()+4, Qt::KeepAspectRatio);
             loadedMovie->setScaledSize(size);
+            movieCenterNeedsUpdating = true;
         }
         else
         {
@@ -389,15 +400,35 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
     }
     case scaleMode::zoomIn:
     {
-        qDebug() << "expensive scale boy in";
-        loadedPixmapItem->setPixmap(loadedPixmap->scaledToHeight(oldPixmapItemHeight * (scaleFactor+1), Qt::SmoothTransformation));
-        break;
+        if (isMovieLoaded)
+        {
+            QSize size = QSize(loadedPixmapItem->pixmap().width(), loadedPixmapItem->pixmap().height());
+            size.scale(oldPixmapItemWidth * (scaleFactor+1), oldPixmapItemHeight * (scaleFactor+1), Qt::KeepAspectRatio);
+            loadedMovie->setScaledSize(size);
+            movieCenterNeedsUpdating = true;
+            break;
+        }
+        else
+        {
+            loadedPixmapItem->setPixmap(loadedPixmap->scaledToHeight(oldPixmapItemHeight * (scaleFactor+1), Qt::SmoothTransformation));
+            break;
+        }
     }
     case scaleMode::zoomOut:
     {
-        qDebug() << "expensive scale boy out";
-        loadedPixmapItem->setPixmap(loadedPixmap->scaledToHeight(oldPixmapItemHeight / (scaleFactor+1), Qt::SmoothTransformation));
-        break;
+        if (isMovieLoaded)
+        {
+            QSize size = QSize(loadedPixmapItem->pixmap().width(), loadedPixmapItem->pixmap().height());
+            size.scale(oldPixmapItemWidth / (scaleFactor+1), oldPixmapItemHeight / (scaleFactor+1), Qt::KeepAspectRatio);
+            loadedMovie->setScaledSize(size);
+            movieCenterNeedsUpdating = true;
+            break;
+        }
+        else
+        {
+            loadedPixmapItem->setPixmap(loadedPixmap->scaledToHeight(oldPixmapItemHeight / (scaleFactor+1), Qt::SmoothTransformation));
+            break;
+        }
     }
     default:
         break;
@@ -406,6 +437,7 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
 
 void QVGraphicsView::originalSize()
 {
+    movieCenterNeedsUpdating = false;
     isOriginalSize = true;
     if (isMovieLoaded)
     {
