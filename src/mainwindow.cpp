@@ -242,7 +242,7 @@ void MainWindow::loadSettings()
     slideshowTimer->setInterval(settings.value("slideshowtimer", 5).toInt()*1000);
 
     //scalefactor
-    ui->graphicsView->setScaleFactor(settings.value("scalefactor", 25).toInt()*0.01);
+    ui->graphicsView->setScaleFactor(settings.value("scalefactor", 25).toInt()*0.01+1);
 }
 
 void MainWindow::saveGeometrySettings()

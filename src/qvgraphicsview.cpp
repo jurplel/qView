@@ -113,12 +113,12 @@ void QVGraphicsView::zoom(int DeltaY)
     //don't zoom too far out, dude
     if (DeltaY > 0)
     {
-        if (getCurrentScale() >= 8)
+        if (getCurrentScale() >= 500)
         return;
     }
     else
     {
-        if (getCurrentScale() <= -4)
+        if (getCurrentScale() <= 0.01)
         return;
     }
 
@@ -134,23 +134,23 @@ void QVGraphicsView::zoom(int DeltaY)
 
     //this is a disaster of an if statement, my apologies but here is what it does:
     //use scaleExpensively if the scale is below 1, or below 1.25 and you are scrolling down (also scaling must be enabled and it must not be animated)
-    if (((getCurrentScale() < 1.0) || (getCurrentScale() <= (scaleFactor+1) && DeltaY < 0)) && getIsScalingEnabled())
+    if (((getCurrentScale() < 1.0) || (getCurrentScale() <= (scaleFactor) && DeltaY < 0)) && getIsScalingEnabled())
     {
         //zoom expensively
         if (DeltaY > 0)
         {
             scaleExpensively(scaleMode::zoomIn);
-            setCurrentScale(getCurrentScale()+scaleFactor);
+            setCurrentScale(getCurrentScale()*scaleFactor);
         }
         else
         {
-            if (getCurrentScale() == scaleFactor+1)
+            if (getCurrentScale() == scaleFactor)
             {
                 resetScale();
                 return;
             }
             scaleExpensively(scaleMode::zoomOut);
-            setCurrentScale(getCurrentScale()-scaleFactor);
+            setCurrentScale(getCurrentScale()/scaleFactor);
         }
     }
     //use this cheaper scaling if none of the above conditions are met
@@ -166,19 +166,19 @@ void QVGraphicsView::zoom(int DeltaY)
         //zoom using cheap matrix method
         if (DeltaY > 0)
         {
-            fittedMatrix = fittedMatrix * (scaleFactor+1);
-            setCurrentScale(getCurrentScale()+scaleFactor);
+            fittedMatrix = fittedMatrix * (scaleFactor);
+            setCurrentScale(getCurrentScale()*scaleFactor);
         }
         else
         {
-            fittedMatrix = fittedMatrix / (scaleFactor+1);
-            setCurrentScale(getCurrentScale()-scaleFactor);
+            fittedMatrix = fittedMatrix / (scaleFactor);
+            setCurrentScale(getCurrentScale()/scaleFactor);
         }
         setTransform(fittedMatrix);
     }
 
     //if scale is 1 or less, center the image
-    if (getCurrentScale() <= 1.0)
+    if (getCurrentScale() < scaleFactor)
     {
         centerOn(loadedPixmapItem->boundingRect().center());
     }
@@ -403,14 +403,14 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
         if (isMovieLoaded)
         {
             QSize size = QSize(loadedPixmapItem->pixmap().width(), loadedPixmapItem->pixmap().height());
-            size.scale(oldPixmapItemWidth * (scaleFactor+1), oldPixmapItemHeight * (scaleFactor+1), Qt::KeepAspectRatio);
+            size.scale(oldPixmapItemWidth * (scaleFactor), oldPixmapItemHeight * (scaleFactor), Qt::KeepAspectRatio);
             loadedMovie->setScaledSize(size);
             movieCenterNeedsUpdating = true;
             break;
         }
         else
         {
-            loadedPixmapItem->setPixmap(loadedPixmap->scaledToHeight(oldPixmapItemHeight * (scaleFactor+1), Qt::SmoothTransformation));
+            loadedPixmapItem->setPixmap(loadedPixmap->scaledToHeight(fittedHeight * (getCurrentScale()*scaleFactor), Qt::SmoothTransformation));
             break;
         }
     }
@@ -419,14 +419,14 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
         if (isMovieLoaded)
         {
             QSize size = QSize(loadedPixmapItem->pixmap().width(), loadedPixmapItem->pixmap().height());
-            size.scale(oldPixmapItemWidth / (scaleFactor+1), oldPixmapItemHeight / (scaleFactor+1), Qt::KeepAspectRatio);
+            size.scale(oldPixmapItemWidth / (scaleFactor), oldPixmapItemHeight / (scaleFactor), Qt::KeepAspectRatio);
             loadedMovie->setScaledSize(size);
             movieCenterNeedsUpdating = true;
             break;
         }
         else
         {
-            loadedPixmapItem->setPixmap(loadedPixmap->scaledToHeight(oldPixmapItemHeight / (scaleFactor+1), Qt::SmoothTransformation));
+            loadedPixmapItem->setPixmap(loadedPixmap->scaledToHeight(fittedHeight * (getCurrentScale()/scaleFactor), Qt::SmoothTransformation));
             break;
         }
     }
@@ -536,6 +536,7 @@ void QVGraphicsView::fitInViewMarginless()
 
     fittedMatrix = transform();
     isOriginalSize = false;
+    fittedHeight = loadedPixmapItem->boundingRect().height();
     setCurrentScale(1.0);
 }
 

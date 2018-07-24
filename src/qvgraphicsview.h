@@ -99,6 +99,7 @@ private:
     qreal currentScale;
     qreal scaleFactor;
     bool isOriginalSize;
+    int fittedHeight;
 
     QImageReader *reader;
     QMovie *loadedMovie;
