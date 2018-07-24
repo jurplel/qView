@@ -34,7 +34,6 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 
     loadedPixmap = new QPixmap();
     loadedPixmapItem = new QGraphicsPixmapItem(*loadedPixmap);
-    loadedPixmapItem->setOffset((50000.0 - loadedPixmap->width()/2), (50000.0 - loadedPixmap->height()/2));
     scene->addItem(loadedPixmapItem);
 }
 
@@ -276,8 +275,9 @@ void QVGraphicsView::loadFile(QString fileName)
         loadedMovie->deleteLater();
     }
 
-    //set pixmap and move graphicsitem
+    //set pixmap, setoffset, and move graphicsitem
     loadedPixmapItem->setPixmap(*loadedPixmap);
+    loadedPixmapItem->setOffset((scene()->width()/2 - loadedPixmap->width()/2), (scene()->height()/2 - loadedPixmap->height()/2));
     setIsPixmapLoaded(true);
 
     //set filtering mode
