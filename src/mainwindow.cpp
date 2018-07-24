@@ -428,11 +428,13 @@ void MainWindow::on_actionWelcome_triggered()
 void MainWindow::on_actionFlip_Horizontally_triggered()
 {
     ui->graphicsView->scale(-1, 1);
+    ui->graphicsView->resetScale();
 }
 
 void MainWindow::on_actionFlip_Vertically_triggered()
 {
     ui->graphicsView->scale(1, -1);
+    ui->graphicsView->resetScale();
 }
 
 void MainWindow::on_actionZoom_In_triggered()
