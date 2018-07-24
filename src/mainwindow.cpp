@@ -56,6 +56,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionFull_Screen->setShortcuts(QKeySequence::FullScreen);
     ui->actionOriginal_Size->setShortcut(Qt::Key_O);
     ui->actionNew_Window->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_N));
+    ui->actionNext_Frame->setShortcut(Qt::Key_N);
+    ui->actionPause->setShortcut(Qt::Key_P);
+    ui->actionFlip_Horizontally->setShortcut(Qt::Key_F);
+    ui->actionFlip_Vertically->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_F));
 
     //Context menu
     menu = new QMenu(this);
@@ -111,6 +115,12 @@ MainWindow::MainWindow(QWidget *parent) :
     flip->addAction(ui->actionFlip_Horizontally);
     flip->addAction(ui->actionFlip_Vertically);
     menu->addMenu(flip);
+
+    QMenu *gif = new QMenu("GIF controls", this);
+    gif->menuAction()->setEnabled(false);
+    gif->addAction(ui->actionPause);
+    gif->addAction(ui->actionNext_Frame);
+    menu->addMenu(gif);
 
     menu->addAction(ui->actionSlideshow);
     menu->addAction(ui->actionFull_Screen);
@@ -490,4 +500,14 @@ void MainWindow::slideshowAction()
 bool MainWindow::getIsPixmapLoaded()
 {
     return ui->graphicsView->getIsPixmapLoaded();
+}
+
+void MainWindow::on_actionPause_triggered()
+{
+    ui->graphicsView->moviePause();
+}
+
+void MainWindow::on_actionNext_Frame_triggered()
+{
+    ui->graphicsView->movieNextFrame();
 }

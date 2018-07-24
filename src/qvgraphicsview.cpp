@@ -218,16 +218,6 @@ void QVGraphicsView::animatedFrameChange(QRect rect)
     }
 }
 
-qreal QVGraphicsView::getScaleFactor() const
-{
-    return scaleFactor;
-}
-
-void QVGraphicsView::setScaleFactor(const qreal &value)
-{
-    scaleFactor = value;
-}
-
 void QVGraphicsView::loadFile(QString fileName)
 {
     QPixmapCache::clear();
@@ -647,4 +637,47 @@ int QVGraphicsView::getCropMode() const
 void QVGraphicsView::setCropMode(int value)
 {
     cropMode = value;
+}
+
+qreal QVGraphicsView::getScaleFactor() const
+{
+    return scaleFactor;
+}
+
+void QVGraphicsView::setScaleFactor(const qreal &value)
+{
+    scaleFactor = value;
+}
+
+bool QVGraphicsView::getIsMovieLoaded() const
+{
+    return isMovieLoaded;
+}
+
+void QVGraphicsView::setIsMovieLoaded(bool value)
+{
+    isMovieLoaded = value;
+}
+
+void QVGraphicsView::moviePause()
+{
+    if (!isMovieLoaded)
+        return;
+
+    if (loadedMovie->state() == QMovie::Running)
+    {
+        loadedMovie->setPaused(true);
+    }
+    else
+    {
+        loadedMovie->setPaused(false);
+    }
+}
+
+void QVGraphicsView::movieNextFrame()
+{
+    if (!isMovieLoaded)
+        return;
+
+    loadedMovie->jumpToNextFrame();
 }

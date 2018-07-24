@@ -116,6 +116,9 @@
      <string>&amp;Tools</string>
     </property>
     <addaction name="actionOptions"/>
+    <addaction name="separator"/>
+    <addaction name="actionPause"/>
+    <addaction name="actionNext_Frame"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -284,6 +287,16 @@
    </property>
    <property name="text">
     <string>Sli&amp;deshow</string>
+   </property>
+  </action>
+  <action name="actionPause">
+   <property name="text">
+    <string>Pause</string>
+   </property>
+  </action>
+  <action name="actionNext_Frame">
+   <property name="text">
+    <string>Next Frame</string>
    </property>
   </action>
  </widget>

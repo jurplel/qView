@@ -88,6 +88,10 @@ private slots:
 
     void on_actionSlideshow_triggered();
 
+    void on_actionPause_triggered();
+
+    void on_actionNext_Frame_triggered();
+
 private:
     Ui::MainWindow *ui;
 
