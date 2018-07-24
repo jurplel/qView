@@ -36,7 +36,7 @@ void QVInfoDialog::updateInfo()
     QLocale locale = QLocale::system();
     QMimeDatabase mimedb;
     QMimeType mime = mimedb.mimeTypeForFile(selectedFileInfo.filePath(), QMimeDatabase::MatchContent);
-    const float megapixels = float(int(((float)(width*height))/1000000 * 10 + 0.5)) / 10 ;
+    const float megapixels = float(int((static_cast<float>((width*height)))/1000000 * 10 + 0.5)) / 10 ;
 
     ui->nameLabel->setText(selectedFileInfo.fileName());
     ui->typeLabel->setText(mime.name());
