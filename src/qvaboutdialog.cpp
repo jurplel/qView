@@ -95,7 +95,7 @@ void QVAboutDialog::checkUpdates(QNetworkReply* reply)
         ui->updateLabel->setText(tr("Error checking for updates"));
         return;
     }
-    if (latestVersionNum > (float)VERSION)
+    if (latestVersionNum > static_cast<float>(VERSION))
     {
         const QString text = tr("<a style=\"color: #03A9F4; text-decoration:none;\" href=\"https://github.com/jeep70/qView/releases\">%1 update available!</a>").arg(latestVersionNum);
         ui->updateLabel->setText(text);

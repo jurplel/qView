@@ -27,7 +27,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     timer->setInterval(10);
     connect(timer, &QTimer::timeout, this, &QVGraphicsView::timerExpired);
 
-    parentMainWindow = ((MainWindow*)parentWidget()->parentWidget());
+    parentMainWindow = (static_cast<MainWindow*>(parentWidget()->parentWidget()));
 
     reader = new QImageReader();
     reader->setDecideFormatFromContent(true);
@@ -430,8 +430,6 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
             break;
         }
     }
-    default:
-        break;
     }
 }
 
