@@ -81,7 +81,7 @@
      <x>0</x>
      <y>0</y>
      <width>640</width>
-     <height>24</height>
+     <height>23</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -286,17 +286,20 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Sli&amp;deshow</string>
+    <string>Start Sli&amp;deshow</string>
+   </property>
+   <property name="toolTip">
+    <string>Slideshow</string>
    </property>
   </action>
   <action name="actionPause">
    <property name="text">
-    <string>Pause</string>
+    <string>&amp;Pause</string>
    </property>
   </action>
   <action name="actionNext_Frame">
    <property name="text">
-    <string>Next Frame</string>
+    <string>&amp;Next Frame</string>
    </property>
   </action>
  </widget>

@@ -478,12 +478,12 @@ void MainWindow::on_actionSlideshow_triggered()
     if (slideshowTimer->isActive())
     {
         slideshowTimer->stop();
-        ui->actionSlideshow->setText(tr("Slideshow"));
+        ui->actionSlideshow->setText(tr("Start Slideshow"));
     }
     else
     {
         slideshowTimer->start();
-        ui->actionSlideshow->setText(tr("Slideshow (active)"));
+        ui->actionSlideshow->setText(tr("Stop Slideshow"));
     }
 }
 
