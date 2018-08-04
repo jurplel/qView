@@ -29,6 +29,8 @@ public:
 public slots:
     void openFile(QString fileName);
 
+    void saveFrame(QString fileName);
+
     void slideshowAction();
 
 protected:
@@ -91,6 +93,14 @@ private slots:
     void on_actionPause_triggered();
 
     void on_actionNext_Frame_triggered();
+
+    void on_actionReset_Speed_triggered();
+
+    void on_actionDecrease_Speed_triggered();
+
+    void on_actionIncrease_Speed_triggered();
+
+    void on_actionSave_Frame_As_triggered();
 
 private:
     Ui::MainWindow *ui;
