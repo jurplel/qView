@@ -17,6 +17,7 @@
 #include <QDesktopServices>
 #include <QContextMenuEvent>
 #include <QMovie>
+#include <QImageWriter>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -54,13 +55,16 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionZoom_In->setShortcuts(QKeySequence::ZoomIn);
     ui->actionZoom_Out->setShortcuts(QKeySequence::ZoomOut);
     ui->actionReset_Zoom->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_0));
+    ui->actionFlip_Horizontally->setShortcut(Qt::Key_F);
+    ui->actionFlip_Vertically->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_F));
     ui->actionFull_Screen->setShortcuts(QKeySequence::FullScreen);
     ui->actionOriginal_Size->setShortcut(Qt::Key_O);
     ui->actionNew_Window->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_N));
     ui->actionNext_Frame->setShortcut(Qt::Key_N);
     ui->actionPause->setShortcut(Qt::Key_P);
-    ui->actionFlip_Horizontally->setShortcut(Qt::Key_F);
-    ui->actionFlip_Vertically->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_F));
+    ui->actionDecrease_Speed->setShortcut(Qt::Key_BracketLeft);
+    ui->actionReset_Speed->setShortcut(Qt::Key_Backslash);
+    ui->actionIncrease_Speed->setShortcut(Qt::Key_BracketRight);
 
     //Context menu
     menu = new QMenu(this);
@@ -119,8 +123,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QMenu *gif = new QMenu("GIF controls", this);
     gif->menuAction()->setEnabled(false);
+    gif->addAction(ui->actionSave_Frame_As);
     gif->addAction(ui->actionPause);
     gif->addAction(ui->actionNext_Frame);
+    gif->addSeparator();
+    gif->addAction(ui->actionDecrease_Speed);
+    gif->addAction(ui->actionReset_Speed);
+    gif->addAction(ui->actionIncrease_Speed);
     menu->addMenu(gif);
 
     menu->addAction(ui->actionSlideshow);
@@ -135,6 +144,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //add recent items to menubar
     ui->menuFile->insertMenu(ui->actionOpen_Containing_Folder, files);
+    ui->menuTools->insertMenu(ui->actionSlideshow, gif);
 
     #ifdef Q_OS_MACX
     //macOS dock menu
@@ -188,7 +198,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::pickFile()
 {
-    QFileDialog *fileDialog = new QFileDialog(this, tr("Open"), "", tr("Supported Files (*.bmp *.cur *.gif *.icns *.ico *.jpeg *.jpe *.jpg *.pbm *.pgm *.png *.ppm *.svg *.svgz *.tif *.tiff *.wbmp *.webp *.xbm *.xpm);;All Files (*)"));
+    QFileDialog *fileDialog = new QFileDialog(this, tr("Open"), "", tr("Supported Files (*.bmp *.cur *.gif *.icns *.ico *.jp2 *.jpeg *.jpe *.jpg *.mng *.pbm *.pgm *.png *.ppm *.svg *.svgz *.tif *.tiff *.wbmp *.webp *.xbm *.xpm);;All Files (*)"));
     fileDialog->setDirectory(settings.value("lastFileDialogDir", QDir::homePath()).toString());
     fileDialog->open();
     connect(fileDialog, &QFileDialog::fileSelected, this, &MainWindow::openFile);
@@ -263,6 +273,7 @@ void MainWindow::saveGeometrySettings()
 
 void MainWindow::updateRecentMenu()
 {
+    //ensure recent items functionality
     if (ui->graphicsView->getIsPixmapLoaded() && !ui->actionOpen_Containing_Folder->isEnabled())
     {
         foreach(QAction* action, ui->menuView->actions())
@@ -274,6 +285,12 @@ void MainWindow::updateRecentMenu()
             action->setEnabled(true);
         }
     }
+    //disable gif controls if there is no gif loaded
+    if (!ui->graphicsView->getIsMovieLoaded())
+        ui->menuTools->actions().first()->setEnabled(false);
+    else
+        ui->menuTools->actions().first()->setEnabled(true);
+
 
     QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
 
@@ -542,3 +559,53 @@ void MainWindow::on_actionNext_Frame_triggered()
 
     ui->graphicsView->getLoadedMovie()->jumpToNextFrame();
 }
+
+void MainWindow::on_actionReset_Speed_triggered()
+{
+    if (!ui->graphicsView->getIsMovieLoaded())
+        return;
+
+    ui->graphicsView->getLoadedMovie()->setSpeed(100);
+}
+
+void MainWindow::on_actionDecrease_Speed_triggered()
+{
+    if (!ui->graphicsView->getIsMovieLoaded())
+        return;
+
+    ui->graphicsView->getLoadedMovie()->setSpeed(ui->graphicsView->getLoadedMovie()->speed()-25);
+}
+
+void MainWindow::on_actionIncrease_Speed_triggered()
+{
+    if (!ui->graphicsView->getIsMovieLoaded())
+        return;
+
+    ui->graphicsView->getLoadedMovie()->setSpeed(ui->graphicsView->getLoadedMovie()->speed()+25);
+}
+
+void MainWindow::on_actionSave_Frame_As_triggered()
+{
+    if (!ui->graphicsView->getIsMovieLoaded())
+        return;
+
+    ui->graphicsView->getLoadedMovie()->setPaused(true);
+    ui->actionPause->setText("Resume");
+    qDebug() << QImageWriter::supportedImageFormats();
+    qDebug() << QImageReader::supportedImageFormats();
+    qDebug() << QMovie::supportedFormats();
+    QFileDialog *saveDialog = new QFileDialog(this, tr("Save Frame As..."), "", tr("Supported Files (*.bmp *.cur *.icns *.ico *.jp2 *.jpeg *.jpe *.jpg *.pbm *.pgm *.png *.ppm *.tif *.tiff *.wbmp *.webp *.xbm *.xpm);;All Files (*)"));
+    saveDialog->setDirectory(settings.value("lastFileDialogDir", QDir::homePath()).toString());
+    saveDialog->selectFile(ui->graphicsView->getSelectedFileInfo().baseName() + "-" + QString::number(ui->graphicsView->getLoadedMovie()->currentFrameNumber()));
+    saveDialog->setDefaultSuffix("png");
+    saveDialog->setAcceptMode(QFileDialog::AcceptSave);
+    saveDialog->open();
+    connect(saveDialog, &QFileDialog::fileSelected, this, &MainWindow::saveFrame);
+}
+
+void MainWindow::saveFrame(QString fileName)
+{
+    ui->graphicsView->getLoadedMovie()->currentPixmap().save(fileName, nullptr, 100);
+}
+
+

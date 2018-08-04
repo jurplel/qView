@@ -10,4 +10,4 @@ StartupWMClass=qview
 Comment=Simple Qt Image Viewer
 Categories=Qt;Graphics;Viewer;Photography
 Terminal=false
-MimeType=image/bmp;image/x-win-bitmap;image/gif;image/icns;image/x-icon;image/jpeg;image/jpg;image/x-portable-bitmap;image/x-portable-graymap;image/png;image/x-portable-pixmap;image/svg+xml;image/tiff;image/vnd.wap.wbmp;image/webp;image/x-xbitmap;image/x-xpixmap
+MimeType=image/bmp;image/x-win-bitmap;image/gif;image/icns;image/x-icon;image/jp2;image/jpeg;image/jpg;video/x-mng;video/mng;image/x-portable-bitmap;image/x-portable-graymap;image/png;image/x-portable-pixmap;image/svg+xml;image/tiff;image/vnd.wap.wbmp;image/webp;image/x-xbitmap;image/x-xpixmap
