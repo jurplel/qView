@@ -90,7 +90,7 @@ void QVAboutDialog::checkUpdates(QNetworkReply* reply)
 
     float latestVersionNum = json.array().first().toObject().value("tag_name").toString("0.0").toFloat();
 
-    if (latestVersionNum == 0.0)
+    if (latestVersionNum == 0.0f)
     {
         ui->updateLabel->setText(tr("Error checking for updates"));
         return;

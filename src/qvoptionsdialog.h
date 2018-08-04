@@ -14,7 +14,7 @@ class QVOptionsDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit QVOptionsDialog(QWidget *parent = 0);
+    explicit QVOptionsDialog(QWidget *parent = nullptr);
     ~QVOptionsDialog();
 
 signals:

@@ -659,25 +659,12 @@ void QVGraphicsView::setIsMovieLoaded(bool value)
     isMovieLoaded = value;
 }
 
-void QVGraphicsView::moviePause()
+QMovie *QVGraphicsView::getLoadedMovie() const
 {
-    if (!isMovieLoaded)
-        return;
-
-    if (loadedMovie->state() == QMovie::Running)
-    {
-        loadedMovie->setPaused(true);
-    }
-    else
-    {
-        loadedMovie->setPaused(false);
-    }
+    return loadedMovie;
 }
 
-void QVGraphicsView::movieNextFrame()
+void QVGraphicsView::setLoadedMovie(QMovie *value)
 {
-    if (!isMovieLoaded)
-        return;
-
-    loadedMovie->jumpToNextFrame();
+    loadedMovie = value;
 }

@@ -13,10 +13,10 @@ class QVInfoDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit QVInfoDialog(QWidget *parent = 0);
+    explicit QVInfoDialog(QWidget *parent = nullptr);
     ~QVInfoDialog();
 
-    void setInfo(const QFileInfo &value, const int &value2, const int &value3);
+    void setInfo(const QFileInfo &value, const int &value2, const int &value3, const int &value4, const int &value5);
 
     void updateInfo();
 
@@ -29,6 +29,9 @@ private:
     QFileInfo selectedFileInfo;
     int width;
     int height;
+
+    int frameCount;
+    int nextFrameDelay;
 };
 
 #endif // QVINFODIALOG_H

@@ -16,6 +16,7 @@
 #include <QProcess>
 #include <QDesktopServices>
 #include <QContextMenuEvent>
+#include <QMovie>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -335,7 +336,20 @@ void MainWindow::clearRecent()
 
 void MainWindow::refreshProperties()
 {
-    info->setInfo(ui->graphicsView->getSelectedFileInfo(), ui->graphicsView->getImageWidth(), ui->graphicsView->getImageHeight());
+    int value4;
+    int value5;
+    if (ui->graphicsView->getIsMovieLoaded())
+    {
+        value4 = ui->graphicsView->getLoadedMovie()->frameCount();
+        value5 = ui->graphicsView->getLoadedMovie()->nextFrameDelay();
+    }
+    else
+    {
+        value4 = 0;
+        value5 = 0;
+    }
+    info->setInfo(ui->graphicsView->getSelectedFileInfo(), ui->graphicsView->getImageWidth(), ui->graphicsView->getImageHeight(), value4, value5);
+
 }
 
 void MainWindow::toggleFullScreen()
@@ -506,10 +520,25 @@ bool MainWindow::getIsPixmapLoaded()
 
 void MainWindow::on_actionPause_triggered()
 {
-    ui->graphicsView->moviePause();
+    if (!ui->graphicsView->getIsMovieLoaded())
+        return;
+
+    if (ui->graphicsView->getLoadedMovie()->state() == QMovie::Running)
+    {
+        ui->graphicsView->getLoadedMovie()->setPaused(true);
+        ui->actionPause->setText("Resume");
+    }
+    else
+    {
+        ui->graphicsView->getLoadedMovie()->setPaused(false);
+        ui->actionPause->setText("Pause");
+    }
 }
 
 void MainWindow::on_actionNext_Frame_triggered()
 {
-    ui->graphicsView->movieNextFrame();
+    if (!ui->graphicsView->getIsMovieLoaded())
+        return;
+
+    ui->graphicsView->getLoadedMovie()->jumpToNextFrame();
 }

@@ -12,7 +12,7 @@ class QVWelcomeDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit QVWelcomeDialog(QWidget *parent = 0);
+    explicit QVWelcomeDialog(QWidget *parent = nullptr);
     ~QVWelcomeDialog();
 
 private:
