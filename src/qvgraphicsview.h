@@ -38,9 +38,6 @@ public:
     void nextFile();
     void previousFile();
 
-    void moviePause();
-    void movieNextFrame();
-
     qreal getCurrentScale() const;
     void setCurrentScale(const qreal &value);
 
@@ -70,6 +67,9 @@ public:
 
     bool getIsMovieLoaded() const;
     void setIsMovieLoaded(bool value);
+
+    QMovie *getLoadedMovie() const;
+    void setLoadedMovie(QMovie *value);
 
 protected:
     void wheelEvent(QWheelEvent *event) override;

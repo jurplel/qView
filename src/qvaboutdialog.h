@@ -13,7 +13,7 @@ class QVAboutDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit QVAboutDialog(QWidget *parent = 0);
+    explicit QVAboutDialog(QWidget *parent = nullptr);
     ~QVAboutDialog();
 
 private slots:
