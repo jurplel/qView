@@ -4,7 +4,6 @@
 #include "qvinfodialog.h"
 #include <QMainWindow>
 #include <QPixmap>
-#include <QSettings>
 
 namespace Ui {
 class MainWindow;
@@ -107,7 +106,6 @@ private:
 
     void pickFile();
 
-    QSettings settings;
     QMenu *menu;
     QMenu *dockMenu;
 

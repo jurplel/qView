@@ -306,8 +306,6 @@ void QVGraphicsView::updateRecentFiles(QFileInfo file)
     }
 
     settings.setValue("recentFiles", recentFiles);
-
-    qobject_cast<QVApplication*>qApp->updateRecentMenus();
 }
 
 void QVGraphicsView::setWindowTitle()

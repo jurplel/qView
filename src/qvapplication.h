@@ -20,8 +20,6 @@ public:
 
     MainWindow *getMainWindow();
 
-    void updateRecentMenus();
-
     bool isMoreThanOneWindow;
 };
 

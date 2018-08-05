@@ -37,13 +37,6 @@ MainWindow *QVApplication::newWindow()
     return w;
 }
 
-void QVApplication::updateRecentMenus()
-{
-    foreach (QWidget *w, qApp->topLevelWidgets())
-        if (MainWindow* mainWin = qobject_cast<MainWindow*>(w))
-            mainWin->updateRecentMenu();
-}
-
 MainWindow *QVApplication::getMainWindow()
 {
     foreach (QWidget *w, qApp->topLevelWidgets())
