@@ -18,6 +18,7 @@
 #include <QContextMenuEvent>
 #include <QMovie>
 #include <QImageWriter>
+#include <QSettings>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -176,12 +177,14 @@ MainWindow::~MainWindow()
 void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 {
     QMainWindow::contextMenuEvent(event);
+    updateRecentMenu();
     menu->exec(event->globalPos());
 }
 
 void MainWindow::showEvent(QShowEvent *event)
 {
     QMainWindow::showEvent(event);
+    QSettings settings;
 
     if (settings.value("firstlaunch", false).toBool())
         return;
@@ -198,6 +201,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::pickFile()
 {
+    QSettings settings;
     QFileDialog *fileDialog = new QFileDialog(this, tr("Open"), "", tr("Supported Files (*.bmp *.cur *.gif *.icns *.ico *.jp2 *.jpeg *.jpe *.jpg *.mng *.pbm *.pgm *.png *.ppm *.svg *.svgz *.tif *.tiff *.wbmp *.webp *.xbm *.xpm);;All Files (*)"));
     fileDialog->setDirectory(settings.value("lastFileDialogDir", QDir::homePath()).toString());
     fileDialog->open();
@@ -206,6 +210,7 @@ void MainWindow::pickFile()
 
 void MainWindow::openFile(QString fileName)
 {
+    QSettings settings;
     ui->graphicsView->loadFile(fileName);
     settings.setValue("lastFileDialogDir", QFileInfo(fileName).path());
 }
@@ -213,6 +218,7 @@ void MainWindow::openFile(QString fileName)
 
 void MainWindow::loadSettings()
 {
+    QSettings settings;
 
     //geometry
     restoreGeometry(settings.value("geometry").toByteArray());
@@ -268,11 +274,14 @@ void MainWindow::loadSettings()
 
 void MainWindow::saveGeometrySettings()
 {
+    QSettings settings;
     settings.setValue("geometry", saveGeometry());
 }
 
 void MainWindow::updateRecentMenu()
 {
+    QSettings settings;
+
     //ensure recent items functionality
     if (ui->graphicsView->getIsPixmapLoaded() && !ui->actionOpen_Containing_Folder->isEnabled())
     {
@@ -327,12 +336,14 @@ void MainWindow::updateRecentMenu()
 
 void MainWindow::openRecent(int i)
 {
+    QSettings settings;
     QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
     ui->graphicsView->loadFile(recentFiles[i].toList().last().toString());
 }
 
 void MainWindow::clearRecent()
 {
+    QSettings settings;
     QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
     for (int i = 0; i <= 9; i++)
     {
@@ -520,6 +531,7 @@ void MainWindow::on_actionSlideshow_triggered()
 
 void MainWindow::slideshowAction()
 {
+    QSettings settings;
     if(settings.value("slideshowdirection", 0).toInt() == 0)
     {
         ui->graphicsView->nextFile();
@@ -586,6 +598,7 @@ void MainWindow::on_actionIncrease_Speed_triggered()
 
 void MainWindow::on_actionSave_Frame_As_triggered()
 {
+    QSettings settings;
     if (!ui->graphicsView->getIsMovieLoaded())
         return;
 
