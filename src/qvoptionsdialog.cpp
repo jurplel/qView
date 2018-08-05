@@ -1,7 +1,6 @@
 #include "qvoptionsdialog.h"
 #include "ui_qvoptionsdialog.h"
 #include <QColorDialog>
-#include <QDebug>
 #include <QPalette>
 
 QVOptionsDialog::QVOptionsDialog(QWidget *parent) :

@@ -1,6 +1,5 @@
 #include "qvgraphicsview.h"
 #include "qvapplication.h"
-#include <QDebug>
 #include <QWheelEvent>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
@@ -121,6 +120,13 @@ void QVGraphicsView::zoom(int DeltaY)
         if (getCurrentScale() <= 0.01)
         return;
     }
+    //Disallow zooming while movie is paused
+    if (isMovieLoaded)
+    {
+        if (!(loadedMovie->state() == QMovie::Running))
+            return;
+    }
+
 
     //zoom around mouse when above window size, otherwise center
     if (getCurrentScale() < 1.0)
@@ -210,7 +216,9 @@ void QVGraphicsView::animatedFrameChange(QRect rect)
     loadedPixmapItem->setPixmap(loadedMovie->currentPixmap());
 
     if (getCurrentScale() == 1.0 && !isOriginalSize)
+    {
         fitInViewMarginless();
+    }
     if (movieCenterNeedsUpdating)
     {
         movieCenterNeedsUpdating = false;
@@ -361,8 +369,6 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
     if (!getIsPixmapLoaded() || !getIsScalingEnabled())
         return;
 
-    float oldPixmapItemWidth = loadedPixmapItem->pixmap().width();
-    float oldPixmapItemHeight = loadedPixmapItem->pixmap().height();
     switch (mode) {
     case scaleMode::resetScale:
     {
@@ -383,33 +389,36 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
     }
     case scaleMode::zoomIn:
     {
+        qDebug() << fittedWidth;
+        QSize size = QSize(loadedPixmap->width(), loadedPixmap->height());
+        size.scale(static_cast<int>(fittedWidth * (getCurrentScale()*scaleFactor)), static_cast<int>(fittedHeight * (getCurrentScale()*scaleFactor)), Qt::KeepAspectRatio);
         if (isMovieLoaded)
         {
-            QSize size = QSize(loadedPixmapItem->pixmap().width(), loadedPixmapItem->pixmap().height());
-            size.scale(oldPixmapItemWidth * (scaleFactor), oldPixmapItemHeight * (scaleFactor), Qt::KeepAspectRatio);
+
             loadedMovie->setScaledSize(size);
             movieCenterNeedsUpdating = true;
             break;
         }
         else
         {
-            loadedPixmapItem->setPixmap(loadedPixmap->scaledToHeight(fittedHeight * (getCurrentScale()*scaleFactor), Qt::SmoothTransformation));
+            loadedPixmapItem->setPixmap(loadedPixmap->scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
             break;
         }
     }
     case scaleMode::zoomOut:
     {
+        qDebug() << fittedWidth;
+        QSize size = QSize(loadedPixmap->width(), loadedPixmap->height());
+        size.scale(static_cast<int>(fittedWidth * (getCurrentScale()/scaleFactor)), static_cast<int>(fittedHeight * (getCurrentScale()/scaleFactor)), Qt::KeepAspectRatio);
         if (isMovieLoaded)
         {
-            QSize size = QSize(loadedPixmapItem->pixmap().width(), loadedPixmapItem->pixmap().height());
-            size.scale(oldPixmapItemWidth / (scaleFactor), oldPixmapItemHeight / (scaleFactor), Qt::KeepAspectRatio);
             loadedMovie->setScaledSize(size);
             movieCenterNeedsUpdating = true;
             break;
         }
         else
         {
-            loadedPixmapItem->setPixmap(loadedPixmap->scaledToHeight(fittedHeight * (getCurrentScale()/scaleFactor), Qt::SmoothTransformation));
+            loadedPixmapItem->setPixmap(loadedPixmap->scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
             break;
         }
     }
@@ -418,7 +427,7 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
 
 void QVGraphicsView::originalSize()
 {
-    movieCenterNeedsUpdating = false;
+    movieCenterNeedsUpdating = true;
     isOriginalSize = true;
     if (isMovieLoaded)
     {
@@ -520,6 +529,7 @@ void QVGraphicsView::fitInViewMarginless()
     fittedMatrix = transform();
     isOriginalSize = false;
     fittedHeight = loadedPixmapItem->boundingRect().height();
+    fittedWidth = loadedPixmapItem->boundingRect().width();
     setCurrentScale(1.0);
 }
 
