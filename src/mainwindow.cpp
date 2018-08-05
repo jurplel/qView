@@ -8,7 +8,6 @@
 #include <QMessageBox>
 #include <QString>
 #include <QGraphicsPixmapItem>
-#include <QDebug>
 #include <QPixmap>
 #include <QClipboard>
 #include <QCoreApplication>
@@ -66,6 +65,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionDecrease_Speed->setShortcut(Qt::Key_BracketLeft);
     ui->actionReset_Speed->setShortcut(Qt::Key_Backslash);
     ui->actionIncrease_Speed->setShortcut(Qt::Key_BracketRight);
+    ui->actionProperties->setShortcut(Qt::Key_I);
 
     //Context menu
     menu = new QMenu(this);
@@ -604,12 +604,9 @@ void MainWindow::on_actionSave_Frame_As_triggered()
 
     ui->graphicsView->getLoadedMovie()->setPaused(true);
     ui->actionPause->setText("Resume");
-    qDebug() << QImageWriter::supportedImageFormats();
-    qDebug() << QImageReader::supportedImageFormats();
-    qDebug() << QMovie::supportedFormats();
     QFileDialog *saveDialog = new QFileDialog(this, tr("Save Frame As..."), "", tr("Supported Files (*.bmp *.cur *.icns *.ico *.jp2 *.jpeg *.jpe *.jpg *.pbm *.pgm *.png *.ppm *.tif *.tiff *.wbmp *.webp *.xbm *.xpm);;All Files (*)"));
     saveDialog->setDirectory(settings.value("lastFileDialogDir", QDir::homePath()).toString());
-    saveDialog->selectFile(ui->graphicsView->getSelectedFileInfo().baseName() + "-" + QString::number(ui->graphicsView->getLoadedMovie()->currentFrameNumber()));
+    saveDialog->selectFile(ui->graphicsView->getSelectedFileInfo().baseName() + "-" + QString::number(ui->graphicsView->getLoadedMovie()->currentFrameNumber()) + ".png");
     saveDialog->setDefaultSuffix("png");
     saveDialog->setAcceptMode(QFileDialog::AcceptSave);
     saveDialog->open();
