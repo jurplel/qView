@@ -120,12 +120,6 @@ void QVGraphicsView::zoom(int DeltaY)
         if (getCurrentScale() <= 0.01)
         return;
     }
-    //Disallow zooming while movie is paused
-    if (isMovieLoaded)
-    {
-        if (!(loadedMovie->state() == QMovie::Running))
-            return;
-    }
 
 
     //zoom around mouse when above window size, otherwise center
@@ -138,10 +132,19 @@ void QVGraphicsView::zoom(int DeltaY)
         setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
     }
 
+    bool veto = false;
+    //Disallow zooming expensively while movie is paused
+    if (isMovieLoaded)
+    {
+        if (!(loadedMovie->state() == QMovie::Running))
+            veto = true;
+    }
+
     //this is a disaster of an if statement, my apologies but here is what it does:
     //use scaleExpensively if the scale is below 1, or below 1.25 and you are scrolling down (also scaling must be enabled and it must not be animated)
-    if (((getCurrentScale() < 1.0) || (getCurrentScale() <= (scaleFactor) && DeltaY < 0)) && getIsScalingEnabled())
+    if (((getCurrentScale() < 1.0) || (getCurrentScale() <= (scaleFactor) && DeltaY < 0)) && getIsScalingEnabled() && !veto)
     {
+
         //zoom expensively
         if (DeltaY > 0)
         {
@@ -389,7 +392,6 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
     }
     case scaleMode::zoomIn:
     {
-        qDebug() << fittedWidth;
         QSize size = QSize(loadedPixmap->width(), loadedPixmap->height());
         size.scale(static_cast<int>(fittedWidth * (getCurrentScale()*scaleFactor)), static_cast<int>(fittedHeight * (getCurrentScale()*scaleFactor)), Qt::KeepAspectRatio);
         if (isMovieLoaded)
@@ -407,7 +409,6 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
     }
     case scaleMode::zoomOut:
     {
-        qDebug() << fittedWidth;
         QSize size = QSize(loadedPixmap->width(), loadedPixmap->height());
         size.scale(static_cast<int>(fittedWidth * (getCurrentScale()/scaleFactor)), static_cast<int>(fittedHeight * (getCurrentScale()/scaleFactor)), Qt::KeepAspectRatio);
         if (isMovieLoaded)
