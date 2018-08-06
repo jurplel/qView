@@ -375,17 +375,22 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
     switch (mode) {
     case scaleMode::resetScale:
     {
-        QSize size = QSize(loadedPixmap->width(), loadedPixmap->height());
-        //4 is added to these numbers to take into account the -2 margin from fitInViewMarginless (kind of a misnomer, eh?)
-        size.scale(width()+4, height()+4, Qt::KeepAspectRatio);
         if (isMovieLoaded)
         {
+            QSize size = QSize(loadedPixmap->width(), loadedPixmap->height());
+            size.scale(width()+4, height()+4, Qt::KeepAspectRatio);
             loadedMovie->setScaledSize(size);
             movieCenterNeedsUpdating = true;
         }
         else
         {
-            loadedPixmapItem->setPixmap(loadedPixmap->scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            //4 is added to these numbers to take into account the -2 margin from fitInViewMarginless (kind of a misnomer, eh?)
+            qreal marginHeight = (height()-alternateBoundingBox.height()*transform().m22())+4;
+            qreal marginWidth = (width()-alternateBoundingBox.width()*transform().m11())+4;
+            if (marginWidth < marginHeight)
+                loadedPixmapItem->setPixmap(loadedPixmap->scaledToWidth(width()+4, Qt::SmoothTransformation));
+            else
+                loadedPixmapItem->setPixmap(loadedPixmap->scaledToHeight(height()+4, Qt::SmoothTransformation));
             fitInViewMarginless();
         }
         break;
