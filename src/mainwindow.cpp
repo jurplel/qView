@@ -18,6 +18,9 @@
 #include <QMovie>
 #include <QImageWriter>
 #include <QSettings>
+#include <QStyle>
+#include <QIcon>
+#include <QMimeDatabase>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -25,20 +28,20 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    //enable drag&dropping
+    //Enable drag&dropping
     setAcceptDrops(true);
 
-    //make info dialog
+    //Make info dialog
     info = new QVInfoDialog(this);
 
-    //timer for slideshow
+    //Timer for slideshow
     slideshowTimer = new QTimer(this);
     connect(slideshowTimer, &QTimer::timeout, this, &MainWindow::slideshowAction);
 
-    //load settings from file
+    //Load settings from file
     loadSettings();
 
-    //change show in file explorer text based on operating system
+    //Change show in file explorer text based on operating system
     #if defined(Q_OS_WIN)
     ui->actionOpen_Containing_Folder->setText("Show in Explorer");
     #elif defined(Q_OS_MACX)
@@ -143,10 +146,22 @@ MainWindow::MainWindow(QWidget *parent) :
     help->addAction(ui->actionWelcome);
     menu->addMenu(help);
 
-    //add recent items to menubar
+
+    //Menu icons that can't be set in the ui file
+    files->setIcon(QIcon::fromTheme("document-open-recent"));
+    clearMenu->setIcon(QIcon::fromTheme("edit-delete"));
+    zoom->setIcon(QIcon::fromTheme("zoom-in"));
+    rotate->setIcon(QIcon::fromTheme("object-rotate-right"));
+    flip->setIcon(QIcon::fromTheme("object-flip-horizontal"));
+    gif->setIcon(QIcon::fromTheme("media-playlist-repeat"));
+    help->setIcon(QIcon::fromTheme("help-about"));
+
+
+    //Add recent items to menubar
     ui->menuFile->insertMenu(ui->actionOpen_Containing_Folder, files);
     ui->menuTools->insertMenu(ui->actionSlideshow, gif);
 
+    //Add dock menu on macOS
     #ifdef Q_OS_MACX
     //macOS dock menu
     ui->menuView->removeAction(ui->actionFull_Screen);
@@ -160,7 +175,7 @@ MainWindow::MainWindow(QWidget *parent) :
     }
     #endif
 
-    //add to mainwindow's action list so keyboard shortcuts work without a menubar
+    //Add to mainwindow's action list so keyboard shortcuts work without a menubar
     foreach(QAction *action, menu->actions())
     {
         addAction(action);
@@ -317,6 +332,16 @@ void MainWindow::updateRecentMenu()
             if (!qobject_cast<QVApplication*>qApp->isMoreThanOneWindow)
                 dockMenu->addAction(recentItems[i]);
             #endif
+            QMimeDatabase mimedb;
+            QMimeType type = mimedb.mimeTypeForFile(recentFiles[i].toList().last().toString());
+            if (type.iconName().isNull())
+            {
+                recentItems[i]->setIcon(QIcon::fromTheme(type.genericIconName()));
+            }
+            else
+            {
+                  recentItems[i]->setIcon(QIcon::fromTheme(type.iconName()));
+            }
         }
         else
         {
@@ -521,11 +546,13 @@ void MainWindow::on_actionSlideshow_triggered()
     {
         slideshowTimer->stop();
         ui->actionSlideshow->setText(tr("Start Slideshow"));
+        ui->actionSlideshow->setIcon(QIcon::fromTheme("media-playback-start"));
     }
     else
     {
         slideshowTimer->start();
         ui->actionSlideshow->setText(tr("Stop Slideshow"));
+        ui->actionSlideshow->setIcon(QIcon::fromTheme("media-playback-stop"));
     }
 }
 
@@ -556,11 +583,13 @@ void MainWindow::on_actionPause_triggered()
     {
         ui->graphicsView->getLoadedMovie()->setPaused(true);
         ui->actionPause->setText("Resume");
+        ui->actionPause->setIcon(QIcon::fromTheme("media-playback-start"));
     }
     else
     {
         ui->graphicsView->getLoadedMovie()->setPaused(false);
         ui->actionPause->setText("Pause");
+        ui->actionPause->setIcon(QIcon::fromTheme("media-playback-pause"));
     }
 }
 
