@@ -156,6 +156,9 @@ MainWindow::MainWindow(QWidget *parent) :
     gif->setIcon(QIcon::fromTheme("media-playlist-repeat"));
     help->setIcon(QIcon::fromTheme("help-about"));
 
+    //fallback icons
+    ui->actionWelcome->setIcon(QIcon::fromTheme("help-faq", QIcon::fromTheme("help-about")));
+    ui->actionOptions->setIcon(QIcon::fromTheme("configure", QIcon::fromTheme("preferences-other")));
 
     //Add recent items to menubar
     ui->menuFile->insertMenu(ui->actionOpen_Containing_Folder, files);
