@@ -95,8 +95,8 @@
     <addaction name="actionOpen"/>
     <addaction name="actionOpen_Containing_Folder"/>
     <addaction name="actionProperties"/>
-    <addaction name="actionNext_File"/>
-    <addaction name="actionPrevious_File"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -137,15 +137,24 @@
     <addaction name="separator"/>
     <addaction name="actionFull_Screen"/>
    </widget>
+   <widget class="QMenu" name="menuGo">
+    <property name="title">
+     <string>&amp;Go</string>
+    </property>
+    <addaction name="actionPrevious_File"/>
+    <addaction name="actionNext_File"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuView"/>
+   <addaction name="menuGo"/>
    <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
   </widget>
   <action name="actionOpen">
    <property name="icon">
-    <iconset theme="document-open"/>
+    <iconset theme="document-open">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>&amp;Open</string>
@@ -156,7 +165,8 @@
   </action>
   <action name="actionAbout">
    <property name="icon">
-    <iconset theme="help-about"/>
+    <iconset theme="help-about">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>&amp;About</string>
@@ -164,7 +174,8 @@
   </action>
   <action name="actionPaste">
    <property name="icon">
-    <iconset theme="edit-paste"/>
+    <iconset theme="edit-paste">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>&amp;Paste</string>
@@ -172,7 +183,8 @@
   </action>
   <action name="actionOptions">
    <property name="icon">
-    <iconset theme="preferences-other"/>
+    <iconset theme="preferences-other">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>&amp;Options</string>
@@ -183,7 +195,8 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset theme="go-previous"/>
+    <iconset theme="go-previous">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>&amp;Previous File</string>
@@ -194,7 +207,8 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset theme="go-next"/>
+    <iconset theme="go-next">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>&amp;Next File</string>
@@ -205,7 +219,8 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset theme="document-open"/>
+    <iconset theme="document-open">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Open &amp;Containing Folder</string>
@@ -213,7 +228,8 @@
   </action>
   <action name="actionWelcome">
    <property name="icon">
-    <iconset theme="help-about"/>
+    <iconset theme="help-about">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>&amp;Welcome</string>
@@ -224,7 +240,8 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset theme="object-rotate-right"/>
+    <iconset theme="object-rotate-right">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Rotat&amp;e Right</string>
@@ -235,7 +252,8 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset theme="object-rotate-left"/>
+    <iconset theme="object-rotate-left">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Rotate &amp;Left</string>
@@ -246,10 +264,11 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset theme="object-flip-horizontal"/>
+    <iconset theme="object-flip-horizontal">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>&amp;Flip Horizontally</string>
+    <string>&amp;Mirror</string>
    </property>
   </action>
   <action name="actionFlip_Vertically">
@@ -257,10 +276,11 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset theme="object-flip-vertical"/>
+    <iconset theme="object-flip-vertical">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>Flip &amp;Vertically</string>
+    <string>&amp;Flip</string>
    </property>
   </action>
   <action name="actionZoom_In">
@@ -268,7 +288,8 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset theme="zoom-in"/>
+    <iconset theme="zoom-in">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>&amp;Zoom In</string>
@@ -279,7 +300,8 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset theme="zoom-out"/>
+    <iconset theme="zoom-out">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Zoom &amp;Out</string>
@@ -290,7 +312,8 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset theme="zoom-fit-best"/>
+    <iconset theme="zoom-fit-best">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>&amp;Reset Zoom</string>
@@ -301,7 +324,8 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset theme="document-properties"/>
+    <iconset theme="document-properties">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>&amp;Show File Info</string>
@@ -309,7 +333,8 @@
   </action>
   <action name="actionFull_Screen">
    <property name="icon">
-    <iconset theme="view-fullscreen"/>
+    <iconset theme="view-fullscreen">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Full &amp;Screen</string>
@@ -320,7 +345,8 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset theme="zoom-original"/>
+    <iconset theme="zoom-original">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Or&amp;iginal Size</string>
@@ -328,7 +354,8 @@
   </action>
   <action name="actionNew_Window">
    <property name="icon">
-    <iconset theme="window-new"/>
+    <iconset theme="window-new">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>New &amp;Window</string>
@@ -342,7 +369,8 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset theme="media-playback-start"/>
+    <iconset theme="media-playback-start">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Start Sli&amp;deshow</string>
@@ -353,7 +381,8 @@
   </action>
   <action name="actionPause">
    <property name="icon">
-    <iconset theme="media-playback-pause"/>
+    <iconset theme="media-playback-pause">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>&amp;Pause</string>
@@ -361,7 +390,8 @@
   </action>
   <action name="actionNext_Frame">
    <property name="icon">
-    <iconset theme="media-skip-forward"/>
+    <iconset theme="media-skip-forward">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>&amp;Next Frame</string>
@@ -369,7 +399,8 @@
   </action>
   <action name="actionIncrease_Speed">
    <property name="icon">
-    <iconset theme="media-seek-forward"/>
+    <iconset theme="media-seek-forward">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Increase Speed</string>
@@ -377,7 +408,8 @@
   </action>
   <action name="actionDecrease_Speed">
    <property name="icon">
-    <iconset theme="media-seek-backward"/>
+    <iconset theme="media-seek-backward">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Decrease Speed</string>
@@ -385,7 +417,8 @@
   </action>
   <action name="actionReset_Speed">
    <property name="icon">
-    <iconset theme="media-playback-start"/>
+    <iconset theme="media-playback-start">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Reset Speed</string>
@@ -393,10 +426,19 @@
   </action>
   <action name="actionSave_Frame_As">
    <property name="icon">
-    <iconset theme="document-save-as"/>
+    <iconset theme="document-save-as">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Save Frame As...</string>
+   </property>
+  </action>
+  <action name="actionQuit">
+   <property name="icon">
+    <iconset theme="application-exit"/>
+   </property>
+   <property name="text">
+    <string>Quit</string>
    </property>
   </action>
  </widget>

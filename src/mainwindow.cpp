@@ -69,6 +69,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionReset_Speed->setShortcut(Qt::Key_Backslash);
     ui->actionIncrease_Speed->setShortcut(Qt::Key_BracketRight);
     ui->actionProperties->setShortcut(Qt::Key_I);
+    ui->actionQuit->setShortcut(QKeySequence::Quit);
+    ui->actionOptions->setShortcut(QKeySequence::Preferences);
 
     //Context menu
     menu = new QMenu(this);
@@ -101,29 +103,25 @@ MainWindow::MainWindow(QWidget *parent) :
     menu->addAction(ui->actionProperties);
     menu->addAction(ui->actionPaste);
     menu->addSeparator();
-    menu->addAction(ui->actionNext_File);
     menu->addAction(ui->actionPrevious_File);
+    menu->addAction(ui->actionNext_File);
     menu->addSeparator();
 
-    QMenu *zoom = new QMenu("Zoom", this);
-    zoom->menuAction()->setEnabled(false);
-    zoom->addAction(ui->actionZoom_In);
-    zoom->addAction(ui->actionZoom_Out);
-    zoom->addAction(ui->actionReset_Zoom);
-    zoom->addAction(ui->actionOriginal_Size);
-    menu->addMenu(zoom);
-
-    QMenu *rotate = new QMenu("Rotate", this);
-    rotate->menuAction()->setEnabled(false);
-    rotate->addAction(ui->actionRotate_Right);
-    rotate->addAction(ui->actionRotate_Left);
-    menu->addMenu(rotate);
-
-    QMenu *flip = new QMenu("Flip", this);
-    flip->menuAction()->setEnabled(false);
-    flip->addAction(ui->actionFlip_Horizontally);
-    flip->addAction(ui->actionFlip_Vertically);
-    menu->addMenu(flip);
+    QMenu *view = new QMenu("View", this);
+    view->menuAction()->setEnabled(false);
+    view->addAction(ui->actionZoom_In);
+    view->addAction(ui->actionZoom_Out);
+    view->addAction(ui->actionReset_Zoom);
+    view->addAction(ui->actionOriginal_Size);
+    view->addSeparator();
+    view->addAction(ui->actionRotate_Right);
+    view->addAction(ui->actionRotate_Left);
+    view->addSeparator();
+    view->addAction(ui->actionFlip_Horizontally);
+    view->addAction(ui->actionFlip_Vertically);
+    view->addSeparator();
+    view->addAction(ui->actionFull_Screen);
+    menu->addMenu(view);
 
     QMenu *gif = new QMenu("GIF controls", this);
     gif->menuAction()->setEnabled(false);
@@ -134,25 +132,23 @@ MainWindow::MainWindow(QWidget *parent) :
     gif->addAction(ui->actionDecrease_Speed);
     gif->addAction(ui->actionReset_Speed);
     gif->addAction(ui->actionIncrease_Speed);
-    menu->addMenu(gif);
 
-    menu->addAction(ui->actionSlideshow);
-    menu->addAction(ui->actionFull_Screen);
-    menu->addSeparator();
-    menu->addAction(ui->actionOptions);
+    QMenu *tools = new QMenu("Tools", this);
+    tools->addMenu(gif);
+    tools->addAction(ui->actionSlideshow);
+    tools->addAction(ui->actionOptions);
+    menu->addMenu(tools);
 
     QMenu *help = new QMenu("Help", this);
     help->addAction(ui->actionAbout);
     help->addAction(ui->actionWelcome);
     menu->addMenu(help);
 
-
     //Menu icons that can't be set in the ui file
     files->setIcon(QIcon::fromTheme("document-open-recent"));
     clearMenu->setIcon(QIcon::fromTheme("edit-delete"));
-    zoom->setIcon(QIcon::fromTheme("zoom-in"));
-    rotate->setIcon(QIcon::fromTheme("object-rotate-right"));
-    flip->setIcon(QIcon::fromTheme("object-flip-horizontal"));
+    view->setIcon(QIcon::fromTheme("zoom-fit-best"));
+    tools->setIcon(QIcon::fromTheme("configure", QIcon::fromTheme("preferences-other")));
     gif->setIcon(QIcon::fromTheme("media-playlist-repeat"));
     help->setIcon(QIcon::fromTheme("help-about"));
 
@@ -162,6 +158,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //Add recent items to menubar
     ui->menuFile->insertMenu(ui->actionOpen_Containing_Folder, files);
+    ui->menuFile->insertSeparator(ui->actionOpen_Containing_Folder);
     ui->menuTools->insertMenu(ui->actionSlideshow, gif);
 
     //Add dock menu on macOS
@@ -311,6 +308,7 @@ void MainWindow::updateRecentMenu()
         {
             action->setEnabled(true);
         }
+        ui->actionSlideshow->setEnabled(true);
     }
     //disable gif controls if there is no gif loaded
     if (!ui->graphicsView->getIsMovieLoaded())
@@ -650,4 +648,7 @@ void MainWindow::saveFrame(QString fileName)
     ui->graphicsView->getLoadedMovie()->currentPixmap().save(fileName, nullptr, 100);
 }
 
-
+void MainWindow::on_actionQuit_triggered()
+{
+    qApp->quit();
+}
