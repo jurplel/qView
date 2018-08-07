@@ -1,4 +1,4 @@
-#ifndef QVGRAPHICSVIEW_H
+ #ifndef QVGRAPHICSVIEW_H
 #define QVGRAPHICSVIEW_H
 
 #include "mainwindow.h"
@@ -24,7 +24,7 @@ public:
     };
     Q_ENUM(scaleMode)
 
-    void zoom(int DeltaY);
+    void zoom(int DeltaY, QPoint pos = QPoint());
 
     void loadMimeData(const QMimeData *mimeData);
     void loadFile(QString fileName);

@@ -63,7 +63,7 @@
        <enum>QGraphicsView::ScrollHandDrag</enum>
       </property>
       <property name="transformationAnchor">
-       <enum>QGraphicsView::AnchorUnderMouse</enum>
+       <enum>QGraphicsView::NoAnchor</enum>
       </property>
       <property name="viewportUpdateMode">
        <enum>QGraphicsView::MinimalViewportUpdate</enum>
@@ -435,10 +435,11 @@
   </action>
   <action name="actionQuit">
    <property name="icon">
-    <iconset theme="application-exit"/>
+    <iconset theme="application-exit">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>Quit</string>
+    <string>&amp;Quit</string>
    </property>
   </action>
  </widget>
