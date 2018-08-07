@@ -7,6 +7,7 @@
 #include <QMessageBox>
 #include <QMovie>
 #include <QPixmapCache>
+#include <QDebug>
 
 QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 {
@@ -91,14 +92,14 @@ void QVGraphicsView::mouseDoubleClickEvent(QMouseEvent *event)
 }
 void QVGraphicsView::wheelEvent(QWheelEvent *event)
 {
-    zoom(event->angleDelta().y());
+    zoom(event->angleDelta().y(), event->pos());
 }
-
 
 // Functions
 
-void QVGraphicsView::zoom(int DeltaY)
+void QVGraphicsView::zoom(int DeltaY, QPoint pos)
 {
+    QPointF originalMappedPos = mapToScene(pos);
     if (!getIsPixmapLoaded())
         return;
 
@@ -121,17 +122,6 @@ void QVGraphicsView::zoom(int DeltaY)
         return;
     }
 
-
-    //zoom around mouse when above window size, otherwise center
-    if (getCurrentScale() < 1.0)
-    {
-        setTransformationAnchor(QGraphicsView::AnchorViewCenter);
-    }
-    else
-    {
-        setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
-    }
-
     bool veto = false;
     //Disallow zooming expensively while movie is paused
     if (isMovieLoaded)
@@ -141,10 +131,11 @@ void QVGraphicsView::zoom(int DeltaY)
     }
 
     //this is a disaster of an if statement, my apologies but here is what it does:
-    //use scaleExpensively if the scale is below 1, or below 1.25 and you are scrolling down (also scaling must be enabled and it must not be animated)
+    //use scaleExpensively if the scale is below 1, or below 1.25 and you are scrolling down (also scaling must be enabled and it must not be a paused movie)
     if (((getCurrentScale() < 1.0) || (getCurrentScale() <= (scaleFactor) && DeltaY < 0)) && getIsScalingEnabled() && !veto)
     {
-
+        // Last scene pos: lastMouseMoveScenePoint
+        // Current mouse pos:
         //zoom expensively
         if (DeltaY > 0)
         {
@@ -186,8 +177,14 @@ void QVGraphicsView::zoom(int DeltaY)
         setTransform(fittedMatrix);
     }
 
-    //if scale is 1 or less, center the image
-    if (getCurrentScale() < scaleFactor)
+    //if you are zooming in and the mouse is in play, zoom towards the mouse
+    //otherwise, just center the image
+    if (getCurrentScale() >= scaleFactor && underMouse())
+    {
+        QPointF transformationDiff = mapToScene(viewport()->rect().center()) - mapToScene(pos);
+        centerOn(originalMappedPos + transformationDiff);
+    }
+    else
     {
         centerOn(loadedPixmapItem->boundingRect().center());
     }
