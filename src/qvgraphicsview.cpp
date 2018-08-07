@@ -114,12 +114,12 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
     if (DeltaY > 0)
     {
         if (getCurrentScale() >= 500)
-        return;
+            return;
     }
     else
     {
         if (getCurrentScale() <= 0.01)
-        return;
+            return;
     }
 
     bool veto = false;
@@ -134,8 +134,6 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
     //use scaleExpensively if the scale is below 1, or below 1.25 and you are scrolling down (also scaling must be enabled and it must not be a paused movie)
     if (((getCurrentScale() < 1.0) || (getCurrentScale() <= (scaleFactor) && DeltaY < 0)) && getIsScalingEnabled() && !veto)
     {
-        // Last scene pos: lastMouseMoveScenePoint
-        // Current mouse pos:
         //zoom expensively
         if (DeltaY > 0)
         {
@@ -161,6 +159,7 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
         {
             loadedPixmapItem->setPixmap(*loadedPixmap);
             fitInViewMarginless();
+            originalMappedPos = mapToScene(pos);
         }
 
         //zoom using cheap matrix method
