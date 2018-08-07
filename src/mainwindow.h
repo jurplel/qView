@@ -101,6 +101,8 @@ private slots:
 
     void on_actionSave_Frame_As_triggered();
 
+    void on_actionQuit_triggered();
+
 private:
     Ui::MainWindow *ui;
 
