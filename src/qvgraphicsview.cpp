@@ -101,7 +101,7 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
 void QVGraphicsView::zoom(int DeltaY, QPoint pos)
 {
     QPointF originalMappedPos = mapToScene(pos);
-    QPointF result = loadedPixmapItem->boundingRect().center();
+    QPointF result;
 
     if (!getIsPixmapLoaded())
         return;
@@ -118,11 +118,13 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
     {
         if (getCurrentScale() >= 500)
             return;
+        setCurrentScale(getCurrentScale()*scaleFactor);
     }
     else
     {
         if (getCurrentScale() <= 0.01)
             return;
+        setCurrentScale(getCurrentScale()/scaleFactor);
     }
 
     bool veto = false;
@@ -141,7 +143,6 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
         if (DeltaY > 0)
         {
             scaleExpensively(scaleMode::zoomIn);
-            setCurrentScale(getCurrentScale()*scaleFactor);
         }
         else
         {
@@ -151,7 +152,6 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
                 return;
             }
             scaleExpensively(scaleMode::zoomOut);
-            setCurrentScale(getCurrentScale()/scaleFactor);
         }
     }
     //use this cheaper scaling if none of the above conditions are met
@@ -170,12 +170,10 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
             if (DeltaY > 0)
             {
                 scaleExpensively(scaleMode::zoomIn);
-                setCurrentScale(getCurrentScale()*scaleFactor);
             }
             else
             {
                 scaleExpensively(scaleMode::zoomOut);
-                setCurrentScale(getCurrentScale()/scaleFactor);
             }
             originalMappedPos = tripleMapped;
         }
@@ -193,12 +191,10 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
             if (DeltaY > 0)
             {
                 fittedMatrix = fittedMatrix * (scaleFactor);
-                setCurrentScale(getCurrentScale()*scaleFactor);
             }
             else
             {
                 fittedMatrix = fittedMatrix / (scaleFactor);
-                setCurrentScale(getCurrentScale()/scaleFactor);
             }
             setTransform(fittedMatrix);
         }
@@ -423,7 +419,7 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
     case scaleMode::zoomIn:
     {
         QSize size = QSize(loadedPixmap->width(), loadedPixmap->height());
-        size.scale(static_cast<int>(fittedWidth * (getCurrentScale()*scaleFactor)), static_cast<int>(fittedHeight * (getCurrentScale()*scaleFactor)), Qt::KeepAspectRatio);
+        size.scale(static_cast<int>(fittedWidth * (getCurrentScale())), static_cast<int>(fittedHeight * (getCurrentScale())), Qt::KeepAspectRatio);
         if (isMovieLoaded)
         {
 
@@ -440,7 +436,7 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
     case scaleMode::zoomOut:
     {
         QSize size = QSize(loadedPixmap->width(), loadedPixmap->height());
-        size.scale(static_cast<int>(fittedWidth * (getCurrentScale()/scaleFactor)), static_cast<int>(fittedHeight * (getCurrentScale()/scaleFactor)), Qt::KeepAspectRatio);
+        size.scale(static_cast<int>(fittedWidth * (getCurrentScale())), static_cast<int>(fittedHeight * (getCurrentScale())), Qt::KeepAspectRatio);
         if (isMovieLoaded)
         {
             loadedMovie->setScaledSize(size);
