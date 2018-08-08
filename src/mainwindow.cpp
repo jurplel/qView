@@ -469,7 +469,7 @@ void MainWindow::on_actionOpen_Containing_Folder_triggered()
     #elif defined(Q_OS_MACX)
     process.execute("open", QStringList() << "-R" << selectedFileInfo.absoluteFilePath());
     #else
-    process.execute("xdg-open", QStringList() << selectedFileInfo.absoluteFilePath());
+    process.execute("xdg-open", QStringList() << selectedFileInfo.absolutePath());
     #endif
 
     return;
