@@ -100,6 +100,8 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
 void QVGraphicsView::zoom(int DeltaY, QPoint pos)
 {
     QPointF originalMappedPos = mapToScene(pos);
+    QPointF result = loadedPixmapItem->boundingRect().center();
+
     if (!getIsPixmapLoaded())
         return;
 
@@ -154,26 +156,51 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
     //use this cheaper scaling if none of the above conditions are met
     else
     {
-       //if the pixmap being displayed is not the full resolution, set it to be
-        if (!(loadedPixmapItem->pixmap().height() == loadedPixmap->height()) && !isMovieLoaded)
+        //but wait, before you do cheap scaling, check if expensive scaling while zooming in is enabled and valid
+        //if it is, do it, if not, do cheap scaling
+        if (getCurrentScale() < 1.9 && getIsScalingEnabled())
         {
-            loadedPixmapItem->setPixmap(*loadedPixmap);
-            fitInViewMarginless();
-            originalMappedPos = mapToScene(pos);
-        }
-
-        //zoom using cheap matrix method
-        if (DeltaY > 0)
-        {
-            fittedMatrix = fittedMatrix * (scaleFactor);
-            setCurrentScale(getCurrentScale()*scaleFactor);
+            QPointF doubleMapped = loadedPixmapItem->mapFromScene(originalMappedPos);
+            loadedPixmapItem->setTransformOriginPoint(loadedPixmapItem->boundingRect().topLeft());
+            loadedPixmapItem->setScale(scaleFactor);
+            QPointF tripleMapped = loadedPixmapItem->mapToScene(doubleMapped);
+            loadedPixmapItem->setScale(1.0);
+            //zoom expensively
+            if (DeltaY > 0)
+            {
+                scaleExpensively(scaleMode::zoomIn);
+                setCurrentScale(getCurrentScale()*scaleFactor);
+            }
+            else
+            {
+                scaleExpensively(scaleMode::zoomOut);
+                setCurrentScale(getCurrentScale()/scaleFactor);
+            }
+            originalMappedPos = tripleMapped;
         }
         else
         {
-            fittedMatrix = fittedMatrix / (scaleFactor);
-            setCurrentScale(getCurrentScale()/scaleFactor);
+            //if the pixmap being displayed is not the full resolution, set it to be
+//            if (!(loadedPixmapItem->pixmap().height() == loadedPixmap->height()) && !isMovieLoaded)
+//            {
+//                loadedPixmapItem->setPixmap(*loadedPixmap);
+//                fitInViewMarginless();
+//                originalMappedPos = mapToScene(pos);
+//            }
+
+            //zoom using cheap matrix method
+            if (DeltaY > 0)
+            {
+                fittedMatrix = fittedMatrix * (scaleFactor);
+                setCurrentScale(getCurrentScale()*scaleFactor);
+            }
+            else
+            {
+                fittedMatrix = fittedMatrix / (scaleFactor);
+                setCurrentScale(getCurrentScale()/scaleFactor);
+            }
+            setTransform(fittedMatrix);
         }
-        setTransform(fittedMatrix);
     }
 
     //if you are zooming in and the mouse is in play, zoom towards the mouse
@@ -181,12 +208,13 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
     if (getCurrentScale() >= scaleFactor && underMouse())
     {
         QPointF transformationDiff = mapToScene(viewport()->rect().center()) - mapToScene(pos);
-        centerOn(originalMappedPos + transformationDiff);
+        result = originalMappedPos + transformationDiff;
     }
     else
     {
-        centerOn(loadedPixmapItem->boundingRect().center());
+        result = loadedPixmapItem->boundingRect().center();
     }
+    centerOn(result);
 }
 
 void QVGraphicsView::loadMimeData(const QMimeData *mimeData)
