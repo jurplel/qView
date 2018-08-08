@@ -8,6 +8,7 @@
 #include <QMovie>
 #include <QPixmapCache>
 #include <QDebug>
+#include <QtMath>
 
 QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 {
@@ -137,7 +138,7 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
 
     //this is a disaster of an if statement, my apologies but here is what it does:
     //use scaleExpensively if the scale is below 1, or below 1.25 and you are scrolling down (also scaling must be enabled and it must not be a paused movie)
-    if (((getCurrentScale() < 1.0) || (getCurrentScale() <= (scaleFactor) && DeltaY < 0)) && getIsScalingEnabled() && !veto)
+    if (getCurrentScale() < 1.0 && getIsScalingEnabled() && !veto)
     {
         //zoom expensively
         if (DeltaY > 0)
@@ -159,23 +160,32 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
     {
         //but wait, before you do cheap scaling, check if expensive scaling while zooming in is enabled and valid
         //if it is, do it, if not, do cheap scaling
-        if (getCurrentScale() < 1.9 && getIsScalingEnabled() && getIsScalingTwoEnabled())
+        if ((getCurrentScale() < qPow(scaleFactor, 4)) && getIsScalingEnabled() && getIsScalingTwoEnabled() && !isMovieLoaded)
         {
             QPointF doubleMapped = loadedPixmapItem->mapFromScene(originalMappedPos);
             loadedPixmapItem->setTransformOriginPoint(loadedPixmapItem->boundingRect().topLeft());
-            loadedPixmapItem->setScale(scaleFactor);
-            QPointF tripleMapped = loadedPixmapItem->mapToScene(doubleMapped);
-            loadedPixmapItem->setScale(1.0);
             //zoom expensively
             if (DeltaY > 0)
             {
                 scaleExpensively(scaleMode::zoomIn);
+                loadedPixmapItem->setScale(scaleFactor);
             }
             else
             {
                 scaleExpensively(scaleMode::zoomOut);
+                loadedPixmapItem->setScale(qPow(scaleFactor, -1));
             }
-            originalMappedPos = tripleMapped;
+            QPointF tripleMapped = loadedPixmapItem->mapToScene(doubleMapped);
+            loadedPixmapItem->setScale(1.0);
+            if (getCurrentScale() > qPow(scaleFactor, 2) && DeltaY < 0)
+            {
+                scale(qPow(scaleFactor, -1), qPow(scaleFactor, -1));
+            }
+            else
+            {
+                originalMappedPos = tripleMapped;
+            }
+
         }
         else
         {
@@ -189,20 +199,15 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
 
             //zoom using cheap matrix method
             if (DeltaY > 0)
-            {
-                fittedMatrix = fittedMatrix * (scaleFactor);
-            }
+                scale(scaleFactor, scaleFactor);
             else
-            {
-                fittedMatrix = fittedMatrix / (scaleFactor);
-            }
-            setTransform(fittedMatrix);
+                scale(qPow(scaleFactor, -1), qPow(scaleFactor, -1));
         }
     }
 
     //if you are zooming in and the mouse is in play, zoom towards the mouse
     //otherwise, just center the image
-    if (getCurrentScale() >= scaleFactor && underMouse())
+    if (getCurrentScale() > 1.0 && underMouse())
     {
         QPointF transformationDiff = mapToScene(viewport()->rect().center()) - mapToScene(pos);
         result = originalMappedPos + transformationDiff;
