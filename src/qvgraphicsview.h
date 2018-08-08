@@ -71,6 +71,9 @@ public:
     QMovie *getLoadedMovie() const;
     void setLoadedMovie(QMovie *value);
 
+    bool getIsScalingTwoEnabled() const;
+    void setIsScalingTwoEnabled(bool value);
+
 protected:
     void wheelEvent(QWheelEvent *event) override;
 
@@ -125,6 +128,7 @@ private:
     bool isScalingEnabled;
     int titlebarMode;
     int cropMode;
+    bool isScalingTwoEnabled;
 
     QFileInfo selectedFileInfo;
 

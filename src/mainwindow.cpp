@@ -285,6 +285,9 @@ void MainWindow::loadSettings()
 
     //scalefactor
     ui->graphicsView->setScaleFactor(settings.value("scalefactor", 25).toInt()*0.01+1);
+
+    //scaling
+    ui->graphicsView->setIsScalingTwoEnabled(settings.value("scalingtwoenabled", true).toBool());
 }
 
 void MainWindow::saveGeometrySettings()

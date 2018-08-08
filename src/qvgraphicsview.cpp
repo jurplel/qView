@@ -90,6 +90,7 @@ void QVGraphicsView::mouseDoubleClickEvent(QMouseEvent *event)
     QGraphicsView::mouseDoubleClickEvent(event);
     parentMainWindow->toggleFullScreen();
 }
+
 void QVGraphicsView::wheelEvent(QWheelEvent *event)
 {
     zoom(event->angleDelta().y(), event->pos());
@@ -158,7 +159,7 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
     {
         //but wait, before you do cheap scaling, check if expensive scaling while zooming in is enabled and valid
         //if it is, do it, if not, do cheap scaling
-        if (getCurrentScale() < 1.9 && getIsScalingEnabled())
+        if (getCurrentScale() < 1.9 && getIsScalingEnabled() && getIsScalingTwoEnabled())
         {
             QPointF doubleMapped = loadedPixmapItem->mapFromScene(originalMappedPos);
             loadedPixmapItem->setTransformOriginPoint(loadedPixmapItem->boundingRect().topLeft());
@@ -181,12 +182,12 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
         else
         {
             //if the pixmap being displayed is not the full resolution, set it to be
-//            if (!(loadedPixmapItem->pixmap().height() == loadedPixmap->height()) && !isMovieLoaded)
-//            {
-//                loadedPixmapItem->setPixmap(*loadedPixmap);
-//                fitInViewMarginless();
-//                originalMappedPos = mapToScene(pos);
-//            }
+            if (!(loadedPixmapItem->pixmap().height() == loadedPixmap->height()) && !isMovieLoaded && !getIsScalingTwoEnabled())
+            {
+                loadedPixmapItem->setPixmap(*loadedPixmap);
+                fitInViewMarginless();
+                originalMappedPos = mapToScene(pos);
+            }
 
             //zoom using cheap matrix method
             if (DeltaY > 0)
@@ -700,4 +701,14 @@ QMovie *QVGraphicsView::getLoadedMovie() const
 void QVGraphicsView::setLoadedMovie(QMovie *value)
 {
     loadedMovie = value;
+}
+
+bool QVGraphicsView::getIsScalingTwoEnabled() const
+{
+    return isScalingTwoEnabled;
+}
+
+void QVGraphicsView::setIsScalingTwoEnabled(bool value)
+{
+    isScalingTwoEnabled = value;
 }

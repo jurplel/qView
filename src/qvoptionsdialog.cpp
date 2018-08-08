@@ -38,6 +38,7 @@ void QVOptionsDialog::saveSettings()
     settings.setValue("slideshowtimer", transientSettings.slideshowTimer);
     settings.setValue("slideshowdirection", transientSettings.slideshowDirection);
     settings.setValue("scalefactor", transientSettings.scaleFactor);
+    settings.setValue("scalingtwoenabled", transientSettings.scalingTwoEnabled);
     emit optionsSaved();
 }
 
@@ -93,6 +94,10 @@ void QVOptionsDialog::loadSettings()
     //scalefactor
     transientSettings.scaleFactor = settings.value("scalefactor", 25).toInt();
     ui->scaleFactorSpinBox->setValue(transientSettings.scaleFactor);
+
+    //scaling2 (while zooming in)
+    transientSettings.scalingTwoEnabled = settings.value("scalingtwoenabled", true).toBool();
+    ui->scalingTwoCheckbox->setChecked(transientSettings.scalingTwoEnabled);
 }
 
 
@@ -191,4 +196,16 @@ void QVOptionsDialog::on_slideshowDirectionComboBox_currentIndexChanged(int inde
 void QVOptionsDialog::on_scaleFactorSpinBox_valueChanged(int arg1)
 {
     transientSettings.scaleFactor = arg1;
+}
+
+void QVOptionsDialog::on_scalingTwoCheckbox_stateChanged(int arg1)
+{
+    if (arg1 > 0)
+    {
+        transientSettings.scalingTwoEnabled = true;
+    }
+    else
+    {
+        transientSettings.scalingTwoEnabled = false;
+    }
 }

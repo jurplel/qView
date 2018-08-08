@@ -43,6 +43,8 @@ private slots:
 
     void on_scaleFactorSpinBox_valueChanged(int arg1);
 
+    void on_scalingTwoCheckbox_stateChanged(int arg1);
+
 protected:
     virtual void showEvent(QShowEvent *event);
 
@@ -66,6 +68,7 @@ private:
         int slideshowDirection;
         int scaleFactor;
         bool resizeScaleEnabled;
+        bool scalingTwoEnabled;
     };
 
     STransientSettings transientSettings;
