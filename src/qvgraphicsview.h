@@ -130,6 +130,9 @@ private:
     int cropMode;
     bool isScalingTwoEnabled;
 
+    qreal maxScalingTwoSize;
+    bool cheapScaledLast;
+
     QFileInfo selectedFileInfo;
 
     QFileInfoList loadedFileFolder;
