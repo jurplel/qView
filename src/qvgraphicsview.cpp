@@ -17,6 +17,8 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     setScene(scene);
 
     scaleFactor = 0.25;
+    maxScalingTwoSize = 4;
+    cheapScaledLast = false;
     isPixmapLoaded = false;
     movieCenterNeedsUpdating = false;
     isMovieLoaded = false;
@@ -140,6 +142,7 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
     //use scaleExpensively if the scale is below 1, or below 1.25 and you are scrolling down (also scaling must be enabled and it must not be a paused movie)
     if (getCurrentScale() < 1.0 && getIsScalingEnabled() && !veto)
     {
+        cheapScaledLast = false;
         //zoom expensively
         if (DeltaY > 0)
         {
@@ -160,7 +163,7 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
     {
         //but wait, before you do cheap scaling, check if expensive scaling while zooming in is enabled and valid
         //if it is, do it, if not, do cheap scaling
-        if ((getCurrentScale() < qPow(scaleFactor, 4)) && getIsScalingEnabled() && getIsScalingTwoEnabled() && !isMovieLoaded)
+        if (getCurrentScale() < maxScalingTwoSize && getIsScalingEnabled() && getIsScalingTwoEnabled() && !isMovieLoaded)
         {
             QPointF doubleMapped = loadedPixmapItem->mapFromScene(originalMappedPos);
             loadedPixmapItem->setTransformOriginPoint(loadedPixmapItem->boundingRect().topLeft());
@@ -177,14 +180,11 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
             }
             QPointF tripleMapped = loadedPixmapItem->mapToScene(doubleMapped);
             loadedPixmapItem->setScale(1.0);
-            if (getCurrentScale() > qPow(scaleFactor, 2) && DeltaY < 0)
-            {
+            if (cheapScaledLast && DeltaY < 0)
                 scale(qPow(scaleFactor, -1), qPow(scaleFactor, -1));
-            }
             else
-            {
                 originalMappedPos = tripleMapped;
-            }
+            cheapScaledLast = false;
 
         }
         else
@@ -202,6 +202,7 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
                 scale(scaleFactor, scaleFactor);
             else
                 scale(qPow(scaleFactor, -1), qPow(scaleFactor, -1));
+            cheapScaledLast = true;
         }
     }
 
@@ -217,6 +218,8 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
         result = loadedPixmapItem->boundingRect().center();
     }
     centerOn(result);
+
+    qDebug() << getCurrentScale();
 }
 
 void QVGraphicsView::loadMimeData(const QMimeData *mimeData)

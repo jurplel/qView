@@ -70,6 +70,10 @@ void QVOptionsDialog::loadSettings()
     //scaling
     transientSettings.scalingEnabled = settings.value("scalingenabled", true).toBool();
     ui->scalingCheckbox->setChecked(transientSettings.scalingEnabled);
+    if (!transientSettings.scalingEnabled)
+    {
+        ui->scalingTwoCheckbox->setEnabled(false);
+    }
 
     //titlebar
     transientSettings.titlebarMode = settings.value("titlebarmode", 1).toInt();
@@ -153,10 +157,12 @@ void QVOptionsDialog::on_scalingCheckbox_stateChanged(int arg1)
     if (arg1 > 0)
     {
         transientSettings.scalingEnabled = true;
+        ui->scalingTwoCheckbox->setEnabled(true);
     }
     else
     {
         transientSettings.scalingEnabled = false;
+        ui->scalingTwoCheckbox->setEnabled(false);
     }
 }
 
