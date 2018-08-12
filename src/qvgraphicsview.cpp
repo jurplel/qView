@@ -139,10 +139,9 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
     }
 
     //this is a disaster of an if statement, my apologies but here is what it does:
-    //use scaleExpensively if the scale is below 1, or below 1.25 and you are scrolling down (also scaling must be enabled and it must not be a paused movie)
+    //use scaleExpensively if the scale is below 1 (also scaling must be enabled and it must not be a paused movie)
     if (getCurrentScale() < 1.0 && getIsScalingEnabled() && !veto)
     {
-        cheapScaledLast = false;
         //zoom expensively
         if (DeltaY > 0)
         {
@@ -150,60 +149,56 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
         }
         else
         {
-            if (getCurrentScale() == scaleFactor)
-            {
-                resetScale();
-                return;
-            }
             scaleExpensively(scaleMode::zoomOut);
         }
+        cheapScaledLast = false;
     }
-    //use this cheaper scaling if none of the above conditions are met
-    else
+    //check if expensive scaling while zooming in is enabled and valid
+    else if (getCurrentScale() < maxScalingTwoSize && getIsScalingEnabled() && getIsScalingTwoEnabled() && !isMovieLoaded)
     {
-        //but wait, before you do cheap scaling, check if expensive scaling while zooming in is enabled and valid
-        //if it is, do it, if not, do cheap scaling
-        if (getCurrentScale() < maxScalingTwoSize && getIsScalingEnabled() && getIsScalingTwoEnabled() && !isMovieLoaded)
+        //to scale the mouse position with the image, the mouse position is mapped to the graphicsitem,
+        //it's scaled with a matrix (setScale), and then mapped back to scene. expensive scaling is done as expected.
+        QPointF doubleMapped = loadedPixmapItem->mapFromScene(originalMappedPos);
+        loadedPixmapItem->setTransformOriginPoint(loadedPixmapItem->boundingRect().topLeft());
+        if (DeltaY > 0)
         {
-            QPointF doubleMapped = loadedPixmapItem->mapFromScene(originalMappedPos);
-            loadedPixmapItem->setTransformOriginPoint(loadedPixmapItem->boundingRect().topLeft());
-            //zoom expensively
-            if (DeltaY > 0)
-            {
-                scaleExpensively(scaleMode::zoomIn);
-                loadedPixmapItem->setScale(scaleFactor);
-            }
-            else
-            {
-                scaleExpensively(scaleMode::zoomOut);
-                loadedPixmapItem->setScale(qPow(scaleFactor, -1));
-            }
-            QPointF tripleMapped = loadedPixmapItem->mapToScene(doubleMapped);
-            loadedPixmapItem->setScale(1.0);
-            if (cheapScaledLast && DeltaY < 0)
-                scale(qPow(scaleFactor, -1), qPow(scaleFactor, -1));
-            else
-                originalMappedPos = tripleMapped;
-            cheapScaledLast = false;
-
+            scaleExpensively(scaleMode::zoomIn);
+            loadedPixmapItem->setScale(scaleFactor);
         }
         else
         {
-            //if the pixmap being displayed is not the full resolution, set it to be
-            if (!(loadedPixmapItem->pixmap().height() == loadedPixmap->height()) && !isMovieLoaded && !getIsScalingTwoEnabled())
-            {
-                loadedPixmapItem->setPixmap(*loadedPixmap);
-                fitInViewMarginless();
-                originalMappedPos = mapToScene(pos);
-            }
-
-            //zoom using cheap matrix method
-            if (DeltaY > 0)
-                scale(scaleFactor, scaleFactor);
-            else
-                scale(qPow(scaleFactor, -1), qPow(scaleFactor, -1));
-            cheapScaledLast = true;
+            scaleExpensively(scaleMode::zoomOut);
+            loadedPixmapItem->setScale(qPow(scaleFactor, -1));
         }
+        QPointF tripleMapped = loadedPixmapItem->mapToScene(doubleMapped);
+        loadedPixmapItem->setScale(1.0);
+
+        //when you are zooming out from high zoom levels and hit the "ScalingTwo" level again,
+        //this does one more matrix zoom and cancels the expensive zoom (needed for smoothness)
+        if (cheapScaledLast && DeltaY < 0)
+            scale(qPow(scaleFactor, -1), qPow(scaleFactor, -1));
+        else
+            originalMappedPos = tripleMapped;
+
+        cheapScaledLast = false;
+    }
+    //do regular matrix-based cheap scaling instead
+    else
+    {
+        //if the pixmap being displayed is not the full resolution, set it to be
+        if (!(loadedPixmapItem->pixmap().height() == loadedPixmap->height()) && !isMovieLoaded && !getIsScalingTwoEnabled())
+        {
+            loadedPixmapItem->setPixmap(*loadedPixmap);
+            fitInViewMarginless();
+            originalMappedPos = mapToScene(pos);
+        }
+
+        //zoom using cheap matrix method
+        if (DeltaY > 0)
+            scale(scaleFactor, scaleFactor);
+        else
+            scale(qPow(scaleFactor, -1), qPow(scaleFactor, -1));
+        cheapScaledLast = true;
     }
 
     //if you are zooming in and the mouse is in play, zoom towards the mouse
@@ -218,8 +213,6 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
         result = loadedPixmapItem->boundingRect().center();
     }
     centerOn(result);
-
-    qDebug() << getCurrentScale();
 }
 
 void QVGraphicsView::loadMimeData(const QMimeData *mimeData)
@@ -563,6 +556,7 @@ void QVGraphicsView::fitInViewMarginless()
 
     fittedMatrix = transform();
     isOriginalSize = false;
+    cheapScaledLast = false;
     fittedHeight = loadedPixmapItem->boundingRect().height();
     fittedWidth = loadedPixmapItem->boundingRect().width();
     setCurrentScale(1.0);
