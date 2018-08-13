@@ -140,7 +140,7 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
 
     //this is a disaster of an if statement, my apologies but here is what it does:
     //use scaleExpensively if the scale is below 1 (also scaling must be enabled and it must not be a paused movie)
-    if (getCurrentScale() < 1.0 && getIsScalingEnabled() && !veto)
+    if (getCurrentScale() < 0.99999 && getIsScalingEnabled() && !veto)
     {
         //zoom expensively
         if (DeltaY > 0)
@@ -203,7 +203,7 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
 
     //if you are zooming in and the mouse is in play, zoom towards the mouse
     //otherwise, just center the image
-    if (getCurrentScale() > 1.0 && underMouse())
+    if (getCurrentScale() > 1.00001 && underMouse())
     {
         QPointF transformationDiff = mapToScene(viewport()->rect().center()) - mapToScene(pos);
         result = originalMappedPos + transformationDiff;
@@ -426,13 +426,12 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
 
             loadedMovie->setScaledSize(size);
             movieCenterNeedsUpdating = true;
-            break;
         }
         else
         {
             loadedPixmapItem->setPixmap(loadedPixmap->scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-            break;
         }
+        break;
     }
     case scaleMode::zoomOut:
     {
@@ -442,13 +441,12 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
         {
             loadedMovie->setScaledSize(size);
             movieCenterNeedsUpdating = true;
-            break;
         }
         else
         {
             loadedPixmapItem->setPixmap(loadedPixmap->scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-            break;
         }
+        break;
     }
     }
 }
