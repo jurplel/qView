@@ -1,4 +1,4 @@
-#include "qvgraphicsview.h"
+﻿#include "qvgraphicsview.h"
 #include "qvapplication.h"
 #include <QWheelEvent>
 #include <QGraphicsPixmapItem>
@@ -140,7 +140,7 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
 
     //this is a disaster of an if statement, my apologies but here is what it does:
     //use scaleExpensively if the scale is below 1 (also scaling must be enabled and it must not be a paused movie)
-    if (getCurrentScale() < 0.99999 && getIsScalingEnabled() && !veto)
+    if (getCurrentScale() < 1.00001 && getIsScalingEnabled() && !veto)
     {
         //zoom expensively
         if (DeltaY > 0)
@@ -213,6 +213,8 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
         result = loadedPixmapItem->boundingRect().center();
     }
     centerOn(result);
+
+    qDebug() << getCurrentScale() << fittedHeight;
 }
 
 void QVGraphicsView::loadMimeData(const QMimeData *mimeData)
@@ -240,14 +242,14 @@ void QVGraphicsView::animatedFrameChange(QRect rect)
 
     loadedPixmapItem->setPixmap(loadedMovie->currentPixmap());
 
-    if (getCurrentScale() == 1.0 && !isOriginalSize)
-    {
-        fitInViewMarginless();
-    }
     if (movieCenterNeedsUpdating)
     {
         movieCenterNeedsUpdating = false;
         centerOn(loadedPixmapItem);
+        if (qFuzzyCompare(getCurrentScale(), 1.0))
+        {
+            fitInViewMarginless();
+        }
     }
 }
 
@@ -283,19 +285,19 @@ void QVGraphicsView::loadFile(QString fileName)
     }
 
     //animation detection
+    if (isMovieLoaded)
+    {
+        isMovieLoaded = false;
+        movieCenterNeedsUpdating = false;
+        loadedMovie->deleteLater();
+    }
     if (reader->supportsAnimation() && reader->imageCount() > 1)
     {
         loadedMovie = new QMovie(fileName);
         connect(loadedMovie, &QMovie::updated, this, &QVGraphicsView::animatedFrameChange);
         loadedMovie->start();
-        isMovieLoaded = true;
         movieCenterNeedsUpdating = true;
-    }
-    else if (isMovieLoaded)
-    {
-        isMovieLoaded = false;
-        movieCenterNeedsUpdating = false;
-        loadedMovie->deleteLater();
+        isMovieLoaded = true;
     }
 
     //set pixmap, setoffset, and move graphicsitem
@@ -423,7 +425,6 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
         size.scale(static_cast<int>(fittedWidth * (getCurrentScale())), static_cast<int>(fittedHeight * (getCurrentScale())), Qt::KeepAspectRatio);
         if (isMovieLoaded)
         {
-
             loadedMovie->setScaledSize(size);
             movieCenterNeedsUpdating = true;
         }
