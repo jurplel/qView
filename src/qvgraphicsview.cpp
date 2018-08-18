@@ -139,8 +139,8 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
     }
 
     //this is a disaster of an if statement, my apologies but here is what it does:
-    //use scaleExpensively if the scale is below 1 (also scaling must be enabled and it must not be a paused movie)
-    if (getCurrentScale() < 1.00001 && getIsScalingEnabled() && !veto)
+    //use scaleExpensively if the scale is less than 1 or less than or equal to one while scrolling up (also scaling must be enabled and it must not be a paused movie)
+    if ((getCurrentScale() < 0.99999 || (getCurrentScale() < 1.00001 && DeltaY > 0)) && getIsScalingEnabled() && !veto)
     {
         //zoom expensively
         if (DeltaY > 0)
@@ -213,8 +213,6 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
         result = loadedPixmapItem->boundingRect().center();
     }
     centerOn(result);
-
-    qDebug() << getCurrentScale() << fittedHeight;
 }
 
 void QVGraphicsView::loadMimeData(const QMimeData *mimeData)
