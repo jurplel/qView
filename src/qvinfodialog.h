@@ -16,7 +16,7 @@ public:
     explicit QVInfoDialog(QWidget *parent = nullptr);
     ~QVInfoDialog();
 
-    void setInfo(const QFileInfo &value, const int &value2, const int &value3, const int &value4, const int &value5);
+    void setInfo(const QFileInfo &value, const int &value2, const int &value3, const int &value4);
 
     void updateInfo();
 
@@ -31,7 +31,6 @@ private:
     int height;
 
     int frameCount;
-    int nextFrameDelay;
 };
 
 #endif // QVINFODIALOG_H
