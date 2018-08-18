@@ -396,16 +396,10 @@ void MainWindow::refreshProperties()
     int value4;
     int value5;
     if (ui->graphicsView->getIsMovieLoaded())
-    {
         value4 = ui->graphicsView->getLoadedMovie()->frameCount();
-        value5 = ui->graphicsView->getLoadedMovie()->nextFrameDelay();
-    }
     else
-    {
         value4 = 0;
-        value5 = 0;
-    }
-    info->setInfo(ui->graphicsView->getSelectedFileInfo(), ui->graphicsView->getImageWidth(), ui->graphicsView->getImageHeight(), value4, value5);
+    info->setInfo(ui->graphicsView->getSelectedFileInfo(), ui->graphicsView->getImageWidth(), ui->graphicsView->getImageHeight(), value4);
 
 }
 

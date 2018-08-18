@@ -247,9 +247,7 @@ void QVGraphicsView::animatedFrameChange(QRect rect)
         movieCenterNeedsUpdating = false;
         centerOn(loadedPixmapItem);
         if (qFuzzyCompare(getCurrentScale(), 1.0) && !isOriginalSize)
-        {
             fitInViewMarginless();
-        }
     }
 }
 
