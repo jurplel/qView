@@ -213,6 +213,8 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
         result = loadedPixmapItem->boundingRect().center();
     }
     centerOn(result);
+
+    qDebug() << getCurrentScale();
 }
 
 void QVGraphicsView::loadMimeData(const QMimeData *mimeData)
@@ -421,6 +423,7 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
         size.scale(static_cast<int>(fittedWidth * (getCurrentScale())), static_cast<int>(fittedHeight * (getCurrentScale())), Qt::KeepAspectRatio);
         if (isMovieLoaded)
         {
+            loadedPixmapItem->setPixmap(loadedMovie->currentPixmap().scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
             loadedMovie->setScaledSize(size);
             movieCenterNeedsUpdating = true;
         }
@@ -436,6 +439,7 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
         size.scale(static_cast<int>(fittedWidth * (getCurrentScale())), static_cast<int>(fittedHeight * (getCurrentScale())), Qt::KeepAspectRatio);
         if (isMovieLoaded)
         {
+            loadedPixmapItem->setPixmap(loadedMovie->currentPixmap().scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
             loadedMovie->setScaledSize(size);
             movieCenterNeedsUpdating = true;
         }
