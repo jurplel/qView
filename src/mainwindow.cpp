@@ -394,7 +394,6 @@ void MainWindow::clearRecent()
 void MainWindow::refreshProperties()
 {
     int value4;
-    int value5;
     if (ui->graphicsView->getIsMovieLoaded())
         value4 = ui->graphicsView->getLoadedMovie()->frameCount();
     else
