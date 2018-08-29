@@ -18,6 +18,7 @@ OutputBaseFilename={#MyAppName}-{#MyAppVersion}-win32
 SetupIconFile=qView.ico
 WizardSmallImageFile=win.bmp
 UninstallDisplayIcon={uninstallexe}
+DisableProgramGroupPage=yes
 ChangesAssociations=yes
 Compression=lzma
 SolidCompression=yes
