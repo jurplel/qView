@@ -18,6 +18,7 @@ OutputBaseFilename={#MyAppName}-{#MyAppVersion}-win64
 SetupIconFile=qView.ico
 WizardSmallImageFile=win.bmp
 UninstallDisplayIcon={uninstallexe}
+DisableProgramGroupPage=yes
 ChangesAssociations=yes
 Compression=lzma
 SolidCompression=yes
@@ -36,7 +37,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; Flags: unchecked
 Source: "qView64.exe"; DestDir: "{app}"; DestName: "{#MyAppExeName}"; Flags: ignoreversion
 Source: "qView.VisualElementsManifest.xml"; DestDir: "{app}"; Flags: ignoreversion
 Source: "win-tile-m.png"; DestDir: "{app}"; Flags: ignoreversion
-Source: "qView32\win-tile-s.png"; DestDir: "{app}"; Flags: ignoreversion
+Source: "win-tile-s.png"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
 Name: "{commonprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: startentry
