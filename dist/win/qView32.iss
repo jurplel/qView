@@ -1,12 +1,16 @@
 #define MyAppName "qView"
-#define MyAppVersion "0.6"
+#define MyAppPublisher "jurplel and qView contributors"
 #define MyAppURL "https://interverse.tk/qview/"
 #define MyAppExeName "qView.exe"
+
+; Update these when building
+#define MyAppVersion "1.0"
+#define MyAppYear "2018"
 
 [Setup]
 AppId={{A6A9BAAB-C59E-4EAB-ACE1-3EEDE3031880}
 AppName={#MyAppName}
-AppPublisher=jurplel
+AppPublisher={#MyAppPublisher}
 AppVersion={#MyAppVersion}
 AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisherURL={#MyAppURL}
@@ -16,8 +20,13 @@ DefaultDirName={pf}\{#MyAppName}
 LicenseFile=../../LICENSE
 OutputBaseFilename={#MyAppName}-{#MyAppVersion}-win32
 SetupIconFile=qView.ico
-WizardSmallImageFile=win.bmp
-UninstallDisplayIcon={uninstallexe}
+WizardSmallImageFile=wiz-small.bmp
+WizardImageFile=wiz.bmp
+UninstallDisplayName={#MyAppName}
+UninstallDisplayIcon={app}\{#MyAppExeName}
+VersionInfoVersion={#MyAppVersion}
+AppCopyright=Copyright © 2018-{#MyAppYear}, {#MyAppPublisher}
+MinVersion=0,6.1
 DisableProgramGroupPage=yes
 ChangesAssociations=yes
 Compression=lzma
@@ -28,9 +37,8 @@ ArchitecturesAllowed=x86 x64
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Tasks]
-Name: "fileassociation"; Description: "Set as default image viewer for all supported formats"; Flags: unchecked
-Name: "startentry"; Description: "Create a start menu shortcut";
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; Flags: unchecked
+Name: "startentry"; Description: "Create a start menu shortcut"; GroupDescription: "{cm:AdditionalIcons}";
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
 Source: "qView32.exe"; DestDir: "{app}"; DestName: "{#MyAppExeName}"; Flags: ignoreversion
@@ -47,27 +55,27 @@ Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChang
 
 [Registry]
 ;  File Associations
-Root: HKLM; Subkey: "Software\Classes\.bmp"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue; Tasks: fileassociation
-Root: HKLM; Subkey: "Software\Classes\.cur"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue; Tasks: fileassociation
-Root: HKLM; Subkey: "Software\Classes\.gif"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue; Tasks: fileassociation
-Root: HKLM; Subkey: "Software\Classes\.icns"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue; Tasks: fileassociation
-Root: HKLM; Subkey: "Software\Classes\.ico"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue; Tasks: fileassociation
-Root: HKLM; Subkey: "Software\Classes\.jp2"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue; Tasks: fileassociation
-Root: HKLM; Subkey: "Software\Classes\.jpeg"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue; Tasks: fileassociation
-Root: HKLM; Subkey: "Software\Classes\.jpg"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue; Tasks: fileassociation
-Root: HKLM; Subkey: "Software\Classes\.mng"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue; Tasks: fileassociation
-Root: HKLM; Subkey: "Software\Classes\.pbm"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue; Tasks: fileassociation
-Root: HKLM; Subkey: "Software\Classes\.pgm"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue; Tasks: fileassociation
-Root: HKLM; Subkey: "Software\Classes\.png"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue; Tasks: fileassociation
-Root: HKLM; Subkey: "Software\Classes\.ppm"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue; Tasks: fileassociation
-Root: HKLM; Subkey: "Software\Classes\.svg"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue; Tasks: fileassociation
-Root: HKLM; Subkey: "Software\Classes\.svgz"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue; Tasks: fileassociation
-Root: HKLM; Subkey: "Software\Classes\.tif"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue; Tasks: fileassociation
-Root: HKLM; Subkey: "Software\Classes\.tiff"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue; Tasks: fileassociation
-Root: HKLM; Subkey: "Software\Classes\.wbmp"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue; Tasks: fileassociation
-Root: HKLM; Subkey: "Software\Classes\.webp"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue; Tasks: fileassociation
-Root: HKLM; Subkey: "Software\Classes\.xbm"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue; Tasks: fileassociation
-Root: HKLM; Subkey: "Software\Classes\.xpm"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue; Tasks: fileassociation
+Root: HKLM; Subkey: "Software\Classes\.bmp"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue
+Root: HKLM; Subkey: "Software\Classes\.cur"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue
+Root: HKLM; Subkey: "Software\Classes\.gif"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue
+Root: HKLM; Subkey: "Software\Classes\.icns"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue
+Root: HKLM; Subkey: "Software\Classes\.ico"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue
+Root: HKLM; Subkey: "Software\Classes\.jp2"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue
+Root: HKLM; Subkey: "Software\Classes\.jpeg"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue
+Root: HKLM; Subkey: "Software\Classes\.jpg"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue
+Root: HKLM; Subkey: "Software\Classes\.mng"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue
+Root: HKLM; Subkey: "Software\Classes\.pbm"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue
+Root: HKLM; Subkey: "Software\Classes\.pgm"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue
+Root: HKLM; Subkey: "Software\Classes\.png"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue
+Root: HKLM; Subkey: "Software\Classes\.ppm"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue
+Root: HKLM; Subkey: "Software\Classes\.svg"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue
+Root: HKLM; Subkey: "Software\Classes\.svgz"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue
+Root: HKLM; Subkey: "Software\Classes\.tif"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue
+Root: HKLM; Subkey: "Software\Classes\.tiff"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue
+Root: HKLM; Subkey: "Software\Classes\.wbmp"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue
+Root: HKLM; Subkey: "Software\Classes\.webp"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue
+Root: HKLM; Subkey: "Software\Classes\.xbm"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue
+Root: HKLM; Subkey: "Software\Classes\.xpm"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue
 Root: HKLM; Subkey: "Software\Classes\{#MyAppName}"; ValueType: string; ValueName: ""; ValueData: "{#MyAppName}"; Flags: uninsdeletekey
 Root: HKLM; Subkey: "Software\Classes\{#MyAppName}\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
 
