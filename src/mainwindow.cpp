@@ -323,7 +323,6 @@ void MainWindow::updateRecentMenu()
     QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
 
     #ifdef Q_OS_MACX
-    if (!qobject_cast<QVApplication*>qApp->isMoreThanOneWindow)
         dockMenu->clear();
     #endif
     for (int i = 0; i <= 9; i++)
@@ -333,7 +332,6 @@ void MainWindow::updateRecentMenu()
             recentItems[i]->setVisible(true);
             recentItems[i]->setText(recentFiles[i].toList().first().toString());
             #ifdef Q_OS_MACX
-            if (!qobject_cast<QVApplication*>qApp->isMoreThanOneWindow)
                 dockMenu->addAction(recentItems[i]);
             #endif
             QMimeDatabase mimedb;
@@ -354,12 +352,9 @@ void MainWindow::updateRecentMenu()
         }
     }
     #ifdef Q_OS_MACX
-    if (!qobject_cast<QVApplication*>qApp->isMoreThanOneWindow)
-    {
         dockMenu->addAction(ui->actionNew_Window);
         dockMenu->addAction(ui->actionOpen);
         dockMenu->insertSeparator(ui->actionNew_Window);
-    }
     #endif
 }
 
