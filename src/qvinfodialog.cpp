@@ -10,7 +10,7 @@ QVInfoDialog::QVInfoDialog(QWidget *parent) :
     ui(new Ui::QVInfoDialog)
 {
     ui->setupUi(this);
-    ui->scrollAreaWidgetContents->addAction(ui->actionRefresh);
+    addAction(ui->actionRefresh);
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 }
 
@@ -26,6 +26,7 @@ void QVInfoDialog::setInfo(const QFileInfo &value, const int &value2, const int 
     height = value3;
     frameCount = value4;
     updateInfo();
+    window()->resize(10, 10);
 }
 
 void QVInfoDialog::on_actionRefresh_triggered()
