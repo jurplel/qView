@@ -41,13 +41,6 @@ MainWindow::MainWindow(QWidget *parent) :
     //Load settings from file
     loadSettings();
 
-    //Change show in file explorer text based on operating system
-    #if defined(Q_OS_WIN)
-    ui->actionOpen_Containing_Folder->setText("Show in Explorer");
-    #elif defined(Q_OS_MACX)
-    ui->actionOpen_Containing_Folder->setText("Show in Finder");
-    #endif
-
     //Keyboard Shortcuts
     ui->actionOpen->setShortcuts(QKeySequence::Open);
     ui->actionNext_File->setShortcut(Qt::Key_Right);
@@ -123,7 +116,7 @@ MainWindow::MainWindow(QWidget *parent) :
     view->addAction(ui->actionFull_Screen);
     menu->addMenu(view);
 
-    QMenu *gif = new QMenu("GIF controls", this);
+    QMenu *gif = new QMenu("GIF Controls", this);
     gif->menuAction()->setEnabled(false);
     gif->addAction(ui->actionSave_Frame_As);
     gif->addAction(ui->actionPause);
@@ -161,18 +154,21 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->menuFile->insertSeparator(ui->actionOpen_Containing_Folder);
     ui->menuTools->insertMenu(ui->actionSlideshow, gif);
 
-    //Add dock menu on macOS
+    //macOS specific functions
     #ifdef Q_OS_MACX
-    //macOS dock menu
     ui->menuView->removeAction(ui->actionFull_Screen);
     ui->actionNew_Window->setVisible(true);
-    if (!qobject_cast<QVApplication*>qApp->isMoreThanOneWindow)
-    {
-        dockMenu = new QMenu(this);
-        dockMenu->setAsDockMenu();
-        dockMenu->addAction(ui->actionNew_Window);
-        dockMenu->addAction(ui->actionOpen);
-    }
+    ui->actionOptions->setText("Preferences");
+    ui->actionAbout->setText("About qView");
+    ui->actionOpen_Containing_Folder->setText("Show in Finder");
+
+    //macOS dock menu
+    dockMenu = new QMenu(this);
+    dockMenu->setAsDockMenu();
+    dockMenu->addAction(ui->actionNew_Window);
+    dockMenu->addAction(ui->actionOpen);
+    #elif defined(Q_OS_WIN)
+        ui->actionOpen_Containing_Folder->setText("Show in Explorer");
     #endif
 
     //Add to mainwindow's action list so keyboard shortcuts work without a menubar
@@ -300,17 +296,13 @@ void MainWindow::updateRecentMenu()
 {
     QSettings settings;
 
-    //ensure recent items functionality
+    //activate items after item is loaded for the first time
     if (ui->graphicsView->getIsPixmapLoaded() && !ui->actionOpen_Containing_Folder->isEnabled())
     {
         foreach(QAction* action, ui->menuView->actions())
-        {
             action->setEnabled(true);
-        }
         foreach(QAction* action, menu->actions())
-        {
             action->setEnabled(true);
-        }
         ui->actionSlideshow->setEnabled(true);
     }
     //disable gif controls if there is no gif loaded
@@ -320,10 +312,12 @@ void MainWindow::updateRecentMenu()
         ui->menuTools->actions().first()->setEnabled(true);
 
 
+    //get recent files from config file
     QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
 
+    //on macOS, we have to clear the menu, re-add items, and add the old items again because it displays hidden qactions as grayed out
     #ifdef Q_OS_MACX
-        dockMenu->clear();
+    dockMenu->clear();
     #endif
     for (int i = 0; i <= 9; i++)
     {
@@ -331,19 +325,18 @@ void MainWindow::updateRecentMenu()
         {
             recentItems[i]->setVisible(true);
             recentItems[i]->setText(recentFiles[i].toList().first().toString());
+
+            //re-add items after clearing dock menu
             #ifdef Q_OS_MACX
-                dockMenu->addAction(recentItems[i]);
+            dockMenu->addAction(recentItems[i]);
             #endif
+            //set menu icons for linux users
             QMimeDatabase mimedb;
             QMimeType type = mimedb.mimeTypeForFile(recentFiles[i].toList().last().toString());
             if (type.iconName().isNull())
-            {
                 recentItems[i]->setIcon(QIcon::fromTheme(type.genericIconName()));
-            }
             else
-            {
                   recentItems[i]->setIcon(QIcon::fromTheme(type.iconName()));
-            }
         }
         else
         {
@@ -351,10 +344,11 @@ void MainWindow::updateRecentMenu()
             recentItems[i]->setText("Empty");
         }
     }
+    //re-add original items to dock menu after adding recents
     #ifdef Q_OS_MACX
-        dockMenu->addAction(ui->actionNew_Window);
-        dockMenu->addAction(ui->actionOpen);
-        dockMenu->insertSeparator(ui->actionNew_Window);
+    dockMenu->addAction(ui->actionNew_Window);
+    dockMenu->addAction(ui->actionOpen);
+    dockMenu->insertSeparator(ui->actionNew_Window);
     #endif
 }
 
