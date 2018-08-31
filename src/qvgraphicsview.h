@@ -134,9 +134,6 @@ private:
     bool cheapScaledLast;
 
     QFileInfo selectedFileInfo;
-
-    QFileInfoList loadedFileFolder;
-    int loadedFileFolderIndex;
     const QStringList filterList = (QStringList() << "*.bmp" << "*.cur" << "*.gif" << "*.icns" << "*.ico" << "*.jp2" << "*.jpeg" << "*.jpe" << "*.jpg" << "*.mng" << "*.pbm" << "*.pgm" << "*.png" << "*.ppm" << "*.svg" << "*.svgz" << "*.tif" << "*.tiff" << "*.wbmp" << "*.webp" << "*.xbm" << "*.xpm");
 };
 #endif // QVGRAPHICSVIEW_H

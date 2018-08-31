@@ -96,7 +96,28 @@ void QVGraphicsView::mouseDoubleClickEvent(QMouseEvent *event)
 
 void QVGraphicsView::wheelEvent(QWheelEvent *event)
 {
-    zoom(event->angleDelta().y(), event->pos());
+    qDebug() << event->modifiers();
+    if (event->modifiers() == Qt::ControlModifier)
+    {
+        if (event->angleDelta().y() > 0)
+            translate(0, height()/10);
+        else
+            translate(0, height()/10*-1);
+    }
+    else if (event->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier))
+    {
+        if (event->angleDelta().x() > 0)
+            translate(width()/10, 0);
+        else
+            translate(width()/10*-1, 0);
+    }
+    else
+    {
+        if (event->angleDelta().y() == 0)
+            zoom(event->angleDelta().x(), event->pos());
+        else
+            zoom(event->angleDelta().y(), event->pos());
+    }
 }
 
 // Functions
@@ -213,8 +234,6 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
         result = loadedPixmapItem->boundingRect().center();
     }
     centerOn(result);
-
-    qDebug() << getCurrentScale();
 }
 
 void QVGraphicsView::loadMimeData(const QMimeData *mimeData)
@@ -311,8 +330,6 @@ void QVGraphicsView::loadFile(QString fileName)
 
     //define info variables
     selectedFileInfo = QFileInfo(fileName);
-    loadedFileFolder = QDir(selectedFileInfo.path()).entryInfoList(filterList, QDir::Files);
-    loadedFileFolderIndex = loadedFileFolder.indexOf(selectedFileInfo);
 
     //post-load operations
     resetScale();
@@ -470,6 +487,10 @@ void QVGraphicsView::originalSize()
 
 void QVGraphicsView::nextFile()
 {
+
+    QFileInfoList loadedFileFolder = QDir(selectedFileInfo.path()).entryInfoList(filterList, QDir::Files);
+    int loadedFileFolderIndex = loadedFileFolder.indexOf(selectedFileInfo);
+
     if (loadedFileFolder.isEmpty())
         return;
 
@@ -491,6 +512,9 @@ void QVGraphicsView::nextFile()
 
 void QVGraphicsView::previousFile()
 {
+    QFileInfoList loadedFileFolder = QDir(selectedFileInfo.path()).entryInfoList(filterList, QDir::Files);
+    int loadedFileFolderIndex = loadedFileFolder.indexOf(selectedFileInfo);
+
     if (loadedFileFolder.isEmpty())
         return;
 
