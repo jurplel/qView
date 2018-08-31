@@ -33,7 +33,6 @@ MainWindow *QVApplication::newWindow()
     MainWindow *w = new MainWindow();
     w->show();
     w->setAttribute(Qt::WA_DeleteOnClose);
-    isMoreThanOneWindow = true;
     return w;
 }
 
