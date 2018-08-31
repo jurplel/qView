@@ -15,6 +15,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     //qgraphicsscene setup
     QGraphicsScene *scene = new QGraphicsScene(0.0, 0.0, 100000.0, 100000.0, this);
     setScene(scene);
+    setFocus();
 
     scaleFactor = 0.25;
     maxScalingTwoSize = 4;
@@ -96,7 +97,6 @@ void QVGraphicsView::mouseDoubleClickEvent(QMouseEvent *event)
 
 void QVGraphicsView::wheelEvent(QWheelEvent *event)
 {
-    qDebug() << event->modifiers();
     if (event->modifiers() == Qt::ControlModifier)
     {
         if (event->angleDelta().y() > 0)
@@ -356,6 +356,7 @@ void QVGraphicsView::updateRecentFiles(QFileInfo file)
     }
 
     settings.setValue("recentFiles", recentFiles);
+    parentMainWindow->updateRecentMenu();
 }
 
 void QVGraphicsView::setWindowTitle()

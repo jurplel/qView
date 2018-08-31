@@ -82,6 +82,9 @@ void QVOptionsDialog::loadSettings()
     //menubar
     transientSettings.menubarEnabled = settings.value("menubarenabled", false).toBool();
     ui->menubarCheckbox->setChecked(transientSettings.menubarEnabled);
+    #ifdef Q_OS_MACX
+    ui->menubarCheckbox->hide();
+    #endif
 
     //cropmode
     transientSettings.cropMode = settings.value("cropmode", 0).toInt();
