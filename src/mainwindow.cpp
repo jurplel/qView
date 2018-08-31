@@ -146,8 +146,8 @@ MainWindow::MainWindow(QWidget *parent) :
     help->setIcon(QIcon::fromTheme("help-about"));
 
     //fallback icons
-    ui->actionWelcome->setIcon(QIcon::fromTheme("help-faq", QIcon::fromTheme("help-about")));
-    ui->actionOptions->setIcon(QIcon::fromTheme("configure", QIcon::fromTheme("preferences-other")));
+//    ui->actionWelcome->setIcon(QIcon::fromTheme("help-faq", QIcon::fromTheme("help-about")));
+//    ui->actionOptions->setIcon(QIcon::fromTheme("configure", QIcon::fromTheme("preferences-other")));
 
     //Add recent items to menubar
     ui->menuFile->insertMenu(ui->actionOpen_Containing_Folder, files);
@@ -156,6 +156,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //macOS specific functions
     #ifdef Q_OS_MACX
+    qApp->setAttribute(Qt::AA_DontShowIconsInMenus);
     ui->menuView->removeAction(ui->actionFull_Screen);
     ui->actionNew_Window->setVisible(true);
     ui->actionOptions->setText("Preferences");
@@ -168,7 +169,8 @@ MainWindow::MainWindow(QWidget *parent) :
     dockMenu->addAction(ui->actionNew_Window);
     dockMenu->addAction(ui->actionOpen);
     #elif defined(Q_OS_WIN)
-        ui->actionOpen_Containing_Folder->setText("Show in Explorer");
+    qApp->setAttribute(Qt::AA_DontShowIconsInMenus);
+    ui->actionOpen_Containing_Folder->setText("Show in Explorer");
     #endif
 
     //Add to mainwindow's action list so keyboard shortcuts work without a menubar

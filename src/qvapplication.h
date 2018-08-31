@@ -19,8 +19,6 @@ public:
     MainWindow *newWindow();
 
     MainWindow *getMainWindow();
-
-    bool isMoreThanOneWindow;
 };
 
 #endif // QVAPPLICATION_H
