@@ -97,6 +97,7 @@ void QVGraphicsView::mouseDoubleClickEvent(QMouseEvent *event)
 
 void QVGraphicsView::wheelEvent(QWheelEvent *event)
 {
+    //Basically, if you are holding ctrl then it scrolls instead of zooms (the shift bit is for horizontal scrolling)
     if (event->modifiers() == Qt::ControlModifier)
     {
         if (event->angleDelta().y() > 0)
