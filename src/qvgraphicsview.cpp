@@ -107,10 +107,21 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
     }
     else if (event->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier))
     {
-        if (event->angleDelta().x() > 0)
-            translate(width()/10, 0);
+        if (event->angleDelta().x() != 0)
+        {
+            if (event->angleDelta().x() > 0)
+                translate(width()/10, 0);
+            else
+                translate(width()/10*-1, 0);
+        }
         else
-            translate(width()/10*-1, 0);
+        {
+            if (event->angleDelta().y() > 0)
+                translate(width()/10, 0);
+            else
+                translate(width()/10*-1, 0);
+        }
+
     }
     else
     {
@@ -245,7 +256,6 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
         result = loadedPixmapItem->boundingRect().center();
     }
     centerOn(result);
-    qDebug() << fittedHeight << loadedPixmapItem->boundingRect().height() << getCurrentScale();
 }
 
 void QVGraphicsView::loadMimeData(const QMimeData *mimeData)
