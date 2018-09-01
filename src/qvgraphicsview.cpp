@@ -257,6 +257,7 @@ void QVGraphicsView::loadMimeData(const QMimeData *mimeData)
 
 void QVGraphicsView::animatedFrameChange(QRect rect)
 {
+    Q_UNUSED(rect);
     if (!isMovieLoaded)
         return;
 
