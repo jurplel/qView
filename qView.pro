@@ -5,7 +5,6 @@
 #-------------------------------------------------
 
 QT += core gui network
-macx:win32:QT += svg
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -27,6 +26,7 @@ CONFIG -= debug_and_release debug_and_release_target
 
 
 # Windows specific stuff
+win32:QT += svg # needed for including svg support in static build
 win32:CONFIG += static
 RC_ICONS = "dist/win/qView.ico"
 QMAKE_TARGET_COPYRIGHT = "Copyright © 2018 jurplel and qView contributors"
