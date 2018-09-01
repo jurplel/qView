@@ -208,7 +208,7 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
     else
     {
         //Sets the pixmap to full resolution when zooming in without scaling2
-        if (!(loadedPixmapItem->pixmap().height() == loadedPixmap->height()) && !isMovieLoaded && !getIsScalingTwoEnabled())
+        if (loadedPixmapItem->pixmap().height() != loadedPixmap->height() && !isMovieLoaded && !getIsScalingTwoEnabled())
         {
             loadedPixmapItem->setPixmap(*loadedPixmap);
             fitInViewMarginless(false);
@@ -217,12 +217,17 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
 
         //zoom using cheap matrix method
         if (DeltaY > 0)
+        {
+            //this prevents a jitter when zooming in very quickly from below to above 1.0 on a movie
+            if (isMovieLoaded && loadedMovie->currentPixmap().height() != fittedHeight)
+                loadedMovie->jumpToNextFrame();
             scale(scaleFactor, scaleFactor);
+        }
         else
         {
             scale(qPow(scaleFactor, -1), qPow(scaleFactor, -1));
             //when the pixmap is set to full resolution, reset the scale back to the fittedheight when going back to expensive scaling town
-            if (!(loadedPixmapItem->boundingRect().height() == fittedHeight) && qFuzzyCompare(getCurrentScale(), 1.0) && !isMovieLoaded && !getIsScalingTwoEnabled() && getIsScalingEnabled())
+            if (loadedPixmapItem->boundingRect().height() != fittedHeight && qFuzzyCompare(getCurrentScale(), 1.0) && !isMovieLoaded && !getIsScalingTwoEnabled() && getIsScalingEnabled())
                 resetScale();
         }
         cheapScaledLast = true;
