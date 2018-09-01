@@ -82,6 +82,7 @@ void QVOptionsDialog::loadSettings()
     //menubar
     transientSettings.menubarEnabled = settings.value("menubarenabled", false).toBool();
     ui->menubarCheckbox->setChecked(transientSettings.menubarEnabled);
+    //hide menubar checkbox if on macOS, because it doesn't even work
     #ifdef Q_OS_MACX
     ui->menubarCheckbox->hide();
     #endif
