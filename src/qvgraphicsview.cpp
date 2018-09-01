@@ -207,11 +207,11 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
     //do regular matrix-based cheap scaling instead
     else
     {
-        //if the pixmap being displayed is not the full resolution, set it to be
+        //Sets the pixmap to full resolution when zooming in without scaling2
         if (!(loadedPixmapItem->pixmap().height() == loadedPixmap->height()) && !isMovieLoaded && !getIsScalingTwoEnabled())
         {
             loadedPixmapItem->setPixmap(*loadedPixmap);
-            fitInViewMarginless();
+            fitInViewMarginless(false);
             originalMappedPos = mapToScene(pos);
         }
 
@@ -219,7 +219,12 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
         if (DeltaY > 0)
             scale(scaleFactor, scaleFactor);
         else
+        {
             scale(qPow(scaleFactor, -1), qPow(scaleFactor, -1));
+            //when the pixmap is set to full resolution, reset the scale back to the fittedheight when going back to expensive scaling town
+            if (!(loadedPixmapItem->boundingRect().height() == fittedHeight) && qFuzzyCompare(getCurrentScale(), 1.0) && !isMovieLoaded && !getIsScalingTwoEnabled() && getIsScalingEnabled())
+                resetScale();
+        }
         cheapScaledLast = true;
     }
 
@@ -235,6 +240,7 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
         result = loadedPixmapItem->boundingRect().center();
     }
     centerOn(result);
+    qDebug() << fittedHeight << loadedPixmapItem->boundingRect().height() << getCurrentScale();
 }
 
 void QVGraphicsView::loadMimeData(const QMimeData *mimeData)
@@ -537,7 +543,7 @@ void QVGraphicsView::previousFile()
     loadFile(previousImage.filePath());
 }
 
-void QVGraphicsView::fitInViewMarginless()
+void QVGraphicsView::fitInViewMarginless(bool setVariables)
 {
     alternateBoundingBox = loadedPixmapItem->boundingRect();
     switch (getCropMode()) {
@@ -583,9 +589,12 @@ void QVGraphicsView::fitInViewMarginless()
     fittedMatrix = transform();
     isOriginalSize = false;
     cheapScaledLast = false;
-    fittedHeight = loadedPixmapItem->boundingRect().height();
-    fittedWidth = loadedPixmapItem->boundingRect().width();
-    setCurrentScale(1.0);
+    if (setVariables)
+    {
+        fittedHeight = loadedPixmapItem->boundingRect().height();
+        fittedWidth = loadedPixmapItem->boundingRect().width();
+        setCurrentScale(1.0);
+    }
 }
 
 // Getters & Setters
