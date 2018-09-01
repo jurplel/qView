@@ -245,7 +245,7 @@
        <item row="2" column="0">
         <widget class="QCheckBox" name="scalingTwoCheckbox">
          <property name="text">
-          <string>Scaling algorithm when zooming in</string>
+          <string>Scaling algorithm while zooming in</string>
          </property>
          <property name="checked">
           <bool>true</bool>
