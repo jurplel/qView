@@ -70,13 +70,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
     menu->addAction(ui->actionOpen);
 
-    QMenu *files = new QMenu("Open Recent");
+    QMenu *files = new QMenu(tr("Open Recent"));
 
     int index = 0;
 
     for ( int i = 0; i <= 9; i++ )
     {
-        recentItems.append(new QAction("Empty", this));
+        recentItems.append(new QAction(tr("Empty"), this));
     }
 
     foreach(QAction *action, recentItems)
@@ -86,7 +86,7 @@ MainWindow::MainWindow(QWidget *parent) :
         index++;
     }
     files->addSeparator();
-    QAction *clearMenu = new QAction("Clear Menu", this);
+    QAction *clearMenu = new QAction(tr("Clear Menu"), this);
     connect(clearMenu, &QAction::triggered, this, &MainWindow::clearRecent);
     files->addAction(clearMenu);
 
@@ -100,7 +100,7 @@ MainWindow::MainWindow(QWidget *parent) :
     menu->addAction(ui->actionNext_File);
     menu->addSeparator();
 
-    QMenu *view = new QMenu("View", this);
+    QMenu *view = new QMenu(tr("View"), this);
     view->menuAction()->setEnabled(false);
     view->addAction(ui->actionZoom_In);
     view->addAction(ui->actionZoom_Out);
@@ -116,7 +116,7 @@ MainWindow::MainWindow(QWidget *parent) :
     view->addAction(ui->actionFull_Screen);
     menu->addMenu(view);
 
-    QMenu *gif = new QMenu("GIF Controls", this);
+    QMenu *gif = new QMenu(tr("GIF Controls"), this);
     gif->menuAction()->setEnabled(false);
     gif->addAction(ui->actionSave_Frame_As);
     gif->addAction(ui->actionPause);
@@ -126,13 +126,13 @@ MainWindow::MainWindow(QWidget *parent) :
     gif->addAction(ui->actionReset_Speed);
     gif->addAction(ui->actionIncrease_Speed);
 
-    QMenu *tools = new QMenu("Tools", this);
+    QMenu *tools = new QMenu(tr("Tools"), this);
     tools->addMenu(gif);
     tools->addAction(ui->actionSlideshow);
     tools->addAction(ui->actionOptions);
     menu->addMenu(tools);
 
-    QMenu *help = new QMenu("Help", this);
+    QMenu *help = new QMenu(tr("Help"), this);
     help->addAction(ui->actionAbout);
     help->addAction(ui->actionWelcome);
     menu->addMenu(help);
@@ -146,8 +146,8 @@ MainWindow::MainWindow(QWidget *parent) :
     help->setIcon(QIcon::fromTheme("help-about"));
 
     //fallback icons
-//    ui->actionWelcome->setIcon(QIcon::fromTheme("help-faq", QIcon::fromTheme("help-about")));
-//    ui->actionOptions->setIcon(QIcon::fromTheme("configure", QIcon::fromTheme("preferences-other")));
+    ui->actionWelcome->setIcon(QIcon::fromTheme("help-faq", QIcon::fromTheme("help-about")));
+    ui->actionOptions->setIcon(QIcon::fromTheme("configure", QIcon::fromTheme("preferences-other")));
 
     //Add recent items to menubar
     ui->menuFile->insertMenu(ui->actionOpen_Containing_Folder, files);
@@ -159,9 +159,9 @@ MainWindow::MainWindow(QWidget *parent) :
     qApp->setAttribute(Qt::AA_DontShowIconsInMenus);
     ui->menuView->removeAction(ui->actionFull_Screen);
     ui->actionNew_Window->setVisible(true);
-    ui->actionOptions->setText("Preferences");
-    ui->actionAbout->setText("About qView");
-    ui->actionOpen_Containing_Folder->setText("Show in Finder");
+    ui->actionOptions->setText(tr("Preferences"));
+    ui->actionAbout->setText(tr("About qView"));
+    ui->actionOpen_Containing_Folder->setText(tr("Show in Finder"));
 
     //macOS dock menu
     dockMenu = new QMenu(this);
@@ -170,7 +170,7 @@ MainWindow::MainWindow(QWidget *parent) :
     dockMenu->addAction(ui->actionOpen);
     #elif defined(Q_OS_WIN)
     qApp->setAttribute(Qt::AA_DontShowIconsInMenus);
-    ui->actionOpen_Containing_Folder->setText("Show in Explorer");
+    ui->actionOpen_Containing_Folder->setText(tr("Show in Explorer"));
     #endif
 
     //Add to mainwindow's action list so keyboard shortcuts work without a menubar
@@ -343,7 +343,7 @@ void MainWindow::updateRecentMenu()
         else
         {
             recentItems[i]->setVisible(false);
-            recentItems[i]->setText("Empty");
+            recentItems[i]->setText(tr("Empty"));
         }
     }
     //re-add original items to dock menu after adding recents
@@ -570,13 +570,13 @@ void MainWindow::on_actionPause_triggered()
     if (ui->graphicsView->getLoadedMovie()->state() == QMovie::Running)
     {
         ui->graphicsView->getLoadedMovie()->setPaused(true);
-        ui->actionPause->setText("Resume");
+        ui->actionPause->setText(tr("Resume"));
         ui->actionPause->setIcon(QIcon::fromTheme("media-playback-start"));
     }
     else
     {
         ui->graphicsView->getLoadedMovie()->setPaused(false);
-        ui->actionPause->setText("Pause");
+        ui->actionPause->setText(tr("Pause"));
         ui->actionPause->setIcon(QIcon::fromTheme("media-playback-pause"));
     }
 }
@@ -620,7 +620,7 @@ void MainWindow::on_actionSave_Frame_As_triggered()
         return;
 
     ui->graphicsView->getLoadedMovie()->setPaused(true);
-    ui->actionPause->setText("Resume");
+    ui->actionPause->setText(tr("Resume"));
     QFileDialog *saveDialog = new QFileDialog(this, tr("Save Frame As..."), "", tr("Supported Files (*.bmp *.cur *.icns *.ico *.jp2 *.jpeg *.jpe *.jpg *.pbm *.pgm *.png *.ppm *.tif *.tiff *.wbmp *.webp *.xbm *.xpm);;All Files (*)"));
     saveDialog->setDirectory(settings.value("lastFileDialogDir", QDir::homePath()).toString());
     saveDialog->selectFile(ui->graphicsView->getSelectedFileInfo().baseName() + "-" + QString::number(ui->graphicsView->getLoadedMovie()->currentFrameNumber()) + ".png");

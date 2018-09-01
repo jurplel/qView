@@ -2,6 +2,7 @@
 #include "qvapplication.h"
 #include <QCommandLineParser>
 #include <QCommandLineOption>
+#include <QObject>
 #include <QMenu>
 
 int main(int argc, char *argv[])
@@ -13,7 +14,7 @@ int main(int argc, char *argv[])
     QCommandLineParser parser;
     parser.addHelpOption();
     parser.addVersionOption();
-    parser.addPositionalArgument("file", "The file to open.");
+    parser.addPositionalArgument(QObject::tr("file"), QObject::tr("The file to open."));
     parser.process(a);
 
     MainWindow w;
