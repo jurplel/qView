@@ -93,7 +93,7 @@ protected:
 
     void mouseDoubleClickEvent(QMouseEvent *event) override;
 
-    void fitInViewMarginless();
+    void fitInViewMarginless(bool setVariables = true);
 
 
 private slots:
