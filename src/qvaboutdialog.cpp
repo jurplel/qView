@@ -88,16 +88,16 @@ void QVAboutDialog::checkUpdates(QNetworkReply* reply)
         return;
     }
 
-    float latestVersionNum = json.array().first().toObject().value("tag_name").toString("0.0").toFloat();
+    double latestVersionNum = json.array().first().toObject().value("tag_name").toString("0.0").toDouble();
 
-    if (latestVersionNum == 0.0f)
+    if (latestVersionNum == 0.0)
     {
         ui->updateLabel->setText(tr("Error checking for updates"));
         return;
     }
-    if (latestVersionNum > static_cast<float>(VERSION))
+    if (latestVersionNum > VERSION)
     {
-        const QString text = tr("<a style=\"color: #03A9F4; text-decoration:none;\" href=\"https://github.com/jeep70/qView/releases\">%1 update available!</a>").arg(latestVersionNum);
+        const QString text = tr("<a style=\"color: #03A9F4; text-decoration:none;\" href=\"https://github.com/jeep70/qView/releases\">%1 update available!</a>").arg(QString::number(latestVersionNum, 'f', 1));
         ui->updateLabel->setText(text);
         ui->updateLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
         ui->updateLabel->setOpenExternalLinks(true);
