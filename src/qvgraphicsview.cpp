@@ -7,15 +7,23 @@
 #include <QMessageBox>
 #include <QMovie>
 #include <QPixmapCache>
-#include <QDebug>
 #include <QtMath>
 
 QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 {
     //qgraphicsscene setup
-    QGraphicsScene *scene = new QGraphicsScene(0.0, 0.0, 100000.0, 100000.0, this);
+    auto *scene = new QGraphicsScene(0.0, 0.0, 100000.0, 100000.0, this);
     setScene(scene);
     setFocus();
+
+    currentScale = 1.0;
+    fittedWidth = 0;
+    fittedHeight = 0;
+    isFilteringEnabled = true;
+    isScalingEnabled = true;
+    isScalingTwoEnabled = true;
+    titlebarMode = 0;
+    cropMode = 0;
 
     scaleFactor = 0.25;
     maxScalingTwoSize = 4;
@@ -26,12 +34,15 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     isOriginalSize = false;
     setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
 
+    loadedMovie = new QMovie();
+    connect(loadedMovie, &QMovie::updated, this, &QVGraphicsView::animatedFrameChange);
+
     timer = new QTimer(this);
     timer->setSingleShot(true);
     timer->setInterval(10);
     connect(timer, &QTimer::timeout, this, &QVGraphicsView::timerExpired);
 
-    parentMainWindow = (static_cast<MainWindow*>(parentWidget()->parentWidget()));
+    parentMainWindow = (dynamic_cast<MainWindow*>(parentWidget()->parentWidget()));
 
     reader = new QImageReader();
     reader->setDecideFormatFromContent(true);
@@ -230,7 +241,7 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
         if (DeltaY > 0)
         {
             //this prevents a jitter when zooming in very quickly from below to above 1.0 on a movie
-            if (isMovieLoaded && loadedMovie->currentPixmap().height() != fittedHeight)
+            if (isMovieLoaded && !qFuzzyCompare(loadedMovie->currentPixmap().height(), fittedHeight))
                 loadedMovie->jumpToNextFrame();
             scale(scaleFactor, scaleFactor);
         }
@@ -238,7 +249,7 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
         {
             scale(qPow(scaleFactor, -1), qPow(scaleFactor, -1));
             //when the pixmap is set to full resolution, reset the scale back to the fittedheight when going back to expensive scaling town
-            if (loadedPixmapItem->boundingRect().height() != fittedHeight && qFuzzyCompare(getCurrentScale(), 1.0) && !isMovieLoaded && !getIsScalingTwoEnabled() && getIsScalingEnabled())
+            if (!qFuzzyCompare(loadedPixmapItem->boundingRect().height(), fittedHeight) && qFuzzyCompare(getCurrentScale(), 1.0) && !isMovieLoaded && !getIsScalingTwoEnabled() && getIsScalingEnabled())
                 resetScale();
         }
         cheapScaledLast = true;
@@ -293,7 +304,7 @@ void QVGraphicsView::animatedFrameChange(QRect rect)
     }
 }
 
-void QVGraphicsView::loadFile(QString fileName)
+void QVGraphicsView::loadFile(const QString &fileName)
 {
     QPixmapCache::clear();
     reader->setFileName(fileName);
@@ -304,19 +315,22 @@ void QVGraphicsView::loadFile(QString fileName)
         updateRecentFiles(QFileInfo(fileName));
         return;
     }
-    else if (fileName.isEmpty())
+
+    if (fileName.isEmpty())
     {
         QMessageBox::critical(this, tr("qView Error"), tr("Error: No filepath given"));
         return;
     }
-    else if (!loadedPixmap->convertFromImage(reader->read()))
+
+    if (!loadedPixmap->convertFromImage(reader->read()))
     {
         QMessageBox::critical(this, tr("qView Error"), tr("Error: Failed to load file"));
         if (getIsPixmapLoaded())
             loadFile(selectedFileInfo.filePath());
         return;
     }
-    else if (loadedPixmap->isNull())
+
+    if (loadedPixmap->isNull())
     {
         QMessageBox::critical(this, tr("qView Error"), tr("Error: Null pixmap"));
         if (getIsPixmapLoaded())
@@ -324,17 +338,17 @@ void QVGraphicsView::loadFile(QString fileName)
         return;
     }
 
+
     //animation detection
     if (isMovieLoaded)
     {
+        loadedMovie->stop();
         isMovieLoaded = false;
         movieCenterNeedsUpdating = false;
-        loadedMovie->deleteLater();
     }
     if (reader->supportsAnimation() && reader->imageCount() > 1)
     {
-        loadedMovie = new QMovie(fileName);
-        connect(loadedMovie, &QMovie::updated, this, &QVGraphicsView::animatedFrameChange);
+        loadedMovie->setFileName(fileName);
         loadedMovie->start();
         movieCenterNeedsUpdating = true;
         isMovieLoaded = true;
@@ -361,10 +375,10 @@ void QVGraphicsView::loadFile(QString fileName)
     setWindowTitle();
 }
 
-void QVGraphicsView::updateRecentFiles(QFileInfo file)
+void QVGraphicsView::updateRecentFiles(const QFileInfo &file)
 {
     QSettings settings;
-    QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
+    auto recentFiles = settings.value("recentFiles").value<QVariantList>();
     QStringList fileInfo;
 
     fileInfo << file.fileName() << file.filePath();
@@ -690,25 +704,15 @@ void QVGraphicsView::setTitlebarMode(int value)
 int QVGraphicsView::getImageHeight()
 {
     if (getIsPixmapLoaded())
-    {
         return loadedPixmap->height();
-    }
-    else
-    {
-        return 0;
-    }
+    return 0;
 }
 
 int QVGraphicsView::getImageWidth()
 {
     if (getIsPixmapLoaded())
-    {
         return loadedPixmap->width();
-    }
-    else
-    {
-        return 0;
-    }
+    return 0;
 }
 
 int QVGraphicsView::getCropMode() const

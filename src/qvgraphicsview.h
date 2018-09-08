@@ -27,8 +27,8 @@ public:
     void zoom(int DeltaY, QPoint pos = QPoint());
 
     void loadMimeData(const QMimeData *mimeData);
-    void loadFile(QString fileName);
-    void updateRecentFiles(QFileInfo file);
+    void loadFile(const QString &fileName);
+    void updateRecentFiles(const QFileInfo &file);
     void setWindowTitle();
 
     void resetScale();
