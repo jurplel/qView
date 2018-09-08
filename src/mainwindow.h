@@ -3,7 +3,6 @@
 
 #include "qvinfodialog.h"
 #include <QMainWindow>
-#include <QPixmap>
 
 namespace Ui {
 class MainWindow;
