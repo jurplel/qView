@@ -221,7 +221,7 @@ void MainWindow::pickFile()
     connect(fileDialog, &QFileDialog::fileSelected, this, &MainWindow::openFile);
 }
 
-void MainWindow::openFile(QString fileName)
+void MainWindow::openFile(const QString fileName)
 {
     QSettings settings;
     ui->graphicsView->loadFile(fileName);

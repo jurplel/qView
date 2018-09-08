@@ -26,7 +26,7 @@ public:
     bool getIsPixmapLoaded();
 
 public slots:
-    void openFile(QString fileName);
+    void openFile(const QString fileName);
 
     void saveFrame(QString fileName);
 

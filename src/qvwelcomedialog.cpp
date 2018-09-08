@@ -12,9 +12,8 @@ QVWelcomeDialog::QVWelcomeDialog(QWidget *parent) :
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
     // add fonts
-    QFontDatabase fontDatabase;
-    fontDatabase.addApplicationFont(":/fonts/fonts/Lato-Light.ttf");
-    fontDatabase.addApplicationFont(":/fonts/fonts/Lato-Regular.ttf");
+    QFontDatabase::addApplicationFont(":/fonts/fonts/Lato-Light.ttf");
+    QFontDatabase::addApplicationFont(":/fonts/fonts/Lato-Regular.ttf");
 
     int modifier = 0;
     //set main title font
