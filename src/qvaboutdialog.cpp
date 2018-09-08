@@ -1,7 +1,6 @@
 #include "qvaboutdialog.h"
 #include "ui_qvaboutdialog.h"
 #include <QFontDatabase>
-#include <QDate>
 #include <QJsonDocument>
 
 QVAboutDialog::QVAboutDialog(QWidget *parent) :
@@ -14,9 +13,8 @@ QVAboutDialog::QVAboutDialog(QWidget *parent) :
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
     // add fonts
-    QFontDatabase fontDatabase;
-    fontDatabase.addApplicationFont(":/fonts/fonts/Lato-Light.ttf");
-    fontDatabase.addApplicationFont(":/fonts/fonts/Lato-Regular.ttf");
+    QFontDatabase::addApplicationFont(":/fonts/fonts/Lato-Light.ttf");
+    QFontDatabase::addApplicationFont(":/fonts/fonts/Lato-Regular.ttf");
 
     int modifier = 0;
     //set main title font
@@ -44,7 +42,7 @@ QVAboutDialog::QVAboutDialog(QWidget *parent) :
 
     //set infolabel2 font, text, and properties
     const QFont font5 = QFont("Lato", 8 + modifier, QFont::Normal);
-    const QString labelText2 = tr("Built with Qt %2<br>Source code available under GPLv3 at <a style=\"color: #03A9F4; text-decoration:none;\" href=\"https://github.com/jeep70/qView\">Github</a><br>Icon glyph created by Guilhem from the Noun Project<br>Copyright © 2018-%1, jurplel and qView contributors").arg(QDate::currentDate().year()).arg(QT_VERSION_STR);
+    const QString labelText2 = tr("Built with Qt %1<br>Source code available under GPLv3 at <a style=\"color: #03A9F4; text-decoration:none;\" href=\"https://github.com/jeep70/qView\">Github</a><br>Icon glyph created by Guilhem from the Noun Project<br>Copyright © 2018, jurplel and qView contributors").arg(QT_VERSION_STR);
     ui->infoLabel2->setFont(font5);
     ui->infoLabel2->setText(labelText2);
 

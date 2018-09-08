@@ -2,7 +2,6 @@
 #define QVAPPLICATION_H
 
 #include <QApplication>
-#include <QMainWindow>
 #include "mainwindow.h"
 
 class QVApplication : public QApplication

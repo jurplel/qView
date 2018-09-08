@@ -3,7 +3,6 @@
 #include <QDateTime>
 #include <QLocale>
 #include <QMimeDatabase>
-#include <QtGlobal>
 
 QVInfoDialog::QVInfoDialog(QWidget *parent) :
     QDialog(parent),
