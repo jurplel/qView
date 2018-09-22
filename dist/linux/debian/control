@@ -1,0 +1,14 @@
+Source: qview
+Section: graphics
+Priority: optional
+Maintainer: jurplel <jeep70cp[at]gmail[dotcom]>
+Build-Depends: debhelper (>= 11), qt5-default (>= 5.9)
+Standards-Version: 4.1.3
+Homepage: https://interverse.tk/qview
+
+Package: qview
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libqt5widgets5 (>= 5.9), libqt5network5 (>= 5.9)
+Recommends: qt5-image-formats-plugins (>= 5.9), libqt5svg5-dev (>= 5.9)
+Description: Practical and minimal image viewer
+ qView is a cross-platform Qt image viewer designed to be practical and minimal
