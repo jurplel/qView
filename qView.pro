@@ -54,6 +54,8 @@ icon256.path = /usr/share/icons/hicolor/256x256/apps/
 icon256.files = dist/linux/hicolor/256x256/apps/qview.png
 iconsvg.path = /usr/share/icons/hicolor/scalable/apps/
 iconsvg.files = dist/linux/hicolor/scalable/apps/qview.svg
+license.path = /usr/share/licenses/qview/
+license.files = LICENSE
 
 unix:!macx:INSTALLS += binary desktop icon16 icon32 icon64 icon128 icon256 iconsvg
 unix:!macx:TARGET = qview
