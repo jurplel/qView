@@ -57,7 +57,7 @@ iconsvg.files = dist/linux/hicolor/scalable/apps/qview.svg
 license.path = /usr/share/licenses/qview/
 license.files = LICENSE
 
-unix:!macx:INSTALLS += binary desktop icon16 icon32 icon64 icon128 icon256 iconsvg
+unix:!macx:INSTALLS += binary desktop icon16 icon32 icon64 icon128 icon256 iconsvg license
 unix:!macx:TARGET = qview
 
 # The following define makes your compiler emit warnings if you use
