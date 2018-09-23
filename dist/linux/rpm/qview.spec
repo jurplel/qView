@@ -1,6 +1,6 @@
 Name:		qview
 Version:	1.0
-Release:	1%{?dist}
+Release:	1
 Summary:	Practical and minimal image viewer
 
 Group:		Applications/Multimedia
