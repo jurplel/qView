@@ -24,6 +24,16 @@ public:
     };
     Q_ENUM(scaleMode)
 
+    enum class goToFileMode
+    {
+       constant,
+       first,
+       previous,
+       next,
+       last
+    };
+    Q_ENUM(goToFileMode)
+
     void zoom(int DeltaY, QPoint pos = QPoint());
 
     void loadMimeData(const QMimeData *mimeData);
@@ -35,8 +45,7 @@ public:
     void scaleExpensively(scaleMode mode);
     void originalSize();
 
-    void nextFile();
-    void previousFile();
+    void goToFile(const goToFileMode mode, const int index = 0);
 
     qreal getCurrentScale() const;
     void setCurrentScale(const qreal &value);

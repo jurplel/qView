@@ -64,6 +64,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionProperties->setShortcut(Qt::Key_I);
     ui->actionQuit->setShortcut(QKeySequence::Quit);
     ui->actionOptions->setShortcut(QKeySequence::Preferences);
+    ui->actionFirst_File->setShortcut(Qt::Key_Home);
+    ui->actionLast_File->setShortcut(Qt::Key_End);
 
     //Context menu
     menu = new QMenu(this);
@@ -96,8 +98,10 @@ MainWindow::MainWindow(QWidget *parent) :
     menu->addAction(ui->actionProperties);
     menu->addAction(ui->actionPaste);
     menu->addSeparator();
+    menu->addAction(ui->actionFirst_File);
     menu->addAction(ui->actionPrevious_File);
     menu->addAction(ui->actionNext_File);
+    menu->addAction(ui->actionLast_File);
     menu->addSeparator();
 
     QMenu *view = new QMenu(tr("View"), this);
@@ -434,12 +438,12 @@ void MainWindow::on_actionOptions_triggered()
 
 void MainWindow::on_actionNext_File_triggered()
 {
-    ui->graphicsView->nextFile();
+    ui->graphicsView->goToFile(QVGraphicsView::goToFileMode::next);
 }
 
 void MainWindow::on_actionPrevious_File_triggered()
 {
-    ui->graphicsView->previousFile();
+    ui->graphicsView->goToFile(QVGraphicsView::goToFileMode::previous);
 }
 
 void MainWindow::on_actionOpen_Containing_Folder_triggered()
@@ -548,13 +552,9 @@ void MainWindow::slideshowAction()
 {
     QSettings settings;
     if(settings.value("slideshowdirection", 0).toInt() == 0)
-    {
-        ui->graphicsView->nextFile();
-    }
+        on_actionNext_File_triggered();
     else
-    {
-        ui->graphicsView->previousFile();
-    }
+        on_actionPrevious_File_triggered();
 }
 
 bool MainWindow::getIsPixmapLoaded()
@@ -638,4 +638,14 @@ void MainWindow::saveFrame(QString fileName)
 void MainWindow::on_actionQuit_triggered()
 {
     qApp->quit();
+}
+
+void MainWindow::on_actionFirst_File_triggered()
+{
+    ui->graphicsView->goToFile(QVGraphicsView::goToFileMode::first);
+}
+
+void MainWindow::on_actionLast_File_triggered()
+{
+    ui->graphicsView->goToFile(QVGraphicsView::goToFileMode::last);
 }

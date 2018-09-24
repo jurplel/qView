@@ -141,8 +141,10 @@
     <property name="title">
      <string>&amp;Go</string>
     </property>
+    <addaction name="actionFirst_File"/>
     <addaction name="actionPrevious_File"/>
     <addaction name="actionNext_File"/>
+    <addaction name="actionLast_File"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -440,6 +442,28 @@
    </property>
    <property name="text">
     <string>&amp;Quit</string>
+   </property>
+  </action>
+  <action name="actionFirst_File">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset theme="go-first"/>
+   </property>
+   <property name="text">
+    <string>First File</string>
+   </property>
+  </action>
+  <action name="actionLast_File">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset theme="go-last"/>
+   </property>
+   <property name="text">
+    <string>Last File</string>
    </property>
   </action>
  </widget>
