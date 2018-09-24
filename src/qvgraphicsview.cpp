@@ -523,22 +523,47 @@ void QVGraphicsView::originalSize()
     centerOn(loadedPixmapItem->boundingRect().center());
 }
 
-void QVGraphicsView::nextFile()
-{
 
+void QVGraphicsView::goToFile(const goToFileMode mode, const int index)
+{
     QFileInfoList loadedFileFolder = QDir(selectedFileInfo.path()).entryInfoList(filterList, QDir::Files);
     int loadedFileFolderIndex = loadedFileFolder.indexOf(selectedFileInfo);
 
     if (loadedFileFolder.isEmpty())
         return;
 
-    if (loadedFileFolder.size()-1 == loadedFileFolderIndex)
+    switch (mode) {
+    case goToFileMode::constant:
+    {
+        loadedFileFolderIndex = index;
+        break;
+    }
+    case goToFileMode::first:
     {
         loadedFileFolderIndex = 0;
+        break;
     }
-    else
+    case goToFileMode::previous:
     {
-        loadedFileFolderIndex++;
+        if (loadedFileFolderIndex == 0)
+            loadedFileFolderIndex = loadedFileFolder.size()-1;
+        else
+            loadedFileFolderIndex--;
+        break;
+    }
+    case goToFileMode::next:
+    {
+        if (loadedFileFolder.size()-1 == loadedFileFolderIndex)
+            loadedFileFolderIndex = 0;
+        else
+            loadedFileFolderIndex++;
+        break;
+    }
+    case goToFileMode::last:
+    {
+        loadedFileFolderIndex = loadedFileFolder.size()-1;
+        break;
+    }
     }
 
     const QFileInfo nextImage = loadedFileFolder.value(loadedFileFolderIndex);
@@ -546,30 +571,6 @@ void QVGraphicsView::nextFile()
         return;
 
     loadFile(nextImage.filePath());
-}
-
-void QVGraphicsView::previousFile()
-{
-    QFileInfoList loadedFileFolder = QDir(selectedFileInfo.path()).entryInfoList(filterList, QDir::Files);
-    int loadedFileFolderIndex = loadedFileFolder.indexOf(selectedFileInfo);
-
-    if (loadedFileFolder.isEmpty())
-        return;
-
-    if (loadedFileFolderIndex == 0)
-    {
-        loadedFileFolderIndex = loadedFileFolder.size()-1;
-    }
-    else
-    {
-        loadedFileFolderIndex--;
-    }
-
-    const QFileInfo previousImage = loadedFileFolder.value(loadedFileFolderIndex);
-    if (!previousImage.isFile())
-        return;
-
-    loadFile(previousImage.filePath());
 }
 
 void QVGraphicsView::fitInViewMarginless(bool setVariables)
