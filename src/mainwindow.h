@@ -102,6 +102,10 @@ private slots:
 
     void on_actionQuit_triggered();
 
+    void on_actionFirst_File_triggered();
+
+    void on_actionLast_File_triggered();
+
 private:
     Ui::MainWindow *ui;
 
