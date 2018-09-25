@@ -331,10 +331,10 @@ void MainWindow::updateRecentMenu()
         ui->actionSlideshow->setEnabled(true);
     }
     //disable gif controls if there is no gif loaded
-    if (!ui->graphicsView->getIsMovieLoaded())
-        ui->menuTools->actions().first()->setEnabled(false);
-    else
-        ui->menuTools->actions().first()->setEnabled(true);
+    ui->menuTools->actions().first()->setEnabled(ui->graphicsView->getIsMovieLoaded());
+
+    //disable rewinding if image format doesn't support it
+    ui->actionPrevious_Frame->setEnabled(ui->graphicsView->getIsMovieRewindable());
 
 
     //get recent files from config file
@@ -643,9 +643,8 @@ void MainWindow::on_actionSave_Frame_As_triggered()
     saveDialog->open();
     connect(saveDialog, &QFileDialog::fileSelected, this, [=](QString fileName){
         ui->graphicsView->originalSize();
-        int frame = ui->graphicsView->getLoadedMovie()->currentFrameNumber();
-        for(int i=0; i<=frame; i++)
-            ui->graphicsView->getLoadedMovie()->jumpToFrame(i);
+        on_actionPrevious_Frame_triggered();
+        on_actionNext_Frame_triggered();
         ui->graphicsView->getLoadedMovie()->currentPixmap().save(fileName, nullptr, 100);
         ui->graphicsView->resetScale();
     });
