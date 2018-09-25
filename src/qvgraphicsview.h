@@ -85,6 +85,9 @@ public:
     bool getIsMovieRewindable() const;
     void setIsMovieRewindable(bool value);
 
+    bool getIsResetOnResizeEnabled() const;
+    void setIsResetOnResizeEnabled(bool value);
+
 protected:
     void wheelEvent(QWheelEvent *event) override;
 
@@ -139,6 +142,7 @@ private:
     int titlebarMode;
     int cropMode;
     bool isScalingTwoEnabled;
+    bool isResetOnResizeEnabled;
 
     qreal maxScalingTwoSize;
     bool cheapScaledLast;
