@@ -100,12 +100,6 @@ void QVGraphicsView::mouseReleaseEvent(QMouseEvent *event)
     viewport()->setCursor(Qt::ArrowCursor);
 }
 
-void QVGraphicsView::mouseDoubleClickEvent(QMouseEvent *event)
-{
-    QGraphicsView::mouseDoubleClickEvent(event);
-    parentMainWindow->toggleFullScreen();
-}
-
 void QVGraphicsView::wheelEvent(QWheelEvent *event)
 {
     //Basically, if you are holding ctrl then it scrolls instead of zooms (the shift bit is for horizontal scrolling)
