@@ -449,10 +449,11 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset theme="go-first"/>
+    <iconset theme="go-first">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>First File</string>
+    <string>&amp;First File</string>
    </property>
   </action>
   <action name="actionLast_File">
@@ -460,10 +461,19 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset theme="go-last"/>
+    <iconset theme="go-last">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>Last File</string>
+    <string>&amp;Last File</string>
+   </property>
+  </action>
+  <action name="actionPrevious_Frame">
+   <property name="icon">
+    <iconset theme="media-skip-backward"/>
+   </property>
+   <property name="text">
+    <string>&amp;Previous Frame</string>
    </property>
   </action>
  </widget>
