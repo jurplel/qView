@@ -21,7 +21,6 @@
 #include <QStyle>
 #include <QIcon>
 #include <QMimeDatabase>
-#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -219,6 +218,23 @@ void MainWindow::closeEvent(QCloseEvent *event)
     QMainWindow::closeEvent(event);
 }
 
+void MainWindow::mousePressEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::MouseButton::BackButton)
+        on_actionPrevious_File_triggered();
+    else if (event->button() == Qt::MouseButton::ForwardButton)
+        on_actionNext_File_triggered();
+
+    QMainWindow::mousePressEvent(event);
+}
+
+void MainWindow::mouseDoubleClickEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::MouseButton::LeftButton)
+        on_actionFull_Screen_triggered();
+    QMainWindow::mouseDoubleClickEvent(event);
+}
+
 void MainWindow::pickFile()
 {
     QSettings settings;
@@ -400,18 +416,6 @@ void MainWindow::refreshProperties()
 
 }
 
-void MainWindow::toggleFullScreen()
-{
-    if (windowState() == Qt::WindowFullScreen)
-    {
-        showNormal();
-    }
-    else
-    {
-        showFullScreen();
-    }
-}
-
 // Actions
 
 void MainWindow::on_actionOpen_triggered()
@@ -522,7 +526,14 @@ void MainWindow::on_actionProperties_triggered()
 
 void MainWindow::on_actionFull_Screen_triggered()
 {
-    toggleFullScreen();
+    if (windowState() == Qt::WindowFullScreen)
+    {
+        showNormal();
+    }
+    else
+    {
+        showFullScreen();
+    }
 }
 
 void MainWindow::on_actionOriginal_Size_triggered()
@@ -642,7 +653,7 @@ void MainWindow::on_actionSave_Frame_As_triggered()
 
 void MainWindow::on_actionQuit_triggered()
 {
-    qApp->quit();
+    close();
 }
 
 void MainWindow::on_actionFirst_File_triggered()
