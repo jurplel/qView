@@ -78,7 +78,6 @@ public:
     void setIsMovieLoaded(bool value);
 
     QMovie *getLoadedMovie() const;
-    void setLoadedMovie(QMovie *value);
 
     bool getIsScalingTwoEnabled() const;
     void setIsScalingTwoEnabled(bool value);
