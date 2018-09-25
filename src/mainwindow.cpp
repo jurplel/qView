@@ -21,6 +21,7 @@
 #include <QStyle>
 #include <QIcon>
 #include <QMimeDatabase>
+#include <QShortcut>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -67,6 +68,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionFirst_File->setShortcut(Qt::Key_Home);
     ui->actionLast_File->setShortcut(Qt::Key_End);
     ui->actionPrevious_Frame->setShortcut(Qt::Key_J);
+
+    QShortcut *escShortcut = new QShortcut(this);
+    escShortcut->setKey(Qt::Key_Escape);
+    connect(escShortcut, &QShortcut::activated, [this](){
+        if (windowState() == Qt::WindowFullScreen)
+            showNormal();
+    });
 
     //Context menu
     menu = new QMenu(this);
