@@ -20,8 +20,6 @@ public:
 
     void refreshProperties();
 
-    void toggleFullScreen();
-
     bool getIsPixmapLoaded();
 
 public slots:
@@ -35,6 +33,10 @@ protected:
     void showEvent(QShowEvent *event) override;
 
     void closeEvent(QCloseEvent *event) override;
+
+    void mousePressEvent(QMouseEvent *event) override;
+
+    void mouseDoubleClickEvent(QMouseEvent *event) override;
 
 private slots:
 
