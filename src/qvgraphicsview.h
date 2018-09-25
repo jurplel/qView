@@ -82,6 +82,9 @@ public:
     bool getIsScalingTwoEnabled() const;
     void setIsScalingTwoEnabled(bool value);
 
+    bool getIsMovieRewindable() const;
+    void setIsMovieRewindable(bool value);
+
 protected:
     void wheelEvent(QWheelEvent *event) override;
 
@@ -129,6 +132,7 @@ private:
 
     bool movieCenterNeedsUpdating;
     bool isMovieLoaded;
+    bool isMovieRewindable;
     bool isPixmapLoaded;
     bool isFilteringEnabled;
     bool isScalingEnabled;
