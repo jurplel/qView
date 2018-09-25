@@ -512,13 +512,9 @@ void QVGraphicsView::originalSize()
     movieCenterNeedsUpdating = true;
     isOriginalSize = true;
     if (isMovieLoaded)
-    {
         loadedMovie->setScaledSize(loadedPixmap->size());
-    }
     else
-    {
         loadedPixmapItem->setPixmap(*loadedPixmap);
-    }
     resetMatrix();
     centerOn(loadedPixmapItem->boundingRect().center());
 }
@@ -749,11 +745,6 @@ void QVGraphicsView::setIsMovieLoaded(bool value)
 QMovie *QVGraphicsView::getLoadedMovie() const
 {
     return loadedMovie;
-}
-
-void QVGraphicsView::setLoadedMovie(QMovie *value)
-{
-    loadedMovie = value;
 }
 
 bool QVGraphicsView::getIsScalingTwoEnabled() const
