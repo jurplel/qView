@@ -21,6 +21,7 @@
 #include <QStyle>
 #include <QIcon>
 #include <QMimeDatabase>
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -56,7 +57,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionFull_Screen->setShortcuts(QKeySequence::FullScreen);
     ui->actionOriginal_Size->setShortcut(Qt::Key_O);
     ui->actionNew_Window->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_N));
-    ui->actionNext_Frame->setShortcut(Qt::Key_N);
+    ui->actionNext_Frame->setShortcut(Qt::Key_L);
     ui->actionPause->setShortcut(Qt::Key_P);
     ui->actionDecrease_Speed->setShortcut(Qt::Key_BracketLeft);
     ui->actionReset_Speed->setShortcut(Qt::Key_Backslash);
@@ -66,6 +67,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionOptions->setShortcut(QKeySequence::Preferences);
     ui->actionFirst_File->setShortcut(Qt::Key_Home);
     ui->actionLast_File->setShortcut(Qt::Key_End);
+    ui->actionPrevious_Frame->setShortcut(Qt::Key_J);
 
     //Context menu
     menu = new QMenu(this);
@@ -124,6 +126,7 @@ MainWindow::MainWindow(QWidget *parent) :
     gif->menuAction()->setEnabled(false);
     gif->addAction(ui->actionSave_Frame_As);
     gif->addAction(ui->actionPause);
+    gif->addAction(ui->actionPrevious_Frame);
     gif->addAction(ui->actionNext_Frame);
     gif->addSeparator();
     gif->addAction(ui->actionDecrease_Speed);
@@ -650,4 +653,17 @@ void MainWindow::on_actionFirst_File_triggered()
 void MainWindow::on_actionLast_File_triggered()
 {
     ui->graphicsView->goToFile(QVGraphicsView::goToFileMode::last);
+}
+
+void MainWindow::on_actionPrevious_Frame_triggered()
+{
+    if (!ui->graphicsView->getIsMovieLoaded())
+        return;
+    int frame = ui->graphicsView->getLoadedMovie()->currentFrameNumber();
+    if (frame != 0)
+        frame--;
+    else
+        frame = ui->graphicsView->getLoadedMovie()->frameCount()-1;
+    for(int i=0; i<=frame; i++)
+        ui->graphicsView->getLoadedMovie()->jumpToFrame(i);
 }
