@@ -24,6 +24,8 @@ UI_DIR = intermediate
 RCC_DIR = intermediate
 CONFIG -= debug_and_release debug_and_release_target
 
+# enable c++11
+CONFIG += c++11
 
 # Windows specific stuff
 win32:QT += svg # needed for including svg support in static build

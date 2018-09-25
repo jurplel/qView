@@ -627,12 +627,14 @@ void MainWindow::on_actionSave_Frame_As_triggered()
     saveDialog->setDefaultSuffix("png");
     saveDialog->setAcceptMode(QFileDialog::AcceptSave);
     saveDialog->open();
-    connect(saveDialog, &QFileDialog::fileSelected, this, &MainWindow::saveFrame);
-}
-
-void MainWindow::saveFrame(QString fileName)
-{
-    ui->graphicsView->getLoadedMovie()->currentPixmap().save(fileName, nullptr, 100);
+    connect(saveDialog, &QFileDialog::fileSelected, this, [=](QString fileName){
+        ui->graphicsView->originalSize();
+        int frame = ui->graphicsView->getLoadedMovie()->currentFrameNumber();
+        for(int i=0; i<=frame; i++)
+            ui->graphicsView->getLoadedMovie()->jumpToFrame(i);
+        ui->graphicsView->getLoadedMovie()->currentPixmap().save(fileName, nullptr, 100);
+        ui->graphicsView->resetScale();
+    });
 }
 
 void MainWindow::on_actionQuit_triggered()

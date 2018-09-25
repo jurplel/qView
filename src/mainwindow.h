@@ -27,8 +27,6 @@ public:
 public slots:
     void openFile(const QString fileName);
 
-    void saveFrame(QString fileName);
-
     void slideshowAction();
 
 protected:
