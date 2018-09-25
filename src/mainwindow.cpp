@@ -307,8 +307,11 @@ void MainWindow::loadSettings()
     //scalefactor
     ui->graphicsView->setScaleFactor(settings.value("scalefactor", 25).toInt()*0.01+1);
 
-    //scaling
+    //scaling2
     ui->graphicsView->setIsScalingTwoEnabled(settings.value("scalingtwoenabled", true).toBool());
+
+    //reset on resize
+    ui->graphicsView->setIsResetOnResizeEnabled(settings.value("resetonresizeenabled", true).toBool());
 }
 
 void MainWindow::saveGeometrySettings()
