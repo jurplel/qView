@@ -60,7 +60,10 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 void QVGraphicsView::resizeEvent(QResizeEvent *event)
 {
     QGraphicsView::resizeEvent(event);
-    resetScale();
+    if (!isOriginalSize)
+        resetScale();
+    else
+        centerOn(loadedPixmapItem->boundingRect().center());
 }
 
 void QVGraphicsView::dropEvent(QDropEvent *event)
@@ -509,6 +512,11 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
 
 void QVGraphicsView::originalSize()
 {
+    if (isOriginalSize)
+    {
+        resetScale();
+        return;
+    }
     movieCenterNeedsUpdating = true;
     isOriginalSize = true;
     if (isMovieLoaded)
@@ -517,6 +525,9 @@ void QVGraphicsView::originalSize()
         loadedPixmapItem->setPixmap(*loadedPixmap);
     resetMatrix();
     centerOn(loadedPixmapItem->boundingRect().center());
+
+    fittedHeight = loadedPixmapItem->boundingRect().height();
+    fittedWidth = loadedPixmapItem->boundingRect().width();
 }
 
 
