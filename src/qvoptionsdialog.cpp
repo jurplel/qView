@@ -39,6 +39,7 @@ void QVOptionsDialog::saveSettings()
     settings.setValue("slideshowdirection", transientSettings.slideshowDirection);
     settings.setValue("scalefactor", transientSettings.scaleFactor);
     settings.setValue("scalingtwoenabled", transientSettings.scalingTwoEnabled);
+    settings.setValue("resetonresizeenabled", transientSettings.resetOnResizeEnabled);
     emit optionsSaved();
 }
 
@@ -106,6 +107,10 @@ void QVOptionsDialog::loadSettings()
     //scaling2 (while zooming in)
     transientSettings.scalingTwoEnabled = settings.value("scalingtwoenabled", true).toBool();
     ui->scalingTwoCheckbox->setChecked(transientSettings.scalingTwoEnabled);
+
+    //reset image on resize
+    transientSettings.resetOnResizeEnabled = settings.value("resetonresizeenabled", true).toBool();
+    ui->resetOnResizeCheckbox->setChecked(transientSettings.resetOnResizeEnabled);
 }
 
 
@@ -217,5 +222,17 @@ void QVOptionsDialog::on_scalingTwoCheckbox_stateChanged(int arg1)
     else
     {
         transientSettings.scalingTwoEnabled = false;
+    }
+}
+
+void QVOptionsDialog::on_resetOnResizeCheckbox_stateChanged(int arg1)
+{
+    if (arg1 > 0)
+    {
+        transientSettings.resetOnResizeEnabled = true;
+    }
+    else
+    {
+        transientSettings.resetOnResizeEnabled = false;
     }
 }

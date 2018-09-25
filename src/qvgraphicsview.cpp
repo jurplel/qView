@@ -23,6 +23,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     isFilteringEnabled = true;
     isScalingEnabled = true;
     isScalingTwoEnabled = true;
+    isResetOnResizeEnabled = true;
     titlebarMode = 0;
     cropMode = 0;
 
@@ -60,10 +61,13 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 void QVGraphicsView::resizeEvent(QResizeEvent *event)
 {
     QGraphicsView::resizeEvent(event);
-    if (!isOriginalSize)
-        resetScale();
-    else
-        centerOn(loadedPixmapItem->boundingRect().center());
+    if (isResetOnResizeEnabled)
+    {
+        if (!isOriginalSize)
+            resetScale();
+        else
+            centerOn(loadedPixmapItem->boundingRect().center());
+    }
 }
 
 void QVGraphicsView::dropEvent(QDropEvent *event)
@@ -776,4 +780,14 @@ bool QVGraphicsView::getIsScalingTwoEnabled() const
 void QVGraphicsView::setIsScalingTwoEnabled(bool value)
 {
     isScalingTwoEnabled = value;
+}
+
+bool QVGraphicsView::getIsResetOnResizeEnabled() const
+{
+    return isResetOnResizeEnabled;
+}
+
+void QVGraphicsView::setIsResetOnResizeEnabled(bool value)
+{
+    isResetOnResizeEnabled = value;
 }
