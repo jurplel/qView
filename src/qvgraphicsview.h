@@ -82,9 +82,6 @@ public:
     bool getIsScalingTwoEnabled() const;
     void setIsScalingTwoEnabled(bool value);
 
-    bool getIsMovieRewindable() const;
-    void setIsMovieRewindable(bool value);
-
     bool getIsResetOnResizeEnabled() const;
     void setIsResetOnResizeEnabled(bool value);
 
@@ -135,7 +132,6 @@ private:
 
     bool movieCenterNeedsUpdating;
     bool isMovieLoaded;
-    bool isMovieRewindable;
     bool isPixmapLoaded;
     bool isFilteringEnabled;
     bool isScalingEnabled;
