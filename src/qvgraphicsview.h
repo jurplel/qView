@@ -85,6 +85,9 @@ public:
     bool getIsResetOnResizeEnabled() const;
     void setIsResetOnResizeEnabled(bool value);
 
+    bool getIsPastActualSizeEnabled() const;
+    void setIsPastActualSizeEnabled(bool value);
+
 protected:
     void wheelEvent(QWheelEvent *event) override;
 
@@ -139,6 +142,7 @@ private:
     int cropMode;
     bool isScalingTwoEnabled;
     bool isResetOnResizeEnabled;
+    bool isPastActualSizeEnabled;
 
     qreal maxScalingTwoSize;
     bool cheapScaledLast;

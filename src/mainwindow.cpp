@@ -291,21 +291,12 @@ void MainWindow::loadSettings()
 
     //menubar
     if (settings.value("menubarenabled", false).toBool())
-    {
         ui->menuBar->show();
-    }
     else
-    {
         ui->menuBar->hide();
-    }
 
     //cropmode
     ui->graphicsView->setCropMode(settings.value("cropmode", 0).toInt());
-
-    if (ui->graphicsView->getIsPixmapLoaded())
-    {
-        ui->graphicsView->resetScale();
-    }
 
     //slideshowtimer
     slideshowTimer->setInterval(settings.value("slideshowtimer", 5).toInt()*1000);
@@ -318,6 +309,12 @@ void MainWindow::loadSettings()
 
     //reset on resize
     ui->graphicsView->setIsResetOnResizeEnabled(settings.value("resetonresizeenabled", true).toBool());
+
+    //resize past actual size
+    ui->graphicsView->setIsPastActualSizeEnabled(settings.value("pastactualsizeenabled", true).toBool());
+
+    if (ui->graphicsView->getIsPixmapLoaded())
+        ui->graphicsView->resetScale();
 }
 
 void MainWindow::saveGeometrySettings()

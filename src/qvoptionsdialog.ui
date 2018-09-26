@@ -250,7 +250,7 @@
          </property>
         </widget>
        </item>
-       <item row="6" column="0">
+       <item row="7" column="0">
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
           <widget class="QLabel" name="cropModeLabel">
@@ -291,6 +291,19 @@
           </widget>
          </item>
         </layout>
+       </item>
+       <item row="6" column="0">
+        <widget class="QCheckBox" name="pastActualSizeCheckbox">
+         <property name="toolTip">
+          <string>Stop from resizing the image past its actual size - you can still zoom past it though</string>
+         </property>
+         <property name="text">
+          <string>Image resizes past actual size</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
