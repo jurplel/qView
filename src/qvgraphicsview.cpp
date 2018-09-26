@@ -8,7 +8,6 @@
 #include <QMovie>
 #include <QPixmapCache>
 #include <QtMath>
-#include <QDebug>
 
 QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 {
@@ -33,7 +32,6 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     isPixmapLoaded = false;
     movieCenterNeedsUpdating = false;
     isMovieLoaded = false;
-    isMovieRewindable = true;
     isOriginalSize = false;
     setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
 
@@ -351,10 +349,6 @@ void QVGraphicsView::loadFile(const QString &fileName)
     }
     if (reader->supportsAnimation() && reader->imageCount() != 1)
     {
-        if (reader->imageCount() == 0)
-            isMovieRewindable = false;
-        else
-            isMovieRewindable = true;
         loadedMovie->setFileName(fileName);
         loadedMovie->start();
         movieCenterNeedsUpdating = true;
@@ -755,16 +749,6 @@ bool QVGraphicsView::getIsMovieLoaded() const
 void QVGraphicsView::setIsMovieLoaded(bool value)
 {
     isMovieLoaded = value;
-}
-
-bool QVGraphicsView::getIsMovieRewindable() const
-{
-    return isMovieRewindable;
-}
-
-void QVGraphicsView::setIsMovieRewindable(bool value)
-{
-    isMovieRewindable = value;
 }
 
 QMovie *QVGraphicsView::getLoadedMovie() const

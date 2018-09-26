@@ -468,14 +468,6 @@
     <string>&amp;Last File</string>
    </property>
   </action>
-  <action name="actionPrevious_Frame">
-   <property name="icon">
-    <iconset theme="media-skip-backward"/>
-   </property>
-   <property name="text">
-    <string>&amp;Previous Frame</string>
-   </property>
-  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
