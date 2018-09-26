@@ -67,7 +67,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionOptions->setShortcut(QKeySequence::Preferences);
     ui->actionFirst_File->setShortcut(Qt::Key_Home);
     ui->actionLast_File->setShortcut(Qt::Key_End);
-    ui->actionPrevious_Frame->setShortcut(Qt::Key_J);
 
     QShortcut *escShortcut = new QShortcut(this);
     escShortcut->setKey(Qt::Key_Escape);
@@ -133,7 +132,6 @@ MainWindow::MainWindow(QWidget *parent) :
     gif->menuAction()->setEnabled(false);
     gif->addAction(ui->actionSave_Frame_As);
     gif->addAction(ui->actionPause);
-    gif->addAction(ui->actionPrevious_Frame);
     gif->addAction(ui->actionNext_Frame);
     gif->addSeparator();
     gif->addAction(ui->actionDecrease_Speed);
@@ -343,9 +341,6 @@ void MainWindow::updateRecentMenu()
     }
     //disable gif controls if there is no gif loaded
     ui->menuTools->actions().first()->setEnabled(ui->graphicsView->getIsMovieLoaded());
-
-    //disable rewinding if image format doesn't support it
-    ui->actionPrevious_Frame->setEnabled(ui->graphicsView->getIsMovieRewindable());
 
 
     //get recent files from config file
@@ -654,7 +649,8 @@ void MainWindow::on_actionSave_Frame_As_triggered()
     saveDialog->open();
     connect(saveDialog, &QFileDialog::fileSelected, this, [=](QString fileName){
         ui->graphicsView->originalSize();
-        on_actionPrevious_Frame_triggered();
+        for(int i=0; i<=ui->graphicsView->getLoadedMovie()->frameCount(); i++)
+            ui->graphicsView->getLoadedMovie()->jumpToNextFrame();
         on_actionNext_Frame_triggered();
         ui->graphicsView->getLoadedMovie()->currentPixmap().save(fileName, nullptr, 100);
         ui->graphicsView->resetScale();
@@ -674,17 +670,4 @@ void MainWindow::on_actionFirst_File_triggered()
 void MainWindow::on_actionLast_File_triggered()
 {
     ui->graphicsView->goToFile(QVGraphicsView::goToFileMode::last);
-}
-
-void MainWindow::on_actionPrevious_Frame_triggered()
-{
-    if (!ui->graphicsView->getIsMovieLoaded())
-        return;
-    int frame = ui->graphicsView->getLoadedMovie()->currentFrameNumber();
-    if (frame != 0)
-        frame--;
-    else
-        frame = ui->graphicsView->getLoadedMovie()->frameCount()-1;
-    for(int i=0; i<=frame; i++)
-        ui->graphicsView->getLoadedMovie()->jumpToFrame(i);
 }
