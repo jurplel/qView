@@ -49,8 +49,8 @@ void QVOptionsDialog::loadSettings()
 
     //bgcolor
     transientSettings.bgColor = settings.value("bgcolor", QString("#212121")).toString();
-    loadedColor.setNamedColor(transientSettings.bgColor);
-    ui->bgColorButton->setText(loadedColor.name());
+    ui->bgColorButton->setText(transientSettings.bgColor);
+    updateBgColorButton();
 
     transientSettings.bgColorEnabled = settings.value("bgcolorenabled", true).toBool();
     if (transientSettings.bgColorEnabled)
@@ -111,18 +111,40 @@ void QVOptionsDialog::loadSettings()
     //reset image on resize
     transientSettings.resetOnResizeEnabled = settings.value("resetonresizeenabled", true).toBool();
     ui->resetOnResizeCheckbox->setChecked(transientSettings.resetOnResizeEnabled);
+    if (!transientSettings.resetOnResizeEnabled)
+    {
+        ui->cropModeComboBox->setEnabled(false);
+        ui->cropModeLabel->setEnabled(false);
+    }
 }
 
+void QVOptionsDialog::updateBgColorButton()
+{
+    if (ui->bgColorButton->isEnabled())
+    {
+        QString textColor;
+        if (QColor(transientSettings.bgColor).lightness() > 128)
+            textColor = "#000000";
+        else
+            textColor = "#FFFFFF";
+        ui->bgColorButton->setStyleSheet("background-color: " + transientSettings.bgColor + "; color: " + textColor);
+    }
+    else
+    {
+       ui->bgColorButton->setStyleSheet("");
+    }
+}
 
 void QVOptionsDialog::on_bgColorButton_clicked()
 {
-    QColor selectedColor = QColorDialog::getColor(loadedColor, this);
+    QColor selectedColor = QColorDialog::getColor(transientSettings.bgColor, this);
 
     if (!selectedColor.isValid())
         return;
 
     transientSettings.bgColor = selectedColor.name();
     ui->bgColorButton->setText(selectedColor.name());
+    updateBgColorButton();
 }
 
 void QVOptionsDialog::on_buttonBox_clicked(QAbstractButton *button)
@@ -147,6 +169,7 @@ void QVOptionsDialog::on_bgColorCheckbox_stateChanged(int arg1)
         ui->bgColorButton->setEnabled(false);
         ui->bgColorLabel->setEnabled(false);
     }
+    updateBgColorButton();
 }
 
 void QVOptionsDialog::on_filteringCheckbox_stateChanged(int arg1)
@@ -230,9 +253,13 @@ void QVOptionsDialog::on_resetOnResizeCheckbox_stateChanged(int arg1)
     if (arg1 > 0)
     {
         transientSettings.resetOnResizeEnabled = true;
+        ui->cropModeComboBox->setEnabled(true);
+        ui->cropModeLabel->setEnabled(true);
     }
     else
     {
         transientSettings.resetOnResizeEnabled = false;
+        ui->cropModeComboBox->setEnabled(false);
+        ui->cropModeLabel->setEnabled(false);
     }
 }

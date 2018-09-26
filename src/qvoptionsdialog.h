@@ -17,6 +17,8 @@ public:
     explicit QVOptionsDialog(QWidget *parent = nullptr);
     ~QVOptionsDialog();
 
+    void updateBgColorButton();
+
 signals:
     void optionsSaved();
 
@@ -54,8 +56,6 @@ private:
     Ui::QVOptionsDialog *ui;
     void saveSettings();
     void loadSettings();
-
-    QColor loadedColor;
 
     struct STransientSettings
     {

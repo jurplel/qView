@@ -5,14 +5,6 @@
   <property name="windowModality">
    <enum>Qt::NonModal</enum>
   </property>
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>304</width>
-    <height>300</height>
-   </rect>
-  </property>
   <property name="windowTitle">
    <string>qView Options</string>
   </property>
@@ -22,79 +14,18 @@
      <property name="focusPolicy">
       <enum>Qt::NoFocus</enum>
      </property>
-     <property name="tabShape">
-      <enum>QTabWidget::Rounded</enum>
-     </property>
      <property name="currentIndex">
       <number>1</number>
      </property>
-     <property name="elideMode">
-      <enum>Qt::ElideNone</enum>
-     </property>
-     <property name="documentMode">
-      <bool>false</bool>
-     </property>
-     <property name="tabsClosable">
-      <bool>false</bool>
-     </property>
-     <property name="movable">
-      <bool>false</bool>
-     </property>
-     <property name="tabBarAutoHide">
-      <bool>false</bool>
-     </property>
-     <widget class="QWidget" name="interface_2">
+     <widget class="QWidget" name="window">
       <property name="layoutDirection">
        <enum>Qt::LeftToRight</enum>
       </property>
       <attribute name="title">
-       <string>Interface</string>
+       <string>Window</string>
       </attribute>
       <layout class="QFormLayout" name="formLayout">
        <item row="0" column="0">
-        <widget class="QCheckBox" name="menubarCheckbox">
-         <property name="text">
-          <string>Enable menubar</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <layout class="QHBoxLayout" name="horizontalLayout">
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <item>
-          <widget class="QLabel" name="label">
-           <property name="text">
-            <string>Titlebar text:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QComboBox" name="titlebarModeComboBox">
-           <item>
-            <property name="text">
-             <string>Basic</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Minimal</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Verbose</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="2" column="0">
         <widget class="QCheckBox" name="bgColorCheckbox">
          <property name="text">
           <string>Use background color</string>
@@ -107,7 +38,7 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="0">
+       <item row="1" column="0">
         <layout class="QHBoxLayout" name="bgColorLayout">
          <item>
           <widget class="QLabel" name="bgColorLabel">
@@ -149,6 +80,68 @@
          </item>
         </layout>
        </item>
+       <item row="2" column="0">
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>10</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="5" column="0">
+        <widget class="QCheckBox" name="menubarCheckbox">
+         <property name="text">
+          <string>Show menubar</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="toolTip">
+            <string>Changes the amount of information displayed in the titlebar</string>
+           </property>
+           <property name="text">
+            <string>Titlebar text:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="titlebarModeComboBox">
+           <property name="toolTip">
+            <string>Changes the amount of information displayed in the titlebar</string>
+           </property>
+           <item>
+            <property name="text">
+             <string>Basic</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Minimal</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Verbose</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="image">
@@ -157,72 +150,22 @@
       </attribute>
       <layout class="QFormLayout" name="formLayout_2">
        <item row="0" column="0">
-        <widget class="QCheckBox" name="filteringCheckbox">
-         <property name="text">
-          <string>Bilinear filtering</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QCheckBox" name="scalingCheckbox">
-         <property name="text">
-          <string>Scaling algorithm</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0">
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
-         <item>
-          <widget class="QLabel" name="label_2">
-           <property name="text">
-            <string>Crop away edges:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QComboBox" name="cropModeComboBox">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <item>
-            <property name="text">
-             <string>None</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Vertical</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Horizontal</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="5" column="0">
         <layout class="QHBoxLayout" name="horizontalLayout_3">
          <item>
           <widget class="QLabel" name="label_3">
+           <property name="toolTip">
+            <string>The amount to zoom every scroll wheel click</string>
+           </property>
            <property name="text">
-            <string>Scale factor:</string>
+            <string>Zoom amount:</string>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QSpinBox" name="scaleFactorSpinBox">
+           <property name="toolTip">
+            <string>The amount to zoom every scroll wheel click</string>
+           </property>
            <property name="suffix">
             <string>%</string>
            </property>
@@ -242,10 +185,26 @@
          </item>
         </layout>
        </item>
-       <item row="2" column="0">
-        <widget class="QCheckBox" name="scalingTwoCheckbox">
+       <item row="1" column="0">
+        <widget class="QCheckBox" name="filteringCheckbox">
+         <property name="toolTip">
+          <string>Turn this off to see individual pixels</string>
+         </property>
          <property name="text">
-          <string>Scaling algorithm while zooming in</string>
+          <string>Bilinear filtering</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QCheckBox" name="scalingCheckbox">
+         <property name="toolTip">
+          <string>Images appear aliased (having jagged edges) without this, but it is faster</string>
+         </property>
+         <property name="text">
+          <string>Image scaling</string>
          </property>
          <property name="checked">
           <bool>true</bool>
@@ -253,14 +212,85 @@
         </widget>
        </item>
        <item row="3" column="0">
-        <widget class="QCheckBox" name="resetOnResizeCheckbox">
+        <widget class="QCheckBox" name="scalingTwoCheckbox">
+         <property name="toolTip">
+          <string>Choose whether or not the image continues to be scaled when zooming above the window size (can be laggy with large images)</string>
+         </property>
          <property name="text">
-          <string>Reset image on window resize</string>
+          <string>Scaling above window size</string>
          </property>
          <property name="checked">
           <bool>true</bool>
          </property>
         </widget>
+       </item>
+       <item row="4" column="0">
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="5" column="0">
+        <widget class="QCheckBox" name="resetOnResizeCheckbox">
+         <property name="toolTip">
+          <string>Controls if the image is resized and centered with the window or not</string>
+         </property>
+         <property name="text">
+          <string>Window resizing resizes image</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0">
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QLabel" name="cropModeLabel">
+           <property name="toolTip">
+            <string>Ignores select sides of an image when fitting to window (some sides will extend beyond the window boundaries)</string>
+           </property>
+           <property name="text">
+            <string>Crop away edges:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="cropModeComboBox">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="toolTip">
+            <string>Ignores select sides of an image when fitting to window (some sides will extend beyond the window boundaries)</string>
+           </property>
+           <item>
+            <property name="text">
+             <string>None</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Vertical</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Horizontal</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
      </widget>
@@ -305,6 +335,9 @@
          </item>
          <item>
           <widget class="QSpinBox" name="slideshowTimerSpinBox">
+           <property name="suffix">
+            <string> sec</string>
+           </property>
            <property name="minimum">
             <number>1</number>
            </property>
