@@ -416,8 +416,10 @@ void QVGraphicsView::setWindowTitle()
     }
     case 2:
     {
+        const QFileInfoList loadedFileFolder = QDir(selectedFileInfo.path()).entryInfoList(filterList, QDir::Files);
+        const QString currentFileIndex = QString::number(loadedFileFolder.indexOf(selectedFileInfo)+1);
         QLocale locale;
-        parentMainWindow->setWindowTitle("qView - "  + selectedFileInfo.fileName() + " - " + QString::number(loadedPixmap->width()) + "x" + QString::number(loadedPixmap->height()) + " - " + locale.formattedDataSize(selectedFileInfo.size()));
+        parentMainWindow->setWindowTitle("qView - " + selectedFileInfo.fileName() + " - " + currentFileIndex + "/" + QString::number(loadedFileFolder.count()) + " - "  + QString::number(loadedPixmap->width()) + "x" + QString::number(loadedPixmap->height()) + " - " + locale.formattedDataSize(selectedFileInfo.size()));
         break;
     }
     default:
