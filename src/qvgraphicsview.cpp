@@ -23,6 +23,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     isScalingEnabled = true;
     isScalingTwoEnabled = true;
     isResetOnResizeEnabled = true;
+    isPastActualSizeEnabled = true;
     titlebarMode = 0;
     cropMode = 0;
 
@@ -432,6 +433,17 @@ void QVGraphicsView::resetScale()
     if (!getIsScalingEnabled() && !isMovieLoaded)
         loadedPixmapItem->setPixmap(*loadedPixmap);
 
+    //if we aren't supposed to resize past the actual size, dont do that (the reason it's so long is to take into account the crop mode
+    if (!getIsPastActualSizeEnabled())
+        if ((getCropMode() == 1 && height() >= loadedPixmap->height()) || (getCropMode() == 2 && width() >= loadedPixmap->width())
+        || (getCropMode() == 0  && height() >= loadedPixmap->height() && width() >= loadedPixmap->width()))
+        {
+            if (!isMovieLoaded)
+                loadedPixmapItem->setPixmap(*loadedPixmap);
+            centerOn(loadedPixmapItem->boundingRect().center());
+            return;
+        }
+
     fitInViewMarginless();
 
     if (!getIsScalingEnabled())
@@ -774,4 +786,14 @@ bool QVGraphicsView::getIsResetOnResizeEnabled() const
 void QVGraphicsView::setIsResetOnResizeEnabled(bool value)
 {
     isResetOnResizeEnabled = value;
+}
+
+bool QVGraphicsView::getIsPastActualSizeEnabled() const
+{
+    return isPastActualSizeEnabled;
+}
+
+void QVGraphicsView::setIsPastActualSizeEnabled(bool value)
+{
+    isPastActualSizeEnabled = value;
 }
