@@ -20,7 +20,7 @@ QVAboutDialog::QVAboutDialog(QWidget *parent) :
     //set main title font
     #if (defined Q_OS_MACX)
     const QFont font1 = QFont("Lato", 96, QFont::Light);
-    modifier = 2;
+    modifier = 4;
     #else
     const QFont font1 = QFont("Lato", 72, QFont::Light);
     #endif
