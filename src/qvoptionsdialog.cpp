@@ -40,6 +40,7 @@ void QVOptionsDialog::saveSettings()
     settings.setValue("scalefactor", transientSettings.scaleFactor);
     settings.setValue("scalingtwoenabled", transientSettings.scalingTwoEnabled);
     settings.setValue("resetonresizeenabled", transientSettings.resetOnResizeEnabled);
+    settings.setValue("pastactualsizeenabled", transientSettings.pastActualSizeEnabled);
     emit optionsSaved();
 }
 
@@ -116,6 +117,10 @@ void QVOptionsDialog::loadSettings()
         ui->cropModeComboBox->setEnabled(false);
         ui->cropModeLabel->setEnabled(false);
     }
+
+    //resize past actual size
+    transientSettings.pastActualSizeEnabled = settings.value("pastactualsizeenabled", true).toBool();
+    ui->pastActualSizeCheckbox->setChecked(transientSettings.pastActualSizeEnabled);
 }
 
 void QVOptionsDialog::updateBgColorButton()
@@ -255,11 +260,25 @@ void QVOptionsDialog::on_resetOnResizeCheckbox_stateChanged(int arg1)
         transientSettings.resetOnResizeEnabled = true;
         ui->cropModeComboBox->setEnabled(true);
         ui->cropModeLabel->setEnabled(true);
+        ui->pastActualSizeCheckbox->setEnabled(true);
     }
     else
     {
         transientSettings.resetOnResizeEnabled = false;
         ui->cropModeComboBox->setEnabled(false);
         ui->cropModeLabel->setEnabled(false);
+        ui->pastActualSizeCheckbox->setEnabled(false);
+    }
+}
+
+void QVOptionsDialog::on_pastActualSizeCheckbox_stateChanged(int arg1)
+{
+    if (arg1 > 0)
+    {
+        transientSettings.pastActualSizeEnabled = true;
+    }
+    else
+    {
+        transientSettings.pastActualSizeEnabled = false;
     }
 }
