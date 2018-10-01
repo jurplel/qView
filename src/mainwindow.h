@@ -20,7 +20,7 @@ public:
 
     void refreshProperties();
 
-    bool getIsPixmapLoaded();
+    const bool& getIsPixmapLoaded() const;
 
 public slots:
     void openFile(const QString fileName);
