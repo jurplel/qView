@@ -313,7 +313,7 @@ void MainWindow::loadSettings()
     //resize past actual size
     ui->graphicsView->setIsPastActualSizeEnabled(settings.value("pastactualsizeenabled", true).toBool());
 
-    if (ui->graphicsView->getIsPixmapLoaded())
+    if (ui->graphicsView->getCurrentFileDetails().isPixmapLoaded)
         ui->graphicsView->resetScale();
 }
 
@@ -328,7 +328,7 @@ void MainWindow::updateRecentMenu()
     QSettings settings;
 
     //activate items after item is loaded for the first time
-    if (ui->graphicsView->getIsPixmapLoaded() && !ui->actionOpen_Containing_Folder->isEnabled())
+    if (ui->graphicsView->getCurrentFileDetails().isPixmapLoaded && !ui->actionOpen_Containing_Folder->isEnabled())
     {
         foreach(QAction* action, ui->menuView->actions())
             action->setEnabled(true);
@@ -337,7 +337,7 @@ void MainWindow::updateRecentMenu()
         ui->actionSlideshow->setEnabled(true);
     }
     //disable gif controls if there is no gif loaded
-    ui->menuTools->actions().first()->setEnabled(ui->graphicsView->getIsMovieLoaded());
+    ui->menuTools->actions().first()->setEnabled(ui->graphicsView->getCurrentFileDetails().isMovieLoaded);
 
 
     //get recent files from config file
@@ -399,7 +399,7 @@ void MainWindow::clearRecent()
         }
         else
         {
-            if (!ui->graphicsView->getIsPixmapLoaded())
+            if (!ui->graphicsView->getCurrentFileDetails().isPixmapLoaded)
                 recentFiles.removeAt(0);
         }
     }
@@ -411,12 +411,17 @@ void MainWindow::clearRecent()
 void MainWindow::refreshProperties()
 {
     int value4;
-    if (ui->graphicsView->getIsMovieLoaded())
-        value4 = ui->graphicsView->getLoadedMovie()->frameCount();
+    if (ui->graphicsView->getCurrentFileDetails().isMovieLoaded)
+        value4 = ui->graphicsView->getLoadedMovie().frameCount();
     else
         value4 = 0;
-    info->setInfo(ui->graphicsView->getSelectedFileInfo(), ui->graphicsView->getImageWidth(), ui->graphicsView->getImageHeight(), value4);
+    info->setInfo(ui->graphicsView->getCurrentFileDetails().fileInfo, ui->graphicsView->getLoadedPixmap().width(), ui->graphicsView->getLoadedPixmap().height(), value4);
 
+}
+
+const bool& MainWindow::getIsPixmapLoaded() const
+{
+    return ui->graphicsView->getCurrentFileDetails().isPixmapLoaded;
 }
 
 // Actions
@@ -458,10 +463,10 @@ void MainWindow::on_actionPrevious_File_triggered()
 
 void MainWindow::on_actionOpen_Containing_Folder_triggered()
 {
-    if (!ui->graphicsView->getIsPixmapLoaded())
+    if (!ui->graphicsView->getCurrentFileDetails().isPixmapLoaded)
         return;
 
-    const QFileInfo selectedFileInfo = ui->graphicsView->getSelectedFileInfo();
+    const QFileInfo selectedFileInfo = ui->graphicsView->getCurrentFileDetails().fileInfo;
 
     QProcess process;
 
@@ -574,25 +579,20 @@ void MainWindow::slideshowAction()
         on_actionPrevious_File_triggered();
 }
 
-bool MainWindow::getIsPixmapLoaded()
-{
-    return ui->graphicsView->getIsPixmapLoaded();
-}
-
 void MainWindow::on_actionPause_triggered()
 {
-    if (!ui->graphicsView->getIsMovieLoaded())
+    if (!ui->graphicsView->getCurrentFileDetails().isMovieLoaded)
         return;
 
-    if (ui->graphicsView->getLoadedMovie()->state() == QMovie::Running)
+    if (ui->graphicsView->getLoadedMovie().state() == QMovie::Running)
     {
-        ui->graphicsView->getLoadedMovie()->setPaused(true);
+        ui->graphicsView->setPaused(true);
         ui->actionPause->setText(tr("Resume"));
         ui->actionPause->setIcon(QIcon::fromTheme("media-playback-start"));
     }
     else
     {
-        ui->graphicsView->getLoadedMovie()->setPaused(false);
+        ui->graphicsView->setPaused(false);
         ui->actionPause->setText(tr("Pause"));
         ui->actionPause->setIcon(QIcon::fromTheme("media-playback-pause"));
     }
@@ -600,56 +600,56 @@ void MainWindow::on_actionPause_triggered()
 
 void MainWindow::on_actionNext_Frame_triggered()
 {
-    if (!ui->graphicsView->getIsMovieLoaded())
+    if (!ui->graphicsView->getCurrentFileDetails().isMovieLoaded)
         return;
 
-    ui->graphicsView->getLoadedMovie()->jumpToNextFrame();
+    ui->graphicsView->jumpToNextFrame();
 }
 
 void MainWindow::on_actionReset_Speed_triggered()
 {
-    if (!ui->graphicsView->getIsMovieLoaded())
+    if (!ui->graphicsView->getCurrentFileDetails().isMovieLoaded)
         return;
 
-    ui->graphicsView->getLoadedMovie()->setSpeed(100);
+    ui->graphicsView->setSpeed(100);
 }
 
 void MainWindow::on_actionDecrease_Speed_triggered()
 {
-    if (!ui->graphicsView->getIsMovieLoaded())
+    if (!ui->graphicsView->getCurrentFileDetails().isMovieLoaded)
         return;
 
-    ui->graphicsView->getLoadedMovie()->setSpeed(ui->graphicsView->getLoadedMovie()->speed()-25);
+    ui->graphicsView->setSpeed(ui->graphicsView->getLoadedMovie().speed()-25);
 }
 
 void MainWindow::on_actionIncrease_Speed_triggered()
 {
-    if (!ui->graphicsView->getIsMovieLoaded())
+    if (!ui->graphicsView->getCurrentFileDetails().isMovieLoaded)
         return;
 
-    ui->graphicsView->getLoadedMovie()->setSpeed(ui->graphicsView->getLoadedMovie()->speed()+25);
+    ui->graphicsView->setSpeed(ui->graphicsView->getLoadedMovie().speed()+25);
 }
 
 void MainWindow::on_actionSave_Frame_As_triggered()
 {
     QSettings settings;
-    if (!ui->graphicsView->getIsMovieLoaded())
+    if (!ui->graphicsView->getCurrentFileDetails().isMovieLoaded)
         return;
 
-    ui->graphicsView->getLoadedMovie()->setPaused(true);
+    ui->graphicsView->setPaused(true);
     ui->actionPause->setText(tr("Resume"));
     QFileDialog *saveDialog = new QFileDialog(this, tr("Save Frame As..."), "", tr("Supported Files (*.bmp *.cur *.icns *.ico *.jp2 *.jpeg *.jpe *.jpg *.pbm *.pgm *.png *.ppm *.tif *.tiff *.wbmp *.webp *.xbm *.xpm);;All Files (*)"));
     saveDialog->setDirectory(settings.value("lastFileDialogDir", QDir::homePath()).toString());
-    saveDialog->selectFile(ui->graphicsView->getSelectedFileInfo().baseName() + "-" + QString::number(ui->graphicsView->getLoadedMovie()->currentFrameNumber()) + ".png");
+    saveDialog->selectFile(ui->graphicsView->getCurrentFileDetails().fileInfo.baseName() + "-" + QString::number(ui->graphicsView->getLoadedMovie().currentFrameNumber()) + ".png");
     saveDialog->setDefaultSuffix("png");
     saveDialog->setAcceptMode(QFileDialog::AcceptSave);
     saveDialog->open();
     connect(saveDialog, &QFileDialog::fileSelected, this, [=](QString fileName){
         ui->graphicsView->originalSize();
-        for(int i=0; i<=ui->graphicsView->getLoadedMovie()->frameCount(); i++)
-            ui->graphicsView->getLoadedMovie()->jumpToNextFrame();
+        for(int i=0; i<=ui->graphicsView->getLoadedMovie().frameCount(); i++)
+            ui->graphicsView->jumpToNextFrame();
         on_actionNext_Frame_triggered();
-        ui->graphicsView->getLoadedMovie()->currentPixmap().save(fileName, nullptr, 100);
+        ui->graphicsView->getLoadedMovie().currentPixmap().save(fileName, nullptr, 100);
         ui->graphicsView->resetScale();
     });
 }

@@ -2,6 +2,7 @@
 #define QVGRAPHICSVIEW_H
 
 #include "mainwindow.h"
+#include "qvimagecore.h"
 #include <QGraphicsView>
 #include <QImageReader>
 #include <QMimeData>
@@ -47,14 +48,12 @@ public:
 
     void goToFile(const goToFileMode mode, const int index = 0);
 
+    void jumpToNextFrame();
+    void setPaused(bool desiredState);
+    void setSpeed(int desiredSpeed);
+
     qreal getCurrentScale() const;
     void setCurrentScale(const qreal &value);
-
-    bool getIsPixmapLoaded() const;
-    void setIsPixmapLoaded(bool value);
-
-    QFileInfo getSelectedFileInfo() const;
-    void setSelectedFileInfo(const QFileInfo &value);
 
     bool getIsFilteringEnabled() const;
     void setIsFilteringEnabled(bool value);
@@ -65,19 +64,11 @@ public:
     int getTitlebarMode() const;
     void setTitlebarMode(int value);
 
-    int getImageHeight();
-    int getImageWidth();
-
     int getCropMode() const;
     void setCropMode(int value);
 
     qreal getScaleFactor() const;
     void setScaleFactor(const qreal &value);
-
-    bool getIsMovieLoaded() const;
-    void setIsMovieLoaded(bool value);
-
-    QMovie *getLoadedMovie() const;
 
     bool getIsScalingTwoEnabled() const;
     void setIsScalingTwoEnabled(bool value);
@@ -87,6 +78,10 @@ public:
 
     bool getIsPastActualSizeEnabled() const;
     void setIsPastActualSizeEnabled(bool value);
+
+    const QVImageCore::QVFileDetails& getCurrentFileDetails() const;
+    const QPixmap& getLoadedPixmap() const;
+    const QMovie& getLoadedMovie() const;
 
 protected:
     void wheelEvent(QWheelEvent *event) override;
@@ -111,7 +106,7 @@ protected:
 private slots:
     void timerExpired();
 
-    void animatedFrameChange(QRect rect);
+    void animatedFrameChanged(QRect rect);
 
 private:
 
@@ -123,9 +118,6 @@ private:
     qreal fittedHeight;
     bool isOriginalSize;
 
-    QImageReader *reader;
-    QMovie *loadedMovie;
-    QPixmap *loadedPixmap;
     QGraphicsPixmapItem *loadedPixmapItem;
     QRectF alternateBoundingBox;
 
@@ -134,8 +126,6 @@ private:
     QTimer *timer;
 
     bool movieCenterNeedsUpdating;
-    bool isMovieLoaded;
-    bool isPixmapLoaded;
     bool isFilteringEnabled;
     bool isScalingEnabled;
     int titlebarMode;
@@ -147,7 +137,8 @@ private:
     qreal maxScalingTwoSize;
     bool cheapScaledLast;
 
-    QFileInfo selectedFileInfo;
     const QStringList filterList = (QStringList() << "*.bmp" << "*.cur" << "*.gif" << "*.icns" << "*.ico" << "*.jp2" << "*.jpeg" << "*.jpe" << "*.jpg" << "*.mng" << "*.pbm" << "*.pgm" << "*.png" << "*.ppm" << "*.svg" << "*.svgz" << "*.tif" << "*.tiff" << "*.wbmp" << "*.webp" << "*.xbm" << "*.xpm");
+
+    QVImageCore imageCore;
 };
 #endif // QVGRAPHICSVIEW_H
