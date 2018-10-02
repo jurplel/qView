@@ -48,36 +48,11 @@ public:
 
     void goToFile(const goToFileMode mode, const int index = 0);
 
+    void loadSettings();
+
     void jumpToNextFrame();
-    void setPaused(bool desiredState);
-    void setSpeed(int desiredSpeed);
-
-    qreal getCurrentScale() const;
-    void setCurrentScale(const qreal &value);
-
-    bool getIsFilteringEnabled() const;
-    void setIsFilteringEnabled(bool value);
-
-    bool getIsScalingEnabled() const;
-    void setIsScalingEnabled(bool value);
-
-    int getTitlebarMode() const;
-    void setTitlebarMode(int value);
-
-    int getCropMode() const;
-    void setCropMode(int value);
-
-    qreal getScaleFactor() const;
-    void setScaleFactor(const qreal &value);
-
-    bool getIsScalingTwoEnabled() const;
-    void setIsScalingTwoEnabled(bool value);
-
-    bool getIsResetOnResizeEnabled() const;
-    void setIsResetOnResizeEnabled(bool value);
-
-    bool getIsPastActualSizeEnabled() const;
-    void setIsPastActualSizeEnabled(bool value);
+    void setPaused(const bool &desiredState);
+    void setSpeed(const int &desiredSpeed);
 
     const QVImageCore::QVFileDetails& getCurrentFileDetails() const;
     const QPixmap& getLoadedPixmap() const;
@@ -104,8 +79,6 @@ protected:
 
 
 private slots:
-    void timerExpired();
-
     void animatedFrameChanged(QRect rect);
 
 private:

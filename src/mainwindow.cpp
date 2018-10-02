@@ -220,7 +220,8 @@ void MainWindow::showEvent(QShowEvent *event)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    saveGeometrySettings();
+    QSettings settings;
+    settings.setValue("geometry", saveGeometry());
     QMainWindow::closeEvent(event);
 }
 
@@ -265,62 +266,16 @@ void MainWindow::loadSettings()
     //geometry
     restoreGeometry(settings.value("geometry").toByteArray());
 
-    //bgcolor
-    QBrush newBrush;
-    newBrush.setStyle(Qt::SolidPattern);
-    if (!((settings.value("bgcolorenabled", true).toBool())))
-    {
-        newBrush.setColor(QColor("#00000000"));
-    }
-    else
-    {
-        QColor newColor;
-        newColor.setNamedColor(settings.value("bgcolor", QString("#212121")).toString());
-        newBrush.setColor(newColor);
-    }
-    ui->graphicsView->setBackgroundBrush(newBrush);
-
-    //filtering
-    ui->graphicsView->setIsFilteringEnabled(settings.value("filteringenabled", true).toBool());
-
-    //scaling
-    ui->graphicsView->setIsScalingEnabled(settings.value("scalingenabled", true).toBool());
-
-    //titlebar
-    ui->graphicsView->setTitlebarMode(settings.value("titlebarmode", 1).toInt());
-
     //menubar
     if (settings.value("menubarenabled", false).toBool())
         ui->menuBar->show();
     else
         ui->menuBar->hide();
 
-    //cropmode
-    ui->graphicsView->setCropMode(settings.value("cropmode", 0).toInt());
-
     //slideshowtimer
     slideshowTimer->setInterval(settings.value("slideshowtimer", 5).toInt()*1000);
 
-    //scalefactor
-    ui->graphicsView->setScaleFactor(settings.value("scalefactor", 25).toInt()*0.01+1);
-
-    //scaling2
-    ui->graphicsView->setIsScalingTwoEnabled(settings.value("scalingtwoenabled", true).toBool());
-
-    //reset on resize
-    ui->graphicsView->setIsResetOnResizeEnabled(settings.value("resetonresizeenabled", true).toBool());
-
-    //resize past actual size
-    ui->graphicsView->setIsPastActualSizeEnabled(settings.value("pastactualsizeenabled", true).toBool());
-
-    if (ui->graphicsView->getCurrentFileDetails().isPixmapLoaded)
-        ui->graphicsView->resetScale();
-}
-
-void MainWindow::saveGeometrySettings()
-{
-    QSettings settings;
-    settings.setValue("geometry", saveGeometry());
+    ui->graphicsView->loadSettings();
 }
 
 void MainWindow::updateRecentMenu()
@@ -447,7 +402,6 @@ void MainWindow::on_actionOptions_triggered()
     QVOptionsDialog *options = new QVOptionsDialog(this);
     options->open();
 
-    connect(options, &QVOptionsDialog::optionsSaved, this, &MainWindow::saveGeometrySettings);
     connect(options, &QVOptionsDialog::optionsSaved, this, &MainWindow::loadSettings);
 }
 
