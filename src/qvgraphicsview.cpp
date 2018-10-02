@@ -1,4 +1,4 @@
-﻿#include "qvgraphicsview.h"
+#include "qvgraphicsview.h"
 #include "qvapplication.h"
 #include <QWheelEvent>
 #include <QGraphicsPixmapItem>
@@ -24,7 +24,6 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     isScalingTwoEnabled = true;
     isResetOnResizeEnabled = true;
     isPastActualSizeEnabled = true;
-
     titlebarMode = 0;
     cropMode = 0;
 
@@ -40,7 +39,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     timer = new QTimer(this);
     timer->setSingleShot(true);
     timer->setInterval(10);
-    connect(timer, &QTimer::timeout, this, &QVGraphicsView::timerExpired);
+    connect(timer, &QTimer::timeout, this, [this]{scaleExpensively(scaleMode::resetScale);});
 
     parentMainWindow = (dynamic_cast<MainWindow*>(parentWidget()->parentWidget()));
 
@@ -160,15 +159,15 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
     //don't zoom too far out, dude
     if (DeltaY > 0)
     {
-        if (getCurrentScale() >= 500)
+        if (currentScale >= 500)
             return;
-        setCurrentScale(getCurrentScale()*scaleFactor);
+        currentScale *= scaleFactor;
     }
     else
     {
-        if (getCurrentScale() <= 0.01)
+        if (currentScale <= 0.01)
             return;
-        setCurrentScale(getCurrentScale()/scaleFactor);
+        currentScale /= scaleFactor;
     }
 
     bool veto = false;
@@ -181,7 +180,7 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
 
     //this is a disaster of an if statement, my apologies but here is what it does:
     //use scaleExpensively if the scale is less than 1 or less than or equal to one while scrolling up (also scaling must be enabled and it must not be a paused movie)
-    if ((getCurrentScale() < 0.99999 || (getCurrentScale() < 1.00001 && DeltaY > 0)) && getIsScalingEnabled() && !veto)
+    if ((currentScale < 0.99999 || (currentScale < 1.00001 && DeltaY > 0)) && isScalingEnabled && !veto)
     {
         //zoom expensively
         if (DeltaY > 0)
@@ -195,7 +194,7 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
         cheapScaledLast = false;
     }
     //check if expensive scaling while zooming in is enabled and valid
-    else if (getCurrentScale() < maxScalingTwoSize && getIsScalingEnabled() && getIsScalingTwoEnabled() && !imageCore.getCurrentFileDetails().isMovieLoaded)
+    else if (currentScale < maxScalingTwoSize && isScalingEnabled && isScalingTwoEnabled && !imageCore.getCurrentFileDetails().isMovieLoaded)
     {
         //to scale the mouse position with the image, the mouse position is mapped to the graphicsitem,
         //it's scaled with a matrix (setScale), and then mapped back to scene. expensive scaling is done as expected.
@@ -227,7 +226,7 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
     else
     {
         //Sets the pixmap to full resolution when zooming in without scaling2
-        if (loadedPixmapItem->pixmap().height() != imageCore.getLoadedPixmap().height() && imageCore.getCurrentFileDetails().isPixmapLoaded  && !getIsScalingTwoEnabled())
+        if (loadedPixmapItem->pixmap().height() != imageCore.getLoadedPixmap().height() && imageCore.getCurrentFileDetails().isPixmapLoaded  && !isScalingTwoEnabled)
         {
             loadedPixmapItem->setPixmap(imageCore.getLoadedPixmap());
             fitInViewMarginless(false);
@@ -246,7 +245,7 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
         {
             scale(qPow(scaleFactor, -1), qPow(scaleFactor, -1));
             //when the pixmap is set to full resolution, reset the scale back to the fittedheight when going back to expensive scaling town
-            if (!qFuzzyCompare(loadedPixmapItem->boundingRect().height(), fittedHeight) && qFuzzyCompare(getCurrentScale(), 1.0) && imageCore.getCurrentFileDetails().isMovieLoaded && !getIsScalingTwoEnabled() && getIsScalingEnabled())
+            if (!qFuzzyCompare(loadedPixmapItem->boundingRect().height(), fittedHeight) && qFuzzyCompare(currentScale, 1.0) && imageCore.getCurrentFileDetails().isMovieLoaded && !isScalingTwoEnabled && isScalingEnabled)
                 resetScale();
         }
         cheapScaledLast = true;
@@ -254,7 +253,7 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
 
     //if you are zooming in and the mouse is in play, zoom towards the mouse
     //otherwise, just center the image
-    if (getCurrentScale() > 1.00001 && underMouse())
+    if (currentScale > 1.00001 && underMouse())
     {
         QPointF transformationDiff = mapToScene(viewport()->rect().center()) - mapToScene(pos);
         result = originalMappedPos + transformationDiff;
@@ -296,17 +295,17 @@ void QVGraphicsView::animatedFrameChanged(QRect rect)
     {
         movieCenterNeedsUpdating = false;
         centerOn(loadedPixmapItem);
-        if (qFuzzyCompare(getCurrentScale(), 1.0) && !isOriginalSize)
+        if (qFuzzyCompare(currentScale, 1.0) && !isOriginalSize)
             fitInViewMarginless();
     }
 }
 
 void QVGraphicsView::loadFile(const QString &fileName)
 {
-    int errorCode = imageCore.loadFile(fileName);
-    if (errorCode >= 0)
+    QString errorString = imageCore.loadFile(fileName);
+    if (!errorString.isEmpty())
     {
-        QMessageBox::critical(this, tr("qView Error"), tr("Read Error"));
+        QMessageBox::critical(this, tr("qView Error"), tr("Read Error: ") + errorString);
         return;
     }
 
@@ -315,7 +314,7 @@ void QVGraphicsView::loadFile(const QString &fileName)
     loadedPixmapItem->setOffset((scene()->width()/2 - imageCore.getLoadedPixmap().width()/2), (scene()->height()/2 - imageCore.getLoadedPixmap().height()/2));
 
     //set filtering mode
-    if (getIsFilteringEnabled())
+    if (isFilteringEnabled)
         loadedPixmapItem->setTransformationMode(Qt::SmoothTransformation);
     else
         loadedPixmapItem->setTransformationMode(Qt::FastTransformation);
@@ -353,7 +352,7 @@ void QVGraphicsView::setWindowTitle()
     if (!imageCore.getCurrentFileDetails().isPixmapLoaded)
         return;
 
-    switch (getTitlebarMode()) {
+    switch (titlebarMode) {
     case 0:
     {
         parentMainWindow->setWindowTitle("qView");
@@ -382,13 +381,13 @@ void QVGraphicsView::resetScale()
     if (!imageCore.getCurrentFileDetails().isPixmapLoaded)
         return;
 
-    if (!getIsScalingEnabled() && !imageCore.getCurrentFileDetails().isMovieLoaded)
+    if (!isScalingEnabled && !imageCore.getCurrentFileDetails().isMovieLoaded)
         loadedPixmapItem->setPixmap(imageCore.getLoadedPixmap());
 
     //if we aren't supposed to resize past the actual size, dont do that (the reason it's so long is to take into account the crop mode)
-    if (!getIsPastActualSizeEnabled())
-        if ((getCropMode() == 1 && height() >= imageCore.getLoadedPixmap().height()) || (getCropMode() == 2 && width() >= imageCore.getLoadedPixmap().width())
-        || (getCropMode() == 0  && height() >= imageCore.getLoadedPixmap().height() && width() >= imageCore.getLoadedPixmap().width()))
+    if (!isPastActualSizeEnabled)
+        if ((cropMode == 1 && height() >= imageCore.getLoadedPixmap().height()) || (cropMode == 2 && width() >= imageCore.getLoadedPixmap().width())
+        || (cropMode == 0  && height() >= imageCore.getLoadedPixmap().height() && width() >= imageCore.getLoadedPixmap().width()))
         {
             if (!imageCore.getCurrentFileDetails().isMovieLoaded)
                 loadedPixmapItem->setPixmap(imageCore.getLoadedPixmap());
@@ -398,20 +397,15 @@ void QVGraphicsView::resetScale()
 
     fitInViewMarginless();
 
-    if (!getIsScalingEnabled())
+    if (!isScalingEnabled)
         return;
 
     timer->start();
 }
 
-void QVGraphicsView::timerExpired()
-{
-    scaleExpensively(scaleMode::resetScale);
-}
-
 void QVGraphicsView::scaleExpensively(scaleMode mode)
 {
-    if (!imageCore.getCurrentFileDetails().isPixmapLoaded || !getIsScalingEnabled())
+    if (!imageCore.getCurrentFileDetails().isPixmapLoaded || !isScalingEnabled)
         return;
 
     switch (mode) {
@@ -436,7 +430,7 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
     }
     case scaleMode::zoomIn:
     {
-        QSize newSize = QSize(static_cast<int>(fittedWidth * (getCurrentScale())), static_cast<int>(fittedHeight * (getCurrentScale())));
+        QSize newSize = QSize(static_cast<int>(fittedWidth * currentScale), static_cast<int>(fittedHeight * currentScale));
 
         loadedPixmapItem->setPixmap(imageCore.scaleExpensively(newSize));
         if (imageCore.getCurrentFileDetails().isMovieLoaded)
@@ -445,7 +439,7 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
     }
     case scaleMode::zoomOut:
     {
-        QSize newSize = QSize(static_cast<int>(fittedWidth * (getCurrentScale())), static_cast<int>(fittedHeight * (getCurrentScale())));
+        QSize newSize = QSize(static_cast<int>(fittedWidth * currentScale), static_cast<int>(fittedHeight * currentScale));
         loadedPixmapItem->setPixmap(imageCore.scaleExpensively(newSize));
 
         if (imageCore.getCurrentFileDetails().isMovieLoaded)
@@ -528,7 +522,7 @@ void QVGraphicsView::goToFile(const goToFileMode mode, const int index)
 void QVGraphicsView::fitInViewMarginless(bool setVariables)
 {
     alternateBoundingBox = loadedPixmapItem->boundingRect();
-    switch (getCropMode()) {
+    switch (cropMode) {
     case 1:
     {
         alternateBoundingBox.translate(alternateBoundingBox.width()/2, 0);
@@ -575,113 +569,55 @@ void QVGraphicsView::fitInViewMarginless(bool setVariables)
     {
         fittedHeight = loadedPixmapItem->boundingRect().height();
         fittedWidth = loadedPixmapItem->boundingRect().width();
-        setCurrentScale(1.0);
+        currentScale = 1.0;
     }
 }
 
-// Getters & Setters
-
-qreal QVGraphicsView::getCurrentScale() const
+void QVGraphicsView::loadSettings()
 {
-    return currentScale;
-}
+    QSettings settings;
 
-void QVGraphicsView::setCurrentScale(const qreal &value)
-{
-    currentScale = value;
-}
-
-bool QVGraphicsView::getIsFilteringEnabled() const
-{
-    return isFilteringEnabled;
-}
-
-void QVGraphicsView::setIsFilteringEnabled(bool value)
-{
-    isFilteringEnabled = value;
-
-    if (imageCore.getCurrentFileDetails().isPixmapLoaded)
+    //bgcolor
+    QBrush newBrush;
+    newBrush.setStyle(Qt::SolidPattern);
+    if (!((settings.value("bgcolorenabled", true).toBool())))
     {
-        if (value)
-        {
-            loadedPixmapItem->setTransformationMode(Qt::SmoothTransformation);
-        }
-        else
-        {
-            loadedPixmapItem->setTransformationMode(Qt::FastTransformation);
-        }
+        newBrush.setColor(QColor("#00000000"));
     }
-}
+    else
+    {
+        QColor newColor;
+        newColor.setNamedColor(settings.value("bgcolor", QString("#212121")).toString());
+        newBrush.setColor(newColor);
+    }
+    setBackgroundBrush(newBrush);
 
-bool QVGraphicsView::getIsScalingEnabled() const
-{
-    return isScalingEnabled;
-}
+    //filtering
+    isFilteringEnabled = settings.value("filteringenabled", true).toBool();
 
-void QVGraphicsView::setIsScalingEnabled(bool value)
-{
-    isScalingEnabled = value;
-}
+    //scaling
+    isScalingEnabled = settings.value("scalingenabled", true).toBool();
 
-int QVGraphicsView::getTitlebarMode() const
-{
-    return titlebarMode;
-}
+    //titlebar
+    titlebarMode = settings.value("titlebarmode", 1).toInt();
 
-void QVGraphicsView::setTitlebarMode(int value)
-{
-    titlebarMode = value;
-    setWindowTitle();
-}
+    //cropmode
+    cropMode = settings.value("cropmode", 0).toInt();
 
-int QVGraphicsView::getCropMode() const
-{
-    return cropMode;
-}
+    //scalefactor
+    scaleFactor = settings.value("scalefactor", 25).toInt()*0.01+1;
 
-void QVGraphicsView::setCropMode(int value)
-{
-    cropMode = value;
-}
+    //scaling2
+    isScalingTwoEnabled = settings.value("scalingtwoenabled", true).toBool();
 
-qreal QVGraphicsView::getScaleFactor() const
-{
-    return scaleFactor;
-}
+    //reset on resize
+    isResetOnResizeEnabled = settings.value("resetonresizeenabled", true).toBool();
 
-void QVGraphicsView::setScaleFactor(const qreal &value)
-{
-    scaleFactor = value;
-}
+    //resize past actual size
+    isPastActualSizeEnabled = settings.value("pastactualsizeenabled", true).toBool();
 
-bool QVGraphicsView::getIsScalingTwoEnabled() const
-{
-    return isScalingTwoEnabled;
-}
-
-void QVGraphicsView::setIsScalingTwoEnabled(bool value)
-{
-    isScalingTwoEnabled = value;
-}
-
-bool QVGraphicsView::getIsResetOnResizeEnabled() const
-{
-    return isResetOnResizeEnabled;
-}
-
-void QVGraphicsView::setIsResetOnResizeEnabled(bool value)
-{
-    isResetOnResizeEnabled = value;
-}
-
-bool QVGraphicsView::getIsPastActualSizeEnabled() const
-{
-    return isPastActualSizeEnabled;
-}
-
-void QVGraphicsView::setIsPastActualSizeEnabled(bool value)
-{
-    isPastActualSizeEnabled = value;
+    if (getCurrentFileDetails().isPixmapLoaded)
+        resetScale();
 }
 
 void QVGraphicsView::jumpToNextFrame()
@@ -689,12 +625,12 @@ void QVGraphicsView::jumpToNextFrame()
     imageCore.jumpToNextFrame();
 }
 
-void QVGraphicsView::setPaused(bool desiredState)
+void QVGraphicsView::setPaused(const bool &desiredState)
 {
     imageCore.setPaused(desiredState);
 }
 
-void QVGraphicsView::setSpeed(int desiredSpeed)
+void QVGraphicsView::setSpeed(const int &desiredSpeed)
 {
     imageCore.setSpeed(desiredSpeed);
 }

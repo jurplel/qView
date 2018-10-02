@@ -31,7 +31,7 @@ public:
 
     explicit QVImageCore(QObject *parent = nullptr);
 
-    int loadFile(const QString &fileName);
+    QString loadFile(const QString &fileName);
     void updateFolderInfo();
 
     void loadSettings();

@@ -5,6 +5,14 @@
   <property name="windowModality">
    <enum>Qt::NonModal</enum>
   </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>270</width>
+    <height>342</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>qView Options</string>
   </property>
@@ -15,7 +23,7 @@
       <enum>Qt::NoFocus</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="window">
       <property name="layoutDirection">
@@ -240,10 +248,10 @@
        <item row="5" column="0">
         <widget class="QCheckBox" name="resetOnResizeCheckbox">
          <property name="toolTip">
-          <string>Controls if the image is resized and centered with the window or not</string>
+          <string>Controls if the image is resized to fit the window and centered when the window resizes</string>
          </property>
          <property name="text">
-          <string>Window resizing resizes image</string>
+          <string>Image resizes with window</string>
          </property>
          <property name="checked">
           <bool>true</bool>
