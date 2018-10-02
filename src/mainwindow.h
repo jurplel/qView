@@ -42,8 +42,6 @@ private slots:
 
     void loadSettings();
 
-    void saveGeometrySettings();
-
     void on_actionOpen_triggered();
 
     void on_actionAbout_triggered();

@@ -2,7 +2,6 @@
 #include <QMessageBox>
 #include <QDir>
 #include <QSettings>
-#include <QDebug>
 
 QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
 {
@@ -19,14 +18,13 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     connect(&loadedMovie, &QMovie::updated, this, &QVImageCore::animatedFrameChanged);
 }
 
-int QVImageCore::loadFile(const QString &fileName)
+QString QVImageCore::loadFile(const QString &fileName)
 {
     imageReader.setFileName(fileName);
     loadedImage = imageReader.read();
     if (loadedImage.isNull())
     {
-        qDebug() << imageReader.errorString();
-        return imageReader.error();
+        return imageReader.errorString();
     }
     loadedPixmap.convertFromImage(loadedImage);
 
@@ -49,7 +47,7 @@ int QVImageCore::loadFile(const QString &fileName)
     currentFileDetails.fileInfo = QFileInfo(fileName);
     currentFileDetails.isPixmapLoaded = true;
     updateFolderInfo();
-    return -1;
+    return "";
 }
 
 void QVImageCore::updateFolderInfo()
@@ -83,8 +81,7 @@ const QPixmap QVImageCore::scaleExpensively(const int desiredWidth, const int de
 
 const QPixmap QVImageCore::scaleExpensively(const QSize desiredSize, const scaleMode mode)
 {
-    QSettings settings;
-    if (!currentFileDetails.isPixmapLoaded || !settings.value("isscalingenabled", true).toBool())
+    if (!currentFileDetails.isPixmapLoaded)
         return QPixmap();
 
     QSize size = QSize(loadedPixmap.width(), loadedPixmap.height());
