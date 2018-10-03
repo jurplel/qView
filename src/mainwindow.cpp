@@ -41,6 +41,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //Load settings from file
     loadSettings();
+    QSettings settings;
+    restoreGeometry(settings.value("geometry").toByteArray());
 
     //Keyboard Shortcuts
     ui->actionOpen->setShortcuts(QKeySequence::Open);
@@ -262,9 +264,6 @@ void MainWindow::openFile(const QString fileName)
 void MainWindow::loadSettings()
 {
     QSettings settings;
-
-    //geometry
-    restoreGeometry(settings.value("geometry").toByteArray());
 
     //menubar
     if (settings.value("menubarenabled", false).toBool())
