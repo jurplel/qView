@@ -146,7 +146,7 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
     QPointF originalMappedPos = mapToScene(pos);
     QPointF result;
 
-    if (!imageCore.getCurrentFileDetails().isPixmapLoaded)
+    if (!getCurrentFileDetails().isPixmapLoaded)
         return;
 
     //if original size set, cancel zoom and reset scale
@@ -172,7 +172,7 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
 
     bool veto = false;
     //Disallow zooming expensively while movie is paused
-    if (imageCore.getCurrentFileDetails().isMovieLoaded)
+    if (getCurrentFileDetails().isMovieLoaded)
     {
         if (!(imageCore.getLoadedMovie().state() == QMovie::Running))
             veto = true;
@@ -194,7 +194,7 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
         cheapScaledLast = false;
     }
     //check if expensive scaling while zooming in is enabled and valid
-    else if (currentScale < maxScalingTwoSize && isScalingEnabled && isScalingTwoEnabled && !imageCore.getCurrentFileDetails().isMovieLoaded)
+    else if (currentScale < maxScalingTwoSize && isScalingEnabled && isScalingTwoEnabled && !getCurrentFileDetails().isMovieLoaded)
     {
         //to scale the mouse position with the image, the mouse position is mapped to the graphicsitem,
         //it's scaled with a matrix (setScale), and then mapped back to scene. expensive scaling is done as expected.
@@ -226,7 +226,7 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
     else
     {
         //Sets the pixmap to full resolution when zooming in without scaling2
-        if (loadedPixmapItem->pixmap().height() != imageCore.getLoadedPixmap().height() && imageCore.getCurrentFileDetails().isPixmapLoaded  && !isScalingTwoEnabled)
+        if (loadedPixmapItem->pixmap().height() != imageCore.getLoadedPixmap().height() && getCurrentFileDetails().isPixmapLoaded  && !isScalingTwoEnabled)
         {
             loadedPixmapItem->setPixmap(imageCore.getLoadedPixmap());
             fitInViewMarginless(false);
@@ -237,7 +237,7 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
         if (DeltaY > 0)
         {
             //this prevents a jitter when zooming in very quickly from below to above 1.0 on a movie
-            if (imageCore.getCurrentFileDetails().isMovieLoaded && !qFuzzyCompare(imageCore.getLoadedMovie().currentPixmap().height(), fittedHeight))
+            if (getCurrentFileDetails().isMovieLoaded && !qFuzzyCompare(imageCore.getLoadedMovie().currentPixmap().height(), fittedHeight))
                 imageCore.jumpToNextFrame();
             scale(scaleFactor, scaleFactor);
         }
@@ -245,7 +245,7 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
         {
             scale(qPow(scaleFactor, -1), qPow(scaleFactor, -1));
             //when the pixmap is set to full resolution, reset the scale back to the fittedheight when going back to expensive scaling town
-            if (!qFuzzyCompare(loadedPixmapItem->boundingRect().height(), fittedHeight) && qFuzzyCompare(currentScale, 1.0) && imageCore.getCurrentFileDetails().isMovieLoaded && !isScalingTwoEnabled && isScalingEnabled)
+            if (!qFuzzyCompare(loadedPixmapItem->boundingRect().height(), fittedHeight) && qFuzzyCompare(currentScale, 1.0) && getCurrentFileDetails().isMovieLoaded && !isScalingTwoEnabled && isScalingEnabled)
                 resetScale();
         }
         cheapScaledLast = true;
@@ -286,7 +286,7 @@ void QVGraphicsView::loadMimeData(const QMimeData *mimeData)
 void QVGraphicsView::animatedFrameChanged(QRect rect)
 {
     Q_UNUSED(rect);
-    if (!imageCore.getCurrentFileDetails().isMovieLoaded)
+    if (!getCurrentFileDetails().isMovieLoaded)
         return;
 
     loadedPixmapItem->setPixmap(imageCore.getLoadedMovie().currentPixmap());
@@ -313,16 +313,10 @@ void QVGraphicsView::loadFile(const QString &fileName)
     loadedPixmapItem->setPixmap(imageCore.getLoadedPixmap());
     loadedPixmapItem->setOffset((scene()->width()/2 - imageCore.getLoadedPixmap().width()/2), (scene()->height()/2 - imageCore.getLoadedPixmap().height()/2));
 
-    //set filtering mode
-    if (isFilteringEnabled)
-        loadedPixmapItem->setTransformationMode(Qt::SmoothTransformation);
-    else
-        loadedPixmapItem->setTransformationMode(Qt::FastTransformation);
-
     //post-load operations
     resetScale();
     parentMainWindow->refreshProperties();
-    updateRecentFiles(imageCore.getCurrentFileDetails().fileInfo);
+    updateRecentFiles(getCurrentFileDetails().fileInfo);
     setWindowTitle();
 }
 
@@ -349,7 +343,7 @@ void QVGraphicsView::updateRecentFiles(const QFileInfo &file)
 
 void QVGraphicsView::setWindowTitle()
 {
-    if (!imageCore.getCurrentFileDetails().isPixmapLoaded)
+    if (!getCurrentFileDetails().isPixmapLoaded)
         return;
 
     switch (titlebarMode) {
@@ -360,15 +354,13 @@ void QVGraphicsView::setWindowTitle()
     }
     case 1:
     {
-        parentMainWindow->setWindowTitle(imageCore.getCurrentFileDetails().fileInfo.fileName());
+        parentMainWindow->setWindowTitle(getCurrentFileDetails().fileInfo.fileName());
         break;
     }
     case 2:
     {
-        const QFileInfoList loadedFileFolder = QDir(imageCore.getCurrentFileDetails().fileInfo.path()).entryInfoList(filterList, QDir::Files);
-        const QString currentFileIndex = QString::number(loadedFileFolder.indexOf(imageCore.getCurrentFileDetails().fileInfo)+1);
         QLocale locale;
-        parentMainWindow->setWindowTitle("qView - " + imageCore.getCurrentFileDetails().fileInfo.fileName() + " - " + currentFileIndex + "/" + QString::number(loadedFileFolder.count()) + " - "  + QString::number(imageCore.getLoadedPixmap().width()) + "x" + QString::number(imageCore.getLoadedPixmap().height()) + " - " + locale.formattedDataSize(imageCore.getCurrentFileDetails().fileInfo.size()));
+        parentMainWindow->setWindowTitle("qView - " + getCurrentFileDetails().fileInfo.fileName() + " - " + QString::number(getCurrentFileDetails().folderIndex-1) + "/" + QString::number(getCurrentFileDetails().folder.count()) + " - "  + QString::number(imageCore.getLoadedPixmap().width()) + "x" + QString::number(imageCore.getLoadedPixmap().height()) + " - " + locale.formattedDataSize(getCurrentFileDetails().fileInfo.size()));
         break;
     }
     default:
@@ -378,10 +370,10 @@ void QVGraphicsView::setWindowTitle()
 
 void QVGraphicsView::resetScale()
 {
-    if (!imageCore.getCurrentFileDetails().isPixmapLoaded)
+    if (!getCurrentFileDetails().isPixmapLoaded)
         return;
 
-    if (!isScalingEnabled && !imageCore.getCurrentFileDetails().isMovieLoaded)
+    if (!isScalingEnabled && !getCurrentFileDetails().isMovieLoaded)
         loadedPixmapItem->setPixmap(imageCore.getLoadedPixmap());
 
     //if we aren't supposed to resize past the actual size, dont do that (the reason it's so long is to take into account the crop mode)
@@ -389,7 +381,7 @@ void QVGraphicsView::resetScale()
         if ((cropMode == 1 && height() >= imageCore.getLoadedPixmap().height()) || (cropMode == 2 && width() >= imageCore.getLoadedPixmap().width())
         || (cropMode == 0  && height() >= imageCore.getLoadedPixmap().height() && width() >= imageCore.getLoadedPixmap().width()))
         {
-            if (!imageCore.getCurrentFileDetails().isMovieLoaded)
+            if (!getCurrentFileDetails().isMovieLoaded)
                 loadedPixmapItem->setPixmap(imageCore.getLoadedPixmap());
             centerOn(loadedPixmapItem->boundingRect().center());
             return;
@@ -405,7 +397,7 @@ void QVGraphicsView::resetScale()
 
 void QVGraphicsView::scaleExpensively(scaleMode mode)
 {
-    if (!imageCore.getCurrentFileDetails().isPixmapLoaded || !isScalingEnabled)
+    if (!getCurrentFileDetails().isPixmapLoaded || !isScalingEnabled)
         return;
 
     switch (mode) {
@@ -423,7 +415,7 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
 
         loadedPixmapItem->setPixmap(imageCore.scaleExpensively(width()+4, height()+4, mode));
 
-        if (!imageCore.getCurrentFileDetails().isMovieLoaded)
+        if (!getCurrentFileDetails().isMovieLoaded)
             fitInViewMarginless();
 
         break;
@@ -433,7 +425,7 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
         QSize newSize = QSize(static_cast<int>(fittedWidth * currentScale), static_cast<int>(fittedHeight * currentScale));
 
         loadedPixmapItem->setPixmap(imageCore.scaleExpensively(newSize));
-        if (imageCore.getCurrentFileDetails().isMovieLoaded)
+        if (getCurrentFileDetails().isMovieLoaded)
             movieCenterNeedsUpdating = true;
         break;
     }
@@ -442,7 +434,7 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
         QSize newSize = QSize(static_cast<int>(fittedWidth * currentScale), static_cast<int>(fittedHeight * currentScale));
         loadedPixmapItem->setPixmap(imageCore.scaleExpensively(newSize));
 
-        if (imageCore.getCurrentFileDetails().isMovieLoaded)
+        if (getCurrentFileDetails().isMovieLoaded)
             movieCenterNeedsUpdating = true;
         break;
     }
@@ -458,7 +450,7 @@ void QVGraphicsView::originalSize()
     }
     movieCenterNeedsUpdating = true;
     isOriginalSize = true;
-    if (imageCore.getCurrentFileDetails().isMovieLoaded)
+    if (getCurrentFileDetails().isMovieLoaded)
         imageCore.scaleExpensively(imageCore.getLoadedPixmap().size());
     else
         loadedPixmapItem->setPixmap(imageCore.getLoadedPixmap());
@@ -472,47 +464,46 @@ void QVGraphicsView::originalSize()
 
 void QVGraphicsView::goToFile(const goToFileMode mode, const int index)
 {
-    QFileInfoList loadedFileFolder = QDir(imageCore.getCurrentFileDetails().fileInfo.path()).entryInfoList(filterList, QDir::Files);
-    int loadedFileFolderIndex = loadedFileFolder.indexOf(imageCore.getCurrentFileDetails().fileInfo);
-
-    if (loadedFileFolder.isEmpty())
+    if (getCurrentFileDetails().folder.isEmpty())
         return;
+
+    int newIndex = getCurrentFileDetails().folderIndex;
 
     switch (mode) {
     case goToFileMode::constant:
     {
-        loadedFileFolderIndex = index;
+        newIndex = index;
         break;
     }
     case goToFileMode::first:
     {
-        loadedFileFolderIndex = 0;
+        newIndex = 0;
         break;
     }
     case goToFileMode::previous:
     {
-        if (loadedFileFolderIndex == 0)
-            loadedFileFolderIndex = loadedFileFolder.size()-1;
+        if (newIndex == 0)
+            newIndex = getCurrentFileDetails().folder.size()-1;
         else
-            loadedFileFolderIndex--;
+            newIndex--;
         break;
     }
     case goToFileMode::next:
     {
-        if (loadedFileFolder.size()-1 == loadedFileFolderIndex)
-            loadedFileFolderIndex = 0;
+        if (getCurrentFileDetails().folder.size()-1 == newIndex)
+            newIndex = 0;
         else
-            loadedFileFolderIndex++;
+            newIndex++;
         break;
     }
     case goToFileMode::last:
     {
-        loadedFileFolderIndex = loadedFileFolder.size()-1;
+        newIndex = getCurrentFileDetails().folder.size()-1;
         break;
     }
     }
 
-    const QFileInfo nextImage = loadedFileFolder.value(loadedFileFolderIndex);
+    const QFileInfo nextImage = getCurrentFileDetails().folder.value(newIndex);
     if (!nextImage.isFile())
         return;
 
@@ -594,6 +585,10 @@ void QVGraphicsView::loadSettings()
 
     //filtering
     isFilteringEnabled = settings.value("filteringenabled", true).toBool();
+    if (isFilteringEnabled)
+        loadedPixmapItem->setTransformationMode(Qt::SmoothTransformation);
+    else
+        loadedPixmapItem->setTransformationMode(Qt::FastTransformation);
 
     //scaling
     isScalingEnabled = settings.value("scalingenabled", true).toBool();
