@@ -309,8 +309,7 @@ void QVGraphicsView::loadFile(const QString &fileName)
         return;
     }
 
-    //set pixmap and offset
-    loadedPixmapItem->setPixmap(imageCore.getLoadedPixmap());
+    //set offset
     loadedPixmapItem->setOffset((scene()->width()/2 - imageCore.getLoadedPixmap().width()/2), (scene()->height()/2 - imageCore.getLoadedPixmap().height()/2));
 
     //post-load operations
