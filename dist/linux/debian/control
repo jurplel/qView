@@ -1,7 +1,7 @@
 Source: qview
 Section: graphics
 Priority: optional
-Maintainer: jurplel <jeep70cp[at]gmail[dotcom]>
+Maintainer: jurplel <jurplel[at]interverse[dottk]>
 Build-Depends: debhelper (>= 11), qt5-default (>= 5.9)
 Standards-Version: 4.1.3
 Homepage: https://interverse.tk/qview
