@@ -47,9 +47,9 @@ private slots:
 
     void on_scalingTwoCheckbox_stateChanged(int arg1);
 
-    void on_resetOnResizeCheckbox_stateChanged(int arg1);
-
     void on_pastActualSizeCheckbox_stateChanged(int arg1);
+
+    void on_scrollZoomsCheckbox_stateChanged(int arg1);
 
 protected:
     virtual void showEvent(QShowEvent *event);
@@ -73,8 +73,8 @@ private:
         int scaleFactor;
         bool resizeScaleEnabled;
         bool scalingTwoEnabled;
-        bool resetOnResizeEnabled;
         bool pastActualSizeEnabled;
+        bool scrollZoomsEnabled;
     };
 
     STransientSettings transientSettings;

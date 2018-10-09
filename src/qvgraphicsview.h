@@ -104,8 +104,8 @@ private:
     int titlebarMode;
     int cropMode;
     bool isScalingTwoEnabled;
-    bool isResetOnResizeEnabled;
     bool isPastActualSizeEnabled;
+    bool isScrollZoomsEnabled;
 
     qreal maxScalingTwoSize;
     bool cheapScaledLast;

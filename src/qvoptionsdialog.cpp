@@ -39,8 +39,8 @@ void QVOptionsDialog::saveSettings()
     settings.setValue("slideshowdirection", transientSettings.slideshowDirection);
     settings.setValue("scalefactor", transientSettings.scaleFactor);
     settings.setValue("scalingtwoenabled", transientSettings.scalingTwoEnabled);
-    settings.setValue("resetonresizeenabled", transientSettings.resetOnResizeEnabled);
     settings.setValue("pastactualsizeenabled", transientSettings.pastActualSizeEnabled);
+    settings.setValue("scrollzoomsenabled", transientSettings.scrollZoomsEnabled);
     emit optionsSaved();
 }
 
@@ -109,18 +109,13 @@ void QVOptionsDialog::loadSettings()
     transientSettings.scalingTwoEnabled = settings.value("scalingtwoenabled", true).toBool();
     ui->scalingTwoCheckbox->setChecked(transientSettings.scalingTwoEnabled);
 
-    //reset image on resize
-    transientSettings.resetOnResizeEnabled = settings.value("resetonresizeenabled", true).toBool();
-    ui->resetOnResizeCheckbox->setChecked(transientSettings.resetOnResizeEnabled);
-    if (!transientSettings.resetOnResizeEnabled)
-    {
-        ui->cropModeComboBox->setEnabled(false);
-        ui->cropModeLabel->setEnabled(false);
-    }
-
     //resize past actual size
     transientSettings.pastActualSizeEnabled = settings.value("pastactualsizeenabled", true).toBool();
     ui->pastActualSizeCheckbox->setChecked(transientSettings.pastActualSizeEnabled);
+
+    //resize past actual size
+    transientSettings.scrollZoomsEnabled = settings.value("scrollzoomsenabled", true).toBool();
+    ui->scrollZoomsCheckbox->setChecked(transientSettings.scrollZoomsEnabled);
 }
 
 void QVOptionsDialog::updateBgColorButton()
@@ -253,24 +248,6 @@ void QVOptionsDialog::on_scalingTwoCheckbox_stateChanged(int arg1)
     }
 }
 
-void QVOptionsDialog::on_resetOnResizeCheckbox_stateChanged(int arg1)
-{
-    if (arg1 > 0)
-    {
-        transientSettings.resetOnResizeEnabled = true;
-        ui->cropModeComboBox->setEnabled(true);
-        ui->cropModeLabel->setEnabled(true);
-        ui->pastActualSizeCheckbox->setEnabled(true);
-    }
-    else
-    {
-        transientSettings.resetOnResizeEnabled = false;
-        ui->cropModeComboBox->setEnabled(false);
-        ui->cropModeLabel->setEnabled(false);
-        ui->pastActualSizeCheckbox->setEnabled(false);
-    }
-}
-
 void QVOptionsDialog::on_pastActualSizeCheckbox_stateChanged(int arg1)
 {
     if (arg1 > 0)
@@ -280,5 +257,17 @@ void QVOptionsDialog::on_pastActualSizeCheckbox_stateChanged(int arg1)
     else
     {
         transientSettings.pastActualSizeEnabled = false;
+    }
+}
+
+void QVOptionsDialog::on_scrollZoomsCheckbox_stateChanged(int arg1)
+{
+    if (arg1 > 0)
+    {
+        transientSettings.scrollZoomsEnabled = true;
+    }
+    else
+    {
+        transientSettings.scrollZoomsEnabled = false;
     }
 }
