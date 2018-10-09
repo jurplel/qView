@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>270</width>
+    <width>335</width>
     <height>342</height>
    </rect>
   </property>
@@ -23,7 +23,7 @@
       <enum>Qt::NoFocus</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="window">
       <property name="layoutDirection">
@@ -101,13 +101,6 @@
          </property>
         </spacer>
        </item>
-       <item row="5" column="0">
-        <widget class="QCheckBox" name="menubarCheckbox">
-         <property name="text">
-          <string>Show menubar</string>
-         </property>
-        </widget>
-       </item>
        <item row="4" column="0">
         <layout class="QHBoxLayout" name="horizontalLayout">
          <property name="leftMargin">
@@ -150,13 +143,66 @@
          </item>
         </layout>
        </item>
+       <item row="5" column="0">
+        <widget class="QCheckBox" name="menubarCheckbox">
+         <property name="text">
+          <string>Show menubar</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="image">
+     <widget class="QWidget" name="scaling">
       <attribute name="title">
-       <string>Image</string>
+       <string>Scaling</string>
       </attribute>
       <layout class="QFormLayout" name="formLayout_2">
+       <item row="1" column="0">
+        <widget class="QCheckBox" name="filteringCheckbox">
+         <property name="toolTip">
+          <string>Turn this off to see individual pixels</string>
+         </property>
+         <property name="text">
+          <string>Bilinear filtering</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QCheckBox" name="scalingCheckbox">
+         <property name="toolTip">
+          <string>Images appear aliased (having jagged edges) without this, but it is faster</string>
+         </property>
+         <property name="text">
+          <string>Image scaling</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QCheckBox" name="scalingTwoCheckbox">
+         <property name="toolTip">
+          <string>Choose whether or not the image continues to be scaled when zooming above the window size (can be laggier with large images)</string>
+         </property>
+         <property name="text">
+          <string>Scaling above default size</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="zoom">
+      <attribute name="title">
+       <string>Zooming</string>
+      </attribute>
+      <layout class="QFormLayout" name="formLayout_4">
        <item row="0" column="0">
         <layout class="QHBoxLayout" name="horizontalLayout_3">
          <item>
@@ -193,72 +239,30 @@
          </item>
         </layout>
        </item>
-       <item row="1" column="0">
-        <widget class="QCheckBox" name="filteringCheckbox">
+       <item row="2" column="0">
+        <widget class="QCheckBox" name="pastActualSizeCheckbox">
          <property name="toolTip">
-          <string>Turn this off to see individual pixels</string>
+          <string>Stop the image from going past its actual size when resizing the window - you can still zoom past it though</string>
          </property>
          <property name="text">
-          <string>Bilinear filtering</string>
+          <string>Image resizes past actual size</string>
          </property>
          <property name="checked">
           <bool>true</bool>
          </property>
         </widget>
        </item>
-       <item row="2" column="0">
-        <widget class="QCheckBox" name="scalingCheckbox">
+       <item row="1" column="0">
+        <widget class="QCheckBox" name="scrollZoomsCheckbox">
          <property name="toolTip">
-          <string>Images appear aliased (having jagged edges) without this, but it is faster</string>
+          <string>Choose whether scrolling zooms or moves the image (alternative can be accessed at any time by holding ctrl/cmd)</string>
          </property>
          <property name="text">
-          <string>Image scaling</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
+          <string>Scrolling zooms</string>
          </property>
         </widget>
        </item>
        <item row="3" column="0">
-        <widget class="QCheckBox" name="scalingTwoCheckbox">
-         <property name="toolTip">
-          <string>Choose whether or not the image continues to be scaled when zooming above the window size (can be laggy with large images)</string>
-         </property>
-         <property name="text">
-          <string>Scaling above window size</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0">
-        <spacer name="horizontalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="5" column="0">
-        <widget class="QCheckBox" name="resetOnResizeCheckbox">
-         <property name="toolTip">
-          <string>Controls if the image is resized to fit the window and centered when the window resizes</string>
-         </property>
-         <property name="text">
-          <string>Image resizes with window</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="0">
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
           <widget class="QLabel" name="cropModeLabel">
@@ -299,19 +303,6 @@
           </widget>
          </item>
         </layout>
-       </item>
-       <item row="6" column="0">
-        <widget class="QCheckBox" name="pastActualSizeCheckbox">
-         <property name="toolTip">
-          <string>Stop from resizing the image past its actual size - you can still zoom past it though</string>
-         </property>
-         <property name="text">
-          <string>Image resizes past actual size</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
        </item>
       </layout>
      </widget>

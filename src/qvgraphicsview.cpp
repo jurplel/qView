@@ -9,6 +9,8 @@
 #include <QPixmapCache>
 #include <QtMath>
 
+#include <QDebug>
+
 QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 {
     //qgraphicsscene setup
@@ -22,7 +24,6 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     isFilteringEnabled = true;
     isScalingEnabled = true;
     isScalingTwoEnabled = true;
-    isResetOnResizeEnabled = true;
     isPastActualSizeEnabled = true;
     titlebarMode = 0;
     cropMode = 0;
@@ -54,13 +55,10 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 void QVGraphicsView::resizeEvent(QResizeEvent *event)
 {
     QGraphicsView::resizeEvent(event);
-    if (isResetOnResizeEnabled)
-    {
-        if (!isOriginalSize)
-            resetScale();
-        else
-            centerOn(loadedPixmapItem->boundingRect().center());
-    }
+    if (!isOriginalSize)
+        resetScale();
+    else
+        centerOn(loadedPixmapItem->boundingRect().center());
 }
 
 void QVGraphicsView::dropEvent(QDropEvent *event)
@@ -105,37 +103,54 @@ void QVGraphicsView::mouseReleaseEvent(QMouseEvent *event)
 void QVGraphicsView::wheelEvent(QWheelEvent *event)
 {
     //Basically, if you are holding ctrl then it scrolls instead of zooms (the shift bit is for horizontal scrolling)
-    if (event->modifiers() == Qt::ControlModifier)
-    {
-        if (event->angleDelta().y() > 0)
-            translate(0, height()/10);
-        else
-            translate(0, height()/10*-1);
-    }
-    else if (event->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier))
-    {
-        if (event->angleDelta().x() != 0)
-        {
-            if (event->angleDelta().x() > 0)
-                translate(width()/10, 0);
-            else
-                translate(width()/10*-1, 0);
-        }
-        else
-        {
-            if (event->angleDelta().y() > 0)
-                translate(width()/10, 0);
-            else
-                translate(width()/10*-1, 0);
-        }
+    qDebug() << event->angleDelta();
+    bool mode = isScrollZoomsEnabled;
+    if (event->modifiers() == Qt::ControlModifier || event->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier))
+        mode = !mode;
 
-    }
-    else
+    if (mode)
     {
         if (event->angleDelta().y() == 0)
             zoom(event->angleDelta().x(), event->pos());
         else
             zoom(event->angleDelta().y(), event->pos());
+    }
+    else
+    {
+        if (event->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier) || event->modifiers() == Qt::ShiftModifier)
+        {
+            if (event->angleDelta().x() != 0)
+            {
+                if (event->angleDelta().x() < 0)
+                    translate(width()/10, 0);
+                else
+                    translate(width()/10*-1, 0);
+            }
+            else
+            {
+                if (event->angleDelta().y() > 0)
+                    translate(width()/10, 0);
+                else
+                    translate(width()/10*-1, 0);
+            }
+        }
+        else
+        {
+            if (event->angleDelta().y() != 0)
+            {
+                if (event->angleDelta().y() > 0)
+                    translate(0, height()/10);
+                else
+                    translate(0, height()/10*-1);
+            }
+            else
+            {
+                if (event->angleDelta().x() < 0)
+                    translate(width()/10, 0);
+                else
+                    translate(width()/10*-1, 0);
+            }
+        }
     }
 }
 
@@ -604,11 +619,11 @@ void QVGraphicsView::loadSettings()
     //scaling2
     isScalingTwoEnabled = settings.value("scalingtwoenabled", true).toBool();
 
-    //reset on resize
-    isResetOnResizeEnabled = settings.value("resetonresizeenabled", true).toBool();
-
     //resize past actual size
     isPastActualSizeEnabled = settings.value("pastactualsizeenabled", true).toBool();
+
+    //scrolling zoom
+    isScrollZoomsEnabled = settings.value("scrollzoomsenabled", true).toBool();
 
     if (getCurrentFileDetails().isPixmapLoaded)
         resetScale();
