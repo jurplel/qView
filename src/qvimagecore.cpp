@@ -24,7 +24,7 @@ QString QVImageCore::loadFile(const QString &fileName)
     loadedImage = imageReader.read();
     if (loadedImage.isNull())
     {
-        return imageReader.errorString();
+        return QString::number(imageReader.error()) + ": " + imageReader.errorString();
     }
     loadedPixmap.convertFromImage(loadedImage);
 
