@@ -75,6 +75,8 @@ protected:
 
     void mouseReleaseEvent(QMouseEvent *event) override;
 
+    bool event(QEvent *event) override;
+
     void fitInViewMarginless(bool setVariables = true);
 
 

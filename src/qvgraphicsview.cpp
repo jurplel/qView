@@ -8,6 +8,7 @@
 #include <QMovie>
 #include <QPixmapCache>
 #include <QtMath>
+#include <QGestureEvent>
 
 #include <QDebug>
 
@@ -103,6 +104,30 @@ void QVGraphicsView::mouseReleaseEvent(QMouseEvent *event)
 {
     QGraphicsView::mouseReleaseEvent(event);
     viewport()->setCursor(Qt::ArrowCursor);
+}
+
+bool QVGraphicsView::event(QEvent *event)
+{
+    //this is for touchpad pinch gestures
+    if (event->type() == QEvent::Gesture)
+    {
+        QGestureEvent *gestureEvent = static_cast<QGestureEvent*>(event);
+        if (QGesture *pinch = gestureEvent->gesture(Qt::PinchGesture))
+        {
+            QPinchGesture *pinchGesture = static_cast<QPinchGesture *>(pinch);
+            QPinchGesture::ChangeFlags changeFlags = pinchGesture->changeFlags();
+            if (changeFlags & QPinchGesture::RotationAngleChanged) {
+                qDebug() << "Rotation angle: " << pinchGesture->rotationAngle() << " Last: " << pinchGesture->lastRotationAngle();
+            }
+            if (changeFlags & QPinchGesture::ScaleFactorChanged) {
+                qDebug() << "Scale factor: " << pinchGesture->scaleFactor() << " Total: " << pinchGesture->totalScaleFactor();
+            }
+            if (pinchGesture->state() == Qt::GestureFinished) {
+                qDebug() << "Gesture finished.";
+            }
+        }
+    }
+    return QWidget::event(event);
 }
 
 void QVGraphicsView::wheelEvent(QWheelEvent *event)
@@ -354,9 +379,7 @@ void QVGraphicsView::updateRecentFiles(const QFileInfo &file)
         recentFiles.prepend(fileInfo);
 
     if(recentFiles.size() > 10)
-    {
         recentFiles.removeLast();
-    }
 
     settings.setValue("recentFiles", recentFiles);
     parentMainWindow->updateRecentMenu();
