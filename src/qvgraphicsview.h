@@ -83,35 +83,37 @@ private slots:
 
 private:
 
-    MainWindow *parentMainWindow;
-
-    qreal currentScale;
-    qreal scaleFactor;
-    qreal fittedWidth;
-    qreal fittedHeight;
-    bool isOriginalSize;
 
     QGraphicsPixmapItem *loadedPixmapItem;
     QRectF alternateBoundingBox;
 
     QTransform fittedMatrix;
     QTransform scaledMatrix;
-    QTimer *timer;
 
-    bool movieCenterNeedsUpdating;
     bool isFilteringEnabled;
     bool isScalingEnabled;
-    int titlebarMode;
-    int cropMode;
     bool isScalingTwoEnabled;
     bool isPastActualSizeEnabled;
     bool isScrollZoomsEnabled;
+    int titlebarMode;
+    int cropMode;
+    qreal scaleFactor;
 
+    qreal currentScale;
+    qreal fittedWidth;
+    qreal fittedHeight;
+    bool isOriginalSize;
     qreal maxScalingTwoSize;
     bool cheapScaledLast;
+    bool movieCenterNeedsUpdating;
+
+    QVImageCore imageCore;
+
+    QTimer *timer;
+
+    MainWindow *parentMainWindow;
 
     const QStringList filterList = (QStringList() << "*.bmp" << "*.cur" << "*.gif" << "*.icns" << "*.ico" << "*.jp2" << "*.jpeg" << "*.jpe" << "*.jpg" << "*.mng" << "*.pbm" << "*.pgm" << "*.png" << "*.ppm" << "*.svg" << "*.svgz" << "*.tif" << "*.tiff" << "*.wbmp" << "*.webp" << "*.xbm" << "*.xpm");
 
-    QVImageCore imageCore;
 };
 #endif // QVGRAPHICSVIEW_H
