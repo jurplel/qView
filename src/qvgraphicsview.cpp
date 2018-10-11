@@ -13,22 +13,27 @@
 
 QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 {
+    grabGesture(Qt::PinchGesture);
+
     //qgraphicsscene setup
     auto *scene = new QGraphicsScene(0.0, 0.0, 100000.0, 100000.0, this);
     setScene(scene);
     setFocus();
 
-    currentScale = 1.0;
-    fittedWidth = 0;
-    fittedHeight = 0;
+    //initialize configurable variables
     isFilteringEnabled = true;
     isScalingEnabled = true;
     isScalingTwoEnabled = true;
     isPastActualSizeEnabled = true;
+    isScrollZoomsEnabled = true;
     titlebarMode = 0;
     cropMode = 0;
-
     scaleFactor = 0.25;
+
+    //initialize other variables
+    currentScale = 1.0;
+    fittedWidth = 0;
+    fittedHeight = 0;
     maxScalingTwoSize = 4;
     cheapScaledLast = false;
     movieCenterNeedsUpdating = false;
@@ -320,7 +325,9 @@ void QVGraphicsView::loadFile(const QString &fileName)
     QString errorString = imageCore.loadFile(fileName);
     if (!errorString.isEmpty())
     {
-        QMessageBox::critical(this, tr("qView Error"), tr("Read Error: ") + errorString);
+        QMessageBox::critical(this, tr("qView Error"), tr("Read Error ") + errorString);
+        if (errorString.at(0) == "1")
+            updateRecentFiles(QFileInfo(fileName));
         return;
     }
 
