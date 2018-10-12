@@ -118,9 +118,28 @@ bool QVGraphicsView::event(QEvent *event)
             QPinchGesture::ChangeFlags changeFlags = pinchGesture->changeFlags();
             if (changeFlags & QPinchGesture::RotationAngleChanged) {
                 qDebug() << "Rotation angle: " << pinchGesture->rotationAngle() << " Last: " << pinchGesture->lastRotationAngle();
+                rotate(qFloor(pinchGesture->rotationAngle()/90)*90);
             }
             if (changeFlags & QPinchGesture::ScaleFactorChanged) {
                 qDebug() << "Scale factor: " << pinchGesture->scaleFactor() << " Total: " << pinchGesture->totalScaleFactor();
+                qreal scaleAmount = (pinchGesture->scaleFactor()-1.0)/scaleFactor;
+
+                if (qFuzzyCompare(scaleAmount, qFabs(scaleAmount)))
+                {
+                    for (qreal i = scaleAmount; i > 0; --i)
+                    {
+                        qDebug() << "zoom #" << i;
+                        zoom(120, pinchGesture->hotSpot().toPoint());
+                    }
+                }
+                else
+                {
+                    for (qreal i = scaleAmount; i < 0; ++i)
+                    {
+                        qDebug() << "zoom #" << i;
+                        zoom(-120, pinchGesture->hotSpot().toPoint());
+                    }
+                }
             }
             if (pinchGesture->state() == Qt::GestureFinished) {
                 qDebug() << "Gesture finished.";
