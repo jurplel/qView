@@ -2,6 +2,7 @@
 #include <QMessageBox>
 #include <QDir>
 #include <QSettings>
+#include <QCollator>
 
 QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
 {
@@ -51,7 +52,16 @@ QString QVImageCore::loadFile(const QString &fileName)
 
 void QVImageCore::updateFolderInfo()
 {
-    currentFileDetails.folder = QDir(currentFileDetails.fileInfo.path()).entryInfoList(filterList, QDir::Files);
+    QCollator collator;
+    collator.setNumericMode(true);
+    currentFileDetails.folder = QDir(currentFileDetails.fileInfo.path()).entryInfoList(filterList, QDir::Files, QDir::NoSort);
+    std::sort(
+        currentFileDetails.folder.begin(),
+        currentFileDetails.folder.end(),
+        [&collator](const QFileInfo &file1, const QFileInfo &file2)
+        {
+            return collator.compare(file1.fileName(), file2.fileName()) < 0;
+        });
     currentFileDetails.folderIndex = currentFileDetails.folder.indexOf(currentFileDetails.fileInfo);
 }
 
@@ -111,3 +121,5 @@ const QPixmap QVImageCore::scaleExpensively(const QSize desiredSize, const scale
     }
     return QPixmap();
 }
+
+
