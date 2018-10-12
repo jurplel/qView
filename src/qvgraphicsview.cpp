@@ -127,13 +127,12 @@ bool QVGraphicsView::event(QEvent *event)
             }
         }
     }
-    return QWidget::event(event);
+    return QGraphicsView::event(event);
 }
 
 void QVGraphicsView::wheelEvent(QWheelEvent *event)
 {
     //Basically, if you are holding ctrl then it scrolls instead of zooms (the shift bit is for horizontal scrolling)
-    qDebug() << event->angleDelta();
     bool mode = isScrollZoomsEnabled;
     if (event->modifiers() == Qt::ControlModifier || event->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier))
         mode = !mode;
@@ -228,14 +227,7 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
     if ((currentScale < 0.99999 || (currentScale < 1.00001 && DeltaY > 0)) && isScalingEnabled && !veto)
     {
         //zoom expensively
-        if (DeltaY > 0)
-        {
-            scaleExpensively(scaleMode::zoomIn);
-        }
-        else
-        {
-            scaleExpensively(scaleMode::zoomOut);
-        }
+        scaleExpensively(scaleMode::zoom);
         cheapScaledLast = false;
     }
     //check if expensive scaling while zooming in is enabled and valid
@@ -245,16 +237,13 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
         //it's scaled with a matrix (setScale), and then mapped back to scene. expensive scaling is done as expected.
         QPointF doubleMapped = loadedPixmapItem->mapFromScene(originalMappedPos);
         loadedPixmapItem->setTransformOriginPoint(loadedPixmapItem->boundingRect().topLeft());
+
+        scaleExpensively(scaleMode::zoom);
         if (DeltaY > 0)
-        {
-            scaleExpensively(scaleMode::zoomIn);
             loadedPixmapItem->setScale(scaleFactor);
-        }
         else
-        {
-            scaleExpensively(scaleMode::zoomOut);
             loadedPixmapItem->setScale(qPow(scaleFactor, -1));
-        }
+
         QPointF tripleMapped = loadedPixmapItem->mapToScene(doubleMapped);
         loadedPixmapItem->setScale(1.0);
 
@@ -356,8 +345,12 @@ void QVGraphicsView::loadFile(const QString &fileName)
         return;
     }
 
-    //set offset
+    //set offset and moviecenter
     loadedPixmapItem->setOffset((scene()->width()/2 - imageCore.getLoadedPixmap().width()/2), (scene()->height()/2 - imageCore.getLoadedPixmap().height()/2));
+    if (imageCore.getCurrentFileDetails().isMovieLoaded)
+        movieCenterNeedsUpdating = true;
+    else
+        movieCenterNeedsUpdating = false;
 
     //post-load operations
     resetScale();
@@ -464,25 +457,16 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
 
         break;
     }
-    case scaleMode::zoomIn:
+    case scaleMode::zoom:
     {
         QSize newSize = QSize(static_cast<int>(fittedWidth * currentScale), static_cast<int>(fittedHeight * currentScale));
 
         loadedPixmapItem->setPixmap(imageCore.scaleExpensively(newSize));
-        if (getCurrentFileDetails().isMovieLoaded)
-            movieCenterNeedsUpdating = true;
-        break;
-    }
-    case scaleMode::zoomOut:
-    {
-        QSize newSize = QSize(static_cast<int>(fittedWidth * currentScale), static_cast<int>(fittedHeight * currentScale));
-        loadedPixmapItem->setPixmap(imageCore.scaleExpensively(newSize));
-
-        if (getCurrentFileDetails().isMovieLoaded)
-            movieCenterNeedsUpdating = true;
         break;
     }
     }
+    if (getCurrentFileDetails().isMovieLoaded)
+        movieCenterNeedsUpdating = true;
 }
 
 void QVGraphicsView::originalSize()
