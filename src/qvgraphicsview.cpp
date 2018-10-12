@@ -397,7 +397,7 @@ void QVGraphicsView::setWindowTitle()
     case 2:
     {
         QLocale locale;
-        parentMainWindow->setWindowTitle("qView - " + getCurrentFileDetails().fileInfo.fileName() + " - " + QString::number(getCurrentFileDetails().folderIndex-1) + "/" + QString::number(getCurrentFileDetails().folder.count()) + " - "  + QString::number(imageCore.getLoadedPixmap().width()) + "x" + QString::number(imageCore.getLoadedPixmap().height()) + " - " + locale.formattedDataSize(getCurrentFileDetails().fileInfo.size()));
+        parentMainWindow->setWindowTitle("qView - " + getCurrentFileDetails().fileInfo.fileName() + " - " + QString::number(getCurrentFileDetails().folderIndex+1) + "/" + QString::number(getCurrentFileDetails().folder.count()) + " - "  + QString::number(imageCore.getLoadedPixmap().width()) + "x" + QString::number(imageCore.getLoadedPixmap().height()) + " - " + locale.formattedDataSize(getCurrentFileDetails().fileInfo.size()));
         break;
     }
     default:
