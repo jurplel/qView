@@ -33,13 +33,11 @@ QString QVImageCore::loadFile(const QString &fileName)
     {
         loadedMovie.stop();
         currentFileDetails.isMovieLoaded = false;
-//        movieCenterNeedsUpdating = false;
     }
     if (imageReader.supportsAnimation() && imageReader.imageCount() != 1)
     {
         loadedMovie.setFileName(fileName);
         loadedMovie.start();
-//        movieCenterNeedsUpdating = true;
         currentFileDetails.isMovieLoaded = true;
     }
 
@@ -90,7 +88,6 @@ const QPixmap QVImageCore::scaleExpensively(const QSize desiredSize, const scale
     if (currentFileDetails.isMovieLoaded)
     {
         loadedMovie.setScaledSize(size);
-        //movieCenterNeedsUpdating = true;
         return loadedMovie.currentPixmap().scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     }
     else

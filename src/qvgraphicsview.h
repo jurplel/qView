@@ -20,8 +20,7 @@ public:
     enum class scaleMode
     {
        resetScale,
-       zoomIn,
-       zoomOut
+       zoom
     };
     Q_ENUM(scaleMode)
 
