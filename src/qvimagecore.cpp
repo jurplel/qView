@@ -8,6 +8,7 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     loadedImage = QImage();
     loadedPixmap = QPixmap();
     imageReader.setDecideFormatFromContent(true);
+    imageReader.setAutoTransform(true);
 
     currentFileDetails.fileInfo = QFileInfo();
     currentFileDetails.isPixmapLoaded = false;
