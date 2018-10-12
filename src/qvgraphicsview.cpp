@@ -450,7 +450,7 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
         else
             mode = QVImageCore::scaleMode::height;
 
-        loadedPixmapItem->setPixmap(imageCore.scaleExpensively(width()+4, height()+4, mode));
+        imageCore.scaleExpensively(width()+4, height()+4, mode);
 
         if (!getCurrentFileDetails().isMovieLoaded)
             fitInViewMarginless();
