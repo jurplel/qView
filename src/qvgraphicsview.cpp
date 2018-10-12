@@ -147,39 +147,9 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
     else
     {
         if (event->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier) || event->modifiers() == Qt::ShiftModifier)
-        {
-            if (event->angleDelta().x() != 0)
-            {
-                if (event->angleDelta().x() < 0)
-                    translate(width()/10, 0);
-                else
-                    translate(width()/10*-1, 0);
-            }
-            else
-            {
-                if (event->angleDelta().y() > 0)
-                    translate(width()/10, 0);
-                else
-                    translate(width()/10*-1, 0);
-            }
-        }
+            translate(event->angleDelta().y()/2, event->angleDelta().x()/2);
         else
-        {
-            if (event->angleDelta().y() != 0)
-            {
-                if (event->angleDelta().y() > 0)
-                    translate(0, height()/10);
-                else
-                    translate(0, height()/10*-1);
-            }
-            else
-            {
-                if (event->angleDelta().x() < 0)
-                    translate(width()/10, 0);
-                else
-                    translate(width()/10*-1, 0);
-            }
-        }
+            translate(event->angleDelta().x()/2, event->angleDelta().y()/2);
     }
 }
 
