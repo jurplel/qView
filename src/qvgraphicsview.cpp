@@ -29,7 +29,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     isScrollZoomsEnabled = true;
     titlebarMode = 0;
     cropMode = 0;
-    scaleFactor = 0.25;
+    scaleFactor = 1.25;
 
     //initialize other variables
     currentScale = 1.0;
@@ -122,14 +122,13 @@ bool QVGraphicsView::event(QEvent *event)
             }
             if (changeFlags & QPinchGesture::ScaleFactorChanged) {
                 qDebug() << "Scale factor: " << pinchGesture->scaleFactor() << " Total: " << pinchGesture->totalScaleFactor();
-                qreal scaleAmount = (pinchGesture->scaleFactor()-1.0)/scaleFactor;
-
+                qreal scaleAmount = (pinchGesture->scaleFactor()-1.0)/(scaleFactor-1);
                 if (qFuzzyCompare(scaleAmount, qFabs(scaleAmount)))
                 {
                     for (qreal i = scaleAmount; i > 0; --i)
                     {
                         qDebug() << "zoom #" << i;
-                        zoom(120, pinchGesture->hotSpot().toPoint());
+                        zoom(120, mapFromGlobal(pinchGesture->hotSpot().toPoint()));
                     }
                 }
                 else
@@ -137,12 +136,12 @@ bool QVGraphicsView::event(QEvent *event)
                     for (qreal i = scaleAmount; i < 0; ++i)
                     {
                         qDebug() << "zoom #" << i;
-                        zoom(-120, pinchGesture->hotSpot().toPoint());
+                        zoom(-120, mapFromGlobal(pinchGesture->hotSpot().toPoint()));
                     }
                 }
             }
-            if (pinchGesture->state() == Qt::GestureFinished) {
-                qDebug() << "Gesture finished.";
+            if (changeFlags & QPinchGesture::CenterPointChanged) {
+                translate(pinchGesture->lastCenterPoint().x()-pinchGesture->centerPoint().x(), pinchGesture->lastCenterPoint().y()-pinchGesture->centerPoint().y());
             }
         }
     }
@@ -165,9 +164,12 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
     }
     else
     {
-        if (event->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier) || event->modifiers() == Qt::ShiftModifier)
+        //macos automatically scrolls horizontally while holding shift
+        #ifndef Q_OS_MACX
+        if (event->modifiers() == (Qt::ControlModifier|Qt::ShiftModifier) || event->modifiers() == Qt::ShiftModifier)
             translate(event->angleDelta().y()/2, event->angleDelta().x()/2);
         else
+        #endif
             translate(event->angleDelta().x()/2, event->angleDelta().y()/2);
     }
 }
