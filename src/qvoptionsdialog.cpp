@@ -78,7 +78,24 @@ void QVOptionsDialog::loadSettings()
 
     //titlebar
     transientSettings.titlebarMode = settings.value("titlebarmode", 1).toInt();
-    ui->titlebarModeComboBox->setCurrentIndex(transientSettings.titlebarMode);
+    switch (transientSettings.titlebarMode)
+    {
+    case 0:
+    {
+        ui->titlebarRadioButton0->setChecked(true);
+        break;
+    }
+    case 1:
+    {
+        ui->titlebarRadioButton1->setChecked(true);
+        break;
+    }
+    case 2:
+    {
+        ui->titlebarRadioButton2->setChecked(true);
+        break;
+    }
+    }
 
     //menubar
     transientSettings.menubarEnabled = settings.value("menubarenabled", false).toBool();
@@ -197,12 +214,6 @@ void QVOptionsDialog::on_menubarCheckbox_stateChanged(int arg1)
     }
 }
 
-
-void QVOptionsDialog::on_titlebarModeComboBox_currentIndexChanged(int index)
-{
-    transientSettings.titlebarMode = index;
-}
-
 void QVOptionsDialog::on_cropModeComboBox_currentIndexChanged(int index)
 {
     transientSettings.cropMode = index;
@@ -257,4 +268,19 @@ void QVOptionsDialog::on_scrollZoomsCheckbox_stateChanged(int arg1)
     {
         transientSettings.scrollZoomsEnabled = false;
     }
+}
+
+void QVOptionsDialog::on_titlebarRadioButton0_clicked()
+{
+    transientSettings.titlebarMode = 0;
+}
+
+void QVOptionsDialog::on_titlebarRadioButton1_clicked()
+{
+    transientSettings.titlebarMode = 1;
+}
+
+void QVOptionsDialog::on_titlebarRadioButton2_clicked()
+{
+    transientSettings.titlebarMode = 2;
 }

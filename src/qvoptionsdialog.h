@@ -33,8 +33,6 @@ private slots:
 
     void on_scalingCheckbox_stateChanged(int arg1);
 
-    void on_titlebarModeComboBox_currentIndexChanged(int index);
-
     void on_menubarCheckbox_stateChanged(int arg1);
 
     void on_cropModeComboBox_currentIndexChanged(int index);
@@ -50,6 +48,12 @@ private slots:
     void on_pastActualSizeCheckbox_stateChanged(int arg1);
 
     void on_scrollZoomsCheckbox_stateChanged(int arg1);
+
+    void on_titlebarRadioButton0_clicked();
+
+    void on_titlebarRadioButton1_clicked();
+
+    void on_titlebarRadioButton2_clicked();
 
 protected:
     virtual void showEvent(QShowEvent *event);

@@ -23,7 +23,7 @@
       <enum>Qt::NoFocus</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="window">
       <property name="layoutDirection">
@@ -85,33 +85,48 @@
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QComboBox" name="titlebarModeComboBox">
-         <property name="toolTip">
-          <string>Changes the amount of information displayed in the titlebar</string>
+        <widget class="QRadioButton" name="titlebarRadioButton0">
+         <property name="text">
+          <string>Basic</string>
          </property>
-         <item>
-          <property name="text">
-           <string>Basic</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Minimal</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Verbose</string>
-          </property>
-         </item>
         </widget>
        </item>
-       <item row="2" column="0">
+       <item row="2" column="1">
+        <widget class="QRadioButton" name="titlebarRadioButton1">
+         <property name="text">
+          <string>&amp;Minimal</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QRadioButton" name="titlebarRadioButton2">
+         <property name="text">
+          <string>&amp;Verbose</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1">
         <widget class="QCheckBox" name="menubarCheckbox">
          <property name="text">
           <string>Show menubar</string>
          </property>
         </widget>
+       </item>
+       <item row="4" column="1">
+        <spacer name="horizontalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>5</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>
@@ -159,7 +174,7 @@
           <string>Choose whether or not the image continues to be scaled when zooming above the window size (can be laggier with large images)</string>
          </property>
          <property name="text">
-          <string>Scaling above default size</string>
+          <string>Scaling above window size</string>
          </property>
          <property name="checked">
           <bool>true</bool>
