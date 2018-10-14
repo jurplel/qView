@@ -28,6 +28,8 @@ void QVOptionsDialog::showEvent(QShowEvent *event)
 void QVOptionsDialog::saveSettings()
 {
     QSettings settings;
+    settings.beginGroup("options");
+
     settings.setValue("bgcolor", transientSettings.bgColor);
     settings.setValue("bgcolorenabled", transientSettings.bgColorEnabled);
     settings.setValue("filteringenabled", transientSettings.filteringEnabled);
@@ -47,6 +49,7 @@ void QVOptionsDialog::saveSettings()
 void QVOptionsDialog::loadSettings()
 {
     QSettings settings;
+    settings.beginGroup("options");
 
     //bgcolor
     transientSettings.bgColor = settings.value("bgcolor", QString("#212121")).toString();
@@ -155,9 +158,15 @@ void QVOptionsDialog::on_bgColorButton_clicked()
 
 void QVOptionsDialog::on_buttonBox_clicked(QAbstractButton *button)
 {
-    if (ui->buttonBox->buttonRole(button) == 8 || ui->buttonBox->buttonRole(button) == 0)
+    if (ui->buttonBox->buttonRole(button) == QDialogButtonBox::AcceptRole || ui->buttonBox->buttonRole(button) == QDialogButtonBox::ApplyRole)
     {
         saveSettings();
+    }
+    else if (ui->buttonBox->buttonRole(button) == QDialogButtonBox::ResetRole)
+    {
+        QSettings settings;
+        settings.remove("options");
+        loadSettings();
     }
 }
 

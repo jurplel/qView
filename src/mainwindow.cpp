@@ -42,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //Load settings from file
     loadSettings();
     QSettings settings;
+    settings.beginGroup("recents");
     restoreGeometry(settings.value("geometry").toByteArray());
 
     //Keyboard Shortcuts
@@ -214,6 +215,7 @@ void MainWindow::showEvent(QShowEvent *event)
 {
     QMainWindow::showEvent(event);
     QSettings settings;
+    settings.beginGroup("recents");
 
     if (settings.value("firstlaunch", false).toBool())
         return;
@@ -225,6 +227,7 @@ void MainWindow::showEvent(QShowEvent *event)
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     QSettings settings;
+    settings.beginGroup("recents");
     settings.setValue("geometry", saveGeometry());
     QMainWindow::closeEvent(event);
 }
@@ -249,6 +252,7 @@ void MainWindow::mouseDoubleClickEvent(QMouseEvent *event)
 void MainWindow::pickFile()
 {
     QSettings settings;
+    settings.beginGroup("recents");
     QFileDialog *fileDialog = new QFileDialog(this, tr("Open"), "", tr("Supported Files (*.bmp *.cur *.gif *.icns *.ico *.jp2 *.jpeg *.jpe *.jpg *.mng *.pbm *.pgm *.png *.ppm *.svg *.svgz *.tif *.tiff *.wbmp *.webp *.xbm *.xpm);;All Files (*)"));
     fileDialog->setDirectory(settings.value("lastFileDialogDir", QDir::homePath()).toString());
     fileDialog->open();
@@ -258,6 +262,7 @@ void MainWindow::pickFile()
 void MainWindow::openFile(const QString fileName)
 {
     QSettings settings;
+    settings.beginGroup("recents");
     ui->graphicsView->loadFile(fileName);
     settings.setValue("lastFileDialogDir", QFileInfo(fileName).path());
 }
@@ -266,7 +271,7 @@ void MainWindow::openFile(const QString fileName)
 void MainWindow::loadSettings()
 {
     QSettings settings;
-
+    settings.beginGroup("options");
     //menubar
     if (settings.value("menubarenabled", false).toBool())
         ui->menuBar->show();
@@ -282,6 +287,7 @@ void MainWindow::loadSettings()
 void MainWindow::updateRecentMenu()
 {
     QSettings settings;
+    settings.beginGroup("recents");
 
     //activate items after item is loaded for the first time
     if (ui->graphicsView->getCurrentFileDetails().isPixmapLoaded && !ui->actionOpen_Containing_Folder->isEnabled())
@@ -341,6 +347,7 @@ void MainWindow::updateRecentMenu()
 void MainWindow::openRecent(int i)
 {
     QSettings settings;
+    settings.beginGroup("recents");
     QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
     ui->graphicsView->loadFile(recentFiles[i].toList().last().toString());
 }
@@ -348,6 +355,7 @@ void MainWindow::openRecent(int i)
 void MainWindow::clearRecent()
 {
     QSettings settings;
+    settings.beginGroup("recents");
     QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
     for (int i = 0; i <= 9; i++)
     {
@@ -530,6 +538,7 @@ void MainWindow::on_actionSlideshow_triggered()
 void MainWindow::slideshowAction()
 {
     QSettings settings;
+    settings.beginGroup("options");
     if(settings.value("slideshowdirection", 0).toInt() == 0)
         on_actionNext_File_triggered();
     else
@@ -590,6 +599,7 @@ void MainWindow::on_actionIncrease_Speed_triggered()
 void MainWindow::on_actionSave_Frame_As_triggered()
 {
     QSettings settings;
+    settings.beginGroup("recents");
     if (!ui->graphicsView->getCurrentFileDetails().isMovieLoaded)
         return;
 
