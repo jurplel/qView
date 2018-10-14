@@ -353,6 +353,7 @@ void QVGraphicsView::loadFile(const QString &fileName)
 void QVGraphicsView::updateRecentFiles(const QFileInfo &file)
 {
     QSettings settings;
+    settings.beginGroup("recents");
     auto recentFiles = settings.value("recentFiles").value<QVariantList>();
     QStringList fileInfo;
 
@@ -589,7 +590,7 @@ void QVGraphicsView::fitInViewMarginless(bool setVariables)
 void QVGraphicsView::loadSettings()
 {
     QSettings settings;
-
+    settings.beginGroup("options");
     //bgcolor
     QBrush newBrush;
     newBrush.setStyle(Qt::SolidPattern);
