@@ -168,6 +168,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->menuFile->insertSeparator(ui->actionOpen_Containing_Folder);
     ui->menuTools->insertMenu(ui->actionSlideshow, gif);
 
+    addAction(ui->actionQuit);
+
     //macOS specific functions
     #ifdef Q_OS_MACX
     qApp->setAttribute(Qt::AA_DontShowIconsInMenus);
@@ -287,6 +289,8 @@ void MainWindow::updateRecentMenu()
         foreach(QAction* action, ui->menuView->actions())
             action->setEnabled(true);
         foreach(QAction* action, menu->actions())
+            action->setEnabled(true);
+        foreach(QAction* action, actions())
             action->setEnabled(true);
         ui->actionSlideshow->setEnabled(true);
     }

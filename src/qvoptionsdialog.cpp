@@ -62,7 +62,6 @@ void QVOptionsDialog::loadSettings()
     {
         ui->bgColorCheckbox->setChecked(false);
         ui->bgColorButton->setEnabled(false);
-        ui->bgColorLabel->setEnabled(false);
     }
 
     //filtering
@@ -120,19 +119,9 @@ void QVOptionsDialog::loadSettings()
 
 void QVOptionsDialog::updateBgColorButton()
 {
-    if (ui->bgColorButton->isEnabled())
-    {
-        QString textColor;
-        if (QColor(transientSettings.bgColor).lightness() > 128)
-            textColor = "#000000";
-        else
-            textColor = "#FFFFFF";
-        ui->bgColorButton->setStyleSheet("background-color: " + transientSettings.bgColor + "; color: " + textColor);
-    }
-    else
-    {
-       ui->bgColorButton->setStyleSheet("");
-    }
+    QPixmap newPixmap = QPixmap(32, 32);
+    newPixmap.fill(transientSettings.bgColor);
+    ui->bgColorButton->setIcon(QIcon(newPixmap));
 }
 
 void QVOptionsDialog::on_bgColorButton_clicked()
@@ -161,13 +150,11 @@ void QVOptionsDialog::on_bgColorCheckbox_stateChanged(int arg1)
     {
         transientSettings.bgColorEnabled = true;
         ui->bgColorButton->setEnabled(true);
-        ui->bgColorLabel->setEnabled(true);
     }
     else
     {
         transientSettings.bgColorEnabled = false;
         ui->bgColorButton->setEnabled(false);
-        ui->bgColorLabel->setEnabled(false);
     }
     updateBgColorButton();
 }
