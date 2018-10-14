@@ -617,6 +617,7 @@ void QVGraphicsView::loadSettings()
 
     //titlebar
     titlebarMode = settings.value("titlebarmode", 1).toInt();
+    setWindowTitle();
 
     //cropmode
     cropMode = settings.value("cropmode", 0).toInt();
