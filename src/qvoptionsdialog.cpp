@@ -46,10 +46,11 @@ void QVOptionsDialog::saveSettings()
     emit optionsSaved();
 }
 
-void QVOptionsDialog::loadSettings()
+void QVOptionsDialog::loadSettings(const bool defaults)
 {
     QSettings settings;
-    settings.beginGroup("options");
+    if (!defaults)
+        settings.beginGroup("options");
 
     //bgcolor
     transientSettings.bgColor = settings.value("bgcolor", QString("#212121")).toString();
@@ -77,6 +78,10 @@ void QVOptionsDialog::loadSettings()
     if (!transientSettings.scalingEnabled)
     {
         ui->scalingTwoCheckbox->setEnabled(false);
+    }
+    else
+    {
+        ui->scalingTwoCheckbox->setEnabled(true);
     }
 
     //titlebar
@@ -165,8 +170,7 @@ void QVOptionsDialog::on_buttonBox_clicked(QAbstractButton *button)
     else if (ui->buttonBox->buttonRole(button) == QDialogButtonBox::ResetRole)
     {
         QSettings settings;
-        settings.remove("options");
-        loadSettings();
+        loadSettings(true);
     }
 }
 

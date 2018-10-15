@@ -61,7 +61,7 @@ protected:
 private:
     Ui::QVOptionsDialog *ui;
     void saveSettings();
-    void loadSettings();
+    void loadSettings(const bool defaults = false);
 
     struct STransientSettings
     {

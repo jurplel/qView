@@ -150,6 +150,7 @@ bool QVGraphicsView::event(QEvent *event)
 
 void QVGraphicsView::wheelEvent(QWheelEvent *event)
 {
+    qDebug() << event->angleDelta().y();
     //Basically, if you are holding ctrl then it scrolls instead of zooms (the shift bit is for horizontal scrolling)
     bool mode = isScrollZoomsEnabled;
     if (event->modifiers() == Qt::ControlModifier || event->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier))
@@ -176,8 +177,11 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
 
 // Functions
 
-void QVGraphicsView::zoom(int DeltaY, QPoint pos)
+void QVGraphicsView::zoom(const int DeltaY, const QPoint pos, qreal targetScaleFactor)
 {
+    if (qFuzzyCompare(targetScaleFactor, 0))
+        targetScaleFactor = scaleFactor;
+
     QPointF originalMappedPos = mapToScene(pos);
     QPointF result;
 
@@ -196,13 +200,13 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
     {
         if (currentScale >= 500)
             return;
-        currentScale *= scaleFactor;
+        currentScale *= targetScaleFactor;
     }
     else
     {
         if (currentScale <= 0.01)
             return;
-        currentScale /= scaleFactor;
+        currentScale /= targetScaleFactor;
     }
 
     bool veto = false;
@@ -231,9 +235,9 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
 
         scaleExpensively(scaleMode::zoom);
         if (DeltaY > 0)
-            loadedPixmapItem->setScale(scaleFactor);
+            loadedPixmapItem->setScale(targetScaleFactor);
         else
-            loadedPixmapItem->setScale(qPow(scaleFactor, -1));
+            loadedPixmapItem->setScale(qPow(targetScaleFactor, -1));
 
         QPointF tripleMapped = loadedPixmapItem->mapToScene(doubleMapped);
         loadedPixmapItem->setScale(1.0);
@@ -241,7 +245,7 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
         //when you are zooming out from high zoom levels and hit the "ScalingTwo" level again,
         //this does one more matrix zoom and cancels the expensive zoom (needed for smoothness)
         if (cheapScaledLast && DeltaY < 0)
-            scale(qPow(scaleFactor, -1), qPow(scaleFactor, -1));
+            scale(qPow(targetScaleFactor, -1), qPow(targetScaleFactor, -1));
         else
             originalMappedPos = tripleMapped;
 
@@ -264,11 +268,11 @@ void QVGraphicsView::zoom(int DeltaY, QPoint pos)
             //this prevents a jitter when zooming in very quickly from below to above 1.0 on a movie
             if (getCurrentFileDetails().isMovieLoaded && !qFuzzyCompare(imageCore.getLoadedMovie().currentPixmap().height(), fittedHeight))
                 imageCore.jumpToNextFrame();
-            scale(scaleFactor, scaleFactor);
+            scale(targetScaleFactor, targetScaleFactor);
         }
         else
         {
-            scale(qPow(scaleFactor, -1), qPow(scaleFactor, -1));
+            scale(qPow(targetScaleFactor, -1), qPow(targetScaleFactor, -1));
             //when the pixmap is set to full resolution, reset the scale back to the fittedheight when going back to expensive scaling town
             if (!qFuzzyCompare(loadedPixmapItem->boundingRect().height(), fittedHeight) && qFuzzyCompare(currentScale, 1.0) && getCurrentFileDetails().isMovieLoaded && !isScalingTwoEnabled && isScalingEnabled)
                 resetScale();
