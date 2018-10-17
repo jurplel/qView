@@ -65,6 +65,7 @@ void QVOptionsDialog::loadSettings(const bool defaults)
     if (transientSettings.bgColorEnabled)
     {
         ui->bgColorCheckbox->setChecked(true);
+        ui->bgColorButton->setEnabled(true);
     }
     else
     {
@@ -148,6 +149,22 @@ void QVOptionsDialog::loadSettings(const bool defaults)
     //window resize mode
     transientSettings.windowResizeMode = settings.value("windowresizemode", 0).toInt();
     ui->windowResizeComboBox->setCurrentIndex(transientSettings.windowResizeMode);
+    if (transientSettings.windowResizeMode == 0)
+    {
+        ui->maxWindowResizeLabel0->setEnabled(false);
+        ui->maxWindowResizeLabel2->setEnabled(false);
+        ui->maxWindowResizeLabel1->setEnabled(false);
+        ui->maxWindowResizeSpinBox0->setEnabled(false);
+        ui->maxWindowResizeSpinBox1->setEnabled(false);
+    }
+    else
+    {
+        ui->maxWindowResizeLabel0->setEnabled(true);
+        ui->maxWindowResizeLabel2->setEnabled(true);
+        ui->maxWindowResizeLabel1->setEnabled(true);
+        ui->maxWindowResizeSpinBox0->setEnabled(true);
+        ui->maxWindowResizeSpinBox1->setEnabled(true);
+    }
 
     //maximum size for auto window resize
     QSize screenSize = QGuiApplication::primaryScreen()->availableSize();
@@ -321,6 +338,22 @@ void QVOptionsDialog::on_titlebarRadioButton2_clicked()
 void QVOptionsDialog::on_windowResizeComboBox_currentIndexChanged(int index)
 {
     transientSettings.windowResizeMode = index;
+    if (index == 0)
+    {
+        ui->maxWindowResizeLabel0->setEnabled(false);
+        ui->maxWindowResizeLabel2->setEnabled(false);
+        ui->maxWindowResizeLabel1->setEnabled(false);
+        ui->maxWindowResizeSpinBox0->setEnabled(false);
+        ui->maxWindowResizeSpinBox1->setEnabled(false);
+    }
+    else
+    {
+        ui->maxWindowResizeLabel0->setEnabled(true);
+        ui->maxWindowResizeLabel2->setEnabled(true);
+        ui->maxWindowResizeLabel1->setEnabled(true);
+        ui->maxWindowResizeSpinBox0->setEnabled(true);
+        ui->maxWindowResizeSpinBox1->setEnabled(true);
+    }
 }
 
 void QVOptionsDialog::on_maxWindowResizeSpinBox0_valueChanged(int arg1)

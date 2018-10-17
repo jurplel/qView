@@ -23,7 +23,7 @@
       <enum>Qt::NoFocus</enum>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="window">
       <property name="layoutDirection">
@@ -141,7 +141,7 @@
         </widget>
        </item>
        <item row="8" column="0">
-        <widget class="QLabel" name="label_7">
+        <widget class="QLabel" name="maxWindowResizeLabel0">
          <property name="toolTip">
           <string>Control the maximum size for the window to resize to when matching the image's actual size</string>
          </property>
@@ -163,7 +163,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLabel" name="label_8">
+          <widget class="QLabel" name="maxWindowResizeLabel1">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
              <horstretch>0</horstretch>
@@ -189,7 +189,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLabel" name="label_9">
+          <widget class="QLabel" name="maxWindowResizeLabel2">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
              <horstretch>0</horstretch>
