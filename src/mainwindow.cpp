@@ -422,7 +422,12 @@ void MainWindow::setWindowSize()
 
     if (imageSize.width() > maxWindowResizedSize.width() || imageSize.height() > maxWindowResizedSize.height())
         imageSize.scale(maxWindowResizedSize, Qt::KeepAspectRatio);
-    resize(imageSize);
+
+    QPoint pos = geometry().center();
+    pos.setX(pos.x()-imageSize.width()/2);
+    pos.setY(pos.y()-imageSize.height()/2);
+
+    setGeometry(QRect(pos, imageSize));
 }
 
 const bool& MainWindow::getIsPixmapLoaded() const
