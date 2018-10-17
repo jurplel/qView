@@ -27,6 +27,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     isScalingTwoEnabled = true;
     isPastActualSizeEnabled = true;
     isScrollZoomsEnabled = true;
+    isLoopFoldersEnabled = true;
     titlebarMode = 0;
     cropMode = 0;
     scaleFactor = 1.25;
@@ -509,7 +510,10 @@ void QVGraphicsView::goToFile(const goToFileMode mode, const int index)
     case goToFileMode::previous:
     {
         if (newIndex == 0)
-            newIndex = getCurrentFileDetails().folder.size()-1;
+        {
+            if (isLoopFoldersEnabled)
+                newIndex = getCurrentFileDetails().folder.size()-1;
+        }
         else
             newIndex--;
         break;
@@ -517,7 +521,10 @@ void QVGraphicsView::goToFile(const goToFileMode mode, const int index)
     case goToFileMode::next:
     {
         if (getCurrentFileDetails().folder.size()-1 == newIndex)
-            newIndex = 0;
+        {
+            if (isLoopFoldersEnabled)
+                newIndex = 0;
+        }
         else
             newIndex++;
         break;
@@ -637,6 +644,9 @@ void QVGraphicsView::loadSettings()
 
     //scrolling zoom
     isScrollZoomsEnabled = settings.value("scrollzoomsenabled", true).toBool();
+
+    //loop folders
+    isLoopFoldersEnabled = settings.value("loopfoldersenabled", true).toBool();
 
     if (getCurrentFileDetails().isPixmapLoaded)
         resetScale();
