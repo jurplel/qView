@@ -45,7 +45,7 @@ void QVOptionsDialog::saveSettings()
     settings.setValue("pastactualsizeenabled", transientSettings.pastActualSizeEnabled);
     settings.setValue("scrollzoomsenabled", transientSettings.scrollZoomsEnabled);
     settings.setValue("windowresizemode", transientSettings.windowResizeMode);
-    settings.setValue("maxwindowresizedsize", transientSettings.maxWindowResizedSize);
+    settings.setValue("maxwindowresizedpercentage", transientSettings.maxWindowResizedPercentage);
     settings.setValue("loopfoldersenabled", transientSettings.loopFoldersEnabled);
     emit optionsSaved();
 }
@@ -151,28 +151,18 @@ void QVOptionsDialog::loadSettings(const bool defaults)
     ui->windowResizeComboBox->setCurrentIndex(transientSettings.windowResizeMode);
     if (transientSettings.windowResizeMode == 0)
     {
-        ui->maxWindowResizeLabel0->setEnabled(false);
-        ui->maxWindowResizeLabel2->setEnabled(false);
-        ui->maxWindowResizeLabel1->setEnabled(false);
-        ui->maxWindowResizeSpinBox0->setEnabled(false);
-        ui->maxWindowResizeSpinBox1->setEnabled(false);
+        ui->maxWindowResizeLabel->setEnabled(false);
+        ui->maxWindowResizeSpinBox->setEnabled(false);
     }
     else
     {
-        ui->maxWindowResizeLabel0->setEnabled(true);
-        ui->maxWindowResizeLabel2->setEnabled(true);
-        ui->maxWindowResizeLabel1->setEnabled(true);
-        ui->maxWindowResizeSpinBox0->setEnabled(true);
-        ui->maxWindowResizeSpinBox1->setEnabled(true);
+        ui->maxWindowResizeLabel->setEnabled(true);
+        ui->maxWindowResizeSpinBox->setEnabled(true);
     }
 
     //maximum size for auto window resize
-    QSize screenSize = QGuiApplication::primaryScreen()->availableSize();
-    screenSize.scale(static_cast<int>(screenSize.width()*0.9), static_cast<int>(screenSize.height()*0.9), Qt::KeepAspectRatio);
-
-    transientSettings.maxWindowResizedSize = settings.value("maxwindowresizedsize", screenSize).toSize();
-    ui->maxWindowResizeSpinBox0->setValue(transientSettings.maxWindowResizedSize.width());
-    ui->maxWindowResizeSpinBox1->setValue(transientSettings.maxWindowResizedSize.height());
+    transientSettings.maxWindowResizedPercentage = settings.value("maxwindowresizedpercentage", 90).toInt();
+    ui->maxWindowResizeSpinBox->setValue(transientSettings.maxWindowResizedPercentage);
 
     //loop folders
     transientSettings.loopFoldersEnabled = settings.value("loopfoldersenabled", true).toBool();
@@ -340,30 +330,19 @@ void QVOptionsDialog::on_windowResizeComboBox_currentIndexChanged(int index)
     transientSettings.windowResizeMode = index;
     if (index == 0)
     {
-        ui->maxWindowResizeLabel0->setEnabled(false);
-        ui->maxWindowResizeLabel2->setEnabled(false);
-        ui->maxWindowResizeLabel1->setEnabled(false);
-        ui->maxWindowResizeSpinBox0->setEnabled(false);
-        ui->maxWindowResizeSpinBox1->setEnabled(false);
+        ui->maxWindowResizeLabel->setEnabled(false);
+        ui->maxWindowResizeSpinBox->setEnabled(false);
     }
     else
     {
-        ui->maxWindowResizeLabel0->setEnabled(true);
-        ui->maxWindowResizeLabel2->setEnabled(true);
-        ui->maxWindowResizeLabel1->setEnabled(true);
-        ui->maxWindowResizeSpinBox0->setEnabled(true);
-        ui->maxWindowResizeSpinBox1->setEnabled(true);
+        ui->maxWindowResizeLabel->setEnabled(true);
+        ui->maxWindowResizeSpinBox->setEnabled(true);
     }
 }
 
-void QVOptionsDialog::on_maxWindowResizeSpinBox0_valueChanged(int arg1)
+void QVOptionsDialog::on_maxWindowResizeSpinBox_valueChanged(int arg1)
 {
-    transientSettings.maxWindowResizedSize.setWidth(arg1);
-}
-
-void QVOptionsDialog::on_maxWindowResizeSpinBox1_valueChanged(int arg1)
-{
-    transientSettings.maxWindowResizedSize.setHeight(arg1);
+    transientSettings.maxWindowResizedPercentage = arg1;
 }
 
 void QVOptionsDialog::on_loopFoldersCheckbox_stateChanged(int arg1)
