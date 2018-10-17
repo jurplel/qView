@@ -150,7 +150,6 @@ bool QVGraphicsView::event(QEvent *event)
 
 void QVGraphicsView::wheelEvent(QWheelEvent *event)
 {
-    qDebug() << event->angleDelta().y();
     //Basically, if you are holding ctrl then it scrolls instead of zooms (the shift bit is for horizontal scrolling)
     bool mode = isScrollZoomsEnabled;
     if (event->modifiers() == Qt::ControlModifier || event->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier))
@@ -349,7 +348,7 @@ void QVGraphicsView::loadFile(const QString &fileName)
 
     //post-load operations
     resetScale();
-    parentMainWindow->refreshProperties();
+    emit fileLoaded();
     updateRecentFiles(getCurrentFileDetails().fileInfo);
     setWindowTitle();
 }

@@ -57,6 +57,9 @@ public:
     const QPixmap& getLoadedPixmap() const;
     const QMovie& getLoadedMovie() const;
 
+signals:
+    void fileLoaded();
+
 protected:
     void wheelEvent(QWheelEvent *event) override;
 

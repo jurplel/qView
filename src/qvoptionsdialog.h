@@ -55,6 +55,8 @@ private slots:
 
     void on_titlebarRadioButton2_clicked();
 
+    void on_windowResizeComboBox_currentIndexChanged(int index);
+
 protected:
     virtual void showEvent(QShowEvent *event);
 
@@ -79,6 +81,7 @@ private:
         bool scalingTwoEnabled;
         bool pastActualSizeEnabled;
         bool scrollZoomsEnabled;
+        int windowResizeMode;
     };
 
     STransientSettings transientSettings;

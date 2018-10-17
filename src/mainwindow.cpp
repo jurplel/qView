@@ -22,12 +22,19 @@
 #include <QIcon>
 #include <QMimeDatabase>
 #include <QShortcut>
+#include <QScreen>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    windowResizeMode = 0;
+    justLaunchedWithImage = false;
+
+    //connect function for setting window size to file loaded signal
+    connect(ui->graphicsView, &QVGraphicsView::fileLoaded, this, &MainWindow::fileLoaded);
 
     //Enable drag&dropping
     setAcceptDrops(true);
@@ -263,8 +270,9 @@ void MainWindow::openFile(const QString fileName)
 {
     QSettings settings;
     settings.beginGroup("recents");
-    ui->graphicsView->loadFile(fileName);
     settings.setValue("lastFileDialogDir", QFileInfo(fileName).path());
+
+    ui->graphicsView->loadFile(fileName);
 }
 
 
@@ -280,6 +288,8 @@ void MainWindow::loadSettings()
 
     //slideshowtimer
     slideshowTimer->setInterval(settings.value("slideshowtimer", 5).toInt()*1000);
+
+    windowResizeMode = settings.value("windowresizemode", 0).toInt();
 
     ui->graphicsView->loadSettings();
 }
@@ -374,6 +384,17 @@ void MainWindow::clearRecent()
     updateRecentMenu();
 }
 
+
+void MainWindow::fileLoaded()
+{
+    refreshProperties();
+    if (windowResizeMode == 2 || (windowResizeMode == 1 && justLaunchedWithImage))
+    {
+        justLaunchedWithImage = false;
+        setWindowSize();
+    }
+}
+
 void MainWindow::refreshProperties()
 {
     int value4;
@@ -385,9 +406,28 @@ void MainWindow::refreshProperties()
 
 }
 
+void MainWindow::setWindowSize()
+{
+    QSize screenSize = QGuiApplication::primaryScreen()->availableSize();
+    qDebug() << screenSize;
+    screenSize.scale(static_cast<int>(screenSize.width()*0.9), static_cast<int>(screenSize.height()*0.9), Qt::KeepAspectRatio);
+    qDebug() << screenSize;
+
+    QSize imageSize = QSize(ui->graphicsView->getLoadedPixmap().width(), ui->graphicsView->getLoadedPixmap().height());
+
+    if (imageSize.width() > screenSize.width() || imageSize.height() > screenSize.height())
+        imageSize.scale(screenSize, Qt::KeepAspectRatio);
+    resize(imageSize);
+}
+
 const bool& MainWindow::getIsPixmapLoaded() const
 {
     return ui->graphicsView->getCurrentFileDetails().isPixmapLoaded;
+}
+
+void MainWindow::setJustLaunchedWithImage(const bool value)
+{
+    justLaunchedWithImage = value;
 }
 
 // Actions

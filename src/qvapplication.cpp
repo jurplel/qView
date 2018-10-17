@@ -19,11 +19,13 @@ void QVApplication::openFile(QString file)
 {
     if (!getMainWindow()->getIsPixmapLoaded())
     {
+        getMainWindow()->setJustLaunchedWithImage(true);
         getMainWindow()->openFile(file);
     }
     else
     {
         MainWindow *w = newWindow();
+        w->setJustLaunchedWithImage(true);
         w->openFile(file);
     }
 }
