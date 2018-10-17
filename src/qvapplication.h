@@ -13,7 +13,7 @@ public:
 
     bool event(QEvent *event) override;
 
-    void openFile(QString file);
+    void openFile(const QString file);
 
     MainWindow *newWindow();
 
