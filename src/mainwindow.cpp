@@ -185,7 +185,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //macOS specific functions
     #ifdef Q_OS_MACX
-    qApp->setAttribute(Qt::AA_DontShowIconsInMenus);
     ui->menuView->removeAction(ui->actionFull_Screen);
     ui->actionNew_Window->setVisible(true);
     ui->actionOptions->setText(tr("Preferences"));
@@ -198,7 +197,6 @@ MainWindow::MainWindow(QWidget *parent) :
     dockMenu->addAction(ui->actionNew_Window);
     dockMenu->addAction(ui->actionOpen);
     #elif defined(Q_OS_WIN)
-    qApp->setAttribute(Qt::AA_DontShowIconsInMenus);
     ui->actionOpen_Containing_Folder->setText(tr("Show in Explorer"));
     #endif
 
@@ -671,6 +669,7 @@ void MainWindow::on_actionSave_Frame_As_triggered()
 void MainWindow::on_actionQuit_triggered()
 {
     close();
+    qApp->quit();
 }
 
 void MainWindow::on_actionFirst_File_triggered()
