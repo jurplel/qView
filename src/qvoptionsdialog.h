@@ -61,6 +61,8 @@ private slots:
 
     void on_maxWindowResizeSpinBox1_valueChanged(int arg1);
 
+    void on_loopFoldersCheckbox_stateChanged(int arg1);
+
 protected:
     virtual void showEvent(QShowEvent *event);
 
@@ -87,6 +89,7 @@ private:
         bool scrollZoomsEnabled;
         int windowResizeMode;
         QSize maxWindowResizedSize;
+        bool loopFoldersEnabled;
     };
 
     STransientSettings transientSettings;
