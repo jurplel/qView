@@ -2,6 +2,7 @@
 #include "ui_qvoptionsdialog.h"
 #include <QColorDialog>
 #include <QPalette>
+#include <QScreen>
 
 QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     QDialog(parent),
@@ -44,6 +45,7 @@ void QVOptionsDialog::saveSettings()
     settings.setValue("pastactualsizeenabled", transientSettings.pastActualSizeEnabled);
     settings.setValue("scrollzoomsenabled", transientSettings.scrollZoomsEnabled);
     settings.setValue("windowresizemode", transientSettings.windowResizeMode);
+    settings.setValue("maxwindowresizedsize", transientSettings.maxWindowResizedSize);
     emit optionsSaved();
 }
 
@@ -142,8 +144,17 @@ void QVOptionsDialog::loadSettings(const bool defaults)
     transientSettings.scrollZoomsEnabled = settings.value("scrollzoomsenabled", true).toBool();
     ui->scrollZoomsCheckbox->setChecked(transientSettings.scrollZoomsEnabled);
 
+    //window resize mode
     transientSettings.windowResizeMode = settings.value("windowresizemode", 0).toInt();
     ui->windowResizeComboBox->setCurrentIndex(transientSettings.windowResizeMode);
+
+    //maximum size for auto window resize
+    QSize screenSize = QGuiApplication::primaryScreen()->availableSize();
+    screenSize.scale(static_cast<int>(screenSize.width()*0.9), static_cast<int>(screenSize.height()*0.9), Qt::KeepAspectRatio);
+
+    transientSettings.maxWindowResizedSize = settings.value("maxwindowresizedsize", screenSize).toSize();
+    ui->maxWindowResizeSpinBox0->setValue(transientSettings.maxWindowResizedSize.width());
+    ui->maxWindowResizeSpinBox1->setValue(transientSettings.maxWindowResizedSize.height());
 }
 
 void QVOptionsDialog::updateBgColorButton()
@@ -305,4 +316,14 @@ void QVOptionsDialog::on_titlebarRadioButton2_clicked()
 void QVOptionsDialog::on_windowResizeComboBox_currentIndexChanged(int index)
 {
     transientSettings.windowResizeMode = index;
+}
+
+void QVOptionsDialog::on_maxWindowResizeSpinBox0_valueChanged(int arg1)
+{
+    transientSettings.maxWindowResizedSize.setWidth(arg1);
+}
+
+void QVOptionsDialog::on_maxWindowResizeSpinBox1_valueChanged(int arg1)
+{
+    transientSettings.maxWindowResizedSize.setHeight(arg1);
 }
