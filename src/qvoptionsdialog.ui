@@ -23,7 +23,7 @@
       <enum>Qt::NoFocus</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="window">
       <property name="layoutDirection">
@@ -110,6 +110,9 @@
        </item>
        <item row="7" column="0">
         <widget class="QLabel" name="label_6">
+         <property name="toolTip">
+          <string>Control when the window should resize to fit the image's actual size</string>
+         </property>
          <property name="text">
           <string>Window matches image size:</string>
          </property>
@@ -117,6 +120,9 @@
        </item>
        <item row="7" column="1">
         <widget class="QComboBox" name="windowResizeComboBox">
+         <property name="toolTip">
+          <string>Control when the window should resize to fit the image's actual size</string>
+         </property>
          <item>
           <property name="text">
            <string>Never</string>
@@ -136,6 +142,9 @@
        </item>
        <item row="8" column="0">
         <widget class="QLabel" name="label_7">
+         <property name="toolTip">
+          <string>Control the maximum size for the window to resize to when matching the image's actual size</string>
+         </property>
          <property name="text">
           <string>Up to:</string>
          </property>
@@ -145,6 +154,9 @@
         <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
           <widget class="QSpinBox" name="maxWindowResizeSpinBox0">
+           <property name="toolTip">
+            <string>Control the maximum size for the window to resize to when matching the image's actual size</string>
+           </property>
            <property name="maximum">
             <number>9999</number>
            </property>
@@ -158,6 +170,9 @@
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
+           <property name="toolTip">
+            <string>Control the maximum size for the window to resize to when matching the image's actual size</string>
+           </property>
            <property name="text">
             <string>x</string>
            </property>
@@ -165,6 +180,9 @@
          </item>
          <item>
           <widget class="QSpinBox" name="maxWindowResizeSpinBox1">
+           <property name="toolTip">
+            <string>Control the maximum size for the window to resize to when matching the image's actual size</string>
+           </property>
            <property name="maximum">
             <number>9999</number>
            </property>
@@ -177,6 +195,9 @@
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
+           </property>
+           <property name="toolTip">
+            <string>Control the maximum size for the window to resize to when matching the image's actual size</string>
            </property>
            <property name="text">
             <string>px</string>
@@ -395,9 +416,9 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="slideshow">
+     <widget class="QWidget" name="misc">
       <attribute name="title">
-       <string>Slideshow</string>
+       <string>Miscellaneous</string>
       </attribute>
       <layout class="QFormLayout" name="formLayout_3">
        <item row="0" column="0">
@@ -443,6 +464,32 @@
           <number>5</number>
          </property>
         </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QCheckBox" name="loopFoldersCheckbox">
+         <property name="toolTip">
+          <string>Controls whether or not qView should go back to the first item after reaching the end of a folder</string>
+         </property>
+         <property name="text">
+          <string>Loop through folders</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <spacer name="horizontalSpacer_5">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>5</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>

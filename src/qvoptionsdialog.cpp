@@ -46,6 +46,7 @@ void QVOptionsDialog::saveSettings()
     settings.setValue("scrollzoomsenabled", transientSettings.scrollZoomsEnabled);
     settings.setValue("windowresizemode", transientSettings.windowResizeMode);
     settings.setValue("maxwindowresizedsize", transientSettings.maxWindowResizedSize);
+    settings.setValue("loopfoldersenabled", transientSettings.loopFoldersEnabled);
     emit optionsSaved();
 }
 
@@ -155,6 +156,10 @@ void QVOptionsDialog::loadSettings(const bool defaults)
     transientSettings.maxWindowResizedSize = settings.value("maxwindowresizedsize", screenSize).toSize();
     ui->maxWindowResizeSpinBox0->setValue(transientSettings.maxWindowResizedSize.width());
     ui->maxWindowResizeSpinBox1->setValue(transientSettings.maxWindowResizedSize.height());
+
+    //loop folders
+    transientSettings.loopFoldersEnabled = settings.value("loopfoldersenabled", true).toBool();
+    ui->loopFoldersCheckbox->setChecked(transientSettings.loopFoldersEnabled);
 }
 
 void QVOptionsDialog::updateBgColorButton()
@@ -326,4 +331,16 @@ void QVOptionsDialog::on_maxWindowResizeSpinBox0_valueChanged(int arg1)
 void QVOptionsDialog::on_maxWindowResizeSpinBox1_valueChanged(int arg1)
 {
     transientSettings.maxWindowResizedSize.setHeight(arg1);
+}
+
+void QVOptionsDialog::on_loopFoldersCheckbox_stateChanged(int arg1)
+{
+    if (arg1 > 0)
+    {
+        transientSettings.loopFoldersEnabled = true;
+    }
+    else
+    {
+        transientSettings.loopFoldersEnabled = false;
+    }
 }
