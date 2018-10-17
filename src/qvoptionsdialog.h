@@ -57,6 +57,10 @@ private slots:
 
     void on_windowResizeComboBox_currentIndexChanged(int index);
 
+    void on_maxWindowResizeSpinBox0_valueChanged(int arg1);
+
+    void on_maxWindowResizeSpinBox1_valueChanged(int arg1);
+
 protected:
     virtual void showEvent(QShowEvent *event);
 
@@ -82,6 +86,7 @@ private:
         bool pastActualSizeEnabled;
         bool scrollZoomsEnabled;
         int windowResizeMode;
+        QSize maxWindowResizedSize;
     };
 
     STransientSettings transientSettings;

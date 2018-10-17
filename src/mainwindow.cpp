@@ -30,8 +30,13 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    //initialize variables
     windowResizeMode = 0;
     justLaunchedWithImage = false;
+
+    QSize screenSize = QGuiApplication::primaryScreen()->availableSize();
+    screenSize.scale(static_cast<int>(screenSize.width()*0.9), static_cast<int>(screenSize.height()*0.9), Qt::KeepAspectRatio);
+    maxWindowResizedSize = screenSize;
 
     //connect function for setting window size to file loaded signal
     connect(ui->graphicsView, &QVGraphicsView::fileLoaded, this, &MainWindow::fileLoaded);
@@ -289,7 +294,13 @@ void MainWindow::loadSettings()
     //slideshowtimer
     slideshowTimer->setInterval(settings.value("slideshowtimer", 5).toInt()*1000);
 
+    //window resize mode
     windowResizeMode = settings.value("windowresizemode", 0).toInt();
+
+    //max window resize mode size
+    QSize screenSize = QGuiApplication::primaryScreen()->availableSize();
+    screenSize.scale(static_cast<int>(screenSize.width()*0.9), static_cast<int>(screenSize.height()*0.9), Qt::KeepAspectRatio);
+    maxWindowResizedSize = settings.value("maxwindowresizedsize", screenSize).toSize();
 
     ui->graphicsView->loadSettings();
 }
@@ -408,15 +419,11 @@ void MainWindow::refreshProperties()
 
 void MainWindow::setWindowSize()
 {
-    QSize screenSize = QGuiApplication::primaryScreen()->availableSize();
-    qDebug() << screenSize;
-    screenSize.scale(static_cast<int>(screenSize.width()*0.9), static_cast<int>(screenSize.height()*0.9), Qt::KeepAspectRatio);
-    qDebug() << screenSize;
 
     QSize imageSize = QSize(ui->graphicsView->getLoadedPixmap().width(), ui->graphicsView->getLoadedPixmap().height());
 
-    if (imageSize.width() > screenSize.width() || imageSize.height() > screenSize.height())
-        imageSize.scale(screenSize, Qt::KeepAspectRatio);
+    if (imageSize.width() > maxWindowResizedSize.width() || imageSize.height() > maxWindowResizedSize.height())
+        imageSize.scale(maxWindowResizedSize, Qt::KeepAspectRatio);
     resize(imageSize);
 }
 
