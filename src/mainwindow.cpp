@@ -426,8 +426,6 @@ void MainWindow::setWindowSize()
     QPoint pos = geometry().center();
     pos.setX(pos.x()+1-imageSize.width()/2);
     pos.setY(pos.y()+1-imageSize.height()/2);
-    qDebug() << pos;
-    qDebug() << imageSize.width()/2;
     setGeometry(QRect(pos, imageSize));
 }
 
