@@ -348,8 +348,8 @@ void QVGraphicsView::loadFile(const QString &fileName)
         movieCenterNeedsUpdating = false;
 
     //post-load operations
-    resetScale();
     emit fileLoaded();
+    resetScale();
     updateRecentFiles(getCurrentFileDetails().fileInfo);
     setWindowTitle();
 }
