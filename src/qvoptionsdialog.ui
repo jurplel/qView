@@ -141,7 +141,7 @@
         </widget>
        </item>
        <item row="8" column="0">
-        <widget class="QLabel" name="maxWindowResizeLabel0">
+        <widget class="QLabel" name="maxWindowResizeLabel">
          <property name="toolTip">
           <string>Control the maximum size for the window to resize to when matching the image's actual size</string>
          </property>
@@ -149,62 +149,6 @@
           <string>Up to:</string>
          </property>
         </widget>
-       </item>
-       <item row="8" column="1">
-        <layout class="QHBoxLayout" name="horizontalLayout">
-         <item>
-          <widget class="QSpinBox" name="maxWindowResizeSpinBox0">
-           <property name="toolTip">
-            <string>Control the maximum size for the window to resize to when matching the image's actual size</string>
-           </property>
-           <property name="maximum">
-            <number>9999</number>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="maxWindowResizeLabel1">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="toolTip">
-            <string>Control the maximum size for the window to resize to when matching the image's actual size</string>
-           </property>
-           <property name="text">
-            <string>x</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QSpinBox" name="maxWindowResizeSpinBox1">
-           <property name="toolTip">
-            <string>Control the maximum size for the window to resize to when matching the image's actual size</string>
-           </property>
-           <property name="maximum">
-            <number>9999</number>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="maxWindowResizeLabel2">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="toolTip">
-            <string>Control the maximum size for the window to resize to when matching the image's actual size</string>
-           </property>
-           <property name="text">
-            <string>px</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
        </item>
        <item row="9" column="1">
         <spacer name="horizontalSpacer_3">
@@ -238,6 +182,25 @@
           </size>
          </property>
         </spacer>
+       </item>
+       <item row="8" column="1">
+        <widget class="QSpinBox" name="maxWindowResizeSpinBox">
+         <property name="suffix">
+          <string>% of screen size</string>
+         </property>
+         <property name="minimum">
+          <number>10</number>
+         </property>
+         <property name="maximum">
+          <number>100</number>
+         </property>
+         <property name="singleStep">
+          <number>5</number>
+         </property>
+         <property name="value">
+          <number>90</number>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -308,10 +271,10 @@
           <string>The amount to zoom every scroll wheel click</string>
          </property>
          <property name="suffix">
-          <string>%</string>
+          <string notr="true">%</string>
          </property>
          <property name="minimum">
-          <number>5</number>
+          <number>1</number>
          </property>
          <property name="maximum">
           <number>200</number>

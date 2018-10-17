@@ -125,7 +125,7 @@ private:
 
     int windowResizeMode;
     bool justLaunchedWithImage;
-    QSize maxWindowResizedSize;
+    qreal maxWindowResizedConstant;
 };
 
 #endif // MAINWINDOW_H
