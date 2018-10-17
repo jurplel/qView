@@ -108,13 +108,6 @@
          </property>
         </widget>
        </item>
-       <item row="6" column="1">
-        <widget class="QCheckBox" name="menubarCheckbox">
-         <property name="text">
-          <string>Show menubar</string>
-         </property>
-        </widget>
-       </item>
        <item row="4" column="1">
         <spacer name="horizontalSpacer_3">
          <property name="orientation">
@@ -127,6 +120,39 @@
           </size>
          </property>
         </spacer>
+       </item>
+       <item row="6" column="1">
+        <widget class="QCheckBox" name="menubarCheckbox">
+         <property name="text">
+          <string>Show menubar</string>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="0">
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string>Window matches image size:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="1">
+        <widget class="QComboBox" name="windowResizeComboBox">
+         <item>
+          <property name="text">
+           <string>Never</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>When launching</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>When opening images</string>
+          </property>
+         </item>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -374,32 +400,32 @@
  <connections>
   <connection>
    <sender>buttonBox</sender>
-   <signal>accepted()</signal>
+   <signal>rejected()</signal>
    <receiver>QVOptionsDialog</receiver>
-   <slot>accept()</slot>
+   <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>325</x>
+     <y>332</y>
     </hint>
     <hint type="destinationlabel">
-     <x>157</x>
+     <x>286</x>
      <y>274</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>buttonBox</sender>
-   <signal>rejected()</signal>
+   <signal>accepted()</signal>
    <receiver>QVOptionsDialog</receiver>
-   <slot>reject()</slot>
+   <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>257</x>
+     <y>332</y>
     </hint>
     <hint type="destinationlabel">
-     <x>286</x>
+     <x>157</x>
      <y>274</y>
     </hint>
    </hints>

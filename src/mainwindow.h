@@ -20,12 +20,18 @@ public:
 
     void refreshProperties();
 
+    void setWindowSize();
+
     const bool& getIsPixmapLoaded() const;
+
+    void setJustLaunchedWithImage(const bool value);
 
 public slots:
     void openFile(const QString fileName);
 
     void slideshowAction();
+
+    void fileLoaded();
 
 protected:
     void contextMenuEvent(QContextMenuEvent *event) override;
@@ -116,6 +122,9 @@ private:
     QList<QAction*> recentItems;
 
     QVInfoDialog *info;
+
+    int windowResizeMode;
+    bool justLaunchedWithImage;
 };
 
 #endif // MAINWINDOW_H

@@ -43,6 +43,7 @@ void QVOptionsDialog::saveSettings()
     settings.setValue("scalingtwoenabled", transientSettings.scalingTwoEnabled);
     settings.setValue("pastactualsizeenabled", transientSettings.pastActualSizeEnabled);
     settings.setValue("scrollzoomsenabled", transientSettings.scrollZoomsEnabled);
+    settings.setValue("windowresizemode", transientSettings.windowResizeMode);
     emit optionsSaved();
 }
 
@@ -140,6 +141,9 @@ void QVOptionsDialog::loadSettings(const bool defaults)
     //resize past actual size
     transientSettings.scrollZoomsEnabled = settings.value("scrollzoomsenabled", true).toBool();
     ui->scrollZoomsCheckbox->setChecked(transientSettings.scrollZoomsEnabled);
+
+    transientSettings.windowResizeMode = settings.value("windowresizemode", 0).toInt();
+    ui->windowResizeComboBox->setCurrentIndex(transientSettings.windowResizeMode);
 }
 
 void QVOptionsDialog::updateBgColorButton()
@@ -296,4 +300,9 @@ void QVOptionsDialog::on_titlebarRadioButton1_clicked()
 void QVOptionsDialog::on_titlebarRadioButton2_clicked()
 {
     transientSettings.titlebarMode = 2;
+}
+
+void QVOptionsDialog::on_windowResizeComboBox_currentIndexChanged(int index)
+{
+    transientSettings.windowResizeMode = index;
 }

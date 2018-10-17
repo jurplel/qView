@@ -21,7 +21,10 @@ int main(int argc, char *argv[])
 
 
     if (!parser.positionalArguments().isEmpty())
+    {
+        w.setJustLaunchedWithImage(true);
         w.openFile(parser.positionalArguments().first());
+    }
 
     return a.exec();
 }
