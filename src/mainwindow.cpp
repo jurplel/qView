@@ -34,9 +34,7 @@ MainWindow::MainWindow(QWidget *parent) :
     windowResizeMode = 0;
     justLaunchedWithImage = false;
 
-    QSize screenSize = QGuiApplication::primaryScreen()->availableSize();
-    screenSize.scale(static_cast<int>(screenSize.width()*0.9), static_cast<int>(screenSize.height()*0.9), Qt::KeepAspectRatio);
-    maxWindowResizedSize = screenSize;
+    maxWindowResizedConstant = 0.9;
 
     //connect function for setting window size to file loaded signal
     connect(ui->graphicsView, &QVGraphicsView::fileLoaded, this, &MainWindow::fileLoaded);
@@ -296,9 +294,7 @@ void MainWindow::loadSettings()
     windowResizeMode = settings.value("windowresizemode", 0).toInt();
 
     //max window resize mode size
-    QSize screenSize = QGuiApplication::primaryScreen()->availableSize();
-    screenSize.scale(static_cast<int>(screenSize.width()*0.9), static_cast<int>(screenSize.height()*0.9), Qt::KeepAspectRatio);
-    maxWindowResizedSize = settings.value("maxwindowresizedsize", screenSize).toSize();
+    maxWindowResizedConstant = settings.value("maxwindowresizedpercentage", 90).toReal()/100;
 
     ui->graphicsView->loadSettings();
 }
@@ -420,8 +416,11 @@ void MainWindow::setWindowSize()
 
     QSize imageSize = QSize(ui->graphicsView->getLoadedPixmap().width(), ui->graphicsView->getLoadedPixmap().height());
 
-    if (imageSize.width() > maxWindowResizedSize.width() || imageSize.height() > maxWindowResizedSize.height())
-        imageSize.scale(maxWindowResizedSize, Qt::KeepAspectRatio);
+    QSize currentScreenSize = QGuiApplication::screenAt(geometry().center())->size();
+    currentScreenSize *= maxWindowResizedConstant;
+
+    if (imageSize.width() > currentScreenSize.width() || imageSize.height() > currentScreenSize.height())
+        imageSize.scale(currentScreenSize, Qt::KeepAspectRatio);
 
     QPoint pos = geometry().center();
     pos.setX(pos.x()+1-imageSize.width()/2);
