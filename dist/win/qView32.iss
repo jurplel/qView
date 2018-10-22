@@ -4,7 +4,7 @@
 #define MyAppExeName "qView.exe"
 
 ; Update these when building
-#define MyAppVersion "1.1"
+#define MyAppVersion "2.0"
 #define MyAppYear "2018"
 
 [Setup]
@@ -25,7 +25,7 @@ WizardImageFile=wiz.bmp
 UninstallDisplayName={#MyAppName}
 UninstallDisplayIcon={app}\{#MyAppExeName}
 VersionInfoVersion={#MyAppVersion}
-AppCopyright=Copyright ï¿½ 2018-{#MyAppYear}, {#MyAppPublisher}
+AppCopyright=Copyright © 2018-{#MyAppYear}, {#MyAppPublisher}
 MinVersion=0,6.1
 DisableProgramGroupPage=yes
 ChangesAssociations=yes
