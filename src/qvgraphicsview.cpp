@@ -278,7 +278,7 @@ void QVGraphicsView::zoom(const int DeltaY, const QPoint pos, qreal targetScaleF
         {
             scale(qPow(targetScaleFactor, -1), qPow(targetScaleFactor, -1));
             //when the pixmap is set to full resolution, reset the scale back to the fittedheight when going back to expensive scaling town
-            if (!qFuzzyCompare(loadedPixmapItem->boundingRect().height(), fittedHeight) && qFuzzyCompare(currentScale, 1.0) && getCurrentFileDetails().isMovieLoaded && !isScalingTwoEnabled && isScalingEnabled)
+            if (!qFuzzyCompare(loadedPixmapItem->boundingRect().height(), fittedHeight) && qFuzzyCompare(currentScale, 1.0) && !getCurrentFileDetails().isMovieLoaded && !isScalingTwoEnabled && isScalingEnabled)
                 resetScale();
         }
         cheapScaledLast = true;
