@@ -392,12 +392,12 @@ void MainWindow::clearRecent()
 
 void MainWindow::fileLoaded()
 {
-    refreshProperties();
     if (windowResizeMode == 2 || (windowResizeMode == 1 && justLaunchedWithImage))
     {
         justLaunchedWithImage = false;
         setWindowSize();
     }
+    refreshProperties();
 }
 
 void MainWindow::refreshProperties()
@@ -547,13 +547,9 @@ void MainWindow::on_actionProperties_triggered()
 void MainWindow::on_actionFull_Screen_triggered()
 {
     if (windowState() == Qt::WindowFullScreen)
-    {
         showNormal();
-    }
     else
-    {
         showFullScreen();
-    }
 }
 
 void MainWindow::on_actionOriginal_Size_triggered()
