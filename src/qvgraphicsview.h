@@ -43,7 +43,7 @@ public:
 
     void resetScale();
     void scaleExpensively(scaleMode mode);
-    void originalSize();
+    void originalSize(bool setVariables = true);
 
     void goToFile(const goToFileMode mode, const int index = 0);
 

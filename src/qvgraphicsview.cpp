@@ -328,7 +328,7 @@ void QVGraphicsView::animatedFrameChanged(QRect rect)
         movieCenterNeedsUpdating = false;
         centerOn(loadedPixmapItem);
         if (qFuzzyCompare(currentScale, 1.0) && !isOriginalSize)
-            fitInViewMarginless();
+            resetScale();
     }
 }
 
@@ -417,9 +417,8 @@ void QVGraphicsView::resetScale()
         if ((cropMode == 1 && height() >= imageCore.getLoadedPixmap().height()) || (cropMode == 2 && width() >= imageCore.getLoadedPixmap().width())
         || (cropMode == 0  && height() >= imageCore.getLoadedPixmap().height() && width() >= imageCore.getLoadedPixmap().width()))
         {
-            if (!getCurrentFileDetails().isMovieLoaded)
-                loadedPixmapItem->setPixmap(imageCore.getLoadedPixmap());
-            centerOn(loadedPixmapItem->boundingRect().center());
+            if (!isOriginalSize)
+                originalSize(false);
             return;
         }
 
@@ -471,24 +470,28 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
         movieCenterNeedsUpdating = true;
 }
 
-void QVGraphicsView::originalSize()
+void QVGraphicsView::originalSize(bool setVariables)
 {
     if (isOriginalSize)
     {
         resetScale();
         return;
     }
-    movieCenterNeedsUpdating = true;
-    isOriginalSize = true;
     if (getCurrentFileDetails().isMovieLoaded)
         imageCore.scaleExpensively(imageCore.getLoadedPixmap().size());
     else
         loadedPixmapItem->setPixmap(imageCore.getLoadedPixmap());
-    resetMatrix();
+    resetTransform();
     centerOn(loadedPixmapItem->boundingRect().center());
 
     fittedHeight = loadedPixmapItem->boundingRect().height();
     fittedWidth = loadedPixmapItem->boundingRect().width();
+
+    if (setVariables)
+    {
+        movieCenterNeedsUpdating = true;
+        isOriginalSize = true;
+    }
 }
 
 
