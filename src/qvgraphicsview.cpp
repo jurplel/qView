@@ -40,7 +40,6 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     cheapScaledLast = false;
     movieCenterNeedsUpdating = false;
     isOriginalSize = false;
-    setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
 
     connect(&imageCore, &QVImageCore::animatedFrameChanged, this, &QVGraphicsView::animatedFrameChanged);
 
