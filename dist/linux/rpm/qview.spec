@@ -1,12 +1,12 @@
 Name:		qview
-Version:	1.1
+Version:	2.0
 Release:	1
 Summary:	Practical and minimal image viewer
 
 Group:		Applications/Multimedia
 License:	GPLv3
 URL:		https://interverse.tk/qview
-Source0:	https://github.com/jeep70/qView/releases/download/1.1/qView-1.1.tar.gz
+Source0:	https://github.com/jeep70/qView/releases/download/%{version}/qView-%{version}.tar.gz
 
 
 %description
