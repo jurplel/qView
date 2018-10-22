@@ -179,9 +179,11 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
 
 void QVGraphicsView::zoom(const int DeltaY, const QPoint pos, qreal targetScaleFactor)
 {
+    //if targetScaleFactor is 0 (default) - use scaleFactor variable
     if (qFuzzyCompare(targetScaleFactor, 0))
         targetScaleFactor = scaleFactor;
 
+    //define variables for later
     QPointF originalMappedPos = mapToScene(pos);
     QPointF result;
 
@@ -209,24 +211,26 @@ void QVGraphicsView::zoom(const int DeltaY, const QPoint pos, qreal targetScaleF
         currentScale /= targetScaleFactor;
     }
 
-    bool veto = false;
-    //Disallow zooming expensively while movie is paused
+    bool shouldUseScaling = isScalingEnabled;
+    bool shouldUseScaling2 = isScalingTwoEnabled;
+    //Disallow scaling while movie is paused and scaling2 if movie is loaded
     if (getCurrentFileDetails().isMovieLoaded)
     {
+        shouldUseScaling2 = false;
         if (!(imageCore.getLoadedMovie().state() == QMovie::Running))
-            veto = true;
+            shouldUseScaling = false;
     }
 
-    //this is a disaster of an if statement, my apologies but here is what it does:
-    //use scaleExpensively if the scale is less than 1 or less than or equal to one while scrolling up (also scaling must be enabled and it must not be a paused movie)
-    if ((currentScale < 0.99999 || (currentScale < 1.00001 && DeltaY > 0)) && isScalingEnabled && !veto)
+
+    //Use scaling up to scale factor 1.0 if we should
+    if ((currentScale < 0.99999 || (currentScale < 1.00001 && DeltaY > 0)) && shouldUseScaling)
     {
         //zoom expensively
         scaleExpensively(scaleMode::zoom);
         cheapScaledLast = false;
     }
-    //check if expensive scaling while zooming in is enabled and valid
-    else if (currentScale < maxScalingTwoSize && isScalingEnabled && isScalingTwoEnabled && !getCurrentFileDetails().isMovieLoaded)
+    //Use scaling up to the maximum scalingtwo value if we should
+    else if (currentScale < maxScalingTwoSize && shouldUseScaling2)
     {
         //to scale the mouse position with the image, the mouse position is mapped to the graphicsitem,
         //it's scaled with a matrix (setScale), and then mapped back to scene. expensive scaling is done as expected.
@@ -251,11 +255,11 @@ void QVGraphicsView::zoom(const int DeltaY, const QPoint pos, qreal targetScaleF
 
         cheapScaledLast = false;
     }
-    //do regular matrix-based cheap scaling instead
+    //do regular matrix-based cheap scaling as a last resort
     else
     {
         //Sets the pixmap to full resolution when zooming in without scaling2
-        if (loadedPixmapItem->pixmap().height() != imageCore.getLoadedPixmap().height() && getCurrentFileDetails().isPixmapLoaded  && !isScalingTwoEnabled)
+        if (loadedPixmapItem->pixmap().height() != imageCore.getLoadedPixmap().height() && !isScalingTwoEnabled)
         {
             loadedPixmapItem->setPixmap(imageCore.getLoadedPixmap());
             fitInViewMarginless(false);
@@ -626,6 +630,12 @@ void QVGraphicsView::loadSettings()
     //scaling
     isScalingEnabled = settings.value("scalingenabled", true).toBool();
 
+    //scaling2
+    if (!isScalingEnabled)
+        isScalingTwoEnabled = false;
+    else
+        isScalingTwoEnabled = settings.value("scalingtwoenabled", true).toBool();
+
     //titlebar
     titlebarMode = settings.value("titlebarmode", 1).toInt();
     setWindowTitle();
@@ -635,9 +645,6 @@ void QVGraphicsView::loadSettings()
 
     //scalefactor
     scaleFactor = settings.value("scalefactor", 25).toInt()*0.01+1;
-
-    //scaling2
-    isScalingTwoEnabled = settings.value("scalingtwoenabled", true).toBool();
 
     //resize past actual size
     isPastActualSizeEnabled = settings.value("pastactualsizeenabled", true).toBool();
