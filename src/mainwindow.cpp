@@ -70,7 +70,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionFull_Screen->setShortcuts(QKeySequence::FullScreen);
     ui->actionOriginal_Size->setShortcut(Qt::Key_O);
     ui->actionNew_Window->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_N));
-    ui->actionNext_Frame->setShortcut(Qt::Key_L);
+    ui->actionNext_Frame->setShortcut(Qt::Key_N);
     ui->actionPause->setShortcut(Qt::Key_P);
     ui->actionDecrease_Speed->setShortcut(Qt::Key_BracketLeft);
     ui->actionReset_Speed->setShortcut(Qt::Key_Backslash);
