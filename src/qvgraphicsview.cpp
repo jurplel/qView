@@ -34,8 +34,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 
     //initialize other variables
     currentScale = 1.0;
-    fittedWidth = 0;
-    fittedHeight = 0;
+    scaledSize = QSize();
     maxScalingTwoSize = 4;
     cheapScaledLast = false;
     movieCenterNeedsUpdating = false;
@@ -269,7 +268,7 @@ void QVGraphicsView::zoom(const int DeltaY, const QPoint pos, qreal targetScaleF
         if (DeltaY > 0)
         {
             //this prevents a jitter when zooming in very quickly from below to above 1.0 on a movie
-            if (getCurrentFileDetails().isMovieLoaded && !qFuzzyCompare(imageCore.getLoadedMovie().currentPixmap().height(), fittedHeight))
+            if (getCurrentFileDetails().isMovieLoaded && imageCore.getLoadedMovie().currentPixmap().height() != scaledSize.height())
                 imageCore.jumpToNextFrame();
             scale(targetScaleFactor, targetScaleFactor);
         }
@@ -277,7 +276,7 @@ void QVGraphicsView::zoom(const int DeltaY, const QPoint pos, qreal targetScaleF
         {
             scale(qPow(targetScaleFactor, -1), qPow(targetScaleFactor, -1));
             //when the pixmap is set to full resolution, reset the scale back to the fittedheight when going back to expensive scaling town
-            if (!qFuzzyCompare(loadedPixmapItem->boundingRect().height(), fittedHeight) && qFuzzyCompare(currentScale, 1.0) && !getCurrentFileDetails().isMovieLoaded && !isScalingTwoEnabled && isScalingEnabled)
+            if (!qFuzzyCompare(loadedPixmapItem->boundingRect().height(), scaledSize.height()) && qFuzzyCompare(currentScale, 1.0) && !shouldUseScaling2 && shouldUseScaling)
                 resetScale();
         }
         cheapScaledLast = true;
@@ -451,7 +450,6 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
         else
             mode = QVImageCore::scaleMode::height;
 
-        qDebug() << fittedHeight;
         if (!getCurrentFileDetails().isMovieLoaded)
         {
             loadedPixmapItem->setPixmap(imageCore.scaleExpensively(width()+4, height()+4, mode));
@@ -460,11 +458,12 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
         else
             imageCore.scaleExpensively(width()+4, height()+4, mode);
 
+        scaledSize = loadedPixmapItem->boundingRect().size().toSize();
         break;
     }
     case scaleMode::zoom:
     {
-        QSize newSize = QSize(static_cast<int>(fittedWidth * currentScale), static_cast<int>(fittedHeight * currentScale));
+        QSize newSize = scaledSize * currentScale;
 
         loadedPixmapItem->setPixmap(imageCore.scaleExpensively(newSize));
         break;
@@ -488,8 +487,7 @@ void QVGraphicsView::originalSize(bool setVariables)
     resetTransform();
     centerOn(loadedPixmapItem->boundingRect().center());
 
-    fittedHeight = loadedPixmapItem->boundingRect().height();
-    fittedWidth = loadedPixmapItem->boundingRect().width();
+    scaledSize = imageCore.getLoadedPixmap().size();
 
     if (setVariables)
     {
@@ -601,8 +599,6 @@ void QVGraphicsView::fitInViewMarginless(bool setVariables)
     cheapScaledLast = false;
     if (setVariables)
     {
-        fittedHeight = loadedPixmapItem->boundingRect().height();
-        fittedWidth = loadedPixmapItem->boundingRect().width();
         currentScale = 1.0;
     }
 }
