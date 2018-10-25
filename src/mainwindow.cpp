@@ -23,6 +23,7 @@
 #include <QMimeDatabase>
 #include <QShortcut>
 #include <QScreen>
+#include <QCursor>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -525,12 +526,12 @@ void MainWindow::on_actionFlip_Vertically_triggered()
 
 void MainWindow::on_actionZoom_In_triggered()
 {
-    ui->graphicsView->zoom(120);
+    ui->graphicsView->zoom(120, ui->graphicsView->mapFromGlobal(QCursor::pos()));
 }
 
 void MainWindow::on_actionZoom_Out_triggered()
 {
-    ui->graphicsView->zoom(-120);
+    ui->graphicsView->zoom(-120, ui->graphicsView->mapFromGlobal(QCursor::pos()));
 }
 
 void MainWindow::on_actionReset_Zoom_triggered()
