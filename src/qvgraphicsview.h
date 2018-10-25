@@ -89,7 +89,8 @@ private:
 
 
     QGraphicsPixmapItem *loadedPixmapItem;
-    QRectF alternateBoundingBox;
+    QRectF adjustedBoundingRect;
+    QSize adjustedImageSize;
 
     QTransform fittedMatrix;
     QTransform scaledMatrix;
