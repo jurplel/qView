@@ -39,6 +39,7 @@ QString QVImageCore::loadFile(const QString &fileName)
     if (imageReader.supportsAnimation() && imageReader.imageCount() != 1)
     {
         loadedMovie.setFileName(fileName);
+        loadedMovie.setScaledSize(loadedPixmap.size());
         loadedMovie.start();
         currentFileDetails.isMovieLoaded = true;
     }
