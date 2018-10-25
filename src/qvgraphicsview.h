@@ -105,8 +105,7 @@ private:
     qreal scaleFactor;
 
     qreal currentScale;
-    qreal fittedWidth;
-    qreal fittedHeight;
+    QSize scaledSize;
     bool isOriginalSize;
     qreal maxScalingTwoSize;
     bool cheapScaledLast;
