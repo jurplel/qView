@@ -192,7 +192,7 @@ void QVGraphicsView::zoom(const int DeltaY, const QPoint pos, qreal targetScaleF
     //if original size set, cancel zoom and reset scale
     if (isOriginalSize)
     {
-        resetScale();
+        originalSize();
         return;
     }
 
@@ -328,7 +328,12 @@ void QVGraphicsView::animatedFrameChanged(QRect rect)
         movieCenterNeedsUpdating = false;
         centerOn(loadedPixmapItem);
         if (qFuzzyCompare(currentScale, 1.0) && !isOriginalSize)
-            resetScale();
+        {
+            if (isPastActualSizeEnabled)
+                fitInViewMarginless();
+            else
+                resetScale();
+        }
     }
 }
 
