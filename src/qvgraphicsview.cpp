@@ -50,7 +50,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 
     parentMainWindow = (dynamic_cast<MainWindow*>(parentWidget()->parentWidget()));
 
-    loadedPixmapItem = new QGraphicsPixmapItem(imageCore.getLoadedPixmap());
+    loadedPixmapItem = new QGraphicsPixmapItem();
     scene->addItem(loadedPixmapItem);
 
 }
@@ -348,7 +348,8 @@ void QVGraphicsView::loadFile(const QString &fileName)
         return;
     }
 
-    //set offset and moviecenter
+    //set pixmap, offset, and moviecenter
+    loadedPixmapItem->setPixmap(imageCore.getLoadedPixmap());
     loadedPixmapItem->setOffset((scene()->width()/2 - imageCore.getLoadedPixmap().width()/2), (scene()->height()/2 - imageCore.getLoadedPixmap().height()/2));
     if (imageCore.getCurrentFileDetails().isMovieLoaded)
         movieCenterNeedsUpdating = true;
@@ -414,13 +415,10 @@ void QVGraphicsView::resetScale()
     if (!getCurrentFileDetails().isPixmapLoaded)
         return;
 
-    if (!isScalingEnabled && !getCurrentFileDetails().isMovieLoaded)
-        loadedPixmapItem->setPixmap(imageCore.getLoadedPixmap());
-
     //if we aren't supposed to resize past the actual size, dont do that (the reason it's so long is to take into account the crop mode)
     if (!isPastActualSizeEnabled)
         if ((cropMode == 1 && height() >= imageCore.getLoadedPixmap().height()) || (cropMode == 2 && width() >= imageCore.getLoadedPixmap().width())
-        || (cropMode == 0  && height() >= imageCore.getLoadedPixmap().height() && width() >= imageCore.getLoadedPixmap().width()))
+        || (cropMode == 0  && height() >= imageCore.getLoadedPixmap().height() &&    width() >= imageCore.getLoadedPixmap().width()))
         {
             if (!isOriginalSize)
                 originalSize(false);
@@ -453,6 +451,7 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
         else
             mode = QVImageCore::scaleMode::height;
 
+        qDebug() << fittedHeight;
         if (!getCurrentFileDetails().isMovieLoaded)
         {
             loadedPixmapItem->setPixmap(imageCore.scaleExpensively(width()+4, height()+4, mode));
