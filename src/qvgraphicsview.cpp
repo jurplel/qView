@@ -354,6 +354,8 @@ void QVGraphicsView::loadFile(const QString &fileName)
     else
         movieCenterNeedsUpdating = false;
 
+    scaledSize = loadedPixmapItem->boundingRect().size().toSize();
+
     //post-load operations
     emit fileLoaded();
     resetScale();
@@ -426,13 +428,14 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
     if (!getCurrentFileDetails().isPixmapLoaded || !isScalingEnabled)
         return;
 
-    //do not scale expensively above actual size unless you are meant to
-    if (!isPastActualSizeEnabled && (adjustedImageSize.width() < width() || adjustedImageSize.height() < height()))
-        return;
-
     switch (mode) {
     case scaleMode::resetScale:
     {
+
+        //do not resetscale expensively above actual size unless you are meant to
+        if (!isPastActualSizeEnabled && (adjustedImageSize.width() < width() || adjustedImageSize.height() < height()))
+            return;
+
         // figure out if we should resize to width or height depending on the gap between the window chrome and the image itself
         // 4 is added to these numbers to take into account the -2 margin from fitInViewMarginless (kind of a misnomer, eh?)
         qreal marginWidth = (width()-adjustedBoundingRect.width()*transform().m11())+4;
@@ -457,7 +460,6 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
     case scaleMode::zoom:
     {
         QSize newSize = scaledSize * currentScale;
-
         loadedPixmapItem->setPixmap(imageCore.scaleExpensively(newSize));
         break;
     }
