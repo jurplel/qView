@@ -180,7 +180,7 @@
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>&amp;Options...</string>
+    <string>&amp;Options</string>
    </property>
   </action>
   <action name="actionPrevious_File">
