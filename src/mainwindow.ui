@@ -93,8 +93,8 @@
     <property name="title">
      <string>&amp;Help</string>
     </property>
-    <addaction name="actionWelcome"/>
     <addaction name="actionAbout"/>
+    <addaction name="actionWelcome"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -158,7 +158,7 @@
   </action>
   <action name="actionAbout">
    <property name="icon">
-    <iconset theme="qview">
+    <iconset theme="help-about">
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
