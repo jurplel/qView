@@ -159,8 +159,8 @@ MainWindow::MainWindow(QWidget *parent) :
     menu->addMenu(tools);
 
     QMenu *help = new QMenu(tr("Help"), this);
-    help->addAction(ui->actionWelcome);
     help->addAction(ui->actionAbout);
+    help->addAction(ui->actionWelcome);
     menu->addMenu(help);
 
     //Menu icons that can't be set in the ui file
@@ -185,10 +185,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //macOS specific functions
     #ifdef Q_OS_UNIX
-    ui->actionAbout->setText(tr("About qView"));
-    ui->actionOptions->setText(tr("Preferences..."));
+    ui->actionOptions->setText(tr("Preferences"));
     #endif
     #ifdef Q_OS_MACX
+    ui->actionAbout->setText(tr("About qView"));
+    ui->actionOptions->setText(tr("Preferences..."));
     ui->menuView->removeAction(ui->actionFull_Screen);
     ui->actionNew_Window->setVisible(true);
     ui->actionOpen_Containing_Folder->setText(tr("Show in Finder"));
