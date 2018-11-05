@@ -180,14 +180,17 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->menuFile->insertSeparator(ui->actionOpen_Containing_Folder);
     ui->menuTools->insertMenu(ui->actionSlideshow, gif);
 
+    //add actions not used in context menu so that keyboard shortcuts still work
     addAction(ui->actionQuit);
 
     //macOS specific functions
+    #ifdef Q_OS_UNIX
+    ui->actionAbout->setText(tr("About qView"));
+    ui->actionOptions->setText(tr("Preferences..."));
+    #endif
     #ifdef Q_OS_MACX
     ui->menuView->removeAction(ui->actionFull_Screen);
     ui->actionNew_Window->setVisible(true);
-    ui->actionOptions->setText(tr("Preferences"));
-    ui->actionAbout->setText(tr("About qView"));
     ui->actionOpen_Containing_Folder->setText(tr("Show in Finder"));
 
     //macOS dock menu

@@ -14,7 +14,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Welcome to qView</string>
+   <string>Welcome</string>
   </property>
   <property name="styleSheet">
    <string notr="true">background-color: #212121</string>
