@@ -13,8 +13,8 @@ QVAboutDialog::QVAboutDialog(QWidget *parent) :
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
     // add fonts
-    QFontDatabase::addApplicationFont(":/fonts/fonts/Lato-Light.ttf");
-    QFontDatabase::addApplicationFont(":/fonts/fonts/Lato-Regular.ttf");
+    QFontDatabase::addApplicationFont(":/fonts/resources/Lato-Light.ttf");
+    QFontDatabase::addApplicationFont(":/fonts/resources/Lato-Regular.ttf");
 
     int modifier = 0;
     //set main title font
