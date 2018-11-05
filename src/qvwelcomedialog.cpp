@@ -35,9 +35,12 @@ QVWelcomeDialog::QVWelcomeDialog(QWidget *parent) :
     //set info font & text
     QFont font3 = QFont("Lato", 12 + modifier);
     font3.setStyleName("Regular");
-    const QString updateText = tr("<ul><li>Right click to access the main menu<li>Use arrow keys to switch files<li>Drag the image to reposition it<li>Scroll to zoom in and out</ul>");
+    const QString updateText = tr("<ul><li>Right click to access the main menu</li><li>Drag the image to reposition it</li><li>Scroll to zoom in and out</li><li>Use arrow keys to switch files</li><li><a style='color: #03A9F4; text-decoration:none;' href='https://github.com/jurplel/qView/wiki/Keyboard-Shortcuts'>View more keyboard shortcuts</a></li></ul>");
     ui->infoLabel->setFont(font3);
     ui->infoLabel->setText(updateText);
+
+    ui->infoLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
+    ui->infoLabel->setOpenExternalLinks(true);
 }
 
 QVWelcomeDialog::~QVWelcomeDialog()
