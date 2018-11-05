@@ -12,6 +12,10 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
 
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
+
+    #ifdef Q_OS_UNIX
+    setWindowTitle("Preferences");
+    #endif
 }
 
 QVOptionsDialog::~QVOptionsDialog()
