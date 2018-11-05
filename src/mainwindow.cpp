@@ -159,8 +159,8 @@ MainWindow::MainWindow(QWidget *parent) :
     menu->addMenu(tools);
 
     QMenu *help = new QMenu(tr("Help"), this);
-    help->addAction(ui->actionAbout);
     help->addAction(ui->actionWelcome);
+    help->addAction(ui->actionAbout);
     menu->addMenu(help);
 
     //Menu icons that can't be set in the ui file
