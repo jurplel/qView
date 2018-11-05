@@ -10,11 +10,11 @@
     <x>0</x>
     <y>0</y>
     <width>388</width>
-    <height>342</height>
+    <height>348</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>qView Options</string>
+   <string>Options</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
