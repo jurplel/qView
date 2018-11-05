@@ -103,4 +103,4 @@ FORMS += \
     src/qvinfodialog.ui
 
 RESOURCES += \
-    src/resources.qrc
+    resources.qrc
