@@ -431,28 +431,38 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
     switch (mode) {
     case scaleMode::resetScale:
     {
-
-        //do not resetscale expensively above actual size unless you are meant to
-        if (!isPastActualSizeEnabled && (adjustedImageSize.width() < width() || adjustedImageSize.height() < height()))
-            return;
-
         // figure out if we should resize to width or height depending on the gap between the window chrome and the image itself
         // 4 is added to these numbers to take into account the -2 margin from fitInViewMarginless (kind of a misnomer, eh?)
         qreal marginWidth = (width()-adjustedBoundingRect.width()*transform().m11())+4;
         qreal marginHeight = (height()-adjustedBoundingRect.height()*transform().m22())+4;
-        QVImageCore::scaleMode mode;
+        QVImageCore::scaleMode coreMode;
         if (marginWidth < marginHeight)
-            mode = QVImageCore::scaleMode::width;
+            coreMode = QVImageCore::scaleMode::width;
         else
-            mode = QVImageCore::scaleMode::height;
+            coreMode = QVImageCore::scaleMode::height;
+
+        //do not resetscale expensively above actual size unless you are meant to
+        if (!isPastActualSizeEnabled && adjustedImageSize.width() < width() && adjustedImageSize.height() < height())
+        {
+            if (getCurrentFileDetails().isMovieLoaded)
+            {
+                imageCore.scaleExpensively(adjustedImageSize, coreMode);
+            }
+            else
+            {
+                loadedPixmapItem->setPixmap(getLoadedPixmap());
+                fitInViewMarginless();
+            }
+            break;
+        }
 
         if (!getCurrentFileDetails().isMovieLoaded)
         {
-            loadedPixmapItem->setPixmap(imageCore.scaleExpensively(width()+4, height()+4, mode));
+            loadedPixmapItem->setPixmap(imageCore.scaleExpensively(width()+4, height()+4, coreMode));
             fitInViewMarginless();
         }
         else
-            imageCore.scaleExpensively(width()+4, height()+4, mode);
+            imageCore.scaleExpensively(width()+4, height()+4, coreMode);
 
         scaledSize = loadedPixmapItem->boundingRect().size().toSize();
         break;
