@@ -14,7 +14,10 @@
    <string>About qView</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: #212121</string>
+   <string notr="true">#QVAboutDialog {
+background-color: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0, stop:0 rgba(33, 33, 33, 255), stop:1 rgba(41, 41, 41, 255))
+}
+</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_3">
    <property name="sizeConstraint">
