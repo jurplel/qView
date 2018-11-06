@@ -33,15 +33,21 @@ void QVImageCore::loadFile(const QString &fileName)
 QVImageCore::imageAndFileInfo QVImageCore::readFile(const QString &fileName)
 {
     imageAndFileInfo combinedInfo;
+
     QImageReader newImageReader;
+    newImageReader.setDecideFormatFromContent(true);
+    newImageReader.setAutoTransform(true);
+
     newImageReader.setFileName(fileName);
     const QImage readImage = newImageReader.read();
+
+    combinedInfo.readFileInfo = QFileInfo(fileName);
     if (readImage.isNull())
     {
-//        return QString::number(imageReader.error()) + ": " + imageReader.errorString();
+        emit readError(QString::number(imageReader.error()) + ": " + newImageReader.errorString(), fileName);
         return combinedInfo;
     }
-    combinedInfo.readFileInfo = QFileInfo(fileName);
+
     combinedInfo.readImage = readImage;
     return combinedInfo;
 }
@@ -52,14 +58,14 @@ void QVImageCore::processFile(int index)
         return;
 
     imageAndFileInfo loadedImageAndFileInfo = futureWatcher.resultAt(index);
+    if (loadedImageAndFileInfo.readImage.isNull())
+        return;
 
     loadedImage = loadedImageAndFileInfo.readImage;
-
     loadedPixmap.convertFromImage(loadedImage);
 
-    imageReader.setFileName(loadedImageAndFileInfo.readFileInfo.filePath());
-
     //animation detection
+    imageReader.setFileName(loadedImageAndFileInfo.readFileInfo.filePath());
     if (currentFileDetails.isMovieLoaded)
     {
         loadedMovie.stop();
