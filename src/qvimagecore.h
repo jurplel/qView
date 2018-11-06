@@ -6,6 +6,7 @@
 #include <QPixmap>
 #include <QMovie>
 #include <QFileInfo>
+#include <QFutureWatcher>
 
 class QVImageCore : public QObject
 {
@@ -29,9 +30,16 @@ public:
         int folderIndex;
     };
 
+    struct imageAndFileInfo
+    {
+        QImage readImage;
+        QFileInfo readFileInfo;
+    };
+
     explicit QVImageCore(QObject *parent = nullptr);
 
-    QString loadFile(const QString &fileName);
+    void loadFile(const QString &fileName);
+    imageAndFileInfo readFile(const QString &fileName);
     void updateFolderInfo();
 
     void loadSettings();
@@ -51,7 +59,10 @@ public:
 signals:
     void animatedFrameChanged(QRect rect);
 
+    void fileRead(QString string);
+
 public slots:
+    void processFile(int index);
 
 private:
     const QStringList filterList = (QStringList() << "*.bmp" << "*.cur" << "*.gif" << "*.icns" << "*.ico" << "*.jp2" << "*.jpeg" << "*.jpe" << "*.jpg" << "*.mng" << "*.pbm" << "*.pgm" << "*.png" << "*.ppm" << "*.svg" << "*.svgz" << "*.tif" << "*.tiff" << "*.wbmp" << "*.webp" << "*.xbm" << "*.xpm");
@@ -62,6 +73,8 @@ private:
     QImageReader imageReader;
 
     QVFileDetails currentFileDetails;
+
+    QFutureWatcher<imageAndFileInfo> futureWatcher;
 };
 
 #endif // QVIMAGECORE_H
