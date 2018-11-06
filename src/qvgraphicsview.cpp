@@ -14,6 +14,8 @@
 
 QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 {
+    qRegisterMetaType<QFileInfo>();
+
     grabGesture(Qt::PinchGesture);
 
     //qgraphicsscene setup
@@ -44,6 +46,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 
     connect(&imageCore, &QVImageCore::animatedFrameChanged, this, &QVGraphicsView::animatedFrameChanged);
     connect(&imageCore, &QVImageCore::fileRead, this, &QVGraphicsView::prepareFile);
+    connect(&imageCore, &QVImageCore::readError, this, &QVGraphicsView::error);
 
     timer = new QTimer(this);
     timer->setSingleShot(true);
@@ -339,13 +342,6 @@ void QVGraphicsView::animatedFrameChanged(QRect rect)
 void QVGraphicsView::loadFile(const QString &fileName)
 {
     imageCore.loadFile(fileName);
-//    if (!errorString.isEmpty())
-//    {
-//        QMessageBox::critical(this, tr("qView Error"), tr("Read Error ") + errorString);
-//        if (errorString.at(0) == "1")
-//            updateRecentFiles(QFileInfo(fileName));
-//        return;
-//    }
 }
 
 void QVGraphicsView::prepareFile()
@@ -623,6 +619,17 @@ void QVGraphicsView::fitInViewMarginless(bool setVariables)
     {
         currentScale = 1.0;
     }
+}
+
+void QVGraphicsView::error(const QString &errorString, const QString &fileName)
+{
+        if (!errorString.isEmpty())
+        {
+            QMessageBox::critical(this, tr("Error"), tr("Error ") + errorString);
+            if (errorString.at(0) == "1")
+                updateRecentFiles(QFileInfo(fileName));
+            return;
+        }
 }
 
 void QVGraphicsView::loadSettings()

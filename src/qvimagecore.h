@@ -1,4 +1,4 @@
-#ifndef QVIMAGECORE_H
+﻿#ifndef QVIMAGECORE_H
 #define QVIMAGECORE_H
 
 #include <QObject>
@@ -60,6 +60,8 @@ signals:
     void animatedFrameChanged(QRect rect);
 
     void fileRead(QString string);
+
+    void readError(const QString &errorString, const QString &fileName);
 
 public slots:
     void processFile(int index);
