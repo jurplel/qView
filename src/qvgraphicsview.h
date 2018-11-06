@@ -85,6 +85,8 @@ protected:
 private slots:
     void animatedFrameChanged(QRect rect);
 
+    void prepareFile();
+
 private:
 
 

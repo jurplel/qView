@@ -3,6 +3,9 @@
 #include <QDir>
 #include <QSettings>
 #include <QCollator>
+#include <QtConcurrent/QtConcurrent>
+
+#include <QDebug>
 
 QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
 {
@@ -18,17 +21,43 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     currentFileDetails.folderIndex = -1;
 
     connect(&loadedMovie, &QMovie::updated, this, &QVImageCore::animatedFrameChanged);
+
+    connect(&futureWatcher, &QFutureWatcher<imageAndFileInfo>::resultReadyAt, this, &QVImageCore::processFile);
 }
 
-QString QVImageCore::loadFile(const QString &fileName)
+void QVImageCore::loadFile(const QString &fileName)
 {
-    imageReader.setFileName(fileName);
-    loadedImage = imageReader.read();
-    if (loadedImage.isNull())
+    futureWatcher.setFuture(QtConcurrent::run(this, &QVImageCore::readFile, fileName));
+}
+
+QVImageCore::imageAndFileInfo QVImageCore::readFile(const QString &fileName)
+{
+    imageAndFileInfo combinedInfo;
+    QImageReader newImageReader;
+    newImageReader.setFileName(fileName);
+    const QImage readImage = newImageReader.read();
+    if (readImage.isNull())
     {
-        return QString::number(imageReader.error()) + ": " + imageReader.errorString();
+//        return QString::number(imageReader.error()) + ": " + imageReader.errorString();
+        return combinedInfo;
     }
+    combinedInfo.readFileInfo = QFileInfo(fileName);
+    combinedInfo.readImage = readImage;
+    return combinedInfo;
+}
+
+void QVImageCore::processFile(int index)
+{
+    if (futureWatcher.isRunning())
+        return;
+
+    imageAndFileInfo loadedImageAndFileInfo = futureWatcher.resultAt(index);
+
+    loadedImage = loadedImageAndFileInfo.readImage;
+
     loadedPixmap.convertFromImage(loadedImage);
+
+    imageReader.setFileName(loadedImageAndFileInfo.readFileInfo.filePath());
 
     //animation detection
     if (currentFileDetails.isMovieLoaded)
@@ -38,17 +67,18 @@ QString QVImageCore::loadFile(const QString &fileName)
     }
     if (imageReader.supportsAnimation() && imageReader.imageCount() != 1)
     {
-        loadedMovie.setFileName(fileName);
+        loadedMovie.setFileName(loadedImageAndFileInfo.readFileInfo.filePath());
         loadedMovie.setScaledSize(loadedPixmap.size());
         loadedMovie.start();
         currentFileDetails.isMovieLoaded = true;
     }
 
     //define info variables
-    currentFileDetails.fileInfo = QFileInfo(fileName);
+    currentFileDetails.fileInfo = loadedImageAndFileInfo.readFileInfo;
     currentFileDetails.isPixmapLoaded = true;
     updateFolderInfo();
-    return "";
+
+    emit fileRead(currentFileDetails.fileInfo.path());
 }
 
 void QVImageCore::updateFolderInfo()
