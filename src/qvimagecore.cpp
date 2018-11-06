@@ -27,7 +27,8 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
 
 void QVImageCore::loadFile(const QString &fileName)
 {
-    futureWatcher.setFuture(QtConcurrent::run(this, &QVImageCore::readFile, fileName));
+    if (!futureWatcher.isRunning())
+        futureWatcher.setFuture(QtConcurrent::run(this, &QVImageCore::readFile, fileName));
 }
 
 QVImageCore::imageAndFileInfo QVImageCore::readFile(const QString &fileName)
