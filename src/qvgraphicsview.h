@@ -87,6 +87,8 @@ private slots:
 
     void prepareFile();
 
+    void error(const QString &errorString, const QString &fileName);
+
 private:
 
 
