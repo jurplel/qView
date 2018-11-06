@@ -14,8 +14,6 @@
 
 QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 {
-    qRegisterMetaType<QFileInfo>();
-
     grabGesture(Qt::PinchGesture);
 
     //qgraphicsscene setup
