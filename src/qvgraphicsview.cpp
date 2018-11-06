@@ -43,6 +43,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     isOriginalSize = false;
 
     connect(&imageCore, &QVImageCore::animatedFrameChanged, this, &QVGraphicsView::animatedFrameChanged);
+    connect(&imageCore, &QVImageCore::fileRead, this, &QVGraphicsView::prepareFile);
 
     timer = new QTimer(this);
     timer->setSingleShot(true);
@@ -337,15 +338,18 @@ void QVGraphicsView::animatedFrameChanged(QRect rect)
 
 void QVGraphicsView::loadFile(const QString &fileName)
 {
-    QString errorString = imageCore.loadFile(fileName);
-    if (!errorString.isEmpty())
-    {
-        QMessageBox::critical(this, tr("qView Error"), tr("Read Error ") + errorString);
-        if (errorString.at(0) == "1")
-            updateRecentFiles(QFileInfo(fileName));
-        return;
-    }
+    imageCore.loadFile(fileName);
+//    if (!errorString.isEmpty())
+//    {
+//        QMessageBox::critical(this, tr("qView Error"), tr("Read Error ") + errorString);
+//        if (errorString.at(0) == "1")
+//            updateRecentFiles(QFileInfo(fileName));
+//        return;
+//    }
+}
 
+void QVGraphicsView::prepareFile()
+{
     //set pixmap, offset, and moviecenter
     loadedPixmapItem->setPixmap(getLoadedPixmap());
     loadedPixmapItem->setOffset((scene()->width()/2 - getLoadedPixmap().width()/2), (scene()->height()/2 - getLoadedPixmap().height()/2));
