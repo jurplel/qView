@@ -39,6 +39,7 @@ public:
     void loadMimeData(const QMimeData *mimeData);
     void loadFile(const QString &fileName);
     void updateRecentFiles(const QFileInfo &file);
+    void setRecentFiles();
     void setWindowTitle();
 
     void resetScale();
@@ -87,6 +88,8 @@ private slots:
 
     void prepareFile();
 
+    void updateFileInfoDisplays();
+
     void error(const QString &errorString, const QString &fileName);
 
 private:
@@ -115,6 +118,7 @@ private:
     qreal maxScalingTwoSize;
     bool cheapScaledLast;
     bool movieCenterNeedsUpdating;
+    QVariantList recentFiles;
 
     QVImageCore imageCore;
 
