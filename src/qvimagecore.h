@@ -59,6 +59,8 @@ public:
 signals:
     void animatedFrameChanged(QRect rect);
 
+    void fileInfoUpdated();
+
     void fileRead(QString string);
 
     void readError(const QString &errorString, const QString &fileName);
