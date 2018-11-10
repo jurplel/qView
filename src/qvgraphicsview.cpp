@@ -363,9 +363,9 @@ void QVGraphicsView::prepareFile()
 
 void QVGraphicsView::updateFileInfoDisplays()
 {
-    emit fileLoaded();
     updateRecentFiles(getCurrentFileDetails().fileInfo);
     setWindowTitle();
+    emit fileLoaded();
 }
 
 void QVGraphicsView::updateRecentFiles(const QFileInfo &file)
