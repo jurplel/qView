@@ -39,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //connect graphicsview signals
     connect(ui->graphicsView, &QVGraphicsView::fileLoaded, this, &MainWindow::fileLoaded);
-    connect(ui->graphicsView, &QVGraphicsView::updateRecentFiles, this, &MainWindow::updateRecentMenu);
+    connect(ui->graphicsView, &QVGraphicsView::updateRecentMenu, this, &MainWindow::updateRecentMenu);
     connect(ui->graphicsView, &QVGraphicsView::sendWindowTitle, this, &MainWindow::setWindowTitle);
 
     //Enable drag&dropping
