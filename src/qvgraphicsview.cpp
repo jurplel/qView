@@ -358,6 +358,7 @@ void QVGraphicsView::prepareFile()
 
     resetScale();
     setWindowTitle();
+    emit updateRecentMenu();
 }
 
 void QVGraphicsView::updateFileInfoDisplays()
