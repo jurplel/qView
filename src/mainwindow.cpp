@@ -420,8 +420,7 @@ void MainWindow::refreshProperties()
 
 void MainWindow::setWindowSize()
 {
-
-    QSize imageSize = QSize(ui->graphicsView->getLoadedPixmap().width(), ui->graphicsView->getLoadedPixmap().height());
+    QSize imageSize = ui->graphicsView->getCurrentFileDetails().imageSize;
 
     QSize currentScreenSize = QGuiApplication::screenAt(geometry().center())->size();
     currentScreenSize *= maxWindowResizedConstant;

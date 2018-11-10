@@ -28,6 +28,7 @@ public:
         bool isMovieLoaded;
         QFileInfoList folder;
         int folderIndex;
+        QSize imageSize;
     };
 
     struct imageAndFileInfo
