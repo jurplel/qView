@@ -37,6 +37,9 @@ void QVImageCore::loadFile(const QString &fileName)
     currentFileDetails.isPixmapLoaded = true;
     updateFolderInfo();
 
+    imageReader.setFileName(fileName);
+    currentFileDetails.imageSize = imageReader.size();
+
     emit fileInfoUpdated();
 }
 
@@ -54,7 +57,7 @@ QVImageCore::imageAndFileInfo QVImageCore::readFile(const QString &fileName)
     combinedInfo.readFileInfo = QFileInfo(fileName);
     if (readImage.isNull())
     {
-        emit readError(QString::number(imageReader.error()) + ": " + newImageReader.errorString(), fileName);
+        emit readError(QString::number(newImageReader.error()) + ": " + newImageReader.errorString(), fileName);
         return combinedInfo;
     }
 
