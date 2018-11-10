@@ -4,6 +4,7 @@
 #include <QSettings>
 #include <QCollator>
 #include <QtConcurrent/QtConcurrent>
+#include <QThreadPool>
 
 #include <QDebug>
 
@@ -27,8 +28,16 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
 
 void QVImageCore::loadFile(const QString &fileName)
 {
-    if (!futureWatcher.isRunning())
+    QThreadPool *globalThreadPool = QThreadPool::globalInstance();
+    if (globalThreadPool->activeThreadCount() < globalThreadPool->maxThreadCount())
         futureWatcher.setFuture(QtConcurrent::run(this, &QVImageCore::readFile, fileName));
+
+    //define info variables
+    currentFileDetails.fileInfo = QFileInfo(fileName);
+    currentFileDetails.isPixmapLoaded = true;
+    updateFolderInfo();
+
+    emit fileInfoUpdated();
 }
 
 QVImageCore::imageAndFileInfo QVImageCore::readFile(const QString &fileName)
@@ -79,11 +88,6 @@ void QVImageCore::processFile(int index)
         loadedMovie.start();
         currentFileDetails.isMovieLoaded = true;
     }
-
-    //define info variables
-    currentFileDetails.fileInfo = loadedImageAndFileInfo.readFileInfo;
-    currentFileDetails.isPixmapLoaded = true;
-    updateFolderInfo();
 
     emit fileRead(currentFileDetails.fileInfo.path());
 }

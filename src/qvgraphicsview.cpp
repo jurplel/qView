@@ -43,6 +43,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     isOriginalSize = false;
 
     connect(&imageCore, &QVImageCore::animatedFrameChanged, this, &QVGraphicsView::animatedFrameChanged);
+    connect(&imageCore, &QVImageCore::fileInfoUpdated, [this](){setWindowTitle();});
     connect(&imageCore, &QVImageCore::fileRead, this, &QVGraphicsView::prepareFile);
     connect(&imageCore, &QVImageCore::readError, this, &QVGraphicsView::error);
 
