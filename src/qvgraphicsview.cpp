@@ -55,8 +55,6 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     timer->setInterval(10);
     connect(timer, &QTimer::timeout, this, [this]{scaleExpensively(scaleMode::resetScale);});
 
-    parentMainWindow = (dynamic_cast<MainWindow*>(parentWidget()->parentWidget()));
-
     loadedPixmapItem = new QGraphicsPixmapItem();
     scene->addItem(loadedPixmapItem);
 
@@ -391,7 +389,7 @@ void QVGraphicsView::setRecentFiles()
     QSettings settings;
     settings.beginGroup("recents");
     settings.setValue("recentFiles", recentFiles);
-    parentMainWindow->updateRecentMenu();
+    emit updateRecentMenu();
 }
 
 void QVGraphicsView::setWindowTitle()
@@ -399,26 +397,29 @@ void QVGraphicsView::setWindowTitle()
     if (!getCurrentFileDetails().isPixmapLoaded)
         return;
 
+    QString newString;
     switch (titlebarMode) {
     case 0:
     {
-        parentMainWindow->setWindowTitle("qView");
+        newString = "qView";
         break;
     }
     case 1:
     {
-        parentMainWindow->setWindowTitle(getCurrentFileDetails().fileInfo.fileName());
+        newString = getCurrentFileDetails().fileInfo.fileName();
         break;
     }
     case 2:
     {
         QLocale locale;
-        parentMainWindow->setWindowTitle("qView - " + getCurrentFileDetails().fileInfo.fileName() + " - " + QString::number(getCurrentFileDetails().folderIndex+1) + "/" + QString::number(getCurrentFileDetails().folder.count()) + " - "  + QString::number(getLoadedPixmap().width()) + "x" + QString::number(getLoadedPixmap().height()) + " - " + locale.formattedDataSize(getCurrentFileDetails().fileInfo.size()));
+        newString = "qView - " + getCurrentFileDetails().fileInfo.fileName() + " - " + QString::number(getCurrentFileDetails().folderIndex+1) + "/" + QString::number(getCurrentFileDetails().folder.count()) + " - "  + QString::number(getLoadedPixmap().width()) + "x" + QString::number(getLoadedPixmap().height()) + " - " + locale.formattedDataSize(getCurrentFileDetails().fileInfo.size());
         break;
     }
     default:
         break;
     }
+
+    emit sendWindowTitle(newString);
 }
 
 void QVGraphicsView::resetScale()

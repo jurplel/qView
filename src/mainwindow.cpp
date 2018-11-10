@@ -37,8 +37,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     maxWindowResizedConstant = 0.9;
 
-    //connect function for setting window size to file loaded signal
+    //connect graphicsview signals
     connect(ui->graphicsView, &QVGraphicsView::fileLoaded, this, &MainWindow::fileLoaded);
+    connect(ui->graphicsView, &QVGraphicsView::updateRecentFiles, this, &MainWindow::updateRecentMenu);
+    connect(ui->graphicsView, &QVGraphicsView::sendWindowTitle, this, &MainWindow::setWindowTitle);
 
     //Enable drag&dropping
     setAcceptDrops(true);
