@@ -41,9 +41,12 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     cheapScaledLast = false;
     movieCenterNeedsUpdating = false;
     isOriginalSize = false;
+    QSettings settings;
+    settings.beginGroup("recents");
+    recentFiles = settings.value("recentFiles").value<QVariantList>();
 
     connect(&imageCore, &QVImageCore::animatedFrameChanged, this, &QVGraphicsView::animatedFrameChanged);
-    connect(&imageCore, &QVImageCore::fileInfoUpdated, [this](){setWindowTitle();});
+    connect(&imageCore, &QVImageCore::fileInfoUpdated, this, &QVGraphicsView::updateFileInfoDisplays);
     connect(&imageCore, &QVImageCore::fileRead, this, &QVGraphicsView::prepareFile);
     connect(&imageCore, &QVImageCore::readError, this, &QVGraphicsView::error);
 
@@ -355,9 +358,13 @@ void QVGraphicsView::prepareFile()
 
     scaledSize = loadedPixmapItem->boundingRect().size().toSize();
 
-    //post-load operations
-    emit fileLoaded();
     resetScale();
+    setWindowTitle();
+}
+
+void QVGraphicsView::updateFileInfoDisplays()
+{
+    emit fileLoaded();
     updateRecentFiles(getCurrentFileDetails().fileInfo);
     setWindowTitle();
 }
@@ -366,7 +373,7 @@ void QVGraphicsView::updateRecentFiles(const QFileInfo &file)
 {
     QSettings settings;
     settings.beginGroup("recents");
-    auto recentFiles = settings.value("recentFiles").value<QVariantList>();
+    recentFiles = settings.value("recentFiles").value<QVariantList>();
     QStringList fileInfo;
 
     fileInfo << file.fileName() << file.filePath();
@@ -377,7 +384,12 @@ void QVGraphicsView::updateRecentFiles(const QFileInfo &file)
 
     if(recentFiles.size() > 10)
         recentFiles.removeLast();
+}
 
+void QVGraphicsView::setRecentFiles()
+{
+    QSettings settings;
+    settings.beginGroup("recents");
     settings.setValue("recentFiles", recentFiles);
     parentMainWindow->updateRecentMenu();
 }
@@ -626,7 +638,10 @@ void QVGraphicsView::error(const QString &errorString, const QString &fileName)
         {
             QMessageBox::critical(this, tr("Error"), tr("Error ") + errorString);
             if (errorString.at(0) == "1")
+            {
                 updateRecentFiles(QFileInfo(fileName));
+                setRecentFiles();
+            }
             return;
         }
 }
