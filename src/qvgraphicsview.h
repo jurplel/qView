@@ -61,6 +61,10 @@ public:
 signals:
     void fileLoaded();
 
+    void updateRecentMenu();
+
+    void sendWindowTitle(const QString &newTitle);
+
 protected:
     void wheelEvent(QWheelEvent *event) override;
 
@@ -123,8 +127,6 @@ private:
     QVImageCore imageCore;
 
     QTimer *timer;
-
-    MainWindow *parentMainWindow;
 
     const QStringList filterList = (QStringList() << "*.bmp" << "*.cur" << "*.gif" << "*.icns" << "*.ico" << "*.jp2" << "*.jpeg" << "*.jpe" << "*.jpg" << "*.mng" << "*.pbm" << "*.pgm" << "*.png" << "*.ppm" << "*.svg" << "*.svgz" << "*.tif" << "*.tiff" << "*.wbmp" << "*.webp" << "*.xbm" << "*.xpm");
 
