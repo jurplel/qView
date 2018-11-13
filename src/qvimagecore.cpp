@@ -33,6 +33,7 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     connect(&loadedMovie, &QMovie::updated, this, &QVImageCore::animatedFrameChanged);
 
     connect(&loadFutureWatcher, &QFutureWatcher<imageAndFileInfo>::resultReadyAt, this, &QVImageCore::processFile);
+    connect(&cacheFutureWatcher, &QFutureWatcher<imageAndFileInfo>::resultReadyAt, this, &QVImageCore::addToCache);
 }
 
 void QVImageCore::loadFile(const QString &fileName)
@@ -123,6 +124,19 @@ void QVImageCore::postLoad()
     }
 
     emit fileRead(currentFileDetails.fileInfo.path());
+
+    //add loop folders enabled check here
+    if (currentFileDetails.folderIndex-1 > 0)
+        addIndexToCache(currentFileDetails.folderIndex-1);
+    else
+        addIndexToCache(currentFileDetails.folder.length()-1);
+
+    //here too (y'know, as an else if)
+    qDebug() << currentFileDetails.folderIndex+1 << currentFileDetails.folder.length()-1;
+    if (currentFileDetails.folderIndex+1 < currentFileDetails.folder.length()-1)
+        addIndexToCache(currentFileDetails.folderIndex+1);
+    else
+        addIndexToCache(0);
 }
 
 void QVImageCore::updateFolderInfo()
@@ -138,6 +152,24 @@ void QVImageCore::updateFolderInfo()
             return collator.compare(file1.fileName(), file2.fileName()) < 0;
         });
     currentFileDetails.folderIndex = currentFileDetails.folder.indexOf(currentFileDetails.fileInfo);
+}
+
+void QVImageCore::addIndexToCache(const int &index)
+{
+    if (currentFileDetails.folder.isEmpty())
+        return;
+
+    QString filePath = currentFileDetails.folder[index].filePath();
+    cacheFutureWatcher.setFuture(QtConcurrent::run(this, &QVImageCore::readFile, filePath));
+}
+
+void QVImageCore::addToCache(const int &index)
+{
+    imageAndFileInfo loadedImageAndFileInfo = cacheFutureWatcher.resultAt(index);
+    if (loadedImageAndFileInfo.readImage.isNull())
+        return;
+
+    pixmapCache.insert(loadedImageAndFileInfo.readFileInfo.filePath(), QPixmap::fromImage(loadedImageAndFileInfo.readImage));
 }
 
 void QVImageCore::jumpToNextFrame()

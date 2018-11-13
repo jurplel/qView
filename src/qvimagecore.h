@@ -42,8 +42,10 @@ public:
 
     void loadFile(const QString &fileName);
     imageAndFileInfo readFile(const QString &fileName);
-    void updateFolderInfo();
     void postLoad();
+    void updateFolderInfo();
+    void addIndexToCache(const int &index);
+    void addToCache(const int &index);
 
     void loadSettings();
 
@@ -84,6 +86,7 @@ private:
     QFutureWatcher<imageAndFileInfo> loadFutureWatcher;
 
     bool vetoFutureWatcher;
+    QFutureWatcher<imageAndFileInfo> cacheFutureWatcher;
     QPixmapCache pixmapCache;
 };
 
