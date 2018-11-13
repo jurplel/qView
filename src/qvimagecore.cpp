@@ -10,27 +10,34 @@
 
 QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
 {
-    loadedImage = QImage();
     loadedPixmap = QPixmap();
     imageReader.setDecideFormatFromContent(true);
     imageReader.setAutoTransform(true);
+
+    vetoFutureWatcher = false;
 
     currentFileDetails.fileInfo = QFileInfo();
     currentFileDetails.isPixmapLoaded = false;
     currentFileDetails.isMovieLoaded = false;
     currentFileDetails.folder = QFileInfoList();
     currentFileDetails.folderIndex = -1;
+    currentFileDetails.imageSize = QSize();
+
+    lastFileDetails.fileInfo = QFileInfo();
+    lastFileDetails.isPixmapLoaded = false;
+    lastFileDetails.isMovieLoaded = false;
+    lastFileDetails.folder = QFileInfoList();
+    lastFileDetails.folderIndex = -1;
+    lastFileDetails.imageSize = QSize();
 
     connect(&loadedMovie, &QMovie::updated, this, &QVImageCore::animatedFrameChanged);
 
-    connect(&futureWatcher, &QFutureWatcher<imageAndFileInfo>::resultReadyAt, this, &QVImageCore::processFile);
+    connect(&loadFutureWatcher, &QFutureWatcher<imageAndFileInfo>::resultReadyAt, this, &QVImageCore::processFile);
 }
 
 void QVImageCore::loadFile(const QString &fileName)
 {
-    QThreadPool *globalThreadPool = QThreadPool::globalInstance();
-    if (globalThreadPool->activeThreadCount() < globalThreadPool->maxThreadCount())
-        futureWatcher.setFuture(QtConcurrent::run(this, &QVImageCore::readFile, fileName));
+    lastFileDetails = currentFileDetails;
 
     //define info variables
     currentFileDetails.fileInfo = QFileInfo(fileName);
@@ -41,6 +48,22 @@ void QVImageCore::loadFile(const QString &fileName)
     currentFileDetails.imageSize = imageReader.size();
 
     emit fileInfoUpdated();
+
+    if (!pixmapCache.find(currentFileDetails.fileInfo.filePath(), &loadedPixmap))
+    {
+        qDebug() << 0;
+        vetoFutureWatcher = false;
+        QThreadPool *globalThreadPool = QThreadPool::globalInstance();
+        if (globalThreadPool->activeThreadCount() < globalThreadPool->maxThreadCount())
+            loadFutureWatcher.setFuture(QtConcurrent::run(this, &QVImageCore::readFile, currentFileDetails.fileInfo.filePath()));
+    }
+    else
+    {
+        qDebug() << 1;
+        vetoFutureWatcher = true;
+        postLoad();
+    }
+
 }
 
 QVImageCore::imageAndFileInfo QVImageCore::readFile(const QString &fileName)
@@ -58,6 +81,8 @@ QVImageCore::imageAndFileInfo QVImageCore::readFile(const QString &fileName)
     if (readImage.isNull())
     {
         emit readError(QString::number(newImageReader.error()) + ": " + newImageReader.errorString(), fileName);
+        currentFileDetails = lastFileDetails;
+        emit fileInfoUpdated();
         return combinedInfo;
     }
 
@@ -67,18 +92,22 @@ QVImageCore::imageAndFileInfo QVImageCore::readFile(const QString &fileName)
 
 void QVImageCore::processFile(int index)
 {
-    if (futureWatcher.isRunning())
+    if (loadFutureWatcher.isRunning() || vetoFutureWatcher)
         return;
 
-    imageAndFileInfo loadedImageAndFileInfo = futureWatcher.resultAt(index);
+    imageAndFileInfo loadedImageAndFileInfo = loadFutureWatcher.resultAt(index);
     if (loadedImageAndFileInfo.readImage.isNull())
         return;
 
-    loadedImage = loadedImageAndFileInfo.readImage;
-    loadedPixmap.convertFromImage(loadedImage);
+    loadedPixmap.convertFromImage(loadedImageAndFileInfo.readImage);
+    pixmapCache.insert(currentFileDetails.fileInfo.filePath(), loadedPixmap);
+    postLoad();
+}
 
+void QVImageCore::postLoad()
+{
     //animation detection
-    imageReader.setFileName(loadedImageAndFileInfo.readFileInfo.filePath());
+    imageReader.setFileName(currentFileDetails.fileInfo.filePath());
     if (currentFileDetails.isMovieLoaded)
     {
         loadedMovie.stop();
@@ -86,7 +115,8 @@ void QVImageCore::processFile(int index)
     }
     if (imageReader.supportsAnimation() && imageReader.imageCount() != 1)
     {
-        loadedMovie.setFileName(loadedImageAndFileInfo.readFileInfo.filePath());
+        qDebug() << "gif";
+        loadedMovie.setFileName(currentFileDetails.fileInfo.filePath());
         loadedMovie.setScaledSize(loadedPixmap.size());
         loadedMovie.start();
         currentFileDetails.isMovieLoaded = true;
