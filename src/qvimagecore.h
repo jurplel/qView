@@ -7,6 +7,7 @@
 #include <QMovie>
 #include <QFileInfo>
 #include <QFutureWatcher>
+#include <QPixmapCache>
 
 class QVImageCore : public QObject
 {
@@ -42,6 +43,7 @@ public:
     void loadFile(const QString &fileName);
     imageAndFileInfo readFile(const QString &fileName);
     void updateFolderInfo();
+    void postLoad();
 
     void loadSettings();
 
@@ -72,14 +74,17 @@ public slots:
 private:
     const QStringList filterList = (QStringList() << "*.bmp" << "*.cur" << "*.gif" << "*.icns" << "*.ico" << "*.jp2" << "*.jpeg" << "*.jpe" << "*.jpg" << "*.mng" << "*.pbm" << "*.pgm" << "*.png" << "*.ppm" << "*.svg" << "*.svgz" << "*.tif" << "*.tiff" << "*.wbmp" << "*.webp" << "*.xbm" << "*.xpm");
 
-    QImage loadedImage;
     QPixmap loadedPixmap;
     QMovie loadedMovie;
     QImageReader imageReader;
 
     QVFileDetails currentFileDetails;
+    QVFileDetails lastFileDetails;
 
-    QFutureWatcher<imageAndFileInfo> futureWatcher;
+    QFutureWatcher<imageAndFileInfo> loadFutureWatcher;
+
+    bool vetoFutureWatcher;
+    QPixmapCache pixmapCache;
 };
 
 #endif // QVIMAGECORE_H
