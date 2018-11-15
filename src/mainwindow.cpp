@@ -39,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //connect graphicsview signals
     connect(ui->graphicsView, &QVGraphicsView::fileLoaded, this, &MainWindow::fileLoaded);
+    connect(ui->graphicsView, &QVGraphicsView::updatedFileInfo, this, &MainWindow::refreshProperties);
     connect(ui->graphicsView, &QVGraphicsView::updateRecentMenu, this, &MainWindow::updateRecentMenu);
     connect(ui->graphicsView, &QVGraphicsView::sendWindowTitle, this, &MainWindow::setWindowTitle);
 
@@ -311,21 +312,6 @@ void MainWindow::updateRecentMenu()
     QSettings settings;
     settings.beginGroup("recents");
 
-    //activate items after item is loaded for the first time
-    if (ui->graphicsView->getCurrentFileDetails().isPixmapLoaded && !ui->actionOpen_Containing_Folder->isEnabled())
-    {
-        foreach(QAction* action, ui->menuView->actions())
-            action->setEnabled(true);
-        foreach(QAction* action, menu->actions())
-            action->setEnabled(true);
-        foreach(QAction* action, actions())
-            action->setEnabled(true);
-        ui->actionSlideshow->setEnabled(true);
-    }
-    //disable gif controls if there is no gif loaded
-    ui->menuTools->actions().first()->setEnabled(ui->graphicsView->getCurrentFileDetails().isMovieLoaded);
-
-
     //get recent files from config file
     QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
 
@@ -399,6 +385,21 @@ void MainWindow::clearRecent()
 
 void MainWindow::fileLoaded()
 {
+    //activate items after item is loaded for the first time
+    if (ui->graphicsView->getCurrentFileDetails().isPixmapLoaded && !ui->actionOpen_Containing_Folder->isEnabled())
+    {
+        foreach(QAction* action, ui->menuView->actions())
+            action->setEnabled(true);
+        foreach(QAction* action, menu->actions())
+            action->setEnabled(true);
+        foreach(QAction* action, actions())
+            action->setEnabled(true);
+        ui->actionSlideshow->setEnabled(true);
+    }
+    //disable gif controls if there is no gif loaded
+    ui->menuTools->actions().first()->setEnabled(ui->graphicsView->getCurrentFileDetails().isMovieLoaded);
+
+
     if (windowResizeMode == 2 || (windowResizeMode == 1 && justLaunchedWithImage))
     {
         justLaunchedWithImage = false;

@@ -16,6 +16,8 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
 
     vetoFutureWatcher = false;
 
+    isLoopFoldersEnabled = true;
+
     currentFileDetails.fileInfo = QFileInfo();
     currentFileDetails.isPixmapLoaded = false;
     currentFileDetails.isMovieLoaded = false;
@@ -116,7 +118,6 @@ void QVImageCore::postLoad()
     }
     if (imageReader.supportsAnimation() && imageReader.imageCount() != 1)
     {
-        qDebug() << "gif";
         loadedMovie.setFileName(currentFileDetails.fileInfo.filePath());
         loadedMovie.setScaledSize(loadedPixmap.size());
         loadedMovie.start();
@@ -125,17 +126,19 @@ void QVImageCore::postLoad()
 
     emit fileRead(currentFileDetails.fileInfo.path());
 
-    //add loop folders enabled check here
+    //add previous and next file to cache
+    //to-do: add loop folders enabled check here
     if (currentFileDetails.folderIndex-1 > 0)
         addIndexToCache(currentFileDetails.folderIndex-1);
-    else
+    else if (isLoopFoldersEnabled)
         addIndexToCache(currentFileDetails.folder.length()-1);
 
+    cacheFutureWatcher.waitForFinished();
+
     //here too (y'know, as an else if)
-    qDebug() << currentFileDetails.folderIndex+1 << currentFileDetails.folder.length()-1;
     if (currentFileDetails.folderIndex+1 < currentFileDetails.folder.length()-1)
         addIndexToCache(currentFileDetails.folderIndex+1);
-    else
+    else if (isLoopFoldersEnabled)
         addIndexToCache(0);
 }
 
@@ -165,6 +168,7 @@ void QVImageCore::addIndexToCache(const int &index)
 
 void QVImageCore::addToCache(const int &index)
 {
+    qDebug() << "cache";
     imageAndFileInfo loadedImageAndFileInfo = cacheFutureWatcher.resultAt(index);
     if (loadedImageAndFileInfo.readImage.isNull())
         return;
@@ -229,3 +233,11 @@ const QPixmap QVImageCore::scaleExpensively(const QSize desiredSize, const scale
 }
 
 
+void QVImageCore::loadSettings()
+{
+    QSettings settings;
+    settings.beginGroup("options");
+
+    //loop folders
+    isLoopFoldersEnabled = settings.value("loopfoldersenabled", true).toBool();
+}
