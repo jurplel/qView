@@ -42,7 +42,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     movieCenterNeedsUpdating = false;
     isOriginalSize = false;
     QSettings settings;
-    settings.beginGroup("recents");
+    settings.beginGroup("");
     recentFiles = settings.value("recentFiles").value<QVariantList>();
 
     connect(&imageCore, &QVImageCore::animatedFrameChanged, this, &QVGraphicsView::animatedFrameChanged);
@@ -357,13 +357,15 @@ void QVGraphicsView::prepareFile()
     scaledSize = loadedPixmapItem->boundingRect().size().toSize();
 
     resetScale();
-    setWindowTitle();
-    emit updateRecentMenu();
+    emit fileLoaded();
 }
 
 void QVGraphicsView::updateFileInfoDisplays()
 {
     updateRecentFiles(getCurrentFileDetails().fileInfo);
+    setRecentFiles();
+    emit updateRecentMenu();
+
     setWindowTitle();
     emit fileLoaded();
 }
@@ -652,6 +654,7 @@ void QVGraphicsView::loadSettings()
 {
     QSettings settings;
     settings.beginGroup("options");
+
     //bgcolor
     QBrush newBrush;
     newBrush.setStyle(Qt::SolidPattern);
@@ -704,6 +707,8 @@ void QVGraphicsView::loadSettings()
 
     if (getCurrentFileDetails().isPixmapLoaded)
         resetScale();
+
+    imageCore.loadSettings();
 }
 
 void QVGraphicsView::jumpToNextFrame()

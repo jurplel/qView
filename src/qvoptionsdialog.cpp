@@ -59,6 +59,8 @@ void QVOptionsDialog::loadSettings(const bool defaults)
     QSettings settings;
     if (!defaults)
         settings.beginGroup("options");
+    else
+        settings.beginGroup("emptygroup");
 
     //bgcolor
     transientSettings.bgColor = settings.value("bgcolor", QString("#212121")).toString();
