@@ -61,6 +61,7 @@ public:
     const QMovie& getLoadedMovie() const {return loadedMovie; }
     const QVFileDetails& getCurrentFileDetails() const {return currentFileDetails; }
 
+
 signals:
     void animatedFrameChanged(QRect rect);
 
@@ -88,6 +89,8 @@ private:
     bool vetoFutureWatcher;
     QFutureWatcher<imageAndFileInfo> cacheFutureWatcher;
     QPixmapCache pixmapCache;
+
+    bool isLoopFoldersEnabled;
 };
 
 #endif // QVIMAGECORE_H
