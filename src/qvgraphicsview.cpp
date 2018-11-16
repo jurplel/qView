@@ -364,7 +364,6 @@ void QVGraphicsView::updateFileInfoDisplays()
 {
     updateRecentFiles(getCurrentFileDetails().fileInfo);
     setRecentFiles();
-    emit updateRecentMenu();
 
     setWindowTitle();
     emit fileLoaded();

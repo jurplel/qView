@@ -32,7 +32,7 @@ public:
         QSize imageSize;
     };
 
-    struct imageAndFileInfo
+    struct QVImageAndFileInfo
     {
         QImage readImage;
         QFileInfo readFileInfo;
@@ -41,11 +41,11 @@ public:
     explicit QVImageCore(QObject *parent = nullptr);
 
     void loadFile(const QString &fileName);
-    imageAndFileInfo readFile(const QString &fileName);
+    QVImageAndFileInfo readFile(const QString &fileName);
     void postLoad();
     void updateFolderInfo();
     void addIndexToCache(const int &index);
-    void addToCache(const int &index);
+    void addToCache(const QVImageAndFileInfo loadedImageAndFileInfo);
 
     void loadSettings();
 
@@ -84,10 +84,11 @@ private:
     QVFileDetails currentFileDetails;
     QVFileDetails lastFileDetails;
 
-    QFutureWatcher<imageAndFileInfo> loadFutureWatcher;
+    QFutureWatcher<QVImageAndFileInfo> loadFutureWatcher;
 
     bool vetoFutureWatcher;
-    QFutureWatcher<imageAndFileInfo> cacheFutureWatcher;
+    QFutureWatcher<QVImageAndFileInfo> cacheFutureWatcher;
+    QFutureWatcher<QVImageAndFileInfo> cacheFutureWatcher2;
     QPixmapCache pixmapCache;
 
     bool isLoopFoldersEnabled;
