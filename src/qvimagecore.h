@@ -45,7 +45,7 @@ public:
     void postLoad();
     void updateFolderInfo();
     void addIndexToCache(const int &index);
-    void addToCache(const QVImageAndFileInfo loadedImageAndFileInfo);
+    void addToCache(const QVImageAndFileInfo &loadedImageAndFileInfo);
 
     void loadSettings();
 

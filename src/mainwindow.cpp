@@ -415,7 +415,7 @@ void MainWindow::refreshProperties()
         value4 = ui->graphicsView->getLoadedMovie().frameCount();
     else
         value4 = 0;
-    info->setInfo(ui->graphicsView->getCurrentFileDetails().fileInfo, ui->graphicsView->getLoadedPixmap().width(), ui->graphicsView->getLoadedPixmap().height(), value4);
+    info->setInfo(ui->graphicsView->getCurrentFileDetails().fileInfo, ui->graphicsView->getCurrentFileDetails().imageSize.width(), ui->graphicsView->getCurrentFileDetails().imageSize.height(), value4);
 
 }
 
