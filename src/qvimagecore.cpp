@@ -32,6 +32,8 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     lastFileDetails.folderIndex = -1;
     lastFileDetails.imageSize = QSize();
 
+    pixmapCache.setCacheLimit(102400);
+
     connect(&loadedMovie, &QMovie::updated, this, &QVImageCore::animatedFrameChanged);
 
     connect(&loadFutureWatcher, &QFutureWatcher<QVImageAndFileInfo>::resultReadyAt, this, &QVImageCore::processFile);
@@ -46,6 +48,7 @@ void QVImageCore::loadFile(const QString &fileName)
     //define info variables
     currentFileDetails.fileInfo = QFileInfo(fileName);
     currentFileDetails.isPixmapLoaded = true;
+    currentFileDetails.isMovieLoaded = false;
     updateFolderInfo();
 
     imageReader.setFileName(fileName);
@@ -53,7 +56,7 @@ void QVImageCore::loadFile(const QString &fileName)
 
     emit fileInfoUpdated();
 
-    if (!pixmapCache.find(currentFileDetails.fileInfo.filePath(), &loadedPixmap))
+    if (!pixmapCache.find(currentFileDetails.fileInfo.filePath(), loadedPixmap))
     {
         qDebug() << 0;
         vetoFutureWatcher = false;
@@ -66,6 +69,7 @@ void QVImageCore::loadFile(const QString &fileName)
         qDebug() << 1;
         vetoFutureWatcher = true;
         postLoad();
+        pixmapCache.remove(currentFileDetails.fileInfo.filePath());
     }
 
 }
@@ -104,7 +108,6 @@ void QVImageCore::processFile(int index)
         return;
 
     loadedPixmap.convertFromImage(loadedImageAndFileInfo.readImage);
-    addToCache(loadedImageAndFileInfo);
     postLoad();
 }
 
@@ -112,11 +115,7 @@ void QVImageCore::postLoad()
 {
     //animation detection
     imageReader.setFileName(currentFileDetails.fileInfo.filePath());
-    if (currentFileDetails.isMovieLoaded)
-    {
-        loadedMovie.stop();
-        currentFileDetails.isMovieLoaded = false;
-    }
+    loadedMovie.stop();
     if (imageReader.supportsAnimation() && imageReader.imageCount() != 1)
     {
         loadedMovie.setFileName(currentFileDetails.fileInfo.filePath());
@@ -125,8 +124,11 @@ void QVImageCore::postLoad()
         currentFileDetails.isMovieLoaded = true;
     }
 
+    currentFileDetails.imageSize = QSize(loadedPixmap.width(), loadedPixmap.height());
+
     emit fileRead(currentFileDetails.fileInfo.path());
 
+    pixmapCache.clear();
     //add previous and next file to cache
     if (currentFileDetails.folderIndex-1 > 0)
         addIndexToCache(currentFileDetails.folderIndex-1);
@@ -160,18 +162,20 @@ void QVImageCore::addIndexToCache(const int &index)
         return;
 
     QString filePath = currentFileDetails.folder[index].filePath();
+
+    if (pixmapCache.find(filePath, nullptr))
+        return;
+
     if (!cacheFutureWatcher.isRunning())
         cacheFutureWatcher.setFuture(QtConcurrent::run(this, &QVImageCore::readFile, filePath));
     else
         cacheFutureWatcher2.setFuture(QtConcurrent::run(this, &QVImageCore::readFile, filePath));
 }
 
-void QVImageCore::addToCache(const QVImageAndFileInfo loadedImageAndFileInfo)
+void QVImageCore::addToCache(const QVImageAndFileInfo &loadedImageAndFileInfo)
 {
     if (loadedImageAndFileInfo.readImage.isNull())
         return;
-
-    qDebug() << "caching" << loadedImageAndFileInfo.readImage;
 
     pixmapCache.insert(loadedImageAndFileInfo.readFileInfo.filePath(), QPixmap::fromImage(loadedImageAndFileInfo.readImage));
 }
