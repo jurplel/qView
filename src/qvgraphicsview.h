@@ -38,8 +38,7 @@ public:
 
     void loadMimeData(const QMimeData *mimeData);
     void loadFile(const QString &fileName);
-    void updateRecentFiles(const QFileInfo &file);
-    void setRecentFiles();
+    void addRecentFile(const QFileInfo &file);
     void setWindowTitle();
 
     void resetScale();
@@ -95,6 +94,8 @@ private slots:
 
     void updateFileInfoDisplays();
 
+    void saveRecentFiles();
+
     void error(const QString &errorString, const QString &fileName);
 
 private:
@@ -127,7 +128,8 @@ private:
 
     QVImageCore imageCore;
 
-    QTimer *timer;
+    QTimer *expensiveScaleTimer;
+    QTimer *recentsSaveTimer;
 
     const QStringList filterList = (QStringList() << "*.bmp" << "*.cur" << "*.gif" << "*.icns" << "*.ico" << "*.jp2" << "*.jpeg" << "*.jpe" << "*.jpg" << "*.mng" << "*.pbm" << "*.pgm" << "*.png" << "*.ppm" << "*.svg" << "*.svgz" << "*.tif" << "*.tiff" << "*.wbmp" << "*.webp" << "*.xbm" << "*.xpm");
 
