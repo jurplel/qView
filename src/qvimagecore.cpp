@@ -17,6 +17,7 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     vetoFutureWatcher = false;
 
     isLoopFoldersEnabled = true;
+    preloadingMode = 1;
 
     currentFileDetails.fileInfo = QFileInfo();
     currentFileDetails.isPixmapLoaded = false;
@@ -36,9 +37,7 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
 
     connect(&loadedMovie, &QMovie::updated, this, &QVImageCore::animatedFrameChanged);
 
-    connect(&loadFutureWatcher, &QFutureWatcher<QVImageAndFileInfo>::resultReadyAt, this, &QVImageCore::processFile);
-    connect(&cacheFutureWatcher, &QFutureWatcher<QVImageAndFileInfo>::resultReadyAt, [this](const int index){addToCache(cacheFutureWatcher.resultAt(index));});
-    connect(&cacheFutureWatcher2, &QFutureWatcher<QVImageAndFileInfo>::resultReadyAt, [this](const int index){addToCache(cacheFutureWatcher2.resultAt(index)); });
+    connect(&loadFutureWatcher, &QFutureWatcher<QVImageAndFileInfo>::finished, this, &QVImageCore::processFile);
 
     cacheTimer = new QTimer(this);
     cacheTimer->setSingleShot(true);
@@ -52,8 +51,6 @@ void QVImageCore::loadFile(const QString &fileName)
 
     //define info variables
     currentFileDetails.fileInfo = QFileInfo(fileName);
-    currentFileDetails.isPixmapLoaded = true;
-    currentFileDetails.isMovieLoaded = false;
     updateFolderInfo();
 
     imageReader.setFileName(fileName);
@@ -61,20 +58,19 @@ void QVImageCore::loadFile(const QString &fileName)
 
     emit fileInfoUpdated();
 
-    if (!pixmapCache.find(currentFileDetails.fileInfo.filePath(), loadedPixmap))
+    if (preloadingMode > 0 && pixmapCache.find(currentFileDetails.fileInfo.filePath(), loadedPixmap))
     {
-        qDebug() << 0;
+        vetoFutureWatcher = true;
+        postLoad();
+        if (preloadingMode > 1)
+            pixmapCache.remove(currentFileDetails.fileInfo.filePath());
+    }
+    else
+    {
         vetoFutureWatcher = false;
         QThreadPool *globalThreadPool = QThreadPool::globalInstance();
         if (globalThreadPool->activeThreadCount() < globalThreadPool->maxThreadCount())
             loadFutureWatcher.setFuture(QtConcurrent::run(this, &QVImageCore::readFile, currentFileDetails.fileInfo.filePath()));
-    }
-    else
-    {
-        qDebug() << 1;
-        vetoFutureWatcher = true;
-        postLoad();
-        pixmapCache.remove(currentFileDetails.fileInfo.filePath());
     }
 
 }
@@ -103,24 +99,30 @@ QVImageCore::QVImageAndFileInfo QVImageCore::readFile(const QString &fileName)
     return combinedInfo;
 }
 
-void QVImageCore::processFile(int index)
+void QVImageCore::processFile()
 {
     if (loadFutureWatcher.isRunning() || vetoFutureWatcher)
         return;
 
-    QVImageAndFileInfo loadedImageAndFileInfo = loadFutureWatcher.resultAt(index);
+    QVImageAndFileInfo loadedImageAndFileInfo = loadFutureWatcher.result();
     if (loadedImageAndFileInfo.readImage.isNull())
         return;
 
     loadedPixmap.convertFromImage(loadedImageAndFileInfo.readImage);
     postLoad();
+    qDebug() << loadedImageAndFileInfo.readFileInfo;
 }
 
 void QVImageCore::postLoad()
 {
+
+    currentFileDetails.isPixmapLoaded = true;
+    currentFileDetails.isMovieLoaded = false;
+    loadedMovie.stop();
+    loadedMovie.setFileName("");
+
     //animation detection
     imageReader.setFileName(currentFileDetails.fileInfo.filePath());
-    loadedMovie.stop();
     if (imageReader.supportsAnimation() && imageReader.imageCount() != 1)
     {
         loadedMovie.setFileName(currentFileDetails.fileInfo.filePath());
@@ -138,17 +140,31 @@ void QVImageCore::postLoad()
 
 void QVImageCore::requestCaching()
 {
-    pixmapCache.clear();
-    //add previous and next file to cache
-    if (currentFileDetails.folderIndex-1 > 0)
-        addIndexToCache(currentFileDetails.folderIndex-1);
-    else if (isLoopFoldersEnabled)
-        addIndexToCache(currentFileDetails.folder.length()-1);
+    switch(preloadingMode) {
+    case 1:
+    {
+        pixmapCache.clear();
+        //add previous and next file to cache
+        if (currentFileDetails.folderIndex-1 > 0)
+            addIndexToCache(currentFileDetails.folderIndex-1);
+        else if (isLoopFoldersEnabled)
+            addIndexToCache(currentFileDetails.folder.length()-1);
 
-    if (currentFileDetails.folderIndex+1 < currentFileDetails.folder.length()-1)
-        addIndexToCache(currentFileDetails.folderIndex+1);
-    else if (isLoopFoldersEnabled)
-        addIndexToCache(0);
+        if (currentFileDetails.folderIndex+1 < currentFileDetails.folder.length()-1)
+            addIndexToCache(currentFileDetails.folderIndex+1);
+        else if (isLoopFoldersEnabled)
+            addIndexToCache(0);
+        break;
+    }
+    case 2:
+    {
+        for (int i = 0; i < currentFileDetails.folder.length(); i++)
+        {
+            addIndexToCache(i);
+        }
+        break;
+    }
+    }
 }
 
 void QVImageCore::updateFolderInfo()
@@ -176,10 +192,12 @@ void QVImageCore::addIndexToCache(const int &index)
     if (pixmapCache.find(filePath, nullptr))
         return;
 
-    if (!cacheFutureWatcher.isRunning())
-        cacheFutureWatcher.setFuture(QtConcurrent::run(this, &QVImageCore::readFile, filePath));
-    else
-        cacheFutureWatcher2.setFuture(QtConcurrent::run(this, &QVImageCore::readFile, filePath));
+    QFutureWatcher<QVImageAndFileInfo> *cacheFutureWatcher = new QFutureWatcher<QVImageAndFileInfo>();
+    connect(cacheFutureWatcher, &QFutureWatcher<QVImageAndFileInfo>::finished, [cacheFutureWatcher, this](){
+        addToCache(cacheFutureWatcher->result());
+        cacheFutureWatcher->deleteLater();
+    });
+    cacheFutureWatcher->setFuture(QtConcurrent::run(this, &QVImageCore::readFile, filePath));
 }
 
 void QVImageCore::addToCache(const QVImageAndFileInfo &loadedImageAndFileInfo)
@@ -254,4 +272,7 @@ void QVImageCore::loadSettings()
 
     //loop folders
     isLoopFoldersEnabled = settings.value("loopfoldersenabled", true).toBool();
+
+    //preloading mode
+    preloadingMode = settings.value("preloadingmode", true).toInt();
 }
