@@ -39,6 +39,11 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     connect(&loadFutureWatcher, &QFutureWatcher<QVImageAndFileInfo>::resultReadyAt, this, &QVImageCore::processFile);
     connect(&cacheFutureWatcher, &QFutureWatcher<QVImageAndFileInfo>::resultReadyAt, [this](const int index){addToCache(cacheFutureWatcher.resultAt(index));});
     connect(&cacheFutureWatcher2, &QFutureWatcher<QVImageAndFileInfo>::resultReadyAt, [this](const int index){addToCache(cacheFutureWatcher2.resultAt(index)); });
+
+    cacheTimer = new QTimer(this);
+    cacheTimer->setSingleShot(true);
+    cacheTimer->setInterval(100);
+    connect(cacheTimer, &QTimer::timeout, this, &QVImageCore::requestCaching);
 }
 
 void QVImageCore::loadFile(const QString &fileName)
@@ -128,6 +133,11 @@ void QVImageCore::postLoad()
 
     emit fileRead(currentFileDetails.fileInfo.path());
 
+    cacheTimer->start();
+}
+
+void QVImageCore::requestCaching()
+{
     pixmapCache.clear();
     //add previous and next file to cache
     if (currentFileDetails.folderIndex-1 > 0)
