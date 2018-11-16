@@ -16,8 +16,6 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override;
 
-    void updateRecentMenu();
-
     void refreshProperties();
 
     void setWindowSize();
@@ -77,6 +75,8 @@ private slots:
     void on_actionZoom_Out_triggered();
 
     void on_actionReset_Zoom_triggered();
+
+    void updateRecentMenu();
 
     void openRecent(int i);
 

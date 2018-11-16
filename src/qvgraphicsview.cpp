@@ -42,7 +42,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     movieCenterNeedsUpdating = false;
     isOriginalSize = false;
     QSettings settings;
-    settings.beginGroup("");
+    settings.beginGroup("recents");
     recentFiles = settings.value("recentFiles").value<QVariantList>();
 
     connect(&imageCore, &QVImageCore::animatedFrameChanged, this, &QVGraphicsView::animatedFrameChanged);
@@ -50,10 +50,15 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     connect(&imageCore, &QVImageCore::fileRead, this, &QVGraphicsView::prepareFile);
     connect(&imageCore, &QVImageCore::readError, this, &QVGraphicsView::error);
 
-    timer = new QTimer(this);
-    timer->setSingleShot(true);
-    timer->setInterval(10);
-    connect(timer, &QTimer::timeout, this, [this]{scaleExpensively(scaleMode::resetScale);});
+    expensiveScaleTimer = new QTimer(this);
+    expensiveScaleTimer->setSingleShot(true);
+    expensiveScaleTimer->setInterval(10);
+    connect(expensiveScaleTimer, &QTimer::timeout, this, [this]{scaleExpensively(scaleMode::resetScale);});
+
+    recentsSaveTimer = new QTimer(this);
+    recentsSaveTimer->setSingleShot(true);
+    recentsSaveTimer->setInterval(100);
+    connect(recentsSaveTimer, &QTimer::timeout, this, &QVGraphicsView::saveRecentFiles);
 
     loadedPixmapItem = new QGraphicsPixmapItem();
     scene->addItem(loadedPixmapItem);
@@ -362,14 +367,13 @@ void QVGraphicsView::prepareFile()
 
 void QVGraphicsView::updateFileInfoDisplays()
 {
-    updateRecentFiles(getCurrentFileDetails().fileInfo);
-    setRecentFiles();
+    addRecentFile(getCurrentFileDetails().fileInfo);
 
     setWindowTitle();
     emit fileLoaded();
 }
 
-void QVGraphicsView::updateRecentFiles(const QFileInfo &file)
+void QVGraphicsView::addRecentFile(const QFileInfo &file)
 {
     QSettings settings;
     settings.beginGroup("recents");
@@ -384,9 +388,11 @@ void QVGraphicsView::updateRecentFiles(const QFileInfo &file)
 
     if(recentFiles.size() > 10)
         recentFiles.removeLast();
+
+    recentsSaveTimer->start();
 }
 
-void QVGraphicsView::setRecentFiles()
+void QVGraphicsView::saveRecentFiles()
 {
     QSettings settings;
     settings.beginGroup("recents");
@@ -434,7 +440,7 @@ void QVGraphicsView::resetScale()
     if (!isScalingEnabled)
         return;
 
-    timer->start();
+    expensiveScaleTimer->start();
 }
 
 void QVGraphicsView::scaleExpensively(scaleMode mode)
@@ -642,8 +648,7 @@ void QVGraphicsView::error(const QString &errorString, const QString &fileName)
             QMessageBox::critical(this, tr("Error"), tr("Error ") + errorString);
             if (errorString.at(0) == "1")
             {
-                updateRecentFiles(QFileInfo(fileName));
-                setRecentFiles();
+                addRecentFile(QFileInfo(fileName));
             }
             return;
         }
