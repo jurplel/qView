@@ -73,7 +73,7 @@ signals:
     void readError(const QString &errorString, const QString &fileName);
 
 public slots:
-    void processFile(int index);
+    void processFile();
 
 private:
     const QStringList filterList = (QStringList() << "*.bmp" << "*.cur" << "*.gif" << "*.icns" << "*.ico" << "*.jp2" << "*.jpeg" << "*.jpe" << "*.jpg" << "*.mng" << "*.pbm" << "*.pgm" << "*.png" << "*.ppm" << "*.svg" << "*.svgz" << "*.tif" << "*.tiff" << "*.wbmp" << "*.webp" << "*.xbm" << "*.xpm");
@@ -88,12 +88,11 @@ private:
     QFutureWatcher<QVImageAndFileInfo> loadFutureWatcher;
 
     bool vetoFutureWatcher;
-    QFutureWatcher<QVImageAndFileInfo> cacheFutureWatcher;
-    QFutureWatcher<QVImageAndFileInfo> cacheFutureWatcher2;
     QPixmapCache pixmapCache;
     QTimer *cacheTimer;
 
     bool isLoopFoldersEnabled;
+    int preloadingMode;
 };
 
 #endif // QVIMAGECORE_H
