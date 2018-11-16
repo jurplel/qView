@@ -423,8 +423,6 @@ void QVGraphicsView::setWindowTitle()
         newString = "qView - " + getCurrentFileDetails().fileInfo.fileName() + " - " + QString::number(getCurrentFileDetails().folderIndex+1) + "/" + QString::number(getCurrentFileDetails().folder.count()) + " - "  + QString::number(getLoadedPixmap().width()) + "x" + QString::number(getLoadedPixmap().height()) + " - " + locale.formattedDataSize(getCurrentFileDetails().fileInfo.size());
         break;
     }
-    default:
-        break;
     }
 
     emit sendWindowTitle(newString);
