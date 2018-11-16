@@ -43,6 +43,7 @@ public:
     void loadFile(const QString &fileName);
     QVImageAndFileInfo readFile(const QString &fileName);
     void postLoad();
+    void requestCaching();
     void updateFolderInfo();
     void addIndexToCache(const int &index);
     void addToCache(const QVImageAndFileInfo &loadedImageAndFileInfo);
@@ -90,6 +91,7 @@ private:
     QFutureWatcher<QVImageAndFileInfo> cacheFutureWatcher;
     QFutureWatcher<QVImageAndFileInfo> cacheFutureWatcher2;
     QPixmapCache pixmapCache;
+    QTimer *cacheTimer;
 
     bool isLoopFoldersEnabled;
 };
