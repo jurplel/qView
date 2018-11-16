@@ -402,9 +402,6 @@ void QVGraphicsView::saveRecentFiles()
 
 void QVGraphicsView::setWindowTitle()
 {
-    if (!getCurrentFileDetails().isPixmapLoaded)
-        return;
-
     QString newString;
     switch (titlebarMode) {
     case 0:
@@ -420,7 +417,7 @@ void QVGraphicsView::setWindowTitle()
     case 2:
     {
         QLocale locale;
-        newString = "qView - " + getCurrentFileDetails().fileInfo.fileName() + " - " + QString::number(getCurrentFileDetails().folderIndex+1) + "/" + QString::number(getCurrentFileDetails().folder.count()) + " - "  + QString::number(getLoadedPixmap().width()) + "x" + QString::number(getLoadedPixmap().height()) + " - " + locale.formattedDataSize(getCurrentFileDetails().fileInfo.size());
+        newString = "qView - " + getCurrentFileDetails().fileInfo.fileName() + " - " + QString::number(getCurrentFileDetails().folderIndex+1) + "/" + QString::number(getCurrentFileDetails().folder.count()) + " - "  + QString::number(getCurrentFileDetails().imageSize.width()) + "x" + QString::number(getCurrentFileDetails().imageSize.height()) + " - " + locale.formattedDataSize(getCurrentFileDetails().fileInfo.size());
         break;
     }
     }
