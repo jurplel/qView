@@ -23,7 +23,7 @@
       <enum>Qt::NoFocus</enum>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="window">
       <property name="layoutDirection">
@@ -481,6 +481,9 @@
        </item>
        <item row="3" column="0">
         <widget class="QLabel" name="label_7">
+         <property name="toolTip">
+          <string>Controls the amount of images preloaded - Warning: &quot;Entire folder&quot; will eat your ram</string>
+         </property>
          <property name="text">
           <string>Preloading:</string>
          </property>
