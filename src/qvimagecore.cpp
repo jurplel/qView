@@ -50,6 +50,7 @@ void QVImageCore::loadFile(const QString &fileName)
     lastFileDetails = currentFileDetails;
 
     //define info variables
+    currentFileDetails.isMovieLoaded = false;
     currentFileDetails.fileInfo = QFileInfo(fileName);
     updateFolderInfo();
 
@@ -115,11 +116,11 @@ void QVImageCore::processFile()
 
 void QVImageCore::postLoad()
 {
-
     currentFileDetails.isPixmapLoaded = true;
-    currentFileDetails.isMovieLoaded = false;
     loadedMovie.stop();
     loadedMovie.setFileName("");
+
+    fileInfoUpdated();
 
     //animation detection
     imageReader.setFileName(currentFileDetails.fileInfo.filePath());
