@@ -328,8 +328,6 @@ void QVGraphicsView::loadMimeData(const QMimeData *mimeData)
 void QVGraphicsView::animatedFrameChanged(QRect rect)
 {
     Q_UNUSED(rect);
-    if (!getCurrentFileDetails().isMovieLoaded)
-        return;
 
     loadedPixmapItem->setPixmap(getLoadedMovie().currentPixmap());
 
@@ -402,6 +400,9 @@ void QVGraphicsView::saveRecentFiles()
 
 void QVGraphicsView::setWindowTitle()
 {
+    if (!getCurrentFileDetails().isPixmapLoaded)
+        return;
+
     QString newString;
     switch (titlebarMode) {
     case 0:
