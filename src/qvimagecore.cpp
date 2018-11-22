@@ -33,7 +33,7 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     lastFileDetails.folderIndex = -1;
     lastFileDetails.imageSize = QSize();
 
-    pixmapCache.setCacheLimit(102400);
+    pixmapCache.setCacheLimit(1024000);
 
     connect(&loadedMovie, &QMovie::updated, this, &QVImageCore::animatedFrameChanged);
 
@@ -69,9 +69,7 @@ void QVImageCore::loadFile(const QString &fileName)
     else
     {
         vetoFutureWatcher = false;
-        QThreadPool *globalThreadPool = QThreadPool::globalInstance();
-        if (globalThreadPool->activeThreadCount() < globalThreadPool->maxThreadCount())
-            loadFutureWatcher.setFuture(QtConcurrent::run(this, &QVImageCore::readFile, currentFileDetails.fileInfo.filePath()));
+        loadFutureWatcher.setFuture(QtConcurrent::run(this, &QVImageCore::readFile, currentFileDetails.fileInfo.filePath()));
     }
 
 }
@@ -111,7 +109,6 @@ void QVImageCore::processFile()
 
     loadedPixmap.convertFromImage(loadedImageAndFileInfo.readImage);
     postLoad();
-    qDebug() << loadedImageAndFileInfo.readFileInfo;
 }
 
 void QVImageCore::postLoad()
@@ -142,6 +139,11 @@ void QVImageCore::postLoad()
 void QVImageCore::requestCaching()
 {
     switch(preloadingMode) {
+    case 0:
+    {
+        pixmapCache.clear();
+        break;
+    }
     case 1:
     {
         pixmapCache.clear();
