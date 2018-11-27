@@ -38,7 +38,7 @@ public:
 
     void loadMimeData(const QMimeData *mimeData);
     void loadFile(const QString &fileName);
-    void updateRecentFiles(const QFileInfo &file);
+    void addRecentFile(const QFileInfo &file);
     void setWindowTitle();
 
     void resetScale();
@@ -59,6 +59,11 @@ public:
 
 signals:
     void fileLoaded();
+    void updatedFileInfo();
+
+    void updateRecentMenu();
+
+    void sendWindowTitle(const QString &newTitle);
 
 protected:
     void wheelEvent(QWheelEvent *event) override;
@@ -84,6 +89,14 @@ protected:
 
 private slots:
     void animatedFrameChanged(QRect rect);
+
+    void prepareFile();
+
+    void updateFileInfoDisplays();
+
+    void saveRecentFiles();
+
+    void error(const QString &errorString, const QString &fileName);
 
 private:
 
@@ -111,12 +124,12 @@ private:
     qreal maxScalingTwoSize;
     bool cheapScaledLast;
     bool movieCenterNeedsUpdating;
+    QVariantList recentFiles;
 
     QVImageCore imageCore;
 
-    QTimer *timer;
-
-    MainWindow *parentMainWindow;
+    QTimer *expensiveScaleTimer;
+    QTimer *recentsSaveTimer;
 
     const QStringList filterList = (QStringList() << "*.bmp" << "*.cur" << "*.gif" << "*.icns" << "*.ico" << "*.jp2" << "*.jpeg" << "*.jpe" << "*.jpg" << "*.mng" << "*.pbm" << "*.pgm" << "*.png" << "*.ppm" << "*.svg" << "*.svgz" << "*.tif" << "*.tiff" << "*.wbmp" << "*.webp" << "*.xbm" << "*.xpm");
 

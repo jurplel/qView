@@ -37,8 +37,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     maxWindowResizedConstant = 0.9;
 
-    //connect function for setting window size to file loaded signal
+    //connect graphicsview signals
     connect(ui->graphicsView, &QVGraphicsView::fileLoaded, this, &MainWindow::fileLoaded);
+    connect(ui->graphicsView, &QVGraphicsView::updatedFileInfo, this, &MainWindow::refreshProperties);
+    connect(ui->graphicsView, &QVGraphicsView::updateRecentMenu, this, &MainWindow::updateRecentMenu);
+    connect(ui->graphicsView, &QVGraphicsView::sendWindowTitle, this, &MainWindow::setWindowTitle);
 
     //Enable drag&dropping
     setAcceptDrops(true);
@@ -309,21 +312,6 @@ void MainWindow::updateRecentMenu()
     QSettings settings;
     settings.beginGroup("recents");
 
-    //activate items after item is loaded for the first time
-    if (ui->graphicsView->getCurrentFileDetails().isPixmapLoaded && !ui->actionOpen_Containing_Folder->isEnabled())
-    {
-        foreach(QAction* action, ui->menuView->actions())
-            action->setEnabled(true);
-        foreach(QAction* action, menu->actions())
-            action->setEnabled(true);
-        foreach(QAction* action, actions())
-            action->setEnabled(true);
-        ui->actionSlideshow->setEnabled(true);
-    }
-    //disable gif controls if there is no gif loaded
-    ui->menuTools->actions().first()->setEnabled(ui->graphicsView->getCurrentFileDetails().isMovieLoaded);
-
-
     //get recent files from config file
     QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
 
@@ -397,6 +385,21 @@ void MainWindow::clearRecent()
 
 void MainWindow::fileLoaded()
 {
+    //activate items after item is loaded for the first time
+    if (ui->graphicsView->getCurrentFileDetails().isPixmapLoaded && !ui->actionOpen_Containing_Folder->isEnabled())
+    {
+        foreach(QAction* action, ui->menuView->actions())
+            action->setEnabled(true);
+        foreach(QAction* action, menu->actions())
+            action->setEnabled(true);
+        foreach(QAction* action, actions())
+            action->setEnabled(true);
+        ui->actionSlideshow->setEnabled(true);
+    }
+    //disable gif controls if there is no gif loaded
+    ui->menuTools->actions().first()->setEnabled(ui->graphicsView->getCurrentFileDetails().isMovieLoaded);
+
+
     if (windowResizeMode == 2 || (windowResizeMode == 1 && justLaunchedWithImage))
     {
         justLaunchedWithImage = false;
@@ -412,14 +415,13 @@ void MainWindow::refreshProperties()
         value4 = ui->graphicsView->getLoadedMovie().frameCount();
     else
         value4 = 0;
-    info->setInfo(ui->graphicsView->getCurrentFileDetails().fileInfo, ui->graphicsView->getLoadedPixmap().width(), ui->graphicsView->getLoadedPixmap().height(), value4);
+    info->setInfo(ui->graphicsView->getCurrentFileDetails().fileInfo, ui->graphicsView->getCurrentFileDetails().imageSize.width(), ui->graphicsView->getCurrentFileDetails().imageSize.height(), value4);
 
 }
 
 void MainWindow::setWindowSize()
 {
-
-    QSize imageSize = QSize(ui->graphicsView->getLoadedPixmap().width(), ui->graphicsView->getLoadedPixmap().height());
+    QSize imageSize = ui->graphicsView->getCurrentFileDetails().imageSize;
 
     QSize currentScreenSize = QGuiApplication::screenAt(geometry().center())->size();
     currentScreenSize *= maxWindowResizedConstant;
