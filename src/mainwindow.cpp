@@ -423,7 +423,7 @@ void MainWindow::setWindowSize()
 {
     QSize imageSize = ui->graphicsView->getCurrentFileDetails().imageSize;
 
-    QSize currentScreenSize = QGuiApplication::screenAt(geometry().center())->size();
+    QSize currentScreenSize = screenAt(geometry().center())->size();
     currentScreenSize *= maxWindowResizedConstant;
 
     if (imageSize.width() > currentScreenSize.width() || imageSize.height() > currentScreenSize.height())
@@ -432,6 +432,22 @@ void MainWindow::setWindowSize()
     QRect newRect = QRect(geometry().topLeft(), imageSize);
     newRect.moveCenter(geometry().center());
     setGeometry(newRect);
+}
+
+QScreen *MainWindow::screenAt(const QPoint &point)
+{
+    QVarLengthArray<const QScreen *, 8> visitedScreens;
+    for (const QScreen *screen : QGuiApplication::screens()) {
+        if (visitedScreens.contains(screen))
+            continue;
+        // The virtual siblings include the screen itself, so iterate directly
+        for (QScreen *sibling : screen->virtualSiblings()) {
+            if (sibling->geometry().contains(point))
+                return sibling;
+            visitedScreens.append(sibling);
+        }
+    }
+    return nullptr;
 }
 
 const bool& MainWindow::getIsPixmapLoaded() const

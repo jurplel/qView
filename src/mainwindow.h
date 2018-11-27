@@ -24,6 +24,8 @@ public:
 
     void setJustLaunchedWithImage(const bool value);
 
+    QScreen *screenAt(const QPoint &point);
+
 public slots:
     void openFile(const QString fileName);
 
