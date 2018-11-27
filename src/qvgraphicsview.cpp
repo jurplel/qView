@@ -368,7 +368,7 @@ void QVGraphicsView::updateFileInfoDisplays()
     addRecentFile(getCurrentFileDetails().fileInfo);
 
     setWindowTitle();
-    emit fileLoaded();
+    emit updatedFileInfo();
 }
 
 void QVGraphicsView::addRecentFile(const QFileInfo &file)
