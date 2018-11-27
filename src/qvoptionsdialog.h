@@ -61,6 +61,8 @@ private slots:
 
     void on_loopFoldersCheckbox_stateChanged(int arg1);
 
+    void on_preloadingComboBox_currentIndexChanged(int index);
+
 protected:
     virtual void showEvent(QShowEvent *event);
 
@@ -88,6 +90,7 @@ private:
         int windowResizeMode;
         int maxWindowResizedPercentage;
         bool loopFoldersEnabled;
+        int preloadingMode;
     };
 
     STransientSettings transientSettings;

@@ -41,15 +41,24 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     cheapScaledLast = false;
     movieCenterNeedsUpdating = false;
     isOriginalSize = false;
+    QSettings settings;
+    settings.beginGroup("recents");
+    recentFiles = settings.value("recentFiles").value<QVariantList>();
 
     connect(&imageCore, &QVImageCore::animatedFrameChanged, this, &QVGraphicsView::animatedFrameChanged);
+    connect(&imageCore, &QVImageCore::fileInfoUpdated, this, &QVGraphicsView::updateFileInfoDisplays);
+    connect(&imageCore, &QVImageCore::fileRead, this, &QVGraphicsView::prepareFile);
+    connect(&imageCore, &QVImageCore::readError, this, &QVGraphicsView::error);
 
-    timer = new QTimer(this);
-    timer->setSingleShot(true);
-    timer->setInterval(10);
-    connect(timer, &QTimer::timeout, this, [this]{scaleExpensively(scaleMode::resetScale);});
+    expensiveScaleTimer = new QTimer(this);
+    expensiveScaleTimer->setSingleShot(true);
+    expensiveScaleTimer->setInterval(10);
+    connect(expensiveScaleTimer, &QTimer::timeout, this, [this]{scaleExpensively(scaleMode::resetScale);});
 
-    parentMainWindow = (dynamic_cast<MainWindow*>(parentWidget()->parentWidget()));
+    recentsSaveTimer = new QTimer(this);
+    recentsSaveTimer->setSingleShot(true);
+    recentsSaveTimer->setInterval(100);
+    connect(recentsSaveTimer, &QTimer::timeout, this, &QVGraphicsView::saveRecentFiles);
 
     loadedPixmapItem = new QGraphicsPixmapItem();
     scene->addItem(loadedPixmapItem);
@@ -319,8 +328,6 @@ void QVGraphicsView::loadMimeData(const QMimeData *mimeData)
 void QVGraphicsView::animatedFrameChanged(QRect rect)
 {
     Q_UNUSED(rect);
-    if (!getCurrentFileDetails().isMovieLoaded)
-        return;
 
     loadedPixmapItem->setPixmap(getLoadedMovie().currentPixmap());
 
@@ -337,15 +344,11 @@ void QVGraphicsView::animatedFrameChanged(QRect rect)
 
 void QVGraphicsView::loadFile(const QString &fileName)
 {
-    QString errorString = imageCore.loadFile(fileName);
-    if (!errorString.isEmpty())
-    {
-        QMessageBox::critical(this, tr("qView Error"), tr("Read Error ") + errorString);
-        if (errorString.at(0) == "1")
-            updateRecentFiles(QFileInfo(fileName));
-        return;
-    }
+    imageCore.loadFile(fileName);
+}
 
+void QVGraphicsView::prepareFile()
+{
     //set pixmap, offset, and moviecenter
     loadedPixmapItem->setPixmap(getLoadedPixmap());
     loadedPixmapItem->setOffset((scene()->width()/2 - getLoadedPixmap().width()/2), (scene()->height()/2 - getLoadedPixmap().height()/2));
@@ -356,18 +359,23 @@ void QVGraphicsView::loadFile(const QString &fileName)
 
     scaledSize = loadedPixmapItem->boundingRect().size().toSize();
 
-    //post-load operations
-    emit fileLoaded();
     resetScale();
-    updateRecentFiles(getCurrentFileDetails().fileInfo);
-    setWindowTitle();
+    emit fileLoaded();
 }
 
-void QVGraphicsView::updateRecentFiles(const QFileInfo &file)
+void QVGraphicsView::updateFileInfoDisplays()
+{
+    addRecentFile(getCurrentFileDetails().fileInfo);
+
+    setWindowTitle();
+    emit fileLoaded();
+}
+
+void QVGraphicsView::addRecentFile(const QFileInfo &file)
 {
     QSettings settings;
     settings.beginGroup("recents");
-    auto recentFiles = settings.value("recentFiles").value<QVariantList>();
+    recentFiles = settings.value("recentFiles").value<QVariantList>();
     QStringList fileInfo;
 
     fileInfo << file.fileName() << file.filePath();
@@ -379,8 +387,15 @@ void QVGraphicsView::updateRecentFiles(const QFileInfo &file)
     if(recentFiles.size() > 10)
         recentFiles.removeLast();
 
+    recentsSaveTimer->start();
+}
+
+void QVGraphicsView::saveRecentFiles()
+{
+    QSettings settings;
+    settings.beginGroup("recents");
     settings.setValue("recentFiles", recentFiles);
-    parentMainWindow->updateRecentMenu();
+    emit updateRecentMenu();
 }
 
 void QVGraphicsView::setWindowTitle()
@@ -388,26 +403,27 @@ void QVGraphicsView::setWindowTitle()
     if (!getCurrentFileDetails().isPixmapLoaded)
         return;
 
+    QString newString;
     switch (titlebarMode) {
     case 0:
     {
-        parentMainWindow->setWindowTitle("qView");
+        newString = "qView";
         break;
     }
     case 1:
     {
-        parentMainWindow->setWindowTitle(getCurrentFileDetails().fileInfo.fileName());
+        newString = getCurrentFileDetails().fileInfo.fileName();
         break;
     }
     case 2:
     {
         QLocale locale;
-        parentMainWindow->setWindowTitle("qView - " + getCurrentFileDetails().fileInfo.fileName() + " - " + QString::number(getCurrentFileDetails().folderIndex+1) + "/" + QString::number(getCurrentFileDetails().folder.count()) + " - "  + QString::number(getLoadedPixmap().width()) + "x" + QString::number(getLoadedPixmap().height()) + " - " + locale.formattedDataSize(getCurrentFileDetails().fileInfo.size()));
+        newString = "qView - " + getCurrentFileDetails().fileInfo.fileName() + " - " + QString::number(getCurrentFileDetails().folderIndex+1) + "/" + QString::number(getCurrentFileDetails().folder.count()) + " - "  + QString::number(getCurrentFileDetails().imageSize.width()) + "x" + QString::number(getCurrentFileDetails().imageSize.height()) + " - " + locale.formattedDataSize(getCurrentFileDetails().fileInfo.size());
         break;
     }
-    default:
-        break;
     }
+
+    emit sendWindowTitle(newString);
 }
 
 void QVGraphicsView::resetScale()
@@ -420,7 +436,7 @@ void QVGraphicsView::resetScale()
     if (!isScalingEnabled)
         return;
 
-    timer->start();
+    expensiveScaleTimer->start();
 }
 
 void QVGraphicsView::scaleExpensively(scaleMode mode)
@@ -621,10 +637,24 @@ void QVGraphicsView::fitInViewMarginless(bool setVariables)
     }
 }
 
+void QVGraphicsView::error(const QString &errorString, const QString &fileName)
+{
+        if (!errorString.isEmpty())
+        {
+            QMessageBox::critical(this, tr("Error"), tr("Error ") + errorString);
+            if (errorString.at(0) == "1")
+            {
+                addRecentFile(QFileInfo(fileName));
+            }
+            return;
+        }
+}
+
 void QVGraphicsView::loadSettings()
 {
     QSettings settings;
     settings.beginGroup("options");
+
     //bgcolor
     QBrush newBrush;
     newBrush.setStyle(Qt::SolidPattern);
@@ -677,6 +707,8 @@ void QVGraphicsView::loadSettings()
 
     if (getCurrentFileDetails().isPixmapLoaded)
         resetScale();
+
+    imageCore.loadSettings();
 }
 
 void QVGraphicsView::jumpToNextFrame()

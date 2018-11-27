@@ -51,6 +51,7 @@ void QVOptionsDialog::saveSettings()
     settings.setValue("windowresizemode", transientSettings.windowResizeMode);
     settings.setValue("maxwindowresizedpercentage", transientSettings.maxWindowResizedPercentage);
     settings.setValue("loopfoldersenabled", transientSettings.loopFoldersEnabled);
+    settings.setValue("preloadingmode", transientSettings.preloadingMode);
     emit optionsSaved();
 }
 
@@ -59,6 +60,8 @@ void QVOptionsDialog::loadSettings(const bool defaults)
     QSettings settings;
     if (!defaults)
         settings.beginGroup("options");
+    else
+        settings.beginGroup("emptygroup");
 
     //bgcolor
     transientSettings.bgColor = settings.value("bgcolor", QString("#212121")).toString();
@@ -171,6 +174,10 @@ void QVOptionsDialog::loadSettings(const bool defaults)
     //loop folders
     transientSettings.loopFoldersEnabled = settings.value("loopfoldersenabled", true).toBool();
     ui->loopFoldersCheckbox->setChecked(transientSettings.loopFoldersEnabled);
+
+    //preloading mode
+    transientSettings.preloadingMode = settings.value("preloadingmode", 1).toInt();
+    ui->preloadingComboBox->setCurrentIndex(transientSettings.preloadingMode);
 }
 
 void QVOptionsDialog::updateBgColorButton()
@@ -359,4 +366,9 @@ void QVOptionsDialog::on_loopFoldersCheckbox_stateChanged(int arg1)
     {
         transientSettings.loopFoldersEnabled = false;
     }
+}
+
+void QVOptionsDialog::on_preloadingComboBox_currentIndexChanged(int index)
+{
+    transientSettings.preloadingMode = index;
 }

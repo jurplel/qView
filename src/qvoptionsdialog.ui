@@ -23,7 +23,7 @@
       <enum>Qt::NoFocus</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="window">
       <property name="layoutDirection">
@@ -428,19 +428,6 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="1">
-        <widget class="QCheckBox" name="loopFoldersCheckbox">
-         <property name="toolTip">
-          <string>Controls whether or not qView should go back to the first item after reaching the end of a folder</string>
-         </property>
-         <property name="text">
-          <string>Loop through folders</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
        <item row="2" column="1">
         <spacer name="horizontalSpacer_5">
          <property name="orientation">
@@ -453,6 +440,54 @@
           </size>
          </property>
         </spacer>
+       </item>
+       <item row="3" column="1">
+        <widget class="QComboBox" name="preloadingComboBox">
+         <property name="toolTip">
+          <string>Controls the amount of images preloaded - Warning: &quot;Entire folder&quot; will eat your ram</string>
+         </property>
+         <property name="currentIndex">
+          <number>0</number>
+         </property>
+         <item>
+          <property name="text">
+           <string>Disabled</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Adjacent</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Entire folder (!)</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QCheckBox" name="loopFoldersCheckbox">
+         <property name="toolTip">
+          <string>Controls whether or not qView should go back to the first item after reaching the end of a folder</string>
+         </property>
+         <property name="text">
+          <string>Loop through folders</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label_7">
+         <property name="toolTip">
+          <string>Controls the amount of images preloaded - Warning: &quot;Entire folder&quot; will eat your ram</string>
+         </property>
+         <property name="text">
+          <string>Preloading:</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

@@ -1,4 +1,4 @@
-#ifndef QVIMAGECORE_H
+﻿#ifndef QVIMAGECORE_H
 #define QVIMAGECORE_H
 
 #include <QObject>
@@ -6,6 +6,8 @@
 #include <QPixmap>
 #include <QMovie>
 #include <QFileInfo>
+#include <QFutureWatcher>
+#include <QPixmapCache>
 
 class QVImageCore : public QObject
 {
@@ -27,12 +29,24 @@ public:
         bool isMovieLoaded;
         QFileInfoList folder;
         int folderIndex;
+        QSize imageSize;
+    };
+
+    struct QVImageAndFileInfo
+    {
+        QImage readImage;
+        QFileInfo readFileInfo;
     };
 
     explicit QVImageCore(QObject *parent = nullptr);
 
-    QString loadFile(const QString &fileName);
+    void loadFile(const QString &fileName);
+    QVImageAndFileInfo readFile(const QString &fileName);
+    void postLoad();
+    void requestCaching();
     void updateFolderInfo();
+    void addIndexToCache(const int &index);
+    void addToCache(const QVImageAndFileInfo &loadedImageAndFileInfo);
 
     void loadSettings();
 
@@ -48,20 +62,37 @@ public:
     const QMovie& getLoadedMovie() const {return loadedMovie; }
     const QVFileDetails& getCurrentFileDetails() const {return currentFileDetails; }
 
+
 signals:
     void animatedFrameChanged(QRect rect);
 
+    void fileInfoUpdated();
+
+    void fileRead(QString string);
+
+    void readError(const QString &errorString, const QString &fileName);
+
 public slots:
+    void processFile();
 
 private:
     const QStringList filterList = (QStringList() << "*.bmp" << "*.cur" << "*.gif" << "*.icns" << "*.ico" << "*.jp2" << "*.jpeg" << "*.jpe" << "*.jpg" << "*.mng" << "*.pbm" << "*.pgm" << "*.png" << "*.ppm" << "*.svg" << "*.svgz" << "*.tif" << "*.tiff" << "*.wbmp" << "*.webp" << "*.xbm" << "*.xpm");
 
-    QImage loadedImage;
     QPixmap loadedPixmap;
     QMovie loadedMovie;
     QImageReader imageReader;
 
     QVFileDetails currentFileDetails;
+    QVFileDetails lastFileDetails;
+
+    QFutureWatcher<QVImageAndFileInfo> loadFutureWatcher;
+
+    bool vetoFutureWatcher;
+    QPixmapCache pixmapCache;
+    QTimer *cacheTimer;
+
+    bool isLoopFoldersEnabled;
+    int preloadingMode;
 };
 
 #endif // QVIMAGECORE_H
