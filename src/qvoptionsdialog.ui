@@ -23,7 +23,7 @@
       <enum>Qt::NoFocus</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="window">
       <property name="layoutDirection">
@@ -441,31 +441,6 @@
          </property>
         </spacer>
        </item>
-       <item row="3" column="1">
-        <widget class="QComboBox" name="preloadingComboBox">
-         <property name="toolTip">
-          <string>Controls the amount of images preloaded - Warning: &quot;Entire folder&quot; will eat your ram</string>
-         </property>
-         <property name="currentIndex">
-          <number>0</number>
-         </property>
-         <item>
-          <property name="text">
-           <string>Disabled</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Adjacent</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Entire folder (!)</string>
-          </property>
-         </item>
-        </widget>
-       </item>
        <item row="4" column="1">
         <widget class="QCheckBox" name="loopFoldersCheckbox">
          <property name="toolTip">
@@ -482,11 +457,36 @@
        <item row="3" column="0">
         <widget class="QLabel" name="label_7">
          <property name="toolTip">
-          <string>Controls the amount of images preloaded - Warning: &quot;Entire folder&quot; will eat your ram</string>
+          <string>Controls the amount of images preloaded</string>
          </property>
          <property name="text">
           <string>Preloading:</string>
          </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QComboBox" name="preloadingComboBox">
+         <property name="toolTip">
+          <string>Controls the amount of images preloaded</string>
+         </property>
+         <property name="currentIndex">
+          <number>0</number>
+         </property>
+         <item>
+          <property name="text">
+           <string>Disabled</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Adjacent</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Extended</string>
+          </property>
+         </item>
         </widget>
        </item>
       </layout>
