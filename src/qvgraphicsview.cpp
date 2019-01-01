@@ -37,7 +37,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     adjustedImageSize = QSize();
     currentScale = 1.0;
     scaledSize = QSize();
-    maxScalingTwoSize = 4;
+    maxScalingTwoSize = 3;
     cheapScaledLast = false;
     movieCenterNeedsUpdating = false;
     isOriginalSize = false;

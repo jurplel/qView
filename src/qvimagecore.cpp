@@ -33,7 +33,7 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     lastFileDetails.folderIndex = -1;
     lastFileDetails.imageSize = QSize();
 
-    pixmapCache.setCacheLimit(1024000);
+    pixmapCache.setCacheLimit(512000);
 
     connect(&loadedMovie, &QMovie::updated, this, &QVImageCore::animatedFrameChanged);
 
@@ -47,6 +47,9 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
 
 void QVImageCore::loadFile(const QString &fileName)
 {
+    if (loadFutureWatcher.isRunning())
+        return;
+
     lastFileDetails = currentFileDetails;
 
     //define info variables
@@ -56,8 +59,6 @@ void QVImageCore::loadFile(const QString &fileName)
 
     imageReader.setFileName(fileName);
     currentFileDetails.imageSize = imageReader.size();
-
-    emit fileInfoUpdated();
 
     if (preloadingMode > 0 && pixmapCache.find(currentFileDetails.fileInfo.filePath(), loadedPixmap))
     {
@@ -100,7 +101,7 @@ QVImageCore::QVImageAndFileInfo QVImageCore::readFile(const QString &fileName)
 
 void QVImageCore::processFile()
 {
-    if (loadFutureWatcher.isRunning() || vetoFutureWatcher)
+    if (vetoFutureWatcher)
         return;
 
     QVImageAndFileInfo loadedImageAndFileInfo = loadFutureWatcher.result();
@@ -132,6 +133,7 @@ void QVImageCore::postLoad()
     currentFileDetails.imageSize = QSize(loadedPixmap.width(), loadedPixmap.height());
 
     emit fileRead(currentFileDetails.fileInfo.path());
+    emit fileInfoUpdated();
 
     cacheTimer->start();
 }
@@ -146,17 +148,11 @@ void QVImageCore::requestCaching()
     }
     case 1:
     {
-        pixmapCache.clear();
-        //add previous and next file to cache
-        if (currentFileDetails.folderIndex-1 > 0)
-            addIndexToCache(currentFileDetails.folderIndex-1);
-        else if (isLoopFoldersEnabled)
-            addIndexToCache(currentFileDetails.folder.length()-1);
-
-        if (currentFileDetails.folderIndex+1 < currentFileDetails.folder.length()-1)
-            addIndexToCache(currentFileDetails.folderIndex+1);
-        else if (isLoopFoldersEnabled)
-            addIndexToCache(0);
+        //add previous and next files to cache
+        for (int i = currentFileDetails.folderIndex-2; i <= currentFileDetails.folderIndex+2; i++)
+        {
+            addIndexToCache(i);
+        }
         break;
     }
     case 2:
@@ -185,10 +181,24 @@ void QVImageCore::updateFolderInfo()
     currentFileDetails.folderIndex = currentFileDetails.folder.indexOf(currentFileDetails.fileInfo);
 }
 
-void QVImageCore::addIndexToCache(const int &index)
+void QVImageCore::addIndexToCache(int index)
 {
     if (currentFileDetails.folder.isEmpty())
         return;
+
+    //keep within index range
+    if (index > currentFileDetails.folder.length()-1)
+    {
+        if (!isLoopFoldersEnabled)
+            return;
+        index = index-(currentFileDetails.folder.length());
+    }
+    else if (index < 0)
+    {
+        if (!isLoopFoldersEnabled)
+            return;
+        index = index+(currentFileDetails.folder.length());
+    }
 
     QString filePath = currentFileDetails.folder[index].filePath();
 
