@@ -89,10 +89,11 @@ private:
 
     bool vetoFutureWatcher;
     QPixmapCache pixmapCache;
-    QTimer *cacheTimer;
 
     bool isLoopFoldersEnabled;
     int preloadingMode;
+
+    QTimer *fileChangeRateTimer;
 };
 
 #endif // QVIMAGECORE_H
