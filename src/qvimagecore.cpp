@@ -186,6 +186,10 @@ void QVImageCore::addIndexToCache(int index)
         index = index+(currentFileDetails.folder.length());
     }
 
+    //if still out of range after looping, just cancel the cache for this index
+    if (index > currentFileDetails.folder.length()-1 || index < 0)
+        return;
+
     QString filePath = currentFileDetails.folder[index].filePath();
 
     if (pixmapCache.find(filePath, nullptr))
