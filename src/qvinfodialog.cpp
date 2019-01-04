@@ -37,7 +37,7 @@ void QVInfoDialog::updateInfo()
 {
     QLocale locale = QLocale::system();
     QMimeDatabase mimedb;
-    QMimeType mime = mimedb.mimeTypeForFile(selectedFileInfo.filePath(), QMimeDatabase::MatchContent);
+    QMimeType mime = mimedb.mimeTypeForFile(selectedFileInfo.absoluteFilePath(), QMimeDatabase::MatchContent);
     //this is just math to figure the megapixels and then round it to the tenths place
     const double megapixels = static_cast<double>(static_cast<int>((static_cast<double>((width*height)))/1000000 * 10 + 0.5)) / 10 ;
 

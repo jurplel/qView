@@ -44,24 +44,31 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     fileChangeRateTimer->setInterval(60);
 }
 
-void QVImageCore::loadFile(const QString &fileName)
+void QVImageCore::loadFile(const QString fileName)
 {
     if (loadFutureWatcher.isRunning() || fileChangeRateTimer->isActive())
         return;
 
+    //save old file details in event of a read error
     lastFileDetails = currentFileDetails;
 
-    requestCaching();
+    //sanitize file name
+    QUrl sanitaryUrl = QUrl(fileName);
+    sanitaryUrl.setScheme(QString());
+    QString sanitaryString = QUrl::fromPercentEncoding(sanitaryUrl.toEncoded());
 
     //define info variables
     currentFileDetails.isMovieLoaded = false;
-    currentFileDetails.fileInfo = QFileInfo(fileName);
+    currentFileDetails.fileInfo = QFileInfo(sanitaryString);
     updateFolderInfo();
 
-    imageReader.setFileName(fileName);
+    requestCaching();
+
+    imageReader.setFileName(currentFileDetails.fileInfo.absoluteFilePath());
     currentFileDetails.imageSize = imageReader.size();
 
-    if (pixmapCache.find(currentFileDetails.fileInfo.filePath(), loadedPixmap))
+    //check if cached already before loading the long way
+    if (pixmapCache.find(currentFileDetails.fileInfo.absoluteFilePath(), loadedPixmap))
     {
         vetoFutureWatcher = true;
         postLoad();
@@ -69,12 +76,12 @@ void QVImageCore::loadFile(const QString &fileName)
     else
     {
         vetoFutureWatcher = false;
-        loadFutureWatcher.setFuture(QtConcurrent::run(this, &QVImageCore::readFile, currentFileDetails.fileInfo.filePath()));
+        loadFutureWatcher.setFuture(QtConcurrent::run(this, &QVImageCore::readFile, currentFileDetails.fileInfo.absoluteFilePath()));
     }
 
 }
 
-QVImageCore::QVImageAndFileInfo QVImageCore::readFile(const QString &fileName)
+QVImageCore::QVImageAndFileInfo QVImageCore::readFile(const QString fileName)
 {
     QVImageAndFileInfo combinedInfo;
 
@@ -123,10 +130,10 @@ void QVImageCore::postLoad()
     fileInfoUpdated();
 
     //animation detection
-    imageReader.setFileName(currentFileDetails.fileInfo.filePath());
+    imageReader.setFileName(currentFileDetails.fileInfo.absoluteFilePath());
     if (imageReader.supportsAnimation() && imageReader.imageCount() != 1)
     {
-        loadedMovie.setFileName(currentFileDetails.fileInfo.filePath());
+        loadedMovie.setFileName(currentFileDetails.fileInfo.absoluteFilePath());
         loadedMovie.setScaledSize(loadedPixmap.size());
         loadedMovie.start();
         currentFileDetails.isMovieLoaded = true;
@@ -190,7 +197,7 @@ void QVImageCore::addIndexToCache(int index)
     if (index > currentFileDetails.folder.length()-1 || index < 0)
         return;
 
-    QString filePath = currentFileDetails.folder[index].filePath();
+    QString filePath = currentFileDetails.folder[index].absoluteFilePath();
 
     if (pixmapCache.find(filePath, nullptr))
         return;
@@ -208,7 +215,7 @@ void QVImageCore::addToCache(const QVImageAndFileInfo &loadedImageAndFileInfo)
     if (loadedImageAndFileInfo.readImage.isNull())
         return;
 
-    pixmapCache.insert(loadedImageAndFileInfo.readFileInfo.filePath(), QPixmap::fromImage(loadedImageAndFileInfo.readImage));
+    pixmapCache.insert(loadedImageAndFileInfo.readFileInfo.absoluteFilePath(), QPixmap::fromImage(loadedImageAndFileInfo.readImage));
 }
 
 void QVImageCore::jumpToNextFrame()
