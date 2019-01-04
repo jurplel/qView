@@ -40,8 +40,8 @@ public:
 
     explicit QVImageCore(QObject *parent = nullptr);
 
-    void loadFile(const QString &fileName);
-    QVImageAndFileInfo readFile(const QString &fileName);
+    void loadFile(const QString fileName);
+    QVImageAndFileInfo readFile(const QString fileName);
     void postLoad();
     void requestCaching();
     void updateFolderInfo();
@@ -70,7 +70,7 @@ signals:
 
     void fileRead(QString string);
 
-    void readError(const QString &errorString, const QString &fileName);
+    void readError(const QString &errorString, const QString fileName);
 
 public slots:
     void processFile();

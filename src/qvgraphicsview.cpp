@@ -378,10 +378,10 @@ void QVGraphicsView::addRecentFile(const QFileInfo &file)
     recentFiles = settings.value("recentFiles").value<QVariantList>();
     QStringList fileInfo;
 
-    fileInfo << file.fileName() << file.filePath();
+    fileInfo << file.fileName() << file.absoluteFilePath();
 
     recentFiles.removeAll(fileInfo);
-    if (QFile::exists(file.filePath()))
+    if (QFile::exists(file.absoluteFilePath()))
         recentFiles.prepend(fileInfo);
 
     if(recentFiles.size() > 10)
@@ -569,7 +569,7 @@ void QVGraphicsView::goToFile(const goToFileMode mode, const int index)
     if (!nextImage.isFile())
         return;
 
-    loadFile(nextImage.filePath());
+    loadFile(nextImage.absoluteFilePath());
 }
 
 void QVGraphicsView::fitInViewMarginless(bool setVariables)
