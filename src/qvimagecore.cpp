@@ -251,7 +251,6 @@ const QPixmap QVImageCore::scaleExpensively(const QSize desiredSize, const scale
 
     if (currentFileDetails.isMovieLoaded)
     {
-        loadedMovie.setScaledSize(size);
         return loadedMovie.currentPixmap().scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     }
     else
