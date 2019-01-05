@@ -472,15 +472,18 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
             break;
         }
 
-        if (!getCurrentFileDetails().isMovieLoaded)
+        if (getCurrentFileDetails().isMovieLoaded)
+        {
+            const QPixmap returnedPixmap = imageCore.scaleExpensively(width()+4, height()+4, coreMode);
+            scaledSize = returnedPixmap.size();
+        }
+        else
         {
             loadedPixmapItem->setPixmap(imageCore.scaleExpensively(width()+4, height()+4, coreMode));
             fitInViewMarginless();
+            scaledSize = loadedPixmapItem->boundingRect().size().toSize();
         }
-        else
-            imageCore.scaleExpensively(width()+4, height()+4, coreMode);
 
-        scaledSize = loadedPixmapItem->boundingRect().size().toSize();
         break;
     }
     case scaleMode::zoom:
