@@ -222,13 +222,9 @@ void QVGraphicsView::zoom(const int DeltaY, const QPoint pos, qreal targetScaleF
 
     bool shouldUseScaling = isScalingEnabled;
     bool shouldUseScaling2 = isScalingTwoEnabled;
-    //Disallow scaling while movie is paused and scaling2 if movie is loaded
+    //Disallow scaling2 if movie is loaded
     if (getCurrentFileDetails().isMovieLoaded)
-    {
         shouldUseScaling2 = false;
-        if (!(getLoadedMovie().state() == QMovie::Running))
-            shouldUseScaling = false;
-    }
 
 
     //Use scaling up to scale factor 1.0 if we should
@@ -279,7 +275,7 @@ void QVGraphicsView::zoom(const int DeltaY, const QPoint pos, qreal targetScaleF
         if (DeltaY > 0)
         {
             //this prevents a jitter when zooming in very quickly from below to above 1.0 on a movie
-            if (getCurrentFileDetails().isMovieLoaded && getLoadedMovie().currentPixmap().height() != scaledSize.height())
+            if (getCurrentFileDetails().isMovieLoaded && getLoadedMovie().currentPixmap().height() != scaledSize.height() && getLoadedMovie().state() == QMovie::Running)
                 imageCore.jumpToNextFrame();
             scale(targetScaleFactor, targetScaleFactor);
         }
@@ -329,7 +325,18 @@ void QVGraphicsView::animatedFrameChanged(QRect rect)
 {
     Q_UNUSED(rect);
 
-    loadedPixmapItem->setPixmap(getLoadedMovie().currentPixmap());
+    if (isScalingEnabled)
+    {
+        QSize newSize = scaledSize;
+        if (currentScale <= 1.0)
+            newSize *= currentScale;
+
+        loadedPixmapItem->setPixmap(imageCore.scaleExpensively(newSize));
+    }
+    else
+    {
+        loadedPixmapItem->setPixmap(getLoadedMovie().currentPixmap());
+    }
 
     if (movieCenterNeedsUpdating)
     {
@@ -476,6 +483,9 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
         {
             const QPixmap returnedPixmap = imageCore.scaleExpensively(width()+4, height()+4, coreMode);
             scaledSize = returnedPixmap.size();
+
+            if (!(getLoadedMovie().state() == QMovie::Running))
+                loadedPixmapItem->setPixmap(returnedPixmap);
         }
         else
         {

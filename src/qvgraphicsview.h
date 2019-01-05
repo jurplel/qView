@@ -1,4 +1,4 @@
- #ifndef QVGRAPHICSVIEW_H
+#ifndef QVGRAPHICSVIEW_H
 #define QVGRAPHICSVIEW_H
 
 #include "mainwindow.h"
