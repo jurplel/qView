@@ -52,10 +52,12 @@ void QVImageCore::loadFile(const QString fileName)
     //save old file details in event of a read error
     lastFileDetails = currentFileDetails;
 
-    //sanitize file name
+    QString sanitaryString = fileName;
+
+    //sanitize file name if necessary
     QUrl sanitaryUrl = QUrl(fileName);
-    sanitaryUrl.setScheme(QString());
-    QString sanitaryString = QUrl::fromPercentEncoding(sanitaryUrl.toEncoded());
+    if (sanitaryUrl.isLocalFile())
+        sanitaryString = sanitaryUrl.toLocalFile();
 
     //define info variables
     currentFileDetails.isMovieLoaded = false;
