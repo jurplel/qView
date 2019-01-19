@@ -88,7 +88,6 @@ private:
     QFutureWatcher<QVImageAndFileInfo> loadFutureWatcher;
 
     bool vetoFutureWatcher;
-    QPixmapCache pixmapCache;
 
     bool isLoopFoldersEnabled;
     int preloadingMode;
