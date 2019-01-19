@@ -33,7 +33,7 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     lastFileDetails.folderIndex = -1;
     lastFileDetails.imageSize = QSize();
 
-    pixmapCache.setCacheLimit(512000);
+    QPixmapCache::setCacheLimit(512000);
 
     connect(&loadedMovie, &QMovie::updated, this, &QVImageCore::animatedFrameChanged);
 
@@ -70,7 +70,7 @@ void QVImageCore::loadFile(const QString fileName)
     currentFileDetails.imageSize = imageReader.size();
 
     //check if cached already before loading the long way
-    if (pixmapCache.find(currentFileDetails.fileInfo.absoluteFilePath(), loadedPixmap))
+    if (QPixmapCache::find(currentFileDetails.fileInfo.absoluteFilePath(), loadedPixmap))
     {
         vetoFutureWatcher = true;
         postLoad();
@@ -199,9 +199,15 @@ void QVImageCore::addIndexToCache(int index)
     if (index > currentFileDetails.folder.length()-1 || index < 0)
         return;
 
+
     QString filePath = currentFileDetails.folder[index].absoluteFilePath();
 
-    if (pixmapCache.find(filePath, nullptr))
+    if (QPixmapCache::find(filePath, nullptr))
+        return;
+
+    //check if too big for caching
+    imageReader.setFileName(filePath);
+    if ((imageReader.size().width()*imageReader.size().height()*32)/8 > QPixmapCache::cacheLimit()/2)
         return;
 
     QFutureWatcher<QVImageAndFileInfo> *cacheFutureWatcher = new QFutureWatcher<QVImageAndFileInfo>();
@@ -217,7 +223,7 @@ void QVImageCore::addToCache(const QVImageAndFileInfo &loadedImageAndFileInfo)
     if (loadedImageAndFileInfo.readImage.isNull())
         return;
 
-    pixmapCache.insert(loadedImageAndFileInfo.readFileInfo.absoluteFilePath(), QPixmap::fromImage(loadedImageAndFileInfo.readImage));
+    QPixmapCache::insert(loadedImageAndFileInfo.readFileInfo.absoluteFilePath(), QPixmap::fromImage(loadedImageAndFileInfo.readImage));
 }
 
 void QVImageCore::jumpToNextFrame()
