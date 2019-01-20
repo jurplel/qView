@@ -207,7 +207,7 @@ void QVImageCore::addIndexToCache(int index)
 
     //check if too big for caching
     imageReader.setFileName(filePath);
-    if ((imageReader.size().width()*imageReader.size().height()*32)/8 > QPixmapCache::cacheLimit()/2)
+    if (((imageReader.size().width()*imageReader.size().height()*32)/8)/1000 > QPixmapCache::cacheLimit()/2)
         return;
 
     QFutureWatcher<QVImageAndFileInfo> *cacheFutureWatcher = new QFutureWatcher<QVImageAndFileInfo>();
