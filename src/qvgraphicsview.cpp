@@ -6,7 +6,6 @@
 #include <QSettings>
 #include <QMessageBox>
 #include <QMovie>
-#include <QPixmapCache>
 #include <QtMath>
 #include <QGestureEvent>
 
