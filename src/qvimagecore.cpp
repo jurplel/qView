@@ -33,7 +33,7 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     lastFileDetails.folderIndex = -1;
     lastFileDetails.imageSize = QSize();
 
-    QPixmapCache::setCacheLimit(512000);
+    QPixmapCache::setCacheLimit(204800);
 
     connect(&loadedMovie, &QMovie::updated, this, &QVImageCore::animatedFrameChanged);
 
@@ -146,16 +146,19 @@ void QVImageCore::postLoad()
 
 void QVImageCore::requestCaching()
 {
-    if (preloadingMode > 0)
+    if (preloadingMode == 0)
     {
-        int preloadingDistance = 1;
-
-        if (preloadingMode > 1)
-            preloadingDistance = 4;
-
-        for (int i = currentFileDetails.folderIndex-preloadingDistance; i <= currentFileDetails.folderIndex+preloadingDistance; i++)
-            addIndexToCache(i);
+        QPixmapCache::clear();
+        return;
     }
+
+    int preloadingDistance = 1;
+
+    if (preloadingMode > 1)
+        preloadingDistance = 4;
+
+    for (int i = currentFileDetails.folderIndex-preloadingDistance; i <= currentFileDetails.folderIndex+preloadingDistance; i++)
+        addIndexToCache(i);
 }
 
 void QVImageCore::updateFolderInfo()
