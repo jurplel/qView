@@ -33,7 +33,10 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     lastFileDetails.folderIndex = -1;
     lastFileDetails.imageSize = QSize();
 
-    QPixmapCache::setCacheLimit(204800);
+    QPixmapCache::setCacheLimit(20480);
+
+    //prevent really weird memory behavior (we don't really need more than 1 thread anyways)
+    QThreadPool::globalInstance()->setMaxThreadCount(1);
 
     connect(&loadedMovie, &QMovie::updated, this, &QVImageCore::animatedFrameChanged);
 
@@ -64,8 +67,6 @@ void QVImageCore::loadFile(const QString fileName)
     currentFileDetails.fileInfo = QFileInfo(sanitaryString);
     updateFolderInfo();
 
-    requestCaching();
-
     imageReader.setFileName(currentFileDetails.fileInfo.absoluteFilePath());
     currentFileDetails.imageSize = imageReader.size();
 
@@ -81,6 +82,7 @@ void QVImageCore::loadFile(const QString fileName)
         loadFutureWatcher.setFuture(QtConcurrent::run(this, &QVImageCore::readFile, currentFileDetails.fileInfo.absoluteFilePath()));
     }
 
+    requestCaching();
 }
 
 QVImageCore::QVImageAndFileInfo QVImageCore::readFile(const QString fileName)
@@ -218,7 +220,7 @@ void QVImageCore::addIndexToCache(int index)
     cacheFutureWatcher->setFuture(QtConcurrent::run(this, &QVImageCore::readFile, filePath));
 }
 
-void QVImageCore::addToCache(const QVImageAndFileInfo &loadedImageAndFileInfo)
+void QVImageCore::addToCache(QVImageAndFileInfo loadedImageAndFileInfo)
 {
     if (loadedImageAndFileInfo.readImage.isNull())
         return;
@@ -292,4 +294,16 @@ void QVImageCore::loadSettings()
 
     //preloading mode
     preloadingMode = settings.value("preloadingmode", 1).toInt();
+    switch (preloadingMode) {
+    case 1:
+    {
+        QPixmapCache::setCacheLimit(20480);
+        break;
+    }
+    case 2:
+    {
+        QPixmapCache::setCacheLimit(102400);
+        break;
+    }
+    }
 }
