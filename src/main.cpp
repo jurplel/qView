@@ -5,26 +5,24 @@
 
 int main(int argc, char *argv[])
 {
-    QVApplication a(argc, argv);
-    a.setOrganizationName("qView");
-    a.setApplicationName(QString("qView"));
-    a.setApplicationVersion(QString::number(VERSION));
-
-    MainWindow w;
-    w.show();
+    QVApplication app(argc, argv);
+    QCoreApplication::setOrganizationName("qView");
+    QCoreApplication::setApplicationName(QString("qView"));
+    QCoreApplication::setApplicationVersion(QString::number(VERSION));
 
     QCommandLineParser parser;
     parser.addHelpOption();
     parser.addVersionOption();
     parser.addPositionalArgument(QObject::tr("file"), QObject::tr("The file to open."));
-    parser.process(a);
+    parser.process(app);
 
-
+    MainWindow window;
     if (!parser.positionalArguments().isEmpty())
     {
-        w.setJustLaunchedWithImage(true);
-        w.openFile(parser.positionalArguments().first());
+        window.setJustLaunchedWithImage(true);
+        window.openFile(parser.positionalArguments().first());
     }
+    window.show();
 
-    return a.exec();
+    return QApplication::exec();
 }

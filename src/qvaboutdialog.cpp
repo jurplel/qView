@@ -64,7 +64,7 @@ void QVAboutDialog::requestUpdates()
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
-    QNetworkAccessManager *networkManager = new QNetworkAccessManager(this);
+    auto *networkManager = new QNetworkAccessManager(this);
     connect(networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(checkUpdates(QNetworkReply*)));
 
     networkManager->get(request);
@@ -94,9 +94,9 @@ void QVAboutDialog::checkUpdates(QNetworkReply* reply)
         ui->updateLabel->setText(tr("Error checking for updates"));
         return;
     }
-    if (latestVersionNum > VERSION)
+    if (latestVersionNum > 0)
     {
-        const QString text = tr("<a style=\"color: #03A9F4; text-decoration:none;\" href=\"https://github.com/jurplel/qView/releases\">%1 update available!</a>").arg(QString::number(latestVersionNum, 'f', 1));
+        const QString text = tr(R"(<a style="color: #03A9F4; text-decoration:none;" href="https://github.com/jurplel/qView/releases">%1 update available!</a>)").arg(QString::number(latestVersionNum, 'f', 1));
         ui->updateLabel->setText(text);
         ui->updateLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
         ui->updateLabel->setOpenExternalLinks(true);

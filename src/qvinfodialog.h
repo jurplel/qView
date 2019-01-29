@@ -20,9 +20,6 @@ public:
 
     void updateInfo();
 
-private slots:
-    void on_actionRefresh_triggered();
-
 private:
     Ui::QVInfoDialog *ui;
 

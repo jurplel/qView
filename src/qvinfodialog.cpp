@@ -9,8 +9,11 @@ QVInfoDialog::QVInfoDialog(QWidget *parent) :
     ui(new Ui::QVInfoDialog)
 {
     ui->setupUi(this);
-    addAction(ui->actionRefresh);
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
+
+    width = 0;
+    height = 0;
+    frameCount = 0;
 }
 
 QVInfoDialog::~QVInfoDialog()
@@ -28,18 +31,13 @@ void QVInfoDialog::setInfo(const QFileInfo &value, const int &value2, const int 
     window()->resize(10, 10);
 }
 
-void QVInfoDialog::on_actionRefresh_triggered()
-{
-    updateInfo();
-}
-
 void QVInfoDialog::updateInfo()
 {
     QLocale locale = QLocale::system();
     QMimeDatabase mimedb;
     QMimeType mime = mimedb.mimeTypeForFile(selectedFileInfo.absoluteFilePath(), QMimeDatabase::MatchContent);
     //this is just math to figure the megapixels and then round it to the tenths place
-    const double megapixels = static_cast<double>(static_cast<int>((static_cast<double>((width*height)))/1000000 * 10 + 0.5)) / 10 ;
+    const double megapixels = static_cast<double>(qRound(((static_cast<double>((width*height))))/1000000 * 10 + 0.5)) / 10 ;
 
     ui->nameLabel->setText(selectedFileInfo.fileName());
     ui->typeLabel->setText(mime.name());

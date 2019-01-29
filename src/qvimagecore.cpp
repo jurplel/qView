@@ -47,7 +47,7 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     fileChangeRateTimer->setInterval(60);
 }
 
-void QVImageCore::loadFile(const QString fileName)
+void QVImageCore::loadFile(const QString &fileName)
 {
     if (loadFutureWatcher.isRunning() || fileChangeRateTimer->isActive())
         return;
@@ -85,7 +85,7 @@ void QVImageCore::loadFile(const QString fileName)
     requestCaching();
 }
 
-QVImageCore::QVImageAndFileInfo QVImageCore::readFile(const QString fileName)
+QVImageCore::QVImageAndFileInfo QVImageCore::readFile(const QString &fileName)
 {
     QVImageAndFileInfo combinedInfo;
 
@@ -212,7 +212,7 @@ void QVImageCore::addIndexToCache(int index)
     if (((imageReader.size().width()*imageReader.size().height()*32)/8)/1000 > QPixmapCache::cacheLimit()/2)
         return;
 
-    QFutureWatcher<QVImageAndFileInfo> *cacheFutureWatcher = new QFutureWatcher<QVImageAndFileInfo>();
+    auto *cacheFutureWatcher = new QFutureWatcher<QVImageAndFileInfo>();
     connect(cacheFutureWatcher, &QFutureWatcher<QVImageAndFileInfo>::finished, [cacheFutureWatcher, this](){
         addToCache(cacheFutureWatcher->result());
         cacheFutureWatcher->deleteLater();
@@ -259,11 +259,7 @@ const QPixmap QVImageCore::scaleExpensively(const QSize desiredSize, const scale
     QSize size = QSize(loadedPixmap.width(), loadedPixmap.height());
     size.scale(desiredSize, Qt::KeepAspectRatio);
 
-    if (currentFileDetails.isMovieLoaded)
-    {
-        return loadedMovie.currentPixmap().scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    }
-    else
+    if (!currentFileDetails.isMovieLoaded)
     {
         switch (mode) {
         case scaleMode::normal:
@@ -280,7 +276,7 @@ const QPixmap QVImageCore::scaleExpensively(const QSize desiredSize, const scale
         }
         }
     }
-    return QPixmap();
+    return loadedMovie.currentPixmap().scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 }
 
 
