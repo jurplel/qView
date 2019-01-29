@@ -85,7 +85,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionFirst_File->setShortcut(Qt::Key_Home);
     ui->actionLast_File->setShortcut(Qt::Key_End);
 
-    QShortcut *escShortcut = new QShortcut(this);
+    auto *escShortcut = new QShortcut(this);
     escShortcut->setKey(Qt::Key_Escape);
     connect(escShortcut, &QShortcut::activated, [this](){
         if (windowState() == Qt::WindowFullScreen)
@@ -93,9 +93,9 @@ MainWindow::MainWindow(QWidget *parent) :
     });
 
     //Context menu
-    menu = new QMenu(this);
+    contextMenu = new QMenu(this);
 
-    menu->addAction(ui->actionOpen);
+    contextMenu->addAction(ui->actionOpen);
 
     QMenu *files = new QMenu(tr("Open Recent"));
 
@@ -117,17 +117,17 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(clearMenu, &QAction::triggered, this, &MainWindow::clearRecent);
     files->addAction(clearMenu);
 
-    menu->addMenu(files);
+    contextMenu->addMenu(files);
 
-    menu->addAction(ui->actionOpen_Containing_Folder);
-    menu->addAction(ui->actionProperties);
-    menu->addAction(ui->actionPaste);
-    menu->addSeparator();
-    menu->addAction(ui->actionFirst_File);
-    menu->addAction(ui->actionPrevious_File);
-    menu->addAction(ui->actionNext_File);
-    menu->addAction(ui->actionLast_File);
-    menu->addSeparator();
+    contextMenu->addAction(ui->actionOpen_Containing_Folder);
+    contextMenu->addAction(ui->actionProperties);
+    contextMenu->addAction(ui->actionPaste);
+    contextMenu->addSeparator();
+    contextMenu->addAction(ui->actionFirst_File);
+    contextMenu->addAction(ui->actionPrevious_File);
+    contextMenu->addAction(ui->actionNext_File);
+    contextMenu->addAction(ui->actionLast_File);
+    contextMenu->addSeparator();
 
     QMenu *view = new QMenu(tr("View"), this);
     view->menuAction()->setEnabled(false);
@@ -143,7 +143,7 @@ MainWindow::MainWindow(QWidget *parent) :
     view->addAction(ui->actionFlip_Vertically);
     view->addSeparator();
     view->addAction(ui->actionFull_Screen);
-    menu->addMenu(view);
+    contextMenu->addMenu(view);
 
     QMenu *gif = new QMenu(tr("GIF Controls"), this);
     gif->menuAction()->setEnabled(false);
@@ -159,12 +159,12 @@ MainWindow::MainWindow(QWidget *parent) :
     tools->addMenu(gif);
     tools->addAction(ui->actionSlideshow);
     tools->addAction(ui->actionOptions);
-    menu->addMenu(tools);
+    contextMenu->addMenu(tools);
 
     QMenu *help = new QMenu(tr("Help"), this);
     help->addAction(ui->actionAbout);
     help->addAction(ui->actionWelcome);
-    menu->addMenu(help);
+    contextMenu->addMenu(help);
 
     //Menu icons that can't be set in the ui file
     files->setIcon(QIcon::fromTheme("document-open-recent"));
@@ -207,7 +207,7 @@ MainWindow::MainWindow(QWidget *parent) :
     #endif
 
     //Add to mainwindow's action list so keyboard shortcuts work without a menubar
-    foreach(QAction *action, menu->actions())
+    foreach(QAction *action, contextMenu->actions())
     {
         addAction(action);
     }
@@ -224,7 +224,7 @@ void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 {
     QMainWindow::contextMenuEvent(event);
     updateRecentMenu();
-    menu->exec(event->globalPos());
+    contextMenu->exec(event->globalPos());
 }
 
 void MainWindow::showEvent(QShowEvent *event)
@@ -275,7 +275,7 @@ void MainWindow::pickFile()
     connect(fileDialog, &QFileDialog::fileSelected, this, &MainWindow::openFile);
 }
 
-void MainWindow::openFile(const QString fileName)
+void MainWindow::openFile(const QString &fileName)
 {
     QSettings settings;
     settings.beginGroup("recents");
@@ -390,7 +390,7 @@ void MainWindow::fileLoaded()
     {
         foreach(QAction* action, ui->menuView->actions())
             action->setEnabled(true);
-        foreach(QAction* action, menu->actions())
+        foreach(QAction* action, contextMenu->actions())
             action->setEnabled(true);
         foreach(QAction* action, actions())
             action->setEnabled(true);
@@ -469,7 +469,7 @@ void MainWindow::on_actionOpen_triggered()
 
 void MainWindow::on_actionAbout_triggered()
 {
-    QVAboutDialog *about = new QVAboutDialog(this);
+    auto *about = new QVAboutDialog(this);
     about->exec();
 }
 
@@ -480,7 +480,7 @@ void MainWindow::on_actionPaste_triggered()
 
 void MainWindow::on_actionOptions_triggered()
 {
-    QVOptionsDialog *options = new QVOptionsDialog(this);
+    auto *options = new QVOptionsDialog(this);
     options->open();
 
     connect(options, &QVOptionsDialog::optionsSaved, this, &MainWindow::loadSettings);
@@ -503,17 +503,13 @@ void MainWindow::on_actionOpen_Containing_Folder_triggered()
 
     const QFileInfo selectedFileInfo = ui->graphicsView->getCurrentFileDetails().fileInfo;
 
-    QProcess process;
-
     #if defined(Q_OS_WIN)
-    process.startDetached("explorer", QStringList() << "/select," << QDir::toNativeSeparators(selectedFileInfo.absoluteFilePath()));
+    QProcess::startDetached("explorer", QStringList() << "/select," << QDir::toNativeSeparators(selectedFileInfo.absoluteFilePath()));
     #elif defined(Q_OS_MACX)
-    process.execute("open", QStringList() << "-R" << selectedFileInfo.absoluteFilePath());
+    QProcess::execute("open", QStringList() << "-R" << selectedFileInfo.absoluteFilePath());
     #else
-    process.execute("xdg-open", QStringList() << selectedFileInfo.absolutePath());
+    QProcess::execute("xdg-open", QStringList() << selectedFileInfo.absolutePath());
     #endif
-
-    return;
 }
 
 void MainWindow::on_actionRotate_Right_triggered()
@@ -530,7 +526,7 @@ void MainWindow::on_actionRotate_Left_triggered()
 
 void MainWindow::on_actionWelcome_triggered()
 {
-    QVWelcomeDialog *welcome = new QVWelcomeDialog(this);
+    auto *welcome = new QVWelcomeDialog(this);
     welcome->exec();
 }
 
@@ -582,7 +578,7 @@ void MainWindow::on_actionOriginal_Size_triggered()
 
 void MainWindow::on_actionNew_Window_triggered()
 {
-    qobject_cast<QVApplication*>qApp->newWindow();
+    QVApplication::newWindow();
 }
 
 void MainWindow::on_actionSlideshow_triggered()
@@ -690,7 +686,7 @@ void MainWindow::on_actionSave_Frame_As_triggered()
 void MainWindow::on_actionQuit_triggered()
 {
     close();
-    qApp->quit();
+    QCoreApplication::quit();
 }
 
 void MainWindow::on_actionFirst_File_triggered()

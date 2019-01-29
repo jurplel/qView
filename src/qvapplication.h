@@ -13,11 +13,11 @@ public:
 
     bool event(QEvent *event) override;
 
-    void openFile(const QString file);
+    static void openFile(const QString &file);
 
-    MainWindow *newWindow();
+    static MainWindow *newWindow();
 
-    MainWindow *getMainWindow();
+    static MainWindow *getMainWindow();
 };
 
 #endif // QVAPPLICATION_H

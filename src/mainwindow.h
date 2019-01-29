@@ -27,7 +27,7 @@ public:
     QScreen *screenAt(const QPoint &point);
 
 public slots:
-    void openFile(const QString fileName);
+    void openFile(const QString &fileName);
 
     void slideshowAction();
 
@@ -117,8 +117,11 @@ private:
 
     void pickFile();
 
-    QMenu *menu;
+    QMenu *contextMenu;
+
+    #ifdef Q_OS_MACX
     QMenu *dockMenu;
+    #endif
 
     QTimer *slideshowTimer;
     QList<QAction*> recentItems;

@@ -40,8 +40,8 @@ public:
 
     explicit QVImageCore(QObject *parent = nullptr);
 
-    void loadFile(const QString fileName);
-    QVImageAndFileInfo readFile(const QString fileName);
+    void loadFile(const QString &fileName);
+    QVImageAndFileInfo readFile(const QString &fileName);
     void postLoad();
     void requestCaching();
     void updateFolderInfo();

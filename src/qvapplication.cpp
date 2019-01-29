@@ -12,13 +12,13 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
 bool QVApplication::event(QEvent *event)
 {
     if (event->type() == QEvent::FileOpen) {
-        QFileOpenEvent *openEvent = static_cast<QFileOpenEvent *>(event);
+        auto *openEvent = dynamic_cast<QFileOpenEvent *>(event);
         openFile(openEvent->file());
     }
     return QApplication::event(event);
 }
 
-void QVApplication::openFile(const QString file)
+void QVApplication::openFile(const QString &file)
 {
     MainWindow *w = getMainWindow();
 
@@ -31,7 +31,7 @@ void QVApplication::openFile(const QString file)
 
 MainWindow *QVApplication::newWindow()
 {
-    MainWindow *w = new MainWindow();
+    auto *w = new MainWindow();
     w->show();
     w->setAttribute(Qt::WA_DeleteOnClose);
     return w;
@@ -39,8 +39,8 @@ MainWindow *QVApplication::newWindow()
 
 MainWindow *QVApplication::getMainWindow()
 {
-    foreach (QWidget *w, qApp->topLevelWidgets())
-        if (MainWindow* mainWin = qobject_cast<MainWindow*>(w))
+    foreach (QWidget *w, QApplication::topLevelWidgets())
+        if (auto mainWin = qobject_cast<MainWindow*>(w))
             if (!mainWin->getIsPixmapLoaded())
                 return mainWin;
     return nullptr;

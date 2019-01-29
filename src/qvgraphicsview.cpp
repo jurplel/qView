@@ -120,23 +120,23 @@ bool QVGraphicsView::event(QEvent *event)
     //this is for touchpad pinch gestures
     if (event->type() == QEvent::Gesture)
     {
-        QGestureEvent *gestureEvent = static_cast<QGestureEvent*>(event);
+        auto *gestureEvent = dynamic_cast<QGestureEvent*>(event);
         if (QGesture *pinch = gestureEvent->gesture(Qt::PinchGesture))
         {
-            QPinchGesture *pinchGesture = static_cast<QPinchGesture *>(pinch);
+            auto *pinchGesture = dynamic_cast<QPinchGesture *>(pinch);
             QPinchGesture::ChangeFlags changeFlags = pinchGesture->changeFlags();
             if (changeFlags & QPinchGesture::RotationAngleChanged) {
-                qDebug() << "Rotation angle: " << pinchGesture->rotationAngle() << " Last: " << pinchGesture->lastRotationAngle();
+//                qDebug() << "Rotation angle: " << pinchGesture->rotationAngle() << " Last: " << pinchGesture->lastRotationAngle();
                 rotate(qFloor(pinchGesture->rotationAngle()/90)*90);
             }
             if (changeFlags & QPinchGesture::ScaleFactorChanged) {
-                qDebug() << "Scale factor: " << pinchGesture->scaleFactor() << " Total: " << pinchGesture->totalScaleFactor();
+//                qDebug() << "Scale factor: " << pinchGesture->scaleFactor() << " Total: " << pinchGesture->totalScaleFactor();
                 qreal scaleAmount = (pinchGesture->scaleFactor()-1.0)/(scaleFactor-1);
                 if (qFuzzyCompare(scaleAmount, qFabs(scaleAmount)))
                 {
                     for (qreal i = scaleAmount; i > 0; --i)
                     {
-                        qDebug() << "zoom #" << i;
+//                        qDebug() << "zoom #" << i;
                         zoom(120, mapFromGlobal(pinchGesture->hotSpot().toPoint()));
                     }
                 }
@@ -144,7 +144,7 @@ bool QVGraphicsView::event(QEvent *event)
                 {
                     for (qreal i = scaleAmount; i < 0; ++i)
                     {
-                        qDebug() << "zoom #" << i;
+//                        qDebug() << "zoom #" << i;
                         zoom(-120, mapFromGlobal(pinchGesture->hotSpot().toPoint()));
                     }
                 }
@@ -176,10 +176,10 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
         //macos automatically scrolls horizontally while holding shift
         #ifndef Q_OS_MACX
         if (event->modifiers() == (Qt::ControlModifier|Qt::ShiftModifier) || event->modifiers() == Qt::ShiftModifier)
-            translate(event->angleDelta().y()/2, event->angleDelta().x()/2);
+            translate(event->angleDelta().y()/2.0, event->angleDelta().x()/2.0);
         else
         #endif
-            translate(event->angleDelta().x()/2, event->angleDelta().y()/2);
+            translate(event->angleDelta().x()/2.0, event->angleDelta().y()/2.0);
     }
 }
 
@@ -357,7 +357,7 @@ void QVGraphicsView::prepareFile()
 {
     //set pixmap, offset, and moviecenter
     loadedPixmapItem->setPixmap(getLoadedPixmap());
-    loadedPixmapItem->setOffset((scene()->width()/2 - getLoadedPixmap().width()/2), (scene()->height()/2 - getLoadedPixmap().height()/2));
+    loadedPixmapItem->setOffset((scene()->width()/2 - getLoadedPixmap().width()/2.0), (scene()->height()/2 - getLoadedPixmap().height()/2.0));
     if (getCurrentFileDetails().isMovieLoaded)
         movieCenterNeedsUpdating = true;
     else
@@ -672,12 +672,12 @@ void QVGraphicsView::loadSettings()
     newBrush.setStyle(Qt::SolidPattern);
     if (!((settings.value("bgcolorenabled", true).toBool())))
     {
-        newBrush.setColor(QColor("#00000000"));
+        newBrush.setColor(QColor(0, 0, 0, 0));
     }
     else
     {
         QColor newColor;
-        newColor.setNamedColor(settings.value("bgcolor", QString("#212121")).toString());
+        newColor.setNamedColor(settings.value("bgcolor", "#212121").toString());
         newBrush.setColor(newColor);
     }
     setBackgroundBrush(newBrush);
