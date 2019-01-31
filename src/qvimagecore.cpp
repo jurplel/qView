@@ -35,9 +35,6 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
 
     QPixmapCache::setCacheLimit(20480);
 
-    //prevent really weird memory behavior (we don't really need more than 1 thread anyways)
-    QThreadPool::globalInstance()->setMaxThreadCount(1);
-
     connect(&loadedMovie, &QMovie::updated, this, &QVImageCore::animatedFrameChanged);
 
     connect(&loadFutureWatcher, &QFutureWatcher<QVImageAndFileInfo>::finished, this, &QVImageCore::processFile);
