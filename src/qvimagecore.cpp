@@ -68,8 +68,10 @@ void QVImageCore::loadFile(const QString &fileName)
     currentFileDetails.imageSize = imageReader.size();
 
     //check if cached already before loading the long way
-    if (QPixmapCache::find(currentFileDetails.fileInfo.absoluteFilePath(), loadedPixmap))
+    QPixmap cachedPixmap;
+    if (QPixmapCache::find(currentFileDetails.fileInfo.absoluteFilePath(), cachedPixmap) && !cachedPixmap.isNull())
     {
+        loadedPixmap = cachedPixmap;
         vetoFutureWatcher = true;
         postLoad();
     }
@@ -174,8 +176,9 @@ void QVImageCore::requestCaching()
         preloadingDistance = 4;
 
     QStringList filesToPreload;
-    for (int index = currentFileDetails.folderIndex-preloadingDistance; index <= currentFileDetails.folderIndex+preloadingDistance; index++)
+    for (int i = currentFileDetails.folderIndex-preloadingDistance; i <= currentFileDetails.folderIndex+preloadingDistance; i++)
     {
+        int index = i;
         //keep within index range
         if (isLoopFoldersEnabled)
         {
