@@ -43,9 +43,9 @@ public:
     void loadFile(const QString &fileName);
     QVImageAndFileInfo readFile(const QString &fileName);
     void postLoad();
-    void requestCaching();
     void updateFolderInfo();
-    void addIndexToCache(int index);
+    void requestCaching();
+    void requestCachingFile(QString filePath);
     void addToCache(QVImageAndFileInfo loadedImageAndFileInfo);
 
     void loadSettings();
@@ -90,7 +90,9 @@ private:
     bool vetoFutureWatcher;
 
     bool isLoopFoldersEnabled;
+
     int preloadingMode;
+    QStringList lastFilesPreloaded;
 
     QTimer *fileChangeRateTimer;
 };
