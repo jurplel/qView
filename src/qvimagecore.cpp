@@ -14,7 +14,7 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     imageReader.setDecideFormatFromContent(true);
     imageReader.setAutoTransform(true);
 
-    vetoFutureWatcher = false;
+    justLoadedFromCache = false;
 
     isLoopFoldersEnabled = true;
     preloadingMode = 1;
@@ -72,14 +72,15 @@ void QVImageCore::loadFile(const QString &fileName)
     if (QPixmapCache::find(currentFileDetails.fileInfo.absoluteFilePath(), cachedPixmap) && !cachedPixmap.isNull())
     {
         loadedPixmap = cachedPixmap;
-        vetoFutureWatcher = true;
+        justLoadedFromCache = true;
         postLoad();
     }
     else
     {
-        vetoFutureWatcher = false;
-        loadFutureWatcher.setFuture(QtConcurrent::run(this, &QVImageCore::readFile, currentFileDetails.fileInfo.absoluteFilePath()));
+        justLoadedFromCache = false;
     }
+
+    loadFutureWatcher.setFuture(QtConcurrent::run(this, &QVImageCore::readFile, currentFileDetails.fileInfo.absoluteFilePath()));
 
     requestCaching();
 }
@@ -111,13 +112,19 @@ QVImageCore::QVImageAndFileInfo QVImageCore::readFile(const QString &fileName)
 
 void QVImageCore::processFile()
 {
-    if (vetoFutureWatcher)
-        return;
-
     QVImageAndFileInfo loadedImageAndFileInfo = loadFutureWatcher.result();
 
     if (loadedImageAndFileInfo.readImage.isNull())
         return;
+
+    if (justLoadedFromCache)
+    {
+        if (loadedImageAndFileInfo.readFileInfo.size() == currentFileDetails.fileInfo.size() &&
+            loadedImageAndFileInfo.readImage.size() == loadedPixmap.size())
+            return;
+
+        addToCache(loadedImageAndFileInfo);
+    }
 
     loadedPixmap.convertFromImage(loadedImageAndFileInfo.readImage);
     postLoad();
