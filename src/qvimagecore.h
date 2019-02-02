@@ -87,7 +87,7 @@ private:
 
     QFutureWatcher<QVImageAndFileInfo> loadFutureWatcher;
 
-    bool vetoFutureWatcher;
+    bool justLoadedFromCache;
 
     bool isLoopFoldersEnabled;
 
