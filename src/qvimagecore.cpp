@@ -90,6 +90,8 @@ QVImageCore::QVImageAndFileInfo QVImageCore::readFile(const QString &fileName)
     newImageReader.setDecideFormatFromContent(true);
     newImageReader.setAutoTransform(true);
 
+    QPixmapCache::find(fileName);
+
     newImageReader.setFileName(fileName);
     QImage readImage = newImageReader.read();
 
@@ -143,23 +145,6 @@ void QVImageCore::postLoad()
     emit fileInfoUpdated();
 }
 
-void QVImageCore::requestCaching()
-{
-    if (preloadingMode == 0)
-    {
-        QPixmapCache::clear();
-        return;
-    }
-
-    int preloadingDistance = 1;
-
-    if (preloadingMode > 1)
-        preloadingDistance = 4;
-
-    for (int i = currentFileDetails.folderIndex-preloadingDistance; i <= currentFileDetails.folderIndex+preloadingDistance; i++)
-        addIndexToCache(i);
-}
-
 void QVImageCore::updateFolderInfo()
 {
     QCollator collator;
@@ -175,33 +160,48 @@ void QVImageCore::updateFolderInfo()
     currentFileDetails.folderIndex = currentFileDetails.folder.indexOf(currentFileDetails.fileInfo);
 }
 
-void QVImageCore::addIndexToCache(int index)
+void QVImageCore::requestCaching()
 {
-    if (currentFileDetails.folder.isEmpty())
+    if (preloadingMode == 0)
+    {
+        QPixmapCache::clear();
         return;
-
-    //keep within index range
-    if (index > currentFileDetails.folder.length()-1)
-    {
-        if (!isLoopFoldersEnabled)
-            return;
-        index = index-(currentFileDetails.folder.length());
-    }
-    else if (index < 0)
-    {
-        if (!isLoopFoldersEnabled)
-            return;
-        index = index+(currentFileDetails.folder.length());
     }
 
-    //if still out of range after looping, just cancel the cache for this index
-    if (index > currentFileDetails.folder.length()-1 || index < 0)
-        return;
+    int preloadingDistance = 1;
 
+    if (preloadingMode > 1)
+        preloadingDistance = 4;
 
-    QString filePath = currentFileDetails.folder[index].absoluteFilePath();
+    QStringList filesToPreload;
+    for (int index = currentFileDetails.folderIndex-preloadingDistance; index <= currentFileDetails.folderIndex+preloadingDistance; index++)
+    {
+        //keep within index range
+        if (isLoopFoldersEnabled)
+        {
+            if (index > currentFileDetails.folder.length()-1)
+                index = index-(currentFileDetails.folder.length());
+            else if (index < 0)
+                index = index+(currentFileDetails.folder.length());
+        }
 
-    if (QPixmapCache::find(filePath, nullptr))
+        //if still out of range after looping, just cancel the cache for this index
+        if (index > currentFileDetails.folder.length()-1 || index < 0 || currentFileDetails.folder.isEmpty())
+            return;
+
+        QString filePath = currentFileDetails.folder[index].absoluteFilePath();
+        filesToPreload.append(filePath);
+
+        requestCachingFile(filePath);
+    }
+    lastFilesPreloaded = filesToPreload;
+
+}
+
+void QVImageCore::requestCachingFile(QString filePath)
+{
+    //check if image is already loaded or requested
+    if (QPixmapCache::find(filePath, nullptr) || lastFilesPreloaded.contains(filePath))
         return;
 
     //check if too big for caching
