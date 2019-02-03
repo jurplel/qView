@@ -515,13 +515,13 @@ void MainWindow::on_actionOpen_Containing_Folder_triggered()
 
 void MainWindow::on_actionRotate_Right_triggered()
 {
-    ui->graphicsView->rotate(90);
+    ui->graphicsView->rotateImage(90);
     ui->graphicsView->resetScale();
 }
 
 void MainWindow::on_actionRotate_Left_triggered()
 {
-    ui->graphicsView->rotate(-90);
+    ui->graphicsView->rotateImage(-90);
     ui->graphicsView->resetScale();
 }
 

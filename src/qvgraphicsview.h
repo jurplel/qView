@@ -52,6 +52,7 @@ public:
     void jumpToNextFrame();
     void setPaused(const bool &desiredState);
     void setSpeed(const int &desiredSpeed);
+    void rotateImage(int rotation);
 
     const QVImageCore::QVFileDetails& getCurrentFileDetails() const;
     const QPixmap& getLoadedPixmap() const;

@@ -738,6 +738,11 @@ void QVGraphicsView::setSpeed(const int &desiredSpeed)
     imageCore.setSpeed(desiredSpeed);
 }
 
+void QVGraphicsView::rotateImage(int rotation)
+{
+    imageCore.rotateImage(rotation);
+}
+
 const QVImageCore::QVFileDetails& QVGraphicsView::getCurrentFileDetails() const
 {
     return imageCore.getCurrentFileDetails();
