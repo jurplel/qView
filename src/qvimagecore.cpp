@@ -26,6 +26,7 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     currentFileDetails.folder = QFileInfoList();
     currentFileDetails.folderIndex = -1;
     currentFileDetails.imageSize = QSize();
+    currentFileDetails.rotation = 0;
 
     lastFileDetails.fileInfo = QFileInfo();
     lastFileDetails.isPixmapLoaded = false;
@@ -77,6 +78,9 @@ void QVImageCore::loadFile(const QString &fileName)
         cachedPixmap.size() == currentFileDetails.imageSize &&
         *previouslyRecordedFileSizes.object(currentFileDetails.fileInfo.absoluteFilePath()) == currentFileDetails.fileInfo.size())
     {
+        QTransform transform;
+        transform.rotate(currentFileDetails.rotation);
+        cachedPixmap.transformed(transform);
         loadedPixmap = cachedPixmap;
         justLoadedFromCache = true;
         postLoad();
@@ -120,7 +124,9 @@ void QVImageCore::postRead(QImage loadedImage)
     if (loadedImage.isNull() || justLoadedFromCache)
         return;
 
-    loadedPixmap.convertFromImage(loadedImage);
+    QTransform transform;
+    transform.rotate(currentFileDetails.rotation);
+    loadedPixmap.convertFromImage(loadedImage.transformed(transform));
     postLoad();
 }
 
@@ -137,7 +143,6 @@ void QVImageCore::postLoad()
     if (imageReader.supportsAnimation() && imageReader.imageCount() != 1)
     {
         loadedMovie.setFileName(currentFileDetails.fileInfo.absoluteFilePath());
-        loadedMovie.setScaledSize(loadedPixmap.size());
         loadedMovie.start();
         currentFileDetails.isMovieLoaded = true;
     }
@@ -254,8 +259,11 @@ void QVImageCore::rotateImage(int rotation)
 {
         QTransform transform;
         transform.rotate(rotation);
-        loadedPixmap.convertFromImage(loadedPixmap.toImage().transformed(transform));
+        QImage transformedImage = loadedPixmap.toImage().transformed(transform);
+        loadedPixmap.convertFromImage(transformedImage);
         currentFileDetails.imageSize = QSize(loadedPixmap.width(), loadedPixmap.height());
+        emit fileRead(currentFileDetails.fileInfo.path());
+        currentFileDetails.rotation += rotation;
 }
 
 const QPixmap QVImageCore::scaleExpensively(const int desiredWidth, const int desiredHeight, const scaleMode mode)
@@ -288,7 +296,10 @@ const QPixmap QVImageCore::scaleExpensively(const QSize desiredSize, const scale
         }
         }
     }
-    return loadedMovie.currentPixmap().scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    QTransform transform;
+    transform.rotate(currentFileDetails.rotation);
+    QImage image = loadedMovie.currentImage().transformed(transform);
+    return QPixmap::fromImage(image).scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 }
 
 
