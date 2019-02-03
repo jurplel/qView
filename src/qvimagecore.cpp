@@ -38,7 +38,9 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
 
     connect(&loadedMovie, &QMovie::updated, this, &QVImageCore::animatedFrameChanged);
 
-    connect(&loadFutureWatcher, &QFutureWatcher<QVImageAndFileInfo>::finished, this, &QVImageCore::processFile);
+    connect(&loadFutureWatcher, &QFutureWatcher<QVImageAndFileInfo>::finished, this, [this](){
+        postRead(loadFutureWatcher.result().readImage);
+    });
 
     fileChangeRateTimer = new QTimer(this);
     fileChangeRateTimer->setSingleShot(true);
@@ -113,14 +115,12 @@ QVImageCore::QVImageAndFileInfo QVImageCore::readFile(const QString &fileName)
     return combinedInfo;
 }
 
-void QVImageCore::processFile()
+void QVImageCore::postRead(QImage loadedImage)
 {
-    QVImageAndFileInfo loadedImageAndFileInfo = loadFutureWatcher.result();
-
-    if (loadedImageAndFileInfo.readImage.isNull() || justLoadedFromCache)
+    if (loadedImage.isNull() || justLoadedFromCache)
         return;
 
-    loadedPixmap.convertFromImage(loadedImageAndFileInfo.readImage);
+    loadedPixmap.convertFromImage(loadedImage);
     postLoad();
 }
 
@@ -248,6 +248,14 @@ void QVImageCore::setSpeed(int desiredSpeed)
 {
     if (currentFileDetails.isMovieLoaded)
         loadedMovie.setSpeed(desiredSpeed);
+}
+
+void QVImageCore::rotateImage(int rotation)
+{
+        QTransform transform;
+        transform.rotate(rotation);
+        loadedPixmap.convertFromImage(loadedPixmap.toImage().transformed(transform));
+        currentFileDetails.imageSize = QSize(loadedPixmap.width(), loadedPixmap.height());
 }
 
 const QPixmap QVImageCore::scaleExpensively(const int desiredWidth, const int desiredHeight, const scaleMode mode)

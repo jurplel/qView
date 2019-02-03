@@ -43,6 +43,7 @@ public:
 
     void loadFile(const QString &fileName);
     QVImageAndFileInfo readFile(const QString &fileName);
+    void postRead(QImage loadedImage);
     void postLoad();
     void updateFolderInfo();
     void requestCaching();
@@ -54,6 +55,8 @@ public:
     void jumpToNextFrame();
     void setPaused(bool desiredState);
     void setSpeed(int desiredSpeed);
+
+    void rotateImage(int rotation);
 
     const QPixmap scaleExpensively(const int desiredWidth, const int desiredHeight, const scaleMode mode = scaleMode::normal);
     const QPixmap scaleExpensively(const QSize desiredSize, const scaleMode mode = scaleMode::normal);
@@ -72,9 +75,6 @@ signals:
     void fileRead(QString string);
 
     void readError(const QString &errorString, const QString fileName);
-
-public slots:
-    void processFile();
 
 private:
     const QStringList filterList = (QStringList() << "*.bmp" << "*.cur" << "*.gif" << "*.icns" << "*.ico" << "*.jp2" << "*.jpeg" << "*.jpe" << "*.jpg" << "*.mng" << "*.pbm" << "*.pgm" << "*.png" << "*.ppm" << "*.svg" << "*.svgz" << "*.tif" << "*.tiff" << "*.wbmp" << "*.webp" << "*.xbm" << "*.xpm");
