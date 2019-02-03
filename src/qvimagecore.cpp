@@ -259,10 +259,13 @@ void QVImageCore::rotateImage(int rotation)
 {
         QTransform transform;
         transform.rotate(rotation);
+
         QImage transformedImage = loadedPixmap.toImage().transformed(transform);
         loadedPixmap.convertFromImage(transformedImage);
+
         currentFileDetails.imageSize = QSize(loadedPixmap.width(), loadedPixmap.height());
         emit fileRead(currentFileDetails.fileInfo.path());
+
         currentFileDetails.rotation += rotation;
 }
 

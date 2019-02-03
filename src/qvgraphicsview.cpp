@@ -334,11 +334,12 @@ void QVGraphicsView::animatedFrameChanged(QRect rect)
     }
     else
     {
-        QImage image = getLoadedMovie().currentImage();
         QTransform transform;
         transform.rotate(getCurrentFileDetails().rotation);
-        image.transformed(transform);
-        loadedPixmapItem->setPixmap(QPixmap::fromImage(image));
+
+        QImage transformedImage = getLoadedMovie().currentImage().transformed(transform);
+
+        loadedPixmapItem->setPixmap(QPixmap::fromImage(transformedImage));
     }
 
     if (movieCenterNeedsUpdating)
