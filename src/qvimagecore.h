@@ -31,6 +31,7 @@ public:
         QFileInfoList folder;
         int folderIndex;
         QSize imageSize;
+        int rotation;
     };
 
     struct QVImageAndFileInfo
