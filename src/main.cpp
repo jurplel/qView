@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
     if (!parser.positionalArguments().isEmpty())
     {
         window.setJustLaunchedWithImage(true);
-        window.openFile(parser.positionalArguments().first());
+        window.openFile(parser.positionalArguments().constFirst());
     }
     window.show();
 

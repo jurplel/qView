@@ -87,7 +87,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     auto *escShortcut = new QShortcut(this);
     escShortcut->setKey(Qt::Key_Escape);
-    connect(escShortcut, &QShortcut::activated, [this](){
+    connect(escShortcut, &QShortcut::activated, this, [this](){
         if (windowState() == Qt::WindowFullScreen)
             showNormal();
     });
@@ -108,7 +108,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     foreach(QAction *action, recentItems)
     {
-        connect(action, &QAction::triggered, [this,index]() { openRecent(index); });
+        connect(action, &QAction::triggered, this, [this,index]() { openRecent(index); });
         files->addAction(action);
         index++;
     }
@@ -397,7 +397,7 @@ void MainWindow::fileLoaded()
         ui->actionSlideshow->setEnabled(true);
     }
     //disable gif controls if there is no gif loaded
-    ui->menuTools->actions().first()->setEnabled(ui->graphicsView->getCurrentFileDetails().isMovieLoaded);
+    ui->menuTools->actions().constFirst()->setEnabled(ui->graphicsView->getCurrentFileDetails().isMovieLoaded);
 
 
     if (windowResizeMode == 2 || (windowResizeMode == 1 && justLaunchedWithImage))
@@ -434,6 +434,7 @@ void MainWindow::setWindowSize()
     setGeometry(newRect);
 }
 
+//literally just copy pasted from Qt source code to maintain compatibility with 5.9
 QScreen *MainWindow::screenAt(const QPoint &point)
 {
     QVarLengthArray<const QScreen *, 8> visitedScreens;
