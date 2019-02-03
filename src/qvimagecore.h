@@ -7,7 +7,8 @@
 #include <QMovie>
 #include <QFileInfo>
 #include <QFutureWatcher>
-#include <QPixmapCache>
+#include <QTimer>
+#include <QCache>
 
 class QVImageCore : public QObject
 {
@@ -45,7 +46,7 @@ public:
     void postLoad();
     void updateFolderInfo();
     void requestCaching();
-    void requestCachingFile(QString filePath);
+    void requestCachingFile(const QString &filePath);
     void addToCache(QVImageAndFileInfo loadedImageAndFileInfo);
 
     void loadSettings();
@@ -88,6 +89,7 @@ private:
     QFutureWatcher<QVImageAndFileInfo> loadFutureWatcher;
 
     bool justLoadedFromCache;
+    QCache<QString, qint64> previouslyRecordedFileSizes;
 
     bool isLoopFoldersEnabled;
 
