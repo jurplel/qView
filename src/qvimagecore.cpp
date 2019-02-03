@@ -1,10 +1,11 @@
 #include "qvimagecore.h"
 #include <QMessageBox>
 #include <QDir>
+#include <QUrl>
 #include <QSettings>
 #include <QCollator>
-#include <QtConcurrent/QtConcurrent>
-#include <QThreadPool>
+#include <QtConcurrent/QtConcurrentRun>
+#include <QPixmapCache>
 
 #include <QDebug>
 
@@ -33,7 +34,7 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     lastFileDetails.folderIndex = -1;
     lastFileDetails.imageSize = QSize();
 
-    QPixmapCache::setCacheLimit(20480);
+    QPixmapCache::setCacheLimit(51200);
 
     connect(&loadedMovie, &QMovie::updated, this, &QVImageCore::animatedFrameChanged);
 
@@ -69,7 +70,10 @@ void QVImageCore::loadFile(const QString &fileName)
 
     //check if cached already before loading the long way
     QPixmap cachedPixmap;
-    if (QPixmapCache::find(currentFileDetails.fileInfo.absoluteFilePath(), cachedPixmap) && !cachedPixmap.isNull())
+    if (QPixmapCache::find(currentFileDetails.fileInfo.absoluteFilePath(), cachedPixmap) &&
+        !cachedPixmap.isNull() &&
+        cachedPixmap.size() == currentFileDetails.imageSize &&
+        *previouslyRecordedFileSizes.object(currentFileDetails.fileInfo.absoluteFilePath()) == currentFileDetails.fileInfo.size())
     {
         loadedPixmap = cachedPixmap;
         justLoadedFromCache = true;
@@ -78,9 +82,8 @@ void QVImageCore::loadFile(const QString &fileName)
     else
     {
         justLoadedFromCache = false;
+        loadFutureWatcher.setFuture(QtConcurrent::run(this, &QVImageCore::readFile, currentFileDetails.fileInfo.absoluteFilePath()));
     }
-
-    loadFutureWatcher.setFuture(QtConcurrent::run(this, &QVImageCore::readFile, currentFileDetails.fileInfo.absoluteFilePath()));
 
     requestCaching();
 }
@@ -114,17 +117,8 @@ void QVImageCore::processFile()
 {
     QVImageAndFileInfo loadedImageAndFileInfo = loadFutureWatcher.result();
 
-    if (loadedImageAndFileInfo.readImage.isNull())
+    if (loadedImageAndFileInfo.readImage.isNull() || justLoadedFromCache)
         return;
-
-    if (justLoadedFromCache)
-    {
-        if (loadedImageAndFileInfo.readFileInfo.size() == currentFileDetails.fileInfo.size() &&
-            loadedImageAndFileInfo.readImage.size() == loadedPixmap.size())
-            return;
-
-        addToCache(loadedImageAndFileInfo);
-    }
 
     loadedPixmap.convertFromImage(loadedImageAndFileInfo.readImage);
     postLoad();
@@ -208,7 +202,7 @@ void QVImageCore::requestCaching()
 
 }
 
-void QVImageCore::requestCachingFile(QString filePath)
+void QVImageCore::requestCachingFile(const QString &filePath)
 {
     //check if image is already loaded or requested
     if (QPixmapCache::find(filePath, nullptr) || lastFilesPreloaded.contains(filePath))
@@ -220,7 +214,7 @@ void QVImageCore::requestCachingFile(QString filePath)
         return;
 
     auto *cacheFutureWatcher = new QFutureWatcher<QVImageAndFileInfo>();
-    connect(cacheFutureWatcher, &QFutureWatcher<QVImageAndFileInfo>::finished, [cacheFutureWatcher, this](){
+    connect(cacheFutureWatcher, &QFutureWatcher<QVImageAndFileInfo>::finished, this, [cacheFutureWatcher, this](){
         addToCache(cacheFutureWatcher->result());
         cacheFutureWatcher->deleteLater();
     });
@@ -233,6 +227,9 @@ void QVImageCore::addToCache(QVImageAndFileInfo loadedImageAndFileInfo)
         return;
 
     QPixmapCache::insert(loadedImageAndFileInfo.readFileInfo.absoluteFilePath(), QPixmap::fromImage(loadedImageAndFileInfo.readImage));
+
+    auto *size = new qint64(loadedImageAndFileInfo.readFileInfo.size());
+    previouslyRecordedFileSizes.insert(loadedImageAndFileInfo.readFileInfo.absoluteFilePath(), size);
 }
 
 void QVImageCore::jumpToNextFrame()
@@ -300,12 +297,12 @@ void QVImageCore::loadSettings()
     switch (preloadingMode) {
     case 1:
     {
-        QPixmapCache::setCacheLimit(20480);
+        QPixmapCache::setCacheLimit(51200);
         break;
     }
     case 2:
     {
-        QPixmapCache::setCacheLimit(102400);
+        QPixmapCache::setCacheLimit(204800);
         break;
     }
     }
