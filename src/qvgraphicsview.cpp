@@ -274,9 +274,6 @@ void QVGraphicsView::zoom(const int DeltaY, const QPoint pos, qreal targetScaleF
         //zoom using cheap matrix method
         if (DeltaY > 0)
         {
-            //this prevents a jitter when zooming in very quickly from below to above 1.0 on a movie
-            if (getCurrentFileDetails().isMovieLoaded && getLoadedMovie().currentPixmap().height() != scaledSize.height() && getLoadedMovie().state() == QMovie::Running)
-                imageCore.jumpToNextFrame();
             scale(targetScaleFactor, targetScaleFactor);
         }
         else
