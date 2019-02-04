@@ -31,7 +31,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     cropMode = 0;
     scaleFactor = 1.25;
 
-    //initialize other variables 
+    //initialize other variables
     adjustedBoundingRect = QRectF();
     adjustedImageSize = QSize();
     currentScale = 1.0;
@@ -476,36 +476,14 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
         else
             coreMode = QVImageCore::scaleMode::height;
 
-        //do not resetscale expensively above actual size unless you are meant to
+        //scale to adjustedimagesize if only scaling to actualimagesize
         if (!isPastActualSizeEnabled && adjustedImageSize.width() < width() && adjustedImageSize.height() < height())
-        {
-            if (getCurrentFileDetails().isMovieLoaded)
-            {
-                imageCore.scaleExpensively(adjustedImageSize, coreMode);
-            }
-            else
-            {
-                loadedPixmapItem->setPixmap(getLoadedPixmap());
-                fitInViewMarginless();
-            }
-            break;
-        }
-
-        if (getCurrentFileDetails().isMovieLoaded)
-        {
-            const QPixmap returnedPixmap = imageCore.scaleExpensively(width()+4, height()+4, coreMode);
-            scaledSize = returnedPixmap.size();
-
-            if (!(getLoadedMovie().state() == QMovie::Running))
-                loadedPixmapItem->setPixmap(returnedPixmap);
-        }
+            loadedPixmapItem->setPixmap(imageCore.scaleExpensively(adjustedImageSize.width(), adjustedImageSize.height(), coreMode));
         else
-        {
             loadedPixmapItem->setPixmap(imageCore.scaleExpensively(width()+4, height()+4, coreMode));
-            fitInViewMarginless();
-            scaledSize = loadedPixmapItem->boundingRect().size().toSize();
-        }
 
+        fitInViewMarginless();
+        scaledSize = loadedPixmapItem->boundingRect().size().toSize();
         break;
     }
     case scaleMode::zoom:
