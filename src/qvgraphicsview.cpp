@@ -709,7 +709,11 @@ void QVGraphicsView::loadSettings()
     isLoopFoldersEnabled = settings.value("loopfoldersenabled", true).toBool();
 
     if (getCurrentFileDetails().isPixmapLoaded)
+    {
         resetScale();
+        if (getCurrentFileDetails().isMovieLoaded && getLoadedMovie().state() == QMovie::Running)
+            movieCenterNeedsUpdating = true;
+    }
 
     imageCore.loadSettings();
 }
