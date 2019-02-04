@@ -60,6 +60,9 @@ public:
 
 signals:
     void fileLoaded();
+
+    void updatedLoadedPixmapItem();
+
     void updatedFileInfo();
 
     void updateRecentMenu();

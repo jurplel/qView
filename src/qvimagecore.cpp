@@ -26,7 +26,7 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     currentFileDetails.folder = QFileInfoList();
     currentFileDetails.folderIndex = -1;
     currentFileDetails.imageSize = QSize();
-    currentFileDetails.rotation = 0;
+    currentFileDetails.loadedPixmapSize = QSize();
 
     lastFileDetails.fileInfo = QFileInfo();
     lastFileDetails.isPixmapLoaded = false;
@@ -34,6 +34,9 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     lastFileDetails.folder = QFileInfoList();
     lastFileDetails.folderIndex = -1;
     lastFileDetails.imageSize = QSize();
+    lastFileDetails.loadedPixmapSize = QSize();
+
+    currentRotation = 0;
 
     QPixmapCache::setCacheLimit(51200);
 
@@ -79,7 +82,7 @@ void QVImageCore::loadFile(const QString &fileName)
         *previouslyRecordedFileSizes.object(currentFileDetails.fileInfo.absoluteFilePath()) == currentFileDetails.fileInfo.size())
     {
         QTransform transform;
-        transform.rotate(currentFileDetails.rotation);
+        transform.rotate(currentRotation);
         cachedPixmap.transformed(transform);
         loadedPixmap = cachedPixmap;
         justLoadedFromCache = true;
@@ -125,7 +128,7 @@ void QVImageCore::postRead(QImage loadedImage)
         return;
 
     QTransform transform;
-    transform.rotate(currentFileDetails.rotation);
+    transform.rotate(currentRotation);
     loadedPixmap.convertFromImage(loadedImage.transformed(transform));
     postLoad();
 }
@@ -147,7 +150,8 @@ void QVImageCore::postLoad()
         currentFileDetails.isMovieLoaded = true;
     }
 
-    currentFileDetails.imageSize = QSize(loadedPixmap.width(), loadedPixmap.height());
+    currentFileDetails.imageSize = imageReader.size();
+    currentFileDetails.loadedPixmapSize = loadedPixmap.size();
 
     emit fileRead();
     emit fileInfoUpdated();
@@ -257,13 +261,13 @@ void QVImageCore::setSpeed(int desiredSpeed)
 
 void QVImageCore::rotateImage(int rotation)
 {
-        currentFileDetails.rotation += rotation;
+        currentRotation += rotation;
         QTransform transform;
 
         QImage transformedImage;
         if (currentFileDetails.isMovieLoaded)
         {
-            transform.rotate(currentFileDetails.rotation);
+            transform.rotate(currentRotation);
             transformedImage = loadedMovie.currentImage().transformed(transform);
         }
         else
@@ -274,7 +278,7 @@ void QVImageCore::rotateImage(int rotation)
 
         loadedPixmap.convertFromImage(transformedImage);
 
-        currentFileDetails.imageSize = QSize(loadedPixmap.width(), loadedPixmap.height());
+        currentFileDetails.loadedPixmapSize = QSize(loadedPixmap.width(), loadedPixmap.height());
         emit updateLoadedPixmapItem();
 }
 
@@ -309,7 +313,7 @@ const QPixmap QVImageCore::scaleExpensively(const QSize desiredSize, const scale
         }
     }
     QTransform transform;
-    transform.rotate(currentFileDetails.rotation);
+    transform.rotate(currentRotation);
     QImage image = loadedMovie.currentImage().transformed(transform);
     return QPixmap::fromImage(image).scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 }

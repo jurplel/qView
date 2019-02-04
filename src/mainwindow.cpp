@@ -39,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //connect graphicsview signals
     connect(ui->graphicsView, &QVGraphicsView::fileLoaded, this, &MainWindow::fileLoaded);
+    connect(ui->graphicsView, &QVGraphicsView::updatedLoadedPixmapItem, this, &MainWindow::setWindowSize);
     connect(ui->graphicsView, &QVGraphicsView::updatedFileInfo, this, &MainWindow::refreshProperties);
     connect(ui->graphicsView, &QVGraphicsView::updateRecentMenu, this, &MainWindow::updateRecentMenu);
     connect(ui->graphicsView, &QVGraphicsView::sendWindowTitle, this, &MainWindow::setWindowTitle);
@@ -398,13 +399,6 @@ void MainWindow::fileLoaded()
     }
     //disable gif controls if there is no gif loaded
     ui->menuTools->actions().constFirst()->setEnabled(ui->graphicsView->getCurrentFileDetails().isMovieLoaded);
-
-
-    if (windowResizeMode == 2 || (windowResizeMode == 1 && justLaunchedWithImage))
-    {
-        justLaunchedWithImage = false;
-        setWindowSize();
-    }
 }
 
 void MainWindow::refreshProperties()
@@ -420,7 +414,11 @@ void MainWindow::refreshProperties()
 
 void MainWindow::setWindowSize()
 {
-    QSize imageSize = ui->graphicsView->getCurrentFileDetails().imageSize;
+    if (windowResizeMode == 2 || (windowResizeMode == 1 && justLaunchedWithImage))
+    {
+    justLaunchedWithImage = false;
+
+    QSize imageSize = ui->graphicsView->getCurrentFileDetails().loadedPixmapSize;
 
     QSize currentScreenSize = screenAt(geometry().center())->size();
     currentScreenSize *= maxWindowResizedConstant;
@@ -431,6 +429,7 @@ void MainWindow::setWindowSize()
     QRect newRect = QRect(geometry().topLeft(), imageSize);
     newRect.moveCenter(geometry().center());
     setGeometry(newRect);
+    }
 }
 
 //literally just copy pasted from Qt source code to maintain compatibility with 5.9
