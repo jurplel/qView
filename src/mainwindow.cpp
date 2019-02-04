@@ -405,7 +405,6 @@ void MainWindow::fileLoaded()
         justLaunchedWithImage = false;
         setWindowSize();
     }
-    refreshProperties();
 }
 
 void MainWindow::refreshProperties()

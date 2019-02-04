@@ -91,7 +91,9 @@ protected:
 private slots:
     void animatedFrameChanged(QRect rect);
 
-    void prepareFile();
+    void postLoad();
+
+    void updateLoadedPixmapItem();
 
     void updateFileInfoDisplays();
 

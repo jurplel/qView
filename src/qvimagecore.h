@@ -73,7 +73,9 @@ signals:
 
     void fileInfoUpdated();
 
-    void fileRead(QString string);
+    void updateLoadedPixmapItem();
+
+    void fileRead();
 
     void readError(const QString &errorString, const QString fileName);
 
