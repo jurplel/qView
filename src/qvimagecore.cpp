@@ -149,7 +149,7 @@ void QVImageCore::postLoad()
 
     currentFileDetails.imageSize = QSize(loadedPixmap.width(), loadedPixmap.height());
 
-    emit fileRead(currentFileDetails.fileInfo.path());
+    emit fileRead();
     emit fileInfoUpdated();
 }
 
@@ -257,16 +257,25 @@ void QVImageCore::setSpeed(int desiredSpeed)
 
 void QVImageCore::rotateImage(int rotation)
 {
+        currentFileDetails.rotation += rotation;
         QTransform transform;
-        transform.rotate(rotation);
 
-        QImage transformedImage = loadedPixmap.toImage().transformed(transform);
+        QImage transformedImage;
+        if (currentFileDetails.isMovieLoaded)
+        {
+            transform.rotate(currentFileDetails.rotation);
+            transformedImage = loadedMovie.currentImage().transformed(transform);
+        }
+        else
+        {
+            transform.rotate(rotation);
+            transformedImage = loadedPixmap.toImage().transformed(transform);
+        }
+
         loadedPixmap.convertFromImage(transformedImage);
 
         currentFileDetails.imageSize = QSize(loadedPixmap.width(), loadedPixmap.height());
-        emit fileRead(currentFileDetails.fileInfo.path());
-
-        currentFileDetails.rotation += rotation;
+        emit updateLoadedPixmapItem();
 }
 
 const QPixmap QVImageCore::scaleExpensively(const int desiredWidth, const int desiredHeight, const scaleMode mode)

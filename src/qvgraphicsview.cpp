@@ -46,7 +46,8 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 
     connect(&imageCore, &QVImageCore::animatedFrameChanged, this, &QVGraphicsView::animatedFrameChanged);
     connect(&imageCore, &QVImageCore::fileInfoUpdated, this, &QVGraphicsView::updateFileInfoDisplays);
-    connect(&imageCore, &QVImageCore::fileRead, this, &QVGraphicsView::prepareFile);
+    connect(&imageCore, &QVImageCore::fileRead, this, &QVGraphicsView::postLoad);
+    connect(&imageCore, &QVImageCore::updateLoadedPixmapItem, this, &QVGraphicsView::updateLoadedPixmapItem);
     connect(&imageCore, &QVImageCore::readError, this, &QVGraphicsView::error);
 
     expensiveScaleTimer = new QTimer(this);
@@ -358,20 +359,26 @@ void QVGraphicsView::loadFile(const QString &fileName)
     imageCore.loadFile(fileName);
 }
 
-void QVGraphicsView::prepareFile()
+void QVGraphicsView::postLoad()
 {
-    //set pixmap, offset, and moviecenter
-    loadedPixmapItem->setPixmap(getLoadedPixmap());
-    loadedPixmapItem->setOffset((scene()->width()/2 - getLoadedPixmap().width()/2.0), (scene()->height()/2 - getLoadedPixmap().height()/2.0));
     if (getCurrentFileDetails().isMovieLoaded)
         movieCenterNeedsUpdating = true;
     else
         movieCenterNeedsUpdating = false;
 
+    updateLoadedPixmapItem();
+
+    emit fileLoaded();
+}
+
+void QVGraphicsView::updateLoadedPixmapItem()
+{
+    //set pixmap and offset
+    loadedPixmapItem->setPixmap(getLoadedPixmap());
+    loadedPixmapItem->setOffset((scene()->width()/2 - getLoadedPixmap().width()/2.0), (scene()->height()/2 - getLoadedPixmap().height()/2.0));
     scaledSize = loadedPixmapItem->boundingRect().size().toSize();
 
     resetScale();
-    emit fileLoaded();
 }
 
 void QVGraphicsView::updateFileInfoDisplays()
