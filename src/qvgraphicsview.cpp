@@ -336,7 +336,7 @@ void QVGraphicsView::animatedFrameChanged(QRect rect)
     else
     {
         QTransform transform;
-        transform.rotate(getCurrentFileDetails().rotation);
+        transform.rotate(imageCore.getCurrentRotation());
 
         QImage transformedImage = getLoadedMovie().currentImage().transformed(transform);
 
@@ -379,6 +379,7 @@ void QVGraphicsView::updateLoadedPixmapItem()
     scaledSize = loadedPixmapItem->boundingRect().size().toSize();
 
     resetScale();
+    emit updatedLoadedPixmapItem();
 }
 
 void QVGraphicsView::updateFileInfoDisplays()

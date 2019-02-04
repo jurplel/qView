@@ -31,7 +31,7 @@ public:
         QFileInfoList folder;
         int folderIndex;
         QSize imageSize;
-        int rotation;
+        QSize loadedPixmapSize;
     };
 
     struct QVImageAndFileInfo
@@ -66,6 +66,7 @@ public:
     const QPixmap& getLoadedPixmap() const {return loadedPixmap; }
     const QMovie& getLoadedMovie() const {return loadedMovie; }
     const QVFileDetails& getCurrentFileDetails() const {return currentFileDetails; }
+    int getCurrentRotation() const {return currentRotation; }
 
 
 signals:
@@ -88,6 +89,7 @@ private:
 
     QVFileDetails currentFileDetails;
     QVFileDetails lastFileDetails;
+    int currentRotation;
 
     QFutureWatcher<QVImageAndFileInfo> loadFutureWatcher;
 
