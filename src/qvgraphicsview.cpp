@@ -128,7 +128,7 @@ bool QVGraphicsView::event(QEvent *event)
             QPinchGesture::ChangeFlags changeFlags = pinchGesture->changeFlags();
             if (changeFlags & QPinchGesture::RotationAngleChanged) {
 //                qDebug() << "Rotation angle: " << pinchGesture->rotationAngle() << " Last: " << pinchGesture->lastRotationAngle();
-                rotate(qFloor(pinchGesture->rotationAngle()/90)*90);
+                rotateImage(qFloor(pinchGesture->rotationAngle()/90)*90);
             }
             if (changeFlags & QPinchGesture::ScaleFactorChanged) {
 //                qDebug() << "Scale factor: " << pinchGesture->scaleFactor() << " Total: " << pinchGesture->totalScaleFactor();
