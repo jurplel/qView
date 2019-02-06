@@ -154,7 +154,7 @@ void QVOptionsDialog::loadSettings(const bool defaults)
     ui->scrollZoomsCheckbox->setChecked(transientSettings.scrollZoomsEnabled);
 
     //window resize mode
-    transientSettings.windowResizeMode = settings.value("windowresizemode", 0).toInt();
+    transientSettings.windowResizeMode = settings.value("windowresizemode", 1).toInt();
     ui->windowResizeComboBox->setCurrentIndex(transientSettings.windowResizeMode);
     if (transientSettings.windowResizeMode == 0)
     {
@@ -168,7 +168,7 @@ void QVOptionsDialog::loadSettings(const bool defaults)
     }
 
     //maximum size for auto window resize
-    transientSettings.maxWindowResizedPercentage = settings.value("maxwindowresizedpercentage", 90).toInt();
+    transientSettings.maxWindowResizedPercentage = settings.value("maxwindowresizedpercentage", 60).toInt();
     ui->maxWindowResizeSpinBox->setValue(transientSettings.maxWindowResizedPercentage);
 
     //loop folders

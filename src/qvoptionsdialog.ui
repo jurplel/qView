@@ -23,7 +23,7 @@
       <enum>Qt::NoFocus</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="window">
       <property name="layoutDirection">
@@ -123,6 +123,9 @@
          <property name="toolTip">
           <string>Control when the window should resize to fit the image's actual size</string>
          </property>
+         <property name="currentIndex">
+          <number>1</number>
+         </property>
          <item>
           <property name="text">
            <string>Never</string>
@@ -198,7 +201,7 @@
           <number>5</number>
          </property>
          <property name="value">
-          <number>90</number>
+          <number>60</number>
          </property>
         </widget>
        </item>

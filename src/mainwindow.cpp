@@ -300,10 +300,10 @@ void MainWindow::loadSettings()
     slideshowTimer->setInterval(settings.value("slideshowtimer", 5).toInt()*1000);
 
     //window resize mode
-    windowResizeMode = settings.value("windowresizemode", 0).toInt();
+    windowResizeMode = settings.value("windowresizemode", 1).toInt();
 
     //max window resize mode size
-    maxWindowResizedConstant = settings.value("maxwindowresizedpercentage", 90).toReal()/100;
+    maxWindowResizedConstant = settings.value("maxwindowresizedpercentage", 60).toReal()/100;
 
     ui->graphicsView->loadSettings();
 }
