@@ -31,7 +31,7 @@ CONFIG += c++11
 win32:QT += svg # needed for including svg support in static build
 win32:CONFIG += static
 RC_ICONS = "dist/win/qView.ico"
-QMAKE_TARGET_COPYRIGHT = "Copyright © 2018 jurplel and qView contributors"
+QMAKE_TARGET_COPYRIGHT = "Copyright © 2019 jurplel and qView contributors"
 QMAKE_TARGET_DESCRIPTION = "qView"
 
 # macOS specific stuff
