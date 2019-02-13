@@ -5,7 +5,7 @@
 
 ; Update these when building
 #define MyAppVersion "2.0"
-#define MyAppYear "2018"
+#define MyAppYear "2019"
 
 [Setup]
 AppId={{A6A9BAAB-C59E-4EAB-ACE1-3EEDE3031880}
@@ -25,7 +25,7 @@ WizardImageFile=wiz.bmp
 UninstallDisplayName={#MyAppName}
 UninstallDisplayIcon={app}\{#MyAppExeName}
 VersionInfoVersion={#MyAppVersion}
-AppCopyright=Copyright © 2018-{#MyAppYear}, {#MyAppPublisher}
+AppCopyright=Copyright ï¿½ 2018-{#MyAppYear}, {#MyAppPublisher}
 MinVersion=0,6.1
 DisableProgramGroupPage=yes
 ChangesAssociations=yes
