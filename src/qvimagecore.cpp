@@ -83,8 +83,7 @@ void QVImageCore::loadFile(const QString &fileName)
     {
         QTransform transform;
         transform.rotate(currentRotation);
-        cachedPixmap.transformed(transform);
-        loadedPixmap = cachedPixmap;
+        loadedPixmap = cachedPixmap.transformed(transform);
         justLoadedFromCache = true;
         postLoad();
     }
