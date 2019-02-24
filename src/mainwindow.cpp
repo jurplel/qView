@@ -124,10 +124,8 @@ MainWindow::MainWindow(QWidget *parent) :
     contextMenu->addAction(ui->actionProperties);
     contextMenu->addAction(ui->actionPaste);
     contextMenu->addSeparator();
-    contextMenu->addAction(ui->actionFirst_File);
     contextMenu->addAction(ui->actionPrevious_File);
     contextMenu->addAction(ui->actionNext_File);
-    contextMenu->addAction(ui->actionLast_File);
     contextMenu->addSeparator();
 
     QMenu *view = new QMenu(tr("View"), this);
@@ -186,6 +184,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //add actions not used in context menu so that keyboard shortcuts still work
     addAction(ui->actionQuit);
+    addAction(ui->actionFirst_File);
+    addAction(ui->actionLast_File);
 
     //macOS specific functions
     #ifdef Q_OS_UNIX
