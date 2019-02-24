@@ -414,8 +414,14 @@ void MainWindow::refreshProperties()
 
 void MainWindow::setWindowSize()
 {
-    if (windowResizeMode == 2 || (windowResizeMode == 1 && justLaunchedWithImage))
-    {
+    //check if the program is configured to resize the window
+    if (!(windowResizeMode == 2 || (windowResizeMode == 1 && justLaunchedWithImage)))
+        return;
+
+    //check if window is maximized or fullscreened
+    if (windowState() == Qt::WindowMaximized || windowState() == Qt::WindowFullScreen)
+        return;
+
     justLaunchedWithImage = false;
 
     QSize imageSize = ui->graphicsView->getCurrentFileDetails().loadedPixmapSize;
@@ -429,7 +435,6 @@ void MainWindow::setWindowSize()
     QRect newRect = QRect(geometry().topLeft(), imageSize);
     newRect.moveCenter(geometry().center());
     setGeometry(newRect);
-    }
 }
 
 //literally just copy pasted from Qt source code to maintain compatibility with 5.9
