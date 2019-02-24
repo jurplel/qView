@@ -23,7 +23,7 @@
       <enum>Qt::NoFocus</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="window">
       <property name="layoutDirection">
@@ -390,7 +390,7 @@
        <item row="0" column="0">
         <widget class="QLabel" name="label_4">
          <property name="text">
-          <string>Slideshow direction</string>
+          <string>Slideshow direction:</string>
          </property>
         </widget>
        </item>
