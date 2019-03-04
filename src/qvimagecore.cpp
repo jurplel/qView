@@ -119,7 +119,7 @@ QVImageCore::QVImageAndFileInfo QVImageCore::readFile(const QString &fileName)
     return combinedInfo;
 }
 
-void QVImageCore::postRead(QImage loadedImage)
+void QVImageCore::postRead(const QImage &loadedImage)
 {
     if (loadedImage.isNull() || justLoadedFromCache)
         return;

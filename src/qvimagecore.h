@@ -44,7 +44,7 @@ public:
 
     void loadFile(const QString &fileName);
     QVImageAndFileInfo readFile(const QString &fileName);
-    void postRead(QImage loadedImage);
+    void postRead(const QImage &loadedImage);
     void postLoad();
     void updateFolderInfo();
     void requestCaching();
