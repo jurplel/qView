@@ -213,7 +213,8 @@ void QVImageCore::requestCachingFile(const QString &filePath)
         return;
 
     //check if too big for caching
-    imageReader.setFileName(filePath);    QTransform transform;
+    imageReader.setFileName(filePath);
+    QTransform transform;
     transform.rotate(currentRotation);
     if (((imageReader.size().width()*imageReader.size().height()*32)/8)/1000 > QPixmapCache::cacheLimit()/2)
         return;
