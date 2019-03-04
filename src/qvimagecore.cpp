@@ -81,9 +81,7 @@ void QVImageCore::loadFile(const QString &fileName)
         cachedPixmap.size() == currentFileDetails.imageSize &&
         *previouslyRecordedFileSizes.object(currentFileDetails.fileInfo.absoluteFilePath()) == currentFileDetails.fileInfo.size())
     {
-        QTransform transform;
-        transform.rotate(currentRotation);
-        loadedPixmap = cachedPixmap.transformed(transform);
+        loadedPixmap = matchCurrentRotation(cachedPixmap);
         justLoadedFromCache = true;
         postLoad();
     }
@@ -126,9 +124,7 @@ void QVImageCore::postRead(QImage loadedImage)
     if (loadedImage.isNull() || justLoadedFromCache)
         return;
 
-    QTransform transform;
-    transform.rotate(currentRotation);
-    loadedPixmap.convertFromImage(loadedImage.transformed(transform));
+    loadedPixmap = QPixmap::fromImage(matchCurrentRotation(loadedImage));
     postLoad();
 }
 
@@ -217,7 +213,8 @@ void QVImageCore::requestCachingFile(const QString &filePath)
         return;
 
     //check if too big for caching
-    imageReader.setFileName(filePath);
+    imageReader.setFileName(filePath);    QTransform transform;
+    transform.rotate(currentRotation);
     if (((imageReader.size().width()*imageReader.size().height()*32)/8)/1000 > QPixmapCache::cacheLimit()/2)
         return;
 
@@ -261,6 +258,9 @@ void QVImageCore::setSpeed(int desiredSpeed)
 void QVImageCore::rotateImage(int rotation)
 {
         currentRotation += rotation;
+
+        // normalize between 360 and 0
+        currentRotation = (currentRotation % 360 + 360) % 360;
         QTransform transform;
 
         QImage transformedImage;
@@ -279,6 +279,24 @@ void QVImageCore::rotateImage(int rotation)
 
         currentFileDetails.loadedPixmapSize = QSize(loadedPixmap.width(), loadedPixmap.height());
         emit updateLoadedPixmapItem();
+}
+
+const QImage QVImageCore::matchCurrentRotation(const QImage &imageToRotate)
+{
+    if (!currentRotation)
+        return imageToRotate;
+
+    QTransform transform;
+    transform.rotate(currentRotation);
+    return imageToRotate.transformed(transform);
+}
+
+const QPixmap QVImageCore::matchCurrentRotation(const QPixmap &pixmapToRotate)
+{
+    if (!currentRotation)
+        return pixmapToRotate;
+
+    return QPixmap::fromImage(matchCurrentRotation(pixmapToRotate.toImage()));
 }
 
 const QPixmap QVImageCore::scaleExpensively(const int desiredWidth, const int desiredHeight, const scaleMode mode)
