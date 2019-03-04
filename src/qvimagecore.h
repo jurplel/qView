@@ -58,6 +58,8 @@ public:
     void setSpeed(int desiredSpeed);
 
     void rotateImage(int rotation);
+    const QImage matchCurrentRotation(const QImage &imageToRotate);
+    const QPixmap matchCurrentRotation(const QPixmap &pixmapToRotate);
 
     const QPixmap scaleExpensively(const int desiredWidth, const int desiredHeight, const scaleMode mode = scaleMode::normal);
     const QPixmap scaleExpensively(const QSize desiredSize, const scaleMode mode = scaleMode::normal);
