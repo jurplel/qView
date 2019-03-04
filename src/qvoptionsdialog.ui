@@ -146,7 +146,7 @@
        <item row="8" column="0">
         <widget class="QLabel" name="maxWindowResizeLabel">
          <property name="toolTip">
-          <string>Control the maximum size for the window to resize to when matching the image's actual size</string>
+          <string>Control the maximum size that the window should reach when matching the image's actual size</string>
          </property>
          <property name="text">
           <string>Up to:</string>
@@ -188,6 +188,9 @@
        </item>
        <item row="8" column="1">
         <widget class="QSpinBox" name="maxWindowResizeSpinBox">
+         <property name="toolTip">
+          <string>Control the maximum size that the window should reach when matching the image's actual size</string>
+         </property>
          <property name="suffix">
           <string>% of screen size</string>
          </property>

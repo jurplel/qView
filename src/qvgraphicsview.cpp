@@ -434,7 +434,7 @@ void QVGraphicsView::setWindowTitle()
     case 2:
     {
         QLocale locale;
-        newString = "qView - " + getCurrentFileDetails().fileInfo.fileName() + " - " + QString::number(getCurrentFileDetails().folderIndex+1) + "/" + QString::number(getCurrentFileDetails().folder.count()) + " - "  + QString::number(getCurrentFileDetails().imageSize.width()) + "x" + QString::number(getCurrentFileDetails().imageSize.height()) + " - " + locale.formattedDataSize(getCurrentFileDetails().fileInfo.size());
+        newString = "qView - " + QString::number(getCurrentFileDetails().folderIndex+1) + "/" + QString::number(getCurrentFileDetails().folder.count()) + " - " + getCurrentFileDetails().fileInfo.fileName() + " - "  + QString::number(getCurrentFileDetails().imageSize.width()) + "x" + QString::number(getCurrentFileDetails().imageSize.height()) + " - " + locale.formattedDataSize(getCurrentFileDetails().fileInfo.size());
         break;
     }
     }
