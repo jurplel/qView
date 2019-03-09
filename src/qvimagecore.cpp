@@ -67,8 +67,8 @@ void QVImageCore::loadFile(const QString &fileName)
         sanitaryString = sanitaryUrl.toLocalFile();
 
     //define info variables
-    currentFileDetails.isMovieLoaded = false;
     currentFileDetails.fileInfo = QFileInfo(sanitaryString);
+    setPaused(true);
     updateFolderInfo();
 
     imageReader.setFileName(currentFileDetails.fileInfo.absoluteFilePath());
@@ -143,6 +143,10 @@ void QVImageCore::postLoad()
         loadedMovie.setFileName(currentFileDetails.fileInfo.absoluteFilePath());
         loadedMovie.start();
         currentFileDetails.isMovieLoaded = true;
+    }
+    else
+    {
+        currentFileDetails.isMovieLoaded = false;
     }
 
     currentFileDetails.imageSize = imageReader.size();
@@ -330,10 +334,7 @@ const QPixmap QVImageCore::scaleExpensively(const QSize desiredSize, const scale
         }
         }
     }
-    QTransform transform;
-    transform.rotate(currentRotation);
-    QImage image = loadedMovie.currentImage().transformed(transform);
-    return QPixmap::fromImage(image).scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    return QPixmap::fromImage(matchCurrentRotation(loadedMovie.currentImage())).scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 }
 
 
