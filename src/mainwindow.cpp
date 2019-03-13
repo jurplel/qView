@@ -432,8 +432,11 @@ void MainWindow::setWindowSize()
     if (imageSize.width() > currentScreenSize.width() || imageSize.height() > currentScreenSize.height())
         imageSize.scale(currentScreenSize, Qt::KeepAspectRatio);
 
-    QRect newRect = QRect(geometry().topLeft(), imageSize);
-    newRect.moveCenter(geometry().center());
+
+    QRect oldRect = geometry();
+    resize(imageSize);
+    QRect newRect = geometry();
+    newRect.moveCenter(oldRect.center());
     setGeometry(newRect);
 }
 
