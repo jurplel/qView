@@ -317,24 +317,38 @@ const QPixmap QVImageCore::scaleExpensively(const QSize desiredSize, const scale
     QSize size = QSize(loadedPixmap.width(), loadedPixmap.height());
     size.scale(desiredSize, Qt::KeepAspectRatio);
 
+
+    QPixmap relevantPixmap;
     if (!currentFileDetails.isMovieLoaded)
     {
-        switch (mode) {
-        case scaleMode::normal:
-        {
-            return loadedPixmap.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-        }
-        case scaleMode::width:
-        {
-            return loadedPixmap.scaledToWidth(desiredSize.width(), Qt::SmoothTransformation);
-        }
-        case scaleMode::height:
-        {
-            return loadedPixmap.scaledToHeight(desiredSize.height(), Qt::SmoothTransformation);
-        }
-        }
+        relevantPixmap = loadedPixmap;
     }
-    return QPixmap::fromImage(matchCurrentRotation(loadedMovie.currentImage())).scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    else
+    {
+        relevantPixmap = loadedMovie.currentPixmap();
+        matchCurrentRotation(relevantPixmap);
+    }
+
+
+    switch (mode) {
+    case scaleMode::normal:
+    {
+        relevantPixmap = relevantPixmap.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        break;
+    }
+    case scaleMode::width:
+    {
+        relevantPixmap = relevantPixmap.scaledToWidth(desiredSize.width(), Qt::SmoothTransformation);
+        break;
+    }
+    case scaleMode::height:
+    {
+        relevantPixmap = relevantPixmap.scaledToHeight(desiredSize.height(), Qt::SmoothTransformation);
+        break;
+    }
+    }
+
+    return relevantPixmap;
 }
 
 
