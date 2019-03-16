@@ -487,7 +487,6 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
         }
 
 
-
         //scale to adjustedimagesize if only scaling to actualimagesize
         if (!isPastActualSizeEnabled && adjustedImageSize.width() < width() && adjustedImageSize.height() < height())
             loadedPixmapItem->setPixmap(imageCore.scaleExpensively(adjustedImageSize.width(), adjustedImageSize.height(), coreMode));
@@ -589,7 +588,7 @@ void QVGraphicsView::goToFile(const goToFileMode mode, const int index)
 
 void QVGraphicsView::fitInViewMarginless(bool setVariables)
 {
-    adjustedImageSize = getCurrentFileDetails().imageSize;
+    adjustedImageSize = getCurrentFileDetails().loadedPixmapSize;
     adjustedBoundingRect = loadedPixmapItem->boundingRect();
 
     switch (cropMode) {
@@ -626,7 +625,7 @@ void QVGraphicsView::fitInViewMarginless(bool setVariables)
     }
     else
     {
-        viewRect = QRect(QPoint(), getCurrentFileDetails().imageSize);
+        viewRect = QRect(QPoint(), getCurrentFileDetails().loadedPixmapSize);
         viewRect.moveCenter(rect().center());
     }
     if (viewRect.isEmpty())
