@@ -9,8 +9,6 @@
 #include <QtMath>
 #include <QGestureEvent>
 
-#include <QDebug>
-
 QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 {
     grabGesture(Qt::PinchGesture);
