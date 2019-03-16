@@ -4,6 +4,10 @@
 #include <QLocale>
 #include <QMimeDatabase>
 
+static int getGcd (int a, int b) {
+    return (b == 0) ? a : getGcd(b, a%b);
+}
+
 QVInfoDialog::QVInfoDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::QVInfoDialog)
@@ -28,7 +32,7 @@ void QVInfoDialog::setInfo(const QFileInfo &value, const int &value2, const int 
     height = value3;
     frameCount = value4;
     updateInfo();
-    window()->resize(10, 10);
+    window()->adjustSize();
 }
 
 void QVInfoDialog::updateInfo()
@@ -45,6 +49,8 @@ void QVInfoDialog::updateInfo()
     ui->sizeLabel->setText(locale.formattedDataSize(selectedFileInfo.size()) + " (" + locale.toString(selectedFileInfo.size()) + tr(" bytes)"));
     ui->modifiedLabel->setText(selectedFileInfo.lastModified().toString(locale.dateTimeFormat()));
     ui->dimensionsLabel->setText(QString::number(width) + " x " + QString::number(height) + " (" + QString::number(megapixels) + tr("MP)"));
+    int gcd = getGcd(width,height);
+    ui->ratioLabel->setText(QString::number(width/gcd) + ":" + QString::number(height/gcd));
     if (frameCount != 0)
     {
         ui->framesLabel2->show();
