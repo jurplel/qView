@@ -389,7 +389,6 @@ void QVGraphicsView::updateFileInfoDisplays()
 
 void QVGraphicsView::addRecentFiles()
 {
-    qDebug() << "ran";
     QSettings settings;
     settings.beginGroup("recents");
 
@@ -461,15 +460,33 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
     switch (mode) {
     case scaleMode::resetScale:
     {
-        // figure out if we should resize to width or height depending on the gap between the window chrome and the image itself
-        // 4 is added to these numbers to take into account the -2 margin from fitInViewMarginless (kind of a misnomer, eh?)
-        qreal marginWidth = (width()-adjustedBoundingRect.width()*transform().m11())+4;
-        qreal marginHeight = (height()-adjustedBoundingRect.height()*transform().m22())+4;
         QVImageCore::scaleMode coreMode;
-        if (marginWidth < marginHeight)
-            coreMode = QVImageCore::scaleMode::width;
-        else
+        switch (cropMode) {
+        case 0:
+        {
+            // figure out if we should resize to width or height depending on the gap between the window chrome and the image itself
+            // 4 is added to these numbers to take into account the -2 margin from fitInViewMarginless (kind of a misnomer, eh?)
+            qreal marginWidth = (width()-adjustedBoundingRect.width()*transform().m11())+4;
+            qreal marginHeight = (height()-adjustedBoundingRect.height()*transform().m22())+4;
+            if (marginWidth < marginHeight)
+                coreMode = QVImageCore::scaleMode::width;
+            else
+                coreMode = QVImageCore::scaleMode::height;
+            break;
+        }
+        case 1:
+        {
             coreMode = QVImageCore::scaleMode::height;
+            break;
+        }
+        case 2:
+        {
+            coreMode = QVImageCore::scaleMode::width;
+            break;
+        }
+        }
+
+
 
         //scale to adjustedimagesize if only scaling to actualimagesize
         if (!isPastActualSizeEnabled && adjustedImageSize.width() < width() && adjustedImageSize.height() < height())
@@ -572,8 +589,9 @@ void QVGraphicsView::goToFile(const goToFileMode mode, const int index)
 
 void QVGraphicsView::fitInViewMarginless(bool setVariables)
 {
-    adjustedImageSize = getLoadedPixmap().size();
+    adjustedImageSize = getCurrentFileDetails().imageSize;
     adjustedBoundingRect = loadedPixmapItem->boundingRect();
+
     switch (cropMode) {
     case 1:
     {
@@ -608,7 +626,7 @@ void QVGraphicsView::fitInViewMarginless(bool setVariables)
     }
     else
     {
-        viewRect = QRect(QPoint(), getLoadedPixmap().size());
+        viewRect = QRect(QPoint(), getCurrentFileDetails().imageSize);
         viewRect.moveCenter(rect().center());
     }
     if (viewRect.isEmpty())

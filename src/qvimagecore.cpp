@@ -329,7 +329,6 @@ const QPixmap QVImageCore::scaleExpensively(const QSize desiredSize, const scale
         matchCurrentRotation(relevantPixmap);
     }
 
-
     switch (mode) {
     case scaleMode::normal:
     {
