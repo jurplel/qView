@@ -7,8 +7,6 @@
 #include <QtConcurrent/QtConcurrentRun>
 #include <QPixmapCache>
 
-#include <QDebug>
-
 QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
 {
     loadedPixmap = QPixmap();
