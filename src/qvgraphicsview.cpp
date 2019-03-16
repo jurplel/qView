@@ -460,7 +460,7 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
     switch (mode) {
     case scaleMode::resetScale:
     {
-        QVImageCore::scaleMode coreMode;
+        QVImageCore::scaleMode coreMode = QVImageCore::scaleMode::normal;
         switch (cropMode) {
         case 0:
         {
