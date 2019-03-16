@@ -326,7 +326,7 @@ const QPixmap QVImageCore::scaleExpensively(const QSize desiredSize, const scale
     else
     {
         relevantPixmap = loadedMovie.currentPixmap();
-        matchCurrentRotation(relevantPixmap);
+        relevantPixmap = matchCurrentRotation(relevantPixmap);
     }
 
     switch (mode) {
