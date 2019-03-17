@@ -64,17 +64,21 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionOpen->setShortcuts(QKeySequence::Open);
     ui->actionNext_File->setShortcut(Qt::Key_Right);
     ui->actionPrevious_File->setShortcut(Qt::Key_Left);
-    ui->actionPaste->setShortcuts(QKeySequence::Paste);
+    ui->actionPaste->setShortcuts(QKeySequence::keyBindings(QKeySequence::Paste));
     ui->actionRotate_Right->setShortcut(Qt::Key_Up);
     ui->actionRotate_Left->setShortcut(Qt::Key_Down);
-    ui->actionZoom_In->setShortcuts(QKeySequence::ZoomIn);
-    ui->actionZoom_Out->setShortcuts(QKeySequence::ZoomOut);
+    ui->actionZoom_In->setShortcut(QKeySequence::ZoomIn);
+    ui->actionZoom_Out->setShortcut(QKeySequence::ZoomOut);
     ui->actionReset_Zoom->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_0));
     ui->actionFlip_Horizontally->setShortcut(Qt::Key_F);
     ui->actionFlip_Vertically->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_F));
-    ui->actionFull_Screen->setShortcuts(QKeySequence::FullScreen);
+    ui->actionFull_Screen->setShortcuts(QKeySequence::keyBindings(QKeySequence::FullScreen));
+    //Fixes alt+enter only working with numpad enter when using qt's standard keybinds
+    #ifdef Q_OS_WIN
+    ui->actionFull_Screen->setShortcuts(ui->actionFull_Screen->shortcuts() << QKeySequence(Qt::ALT + Qt::Key_Return));
+    #endif
     ui->actionOriginal_Size->setShortcut(Qt::Key_O);
-    ui->actionNew_Window->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_N));
+    ui->actionNew_Window->setShortcut(QKeySequence::New);
     ui->actionNext_Frame->setShortcut(Qt::Key_N);
     ui->actionPause->setShortcut(Qt::Key_P);
     ui->actionDecrease_Speed->setShortcut(Qt::Key_BracketLeft);
@@ -86,6 +90,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionFirst_File->setShortcut(Qt::Key_Home);
     ui->actionLast_File->setShortcut(Qt::Key_End);
 
+    //Esc to exit fullscreen
     auto *escShortcut = new QShortcut(this);
     escShortcut->setKey(Qt::Key_Escape);
     connect(escShortcut, &QShortcut::activated, this, [this](){
