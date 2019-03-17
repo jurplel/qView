@@ -748,18 +748,3 @@ void QVGraphicsView::rotateImage(int rotation)
 {
     imageCore.rotateImage(rotation);
 }
-
-const QVImageCore::QVFileDetails& QVGraphicsView::getCurrentFileDetails() const
-{
-    return imageCore.getCurrentFileDetails();
-}
-
-const QPixmap& QVGraphicsView::getLoadedPixmap() const
-{
-    return imageCore.getLoadedPixmap();
-}
-
-const QMovie& QVGraphicsView::getLoadedMovie() const
-{
-    return imageCore.getLoadedMovie();
-}
