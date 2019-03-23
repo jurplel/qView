@@ -1,6 +1,6 @@
 #define MyAppName "qView"
 #define MyAppPublisher "jurplel and qView contributors"
-#define MyAppURL "https://interverse.tk/qview/"
+#define MyAppURL "https://intvhq.com/qview/"
 #define MyAppExeName "qView.exe"
 
 ; Update these when building
