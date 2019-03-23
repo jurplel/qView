@@ -5,8 +5,8 @@ Summary:	Practical and minimal image viewer
 
 Group:		Applications/Multimedia
 License:	GPLv3
-URL:		https://interverse.tk/qview
-Source0:	https://github.com/jeep70/qView/releases/download/%{version}/qView-%{version}.tar.gz
+URL:		https://intvhq.com/qview/
+Source0:	https://github.com/jurplel/qView/releases/download/%{version}/qView-%{version}.tar.gz
 
 
 %description
