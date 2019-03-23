@@ -1,7 +1,6 @@
 #include "qvinfodialog.h"
 #include "ui_qvinfodialog.h"
 #include <QDateTime>
-#include <QLocale>
 #include <QMimeDatabase>
 
 static int getGcd (int a, int b) {
@@ -46,7 +45,7 @@ void QVInfoDialog::updateInfo()
     ui->nameLabel->setText(selectedFileInfo.fileName());
     ui->typeLabel->setText(mime.name());
     ui->locationLabel->setText(selectedFileInfo.path());
-    ui->sizeLabel->setText(locale.formattedDataSize(selectedFileInfo.size()) + " (" + locale.toString(selectedFileInfo.size()) + tr(" bytes)"));
+    ui->sizeLabel->setText(formatBytes(selectedFileInfo.size()) + " (" + locale.toString(selectedFileInfo.size()) + tr(" bytes)"));
     ui->modifiedLabel->setText(selectedFileInfo.lastModified().toString(locale.dateTimeFormat()));
     ui->dimensionsLabel->setText(QString::number(width) + " x " + QString::number(height) + " (" + QString::number(megapixels) + tr("MP)"));
     int gcd = getGcd(width,height);
