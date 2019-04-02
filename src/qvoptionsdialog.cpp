@@ -168,7 +168,7 @@ void QVOptionsDialog::loadSettings(const bool defaults)
     }
 
     //maximum size for auto window resize
-    transientSettings.maxWindowResizedPercentage = settings.value("maxwindowresizedpercentage", 60).toInt();
+    transientSettings.maxWindowResizedPercentage = settings.value("maxwindowresizedpercentage", 70).toInt();
     ui->maxWindowResizeSpinBox->setValue(transientSettings.maxWindowResizedPercentage);
 
     //loop folders
