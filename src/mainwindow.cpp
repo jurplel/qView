@@ -35,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
     windowResizeMode = 0;
     justLaunchedWithImage = false;
 
-    maxWindowResizedConstant = 0.9;
+    maxWindowResizedPercentage = 0.7;
 
     //connect graphicsview signals
     connect(ui->graphicsView, &QVGraphicsView::fileLoaded, this, &MainWindow::fileLoaded);
@@ -308,7 +308,7 @@ void MainWindow::loadSettings()
     windowResizeMode = settings.value("windowresizemode", 1).toInt();
 
     //max window resize mode size
-    maxWindowResizedConstant = settings.value("maxwindowresizedpercentage", 60).toReal()/100;
+    maxWindowResizedPercentage = settings.value("maxwindowresizedpercentage", 70).toReal()/100;
 
     ui->graphicsView->loadSettings();
 }
@@ -432,7 +432,7 @@ void MainWindow::setWindowSize()
     QSize imageSize = ui->graphicsView->getCurrentFileDetails().loadedPixmapSize;
 
     QSize currentScreenSize = screenAt(geometry().center())->size();
-    currentScreenSize *= maxWindowResizedConstant;
+    currentScreenSize *= maxWindowResizedPercentage;
 
     if (imageSize.width() > currentScreenSize.width() || imageSize.height() > currentScreenSize.height())
         imageSize.scale(currentScreenSize, Qt::KeepAspectRatio);
