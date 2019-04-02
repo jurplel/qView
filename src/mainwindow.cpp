@@ -34,7 +34,6 @@ MainWindow::MainWindow(QWidget *parent) :
     //initialize variables
     windowResizeMode = 0;
     justLaunchedWithImage = false;
-
     maxWindowResizedPercentage = 0.7;
 
     //connect graphicsview signals
@@ -437,6 +436,12 @@ void MainWindow::setWindowSize()
     if (imageSize.width() > currentScreenSize.width() || imageSize.height() > currentScreenSize.height())
         imageSize.scale(currentScreenSize, Qt::KeepAspectRatio);
 
+    //Windows reports the wrong minimum width, so we constrain the image size relative to the dpi to stop weirdness with tiny images
+    #ifdef Q_OS_WIN
+    auto minimumImageSize = QSize(qRound(logicalDpiX()*1.5), logicalDpiY()/2);
+    if (imageSize.boundedTo(minimumImageSize) == imageSize)
+        imageSize = minimumImageSize;
+    #endif
 
     QRect oldRect = geometry();
     resize(imageSize);
