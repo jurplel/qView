@@ -29,6 +29,7 @@ QMAKE_TARGET_COPYRIGHT = "Copyright © 2019 jurplel and qView contributors"
 QMAKE_TARGET_DESCRIPTION = "qView"
 
 # macOS specific stuff
+macx:QT += svg # needed for macdeployqt added qsvg plugin automatically
 QMAKE_TARGET_BUNDLE_PREFIX = "com.qview"
 QMAKE_INFO_PLIST = "dist/mac/Info.plist"
 ICON = "dist/mac/qView.icns"
