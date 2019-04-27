@@ -31,7 +31,7 @@ public slots:
 
     void slideshowAction();
 
-    void fileLoadedByUser();
+    void cancelSlideshow();
 
     void fileLoaded();
 

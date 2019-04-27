@@ -312,7 +312,7 @@ void QVGraphicsView::loadMimeData(const QMimeData *mimeData)
         if (!pathList.isEmpty())
         {
             loadFile(pathList.first());
-            emit fileLoadedByUser();
+            emit cancelSlideshow();
         }
     }
 }
@@ -558,6 +558,8 @@ void QVGraphicsView::goToFile(const goToFileMode mode, const int index)
         {
             if (isLoopFoldersEnabled)
                 newIndex = getCurrentFileDetails().folder.size()-1;
+            else
+                emit cancelSlideshow();
         }
         else
             newIndex--;
@@ -569,6 +571,8 @@ void QVGraphicsView::goToFile(const goToFileMode mode, const int index)
         {
             if (isLoopFoldersEnabled)
                 newIndex = 0;
+            else
+                emit cancelSlideshow();
         }
         else
             newIndex++;
