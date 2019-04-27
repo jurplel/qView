@@ -59,7 +59,7 @@ public:
     const QMovie& getLoadedMovie() const { return imageCore.getLoadedMovie(); }
 
 signals:
-    void fileLoadedByUser();
+    void cancelSlideshow();
 
     void fileLoaded();
 
