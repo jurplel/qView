@@ -2,9 +2,6 @@
 <ui version="4.0">
  <class>QVWelcomeDialog</class>
  <widget class="QDialog" name="QVWelcomeDialog">
-  <property name="windowModality">
-   <enum>Qt::NonModal</enum>
-  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -20,9 +17,6 @@
    <string notr="true">background-color: #212121</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
-   <property name="leftMargin">
-    <number>9</number>
-   </property>
    <property name="bottomMargin">
     <number>30</number>
    </property>
