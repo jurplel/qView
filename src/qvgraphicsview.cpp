@@ -407,6 +407,7 @@ void QVGraphicsView::addRecentFiles()
             recentFiles.removeLast();
     }
 
+    addRecentFileQueue.clear();
     settings.setValue("recentFiles", recentFiles);
     emit updateRecentMenu();
 }
