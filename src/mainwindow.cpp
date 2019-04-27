@@ -42,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->graphicsView, &QVGraphicsView::updatedFileInfo, this, &MainWindow::refreshProperties);
     connect(ui->graphicsView, &QVGraphicsView::updateRecentMenu, this, &MainWindow::updateRecentMenu);
     connect(ui->graphicsView, &QVGraphicsView::sendWindowTitle, this, &MainWindow::setWindowTitle);
+    connect(ui->graphicsView, &QVGraphicsView::fileLoadedByUser, this, &MainWindow::fileLoadedByUser);
 
     //Enable drag&dropping
     setAcceptDrops(true);
@@ -287,6 +288,7 @@ void MainWindow::openFile(const QString &fileName)
     settings.setValue("lastFileDialogDir", QFileInfo(fileName).path());
 
     ui->graphicsView->loadFile(fileName);
+    fileLoadedByUser();
 }
 
 
@@ -363,6 +365,7 @@ void MainWindow::openRecent(int i)
     settings.beginGroup("recents");
     QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
     ui->graphicsView->loadFile(recentFiles[i].toList().last().toString());
+    fileLoadedByUser();
 }
 
 void MainWindow::clearRecent()
@@ -387,6 +390,12 @@ void MainWindow::clearRecent()
     updateRecentMenu();
 }
 
+void MainWindow::fileLoadedByUser()
+{
+    //stop slideshow if it's running
+    if (slideshowTimer->isActive())
+        on_actionSlideshow_triggered();
+}
 
 void MainWindow::fileLoaded()
 {

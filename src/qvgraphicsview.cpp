@@ -312,13 +312,14 @@ void QVGraphicsView::loadMimeData(const QMimeData *mimeData)
         if (!pathList.isEmpty())
         {
             loadFile(pathList.first());
+            emit fileLoadedByUser();
         }
     }
 }
 
 void QVGraphicsView::animatedFrameChanged(QRect rect)
 {
-    Q_UNUSED(rect);
+    Q_UNUSED(rect)
 
     if (isScalingEnabled)
     {

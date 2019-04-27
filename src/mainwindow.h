@@ -31,6 +31,8 @@ public slots:
 
     void slideshowAction();
 
+    void fileLoadedByUser();
+
     void fileLoaded();
 
 protected:
