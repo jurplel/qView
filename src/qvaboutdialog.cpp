@@ -11,6 +11,7 @@ QVAboutDialog::QVAboutDialog(QWidget *parent) :
 
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
+    setFixedSize(0, 0);
 
     // add fonts
     QFontDatabase::addApplicationFont(":/fonts/resources/Lato-Light.ttf");
