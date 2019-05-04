@@ -158,6 +158,7 @@ void QVImageCore::updateFolderInfo()
 {
     QCollator collator;
     collator.setNumericMode(true);
+    collator.setIgnorePunctuation(true);
     currentFileDetails.folder = QDir(currentFileDetails.fileInfo.path()).entryInfoList(filterList, QDir::Files, QDir::NoSort);
     std::sort(
         currentFileDetails.folder.begin(),
