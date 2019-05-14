@@ -3,17 +3,17 @@
 <p align=center>qView is a Qt-based image viewer designed to be practical and minimal</p>
 
 <h3 align=center>
-    <a href="https://intvhq.com/qview/">Visit the website</a>
+    <a href="https://interversehq.com/qview/">Visit the website</a>
 </h3>
 
 <h4 align=center>
-    <a href="https://intvhq.com/qview/download">Downloads</a> |
+    <a href="https://interversehq.com/qview/download">Downloads</a> |
     <a href="https://github.com/jurplel/qView/wiki/Keyboard-Shortcuts">Keyboard Shortcuts</a> |
-    <a href="https://intvhq.com/qview/changelog">Changelog</a>
+    <a href="https://interversehq.com/qview/changelog">Changelog</a>
 </h4>
 
 <p align=center>
-    <a href="https://intvhq.com/qview/download">
+    <a href="https://interversehq.com/qview/download">
         <img alt="Downloads shield" src="https://img.shields.io/github/downloads/jurplel/qview/total.svg?colorB=blue">
     </a>
     <a href="https://aur.archlinux.org/packages/qview/">
