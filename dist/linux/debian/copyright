@@ -1,9 +1,9 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: qview
-Source: https://intvhq.com/qview/
+Source: https://interversehq.com/qview/
 
 Files: *
-Copyright: 2018-2019 jurplel <jurplel[at]intvhq[dotcom]>
+Copyright: 2018-2019 jurplel <jurplel[at]interversehq[dotcom]>
 License: GPL-3.0+
 
 License: GPL-3.0+
