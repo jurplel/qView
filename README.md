@@ -22,5 +22,5 @@
 </p>
 
 <p align=center>
-    <img alt="Screenshot" src="https://intvhq.com/qview/assets/img/screenshot2.png">
+    <img alt="Screenshot" src="https://interversehq.com/qview/assets/img/screenshot3.png">
 </p>
