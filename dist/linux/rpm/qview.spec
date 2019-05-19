@@ -10,7 +10,7 @@ Source0:	https://github.com/jurplel/qView/releases/download/%{version}/qView-%{v
 
 
 %description
-qView is a cross-platform Qt image viewer designed to be practical and minimal
+qView is a Qt image viewer designed with minimalism and usability in mind.
 
 %global debug_package %{nil}
 
