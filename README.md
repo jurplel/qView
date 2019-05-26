@@ -1,6 +1,6 @@
 <h1 align=center>qView</h1>
 
-<p align=center>qView is a Qt-based image viewer designed to be practical and minimal</p>
+<p align=center>qView is an image viewer designed with minimalism and usability in mind.</p>
 
 <h3 align=center>
     <a href="https://interversehq.com/qview/">Visit the website</a>
