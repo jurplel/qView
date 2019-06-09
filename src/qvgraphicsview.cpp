@@ -301,6 +301,9 @@ void QVGraphicsView::zoom(const int DeltaY, const QPoint pos, qreal targetScaleF
 QMimeData *QVGraphicsView::getMimeData() const
 {
     auto *mimeData = new QMimeData();
+    if (!getCurrentFileDetails().isPixmapLoaded)
+        return mimeData;
+
     mimeData->setUrls({QUrl::fromLocalFile(imageCore.getCurrentFileDetails().fileInfo.filePath())});
     mimeData->setImageData(imageCore.getLoadedPixmap().toImage());
     return mimeData;
@@ -308,20 +311,20 @@ QMimeData *QVGraphicsView::getMimeData() const
 
 void QVGraphicsView::loadMimeData(const QMimeData *mimeData)
 {
-    if (mimeData->hasUrls())
-    {
-        QStringList pathList;
-        const QList<QUrl> urlList = mimeData->urls();
+    if (!mimeData->hasUrls())
+        return;
 
-        for (int i = 0; i < urlList.size() && i < 32; ++i)
-        {
-            pathList.append(urlList.at(i).toLocalFile());
-        }
-        if (!pathList.isEmpty())
-        {
-            loadFile(pathList.first());
-            emit cancelSlideshow();
-        }
+    QStringList pathList;
+    const QList<QUrl> urlList = mimeData->urls();
+
+    for (int i = 0; i < urlList.size() && i < 32; ++i)
+    {
+        pathList.append(urlList.at(i).toLocalFile());
+    }
+    if (!pathList.isEmpty())
+    {
+        loadFile(pathList.first());
+        emit cancelSlideshow();
     }
 }
 
