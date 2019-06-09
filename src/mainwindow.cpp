@@ -64,6 +64,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionOpen->setShortcuts(QKeySequence::Open);
     ui->actionNext_File->setShortcut(Qt::Key_Right);
     ui->actionPrevious_File->setShortcut(Qt::Key_Left);
+    ui->actionCopy->setShortcuts(QKeySequence::keyBindings(QKeySequence::Copy));
     ui->actionPaste->setShortcuts(QKeySequence::keyBindings(QKeySequence::Paste));
     ui->actionRotate_Right->setShortcut(Qt::Key_Up);
     ui->actionRotate_Left->setShortcut(Qt::Key_Down);
@@ -127,6 +128,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     contextMenu->addAction(ui->actionOpen_Containing_Folder);
     contextMenu->addAction(ui->actionProperties);
+    contextMenu->addSeparator();
+    contextMenu->addAction(ui->actionCopy);
     contextMenu->addAction(ui->actionPaste);
     contextMenu->addSeparator();
     contextMenu->addAction(ui->actionPrevious_File);
@@ -408,6 +411,7 @@ void MainWindow::fileLoaded()
         foreach(QAction* action, actions())
             action->setEnabled(true);
         ui->actionSlideshow->setEnabled(true);
+        ui->actionCopy->setEnabled(true);
     }
     //disable gif controls if there is no gif loaded
     ui->menuTools->actions().constFirst()->setEnabled(ui->graphicsView->getCurrentFileDetails().isMovieLoaded);
@@ -496,6 +500,11 @@ void MainWindow::on_actionAbout_triggered()
 {
     auto *about = new QVAboutDialog(this);
     about->exec();
+}
+
+void MainWindow::on_actionCopy_triggered()
+{
+    QApplication::clipboard()->setMimeData(ui->graphicsView->getMimeData());
 }
 
 void MainWindow::on_actionPaste_triggered()

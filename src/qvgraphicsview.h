@@ -36,6 +36,7 @@ public:
 
     void zoom(const int DeltaY, const QPoint pos, qreal targetScaleFactor = 0);
 
+    QMimeData* getMimeData() const;
     void loadMimeData(const QMimeData *mimeData);
     void loadFile(const QString &fileName);
     void addRecentFiles();
