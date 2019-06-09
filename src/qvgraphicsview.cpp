@@ -298,6 +298,14 @@ void QVGraphicsView::zoom(const int DeltaY, const QPoint pos, qreal targetScaleF
     centerOn(result);
 }
 
+QMimeData *QVGraphicsView::getMimeData() const
+{
+    auto *mimeData = new QMimeData();
+    mimeData->setUrls({QUrl::fromLocalFile(imageCore.getCurrentFileDetails().fileInfo.filePath())});
+    mimeData->setImageData(imageCore.getLoadedPixmap().toImage());
+    return mimeData;
+}
+
 void QVGraphicsView::loadMimeData(const QMimeData *mimeData)
 {
     if (mimeData->hasUrls())
