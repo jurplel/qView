@@ -68,7 +68,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionPaste->setShortcuts(QKeySequence::keyBindings(QKeySequence::Paste));
     ui->actionRotate_Right->setShortcut(Qt::Key_Up);
     ui->actionRotate_Left->setShortcut(Qt::Key_Down);
-    ui->actionZoom_In->setShortcut(QKeySequence::ZoomIn);
+    ui->actionZoom_In->setShortcuts(QKeySequence::keyBindings(QKeySequence::ZoomIn));
     ui->actionZoom_Out->setShortcut(QKeySequence::ZoomOut);
     ui->actionReset_Zoom->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_0));
     ui->actionFlip_Horizontally->setShortcut(Qt::Key_F);
