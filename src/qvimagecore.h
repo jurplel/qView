@@ -70,6 +70,7 @@ public:
     const QVFileDetails& getCurrentFileDetails() const {return currentFileDetails; }
     int getCurrentRotation() const {return currentRotation; }
 
+    void setDevicePixelRatio(qreal scaleFactor);
 
 signals:
     void animatedFrameChanged(QRect rect);
@@ -104,6 +105,8 @@ private:
     QStringList lastFilesPreloaded;
 
     QTimer *fileChangeRateTimer;
+
+    qreal devicePixelRatio;
 };
 
 #endif // QVIMAGECORE_H

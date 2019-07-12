@@ -441,6 +441,7 @@ void MainWindow::setWindowSize()
     justLaunchedWithImage = false;
 
     QSize imageSize = ui->graphicsView->getCurrentFileDetails().loadedPixmapSize;
+    imageSize /= devicePixelRatioF();
 
     QSize currentScreenSize = screenAt(geometry().center())->size();
     currentScreenSize *= maxWindowResizedPercentage;

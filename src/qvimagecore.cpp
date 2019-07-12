@@ -128,6 +128,8 @@ void QVImageCore::postRead(const QImage &loadedImage)
 
 void QVImageCore::postLoad()
 {
+    loadedPixmap.setDevicePixelRatio(devicePixelRatio);
+
     fileChangeRateTimer->start();
 
     currentFileDetails.isPixmapLoaded = true;
@@ -314,6 +316,7 @@ const QPixmap QVImageCore::scaleExpensively(const QSize desiredSize, const scale
 
     QSize size = QSize(loadedPixmap.width(), loadedPixmap.height());
     size.scale(desiredSize, Qt::KeepAspectRatio);
+    qDebug() << desiredSize;
 
 
     QPixmap relevantPixmap;
@@ -371,4 +374,9 @@ void QVImageCore::loadSettings()
         break;
     }
     }
+}
+
+void QVImageCore::setDevicePixelRatio(qreal scaleFactor)
+{
+    devicePixelRatio = scaleFactor;
 }
