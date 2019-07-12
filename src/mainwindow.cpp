@@ -104,7 +104,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     contextMenu->addAction(ui->actionOpen);
 
-    QMenu *files = new QMenu(tr("Open Recent"));
+    QMenu *files = new QMenu(tr("Open Recent"), this);
 
     int index = 0;
 
