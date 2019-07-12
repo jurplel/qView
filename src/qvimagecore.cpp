@@ -73,13 +73,13 @@ void QVImageCore::loadFile(const QString &fileName)
     currentFileDetails.imageSize = imageReader.size();
 
     //check if cached already before loading the long way
-    QPixmap cachedPixmap;
+    QPixmap *cachedPixmap = new QPixmap();
     if (QPixmapCache::find(currentFileDetails.fileInfo.absoluteFilePath(), cachedPixmap) &&
-        !cachedPixmap.isNull() &&
-        cachedPixmap.size() == currentFileDetails.imageSize &&
+        !cachedPixmap->isNull() &&
+        cachedPixmap->size() == currentFileDetails.imageSize &&
         *previouslyRecordedFileSizes.object(currentFileDetails.fileInfo.absoluteFilePath()) == currentFileDetails.fileInfo.size())
     {
-        loadedPixmap = matchCurrentRotation(cachedPixmap);
+        loadedPixmap = matchCurrentRotation(*cachedPixmap);
         justLoadedFromCache = true;
         postLoad();
     }
@@ -88,6 +88,7 @@ void QVImageCore::loadFile(const QString &fileName)
         justLoadedFromCache = false;
         loadFutureWatcher.setFuture(QtConcurrent::run(this, &QVImageCore::readFile, currentFileDetails.fileInfo.absoluteFilePath()));
     }
+    delete cachedPixmap;
 
     requestCaching();
 }
@@ -99,8 +100,6 @@ QVImageCore::QVImageAndFileInfo QVImageCore::readFile(const QString &fileName)
     QImageReader newImageReader;
     newImageReader.setDecideFormatFromContent(true);
     newImageReader.setAutoTransform(true);
-
-    QPixmapCache::find(fileName);
 
     newImageReader.setFileName(fileName);
     QImage readImage = newImageReader.read();
@@ -316,8 +315,6 @@ const QPixmap QVImageCore::scaleExpensively(const QSize desiredSize, const scale
 
     QSize size = QSize(loadedPixmap.width(), loadedPixmap.height());
     size.scale(desiredSize, Qt::KeepAspectRatio);
-    qDebug() << desiredSize;
-
 
     QPixmap relevantPixmap;
     if (!currentFileDetails.isMovieLoaded)
