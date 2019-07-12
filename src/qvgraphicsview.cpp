@@ -42,6 +42,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     QSettings settings;
     settings.beginGroup("recents");
 
+    imageCore.setDevicePixelRatio(devicePixelRatioF());
     connect(&imageCore, &QVImageCore::animatedFrameChanged, this, &QVGraphicsView::animatedFrameChanged);
     connect(&imageCore, &QVImageCore::fileInfoUpdated, this, &QVGraphicsView::updateFileInfoDisplays);
     connect(&imageCore, &QVImageCore::fileRead, this, &QVGraphicsView::postLoad);
@@ -477,8 +478,9 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
         {
             // figure out if we should resize to width or height depending on the gap between the window chrome and the image itself
             // 4 is added to these numbers to take into account the -2 margin from fitInViewMarginless (kind of a misnomer, eh?)
-            qreal marginWidth = (width()-adjustedBoundingRect.width()*transform().m11())+4;
-            qreal marginHeight = (height()-adjustedBoundingRect.height()*transform().m22())+4;
+            QSize windowSize = QSize(static_cast<int>(width()*devicePixelRatioF()), static_cast<int>(height()*devicePixelRatioF()));
+            qreal marginWidth = (windowSize.width()-adjustedBoundingRect.width()*transform().m11())+4;
+            qreal marginHeight = (windowSize.height()-adjustedBoundingRect.height()*transform().m22())+4;
             if (marginWidth < marginHeight)
                 coreMode = QVImageCore::scaleMode::width;
             else
@@ -497,12 +499,14 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
         }
         }
 
+        QSize windowSize = QSize(static_cast<int>(width()*devicePixelRatioF()), static_cast<int>(height()*devicePixelRatioF()));
+        QSize newAdjustedImageSize = adjustedImageSize * getLoadedPixmap().devicePixelRatioF();
 
-        //scale to adjustedimagesize if only scaling to actualimagesize
-        if (!isPastActualSizeEnabled && adjustedImageSize.width() < width() && adjustedImageSize.height() < height())
-            loadedPixmapItem->setPixmap(imageCore.scaleExpensively(adjustedImageSize.width(), adjustedImageSize.height(), coreMode));
+        //scale only to actual size if scaling past actual size is disabled
+        if (!isPastActualSizeEnabled && newAdjustedImageSize.width() < windowSize.width() && newAdjustedImageSize.height() < windowSize.height())
+            loadedPixmapItem->setPixmap(imageCore.scaleExpensively(newAdjustedImageSize.width(), newAdjustedImageSize.height(), coreMode));
         else
-            loadedPixmapItem->setPixmap(imageCore.scaleExpensively(width()+4, height()+4, coreMode));
+            loadedPixmapItem->setPixmap(imageCore.scaleExpensively(windowSize.width()+4, windowSize.height()+4, coreMode));
 
         fitInViewMarginless();
         scaledSize = loadedPixmapItem->boundingRect().size().toSize();
@@ -511,6 +515,9 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
     case scaleMode::zoom:
     {
         QSize newSize = scaledSize * currentScale;
+        if (!getCurrentFileDetails().isMovieLoaded)
+            newSize *= getLoadedPixmap().devicePixelRatioF();
+
         loadedPixmapItem->setPixmap(imageCore.scaleExpensively(newSize));
         break;
     }
@@ -605,7 +612,7 @@ void QVGraphicsView::goToFile(const goToFileMode mode, const int index)
 
 void QVGraphicsView::fitInViewMarginless(bool setVariables)
 {
-    adjustedImageSize = getCurrentFileDetails().loadedPixmapSize;
+    adjustedImageSize = getCurrentFileDetails().loadedPixmapSize / getLoadedPixmap().devicePixelRatioF();
     adjustedBoundingRect = loadedPixmapItem->boundingRect();
 
     switch (cropMode) {
@@ -642,7 +649,7 @@ void QVGraphicsView::fitInViewMarginless(bool setVariables)
     }
     else
     {
-        viewRect = QRect(QPoint(), getCurrentFileDetails().loadedPixmapSize);
+        viewRect = QRect(QPoint(), getCurrentFileDetails().loadedPixmapSize / getLoadedPixmap().devicePixelRatioF());
         viewRect.moveCenter(rect().center());
     }
     if (viewRect.isEmpty())
