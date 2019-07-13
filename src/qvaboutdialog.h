@@ -14,7 +14,7 @@ class QVAboutDialog : public QDialog
 
 public:
     explicit QVAboutDialog(QWidget *parent = nullptr);
-    ~QVAboutDialog();
+    ~QVAboutDialog() override;
 
 private slots:
     void checkUpdates(QNetworkReply* reply);

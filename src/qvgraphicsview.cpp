@@ -185,7 +185,7 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
 
 // Functions
 
-void QVGraphicsView::zoom(const int DeltaY, const QPoint pos, qreal targetScaleFactor)
+void QVGraphicsView::zoom(int DeltaY, const QPoint &pos, qreal targetScaleFactor)
 {
     //if targetScaleFactor is 0 (default) - use scaleFactor variable
     if (qFuzzyCompare(targetScaleFactor, 0))
@@ -550,7 +550,7 @@ void QVGraphicsView::originalSize(bool setVariables)
 }
 
 
-void QVGraphicsView::goToFile(const goToFileMode mode, const int index)
+void QVGraphicsView::goToFile(const goToFileMode &mode, int index)
 {
     if (getCurrentFileDetails().folder.isEmpty())
         return;

@@ -49,7 +49,7 @@ public:
     void updateFolderInfo();
     void requestCaching();
     void requestCachingFile(const QString &filePath);
-    void addToCache(QVImageAndFileInfo loadedImageAndFileInfo);
+    void addToCache(const QVImageAndFileInfo &loadedImageAndFileInfo);
 
     void loadSettings();
 
@@ -58,11 +58,11 @@ public:
     void setSpeed(int desiredSpeed);
 
     void rotateImage(int rotation);
-    const QImage matchCurrentRotation(const QImage &imageToRotate);
-    const QPixmap matchCurrentRotation(const QPixmap &pixmapToRotate);
+    QImage matchCurrentRotation(const QImage &imageToRotate);
+    QPixmap matchCurrentRotation(const QPixmap &pixmapToRotate);
 
-    const QPixmap scaleExpensively(const int desiredWidth, const int desiredHeight, const scaleMode mode = scaleMode::normal);
-    const QPixmap scaleExpensively(const QSize desiredSize, const scaleMode mode = scaleMode::normal);
+    QPixmap scaleExpensively(const int desiredWidth, const int desiredHeight, const scaleMode mode = scaleMode::normal);
+    QPixmap scaleExpensively(const QSize desiredSize, const scaleMode mode = scaleMode::normal);
 
     //returned const reference is read-only
     const QPixmap& getLoadedPixmap() const {return loadedPixmap; }
@@ -94,6 +94,8 @@ private:
     QVFileDetails lastFileDetails;
     int currentRotation;
 
+    qreal devicePixelRatio;
+
     QFutureWatcher<QVImageAndFileInfo> loadFutureWatcher;
 
     bool justLoadedFromCache;
@@ -105,8 +107,6 @@ private:
     QStringList lastFilesPreloaded;
 
     QTimer *fileChangeRateTimer;
-
-    qreal devicePixelRatio;
 };
 
 #endif // QVIMAGECORE_H

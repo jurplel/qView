@@ -486,7 +486,7 @@ const bool& MainWindow::getIsPixmapLoaded() const
     return ui->graphicsView->getCurrentFileDetails().isPixmapLoaded;
 }
 
-void MainWindow::setJustLaunchedWithImage(const bool value)
+void MainWindow::setJustLaunchedWithImage(bool value)
 {
     justLaunchedWithImage = value;
 }

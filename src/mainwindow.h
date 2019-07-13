@@ -22,7 +22,7 @@ public:
 
     const bool& getIsPixmapLoaded() const;
 
-    void setJustLaunchedWithImage(const bool value);
+    void setJustLaunchedWithImage(bool value);
 
     QScreen *screenAt(const QPoint &point);
 

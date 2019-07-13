@@ -13,7 +13,7 @@ class QVWelcomeDialog : public QDialog
 
 public:
     explicit QVWelcomeDialog(QWidget *parent = nullptr);
-    ~QVWelcomeDialog();
+    ~QVWelcomeDialog() override;
 
 private:
     Ui::QVWelcomeDialog *ui;
