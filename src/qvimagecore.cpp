@@ -36,6 +36,8 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
 
     currentRotation = 0;
 
+    devicePixelRatio = 0;
+
     QPixmapCache::setCacheLimit(51200);
 
     connect(&loadedMovie, &QMovie::updated, this, &QVImageCore::animatedFrameChanged);
@@ -73,7 +75,7 @@ void QVImageCore::loadFile(const QString &fileName)
     currentFileDetails.imageSize = imageReader.size();
 
     //check if cached already before loading the long way
-    QPixmap *cachedPixmap = new QPixmap();
+    auto *cachedPixmap = new QPixmap();
     if (QPixmapCache::find(currentFileDetails.fileInfo.absoluteFilePath(), cachedPixmap) &&
         !cachedPixmap->isNull() &&
         cachedPixmap->size() == currentFileDetails.imageSize &&
@@ -230,7 +232,7 @@ void QVImageCore::requestCachingFile(const QString &filePath)
     cacheFutureWatcher->setFuture(QtConcurrent::run(this, &QVImageCore::readFile, filePath));
 }
 
-void QVImageCore::addToCache(QVImageAndFileInfo loadedImageAndFileInfo)
+void QVImageCore::addToCache(const QVImageAndFileInfo &loadedImageAndFileInfo)
 {
     if (loadedImageAndFileInfo.readImage.isNull())
         return;
@@ -285,7 +287,7 @@ void QVImageCore::rotateImage(int rotation)
         emit updateLoadedPixmapItem();
 }
 
-const QImage QVImageCore::matchCurrentRotation(const QImage &imageToRotate)
+QImage QVImageCore::matchCurrentRotation(const QImage &imageToRotate)
 {
     if (!currentRotation)
         return imageToRotate;
@@ -295,7 +297,7 @@ const QImage QVImageCore::matchCurrentRotation(const QImage &imageToRotate)
     return imageToRotate.transformed(transform);
 }
 
-const QPixmap QVImageCore::matchCurrentRotation(const QPixmap &pixmapToRotate)
+QPixmap QVImageCore::matchCurrentRotation(const QPixmap &pixmapToRotate)
 {
     if (!currentRotation)
         return pixmapToRotate;
@@ -303,12 +305,12 @@ const QPixmap QVImageCore::matchCurrentRotation(const QPixmap &pixmapToRotate)
     return QPixmap::fromImage(matchCurrentRotation(pixmapToRotate.toImage()));
 }
 
-const QPixmap QVImageCore::scaleExpensively(const int desiredWidth, const int desiredHeight, const scaleMode mode)
+QPixmap QVImageCore::scaleExpensively(const int desiredWidth, const int desiredHeight, const scaleMode mode)
 {
     return scaleExpensively(QSize(desiredWidth, desiredHeight), mode);
 }
 
-const QPixmap QVImageCore::scaleExpensively(const QSize desiredSize, const scaleMode mode)
+QPixmap QVImageCore::scaleExpensively(const QSize desiredSize, const scaleMode mode)
 {
     if (!currentFileDetails.isPixmapLoaded)
         return QPixmap();
