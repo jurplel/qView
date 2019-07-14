@@ -97,7 +97,14 @@ private:
 
     STransientSettings transientSettings;
 
-    QHash<int, QPair<QString, QStringList>> transientShortcuts;
+    struct SShortcut {
+        int position;
+        QString readableName;
+        QString name;
+        QStringList shortcuts;
+    };
+
+    QList<SShortcut> transientShortcuts;
 };
 
 

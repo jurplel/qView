@@ -520,7 +520,7 @@
           <bool>false</bool>
          </property>
          <property name="rowCount">
-          <number>25</number>
+          <number>0</number>
          </property>
          <property name="columnCount">
           <number>2</number>
@@ -540,31 +540,6 @@
          <attribute name="verticalHeaderVisible">
           <bool>false</bool>
          </attribute>
-         <row/>
-         <row/>
-         <row/>
-         <row/>
-         <row/>
-         <row/>
-         <row/>
-         <row/>
-         <row/>
-         <row/>
-         <row/>
-         <row/>
-         <row/>
-         <row/>
-         <row/>
-         <row/>
-         <row/>
-         <row/>
-         <row/>
-         <row/>
-         <row/>
-         <row/>
-         <row/>
-         <row/>
-         <row/>
          <column>
           <property name="text">
            <string>Action</string>
@@ -575,141 +550,6 @@
            <string>Shortcuts</string>
           </property>
          </column>
-         <item row="0" column="0">
-          <property name="text">
-           <string>Open</string>
-          </property>
-         </item>
-         <item row="0" column="1">
-          <property name="text">
-           <string/>
-          </property>
-         </item>
-         <item row="1" column="0">
-          <property name="text">
-           <string>First File</string>
-          </property>
-         </item>
-         <item row="1" column="1">
-          <property name="text">
-           <string/>
-          </property>
-         </item>
-         <item row="2" column="0">
-          <property name="text">
-           <string>Previous File</string>
-          </property>
-         </item>
-         <item row="3" column="0">
-          <property name="text">
-           <string>Next File</string>
-          </property>
-         </item>
-         <item row="4" column="0">
-          <property name="text">
-           <string>Last File</string>
-          </property>
-         </item>
-         <item row="5" column="0">
-          <property name="text">
-           <string>Copy</string>
-          </property>
-         </item>
-         <item row="6" column="0">
-          <property name="text">
-           <string>Paste</string>
-          </property>
-         </item>
-         <item row="7" column="0">
-          <property name="text">
-           <string>Rotate Right</string>
-          </property>
-         </item>
-         <item row="8" column="0">
-          <property name="text">
-           <string>Rotate Left</string>
-          </property>
-         </item>
-         <item row="9" column="0">
-          <property name="text">
-           <string>Zoom In</string>
-          </property>
-         </item>
-         <item row="10" column="0">
-          <property name="text">
-           <string>Zoom Out</string>
-          </property>
-         </item>
-         <item row="11" column="0">
-          <property name="text">
-           <string>Reset Zoom</string>
-          </property>
-         </item>
-         <item row="12" column="0">
-          <property name="text">
-           <string>Mirror</string>
-          </property>
-         </item>
-         <item row="13" column="0">
-          <property name="text">
-           <string>Flip</string>
-          </property>
-         </item>
-         <item row="14" column="0">
-          <property name="text">
-           <string>Full Screen</string>
-          </property>
-         </item>
-         <item row="15" column="0">
-          <property name="text">
-           <string>Original Size</string>
-          </property>
-         </item>
-         <item row="16" column="0">
-          <property name="text">
-           <string>New Window</string>
-          </property>
-         </item>
-         <item row="17" column="0">
-          <property name="text">
-           <string>Next Frame</string>
-          </property>
-         </item>
-         <item row="18" column="0">
-          <property name="text">
-           <string>Pause</string>
-          </property>
-         </item>
-         <item row="19" column="0">
-          <property name="text">
-           <string>Increase Speed</string>
-          </property>
-         </item>
-         <item row="20" column="0">
-          <property name="text">
-           <string>Decrease Speed</string>
-          </property>
-         </item>
-         <item row="21" column="0">
-          <property name="text">
-           <string>Reset Speed</string>
-          </property>
-         </item>
-         <item row="22" column="0">
-          <property name="text">
-           <string>Show File Info</string>
-          </property>
-         </item>
-         <item row="23" column="0">
-          <property name="text">
-           <string>Options</string>
-          </property>
-         </item>
-         <item row="24" column="0">
-          <property name="text">
-           <string>Quit</string>
-          </property>
-         </item>
         </widget>
        </item>
       </layout>
