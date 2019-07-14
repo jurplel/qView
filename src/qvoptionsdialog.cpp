@@ -4,17 +4,6 @@
 #include <QPalette>
 #include <QScreen>
 
-static QStringList keyBindingsToStringList(QKeySequence::StandardKey sequence)
-{
-    auto seqList = QKeySequence::keyBindings(sequence);
-    QStringList strings;
-    foreach (QKeySequence seq, seqList)
-    {
-        strings << seq.toString();
-    }
-    return strings;
-}
-
 QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::QVOptionsDialog)
@@ -44,6 +33,10 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     transientShortcuts.append({12, "Mirror", "mirror", QStringList(QKeySequence(Qt::Key_F).toString()), {}});
     transientShortcuts.append({13, "Flip", "flip", QStringList(QKeySequence(Qt::CTRL + Qt::Key_F).toString()), {}});
     transientShortcuts.append({14, "Full Screen", "fullscreen", keyBindingsToStringList(QKeySequence::FullScreen), {}});
+    //Fixes alt+enter only working with numpad enter when using qt's standard keybinds
+    #ifdef Q_OS_WIN
+        transientShortcuts.replace(14, {14, "Full Screen", "fullscreen", keyBindingsToStringList(QKeySequence::FullScreen) << QKeySequence(Qt::ALT + Qt::Key_Return).toString(), {}});
+    #endif
     transientShortcuts.append({15, "Original Size", "originalsize", QStringList(QKeySequence(Qt::Key_O).toString()), {}});
     transientShortcuts.append({16, "New Window", "newwindow", keyBindingsToStringList(QKeySequence::New), {}});
     transientShortcuts.append({17, "Next Frame", "nextframe", QStringList(QKeySequence(Qt::Key_N).toString()), {}});
@@ -95,7 +88,8 @@ void QVOptionsDialog::saveSettings()
     settings.beginGroup("shortcuts");
 
     QListIterator<QVShortcutDialog::SShortcut> iter(transientShortcuts);
-    while (iter.hasNext()) {
+    while (iter.hasNext())
+    {
         auto value = iter.next();
         settings.setValue(value.name, value.shortcuts);
     }
@@ -241,7 +235,8 @@ void QVOptionsDialog::loadShortcuts(const bool defaults)
     // Read saved custom shortcuts and populate shortcut table
     auto item = new QTableWidgetItem();
     QMutableListIterator<QVShortcutDialog::SShortcut> iter(transientShortcuts);
-    while (iter.hasNext()) {
+    while (iter.hasNext())
+    {
         iter.next();
         iter.setValue({iter.value().position, iter.value().readableName, iter.value().name, iter.value().defaultShortcuts, settings.value(iter.value().name, iter.value().defaultShortcuts).value<QStringList>()});
 
@@ -251,6 +246,12 @@ void QVOptionsDialog::loadShortcuts(const bool defaults)
         item->setText(iter.value().shortcuts.join(", "));
         ui->shortcutsTable->setItem(iter.value().position, 1, item->clone());
     }
+
+    // Hide next window keybind on platforms other than macOS (cause it doesn't work)
+    #ifndef Q_OS_MACX
+    ui->shortcutsTable->hideRow(16);
+    #endif
+
     delete item;
 }
 

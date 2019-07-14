@@ -16,10 +16,34 @@ class QVOptionsDialog : public QDialog
     Q_OBJECT
 
 public:
+    static QStringList keyBindingsToStringList(QKeySequence::StandardKey sequence)
+    {
+        auto seqList = QKeySequence::keyBindings(sequence);
+        QStringList strings;
+        foreach (QKeySequence seq, seqList)
+        {
+            strings << seq.toString();
+        }
+        return strings;
+    }
+
+    static QList<QKeySequence> stringListToKeySequenceList(QStringList stringList)
+    {
+
+        QList<QKeySequence> keySequences;
+        foreach (QString string, stringList)
+        {
+            keySequences << QKeySequence::fromString(string);
+        }
+        return keySequences;
+    }
+
     explicit QVOptionsDialog(QWidget *parent = nullptr);
     ~QVOptionsDialog() override;
 
     void updateBgColorButton();
+
+    const QList<QVShortcutDialog::SShortcut>& getTransientShortcuts() const {return transientShortcuts; }
 
 signals:
     void optionsSaved();

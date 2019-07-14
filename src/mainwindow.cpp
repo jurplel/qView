@@ -60,37 +60,6 @@ MainWindow::MainWindow(QWidget *parent) :
     settings.beginGroup("recents");
     restoreGeometry(settings.value("geometry").toByteArray());
 
-    //Keyboard Shortcuts
-    ui->actionOpen->setShortcuts(QKeySequence::Open);
-    ui->actionNext_File->setShortcut(Qt::Key_Right);
-    ui->actionPrevious_File->setShortcut(Qt::Key_Left);
-    ui->actionCopy->setShortcuts(QKeySequence::keyBindings(QKeySequence::Copy));
-    ui->actionPaste->setShortcuts(QKeySequence::keyBindings(QKeySequence::Paste));
-    ui->actionRotate_Right->setShortcut(Qt::Key_Up);
-    ui->actionRotate_Left->setShortcut(Qt::Key_Down);
-    ui->actionZoom_In->setShortcuts(QKeySequence::keyBindings(QKeySequence::ZoomIn));
-    ui->actionZoom_Out->setShortcut(QKeySequence::ZoomOut);
-    ui->actionReset_Zoom->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_0));
-    ui->actionFlip_Horizontally->setShortcut(Qt::Key_F);
-    ui->actionFlip_Vertically->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_F));
-    ui->actionFull_Screen->setShortcuts(QKeySequence::keyBindings(QKeySequence::FullScreen));
-    //Fixes alt+enter only working with numpad enter when using qt's standard keybinds
-    #ifdef Q_OS_WIN
-    ui->actionFull_Screen->setShortcuts(ui->actionFull_Screen->shortcuts() << QKeySequence(Qt::ALT + Qt::Key_Return));
-    #endif
-    ui->actionOriginal_Size->setShortcut(Qt::Key_O);
-    ui->actionNew_Window->setShortcut(QKeySequence::New);
-    ui->actionNext_Frame->setShortcut(Qt::Key_N);
-    ui->actionPause->setShortcut(Qt::Key_P);
-    ui->actionIncrease_Speed->setShortcut(Qt::Key_BracketRight);
-    ui->actionDecrease_Speed->setShortcut(Qt::Key_BracketLeft);
-    ui->actionReset_Speed->setShortcut(Qt::Key_Backslash);
-    ui->actionProperties->setShortcut(Qt::Key_I);
-    ui->actionQuit->setShortcut(QKeySequence::Quit);
-    ui->actionOptions->setShortcut(QKeySequence::Preferences);
-    ui->actionFirst_File->setShortcut(Qt::Key_Home);
-    ui->actionLast_File->setShortcut(Qt::Key_End);
-
     //Esc to exit fullscreen
     auto *escShortcut = new QShortcut(this);
     escShortcut->setKey(Qt::Key_Escape);
@@ -146,8 +115,8 @@ MainWindow::MainWindow(QWidget *parent) :
     view->addAction(ui->actionRotate_Right);
     view->addAction(ui->actionRotate_Left);
     view->addSeparator();
-    view->addAction(ui->actionFlip_Horizontally);
-    view->addAction(ui->actionFlip_Vertically);
+    view->addAction(ui->actionMirror);
+    view->addAction(ui->actionFlip);
     view->addSeparator();
     view->addAction(ui->actionFull_Screen);
     contextMenu->addMenu(view);
@@ -315,6 +284,55 @@ void MainWindow::loadSettings()
     maxWindowResizedPercentage = settings.value("maxwindowresizedpercentage", 70).toReal()/100;
 
     ui->graphicsView->loadSettings();
+
+    loadShortcuts();
+}
+
+void MainWindow::loadShortcuts() {
+    QSettings settings;
+    settings.beginGroup("shortcuts");
+
+    typedef QVOptionsDialog qvo;
+
+    // To retrieve default bindings, we hackily init an options dialog and use it's constructor values
+    qvo invisibleOptionsDialog;
+    auto shortcutData = invisibleOptionsDialog.getTransientShortcuts();
+
+    // Iterate through all default shortcuts to get saved shortcuts from settings
+    QHash<QString, QList<QKeySequence>> shortcuts;
+    QListIterator<QVShortcutDialog::SShortcut> iter(shortcutData);
+    while (iter.hasNext())
+    {
+        auto value = iter.next();
+        shortcuts.insert(value.name, qvo::stringListToKeySequenceList(settings.value(value.name, value.defaultShortcuts).value<QStringList>()));
+    }
+
+    // Set shortcuts by name from above list
+    ui->actionOpen->setShortcuts(shortcuts.value("open"));
+    ui->actionFirst_File->setShortcuts(shortcuts.value("firstfile"));
+    ui->actionPrevious_File->setShortcuts(shortcuts.value("previousfile"));
+    ui->actionNext_File->setShortcuts(shortcuts.value("nextfile"));
+    ui->actionLast_File->setShortcuts(shortcuts.value("lastfile"));
+    ui->actionCopy->setShortcuts(shortcuts.value("copy"));
+    ui->actionPaste->setShortcuts(shortcuts.value("paste"));
+    ui->actionRotate_Right->setShortcuts(shortcuts.value("rotateright"));
+    ui->actionRotate_Left->setShortcuts(shortcuts.value("rotateleft"));
+    ui->actionZoom_In->setShortcuts(shortcuts.value("zoomin"));
+    ui->actionZoom_Out->setShortcuts(shortcuts.value("zoomout"));
+    ui->actionReset_Zoom->setShortcuts(shortcuts.value("resetzoom"));
+    ui->actionMirror->setShortcuts(shortcuts.value("mirror"));
+    ui->actionFlip->setShortcuts(shortcuts.value("flip"));
+    ui->actionFull_Screen->setShortcuts(shortcuts.value("fullscreen"));
+    ui->actionOriginal_Size->setShortcuts(shortcuts.value("originalsize"));
+    ui->actionNew_Window->setShortcuts(shortcuts.value("newwindow"));
+    ui->actionNext_Frame->setShortcuts(shortcuts.value("nextframe"));
+    ui->actionPause->setShortcuts(shortcuts.value("pause"));
+    ui->actionIncrease_Speed->setShortcuts(shortcuts.value("increasespeed"));
+    ui->actionDecrease_Speed->setShortcuts(shortcuts.value("decreasespeed"));
+    ui->actionReset_Speed->setShortcuts(shortcuts.value("resetspeed"));
+    ui->actionProperties->setShortcuts(shortcuts.value("showfileinfo"));
+    ui->actionOptions->setShortcuts(shortcuts.value("options"));
+    ui->actionQuit->setShortcuts(shortcuts.value("quit"));
 }
 
 void MainWindow::updateRecentMenu()
@@ -570,13 +588,13 @@ void MainWindow::on_actionWelcome_triggered()
     welcome->exec();
 }
 
-void MainWindow::on_actionFlip_Horizontally_triggered()
+void MainWindow::on_actionMirror_triggered()
 {
     ui->graphicsView->scale(-1, 1);
     ui->graphicsView->resetScale();
 }
 
-void MainWindow::on_actionFlip_Vertically_triggered()
+void MainWindow::on_actionFlip_triggered()
 {
     ui->graphicsView->scale(1, -1);
     ui->graphicsView->resetScale();
