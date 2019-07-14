@@ -1,15 +1,14 @@
 #include "qvshortcutdialog.h"
 #include "ui_qvshortcutdialog.h"
 
-#include <QSettings>
-
-#include <QDebug>
-
 QVShortcutDialog::QVShortcutDialog(SShortcut shortcut_object, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::QVShortcutDialog)
 {
     ui->setupUi(this);
+
+    setAttribute(Qt::WA_DeleteOnClose);
+    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
     shortcut_obj = shortcut_object;
     foreach (QString shortcut, shortcut_obj.shortcuts)
@@ -46,7 +45,19 @@ void QVShortcutDialog::on_keySequenceEdit_editingFinished()
 
 void QVShortcutDialog::on_buttonBox_clicked(QAbstractButton *button)
 {
-    if (ui->buttonBox->buttonRole(button) == QDialogButtonBox::ResetRole)
+    if (ui->buttonBox->buttonRole(button) == QDialogButtonBox::AcceptRole)
+    {
+        QStringList newShortcutsList;
+        for(int i = 0; i < ui->shortcutsList->count(); i++)
+        {
+            QListWidgetItem* item = ui->shortcutsList->item(i);
+            newShortcutsList << item->text();
+        }
+        shortcut_obj.shortcuts = newShortcutsList;
+
+        emit newShortcutObject(shortcut_obj);
+    }
+    else if (ui->buttonBox->buttonRole(button) == QDialogButtonBox::ResetRole)
     {
         ui->shortcutsList->clear();
         foreach (QString shortcut, shortcut_obj.defaultShortcuts)
