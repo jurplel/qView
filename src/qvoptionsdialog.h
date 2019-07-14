@@ -95,37 +95,9 @@ private:
         int preloadingMode;
     };
 
-    struct STransientShortcuts
-    {
-        QStringList open;
-        QStringList firstFile;
-        QStringList previousFile;
-        QStringList nextFile;
-        QStringList lastFile;
-        QStringList copy;
-        QStringList paste;
-        QStringList rotateRight;
-        QStringList rotateLeft;
-        QStringList zoomIn;
-        QStringList zoomOut;
-        QStringList resetZoom;
-        QStringList mirror;
-        QStringList flip;
-        QStringList fullScreen;
-        QStringList originalSize;
-        QStringList newWindow;
-        QStringList nextFrame;
-        QStringList pause;
-        QStringList increaseSpeed;
-        QStringList decreaseSpeed;
-        QStringList resetSpeed;
-        QStringList showFileInfo;
-        QStringList options;
-        QStringList quit;
-    };
-
     STransientSettings transientSettings;
-    STransientShortcuts transientShortcuts;
+
+    QHash<int, QPair<QString, QStringList>> transientShortcuts;
 };
 
 
