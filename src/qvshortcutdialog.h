@@ -24,6 +24,9 @@ public:
     explicit QVShortcutDialog(SShortcut shortcut, QWidget *parent = nullptr);
     ~QVShortcutDialog() override;
 
+signals:
+    void newShortcutObject(SShortcut shortcut);
+
 private slots:
     void on_addButton_clicked();
 
