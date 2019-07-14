@@ -75,7 +75,7 @@
      <x>0</x>
      <y>0</y>
      <width>640</width>
-     <height>23</height>
+     <height>19</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -127,8 +127,8 @@
     <addaction name="actionRotate_Right"/>
     <addaction name="actionRotate_Left"/>
     <addaction name="separator"/>
-    <addaction name="actionFlip_Horizontally"/>
-    <addaction name="actionFlip_Vertically"/>
+    <addaction name="actionMirror"/>
+    <addaction name="actionFlip"/>
     <addaction name="separator"/>
     <addaction name="actionFull_Screen"/>
    </widget>
@@ -170,13 +170,13 @@
    </property>
   </action>
   <action name="actionCopy">
-  <property name="enabled">
-   <bool>false</bool>
-  </property>
-  <property name="icon">
-   <iconset theme="edit-copy">
-    <normaloff>.</normaloff>.</iconset>
-  </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset theme="edit-copy">
+     <normaloff>.</normaloff>.</iconset>
+   </property>
    <property name="text">
     <string>&amp;Copy</string>
    </property>
@@ -268,7 +268,7 @@
     <string>Rotate &amp;Left</string>
    </property>
   </action>
-  <action name="actionFlip_Horizontally">
+  <action name="actionMirror">
    <property name="enabled">
     <bool>false</bool>
    </property>
@@ -280,7 +280,7 @@
     <string>&amp;Mirror</string>
    </property>
   </action>
-  <action name="actionFlip_Vertically">
+  <action name="actionFlip">
    <property name="enabled">
     <bool>false</bool>
    </property>

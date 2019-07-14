@@ -72,9 +72,9 @@ private slots:
 
     void on_actionRotate_Left_triggered();
 
-    void on_actionFlip_Horizontally_triggered();
+    void on_actionMirror_triggered();
 
-    void on_actionFlip_Vertically_triggered();
+    void on_actionFlip_triggered();
 
     void on_actionZoom_In_triggered();
 
@@ -120,6 +120,8 @@ private:
     Ui::MainWindow *ui;
 
     void pickFile();
+
+    void loadShortcuts();
 
     QMenu *contextMenu;
 
