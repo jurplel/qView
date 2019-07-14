@@ -1,6 +1,8 @@
 #ifndef QVOPTIONSDIALOG_H
 #define QVOPTIONSDIALOG_H
 
+#include "qvshortcutdialog.h"
+
 #include <QDialog>
 #include <QSettings>
 #include <QAbstractButton>
@@ -15,7 +17,7 @@ class QVOptionsDialog : public QDialog
 
 public:
     explicit QVOptionsDialog(QWidget *parent = nullptr);
-    ~QVOptionsDialog();
+    ~QVOptionsDialog() override;
 
     void updateBgColorButton();
 
@@ -66,7 +68,7 @@ private slots:
     void on_shortcutsTable_cellDoubleClicked(int row, int column);
 
 protected:
-    virtual void showEvent(QShowEvent *event);
+    virtual void showEvent(QShowEvent *event) override;
 
 private:
     Ui::QVOptionsDialog *ui;
@@ -97,14 +99,7 @@ private:
 
     STransientSettings transientSettings;
 
-    struct SShortcut {
-        int position;
-        QString readableName;
-        QString name;
-        QStringList shortcuts;
-    };
-
-    QList<SShortcut> transientShortcuts;
+    QList<QVShortcutDialog::SShortcut> transientShortcuts;
 };
 
 
