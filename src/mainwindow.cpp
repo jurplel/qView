@@ -82,9 +82,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionNew_Window->setShortcut(QKeySequence::New);
     ui->actionNext_Frame->setShortcut(Qt::Key_N);
     ui->actionPause->setShortcut(Qt::Key_P);
+    ui->actionIncrease_Speed->setShortcut(Qt::Key_BracketRight);
     ui->actionDecrease_Speed->setShortcut(Qt::Key_BracketLeft);
     ui->actionReset_Speed->setShortcut(Qt::Key_Backslash);
-    ui->actionIncrease_Speed->setShortcut(Qt::Key_BracketRight);
     ui->actionProperties->setShortcut(Qt::Key_I);
     ui->actionQuit->setShortcut(QKeySequence::Quit);
     ui->actionOptions->setShortcut(QKeySequence::Preferences);
