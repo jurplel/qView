@@ -4,6 +4,8 @@
 #include <QPalette>
 #include <QScreen>
 
+#include <QDebug>
+
 QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::QVOptionsDialog)
@@ -18,35 +20,35 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     #endif
 
     // Set default shortcuts
-    transientShortcuts.append({0, "Open", "open", keyBindingsToStringList(QKeySequence::Open), {}});
-    transientShortcuts.append({1, "First File", "firstfile", QStringList(QKeySequence(Qt::Key_Home).toString()), {}});
-    transientShortcuts.append({2, "Previous File", "previousfile", QStringList(QKeySequence(Qt::Key_Left).toString()), {}});
-    transientShortcuts.append({3, "Next File", "nextfile", QStringList(QKeySequence(Qt::Key_Right).toString()), {}});
-    transientShortcuts.append({4, "Last File", "lastfile", QStringList(QKeySequence(Qt::Key_End).toString()), {}});
-    transientShortcuts.append({5, "Copy", "copy", keyBindingsToStringList(QKeySequence::Copy), {}});
-    transientShortcuts.append({6, "Paste", "paste", keyBindingsToStringList(QKeySequence::Paste), {}});
-    transientShortcuts.append({7, "Rotate Right", "rotateright", QStringList(QKeySequence(Qt::Key_Up).toString()), {}});
-    transientShortcuts.append({8, "Rotate Left", "rotateleft", QStringList(QKeySequence(Qt::Key_Down).toString()), {}});
-    transientShortcuts.append({9, "Zoom In", "zoomin", keyBindingsToStringList(QKeySequence::ZoomIn), {}});
-    transientShortcuts.append({10, "Zoom Out", "zoomout", keyBindingsToStringList(QKeySequence::ZoomOut), {}});
-    transientShortcuts.append({11, "Reset Zoom", "resetzoom", QStringList(QKeySequence(Qt::CTRL + Qt::Key_0).toString()), {}});
-    transientShortcuts.append({12, "Mirror", "mirror", QStringList(QKeySequence(Qt::Key_F).toString()), {}});
-    transientShortcuts.append({13, "Flip", "flip", QStringList(QKeySequence(Qt::CTRL + Qt::Key_F).toString()), {}});
-    transientShortcuts.append({14, "Full Screen", "fullscreen", keyBindingsToStringList(QKeySequence::FullScreen), {}});
+    transientShortcuts.append({"Open", "open", keyBindingsToStringList(QKeySequence::Open), {}});
+    transientShortcuts.append({"First File", "firstfile", QStringList(QKeySequence(Qt::Key_Home).toString()), {}});
+    transientShortcuts.append({"Previous File", "previousfile", QStringList(QKeySequence(Qt::Key_Left).toString()), {}});
+    transientShortcuts.append({"Next File", "nextfile", QStringList(QKeySequence(Qt::Key_Right).toString()), {}});
+    transientShortcuts.append({"Last File", "lastfile", QStringList(QKeySequence(Qt::Key_End).toString()), {}});
+    transientShortcuts.append({"Copy", "copy", keyBindingsToStringList(QKeySequence::Copy), {}});
+    transientShortcuts.append({"Paste", "paste", keyBindingsToStringList(QKeySequence::Paste), {}});
+    transientShortcuts.append({"Rotate Right", "rotateright", QStringList(QKeySequence(Qt::Key_Up).toString()), {}});
+    transientShortcuts.append({"Rotate Left", "rotateleft", QStringList(QKeySequence(Qt::Key_Down).toString()), {}});
+    transientShortcuts.append({"Zoom In", "zoomin", keyBindingsToStringList(QKeySequence::ZoomIn), {}});
+    transientShortcuts.append({"Zoom Out", "zoomout", keyBindingsToStringList(QKeySequence::ZoomOut), {}});
+    transientShortcuts.append({"Reset Zoom", "resetzoom", QStringList(QKeySequence(Qt::CTRL + Qt::Key_0).toString()), {}});
+    transientShortcuts.append({"Mirror", "mirror", QStringList(QKeySequence(Qt::Key_F).toString()), {}});
+    transientShortcuts.append({"Flip", "flip", QStringList(QKeySequence(Qt::CTRL + Qt::Key_F).toString()), {}});
+    transientShortcuts.append({"Full Screen", "fullscreen", keyBindingsToStringList(QKeySequence::FullScreen), {}});
     //Fixes alt+enter only working with numpad enter when using qt's standard keybinds
     #ifdef Q_OS_WIN
-        transientShortcuts.replace(14, {14, "Full Screen", "fullscreen", keyBindingsToStringList(QKeySequence::FullScreen) << QKeySequence(Qt::ALT + Qt::Key_Return).toString(), {}});
+        transientShortcuts.replace(14, {"Full Screen", "fullscreen", keyBindingsToStringList(QKeySequence::FullScreen) << QKeySequence(Qt::ALT + Qt::Key_Return).toString(), {}});
     #endif
-    transientShortcuts.append({15, "Original Size", "originalsize", QStringList(QKeySequence(Qt::Key_O).toString()), {}});
-    transientShortcuts.append({16, "New Window", "newwindow", keyBindingsToStringList(QKeySequence::New), {}});
-    transientShortcuts.append({17, "Next Frame", "nextframe", QStringList(QKeySequence(Qt::Key_N).toString()), {}});
-    transientShortcuts.append({18, "Pause", "pause", QStringList(QKeySequence(Qt::Key_P).toString()), {}});
-    transientShortcuts.append({19, "Increase Speed", "increasespeed", QStringList(QKeySequence(Qt::Key_BracketRight).toString()), {}});
-    transientShortcuts.append({20, "Decrease Speed", "decreasespeed", QStringList(QKeySequence(Qt::Key_BracketLeft).toString()), {}});
-    transientShortcuts.append({21, "Reset Speed", "resetspeed", QStringList(QKeySequence(Qt::Key_Backslash).toString()), {}});
-    transientShortcuts.append({22, "Show File Info", "showfileinfo", QStringList(QKeySequence(Qt::Key_I).toString()), {}});
-    transientShortcuts.append({23, "Options", "options", keyBindingsToStringList(QKeySequence::Preferences), {}});
-    transientShortcuts.append({24, "Quit", "quit", keyBindingsToStringList(QKeySequence::Quit), {}});
+    transientShortcuts.append({"Original Size", "originalsize", QStringList(QKeySequence(Qt::Key_O).toString()), {}});
+    transientShortcuts.append({"New Window", "newwindow", keyBindingsToStringList(QKeySequence::New), {}});
+    transientShortcuts.append({"Next Frame", "nextframe", QStringList(QKeySequence(Qt::Key_N).toString()), {}});
+    transientShortcuts.append({"Pause", "pause", QStringList(QKeySequence(Qt::Key_P).toString()), {}});
+    transientShortcuts.append({"Increase Speed", "increasespeed", QStringList(QKeySequence(Qt::Key_BracketRight).toString()), {}});
+    transientShortcuts.append({"Decrease Speed", "decreasespeed", QStringList(QKeySequence(Qt::Key_BracketLeft).toString()), {}});
+    transientShortcuts.append({"Reset Speed", "resetspeed", QStringList(QKeySequence(Qt::Key_Backslash).toString()), {}});
+    transientShortcuts.append({"Show File Info", "showfileinfo", QStringList(QKeySequence(Qt::Key_I).toString()), {}});
+    transientShortcuts.append({"Options", "options", keyBindingsToStringList(QKeySequence::Preferences), {}});
+    transientShortcuts.append({"Quit", "quit", keyBindingsToStringList(QKeySequence::Quit), {}});
 }
 
 QVOptionsDialog::~QVOptionsDialog()
@@ -85,6 +87,7 @@ void QVOptionsDialog::saveSettings()
     settings.setValue("preloadingmode", transientSettings.preloadingMode);
 
     // Shortcuts are saved here too for now
+    settings.endGroup();
     settings.beginGroup("shortcuts");
 
     QListIterator<QVShortcutDialog::SShortcut> iter(transientShortcuts);
@@ -230,29 +233,42 @@ void QVOptionsDialog::loadShortcuts(const bool defaults)
     else
         settings.beginGroup("emptygroup");
 
-    ui->shortcutsTable->setRowCount(transientShortcuts.length());
-
-    // Read saved custom shortcuts and populate shortcut table
-    auto item = new QTableWidgetItem();
+    // Read saved custom shortcuts
     QMutableListIterator<QVShortcutDialog::SShortcut> iter(transientShortcuts);
     while (iter.hasNext())
     {
-        iter.next();
-        iter.setValue({iter.value().position, iter.value().readableName, iter.value().name, iter.value().defaultShortcuts, settings.value(iter.value().name, iter.value().defaultShortcuts).value<QStringList>()});
-
-        item->setText(iter.value().readableName);
-        ui->shortcutsTable->setItem(iter.value().position, 0, item->clone());
-
-        item->setText(iter.value().shortcuts.join(", "));
-        ui->shortcutsTable->setItem(iter.value().position, 1, item->clone());
+        auto value = iter.next();
+        iter.setValue({value.readableName, value.name, value.defaultShortcuts, settings.value(value.name, value.defaultShortcuts).value<QStringList>()});
     }
+
+    updateShortcuts();
+}
+
+void QVOptionsDialog::updateShortcuts() {
+    ui->shortcutsTable->setRowCount(transientShortcuts.length());
+
+    auto item = new QTableWidgetItem();
+
+    int i = 0;
+    QListIterator<QVShortcutDialog::SShortcut> iter(transientShortcuts);
+    while (iter.hasNext())
+    {
+        auto value = iter.next();
+
+        item->setText(value.readableName);
+        ui->shortcutsTable->setItem(i, 0, item->clone());
+
+        item->setText(value.shortcuts.join(", "));
+        ui->shortcutsTable->setItem(i, 1, item->clone());
+        i++;
+    }
+
+    delete item;
 
     // Hide next window keybind on platforms other than macOS (cause it doesn't work)
     #ifndef Q_OS_MACX
     ui->shortcutsTable->hideRow(16);
     #endif
-
-    delete item;
 }
 
 void QVOptionsDialog::updateBgColorButton()
@@ -453,7 +469,7 @@ void QVOptionsDialog::on_shortcutsTable_cellDoubleClicked(int row, int column)
     Q_UNUSED(column)
     auto shortcutDialog = new QVShortcutDialog(transientShortcuts.value(row));
     shortcutDialog->open();
-    connect(shortcutDialog, &QVShortcutDialog::newShortcutObject, [this](QVShortcutDialog::SShortcut shortcut){
+    connect(shortcutDialog, &QVShortcutDialog::newShortcut, [this](QVShortcutDialog::SShortcut shortcut){
         QSettings settings;
         settings.beginGroup("shortcuts");
         settings.setValue(shortcut.name, shortcut.shortcuts);

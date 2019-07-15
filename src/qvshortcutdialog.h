@@ -14,7 +14,6 @@ class QVShortcutDialog : public QDialog
 
 public:
     struct SShortcut {
-        int position;
         QString readableName;
         QString name;
         QStringList defaultShortcuts;
@@ -25,7 +24,7 @@ public:
     ~QVShortcutDialog() override;
 
 signals:
-    void newShortcutObject(SShortcut shortcut);
+    void newShortcut(SShortcut shortcut);
 
 private slots:
     void on_addButton_clicked();
