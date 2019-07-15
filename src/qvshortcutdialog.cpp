@@ -55,7 +55,7 @@ void QVShortcutDialog::on_buttonBox_clicked(QAbstractButton *button)
         }
         shortcut_obj.shortcuts = newShortcutsList;
 
-        emit newShortcutObject(shortcut_obj);
+        emit newShortcut(shortcut_obj);
     }
     else if (ui->buttonBox->buttonRole(button) == QDialogButtonBox::ResetRole)
     {
