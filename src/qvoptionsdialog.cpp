@@ -258,7 +258,7 @@ void QVOptionsDialog::updateShortcuts() {
         item->setText(value.readableName);
         ui->shortcutsTable->setItem(i, 0, item->clone());
 
-        item->setText(value.shortcuts.join(", "));
+        item->setText(QKeySequence::fromString(value.shortcuts.join(", ")).toString(QKeySequence::NativeText));
         ui->shortcutsTable->setItem(i, 1, item->clone());
         i++;
     }
