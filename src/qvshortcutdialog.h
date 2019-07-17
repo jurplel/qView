@@ -20,11 +20,11 @@ public:
         QStringList shortcuts;
     };
 
-    explicit QVShortcutDialog(SShortcut shortcut, QWidget *parent = nullptr);
+    explicit QVShortcutDialog(const SShortcut &shortcut, int i, QWidget *parent = nullptr);
     ~QVShortcutDialog() override;
 
 signals:
-    void newShortcut(SShortcut shortcut);
+    void newShortcut(SShortcut shortcut, int index);
 
 private slots:
     void on_addButton_clicked();
@@ -39,6 +39,7 @@ private:
     Ui::QVShortcutDialog *ui;
 
     SShortcut shortcut_obj;
+    int index;
 };
 
 #endif // QVSHORTCUTDIALOG_H
