@@ -467,13 +467,11 @@ void QVOptionsDialog::on_preloadingComboBox_currentIndexChanged(int index)
 void QVOptionsDialog::on_shortcutsTable_cellDoubleClicked(int row, int column)
 {
     Q_UNUSED(column)
-    auto shortcutDialog = new QVShortcutDialog(transientShortcuts.value(row));
+    auto shortcutDialog = new QVShortcutDialog(transientShortcuts.value(row), row);
     shortcutDialog->open();
-    connect(shortcutDialog, &QVShortcutDialog::newShortcut, [this](QVShortcutDialog::SShortcut shortcut){
-        QSettings settings;
-        settings.beginGroup("shortcuts");
-        settings.setValue(shortcut.name, shortcut.shortcuts);
-        loadShortcuts();
+    connect(shortcutDialog, &QVShortcutDialog::newShortcut, [this](QVShortcutDialog::SShortcut shortcut, int index){
+        transientShortcuts.replace(index, shortcut);
+        updateShortcuts();
     });
 }
 
