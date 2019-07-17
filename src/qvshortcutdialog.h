@@ -27,12 +27,6 @@ signals:
     void newShortcut(SShortcut shortcut, int index);
 
 private slots:
-    void on_addButton_clicked();
-
-    void on_subtractButton_clicked();
-
-    void on_keySequenceEdit_editingFinished();
-
     void on_buttonBox_clicked(QAbstractButton *button);
 
 private:
