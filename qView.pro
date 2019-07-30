@@ -79,7 +79,8 @@ SOURCES += \
     src/qvaboutdialog.cpp \
     src/qvwelcomedialog.cpp \
     src/qvinfodialog.cpp \
-    src/qvimagecore.cpp
+    src/qvimagecore.cpp \
+    src/qvshortcutdialog.cpp
 
 HEADERS += \
         src/mainwindow.h \
@@ -89,14 +90,16 @@ HEADERS += \
     src/qvaboutdialog.h \
     src/qvwelcomedialog.h \
     src/qvinfodialog.h \
-    src/qvimagecore.h
+    src/qvimagecore.h \
+    src/qvshortcutdialog.h
 
 FORMS += \
         src/mainwindow.ui \
     src/qvoptionsdialog.ui \
     src/qvaboutdialog.ui \
     src/qvwelcomedialog.ui \
-    src/qvinfodialog.ui
+    src/qvinfodialog.ui \
+    src/qvshortcutdialog.ui
 
 RESOURCES += \
     resources.qrc

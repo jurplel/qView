@@ -1,6 +1,8 @@
 #ifndef QVOPTIONSDIALOG_H
 #define QVOPTIONSDIALOG_H
 
+#include "qvshortcutdialog.h"
+
 #include <QDialog>
 #include <QSettings>
 #include <QAbstractButton>
@@ -14,10 +16,34 @@ class QVOptionsDialog : public QDialog
     Q_OBJECT
 
 public:
+    static QStringList keyBindingsToStringList(QKeySequence::StandardKey sequence)
+    {
+        auto seqList = QKeySequence::keyBindings(sequence);
+        QStringList strings;
+        foreach (QKeySequence seq, seqList)
+        {
+            strings << seq.toString();
+        }
+        return strings;
+    }
+
+    static QList<QKeySequence> stringListToKeySequenceList(QStringList stringList)
+    {
+
+        QList<QKeySequence> keySequences;
+        foreach (QString string, stringList)
+        {
+            keySequences << QKeySequence::fromString(string);
+        }
+        return keySequences;
+    }
+
     explicit QVOptionsDialog(QWidget *parent = nullptr);
-    ~QVOptionsDialog();
+    ~QVOptionsDialog() override;
 
     void updateBgColorButton();
+
+    const QList<QVShortcutDialog::SShortcut>& getTransientShortcuts() const {return transientShortcuts; }
 
 signals:
     void optionsSaved();
@@ -63,13 +89,17 @@ private slots:
 
     void on_preloadingComboBox_currentIndexChanged(int index);
 
+    void on_shortcutsTable_cellDoubleClicked(int row, int column);
+
 protected:
-    virtual void showEvent(QShowEvent *event);
+    virtual void showEvent(QShowEvent *event) override;
 
 private:
     Ui::QVOptionsDialog *ui;
     void saveSettings();
     void loadSettings(const bool defaults = false);
+    void loadShortcuts(const bool defaults = false);
+    void updateShortcuts();
 
     struct STransientSettings
     {
@@ -94,6 +124,8 @@ private:
     };
 
     STransientSettings transientSettings;
+
+    QList<QVShortcutDialog::SShortcut> transientShortcuts;
 };
 
 
