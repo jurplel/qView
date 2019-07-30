@@ -4,6 +4,8 @@
 #include <QPalette>
 #include <QScreen>
 
+#include <QDebug>
+
 QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::QVOptionsDialog)
@@ -16,6 +18,37 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     #ifdef Q_OS_UNIX
     setWindowTitle("Preferences");
     #endif
+
+    // Set default shortcuts
+    transientShortcuts.append({"Open", "open", keyBindingsToStringList(QKeySequence::Open), {}});
+    transientShortcuts.append({"First File", "firstfile", QStringList(QKeySequence(Qt::Key_Home).toString()), {}});
+    transientShortcuts.append({"Previous File", "previousfile", QStringList(QKeySequence(Qt::Key_Left).toString()), {}});
+    transientShortcuts.append({"Next File", "nextfile", QStringList(QKeySequence(Qt::Key_Right).toString()), {}});
+    transientShortcuts.append({"Last File", "lastfile", QStringList(QKeySequence(Qt::Key_End).toString()), {}});
+    transientShortcuts.append({"Copy", "copy", keyBindingsToStringList(QKeySequence::Copy), {}});
+    transientShortcuts.append({"Paste", "paste", keyBindingsToStringList(QKeySequence::Paste), {}});
+    transientShortcuts.append({"Rotate Right", "rotateright", QStringList(QKeySequence(Qt::Key_Up).toString()), {}});
+    transientShortcuts.append({"Rotate Left", "rotateleft", QStringList(QKeySequence(Qt::Key_Down).toString()), {}});
+    transientShortcuts.append({"Zoom In", "zoomin", keyBindingsToStringList(QKeySequence::ZoomIn), {}});
+    transientShortcuts.append({"Zoom Out", "zoomout", keyBindingsToStringList(QKeySequence::ZoomOut), {}});
+    transientShortcuts.append({"Reset Zoom", "resetzoom", QStringList(QKeySequence(Qt::CTRL + Qt::Key_0).toString()), {}});
+    transientShortcuts.append({"Mirror", "mirror", QStringList(QKeySequence(Qt::Key_F).toString()), {}});
+    transientShortcuts.append({"Flip", "flip", QStringList(QKeySequence(Qt::CTRL + Qt::Key_F).toString()), {}});
+    transientShortcuts.append({"Full Screen", "fullscreen", keyBindingsToStringList(QKeySequence::FullScreen), {}});
+    //Fixes alt+enter only working with numpad enter when using qt's standard keybinds
+    #ifdef Q_OS_WIN
+        transientShortcuts.replace(14, {"Full Screen", "fullscreen", keyBindingsToStringList(QKeySequence::FullScreen) << QKeySequence(Qt::ALT + Qt::Key_Return).toString(), {}});
+    #endif
+    transientShortcuts.append({"Original Size", "originalsize", QStringList(QKeySequence(Qt::Key_O).toString()), {}});
+    transientShortcuts.append({"New Window", "newwindow", keyBindingsToStringList(QKeySequence::New), {}});
+    transientShortcuts.append({"Next Frame", "nextframe", QStringList(QKeySequence(Qt::Key_N).toString()), {}});
+    transientShortcuts.append({"Pause", "pause", QStringList(QKeySequence(Qt::Key_P).toString()), {}});
+    transientShortcuts.append({"Increase Speed", "increasespeed", QStringList(QKeySequence(Qt::Key_BracketRight).toString()), {}});
+    transientShortcuts.append({"Decrease Speed", "decreasespeed", QStringList(QKeySequence(Qt::Key_BracketLeft).toString()), {}});
+    transientShortcuts.append({"Reset Speed", "resetspeed", QStringList(QKeySequence(Qt::Key_Backslash).toString()), {}});
+    transientShortcuts.append({"Show File Info", "showfileinfo", QStringList(QKeySequence(Qt::Key_I).toString()), {}});
+    transientShortcuts.append({"Options", "options", keyBindingsToStringList(QKeySequence::Preferences), {}});
+    transientShortcuts.append({"Quit", "quit", keyBindingsToStringList(QKeySequence::Quit), {}});
 }
 
 QVOptionsDialog::~QVOptionsDialog()
@@ -23,11 +56,11 @@ QVOptionsDialog::~QVOptionsDialog()
     delete ui;
 }
 
-
 void QVOptionsDialog::showEvent(QShowEvent *event)
 {
     QDialog::showEvent(event);
     loadSettings();
+    loadShortcuts();
 }
 
 void QVOptionsDialog::saveSettings()
@@ -52,6 +85,18 @@ void QVOptionsDialog::saveSettings()
     settings.setValue("maxwindowresizedpercentage", transientSettings.maxWindowResizedPercentage);
     settings.setValue("loopfoldersenabled", transientSettings.loopFoldersEnabled);
     settings.setValue("preloadingmode", transientSettings.preloadingMode);
+
+    // Shortcuts are saved here too for now
+    settings.endGroup();
+    settings.beginGroup("shortcuts");
+
+    QListIterator<QVShortcutDialog::SShortcut> iter(transientShortcuts);
+    while (iter.hasNext())
+    {
+        auto value = iter.next();
+        settings.setValue(value.name, value.shortcuts);
+    }
+
     emit optionsSaved();
 }
 
@@ -180,6 +225,52 @@ void QVOptionsDialog::loadSettings(const bool defaults)
     ui->preloadingComboBox->setCurrentIndex(transientSettings.preloadingMode);
 }
 
+void QVOptionsDialog::loadShortcuts(const bool defaults)
+{
+    QSettings settings;
+    if (!defaults)
+        settings.beginGroup("shortcuts");
+    else
+        settings.beginGroup("emptygroup");
+
+    // Read saved custom shortcuts
+    QMutableListIterator<QVShortcutDialog::SShortcut> iter(transientShortcuts);
+    while (iter.hasNext())
+    {
+        auto value = iter.next();
+        iter.setValue({value.readableName, value.name, value.defaultShortcuts, settings.value(value.name, value.defaultShortcuts).value<QStringList>()});
+    }
+
+    updateShortcuts();
+}
+
+void QVOptionsDialog::updateShortcuts() {
+    ui->shortcutsTable->setRowCount(transientShortcuts.length());
+
+    auto item = new QTableWidgetItem();
+
+    int i = 0;
+    QListIterator<QVShortcutDialog::SShortcut> iter(transientShortcuts);
+    while (iter.hasNext())
+    {
+        auto value = iter.next();
+
+        item->setText(value.readableName);
+        ui->shortcutsTable->setItem(i, 0, item->clone());
+
+        item->setText(QKeySequence::fromString(value.shortcuts.join(", ")).toString(QKeySequence::NativeText));
+        ui->shortcutsTable->setItem(i, 1, item->clone());
+        i++;
+    }
+
+    delete item;
+
+    // Hide next window keybind on platforms other than macOS (cause it doesn't work)
+    #ifndef Q_OS_MACX
+    ui->shortcutsTable->hideRow(16);
+    #endif
+}
+
 void QVOptionsDialog::updateBgColorButton()
 {
     QPixmap newPixmap = QPixmap(32, 32);
@@ -207,8 +298,8 @@ void QVOptionsDialog::on_buttonBox_clicked(QAbstractButton *button)
     }
     else if (ui->buttonBox->buttonRole(button) == QDialogButtonBox::ResetRole)
     {
-        QSettings settings;
         loadSettings(true);
+        loadShortcuts(true);
     }
 }
 
@@ -372,3 +463,15 @@ void QVOptionsDialog::on_preloadingComboBox_currentIndexChanged(int index)
 {
     transientSettings.preloadingMode = index;
 }
+
+void QVOptionsDialog::on_shortcutsTable_cellDoubleClicked(int row, int column)
+{
+    Q_UNUSED(column)
+    auto shortcutDialog = new QVShortcutDialog(transientShortcuts.value(row), row);
+    shortcutDialog->open();
+    connect(shortcutDialog, &QVShortcutDialog::newShortcut, [this](QVShortcutDialog::SShortcut shortcut, int index){
+        transientShortcuts.replace(index, shortcut);
+        updateShortcuts();
+    });
+}
+
