@@ -566,7 +566,7 @@ void MainWindow::on_actionOpen_Containing_Folder_triggered()
     #elif defined(Q_OS_MACX)
     QProcess::execute("open", QStringList() << "-R" << selectedFileInfo.absoluteFilePath());
     #else
-    QProcess::execute("xdg-open", QStringList() << selectedFileInfo.absolutePath());
+    QDesktopServices::openUrl(selectedFileInfo.absolutePath());
     #endif
 }
 
