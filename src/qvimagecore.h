@@ -107,6 +107,8 @@ private:
     QStringList lastFilesPreloaded;
 
     QTimer *fileChangeRateTimer;
+
+    int largestDimension;
 };
 
 #endif // QVIMAGECORE_H
