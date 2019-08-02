@@ -43,7 +43,7 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     connect(&loadedMovie, &QMovie::updated, this, &QVImageCore::animatedFrameChanged);
 
     connect(&loadFutureWatcher, &QFutureWatcher<QVImageAndFileInfo>::finished, this, [this](){
-        postRead(loadFutureWatcher.result().readImage);
+        postRead(loadFutureWatcher.result());
     });
 
     fileChangeRateTimer = new QTimer(this);
@@ -104,6 +104,7 @@ QVImageCore::QVImageAndFileInfo QVImageCore::readFile(const QString &fileName)
     newImageReader.setAutoTransform(true);
 
     newImageReader.setFileName(fileName);
+
     QImage readImage = newImageReader.read();
 
     combinedInfo.readFileInfo = QFileInfo(fileName);
@@ -118,12 +119,13 @@ QVImageCore::QVImageAndFileInfo QVImageCore::readFile(const QString &fileName)
     return combinedInfo;
 }
 
-void QVImageCore::postRead(const QImage &loadedImage)
+void QVImageCore::postRead(const QVImageAndFileInfo &readImageAndFileInfo)
 {
-    if (loadedImage.isNull() || justLoadedFromCache)
+    if (readImageAndFileInfo.readImage.isNull() || justLoadedFromCache)
         return;
 
-    loadedPixmap = QPixmap::fromImage(matchCurrentRotation(loadedImage));
+    addToCache(readImageAndFileInfo);
+    loadedPixmap = QPixmap::fromImage(matchCurrentRotation(readImageAndFileInfo.readImage));
     postLoad();
 }
 
@@ -232,15 +234,15 @@ void QVImageCore::requestCachingFile(const QString &filePath)
     cacheFutureWatcher->setFuture(QtConcurrent::run(this, &QVImageCore::readFile, filePath));
 }
 
-void QVImageCore::addToCache(const QVImageAndFileInfo &loadedImageAndFileInfo)
+void QVImageCore::addToCache(const QVImageAndFileInfo &readImageAndFileInfo)
 {
-    if (loadedImageAndFileInfo.readImage.isNull())
+    if (readImageAndFileInfo.readImage.isNull())
         return;
 
-    QPixmapCache::insert(loadedImageAndFileInfo.readFileInfo.absoluteFilePath(), QPixmap::fromImage(loadedImageAndFileInfo.readImage));
+    QPixmapCache::insert(readImageAndFileInfo.readFileInfo.absoluteFilePath(), QPixmap::fromImage(readImageAndFileInfo.readImage));
 
-    auto *size = new qint64(loadedImageAndFileInfo.readFileInfo.size());
-    previouslyRecordedFileSizes.insert(loadedImageAndFileInfo.readFileInfo.absoluteFilePath(), size);
+    auto *size = new qint64(readImageAndFileInfo.readFileInfo.size());
+    previouslyRecordedFileSizes.insert(readImageAndFileInfo.readFileInfo.absoluteFilePath(), size);
 }
 
 void QVImageCore::jumpToNextFrame()

@@ -44,12 +44,12 @@ public:
 
     void loadFile(const QString &fileName);
     QVImageAndFileInfo readFile(const QString &fileName);
-    void postRead(const QImage &loadedImage);
+    void postRead(const QVImageAndFileInfo &readImageAndFileInfo);
     void postLoad();
     void updateFolderInfo();
     void requestCaching();
     void requestCachingFile(const QString &filePath);
-    void addToCache(const QVImageAndFileInfo &loadedImageAndFileInfo);
+    void addToCache(const QVImageAndFileInfo &readImageAndFileInfo);
 
     void loadSettings();
 
