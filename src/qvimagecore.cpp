@@ -6,6 +6,9 @@
 #include <QCollator>
 #include <QtConcurrent/QtConcurrentRun>
 #include <QPixmapCache>
+#include <QIcon>
+#include <QGuiApplication>
+#include <QScreen>
 
 QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
 {
@@ -49,6 +52,25 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     fileChangeRateTimer = new QTimer(this);
     fileChangeRateTimer->setSingleShot(true);
     fileChangeRateTimer->setInterval(60);
+
+    largestDimension = 0;
+    foreach (auto screen, QGuiApplication::screens())
+    {
+        int largerDimension;
+        if (screen->size().height() > screen->size().width())
+        {
+            largerDimension = screen->size().height();
+        }
+        else
+        {
+            largerDimension = screen->size().width();
+        }
+
+        if (largerDimension > largestDimension)
+        {
+            largestDimension = largerDimension;
+        }
+    }
 }
 
 void QVImageCore::loadFile(const QString &fileName)
@@ -105,7 +127,18 @@ QVImageCore::QVImageAndFileInfo QVImageCore::readFile(const QString &fileName)
 
     newImageReader.setFileName(fileName);
 
-    QImage readImage = newImageReader.read();
+    QImage readImage;
+    qDebug() << newImageReader.format();
+    if (newImageReader.format() == "svg" || newImageReader.format() == "svgz")
+    {
+        QIcon icon;
+        icon.addFile(fileName);
+        readImage = icon.pixmap(largestDimension).toImage();
+
+    }
+    else {
+        readImage = newImageReader.read();
+    }
 
     combinedInfo.readFileInfo = QFileInfo(fileName);
     if (readImage.isNull())
