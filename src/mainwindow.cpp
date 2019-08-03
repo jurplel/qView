@@ -729,8 +729,10 @@ void MainWindow::on_actionSave_Frame_As_triggered()
     if (!ui->graphicsView->getCurrentFileDetails().isMovieLoaded)
         return;
 
-    ui->graphicsView->setPaused(true);
-    ui->actionPause->setText(tr("Resume"));
+    if (ui->graphicsView->getLoadedMovie().state() == QMovie::Running)
+    {
+        ui->actionPause->trigger();
+    }
     QFileDialog *saveDialog = new QFileDialog(this, tr("Save Frame As..."), "", tr("Supported Files (*.bmp *.cur *.icns *.ico *.jp2 *.jpeg *.jpe *.jpg *.pbm *.pgm *.png *.ppm *.tif *.tiff *.wbmp *.webp *.xbm *.xpm);;All Files (*)"));
     saveDialog->setDirectory(settings.value("lastFileDialogDir", QDir::homePath()).toString());
     saveDialog->selectFile(ui->graphicsView->getCurrentFileDetails().fileInfo.baseName() + "-" + QString::number(ui->graphicsView->getLoadedMovie().currentFrameNumber()) + ".png");
@@ -739,9 +741,9 @@ void MainWindow::on_actionSave_Frame_As_triggered()
     saveDialog->open();
     connect(saveDialog, &QFileDialog::fileSelected, this, [=](QString fileName){
         ui->graphicsView->originalSize();
-        for(int i=0; i<=ui->graphicsView->getLoadedMovie().frameCount(); i++)
-            ui->graphicsView->jumpToNextFrame();
-        on_actionNext_Frame_triggered();
+        for(int i=0; i < ui->graphicsView->getLoadedMovie().frameCount(); i++)
+            ui->actionNext_Frame->trigger();
+
         ui->graphicsView->getLoadedMovie().currentPixmap().save(fileName, nullptr, 100);
         ui->graphicsView->resetScale();
     });
