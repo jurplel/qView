@@ -24,6 +24,10 @@
 #include <QShortcut>
 #include <QScreen>
 #include <QCursor>
+#include <QInputDialog>
+#include <QProgressDialog>
+#include <QFutureWatcher>
+#include <QtConcurrent/QtConcurrentRun>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -72,6 +76,7 @@ MainWindow::MainWindow(QWidget *parent) :
     contextMenu = new QMenu(this);
 
     contextMenu->addAction(ui->actionOpen);
+    contextMenu->addAction(ui->actionOpen_URL);
 
     QMenu *files = new QMenu(tr("Open Recent"), this);
 
@@ -153,6 +158,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //fallback icons
     ui->actionWelcome->setIcon(QIcon::fromTheme("help-faq", QIcon::fromTheme("help-about")));
     ui->actionOptions->setIcon(QIcon::fromTheme("configure", QIcon::fromTheme("preferences-other")));
+    ui->actionOpen_URL->setIcon(QIcon::fromTheme("document-open-remote", QIcon::fromTheme("folder-remote")));
 
     //Add recent items to menubar
     ui->menuFile->insertMenu(ui->actionOpen_Containing_Folder, files);
@@ -755,4 +761,82 @@ void MainWindow::on_actionFirst_File_triggered()
 void MainWindow::on_actionLast_File_triggered()
 {
     ui->graphicsView->goToFile(QVGraphicsView::goToFileMode::last);
+}
+
+void MainWindow::on_actionOpen_URL_triggered()
+{
+    auto inputDialog = new QInputDialog(this);
+    inputDialog->setWindowTitle(ui->actionOpen_URL->text());
+    inputDialog->setLabelText(tr("URL of a supported image file:"));
+    inputDialog->resize(350, inputDialog->height());
+    connect(inputDialog, &QInputDialog::finished, [inputDialog, this](int result) {
+        if (!result)
+            return;
+
+        auto url = QUrl(inputDialog->textValue());
+        inputDialog->deleteLater();
+
+        auto *networkManager = new QNetworkAccessManager(this);
+
+        if (!url.isValid()) {
+            QMessageBox::critical(this, tr("Error"), tr("Error: URL is invalid"));
+            return;
+        }
+
+        auto request = QNetworkRequest(url);
+        auto *reply = networkManager->get(request);
+        auto *progressDialog = new QProgressDialog(tr("Downloading image..."), tr("Cancel"), 0, 100);
+        progressDialog->setAutoClose(false);
+        progressDialog->setAutoReset(false);
+        progressDialog->setWindowTitle(ui->actionOpen_URL->text());
+        progressDialog->open();
+
+        connect(reply, &QNetworkReply::downloadProgress, [progressDialog](qreal bytesReceived, qreal bytesTotal){
+            auto percent = (bytesReceived/bytesTotal)*100;
+            progressDialog->setValue(qRound(percent));
+        });
+
+        connect(reply, &QNetworkReply::finished, [networkManager, progressDialog, reply, this]{
+            if (reply->error())
+            {
+                progressDialog->close();
+                QMessageBox::critical(this, tr("Error"), tr("Error ") + QString::number(reply->error()) + ": " + reply->errorString());
+
+                networkManager->deleteLater();
+                progressDialog->deleteLater();
+                return;
+            }
+
+
+            progressDialog->setMaximum(0);
+
+            auto *tempFile = new QTemporaryFile(this);
+
+            auto *saveFutureWatcher = new QFutureWatcher<bool>();
+            connect(saveFutureWatcher, &QFutureWatcher<bool>::finished, this, [networkManager, progressDialog, tempFile, saveFutureWatcher, this](){
+                progressDialog->close();
+                if(saveFutureWatcher->result())
+                {
+                    if(tempFile->open())
+                    {
+                        openFile(tempFile->fileName());
+                    }
+                }
+                else
+                {
+                     QMessageBox::critical(this, tr("Error"), tr("Error: Invalid image"));
+                     tempFile->deleteLater();
+                }
+                progressDialog->deleteLater();
+                networkManager->deleteLater();
+                saveFutureWatcher->deleteLater();
+            });
+
+            saveFutureWatcher->setFuture(QtConcurrent::run([reply, tempFile]{
+                return QImage::fromData(reply->readAll()).save(tempFile, "png");
+            }));
+
+        });
+    });
+    inputDialog->open();
 }

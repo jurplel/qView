@@ -116,6 +116,8 @@ private slots:
 
     void on_actionLast_File_triggered();
 
+    void on_actionOpen_URL_triggered();
+
 private:
     Ui::MainWindow *ui;
 
