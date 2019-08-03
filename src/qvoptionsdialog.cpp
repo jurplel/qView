@@ -21,6 +21,7 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
 
     // Set default shortcuts
     transientShortcuts.append({"Open", "open", keyBindingsToStringList(QKeySequence::Open), {}});
+    transientShortcuts.append({"Open URL", "openurl", QStringList(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_O).toString()), {}});
     transientShortcuts.append({"First File", "firstfile", QStringList(QKeySequence(Qt::Key_Home).toString()), {}});
     transientShortcuts.append({"Previous File", "previousfile", QStringList(QKeySequence(Qt::Key_Left).toString()), {}});
     transientShortcuts.append({"Next File", "nextfile", QStringList(QKeySequence(Qt::Key_Right).toString()), {}});
