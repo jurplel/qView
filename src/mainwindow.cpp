@@ -298,10 +298,8 @@ void MainWindow::loadShortcuts() {
     QSettings settings;
     settings.beginGroup("shortcuts");
 
-    typedef QVOptionsDialog qvo;
-
     // To retrieve default bindings, we hackily init an options dialog and use it's constructor values
-    qvo invisibleOptionsDialog;
+    QVOptionsDialog invisibleOptionsDialog;
     auto shortcutData = invisibleOptionsDialog.getTransientShortcuts();
 
     // Iterate through all default shortcuts to get saved shortcuts from settings
@@ -310,11 +308,12 @@ void MainWindow::loadShortcuts() {
     while (iter.hasNext())
     {
         auto value = iter.next();
-        shortcuts.insert(value.name, qvo::stringListToKeySequenceList(settings.value(value.name, value.defaultShortcuts).value<QStringList>()));
+        shortcuts.insert(value.name, QVOptionsDialog::stringListToKeySequenceList(settings.value(value.name, value.defaultShortcuts).value<QStringList>()));
     }
 
     // Set shortcuts by name from above list
     ui->actionOpen->setShortcuts(shortcuts.value("open"));
+    ui->actionOpen_URL->setShortcuts(shortcuts.value("openurl"));
     ui->actionFirst_File->setShortcuts(shortcuts.value("firstfile"));
     ui->actionPrevious_File->setShortcuts(shortcuts.value("previousfile"));
     ui->actionNext_File->setShortcuts(shortcuts.value("nextfile"));
