@@ -87,6 +87,7 @@
     </property>
     <addaction name="actionNew_Window"/>
     <addaction name="actionOpen"/>
+    <addaction name="actionOpen_URL"/>
     <addaction name="actionOpen_Containing_Folder"/>
     <addaction name="actionProperties"/>
     <addaction name="separator"/>
@@ -473,6 +474,14 @@
    </property>
    <property name="text">
     <string>&amp;Last File</string>
+   </property>
+  </action>
+  <action name="actionOpen_URL">
+   <property name="icon">
+    <iconset theme="document-open-remote"/>
+   </property>
+   <property name="text">
+    <string>Open URL...</string>
    </property>
   </action>
  </widget>

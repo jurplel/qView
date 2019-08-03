@@ -128,7 +128,6 @@ QVImageCore::QVImageAndFileInfo QVImageCore::readFile(const QString &fileName)
     newImageReader.setFileName(fileName);
 
     QImage readImage;
-    qDebug() << newImageReader.format();
     if (newImageReader.format() == "svg" || newImageReader.format() == "svgz")
     {
         QIcon icon;

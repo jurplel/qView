@@ -681,6 +681,7 @@ void QVGraphicsView::error(const QString &errorString, const QString &fileName)
         if (!errorString.isEmpty())
         {
             QMessageBox::critical(this, tr("Error"), tr("Error ") + errorString);
+            // If file cannot be found, remove it from recents
             if (errorString.at(0) == "1")
             {
                 recentsSaveTimer->start();
