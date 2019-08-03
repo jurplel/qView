@@ -155,7 +155,7 @@
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>&amp;Open...</string>
+    <string>Open...</string>
    </property>
    <property name="visible">
     <bool>true</bool>
@@ -167,7 +167,7 @@
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>&amp;About</string>
+    <string>About</string>
    </property>
   </action>
   <action name="actionCopy">
@@ -179,7 +179,7 @@
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>&amp;Copy</string>
+    <string>Copy</string>
    </property>
   </action>
   <action name="actionPaste">
@@ -188,7 +188,7 @@
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>&amp;Paste</string>
+    <string>Paste</string>
    </property>
   </action>
   <action name="actionOptions">
@@ -197,7 +197,7 @@
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>&amp;Options</string>
+    <string>Options</string>
    </property>
   </action>
   <action name="actionPrevious_File">
@@ -209,7 +209,7 @@
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>&amp;Previous File</string>
+    <string>Previous File</string>
    </property>
   </action>
   <action name="actionNext_File">
@@ -221,7 +221,7 @@
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>&amp;Next File</string>
+    <string>Next File</string>
    </property>
   </action>
   <action name="actionOpen_Containing_Folder">
@@ -233,7 +233,7 @@
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>Open &amp;Containing Folder</string>
+    <string>Open Containing Folder</string>
    </property>
   </action>
   <action name="actionWelcome">
@@ -242,7 +242,7 @@
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>&amp;Welcome</string>
+    <string>Welcome</string>
    </property>
   </action>
   <action name="actionRotate_Right">
@@ -254,7 +254,7 @@
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>Rotat&amp;e Right</string>
+    <string>Rotate Right</string>
    </property>
   </action>
   <action name="actionRotate_Left">
@@ -266,7 +266,7 @@
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>Rotate &amp;Left</string>
+    <string>Rotate Left</string>
    </property>
   </action>
   <action name="actionMirror">
@@ -278,7 +278,7 @@
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>&amp;Mirror</string>
+    <string>Mirror</string>
    </property>
   </action>
   <action name="actionFlip">
@@ -290,7 +290,7 @@
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>&amp;Flip</string>
+    <string>Flip</string>
    </property>
   </action>
   <action name="actionZoom_In">
@@ -302,7 +302,7 @@
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>&amp;Zoom In</string>
+    <string>Zoom In</string>
    </property>
   </action>
   <action name="actionZoom_Out">
@@ -314,7 +314,7 @@
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>Zoom &amp;Out</string>
+    <string>Zoom Out</string>
    </property>
   </action>
   <action name="actionReset_Zoom">
@@ -326,7 +326,7 @@
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>&amp;Reset Zoom</string>
+    <string>Reset Zoom</string>
    </property>
   </action>
   <action name="actionProperties">
@@ -338,7 +338,7 @@
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>&amp;Show File Info</string>
+    <string>Show File Info</string>
    </property>
   </action>
   <action name="actionFull_Screen">
@@ -347,7 +347,7 @@
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>Full &amp;Screen</string>
+    <string>Full Screen</string>
    </property>
   </action>
   <action name="actionOriginal_Size">
@@ -359,7 +359,7 @@
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>Or&amp;iginal Size</string>
+    <string>Original Size</string>
    </property>
   </action>
   <action name="actionNew_Window">
@@ -368,7 +368,7 @@
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>New &amp;Window</string>
+    <string>New Window</string>
    </property>
    <property name="visible">
     <bool>false</bool>
@@ -383,7 +383,7 @@
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>Start Sli&amp;deshow</string>
+    <string>Start Slideshow</string>
    </property>
    <property name="toolTip">
     <string>Slideshow</string>
@@ -395,7 +395,7 @@
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>&amp;Pause</string>
+    <string>Pause</string>
    </property>
   </action>
   <action name="actionNext_Frame">
@@ -404,7 +404,7 @@
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>&amp;Next Frame</string>
+    <string>Next Frame</string>
    </property>
   </action>
   <action name="actionIncrease_Speed">
@@ -449,7 +449,7 @@
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>&amp;Quit</string>
+    <string>Quit</string>
    </property>
   </action>
   <action name="actionFirst_File">
@@ -461,7 +461,7 @@
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>&amp;First File</string>
+    <string>First File</string>
    </property>
   </action>
   <action name="actionLast_File">
@@ -473,7 +473,7 @@
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>&amp;Last File</string>
+    <string>Last File</string>
    </property>
   </action>
   <action name="actionOpen_URL">
