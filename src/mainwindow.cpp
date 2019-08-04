@@ -776,10 +776,15 @@ void MainWindow::on_actionOpen_URL_triggered()
         progressDialog->setWindowTitle(ui->actionOpen_URL->text());
         progressDialog->open();
 
+        connect(progressDialog, &QProgressDialog::canceled, [reply]{
+            reply->abort();
+        });
+
         connect(reply, &QNetworkReply::downloadProgress, [progressDialog](qreal bytesReceived, qreal bytesTotal){
             auto percent = (bytesReceived/bytesTotal)*100;
             progressDialog->setValue(qRound(percent));
         });
+
 
         connect(reply, &QNetworkReply::finished, [networkManager, progressDialog, reply, this]{
             if (reply->error())
