@@ -34,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    setAttribute(Qt::WA_DeleteOnClose);
 
     //initialize variables
     windowResizeMode = 0;
@@ -180,12 +181,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->menuView->removeAction(ui->actionFull_Screen);
     ui->actionNew_Window->setVisible(true);
     ui->actionOpen_Containing_Folder->setText(tr("Show in Finder"));
-
-    //macOS dock menu
-    dockMenu = new QMenu(this);
-    dockMenu->setAsDockMenu();
-    dockMenu->addAction(ui->actionNew_Window);
-    dockMenu->addAction(ui->actionOpen);
     #elif defined(Q_OS_WIN)
     ui->actionOpen_Containing_Folder->setText(tr("Show in Explorer"));
     #endif
@@ -348,9 +343,8 @@ void MainWindow::updateRecentMenu()
     //get recent files from config file
     QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
 
-    //on macOS, we have to clear the menu, re-add items, and add the old items again because it displays hidden qactions as grayed out
     #ifdef Q_OS_MACX
-    dockMenu->clear();
+        qobject_cast<QVApplication*>(qApp)->updateDockRecents();
     #endif
     for (int i = 0; i <= 9; i++)
     {
@@ -359,10 +353,6 @@ void MainWindow::updateRecentMenu()
             recentItems[i]->setVisible(true);
             recentItems[i]->setText(recentFiles[i].toList().first().toString());
 
-            //re-add items after clearing dock menu
-            #ifdef Q_OS_MACX
-            dockMenu->addAction(recentItems[i]);
-            #endif
             //set menu icons for linux users
             QMimeDatabase mimedb;
             QMimeType type = mimedb.mimeTypeForFile(recentFiles[i].toList().last().toString());
@@ -377,12 +367,6 @@ void MainWindow::updateRecentMenu()
             recentItems[i]->setText(tr("Empty"));
         }
     }
-    //re-add original items to dock menu after adding recents
-    #ifdef Q_OS_MACX
-    dockMenu->addAction(ui->actionNew_Window);
-    dockMenu->addAction(ui->actionOpen);
-    dockMenu->insertSeparator(ui->actionNew_Window);
-    #endif
 }
 
 void MainWindow::openRecent(int i)

@@ -26,6 +26,8 @@ public:
 
     QScreen *screenAt(const QPoint &point);
 
+    void pickFile();
+
 public slots:
     void openFile(const QString &fileName);
 
@@ -121,15 +123,9 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-    void pickFile();
-
     void loadShortcuts();
 
     QMenu *contextMenu;
-
-    #ifdef Q_OS_MACX
-    QMenu *dockMenu;
-    #endif
 
     QTimer *slideshowTimer;
     QList<QAction*> recentItems;
