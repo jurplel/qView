@@ -1,5 +1,8 @@
 #include "qvapplication.h"
 #include <QFileOpenEvent>
+#include <QMenu>
+#include <QSettings>
+#include <QDebug>
 
 QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
 {
@@ -7,6 +10,14 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     #if defined(Q_OS_MACX) || defined(Q_OS_WIN)
     setAttribute(Qt::AA_DontShowIconsInMenus);
     #endif
+
+    dockMenu = new QMenu();
+    dockMenu->setAsDockMenu();
+    updateDockRecents();
+}
+
+QVApplication::~QVApplication() {
+    dockMenu->deleteLater();
 }
 
 bool QVApplication::event(QEvent *event)
@@ -18,14 +29,24 @@ bool QVApplication::event(QEvent *event)
     return QApplication::event(event);
 }
 
-void QVApplication::openFile(const QString &file)
+void QVApplication::pickFile()
 {
     MainWindow *w = getMainWindow();
 
     if (!w)
-        w = newWindow();
+        return;
 
-    w->setJustLaunchedWithImage(true);
+    w->pickFile();
+}
+
+void QVApplication::openFile(const QString &file, bool resize)
+{
+    MainWindow *w = getMainWindow();
+
+    if (!w)
+        return;
+
+    w->setJustLaunchedWithImage(resize);
     w->openFile(file);
 }
 
@@ -33,15 +54,56 @@ MainWindow *QVApplication::newWindow()
 {
     auto *w = new MainWindow();
     w->show();
-    w->setAttribute(Qt::WA_DeleteOnClose);
     return w;
 }
 
 MainWindow *QVApplication::getMainWindow()
 {
-    foreach (QWidget *w, QApplication::topLevelWidgets())
-        if (auto mainWin = qobject_cast<MainWindow*>(w))
+    MainWindow *w = nullptr;
+    foreach (QWidget *widget, QApplication::topLevelWidgets())
+    {
+        if (auto *mainWin = qobject_cast<MainWindow*>(widget))
+        {
             if (!mainWin->getIsPixmapLoaded())
-                return mainWin;
-    return nullptr;
+            {
+                w = mainWin;
+            }
+        }
+    }
+
+    if (!w)
+        w = newWindow();
+
+    return w;
+}
+
+void QVApplication::updateDockRecents()
+{
+    QSettings settings;
+    settings.beginGroup("recents");
+    QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
+
+    dockMenu->clear();
+    for (int i = 0; i <= 9; i++)
+    {
+        if (i < recentFiles.size())
+        {
+            auto *action = new QAction(recentFiles[i].toList().first().toString());
+            connect(action, &QAction::triggered, [recentFiles, i]{
+               openFile(recentFiles[i].toList().last().toString(), false);
+            });
+            dockMenu->addAction(action);
+        }
+    }
+    auto *newWindowAction = new QAction(tr("New Window"));
+    connect(newWindowAction, &QAction::triggered, []{
+        newWindow();
+    });
+    auto *openAction = new QAction(tr("Open..."));
+    connect(openAction, &QAction::triggered, []{
+        pickFile();
+    });
+    dockMenu->addSeparator();
+    dockMenu->addAction(newWindowAction);
+    dockMenu->addAction(openAction);
 }
