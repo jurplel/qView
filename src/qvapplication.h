@@ -3,6 +3,7 @@
 
 #include <QApplication>
 #include "mainwindow.h"
+#include <QCache>
 
 class QVApplication : public QApplication
 {
@@ -24,8 +25,14 @@ public:
 
     void updateDockRecents();
 
+    qint64 getPreviouslyRecordedFileSize(const QString &fileName);
+
+    void setPreviouslyRecordedFileSize(const QString &fileName, long long *fileSize);
+
 private:
     QMenu *dockMenu;
+
+    QCache<QString, qint64> previouslyRecordedFileSizes;
 };
 
 #endif // QVAPPLICATION_H

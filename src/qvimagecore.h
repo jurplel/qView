@@ -99,7 +99,6 @@ private:
     QFutureWatcher<QVImageAndFileInfo> loadFutureWatcher;
 
     bool justLoadedFromCache;
-    QCache<QString, qint64> previouslyRecordedFileSizes;
 
     bool isLoopFoldersEnabled;
 

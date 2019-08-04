@@ -2,7 +2,6 @@
 #include <QFileOpenEvent>
 #include <QMenu>
 #include <QSettings>
-#include <QDebug>
 
 QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
 {
@@ -106,4 +105,20 @@ void QVApplication::updateDockRecents()
     dockMenu->addSeparator();
     dockMenu->addAction(newWindowAction);
     dockMenu->addAction(openAction);
+}
+
+qint64 QVApplication::getPreviouslyRecordedFileSize(const QString &fileName)
+{
+    auto previouslyRecordedFileSizePtr = previouslyRecordedFileSizes.object(fileName);
+    qint64 previouslyRecordedFileSize = 0;
+
+    if (previouslyRecordedFileSizePtr)
+        previouslyRecordedFileSize = *previouslyRecordedFileSizePtr;
+
+    return previouslyRecordedFileSize;
+}
+
+void QVApplication::setPreviouslyRecordedFileSize(const QString &fileName, long long *fileSize)
+{
+    previouslyRecordedFileSizes.insert(fileName, fileSize);
 }
