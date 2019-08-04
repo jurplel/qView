@@ -91,6 +91,12 @@ private slots:
 
     void on_shortcutsTable_cellDoubleClicked(int row, int column);
 
+    void on_sortComboBox_currentIndexChanged(int index);
+
+    void on_ascendingRadioButton0_clicked();
+
+    void on_ascendingRadioButton1_clicked();
+
 protected:
     virtual void showEvent(QShowEvent *event) override;
 
@@ -121,6 +127,8 @@ private:
         int maxWindowResizedPercentage;
         bool loopFoldersEnabled;
         int preloadingMode;
+        int sortMode;
+        bool sortAscending;
     };
 
     STransientSettings transientSettings;
