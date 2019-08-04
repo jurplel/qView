@@ -1,4 +1,5 @@
 #include "qvimagecore.h"
+#include "qvapplication.h"
 #include <QMessageBox>
 #include <QDir>
 #include <QUrl>
@@ -96,12 +97,7 @@ void QVImageCore::loadFile(const QString &fileName)
     imageReader.setFileName(currentFileDetails.fileInfo.absoluteFilePath());
     currentFileDetails.imageSize = imageReader.size();
 
-
-    auto previouslyRecordedFileSizePtr = previouslyRecordedFileSizes.object(currentFileDetails.fileInfo.absoluteFilePath());
-    long long previouslyRecordedFileSize = 0;
-
-    if (previouslyRecordedFileSize)
-        previouslyRecordedFileSize = *previouslyRecordedFileSizePtr;
+    auto previouslyRecordedFileSize = qobject_cast<QVApplication*>(qApp)->getPreviouslyRecordedFileSize(currentFileDetails.fileInfo.absoluteFilePath());
 
     auto *cachedPixmap = new QPixmap();
 
@@ -282,7 +278,7 @@ void QVImageCore::addToCache(const QVImageAndFileInfo &readImageAndFileInfo)
     QPixmapCache::insert(readImageAndFileInfo.readFileInfo.absoluteFilePath(), QPixmap::fromImage(readImageAndFileInfo.readImage));
 
     auto *size = new qint64(readImageAndFileInfo.readFileInfo.size());
-    previouslyRecordedFileSizes.insert(readImageAndFileInfo.readFileInfo.absoluteFilePath(), size);
+    qobject_cast<QVApplication*>(qApp)->setPreviouslyRecordedFileSize(readImageAndFileInfo.readFileInfo.absoluteFilePath(), size);
 }
 
 void QVImageCore::jumpToNextFrame()
