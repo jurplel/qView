@@ -199,14 +199,37 @@ void QVImageCore::updateFolderInfo()
 {
     QCollator collator;
     collator.setNumericMode(true);
-    currentFileDetails.folder = QDir(currentFileDetails.fileInfo.path()).entryInfoList(filterList, QDir::Files, QDir::NoSort);
-    std::sort(
-        currentFileDetails.folder.begin(),
-        currentFileDetails.folder.end(),
-        [&collator](const QFileInfo &file1, const QFileInfo &file2)
-        {
-            return collator.compare(file1.fileName(), file2.fileName()) < 0;
+    QDir::SortFlags sortFlags = QDir::NoSort;
+
+    switch (sortMode) {
+    case 1: {
+        sortFlags = QDir::Time;
+        break;
+    }
+    case 2: {
+        sortFlags = QDir::Size;
+        break;
+    }
+    case 3: {
+        sortFlags = QDir::Type;
+        break;
+    }
+    }
+
+    if (!sortAscending)
+        sortFlags.setFlag(QDir::Reversed, true);
+
+    currentFileDetails.folder = QDir(currentFileDetails.fileInfo.path()).entryInfoList(filterList, QDir::Files, sortFlags);
+
+    if (sortMode == 0) {
+        std::sort(currentFileDetails.folder.begin(), currentFileDetails.folder.end(), [&collator, this](const QFileInfo &file1, const QFileInfo &file2) {
+            if (sortAscending)
+                return collator.compare(file1.fileName(), file2.fileName()) < 0;
+            else
+                return collator.compare(file1.fileName(), file2.fileName()) > 0;
         });
+    }
+
     currentFileDetails.folderIndex = currentFileDetails.folder.indexOf(currentFileDetails.fileInfo);
 }
 
@@ -411,6 +434,16 @@ void QVImageCore::loadSettings()
         break;
     }
     }
+
+    //sort mode
+    sortMode = settings.value("sortmode", 0).toInt();
+
+    //sort ascending
+    sortAscending = settings.value("sortascending", true).toBool();
+
+    //update folder info to re-sort and send fileinfoupdated to update titlebar
+    updateFolderInfo();
+    emit fileInfoUpdated();
 }
 
 void QVImageCore::setDevicePixelRatio(qreal scaleFactor)

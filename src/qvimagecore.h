@@ -101,8 +101,11 @@ private:
     bool justLoadedFromCache;
 
     bool isLoopFoldersEnabled;
-
     int preloadingMode;
+    int sortMode;
+    bool sortAscending;
+
+
     QStringList lastFilesPreloaded;
 
     QTimer *fileChangeRateTimer;

@@ -86,6 +86,8 @@ void QVOptionsDialog::saveSettings()
     settings.setValue("maxwindowresizedpercentage", transientSettings.maxWindowResizedPercentage);
     settings.setValue("loopfoldersenabled", transientSettings.loopFoldersEnabled);
     settings.setValue("preloadingmode", transientSettings.preloadingMode);
+    settings.setValue("sortmode", transientSettings.sortMode);
+    settings.setValue("sortascending", transientSettings.sortAscending);
 
     // Shortcuts are saved here too for now
     settings.endGroup();
@@ -224,6 +226,17 @@ void QVOptionsDialog::loadSettings(const bool defaults)
     //preloading mode
     transientSettings.preloadingMode = settings.value("preloadingmode", 1).toInt();
     ui->preloadingComboBox->setCurrentIndex(transientSettings.preloadingMode);
+
+    //sort mode
+    transientSettings.sortMode = settings.value("sortmode", 0).toInt();
+    ui->sortComboBox->setCurrentIndex(transientSettings.sortMode);
+
+    //ascending sort
+    transientSettings.sortAscending = settings.value("sortascending", true).toBool();
+    if (transientSettings.sortAscending)
+        ui->ascendingRadioButton0->setChecked(true);
+    else
+        ui->ascendingRadioButton1->setChecked(true);
 }
 
 void QVOptionsDialog::loadShortcuts(const bool defaults)
@@ -476,3 +489,17 @@ void QVOptionsDialog::on_shortcutsTable_cellDoubleClicked(int row, int column)
     });
 }
 
+void QVOptionsDialog::on_sortComboBox_currentIndexChanged(int index)
+{
+    transientSettings.sortMode = index;
+}
+
+void QVOptionsDialog::on_ascendingRadioButton0_clicked()
+{
+    transientSettings.sortAscending = true;
+}
+
+void QVOptionsDialog::on_ascendingRadioButton1_clicked()
+{
+    transientSettings.sortAscending = false;
+}
