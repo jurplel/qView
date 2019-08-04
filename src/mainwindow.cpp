@@ -513,9 +513,12 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::on_actionCopy_triggered()
 {
-    auto mimeData = ui->graphicsView->getMimeData();
+    auto *mimeData = ui->graphicsView->getMimeData();
     if (!mimeData->hasImage() || !mimeData->hasUrls())
+    {
+        mimeData->deleteLater();
         return;
+    }
 
     QApplication::clipboard()->setMimeData(mimeData);
 }
