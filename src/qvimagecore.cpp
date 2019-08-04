@@ -96,12 +96,20 @@ void QVImageCore::loadFile(const QString &fileName)
     imageReader.setFileName(currentFileDetails.fileInfo.absoluteFilePath());
     currentFileDetails.imageSize = imageReader.size();
 
-    //check if cached already before loading the long way
+
+    auto previouslyRecordedFileSizePtr = previouslyRecordedFileSizes.object(currentFileDetails.fileInfo.absoluteFilePath());
+    long long previouslyRecordedFileSize = 0;
+
+    if (previouslyRecordedFileSize)
+        previouslyRecordedFileSize = *previouslyRecordedFileSizePtr;
+
     auto *cachedPixmap = new QPixmap();
+
+    //check if cached already before loading the long way
     if (QPixmapCache::find(currentFileDetails.fileInfo.absoluteFilePath(), cachedPixmap) &&
         !cachedPixmap->isNull() &&
         cachedPixmap->size() == currentFileDetails.imageSize &&
-        *previouslyRecordedFileSizes.object(currentFileDetails.fileInfo.absoluteFilePath()) == currentFileDetails.fileInfo.size())
+        previouslyRecordedFileSize == currentFileDetails.fileInfo.size())
     {
         loadedPixmap = matchCurrentRotation(*cachedPixmap);
         justLoadedFromCache = true;
