@@ -523,22 +523,6 @@
          </property>
         </widget>
        </item>
-       <item row="8" column="1">
-        <widget class="QSpinBox" name="slideshowTimerSpinBox">
-         <property name="suffix">
-          <string> sec</string>
-         </property>
-         <property name="minimum">
-          <number>1</number>
-         </property>
-         <property name="maximum">
-          <number>999</number>
-         </property>
-         <property name="value">
-          <number>5</number>
-         </property>
-        </widget>
-       </item>
        <item row="1" column="1">
         <widget class="QRadioButton" name="ascendingRadioButton0">
          <property name="text">
@@ -553,6 +537,25 @@
         <widget class="QRadioButton" name="ascendingRadioButton1">
          <property name="text">
           <string>Descending</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="1">
+        <widget class="QDoubleSpinBox" name="slideshowTimerSpinBox">
+         <property name="suffix">
+          <string> sec</string>
+         </property>
+         <property name="decimals">
+          <number>1</number>
+         </property>
+         <property name="minimum">
+          <double>0.100000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>999.899999999999977</double>
+         </property>
+         <property name="singleStep">
+          <double>0.100000000000000</double>
          </property>
         </widget>
        </item>

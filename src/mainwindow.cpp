@@ -274,7 +274,7 @@ void MainWindow::loadSettings()
         ui->menuBar->hide();
 
     //slideshowtimer
-    slideshowTimer->setInterval(settings.value("slideshowtimer", 5).toInt()*1000);
+    slideshowTimer->setInterval(static_cast<int>(settings.value("slideshowtimer", 5).toDouble()*1000));
 
     //window resize mode
     windowResizeMode = settings.value("windowresizemode", 1).toInt();

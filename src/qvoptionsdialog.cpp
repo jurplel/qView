@@ -178,7 +178,7 @@ void QVOptionsDialog::loadSettings(const bool defaults)
     ui->cropModeComboBox->setCurrentIndex(transientSettings.cropMode);
 
     //slideshowtimer
-    transientSettings.slideshowTimer = settings.value("slideshowtimer", 5).toInt();
+    transientSettings.slideshowTimer = settings.value("slideshowtimer", 5).toDouble();
     ui->slideshowTimerSpinBox->setValue(transientSettings.slideshowTimer);
 
     //slideshowdirection
@@ -375,7 +375,7 @@ void QVOptionsDialog::on_cropModeComboBox_currentIndexChanged(int index)
     transientSettings.cropMode = index;
 }
 
-void QVOptionsDialog::on_slideshowTimerSpinBox_valueChanged(int arg1)
+void QVOptionsDialog::on_slideshowTimerSpinBox_valueChanged(double arg1)
 {
     transientSettings.slideshowTimer = arg1;
 }

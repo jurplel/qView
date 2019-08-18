@@ -63,7 +63,7 @@ private slots:
 
     void on_cropModeComboBox_currentIndexChanged(int index);
 
-    void on_slideshowTimerSpinBox_valueChanged(int arg1);
+    void on_slideshowTimerSpinBox_valueChanged(double arg1);
 
     void on_slideshowDirectionComboBox_currentIndexChanged(int index);
 
@@ -116,7 +116,7 @@ private:
         int titlebarMode;
         bool menubarEnabled;
         int cropMode;
-        int slideshowTimer;
+        double slideshowTimer;
         int slideshowDirection;
         int scaleFactor;
         bool resizeScaleEnabled;
