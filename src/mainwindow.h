@@ -3,6 +3,7 @@
 
 #include "qvinfodialog.h"
 #include <QMainWindow>
+#include <QShortcut>
 
 namespace Ui {
 class MainWindow;
@@ -129,6 +130,8 @@ private:
 
     QTimer *slideshowTimer;
     QList<QAction*> recentItems;
+
+    QShortcut *escShortcut;
 
     QVInfoDialog *info;
 
