@@ -10,8 +10,11 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     setAttribute(Qt::AA_DontShowIconsInMenus);
     #endif
 
+
     dockMenu = new QMenu();
+    #ifdef Q_OS_MACX
     dockMenu->setAsDockMenu();
+    #endif
     updateDockRecents();
 }
 
