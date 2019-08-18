@@ -22,6 +22,7 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     // Set default shortcuts
     transientShortcuts.append({"Open", "open", keyBindingsToStringList(QKeySequence::Open), {}});
     transientShortcuts.append({"Open URL", "openurl", QStringList(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_O).toString()), {}});
+    transientShortcuts.append({"Open Containing Folder", "opencontainingfolder", {}, {}});
     transientShortcuts.append({"Show File Info", "showfileinfo", QStringList(QKeySequence(Qt::Key_I).toString()), {}});
     transientShortcuts.append({"Copy", "copy", keyBindingsToStringList(QKeySequence::Copy), {}});
     transientShortcuts.append({"Paste", "paste", keyBindingsToStringList(QKeySequence::Paste), {}});
@@ -42,11 +43,13 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     #ifdef Q_OS_WIN
         transientShortcuts.replace(14, {"Full Screen", "fullscreen", keyBindingsToStringList(QKeySequence::FullScreen) << QKeySequence(Qt::ALT + Qt::Key_Return).toString(), {}});
     #endif
+    transientShortcuts.append({"Save Frame As", "saveframeas", keyBindingsToStringList(QKeySequence::Save), {}});
     transientShortcuts.append({"Pause", "pause", QStringList(QKeySequence(Qt::Key_P).toString()), {}});
     transientShortcuts.append({"Next Frame", "nextframe", QStringList(QKeySequence(Qt::Key_N).toString()), {}});
     transientShortcuts.append({"Decrease Speed", "decreasespeed", QStringList(QKeySequence(Qt::Key_BracketLeft).toString()), {}});
     transientShortcuts.append({"Reset Speed", "resetspeed", QStringList(QKeySequence(Qt::Key_Backslash).toString()), {}});
     transientShortcuts.append({"Increase Speed", "increasespeed", QStringList(QKeySequence(Qt::Key_BracketRight).toString()), {}});
+    transientShortcuts.append({"Toggle Slideshow", "slideshow", {}, {}});
     transientShortcuts.append({"Options", "options", keyBindingsToStringList(QKeySequence::Preferences), {}});
     transientShortcuts.append({"New Window", "newwindow", keyBindingsToStringList(QKeySequence::New), {}});
     transientShortcuts.append({"Quit", "quit", keyBindingsToStringList(QKeySequence::Quit), {}});

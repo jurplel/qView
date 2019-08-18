@@ -307,6 +307,7 @@ void MainWindow::loadShortcuts() {
     // Set shortcuts by name from above list
     ui->actionOpen->setShortcuts(shortcuts.value("open"));
     ui->actionOpen_URL->setShortcuts(shortcuts.value("openurl"));
+    ui->actionOpen_Containing_Folder->setShortcuts(shortcuts.value("opencontainingfolder"));
     ui->actionProperties->setShortcuts(shortcuts.value("showfileinfo"));
     ui->actionCopy->setShortcuts(shortcuts.value("copy"));
     ui->actionPaste->setShortcuts(shortcuts.value("paste"));
@@ -323,11 +324,13 @@ void MainWindow::loadShortcuts() {
     ui->actionMirror->setShortcuts(shortcuts.value("mirror"));
     ui->actionFlip->setShortcuts(shortcuts.value("flip"));
     ui->actionFull_Screen->setShortcuts(shortcuts.value("fullscreen"));
+    ui->actionSave_Frame_As->setShortcuts(shortcuts.value("saveframeas"));
     ui->actionPause->setShortcuts(shortcuts.value("pause"));
     ui->actionNext_Frame->setShortcuts(shortcuts.value("nextframe"));
     ui->actionDecrease_Speed->setShortcuts(shortcuts.value("decreasespeed"));
     ui->actionReset_Speed->setShortcuts(shortcuts.value("resetspeed"));
     ui->actionIncrease_Speed->setShortcuts(shortcuts.value("increasespeed"));
+    ui->actionSlideshow->setShortcuts(shortcuts.value("slideshow"));
     ui->actionOptions->setShortcuts(shortcuts.value("options"));
     ui->actionNew_Window->setShortcuts(shortcuts.value("newwindow"));
     ui->actionQuit->setShortcuts(shortcuts.value("quit"));
