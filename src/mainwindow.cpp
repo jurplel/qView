@@ -21,7 +21,6 @@
 #include <QStyle>
 #include <QIcon>
 #include <QMimeDatabase>
-#include <QShortcut>
 #include <QScreen>
 #include <QCursor>
 #include <QInputDialog>
@@ -49,6 +48,13 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->graphicsView, &QVGraphicsView::sendWindowTitle, this, &MainWindow::setWindowTitle);
     connect(ui->graphicsView, &QVGraphicsView::cancelSlideshow, this, &MainWindow::cancelSlideshow);
 
+    //Initialize escape shortcut
+    escShortcut = new QShortcut(this);
+    connect(escShortcut, &QShortcut::activated, this, [this](){
+        if (windowState() == Qt::WindowFullScreen)
+            on_actionFull_Screen_triggered();
+    });
+
     //Enable drag&dropping
     setAcceptDrops(true);
 
@@ -64,14 +70,6 @@ MainWindow::MainWindow(QWidget *parent) :
     QSettings settings;
     settings.beginGroup("recents");
     restoreGeometry(settings.value("geometry").toByteArray());
-
-    //Esc to exit fullscreen
-    auto *escShortcut = new QShortcut(this);
-    escShortcut->setKey(Qt::Key_Escape);
-    connect(escShortcut, &QShortcut::activated, this, [this](){
-        if (windowState() == Qt::WindowFullScreen)
-            showNormal();
-    });
 
     //Context menu
     contextMenu = new QMenu(this);
@@ -333,6 +331,25 @@ void MainWindow::loadShortcuts() {
     ui->actionProperties->setShortcuts(shortcuts.value("showfileinfo"));
     ui->actionOptions->setShortcuts(shortcuts.value("options"));
     ui->actionQuit->setShortcuts(shortcuts.value("quit"));
+
+    //Check if esc was used in a shortcut somewhere
+    bool escUsed = false;
+    foreach(auto sequenceList, shortcuts)
+    {
+        if (escUsed == true)
+            break;
+
+        if(sequenceList.contains(QKeySequence(Qt::Key_Escape)))
+            escUsed = true;
+    }
+    if (escUsed)
+    {
+        escShortcut->setKey({});
+    }
+    else
+    {
+        escShortcut->setKey(Qt::Key_Escape);
+    }
 }
 
 void MainWindow::updateRecentMenu()
