@@ -22,7 +22,14 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     // Set default shortcuts
     transientShortcuts.append({"Open", "open", keyBindingsToStringList(QKeySequence::Open), {}});
     transientShortcuts.append({"Open URL", "openurl", QStringList(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_O).toString()), {}});
-    transientShortcuts.append({"Open Containing Folder", "opencontainingfolder", {}, {}});
+    //Sets open containing folder to platform-appropriate alternative
+    QString openContainingFolderString = "Open Containing Folder";
+    #ifdef Q_OS_WIN
+    openContainingFolderString = "Show in Explorer";
+    #elif defined(Q_OS_MACX)
+    openContainingFolderString = "Show in Finder";
+    #endif
+    transientShortcuts.append({openContainingFolderString, "opencontainingfolder", {}, {}});
     transientShortcuts.append({"Show File Info", "showfileinfo", QStringList(QKeySequence(Qt::Key_I).toString()), {}});
     transientShortcuts.append({"Copy", "copy", keyBindingsToStringList(QKeySequence::Copy), {}});
     transientShortcuts.append({"Paste", "paste", keyBindingsToStringList(QKeySequence::Paste), {}});
