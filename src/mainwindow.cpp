@@ -307,29 +307,29 @@ void MainWindow::loadShortcuts() {
     // Set shortcuts by name from above list
     ui->actionOpen->setShortcuts(shortcuts.value("open"));
     ui->actionOpen_URL->setShortcuts(shortcuts.value("openurl"));
+    ui->actionProperties->setShortcuts(shortcuts.value("showfileinfo"));
+    ui->actionCopy->setShortcuts(shortcuts.value("copy"));
+    ui->actionPaste->setShortcuts(shortcuts.value("paste"));
     ui->actionFirst_File->setShortcuts(shortcuts.value("firstfile"));
     ui->actionPrevious_File->setShortcuts(shortcuts.value("previousfile"));
     ui->actionNext_File->setShortcuts(shortcuts.value("nextfile"));
     ui->actionLast_File->setShortcuts(shortcuts.value("lastfile"));
-    ui->actionCopy->setShortcuts(shortcuts.value("copy"));
-    ui->actionPaste->setShortcuts(shortcuts.value("paste"));
-    ui->actionRotate_Right->setShortcuts(shortcuts.value("rotateright"));
-    ui->actionRotate_Left->setShortcuts(shortcuts.value("rotateleft"));
     ui->actionZoom_In->setShortcuts(shortcuts.value("zoomin"));
     ui->actionZoom_Out->setShortcuts(shortcuts.value("zoomout"));
     ui->actionReset_Zoom->setShortcuts(shortcuts.value("resetzoom"));
+    ui->actionOriginal_Size->setShortcuts(shortcuts.value("originalsize"));
+    ui->actionRotate_Right->setShortcuts(shortcuts.value("rotateright"));
+    ui->actionRotate_Left->setShortcuts(shortcuts.value("rotateleft"));
     ui->actionMirror->setShortcuts(shortcuts.value("mirror"));
     ui->actionFlip->setShortcuts(shortcuts.value("flip"));
     ui->actionFull_Screen->setShortcuts(shortcuts.value("fullscreen"));
-    ui->actionOriginal_Size->setShortcuts(shortcuts.value("originalsize"));
-    ui->actionNew_Window->setShortcuts(shortcuts.value("newwindow"));
-    ui->actionNext_Frame->setShortcuts(shortcuts.value("nextframe"));
     ui->actionPause->setShortcuts(shortcuts.value("pause"));
-    ui->actionIncrease_Speed->setShortcuts(shortcuts.value("increasespeed"));
+    ui->actionNext_Frame->setShortcuts(shortcuts.value("nextframe"));
     ui->actionDecrease_Speed->setShortcuts(shortcuts.value("decreasespeed"));
     ui->actionReset_Speed->setShortcuts(shortcuts.value("resetspeed"));
-    ui->actionProperties->setShortcuts(shortcuts.value("showfileinfo"));
+    ui->actionIncrease_Speed->setShortcuts(shortcuts.value("increasespeed"));
     ui->actionOptions->setShortcuts(shortcuts.value("options"));
+    ui->actionNew_Window->setShortcuts(shortcuts.value("newwindow"));
     ui->actionQuit->setShortcuts(shortcuts.value("quit"));
 
     //Check if esc was used in a shortcut somewhere
