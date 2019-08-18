@@ -58,7 +58,9 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     transientShortcuts.append({"Increase Speed", "increasespeed", QStringList(QKeySequence(Qt::Key_BracketRight).toString()), {}});
     transientShortcuts.append({"Toggle Slideshow", "slideshow", {}, {}});
     transientShortcuts.append({"Options", "options", keyBindingsToStringList(QKeySequence::Preferences), {}});
+    #ifdef Q_OS_MACX
     transientShortcuts.append({"New Window", "newwindow", keyBindingsToStringList(QKeySequence::New), {}});
+    #endif
     transientShortcuts.append({"Quit", "quit", keyBindingsToStringList(QKeySequence::Quit), {}});
 }
 
