@@ -290,11 +290,6 @@ void QVOptionsDialog::updateShortcuts() {
     }
 
     delete item;
-
-    // Hide next window keybind on platforms other than macOS (cause it doesn't work)
-    #ifndef Q_OS_MACX
-    ui->shortcutsTable->hideRow(16);
-    #endif
 }
 
 void QVOptionsDialog::updateBgColorButton()
