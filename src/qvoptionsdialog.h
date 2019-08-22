@@ -45,6 +45,8 @@ public:
 
     const QList<QVShortcutDialog::SShortcut>& getTransientShortcuts() const {return transientShortcuts; }
 
+    bool shortcutAlreadyBound(QKeySequence chosenSequence, QString exemptShortcut = "");
+
 signals:
     void optionsSaved();
 

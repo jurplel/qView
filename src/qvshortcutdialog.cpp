@@ -22,6 +22,16 @@ QVShortcutDialog::~QVShortcutDialog()
     delete ui;
 }
 
+void QVShortcutDialog::done(int r)
+{
+    if (r == QDialog::Accepted)
+    {
+        return;
+    }
+
+    QDialog::done(r);
+}
+
 void QVShortcutDialog::on_buttonBox_clicked(QAbstractButton *button)
 {
     if (ui->buttonBox->buttonRole(button) == QDialogButtonBox::AcceptRole)
@@ -35,4 +45,9 @@ void QVShortcutDialog::on_buttonBox_clicked(QAbstractButton *button)
     {
         ui->keySequenceEdit->setKeySequence(shortcut_obj.defaultShortcuts.join(", "));
     }
+}
+
+void QVShortcutDialog::acceptValidated()
+{
+    QDialog::done(1);
 }
