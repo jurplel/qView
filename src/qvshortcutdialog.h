@@ -23,6 +23,9 @@ public:
     explicit QVShortcutDialog(const SShortcut &shortcut, int i, QWidget *parent = nullptr);
     ~QVShortcutDialog() override;
 
+public slots:
+    void acceptValidated();
+
 signals:
     void newShortcut(SShortcut shortcut, int index);
 
@@ -30,6 +33,8 @@ private slots:
     void on_buttonBox_clicked(QAbstractButton *button);
 
 private:
+    void done(int r) override;
+
     Ui::QVShortcutDialog *ui;
 
     SShortcut shortcut_obj;

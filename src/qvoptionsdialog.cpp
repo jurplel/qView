@@ -3,6 +3,7 @@
 #include <QColorDialog>
 #include <QPalette>
 #include <QScreen>
+#include <QMessageBox>
 
 #include <QDebug>
 
@@ -490,10 +491,43 @@ void QVOptionsDialog::on_shortcutsTable_cellDoubleClicked(int row, int column)
     Q_UNUSED(column)
     auto shortcutDialog = new QVShortcutDialog(transientShortcuts.value(row), row);
     shortcutDialog->open();
-    connect(shortcutDialog, &QVShortcutDialog::newShortcut, [this](QVShortcutDialog::SShortcut shortcut, int index){
+    connect(shortcutDialog, &QVShortcutDialog::newShortcut, [shortcutDialog, this](QVShortcutDialog::SShortcut shortcut, int index){
+        foreach (auto sequence, shortcut.shortcuts)
+        {
+            if (shortcutAlreadyBound(sequence, shortcut.name))
+            {
+                auto nativeShortcutString = QKeySequence(sequence).toString(QKeySequence::NativeText);
+                QMessageBox::warning(this, tr("Shortcut Already Used"), tr("\"") + nativeShortcutString + tr("\" is already bound to another shortcut."));
+                return;
+            }
+        }
+
+        shortcutDialog->acceptValidated();
         transientShortcuts.replace(index, shortcut);
         updateShortcuts();
     });
+}
+
+bool QVOptionsDialog::shortcutAlreadyBound(QKeySequence chosenSequence, QString exemptShortcut)
+{
+    bool used = false;
+
+    if (chosenSequence.isEmpty())
+        return false;
+
+    foreach(auto shortcut, transientShortcuts)
+    {
+        auto sequenceList = stringListToKeySequenceList(shortcut.shortcuts);
+
+        if (used == true)
+            break;
+
+        if (sequenceList.contains(chosenSequence) && shortcut.name != exemptShortcut)
+        {
+            used = true;
+        }
+    }
+    return used;
 }
 
 void QVOptionsDialog::on_sortComboBox_currentIndexChanged(int index)
