@@ -84,27 +84,30 @@ MainWindow *QVApplication::getMainWindow()
 void QVApplication::updateDockRecents()
 {
     QSettings settings;
-    settings.beginGroup("recents");
-    QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
+    settings.beginGroup("options");
+
+    bool isSaveRecentsEnabled = settings.value("saverecents", true).toBool();
+
+    settings.endGroup();
 
     dockMenu->clear();
-    for (int i = 0; i <= 9; i++)
-    {
-        if (i < recentFiles.size())
-        {
-            auto *action = new QAction(recentFiles[i].toList().first().toString());
-            connect(action, &QAction::triggered, [recentFiles, i]{
-               openFile(recentFiles[i].toList().last().toString(), false);
-            });
-            dockMenu->addAction(action);
-        }
-    }
-    dockMenu->addSeparator();
-    populateMenu();
-}
+    if (isSaveRecentsEnabled) {
+        settings.beginGroup("recents");
+        QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
 
-void QVApplication::populateMenu()
-{
+        for (int i = 0; i <= 9; i++)
+        {
+            if (i < recentFiles.size())
+            {
+                auto *action = new QAction(recentFiles[i].toList().first().toString());
+                connect(action, &QAction::triggered, [recentFiles, i]{
+                   openFile(recentFiles[i].toList().last().toString(), false);
+                });
+                dockMenu->addAction(action);
+            }
+        }
+        dockMenu->addSeparator();
+    }
     auto *newWindowAction = new QAction(tr("New Window"));
     connect(newWindowAction, &QAction::triggered, []{
         newWindow();
@@ -115,20 +118,6 @@ void QVApplication::populateMenu()
     });
     dockMenu->addAction(newWindowAction);
     dockMenu->addAction(openAction);
-}
-
-void QVApplication::checkRecentsEnabled()
-{
-    QSettings settings;
-    settings.beginGroup("options");
-
-    bool isSaveRecentsEnabled = settings.value("saverecents", true).toBool();
-
-    qDebug() << isSaveRecentsEnabled;
-    if (!isSaveRecentsEnabled) {
-        dockMenu->clear();
-        populateMenu();
-    }
 }
 
 qint64 QVApplication::getPreviouslyRecordedFileSize(const QString &fileName)

@@ -188,8 +188,8 @@ MainWindow::MainWindow(QWidget *parent) :
         addAction(action);
     }
 
-    updateRecentsMenu();
     loadSettings();
+    updateRecentsMenu();
 }
 
 MainWindow::~MainWindow()
@@ -284,14 +284,8 @@ void MainWindow::loadSettings()
 
     //saverecents
     isSaveRecentsEnabled = settings.value("saverecents", true).toBool();
-
     recentFilesMenu->menuAction()->setVisible(isSaveRecentsEnabled);
-    if (!isSaveRecentsEnabled) {
-        clearRecent();
-    }
-    #ifdef Q_OS_MACX
-        qobject_cast<QVApplication*>(qApp)->checkRecentsEnabled();
-    #endif
+    updateRecentsMenu();
 
     ui->graphicsView->loadSettings();
 
