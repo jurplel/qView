@@ -25,6 +25,10 @@ public:
 
     void updateDockRecents();
 
+    void populateMenu();
+
+    void checkRecentsEnabled();
+
     qint64 getPreviouslyRecordedFileSize(const QString &fileName);
 
     void setPreviouslyRecordedFileSize(const QString &fileName, long long *fileSize);
