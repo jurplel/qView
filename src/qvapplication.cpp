@@ -3,6 +3,8 @@
 #include <QMenu>
 #include <QSettings>
 
+#include <QDebug>
+
 QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
 {
     //don't even try to show menu icons on mac or windows
@@ -97,6 +99,12 @@ void QVApplication::updateDockRecents()
             dockMenu->addAction(action);
         }
     }
+    dockMenu->addSeparator();
+    populateMenu();
+}
+
+void QVApplication::populateMenu()
+{
     auto *newWindowAction = new QAction(tr("New Window"));
     connect(newWindowAction, &QAction::triggered, []{
         newWindow();
@@ -105,9 +113,22 @@ void QVApplication::updateDockRecents()
     connect(openAction, &QAction::triggered, []{
         pickFile();
     });
-    dockMenu->addSeparator();
     dockMenu->addAction(newWindowAction);
     dockMenu->addAction(openAction);
+}
+
+void QVApplication::checkRecentsEnabled()
+{
+    QSettings settings;
+    settings.beginGroup("options");
+
+    bool isSaveRecentsEnabled = settings.value("saverecents", true).toBool();
+
+    qDebug() << isSaveRecentsEnabled;
+    if (!isSaveRecentsEnabled) {
+        dockMenu->clear();
+        populateMenu();
+    }
 }
 
 qint64 QVApplication::getPreviouslyRecordedFileSize(const QString &fileName)
