@@ -402,6 +402,9 @@ void QVGraphicsView::updateFileInfoDisplays()
 
 void QVGraphicsView::addRecentFiles()
 {
+    if (!isSaveRecentsEnabled)
+        return;
+
     QSettings settings;
     settings.beginGroup("recents");
 
@@ -756,6 +759,8 @@ void QVGraphicsView::loadSettings()
 
     //loop folders
     isLoopFoldersEnabled = settings.value("loopfoldersenabled", true).toBool();
+
+    isSaveRecentsEnabled = settings.value("saverecents", true).toBool();
 
     if (getCurrentFileDetails().isPixmapLoaded)
     {

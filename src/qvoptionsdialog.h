@@ -99,6 +99,8 @@ private slots:
 
     void on_ascendingRadioButton1_clicked();
 
+    void on_saveRecentsCheckbox_stateChanged(int arg1);
+
 protected:
     virtual void showEvent(QShowEvent *event) override;
 
@@ -131,6 +133,7 @@ private:
         int preloadingMode;
         int sortMode;
         bool sortAscending;
+        bool saveRecents;
     };
 
     STransientSettings transientSettings;
