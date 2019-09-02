@@ -19,7 +19,7 @@ public:
 
     static void openFile(const QString &file, bool resize = true);
 
-    static MainWindow *newWindow();
+    static MainWindow *newWindow(const QString &fileToOpen = "");
 
     static MainWindow *getMainWindow();
 

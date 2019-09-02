@@ -54,10 +54,14 @@ void QVApplication::openFile(const QString &file, bool resize)
     w->openFile(file);
 }
 
-MainWindow *QVApplication::newWindow()
+MainWindow *QVApplication::newWindow(const QString &fileToOpen)
 {
     auto *w = new MainWindow();
     w->show();
+
+    if (!fileToOpen.isEmpty())
+        w->openFile(fileToOpen);
+
     return w;
 }
 

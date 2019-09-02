@@ -248,8 +248,20 @@ void MainWindow::pickFile()
     settings.beginGroup("recents");
     QFileDialog *fileDialog = new QFileDialog(this, ui->actionOpen->text(), "", tr("Supported Files (*.bmp *.cur *.gif *.icns *.ico *.jp2 *.jpeg *.jpe *.jpg *.mng *.pbm *.pgm *.png *.ppm *.svg *.svgz *.tif *.tiff *.wbmp *.webp *.xbm *.xpm);;All Files (*)"));
     fileDialog->setDirectory(settings.value("lastFileDialogDir", QDir::homePath()).toString());
+    fileDialog->setFileMode(QFileDialog::ExistingFiles);
     fileDialog->open();
-    connect(fileDialog, &QFileDialog::fileSelected, this, &MainWindow::openFile);
+    connect(fileDialog, &QFileDialog::filesSelected, [this](const QStringList &selected){
+        openFile(selected.first());
+        if (selected.length() > 1)
+        {
+            qDebug() << "more than 1";
+            for (int i = 1; i < selected.length(); i++)
+            {
+                qDebug() << selected[i];
+                QVApplication::newWindow(selected[i]);
+            }
+        }
+    });
 }
 
 void MainWindow::openFile(const QString &fileName)
