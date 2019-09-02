@@ -65,8 +65,7 @@ MainWindow::MainWindow(QWidget *parent) :
     slideshowTimer = new QTimer(this);
     connect(slideshowTimer, &QTimer::timeout, this, &MainWindow::slideshowAction);
 
-    //Load settings from file
-    loadSettings();
+    //Load window geometry
     QSettings settings;
     settings.beginGroup("recents");
     restoreGeometry(settings.value("geometry").toByteArray());
@@ -77,7 +76,7 @@ MainWindow::MainWindow(QWidget *parent) :
     contextMenu->addAction(ui->actionOpen);
     contextMenu->addAction(ui->actionOpen_URL);
 
-    QMenu *files = new QMenu(tr("Open Recent"), this);
+    recentFilesMenu = new QMenu(tr("Open Recent"), this);
 
     int index = 0;
 
@@ -89,15 +88,15 @@ MainWindow::MainWindow(QWidget *parent) :
     foreach(QAction *action, recentItems)
     {
         connect(action, &QAction::triggered, this, [this,index]() { openRecent(index); });
-        files->addAction(action);
+        recentFilesMenu->addAction(action);
         index++;
     }
-    files->addSeparator();
+    recentFilesMenu->addSeparator();
     QAction *clearMenu = new QAction(tr("Clear Menu"), this);
     connect(clearMenu, &QAction::triggered, this, &MainWindow::clearRecent);
-    files->addAction(clearMenu);
+    recentFilesMenu->addAction(clearMenu);
 
-    contextMenu->addMenu(files);
+    contextMenu->addMenu(recentFilesMenu);
 
     contextMenu->addAction(ui->actionOpen_Containing_Folder);
     contextMenu->addAction(ui->actionProperties);
@@ -147,7 +146,7 @@ MainWindow::MainWindow(QWidget *parent) :
     contextMenu->addMenu(help);
 
     //Menu icons that can't be set in the ui file
-    files->setIcon(QIcon::fromTheme("document-open-recent"));
+    recentFilesMenu->setIcon(QIcon::fromTheme("document-open-recent"));
     clearMenu->setIcon(QIcon::fromTheme("edit-delete"));
     view->setIcon(QIcon::fromTheme("zoom-fit-best"));
     tools->setIcon(QIcon::fromTheme("configure", QIcon::fromTheme("preferences-other")));
@@ -160,7 +159,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionOpen_URL->setIcon(QIcon::fromTheme("document-open-remote", QIcon::fromTheme("folder-remote")));
 
     //Add recent items to menubar
-    ui->menuFile->insertMenu(ui->actionOpen_Containing_Folder, files);
+    ui->menuFile->insertMenu(ui->actionOpen_Containing_Folder, recentFilesMenu);
     ui->menuFile->insertSeparator(ui->actionOpen_Containing_Folder);
     ui->menuTools->insertMenu(ui->actionSlideshow, gif);
 
@@ -189,6 +188,7 @@ MainWindow::MainWindow(QWidget *parent) :
         addAction(action);
     }
 
+    loadSettings();
     updateRecentsMenu();
 }
 
@@ -281,6 +281,11 @@ void MainWindow::loadSettings()
 
     //max window resize mode size
     maxWindowResizedPercentage = settings.value("maxwindowresizedpercentage", 70).toReal()/100;
+
+    //saverecents
+    isSaveRecentsEnabled = settings.value("saverecents", true).toBool();
+    recentFilesMenu->menuAction()->setVisible(isSaveRecentsEnabled);
+
 
     ui->graphicsView->loadSettings();
 

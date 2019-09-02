@@ -101,6 +101,7 @@ void QVOptionsDialog::saveSettings()
     settings.setValue("preloadingmode", transientSettings.preloadingMode);
     settings.setValue("sortmode", transientSettings.sortMode);
     settings.setValue("sortascending", transientSettings.sortAscending);
+    settings.setValue("saverecents", transientSettings.saveRecents);
 
     // Shortcuts are saved here too for now
     settings.endGroup();
@@ -250,6 +251,10 @@ void QVOptionsDialog::loadSettings(const bool defaults)
         ui->ascendingRadioButton0->setChecked(true);
     else
         ui->ascendingRadioButton1->setChecked(true);
+
+    //save recents
+    transientSettings.saveRecents = settings.value("saverecents", true).toBool();
+    ui->saveRecentsCheckbox->setChecked(transientSettings.saveRecents);
 }
 
 void QVOptionsDialog::loadShortcuts(const bool defaults)
@@ -543,4 +548,16 @@ void QVOptionsDialog::on_ascendingRadioButton0_clicked()
 void QVOptionsDialog::on_ascendingRadioButton1_clicked()
 {
     transientSettings.sortAscending = false;
+}
+
+void QVOptionsDialog::on_saveRecentsCheckbox_stateChanged(int arg1)
+{
+    if (arg1 > 0)
+    {
+        transientSettings.saveRecents = true;
+    }
+    else
+    {
+        transientSettings.saveRecents = false;
+    }
 }

@@ -559,6 +559,13 @@
          </property>
         </widget>
        </item>
+       <item row="9" column="1">
+        <widget class="QCheckBox" name="saveRecentsCheckbox">
+         <property name="text">
+          <string>Save recent files</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="shortcuts">
