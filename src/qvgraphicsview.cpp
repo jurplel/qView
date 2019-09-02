@@ -39,8 +39,6 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     cheapScaledLast = false;
     movieCenterNeedsUpdating = false;
     isOriginalSize = false;
-    QSettings settings;
-    settings.beginGroup("recents");
 
     imageCore.setDevicePixelRatio(devicePixelRatioF());
     connect(&imageCore, &QVImageCore::animatedFrameChanged, this, &QVGraphicsView::animatedFrameChanged);
@@ -54,10 +52,10 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     expensiveScaleTimer->setInterval(10);
     connect(expensiveScaleTimer, &QTimer::timeout, this, [this]{scaleExpensively(scaleMode::resetScale);});
 
-    recentsSaveTimer = new QTimer(this);
-    recentsSaveTimer->setSingleShot(true);
-    recentsSaveTimer->setInterval(250);
-    connect(recentsSaveTimer, &QTimer::timeout, this, &QVGraphicsView::addRecentFiles);
+    addRecentFilesTimer = new QTimer(this);
+    addRecentFilesTimer->setSingleShot(true);
+    addRecentFilesTimer->setInterval(250);
+    connect(addRecentFilesTimer, &QTimer::timeout, this, &QVGraphicsView::addRecentFiles);
 
     loadedPixmapItem = new QGraphicsPixmapItem();
     scene->addItem(loadedPixmapItem);
@@ -392,10 +390,13 @@ void QVGraphicsView::updateLoadedPixmapItem()
 
 void QVGraphicsView::updateFileInfoDisplays()
 {
-    recentsSaveTimer->start();
+    addRecentFilesTimer->start();
     addRecentFileQueue.append(getCurrentFileDetails().fileInfo);
 
+    // Update window title to reflect new file info
     setWindowTitle();
+
+    // This signals the MainWindow to update the file info window
     emit updatedFileInfo();
 }
 
@@ -404,9 +405,18 @@ void QVGraphicsView::addRecentFiles()
     QSettings settings;
     settings.beginGroup("recents");
 
+    // Get the list of current recent files from the settings
     QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
-    foreach (QFileInfo file, addRecentFileQueue)
-    {
+
+    // Check each recent file to make sure it still exists
+    foreach (auto variant, recentFiles) {
+        if (!QFileInfo::exists(variant.toList().last().toString())) {
+            recentFiles.removeOne(variant);
+        }
+    }
+
+    // Add all the new recent files to the list
+    foreach (QFileInfo file, addRecentFileQueue) {
         QStringList fileInfo;
 
         fileInfo << file.fileName() << file.absoluteFilePath();
@@ -418,9 +428,10 @@ void QVGraphicsView::addRecentFiles()
         if(recentFiles.size() > 10)
             recentFiles.removeLast();
     }
-
     addRecentFileQueue.clear();
+
     settings.setValue("recentFiles", recentFiles);
+
     emit updateRecentMenu();
 }
 
@@ -684,7 +695,7 @@ void QVGraphicsView::error(const QString &errorString, const QString &fileName)
             // If file cannot be found, remove it from recents
             if (errorString.at(0) == "1")
             {
-                recentsSaveTimer->start();
+                addRecentFilesTimer->start();
                 addRecentFileQueue.append(QFileInfo(fileName));
             }
             return;

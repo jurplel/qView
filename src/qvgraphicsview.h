@@ -136,6 +136,6 @@ private:
     QVImageCore imageCore;
 
     QTimer *expensiveScaleTimer;
-    QTimer *recentsSaveTimer;
+    QTimer *addRecentFilesTimer;
 };
 #endif // QVGRAPHICSVIEW_H

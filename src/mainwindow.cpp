@@ -44,7 +44,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->graphicsView, &QVGraphicsView::fileLoaded, this, &MainWindow::fileLoaded);
     connect(ui->graphicsView, &QVGraphicsView::updatedLoadedPixmapItem, this, &MainWindow::setWindowSize);
     connect(ui->graphicsView, &QVGraphicsView::updatedFileInfo, this, &MainWindow::refreshProperties);
-    connect(ui->graphicsView, &QVGraphicsView::updateRecentMenu, this, &MainWindow::updateRecentMenu);
+    connect(ui->graphicsView, &QVGraphicsView::updateRecentMenu, this, &MainWindow::updateRecentsMenu);
     connect(ui->graphicsView, &QVGraphicsView::sendWindowTitle, this, &MainWindow::setWindowTitle);
     connect(ui->graphicsView, &QVGraphicsView::cancelSlideshow, this, &MainWindow::cancelSlideshow);
 
@@ -189,7 +189,7 @@ MainWindow::MainWindow(QWidget *parent) :
         addAction(action);
     }
 
-    updateRecentMenu();
+    updateRecentsMenu();
 }
 
 MainWindow::~MainWindow()
@@ -200,7 +200,7 @@ MainWindow::~MainWindow()
 void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 {
     QMainWindow::contextMenuEvent(event);
-    updateRecentMenu();
+    updateRecentsMenu();
     contextMenu->exec(event->globalPos());
 }
 
@@ -355,7 +355,7 @@ void MainWindow::loadShortcuts() {
     }
 }
 
-void MainWindow::updateRecentMenu()
+void MainWindow::updateRecentsMenu()
 {
     QSettings settings;
     settings.beginGroup("recents");
@@ -417,7 +417,7 @@ void MainWindow::clearRecent()
     }
     settings.setValue("recentFiles", recentFiles);
 
-    updateRecentMenu();
+    updateRecentsMenu();
 }
 
 void MainWindow::cancelSlideshow()

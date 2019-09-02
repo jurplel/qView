@@ -85,7 +85,7 @@ private slots:
 
     void on_actionReset_Zoom_triggered();
 
-    void updateRecentMenu();
+    void updateRecentsMenu();
 
     void openRecent(int i);
 
