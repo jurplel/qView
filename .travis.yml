@@ -1,0 +1,22 @@
+language: cpp
+matrix:
+  include:
+    - os: linux
+      dist: bionic
+    - os: osx
+      osx_image: xcode10.3
+addons:
+  apt:
+    packages:
+      - qt5-default
+      - qt5-qmake
+      - qt5-image-formats-plugins
+  homebrew:
+    packages:
+      - qt
+
+install:
+  - if [ "$TRAVIS_OS_NAME" = "osx" ] ; then brew link --force qt ; fi
+script:
+  - qmake
+  - make
