@@ -505,6 +505,11 @@ void MainWindow::setWindowSize()
     resize(imageSize);
     QRect newRect = geometry();
     newRect.moveCenter(oldRect.center());
+
+    const int titlebarHeight = QApplication::style()->pixelMetric(QStyle::PM_TitleBarHeight);
+    if (newRect.y() < titlebarHeight)
+        newRect.setY(titlebarHeight);
+
     setGeometry(newRect);
 }
 
