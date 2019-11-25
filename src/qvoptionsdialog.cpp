@@ -61,6 +61,7 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     transientShortcuts.append({"Options", "options", keyBindingsToStringList(QKeySequence::Preferences), {}});
     #ifdef Q_OS_MACX
     transientShortcuts.append({"New Window", "newwindow", keyBindingsToStringList(QKeySequence::New), {}});
+    transientShortcuts.append({"Close Window", "closewindow", QStringList(QKeySequence(Qt::CTRL + Qt::Key_W).toString()), {}});
     #endif
     transientShortcuts.append({"Quit", "quit", keyBindingsToStringList(QKeySequence::Quit), {}});
 }

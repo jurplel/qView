@@ -75,7 +75,7 @@
      <x>0</x>
      <y>0</y>
      <width>640</width>
-     <height>19</height>
+     <height>22</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -88,6 +88,7 @@
     <addaction name="actionNew_Window"/>
     <addaction name="actionOpen"/>
     <addaction name="actionOpen_URL"/>
+    <addaction name="actionClose_Window"/>
     <addaction name="actionOpen_Containing_Folder"/>
     <addaction name="actionProperties"/>
     <addaction name="separator"/>
@@ -478,10 +479,26 @@
   </action>
   <action name="actionOpen_URL">
    <property name="icon">
-    <iconset theme="document-open-remote"/>
+    <iconset theme="document-open-remote">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Open URL...</string>
+   </property>
+  </action>
+  <action name="actionClose_Window">
+   <property name="icon">
+    <iconset theme="window-close">
+     <normaloff>.</normaloff>.</iconset>
+   </property>
+   <property name="text">
+    <string>Close Window</string>
+   </property>
+   <property name="toolTip">
+    <string>Close Window</string>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
    </property>
   </action>
  </widget>

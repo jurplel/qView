@@ -159,7 +159,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionOpen_URL->setIcon(QIcon::fromTheme("document-open-remote", QIcon::fromTheme("folder-remote")));
 
     //Add recent items to menubar
-    ui->menuFile->insertMenu(ui->actionOpen_Containing_Folder, recentFilesMenu);
+    ui->menuFile->insertMenu(ui->actionClose_Window, recentFilesMenu);
     ui->menuFile->insertSeparator(ui->actionOpen_Containing_Folder);
     ui->menuTools->insertMenu(ui->actionSlideshow, gif);
 
@@ -177,6 +177,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionOptions->setText(tr("Preferences..."));
     ui->menuView->removeAction(ui->actionFull_Screen);
     ui->actionNew_Window->setVisible(true);
+    ui->actionClose_Window->setVisible(true);
     ui->actionOpen_Containing_Folder->setText(tr("Show in Finder"));
     #elif defined(Q_OS_WIN)
     ui->actionOpen_Containing_Folder->setText(tr("Show in Explorer"));
@@ -350,6 +351,7 @@ void MainWindow::loadShortcuts() {
     ui->actionSlideshow->setShortcuts(shortcuts.value("slideshow"));
     ui->actionOptions->setShortcuts(shortcuts.value("options"));
     ui->actionNew_Window->setShortcuts(shortcuts.value("newwindow"));
+    ui->actionClose_Window->setShortcuts(shortcuts.value("closewindow"));
     ui->actionQuit->setShortcuts(shortcuts.value("quit"));
 
     //Check if esc was used in a shortcut somewhere
@@ -874,4 +876,9 @@ void MainWindow::on_actionOpen_URL_triggered()
         });
     });
     inputDialog->open();
+}
+
+void MainWindow::on_actionClose_Window_triggered()
+{
+    close();
 }

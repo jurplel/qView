@@ -121,6 +121,8 @@ private slots:
 
     void on_actionOpen_URL_triggered();
 
+    void on_actionClose_Window_triggered();
+
 private:
     Ui::MainWindow *ui;
 
