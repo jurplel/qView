@@ -101,6 +101,8 @@ private slots:
 
     void on_saveRecentsCheckbox_stateChanged(int arg1);
 
+    void on_cursorZoomCheckbox_stateChanged(int arg1);
+
 protected:
     virtual void showEvent(QShowEvent *event) override;
 
@@ -134,6 +136,7 @@ private:
         int sortMode;
         bool sortAscending;
         bool saveRecents;
+        bool cursorZoom;
     };
 
     STransientSettings transientSettings;

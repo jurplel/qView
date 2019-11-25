@@ -122,6 +122,7 @@ private:
     bool isScrollZoomsEnabled;
     bool isLoopFoldersEnabled;
     bool isSaveRecentsEnabled;
+    bool isCursorZoomEnabled;
     int titlebarMode;
     int cropMode;
     qreal scaleFactor;

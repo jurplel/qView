@@ -102,6 +102,7 @@ void QVOptionsDialog::saveSettings()
     settings.setValue("sortmode", transientSettings.sortMode);
     settings.setValue("sortascending", transientSettings.sortAscending);
     settings.setValue("saverecents", transientSettings.saveRecents);
+    settings.setValue("cursorzoom", transientSettings.cursorZoom);
 
     // Shortcuts are saved here too for now
     settings.endGroup();
@@ -255,6 +256,9 @@ void QVOptionsDialog::loadSettings(const bool defaults)
     //save recents
     transientSettings.saveRecents = settings.value("saverecents", true).toBool();
     ui->saveRecentsCheckbox->setChecked(transientSettings.saveRecents);
+
+    transientSettings.cursorZoom = settings.value("cursorzoom", true).toBool();
+    ui->cursorZoomCheckbox->setChecked(transientSettings.cursorZoom);
 }
 
 void QVOptionsDialog::loadShortcuts(const bool defaults)
@@ -559,5 +563,17 @@ void QVOptionsDialog::on_saveRecentsCheckbox_stateChanged(int arg1)
     else
     {
         transientSettings.saveRecents = false;
+    }
+}
+
+void QVOptionsDialog::on_cursorZoomCheckbox_stateChanged(int arg1)
+{
+    if (arg1 > 0)
+    {
+        transientSettings.cursorZoom = true;
+    }
+    else
+    {
+        transientSettings.cursorZoom = false;
     }
 }

@@ -285,7 +285,7 @@ void QVGraphicsView::zoom(int DeltaY, const QPoint &pos, qreal targetScaleFactor
 
     //if you are zooming in and the mouse is in play, zoom towards the mouse
     //otherwise, just center the image
-    if (currentScale > 1.00001 && underMouse())
+    if (currentScale > 1.00001 && underMouse() && isCursorZoomEnabled)
     {
         QPointF transformationDiff = mapToScene(viewport()->rect().center()) - mapToScene(pos);
         result = originalMappedPos + transformationDiff;
@@ -760,7 +760,11 @@ void QVGraphicsView::loadSettings()
     //loop folders
     isLoopFoldersEnabled = settings.value("loopfoldersenabled", true).toBool();
 
+    //save recents
     isSaveRecentsEnabled = settings.value("saverecents", true).toBool();
+
+    //cursor zoom
+    isCursorZoomEnabled = settings.value("cursorzoom", true).toBool();
 
     if (getCurrentFileDetails().isPixmapLoaded)
     {
