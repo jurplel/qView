@@ -16,6 +16,7 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     dockMenu = new QMenu();
     #ifdef Q_OS_MACX
     dockMenu->setAsDockMenu();
+    setQuitOnLastWindowClosed(false);
     #endif
     updateDockRecents();
 }
