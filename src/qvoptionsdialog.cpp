@@ -1,5 +1,6 @@
 #include "qvoptionsdialog.h"
 #include "ui_qvoptionsdialog.h"
+#include "qvapplication.h"
 #include <QColorDialog>
 #include <QPalette>
 #include <QScreen>
@@ -117,6 +118,7 @@ void QVOptionsDialog::saveSettings()
     }
 
     emit optionsSaved();
+    qobject_cast<QVApplication*>(qApp)->loadShortcuts();
 }
 
 void QVOptionsDialog::loadSettings(const bool defaults)

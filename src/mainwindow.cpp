@@ -305,22 +305,9 @@ void MainWindow::loadSettings()
     loadShortcuts();
 }
 
-void MainWindow::loadShortcuts() {
-    QSettings settings;
-    settings.beginGroup("shortcuts");
-
-    // To retrieve default bindings, we hackily init an options dialog and use it's constructor values
-    QVOptionsDialog invisibleOptionsDialog;
-    auto shortcutData = invisibleOptionsDialog.getTransientShortcuts();
-
-    // Iterate through all default shortcuts to get saved shortcuts from settings
-    QHash<QString, QList<QKeySequence>> shortcuts;
-    QListIterator<QVShortcutDialog::SShortcut> iter(shortcutData);
-    while (iter.hasNext())
-    {
-        auto value = iter.next();
-        shortcuts.insert(value.name, QVOptionsDialog::stringListToKeySequenceList(settings.value(value.name, value.defaultShortcuts).value<QStringList>()));
-    }
+void MainWindow::loadShortcuts()
+{
+    auto shortcuts = qobject_cast<QVApplication*>(qApp)->getShortcutsList();
 
     // Set shortcuts by name from above list
     ui->actionOpen->setShortcuts(shortcuts.value("open"));

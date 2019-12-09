@@ -1,7 +1,9 @@
 #include "qvapplication.h"
+#include "qvoptionsdialog.h"
 #include <QFileOpenEvent>
 #include <QMenu>
 #include <QSettings>
+#include <QMenuBar>
 
 #include <QDebug>
 
@@ -12,13 +14,30 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     setAttribute(Qt::AA_DontShowIconsInMenus);
     #endif
 
-
     dockMenu = new QMenu();
     #ifdef Q_OS_MACX
     dockMenu->setAsDockMenu();
     setQuitOnLastWindowClosed(false);
     #endif
     updateDockRecents();
+
+    QMenuBar *globalMenuBar = new QMenuBar();
+    auto fileMenu = new QMenu("File");
+    globalMenuBar->addMenu(fileMenu);
+
+    newWindowAction = new QAction("New Window");
+    connect(newWindowAction, &QAction::triggered, [](){
+        newWindow();
+    });
+    fileMenu->addAction(newWindowAction);
+
+    openAction = new QAction("Open");
+    connect(openAction, &QAction::triggered, []() {
+       pickFile();
+    });
+    fileMenu->addAction(openAction);
+
+    loadShortcuts();
 }
 
 QVApplication::~QVApplication() {
@@ -139,4 +158,31 @@ qint64 QVApplication::getPreviouslyRecordedFileSize(const QString &fileName)
 void QVApplication::setPreviouslyRecordedFileSize(const QString &fileName, long long *fileSize)
 {
     previouslyRecordedFileSizes.insert(fileName, fileSize);
+}
+
+void QVApplication::loadShortcuts()
+{
+    auto shortcuts = getShortcutsList();
+    newWindowAction->setShortcuts(shortcuts.value("newwindow"));
+    openAction->setShortcuts(shortcuts.value("open"));
+}
+
+QHash<QString, QList<QKeySequence>> QVApplication::getShortcutsList()
+{
+    QSettings settings;
+    settings.beginGroup("shortcuts");
+
+    // To retrieve default bindings, we hackily init an options dialog and use it's constructor values
+    QVOptionsDialog invisibleOptionsDialog;
+    auto shortcutData = invisibleOptionsDialog.getTransientShortcuts();
+
+    // Iterate through all default shortcuts to get saved shortcuts from settings
+    QHash<QString, QList<QKeySequence>> shortcuts;
+    QListIterator<QVShortcutDialog::SShortcut> iter(shortcutData);
+    while (iter.hasNext())
+    {
+        auto value = iter.next();
+        shortcuts.insert(value.name, QVOptionsDialog::stringListToKeySequenceList(settings.value(value.name, value.defaultShortcuts).value<QStringList>()));
+    }
+    return shortcuts;
 }
