@@ -93,27 +93,28 @@ MainWindow *QVApplication::getMainWindow()
     {
         while (widget->parentWidget() != nullptr)
             widget = widget->parentWidget();
+        qDebug() << 0;
 
         return qobject_cast<MainWindow*>(widget);
     }
-    else
+
+    MainWindow *w = nullptr;
+
+    foreach (QWidget *widget, QApplication::topLevelWidgets())
     {
-        foreach (QWidget *widget, QApplication::topLevelWidgets())
+        if (auto *mainWin = qobject_cast<MainWindow*>(widget))
         {
-            if (auto *mainWin = qobject_cast<MainWindow*>(widget))
+            if (!mainWin->getIsPixmapLoaded())
             {
-                if (!mainWin->getIsPixmapLoaded())
-                {
-                    widget = mainWin;
-                }
+                w = mainWin;
             }
         }
     }
 
-    if (!widget)
+    if (!w)
         widget = newWindow();
 
-    return qobject_cast<MainWindow*>(widget);
+    return w;
 }
 
 void QVApplication::updateDockRecents()
