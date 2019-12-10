@@ -87,22 +87,33 @@ MainWindow *QVApplication::newWindow(const QString &fileToOpen)
 
 MainWindow *QVApplication::getMainWindow()
 {
-    MainWindow *w = nullptr;
-    foreach (QWidget *widget, QApplication::topLevelWidgets())
+    auto widget = activeWindow();
+
+    if (widget)
     {
-        if (auto *mainWin = qobject_cast<MainWindow*>(widget))
+        while (widget->parentWidget() != nullptr)
+            widget = widget->parentWidget();
+
+        return qobject_cast<MainWindow*>(widget);
+    }
+    else
+    {
+        foreach (QWidget *widget, QApplication::topLevelWidgets())
         {
-            if (!mainWin->getIsPixmapLoaded())
+            if (auto *mainWin = qobject_cast<MainWindow*>(widget))
             {
-                w = mainWin;
+                if (!mainWin->getIsPixmapLoaded())
+                {
+                    widget = mainWin;
+                }
             }
         }
     }
 
-    if (!w)
-        w = newWindow();
+    if (!widget)
+        widget = newWindow();
 
-    return w;
+    return qobject_cast<MainWindow*>(widget);
 }
 
 void QVApplication::updateDockRecents()
