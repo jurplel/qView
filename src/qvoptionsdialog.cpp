@@ -118,7 +118,6 @@ void QVOptionsDialog::saveSettings()
     }
 
     emit optionsSaved();
-    qobject_cast<QVApplication*>(qApp)->loadShortcuts();
 }
 
 void QVOptionsDialog::loadSettings(const bool defaults)

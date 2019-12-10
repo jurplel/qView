@@ -30,8 +30,6 @@ public:
 
     void setPreviouslyRecordedFileSize(const QString &fileName, long long *fileSize);
 
-    void loadShortcuts();
-
     QHash<QString, QList<QKeySequence>> getShortcutsList();
 
 private:
@@ -39,9 +37,6 @@ private:
 
     QCache<QString, qint64> previouslyRecordedFileSizes;
 
-    QAction *newWindowAction;
-
-    QAction *openAction;
 };
 
 #endif // QVAPPLICATION_H
