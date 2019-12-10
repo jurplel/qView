@@ -112,7 +112,7 @@ MainWindow *QVApplication::getMainWindow()
     }
 
     if (!w)
-        widget = newWindow();
+        w = newWindow();
 
     return w;
 }
