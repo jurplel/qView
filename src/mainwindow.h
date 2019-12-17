@@ -29,6 +29,10 @@ public:
 
     void pickFile();
 
+    void openUrl(QUrl url);
+
+    void pickUrl();
+
 public slots:
     void openFile(const QString &fileName);
 

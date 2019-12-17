@@ -529,6 +529,92 @@ void MainWindow::setJustLaunchedWithImage(bool value)
     justLaunchedWithImage = value;
 }
 
+void MainWindow::openUrl(QUrl url)
+{
+    auto *networkManager = new QNetworkAccessManager(this);
+
+    if (!url.isValid()) {
+        QMessageBox::critical(this, tr("Error"), tr("Error: URL is invalid"));
+        return;
+    }
+
+    auto request = QNetworkRequest(url);
+    auto *reply = networkManager->get(request);
+    auto *progressDialog = new QProgressDialog(tr("Downloading image..."), tr("Cancel"), 0, 100);
+    progressDialog->setAutoClose(false);
+    progressDialog->setAutoReset(false);
+    progressDialog->setWindowTitle(ui->actionOpen_URL->text());
+    progressDialog->open();
+
+    connect(progressDialog, &QProgressDialog::canceled, [reply]{
+        reply->abort();
+    });
+
+    connect(reply, &QNetworkReply::downloadProgress, [progressDialog](qreal bytesReceived, qreal bytesTotal){
+        auto percent = (bytesReceived/bytesTotal)*100;
+        progressDialog->setValue(qRound(percent));
+    });
+
+
+    connect(reply, &QNetworkReply::finished, [networkManager, progressDialog, reply, this]{
+        if (reply->error())
+        {
+            progressDialog->close();
+            QMessageBox::critical(this, tr("Error"), tr("Error ") + QString::number(reply->error()) + ": " + reply->errorString());
+
+            networkManager->deleteLater();
+            progressDialog->deleteLater();
+            return;
+        }
+
+        progressDialog->setMaximum(0);
+
+        auto *tempFile = new QTemporaryFile(this);
+
+        auto *saveFutureWatcher = new QFutureWatcher<bool>();
+        connect(saveFutureWatcher, &QFutureWatcher<bool>::finished, this, [networkManager, progressDialog, tempFile, saveFutureWatcher, this](){
+            progressDialog->close();
+            if (saveFutureWatcher->result())
+            {
+                if (tempFile->open())
+                {
+                    openFile(tempFile->fileName());
+                }
+            }
+            else
+            {
+                 QMessageBox::critical(this, tr("Error"), tr("Error: Invalid image"));
+                 tempFile->deleteLater();
+            }
+            progressDialog->deleteLater();
+            networkManager->deleteLater();
+            saveFutureWatcher->deleteLater();
+        });
+
+        saveFutureWatcher->setFuture(QtConcurrent::run([reply, tempFile]{
+            return QImage::fromData(reply->readAll()).save(tempFile, "png");
+        }));
+
+    });
+}
+
+void MainWindow::pickUrl()
+{
+    auto inputDialog = new QInputDialog(this);
+    inputDialog->setWindowTitle(ui->actionOpen_URL->text());
+    inputDialog->setLabelText(tr("URL of a supported image file:"));
+    inputDialog->resize(350, inputDialog->height());
+    connect(inputDialog, &QInputDialog::finished, [inputDialog, this](int result) {
+        if (!result)
+            return;
+
+        auto url = QUrl(inputDialog->textValue());
+        inputDialog->deleteLater();
+        openUrl(url);
+    });
+    inputDialog->open();
+}
+
 // Actions
 
 void MainWindow::on_actionOpen_triggered()
@@ -556,7 +642,20 @@ void MainWindow::on_actionCopy_triggered()
 
 void MainWindow::on_actionPaste_triggered()
 {
-    ui->graphicsView->loadMimeData(QApplication::clipboard()->mimeData());
+    const QMimeData *mimeData = QApplication::clipboard()->mimeData();
+
+    if (mimeData->hasText())
+    {
+        auto url = QUrl(mimeData->text());
+
+        if (url.isValid() && (url.scheme() == "http" || url.scheme() == "https"))
+        {
+            openUrl(url);
+            return;
+        }
+    }
+
+    ui->graphicsView->loadMimeData(mimeData);
 }
 
 void MainWindow::on_actionOptions_triggered()
@@ -784,85 +883,7 @@ void MainWindow::on_actionLast_File_triggered()
 
 void MainWindow::on_actionOpen_URL_triggered()
 {
-    auto inputDialog = new QInputDialog(this);
-    inputDialog->setWindowTitle(ui->actionOpen_URL->text());
-    inputDialog->setLabelText(tr("URL of a supported image file:"));
-    inputDialog->resize(350, inputDialog->height());
-    connect(inputDialog, &QInputDialog::finished, [inputDialog, this](int result) {
-        if (!result)
-            return;
-
-        auto url = QUrl(inputDialog->textValue());
-        inputDialog->deleteLater();
-
-        auto *networkManager = new QNetworkAccessManager(this);
-
-        if (!url.isValid()) {
-            QMessageBox::critical(this, tr("Error"), tr("Error: URL is invalid"));
-            return;
-        }
-
-        auto request = QNetworkRequest(url);
-        auto *reply = networkManager->get(request);
-        auto *progressDialog = new QProgressDialog(tr("Downloading image..."), tr("Cancel"), 0, 100);
-        progressDialog->setAutoClose(false);
-        progressDialog->setAutoReset(false);
-        progressDialog->setWindowTitle(ui->actionOpen_URL->text());
-        progressDialog->open();
-
-        connect(progressDialog, &QProgressDialog::canceled, [reply]{
-            reply->abort();
-        });
-
-        connect(reply, &QNetworkReply::downloadProgress, [progressDialog](qreal bytesReceived, qreal bytesTotal){
-            auto percent = (bytesReceived/bytesTotal)*100;
-            progressDialog->setValue(qRound(percent));
-        });
-
-
-        connect(reply, &QNetworkReply::finished, [networkManager, progressDialog, reply, this]{
-            if (reply->error())
-            {
-                progressDialog->close();
-                QMessageBox::critical(this, tr("Error"), tr("Error ") + QString::number(reply->error()) + ": " + reply->errorString());
-
-                networkManager->deleteLater();
-                progressDialog->deleteLater();
-                return;
-            }
-
-
-            progressDialog->setMaximum(0);
-
-            auto *tempFile = new QTemporaryFile(this);
-
-            auto *saveFutureWatcher = new QFutureWatcher<bool>();
-            connect(saveFutureWatcher, &QFutureWatcher<bool>::finished, this, [networkManager, progressDialog, tempFile, saveFutureWatcher, this](){
-                progressDialog->close();
-                if(saveFutureWatcher->result())
-                {
-                    if(tempFile->open())
-                    {
-                        openFile(tempFile->fileName());
-                    }
-                }
-                else
-                {
-                     QMessageBox::critical(this, tr("Error"), tr("Error: Invalid image"));
-                     tempFile->deleteLater();
-                }
-                progressDialog->deleteLater();
-                networkManager->deleteLater();
-                saveFutureWatcher->deleteLater();
-            });
-
-            saveFutureWatcher->setFuture(QtConcurrent::run([reply, tempFile]{
-                return QImage::fromData(reply->readAll()).save(tempFile, "png");
-            }));
-
-        });
-    });
-    inputDialog->open();
+    pickUrl();
 }
 
 void MainWindow::on_actionClose_Window_triggered()
