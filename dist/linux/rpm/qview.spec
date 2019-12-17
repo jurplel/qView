@@ -1,5 +1,5 @@
 Name:		qview
-Version:	2.0
+Version:	3.0
 Release:	1
 Summary:	Practical and minimal image viewer
 

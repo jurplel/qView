@@ -3,7 +3,7 @@ QT += core gui network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = qView
-VERSION = 2.0 # major.minor
+VERSION = 3.0 # major.minor
 TEMPLATE = app
 
 # allows use of version variable elsewhere
