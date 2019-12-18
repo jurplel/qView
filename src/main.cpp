@@ -5,12 +5,12 @@
 
 int main(int argc, char *argv[])
 {
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+
     QVApplication app(argc, argv);
     QCoreApplication::setOrganizationName("qView");
     QCoreApplication::setApplicationName(QString("qView"));
     QCoreApplication::setApplicationVersion(QString::number(VERSION));
-
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QCommandLineParser parser;
     parser.addHelpOption();
