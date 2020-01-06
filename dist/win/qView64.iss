@@ -5,7 +5,7 @@
 
 ; Update these when building
 #define MyAppVersion "3.0"
-#define MyAppYear "2019"
+#define MyAppYear "2020"
 
 [Setup]
 AppId={{A6A9BAAB-C59E-4EAB-ACE1-3EEDE3031880}
