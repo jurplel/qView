@@ -1,5 +1,5 @@
 qview (3.0-2) bionic; urgency=low
 
-  * Initial release
+  * Removed xdg-util dependency
 
  -- jurplel <jurplel@interversehq.com>  Sun, 12 Jan 2020 18:58:16 -0500
