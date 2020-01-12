@@ -9,6 +9,6 @@ Homepage: https://interversehq.com/qview
 Package: qview
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, libqt5widgets5 (>= 5.9), libqt5network5 (>= 5.9), libqt5concurrent5 (>= 5.9)
-Recommends: qt5-image-formats-plugins (>= 5.9), libqt5svg5 (>= 5.9), xdg-utils
+Recommends: qt5-image-formats-plugins (>= 5.9), libqt5svg5 (>= 5.9)
 Description: Practical and minimal image viewer
  qView is a Qt image viewer designed with minimalism and usability in mind.
