@@ -8,7 +8,6 @@
 
 <h4 align=center>
     <a href="https://interversehq.com/qview/download">Downloads</a> |
-    <a href="https://github.com/jurplel/qView/wiki/Keyboard-Shortcuts">Keyboard Shortcuts</a> |
     <a href="https://interversehq.com/qview/changelog">Changelog</a>
 </h4>
 
