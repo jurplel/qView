@@ -18,6 +18,9 @@
     <a href="https://aur.archlinux.org/packages/qview/">
         <img alt="AUR shield" src="https://img.shields.io/aur/version/qview.svg">
     </a>
+    <a href="https://formulae.brew.sh/cask/qview">
+        <img alt="Homebrew cask shield" src="https://img.shields.io/homebrew/cask/v/qview">
+    </a>
 </p>
 
 <p align=center>
