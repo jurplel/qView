@@ -27,6 +27,7 @@
 #include <QProgressDialog>
 #include <QFutureWatcher>
 #include <QtConcurrent/QtConcurrentRun>
+#include <QMenu>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -159,9 +160,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionOpen_URL->setIcon(QIcon::fromTheme("document-open-remote", QIcon::fromTheme("folder-remote")));
 
     //Add recent items to menubar
-    ui->menuFile->insertMenu(ui->actionClose_Window, recentFilesMenu);
-    ui->menuFile->insertSeparator(ui->actionOpen_Containing_Folder);
-    ui->menuTools->insertMenu(ui->actionSlideshow, gif);
+//    ui->menuFile->insertMenu(ui->actionClose_Window, recentFilesMenu);
+//    ui->menuFile->insertSeparator(ui->actionOpen_Containing_Folder);
+//    ui->menuTools->insertMenu(ui->actionSlideshow, gif);
 
     //add actions not used in context menu so that keyboard shortcuts still work
     addAction(ui->actionQuit);
@@ -175,7 +176,7 @@ MainWindow::MainWindow(QWidget *parent) :
     #ifdef Q_OS_MACX
     ui->actionAbout->setText(tr("About qView"));
     ui->actionOptions->setText(tr("Preferences..."));
-    ui->menuView->removeAction(ui->actionFull_Screen);
+//    ui->menuView->removeAction(ui->actionFull_Screen);
     ui->actionNew_Window->setVisible(true);
     ui->actionClose_Window->setVisible(true);
     ui->actionOpen_Containing_Folder->setText(tr("Show in Finder"));
@@ -281,10 +282,10 @@ void MainWindow::loadSettings()
     QSettings settings;
     settings.beginGroup("options");
     //menubar
-    if (settings.value("menubarenabled", false).toBool())
-        ui->menuBar->show();
-    else
-        ui->menuBar->hide();
+//    if (settings.value("menubarenabled", false).toBool())
+//        ui->menuBar->show();
+//    else
+//        ui->menuBar->hide();
 
     //slideshowtimer
     slideshowTimer->setInterval(static_cast<int>(settings.value("slideshowtimer", 5).toDouble()*1000));
@@ -435,19 +436,19 @@ void MainWindow::cancelSlideshow()
 void MainWindow::fileLoaded()
 {
     //activate items after item is loaded for the first time
-    if (ui->graphicsView->getCurrentFileDetails().isPixmapLoaded && !ui->actionOpen_Containing_Folder->isEnabled())
-    {
-        foreach(QAction* action, ui->menuView->actions())
-            action->setEnabled(true);
-        foreach(QAction* action, contextMenu->actions())
-            action->setEnabled(true);
-        foreach(QAction* action, actions())
-            action->setEnabled(true);
-        ui->actionSlideshow->setEnabled(true);
-        ui->actionCopy->setEnabled(true);
-    }
+//    if (ui->graphicsView->getCurrentFileDetails().isPixmapLoaded && !ui->actionOpen_Containing_Folder->isEnabled())
+//    {
+//        foreach(QAction* action, ui->menuView->actions())
+//            action->setEnabled(true);
+//        foreach(QAction* action, contextMenu->actions())
+//            action->setEnabled(true);
+//        foreach(QAction* action, actions())
+//            action->setEnabled(true);
+//        ui->actionSlideshow->setEnabled(true);
+//        ui->actionCopy->setEnabled(true);
+//    }
     //disable gif controls if there is no gif loaded
-    ui->menuTools->actions().constFirst()->setEnabled(ui->graphicsView->getCurrentFileDetails().isMovieLoaded);
+//    ui->menuTools->actions().constFirst()->setEnabled(ui->graphicsView->getCurrentFileDetails().isMovieLoaded);
 }
 
 void MainWindow::refreshProperties()
@@ -615,20 +616,29 @@ void MainWindow::pickUrl()
     inputDialog->open();
 }
 
-// Actions
-
-void MainWindow::on_actionOpen_triggered()
+void MainWindow::openContainingFolder()
 {
-    pickFile();
+    if (!ui->graphicsView->getCurrentFileDetails().isPixmapLoaded)
+        return;
+
+    const QFileInfo selectedFileInfo = ui->graphicsView->getCurrentFileDetails().fileInfo;
+
+    #if defined(Q_OS_WIN)
+    QProcess::startDetached("explorer", QStringList() << "/select," << QDir::toNativeSeparators(selectedFileInfo.absoluteFilePath()));
+    #elif defined(Q_OS_MACX)
+    QProcess::execute("open", QStringList() << "-R" << selectedFileInfo.absoluteFilePath());
+    #else
+    QDesktopServices::openUrl(selectedFileInfo.absolutePath());
+    #endif
 }
 
-void MainWindow::on_actionAbout_triggered()
+void MainWindow::showFileInfo()
 {
-    auto *about = new QVAboutDialog(this);
-    about->exec();
+    refreshProperties();
+    info->show();
 }
 
-void MainWindow::on_actionCopy_triggered()
+void MainWindow::copy()
 {
     auto *mimeData = ui->graphicsView->getMimeData();
     if (!mimeData->hasImage() || !mimeData->hasUrls())
@@ -640,7 +650,7 @@ void MainWindow::on_actionCopy_triggered()
     QApplication::clipboard()->setMimeData(mimeData);
 }
 
-void MainWindow::on_actionPaste_triggered()
+void MainWindow::paste()
 {
     const QMimeData *mimeData = QApplication::clipboard()->mimeData();
 
@@ -656,6 +666,113 @@ void MainWindow::on_actionPaste_triggered()
     }
 
     ui->graphicsView->loadMimeData(mimeData);
+}
+
+void MainWindow::zoomIn()
+{
+    ui->graphicsView->zoom(120, ui->graphicsView->mapFromGlobal(QCursor::pos()));
+}
+
+void MainWindow::zoomOut()
+{
+    ui->graphicsView->zoom(-120, ui->graphicsView->mapFromGlobal(QCursor::pos()));
+}
+
+void MainWindow::resetZoom()
+{
+    ui->graphicsView->resetScale();
+}
+
+void MainWindow::originalSize()
+{
+    ui->graphicsView->originalSize();
+}
+
+void MainWindow::rotateRight()
+{
+    ui->graphicsView->rotateImage(90);
+    resetZoom();
+}
+
+void MainWindow::rotateLeft()
+{
+    ui->graphicsView->rotateImage(-90);
+    resetZoom();
+}
+
+void MainWindow::mirror()
+{
+    ui->graphicsView->scale(-1, 1);
+    resetZoom();
+}
+
+void MainWindow::flip()
+{
+    ui->graphicsView->scale(1, -1);
+    resetZoom();
+}
+
+void MainWindow::firstFile()
+{
+    ui->graphicsView->goToFile(QVGraphicsView::goToFileMode::first);
+}
+
+void MainWindow::previousFile()
+{
+    ui->graphicsView->goToFile(QVGraphicsView::goToFileMode::previous);
+}
+
+void MainWindow::nextFile()
+{
+    ui->graphicsView->goToFile(QVGraphicsView::goToFileMode::next);
+}
+
+void MainWindow::lastFile()
+{
+    ui->graphicsView->goToFile(QVGraphicsView::goToFileMode::last);
+}
+
+void MainWindow::openOptions()
+{
+    auto *options = new QVOptionsDialog(this);
+    options->open();
+
+    connect(options, &QVOptionsDialog::optionsSaved, this, &MainWindow::loadSettings);
+}
+
+void MainWindow::openAbout()
+{
+    auto *about = new QVAboutDialog(this);
+    about->exec();
+}
+
+void MainWindow::openWelcome()
+{
+    auto *welcome = new QVWelcomeDialog(this);
+    welcome->exec();
+}
+
+// Actions
+
+void MainWindow::on_actionOpen_triggered()
+{
+    pickFile();
+}
+
+void MainWindow::on_actionAbout_triggered()
+{
+    auto *about = new QVAboutDialog(this);
+    about->exec();
+}
+
+void MainWindow::on_actionCopy_triggered()
+{
+    copy();
+}
+
+void MainWindow::on_actionPaste_triggered()
+{
+    paste();
 }
 
 void MainWindow::on_actionOptions_triggered()
@@ -678,18 +795,7 @@ void MainWindow::on_actionPrevious_File_triggered()
 
 void MainWindow::on_actionOpen_Containing_Folder_triggered()
 {
-    if (!ui->graphicsView->getCurrentFileDetails().isPixmapLoaded)
-        return;
-
-    const QFileInfo selectedFileInfo = ui->graphicsView->getCurrentFileDetails().fileInfo;
-
-    #if defined(Q_OS_WIN)
-    QProcess::startDetached("explorer", QStringList() << "/select," << QDir::toNativeSeparators(selectedFileInfo.absoluteFilePath()));
-    #elif defined(Q_OS_MACX)
-    QProcess::execute("open", QStringList() << "-R" << selectedFileInfo.absoluteFilePath());
-    #else
-    QDesktopServices::openUrl(selectedFileInfo.absolutePath());
-    #endif
+    openContainingFolder();
 }
 
 void MainWindow::on_actionRotate_Right_triggered()
@@ -739,8 +845,7 @@ void MainWindow::on_actionReset_Zoom_triggered()
 
 void MainWindow::on_actionProperties_triggered()
 {
-    refreshProperties();
-    info->show();
+    showFileInfo();
 }
 
 void MainWindow::on_actionFull_Screen_triggered()

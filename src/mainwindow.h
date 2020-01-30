@@ -33,6 +33,44 @@ public:
 
     void pickUrl();
 
+    void openContainingFolder();
+
+    void showFileInfo();
+
+    void copy();
+
+    void paste();
+
+    void zoomIn();
+
+    void zoomOut();
+
+    void resetZoom();
+
+    void originalSize();
+
+    void rotateRight();
+
+    void rotateLeft();
+
+    void mirror();
+
+    void flip();
+
+    void firstFile();
+
+    void previousFile();
+
+    void nextFile();
+
+    void lastFile();
+
+    void openOptions();
+
+    void openAbout();
+
+    void openWelcome();
+
 public slots:
     void openFile(const QString &fileName);
 
