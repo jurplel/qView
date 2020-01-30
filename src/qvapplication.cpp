@@ -82,7 +82,7 @@ MainWindow *QVApplication::getMainWindow()
 
         if (!window->getIsPixmapLoaded())
         {
-            return qobject_cast<MainWindow*>(window);
+            return window;
         }
     }
 
