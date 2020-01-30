@@ -38,7 +38,7 @@ bool QVApplication::event(QEvent *event)
 
 void QVApplication::pickFile()
 {
-    MainWindow *w = getMainWindow();
+    MainWindow *w = getEmptyMainWindow();
 
     if (!w)
         return;
@@ -48,7 +48,7 @@ void QVApplication::pickFile()
 
 void QVApplication::openFile(const QString &file, bool resize)
 {
-    MainWindow *w = getMainWindow();
+    MainWindow *w = getEmptyMainWindow();
 
     if (!w)
         return;
@@ -68,9 +68,8 @@ MainWindow *QVApplication::newWindow(const QString &fileToOpen)
     return w;
 }
 
-MainWindow *QVApplication::getMainWindow()
+MainWindow *QVApplication::getCurrentMainWindow()
 {
-    //Attempt to use the active window
     auto activeWidget = activeWindow();
 
     if (activeWidget)
@@ -78,8 +77,20 @@ MainWindow *QVApplication::getMainWindow()
         while (activeWidget->parentWidget() != nullptr)
             activeWidget = activeWidget->parentWidget();
 
-        auto window = qobject_cast<MainWindow*>(activeWidget);
+        if (auto *window = qobject_cast<MainWindow*>(activeWidget))
+        {
+            return window;
+        }
+    }
 
+    return nullptr;
+}
+
+MainWindow *QVApplication::getEmptyMainWindow()
+{
+    //Attempt to use the active window
+    if (auto *window = getCurrentMainWindow())
+    {
         if (!window->getIsPixmapLoaded())
         {
             return window;
@@ -87,24 +98,21 @@ MainWindow *QVApplication::getMainWindow()
     }
 
     //If that is not valid, check all windows and use the first valid one
-    MainWindow *w = nullptr;
-
     foreach (QWidget *widget, QApplication::topLevelWidgets())
     {
-        if (auto *mainWin = qobject_cast<MainWindow*>(widget))
+        if (auto *window = qobject_cast<MainWindow*>(widget))
         {
-            if (!mainWin->getIsPixmapLoaded())
+            if (!window->getIsPixmapLoaded())
             {
-                w = mainWin;
+                return window;
             }
         }
     }
 
     //If there are no valid ones, make a new one.
-    if (!w)
-        w = newWindow();
+    auto *window = newWindow();
 
-    return w;
+    return window;
 }
 
 void QVApplication::updateDockRecents()

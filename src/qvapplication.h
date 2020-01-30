@@ -22,7 +22,9 @@ public:
 
     static MainWindow *newWindow(const QString &fileToOpen = "");
 
-    static MainWindow *getMainWindow();
+    static MainWindow *getCurrentMainWindow();
+
+    static MainWindow *getEmptyMainWindow();
 
     void updateDockRecents();
 
