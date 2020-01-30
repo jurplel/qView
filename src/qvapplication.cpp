@@ -70,17 +70,23 @@ MainWindow *QVApplication::newWindow(const QString &fileToOpen)
 
 MainWindow *QVApplication::getMainWindow()
 {
-    auto widget = activeWindow();
+    //Attempt to use the active window
+    auto activeWidget = activeWindow();
 
-    if (widget)
+    if (activeWidget)
     {
-        while (widget->parentWidget() != nullptr)
-            widget = widget->parentWidget();
-        qDebug() << 0;
+        while (activeWidget->parentWidget() != nullptr)
+            activeWidget = activeWidget->parentWidget();
 
-        return qobject_cast<MainWindow*>(widget);
+        auto window = qobject_cast<MainWindow*>(activeWidget);
+
+        if (!window->getIsPixmapLoaded())
+        {
+            return qobject_cast<MainWindow*>(window);
+        }
     }
 
+    //If that is not valid, check all windows and use the first valid one
     MainWindow *w = nullptr;
 
     foreach (QWidget *widget, QApplication::topLevelWidgets())
@@ -94,6 +100,7 @@ MainWindow *QVApplication::getMainWindow()
         }
     }
 
+    //If there are no valid ones, make a new one.
     if (!w)
         w = newWindow();
 
