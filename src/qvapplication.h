@@ -5,6 +5,12 @@
 #include "mainwindow.h"
 #include <QCache>
 #include <QAction>
+#include "actionmanager.h"
+
+#if defined(qvApp)
+#undef qvApp
+#endif
+#define qvApp (static_cast<QVApplication *>(QCoreApplication::instance()))	// global qvapplication object
 
 class QVApplication : public QApplication
 {
@@ -34,10 +40,14 @@ public:
 
     QHash<QString, QList<QKeySequence>> getShortcutsList();
 
+    const ActionManager& getActionManager() const {return actionManager; }
+
 private:
     QMenu *dockMenu;
 
     QCache<QString, qint64> previouslyRecordedFileSizes;
+
+    ActionManager actionManager;
 
 };
 

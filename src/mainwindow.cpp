@@ -752,6 +752,84 @@ void MainWindow::openWelcome()
     welcome->exec();
 }
 
+void MainWindow::saveFrameAs()
+{
+    QSettings settings;
+    settings.beginGroup("recents");
+    if (!ui->graphicsView->getCurrentFileDetails().isMovieLoaded)
+        return;
+
+    if (ui->graphicsView->getLoadedMovie().state() == QMovie::Running)
+    {
+        ui->actionPause->trigger();
+    }
+    QFileDialog *saveDialog = new QFileDialog(this, tr("Save Frame As..."), "", tr("Supported Files (*.bmp *.cur *.icns *.ico *.jp2 *.jpeg *.jpe *.jpg *.pbm *.pgm *.png *.ppm *.tif *.tiff *.wbmp *.webp *.xbm *.xpm);;All Files (*)"));
+    saveDialog->setDirectory(settings.value("lastFileDialogDir", QDir::homePath()).toString());
+    saveDialog->selectFile(ui->graphicsView->getCurrentFileDetails().fileInfo.baseName() + "-" + QString::number(ui->graphicsView->getLoadedMovie().currentFrameNumber()) + ".png");
+    saveDialog->setDefaultSuffix("png");
+    saveDialog->setAcceptMode(QFileDialog::AcceptSave);
+    saveDialog->open();
+    connect(saveDialog, &QFileDialog::fileSelected, this, [=](QString fileName){
+        ui->graphicsView->originalSize();
+        for(int i=0; i < ui->graphicsView->getLoadedMovie().frameCount(); i++)
+            ui->actionNext_Frame->trigger();
+
+        ui->graphicsView->getLoadedMovie().currentPixmap().save(fileName, nullptr, 100);
+        ui->graphicsView->resetScale();
+    });
+}
+
+void MainWindow::pause()
+{
+    if (!ui->graphicsView->getCurrentFileDetails().isMovieLoaded)
+        return;
+
+    if (ui->graphicsView->getLoadedMovie().state() == QMovie::Running)
+    {
+        ui->graphicsView->setPaused(true);
+        ui->actionPause->setText(tr("Resume"));
+        ui->actionPause->setIcon(QIcon::fromTheme("media-playback-start"));
+    }
+    else
+    {
+        ui->graphicsView->setPaused(false);
+        ui->actionPause->setText(tr("Pause"));
+        ui->actionPause->setIcon(QIcon::fromTheme("media-playback-pause"));
+    }
+}
+
+void MainWindow::nextFrame()
+{
+    if (!ui->graphicsView->getCurrentFileDetails().isMovieLoaded)
+        return;
+
+    ui->graphicsView->jumpToNextFrame();
+}
+
+void MainWindow::decreaseSpeed()
+{
+    if (!ui->graphicsView->getCurrentFileDetails().isMovieLoaded)
+        return;
+
+    ui->graphicsView->setSpeed(ui->graphicsView->getLoadedMovie().speed()-25);
+}
+
+void MainWindow::resetSpeed()
+{
+    if (!ui->graphicsView->getCurrentFileDetails().isMovieLoaded)
+        return;
+
+    ui->graphicsView->setSpeed(100);
+}
+
+void MainWindow::increaseSpeed()
+{
+    if (!ui->graphicsView->getCurrentFileDetails().isMovieLoaded)
+        return;
+
+    ui->graphicsView->setSpeed(ui->graphicsView->getLoadedMovie().speed()+25);
+}
+
 // Actions
 
 void MainWindow::on_actionOpen_triggered()

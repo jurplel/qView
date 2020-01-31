@@ -71,6 +71,18 @@ public:
 
     void openWelcome();
 
+    void saveFrameAs();
+
+    void pause();
+
+    void nextFrame();
+
+    void decreaseSpeed();
+
+    void resetSpeed();
+
+    void increaseSpeed();
+
 public slots:
     void openFile(const QString &fileName);
 
