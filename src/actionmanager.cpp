@@ -1,12 +1,18 @@
 #include "actionmanager.h"
 #include "qvapplication.h"
 
+#include <QSettings>
+#include <QMimeDatabase>
+
 ActionManager::ActionManager(QObject *parent) : QObject(parent)
 {
     initializeActionLibrary();
+    initializeRecentsList();
+
+    updateRecentsList();
 }
 
-QAction *ActionManager::getAction(QString key)
+QAction *ActionManager::getAction(QString key) const
 {
     auto action = actionLibrary.value(key);
 
@@ -16,7 +22,7 @@ QAction *ActionManager::getAction(QString key)
     return nullptr;
 }
 
-QMenuBar *ActionManager::buildMenuBar()
+QMenuBar *ActionManager::buildMenuBar() const
 {
     //Global menubar
     auto *menuBar = new QMenuBar();
@@ -27,6 +33,7 @@ QMenuBar *ActionManager::buildMenuBar()
     fileMenu->addAction(getAction("newwindow"));
     fileMenu->addAction(getAction("open"));
     fileMenu->addAction(getAction("openurl"));
+    fileMenu->addMenu(buildRecentsMenu());
     fileMenu->addAction(getAction("closewindow"));
     fileMenu->addSeparator();
     fileMenu->addAction(getAction("opencontainingfolder"));
@@ -45,20 +52,13 @@ QMenuBar *ActionManager::buildMenuBar()
     //End of edit menu
 
     //Beginning of view menu
-    auto *viewMenu = new QMenu(tr("View"));
+    bool withFullscreen = true;
 
-    viewMenu->addAction(getAction("zoomin"));
-    viewMenu->addAction(getAction("zoomout"));
-    viewMenu->addAction(getAction("resetzoom"));
-    viewMenu->addAction(getAction("originalsize"));
-    viewMenu->addSeparator();
-    viewMenu->addAction(getAction("rotateright"));
-    viewMenu->addAction(getAction("rotateleft"));
-    viewMenu->addSeparator();
-    viewMenu->addAction(getAction("mirror"));
-    viewMenu->addAction(getAction("flip"));
+    #ifdef Q_OS_MACOS
+        withFullscreen = false;
+    #endif
 
-    menuBar->addMenu(viewMenu);
+    menuBar->addMenu(buildViewMenu(withFullscreen));
     //End of view menu
 
     //Beginning of go menu
@@ -73,30 +73,20 @@ QMenuBar *ActionManager::buildMenuBar()
     //End of go menu
 
     //Beginning of tools menu
-    auto *toolsMenu = new QMenu(tr("Tools"));
-
-    toolsMenu->addMenu(buildGifMenu());
-    toolsMenu->addAction(getAction("slideshow"));
-    toolsMenu->addAction(getAction("options"));
-
-    menuBar->addMenu(toolsMenu);
+    menuBar->addMenu(buildToolsMenu());
     //End of tools menu
 
     //Beginning of help menu
-    auto *helpMenu = new QMenu(tr("Help"));
-
-    helpMenu->addAction(getAction("about"));
-    helpMenu->addAction(getAction("welcome"));
-
-    menuBar->addMenu(helpMenu);
+    menuBar->addMenu(buildHelpMenu());
     //End of help menu
 
     return menuBar;
 }
 
-QMenu *ActionManager::buildGifMenu()
+QMenu *ActionManager::buildGifMenu() const
 {
     auto *gifMenu = new QMenu(tr("GIF Controls"));
+    gifMenu->setIcon(QIcon::fromTheme("media-playlist-repeat"));
 
     gifMenu->addAction(getAction("saveframeas"));
     gifMenu->addAction(getAction("pause"));
@@ -107,6 +97,117 @@ QMenu *ActionManager::buildGifMenu()
     gifMenu->addAction(getAction("increasespeed"));
 
     return gifMenu;
+}
+
+QMenu *ActionManager::buildViewMenu(bool withFullscreen) const
+{
+    auto *viewMenu = new QMenu(tr("View"));
+    viewMenu->setIcon(QIcon::fromTheme("zoom-fit-best"));
+
+    viewMenu->addAction(getAction("zoomin"));
+    viewMenu->addAction(getAction("zoomout"));
+    viewMenu->addAction(getAction("resetzoom"));
+    viewMenu->addAction(getAction("originalsize"));
+    viewMenu->addSeparator();
+    viewMenu->addAction(getAction("rotateright"));
+    viewMenu->addAction(getAction("rotateleft"));
+    viewMenu->addSeparator();
+    viewMenu->addAction(getAction("mirror"));
+    viewMenu->addAction(getAction("flip"));
+    viewMenu->addSeparator();
+    if (withFullscreen)
+        viewMenu->addAction(getAction("fullscreen"));
+
+    return viewMenu;
+}
+
+QMenu *ActionManager::buildToolsMenu() const
+{
+    auto *toolsMenu = new QMenu(tr("Tools"));
+    toolsMenu->setIcon(QIcon::fromTheme("configure", QIcon::fromTheme("preferences-other")));
+
+    toolsMenu->addMenu(buildGifMenu());
+    toolsMenu->addAction(getAction("slideshow"));
+    toolsMenu->addAction(getAction("options"));
+
+    return toolsMenu;
+}
+
+QMenu *ActionManager::buildHelpMenu() const
+{
+    auto *helpMenu = new QMenu(tr("Help"));
+    helpMenu->setIcon(QIcon::fromTheme("help-about"));
+
+    helpMenu->addAction(getAction("about"));
+    helpMenu->addAction(getAction("welcome"));
+
+    return helpMenu;
+}
+
+QMenu *ActionManager::buildRecentsMenu() const
+{
+    auto recentsMenu = new QMenu(tr("Open Recent"));
+    recentsMenu->setIcon(QIcon::fromTheme("document-open-recent"));
+
+    recentsMenu->addActions(recentsList);
+    recentsMenu->addSeparator();
+    recentsMenu->addAction(getAction("clearrecents"));
+    return recentsMenu;
+}
+
+void ActionManager::updateRecentsList()
+{
+    QSettings settings;
+    settings.beginGroup("recents");
+
+    QVariantList savedRecentsList = settings.value("recentFiles").value<QVariantList>();
+
+    for (int i = 0; i <= 9; i++)
+    {
+        if (i < savedRecentsList.size())
+        {
+            recentsList[i]->setVisible(true);
+
+            QString fileName = savedRecentsList[i].toList().first().toString();
+            recentsList[i]->setText(fileName);
+
+            //set icons for linux users
+            QMimeDatabase mimedb;
+            QMimeType type = mimedb.mimeTypeForFile(savedRecentsList[i].toList().last().toString());
+            if (type.iconName().isNull())
+                recentsList[i]->setIcon(QIcon::fromTheme(type.genericIconName()));
+            else
+                recentsList[i]->setIcon(QIcon::fromTheme(type.iconName()));
+        }
+        else
+        {
+            recentsList[i]->setVisible(false);
+            recentsList[i]->setText(tr("Empty"));
+        }
+    }
+}
+
+void ActionManager::clearRecentsList()
+{
+    QSettings settings;
+    settings.beginGroup("recents");
+    settings.remove("");
+    updateRecentsList();
+}
+
+
+void ActionManager::initializeRecentsList()
+{
+    for ( int i = 0; i <= 9; i++ )
+    {
+        auto action = new QAction(tr("Empty"), this);
+        action->setVisible(false);
+        connect(action, &QAction::triggered, [i]{
+            if (auto *window = qvApp->getCurrentMainWindow())
+                window->openRecent(i);
+        });
+        recentsList.append(action);
+    }
 }
 
 void ActionManager::initializeActionLibrary()
@@ -227,6 +328,13 @@ void ActionManager::initializeActionLibrary()
     });
     actionLibrary.insert("flip", flipAction);
 
+    auto *fullScreenAction = new QAction(QIcon::fromTheme("object-flip-vertical"), tr("Full Screen"));
+    connect(fullScreenAction, &QAction::triggered, [](){
+        if (auto *window = qvApp->getCurrentMainWindow())
+            window->toggleFullScreen();
+    });
+    actionLibrary.insert("fullscreen", fullScreenAction);
+
     auto *firstFileAction = new QAction(QIcon::fromTheme("go-first"), tr("First File"));
     connect(firstFileAction, &QAction::triggered, [](){
         if (auto *window = qvApp->getCurrentMainWindow())
@@ -304,4 +412,11 @@ void ActionManager::initializeActionLibrary()
             window->openWelcome();
     });
     actionLibrary.insert("welcome", welcomeAction);
+
+    //This one is kinda different so here's a separator comment
+    auto *clearRecentsAction = new QAction(QIcon::fromTheme("edit-delete"), tr("Clear Menu"));
+    connect(clearRecentsAction, &QAction::triggered, [this](){
+        clearRecentsList();
+    });
+    actionLibrary.insert("clearrecents", clearRecentsAction);
 }

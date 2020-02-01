@@ -40,14 +40,14 @@ public:
 
     QHash<QString, QList<QKeySequence>> getShortcutsList();
 
-    const ActionManager& getActionManager() const {return actionManager; }
+    ActionManager *getActionManager() const {return actionManager; }
 
 private:
     QMenu *dockMenu;
 
     QCache<QString, qint64> previouslyRecordedFileSizes;
 
-    ActionManager actionManager;
+    ActionManager *actionManager;
 
 };
 

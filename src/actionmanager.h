@@ -11,11 +11,25 @@ class ActionManager : public QObject
 public:
     explicit ActionManager(QObject *parent = nullptr);
 
-    QAction *getAction(QString key);
+    QAction *getAction(QString key) const;
 
-    QMenuBar *buildMenuBar();
+    QMenuBar *buildMenuBar() const;
 
-    QMenu *buildGifMenu();
+    QMenu *buildGifMenu() const;
+
+    QMenu *buildViewMenu(bool withFullscreen = true) const;
+
+    QMenu *buildToolsMenu() const;
+
+    QMenu *buildHelpMenu() const;
+
+    QMenu *buildRecentsMenu() const;
+
+    void updateRecentsList();
+
+    void clearRecentsList();
+
+    void initializeRecentsList();
 
     void initializeActionLibrary();
 
@@ -24,6 +38,7 @@ signals:
 private:
     QHash<QString, QAction*> actionLibrary;
 
+    QList<QAction*> recentsList;
 };
 
 #endif // MENUBUILDER_H
