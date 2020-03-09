@@ -24,10 +24,10 @@ QAction *ActionManager::getAction(QString key) const
 
 QMenuBar *ActionManager::buildMenuBar() const
 {
-    //Global menubar
+    // Global menubar
     auto *menuBar = new QMenuBar();
 
-    //Beginning of file menu
+    // Beginning of file menu
     auto *fileMenu = new QMenu(tr("File"));
 
     fileMenu->addAction(getAction("newwindow"));
@@ -40,18 +40,18 @@ QMenuBar *ActionManager::buildMenuBar() const
     fileMenu->addAction(getAction("showfileinfo"));
 
     menuBar->addMenu(fileMenu);
-    //End of file menu
+    // End of file menu
 
-    //Beginning of edit menu
+    // Beginning of edit menu
     auto *editMenu = new QMenu(tr("Edit"));
 
     editMenu->addAction(getAction("copy"));
     editMenu->addAction(getAction("paste"));
 
     menuBar->addMenu(editMenu);
-    //End of edit menu
+    // End of edit menu
 
-    //Beginning of view menu
+    // Beginning of view menu
     bool withFullscreen = true;
 
     #ifdef Q_OS_MACOS
@@ -59,9 +59,9 @@ QMenuBar *ActionManager::buildMenuBar() const
     #endif
 
     menuBar->addMenu(buildViewMenu(withFullscreen));
-    //End of view menu
+    // End of view menu
 
-    //Beginning of go menu
+    // Beginning of go menu
     auto *goMenu = new QMenu(tr("Go"));
 
     goMenu->addAction(getAction("firstfile"));
@@ -70,15 +70,15 @@ QMenuBar *ActionManager::buildMenuBar() const
     goMenu->addAction(getAction("lastfile"));
 
     menuBar->addMenu(goMenu);
-    //End of go menu
+    // End of go menu
 
-    //Beginning of tools menu
+    // Beginning of tools menu
     menuBar->addMenu(buildToolsMenu());
-    //End of tools menu
+    // End of tools menu
 
-    //Beginning of help menu
+    // Beginning of help menu
     menuBar->addMenu(buildHelpMenu());
-    //End of help menu
+    // End of help menu
 
     return menuBar;
 }
@@ -413,7 +413,7 @@ void ActionManager::initializeActionLibrary()
     });
     actionLibrary.insert("welcome", welcomeAction);
 
-    //This one is kinda different so here's a separator comment
+    // This one is kinda different so here's a separator comment
     auto *clearRecentsAction = new QAction(QIcon::fromTheme("edit-delete"), tr("Clear Menu"));
     connect(clearRecentsAction, &QAction::triggered, [this](){
         clearRecentsList();
