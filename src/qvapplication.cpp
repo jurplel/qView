@@ -177,22 +177,22 @@ void QVApplication::setPreviouslyRecordedFileSize(const QString &fileName, long 
     previouslyRecordedFileSizes.insert(fileName, fileSize);
 }
 
-QHash<QString, QList<QKeySequence>> QVApplication::getShortcutsList()
-{
-    QSettings settings;
-    settings.beginGroup("shortcuts");
+//QHash<QString, QList<QKeySequence>> QVApplication::getShortcutsList()
+//{
+//    QSettings settings;
+//    settings.beginGroup("shortcuts");
 
-    // To retrieve default bindings, we hackily init an options dialog and use it's constructor values
-    QVOptionsDialog invisibleOptionsDialog;
-    auto shortcutData = invisibleOptionsDialog.getTransientShortcuts();
+//    // To retrieve default bindings, we hackily init an options dialog and use it's constructor values
+//    QVOptionsDialog invisibleOptionsDialog;
+//    auto shortcutData = invisibleOptionsDialog.getTransientShortcuts();
 
-    // Iterate through all default shortcuts to get saved shortcuts from settings
-    QHash<QString, QList<QKeySequence>> shortcuts;
-    QListIterator<QVShortcutDialog::SShortcut> iter(shortcutData);
-    while (iter.hasNext())
-    {
-        auto value = iter.next();
-        shortcuts.insert(value.name, QVOptionsDialog::stringListToKeySequenceList(settings.value(value.name, value.defaultShortcuts).value<QStringList>()));
-    }
-    return shortcuts;
-}
+//    // Iterate through all default shortcuts to get saved shortcuts from settings
+//    QHash<QString, QList<QKeySequence>> shortcuts;
+//    QListIterator<QVShortcutDialog::SShortcut> iter(shortcutData);
+//    while (iter.hasNext())
+//    {
+//        auto value = iter.next();
+//        shortcuts.insert(value.name, QVOptionsDialog::stringListToKeySequenceList(settings.value(value.name, value.defaultShortcuts).value<QStringList>()));
+//    }
+//    return shortcuts;
+//}

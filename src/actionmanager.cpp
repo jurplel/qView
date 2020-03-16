@@ -4,10 +4,15 @@
 #include <QSettings>
 #include <QMimeDatabase>
 
+#include <QDebug>
+
 ActionManager::ActionManager(QObject *parent) : QObject(parent)
 {
     initializeActionLibrary();
     initializeRecentsList();
+    initializeShortcutsList();
+    initializeRecentsMenu();
+    assignShortcuts();
 
     updateRecentsList();
 }
@@ -33,7 +38,7 @@ QMenuBar *ActionManager::buildMenuBar() const
     fileMenu->addAction(getAction("newwindow"));
     fileMenu->addAction(getAction("open"));
     fileMenu->addAction(getAction("openurl"));
-    fileMenu->addMenu(buildRecentsMenu());
+    fileMenu->addMenu(recentsMenu);
     fileMenu->addAction(getAction("closewindow"));
     fileMenu->addSeparator();
     fileMenu->addAction(getAction("opencontainingfolder"));
@@ -144,17 +149,6 @@ QMenu *ActionManager::buildHelpMenu() const
     return helpMenu;
 }
 
-QMenu *ActionManager::buildRecentsMenu() const
-{
-    auto recentsMenu = new QMenu(tr("Open Recent"));
-    recentsMenu->setIcon(QIcon::fromTheme("document-open-recent"));
-
-    recentsMenu->addActions(recentsList);
-    recentsMenu->addSeparator();
-    recentsMenu->addAction(getAction("clearrecents"));
-    return recentsMenu;
-}
-
 void ActionManager::updateRecentsList()
 {
     QSettings settings;
@@ -195,6 +189,15 @@ void ActionManager::clearRecentsList()
     updateRecentsList();
 }
 
+void ActionManager::initializeRecentsMenu()
+{
+    recentsMenu = new QMenu(tr("Open Recent"));
+    recentsMenu->setIcon(QIcon::fromTheme("document-open-recent"));
+
+    recentsMenu->addActions(recentsList);
+    recentsMenu->addSeparator();
+    recentsMenu->addAction(getAction("clearrecents"));
+}
 
 void ActionManager::initializeRecentsList()
 {
@@ -212,6 +215,12 @@ void ActionManager::initializeRecentsList()
 
 void ActionManager::initializeActionLibrary()
 {
+    auto *quitAction = new QAction(QIcon::fromTheme("application-exit"), tr("Quit"));
+    connect(quitAction, &QAction::triggered, [](){
+       if (auto *window = qvApp->getCurrentMainWindow())
+           window->quit();
+    });
+
     auto *newWindowAction = new QAction(QIcon::fromTheme("window-new"), tr("New Window"));
     connect(newWindowAction, &QAction::triggered, [](){
         qvApp->newWindow();
@@ -364,24 +373,52 @@ void ActionManager::initializeActionLibrary()
     actionLibrary.insert("lastfile", lastFileAction);
 
     auto *saveFrameAsAction = new QAction(QIcon::fromTheme("document-save-as"), tr("Save Frame As..."));
+    connect(saveFrameAsAction, &QAction::triggered, [](){
+        if (auto *window = qvApp->getCurrentMainWindow())
+            window->saveFrameAs();
+    });
     actionLibrary.insert("saveframeas", saveFrameAsAction);
 
     auto *pauseAction = new QAction(QIcon::fromTheme("media-playback-pause"), tr("Pause"));
+    connect(pauseAction, &QAction::triggered, [](){
+        if (auto *window = qvApp->getCurrentMainWindow())
+            window->pause();
+    });
     actionLibrary.insert("pause", pauseAction);
 
     auto *nextFrameAction = new QAction(QIcon::fromTheme("media-skip-forward"), tr("Next Frame"));
+    connect(nextFrameAction, &QAction::triggered, [](){
+        if (auto *window = qvApp->getCurrentMainWindow())
+            window->nextFrame();
+    });
     actionLibrary.insert("nextframe", nextFrameAction);
 
     auto *decreaseSpeedAction = new QAction(QIcon::fromTheme("media-seek-backward"), tr("Decrease Speed"));
+    connect(decreaseSpeedAction, &QAction::triggered, [](){
+        if (auto *window = qvApp->getCurrentMainWindow())
+            window->decreaseSpeed();
+    });
     actionLibrary.insert("decreasespeed", decreaseSpeedAction);
 
     auto *resetSpeedAction = new QAction(QIcon::fromTheme("media-playback-start"), tr("Reset Speed"));
+    connect(resetSpeedAction, &QAction::triggered, [](){
+        if (auto *window = qvApp->getCurrentMainWindow())
+            window->resetSpeed();
+    });
     actionLibrary.insert("resetspeed", resetSpeedAction);
 
     auto *increaseSpeedAction = new QAction(QIcon::fromTheme("media-skip-forward"), tr("Increase Speed"));
+    connect(increaseSpeedAction, &QAction::triggered, [](){
+        if (auto *window = qvApp->getCurrentMainWindow())
+            window->increaseSpeed();
+    });
     actionLibrary.insert("increasespeed", increaseSpeedAction);
 
     auto *slideshowAction = new QAction(QIcon::fromTheme("media-playback-start"), tr("Start Slideshow"));
+    connect(slideshowAction, &QAction::triggered, [](){
+        if (auto *window = qvApp->getCurrentMainWindow())
+            window->toggleSlideshow();
+    });
     actionLibrary.insert("slideshow", slideshowAction);
 
     auto *optionsAction = new QAction(QIcon::fromTheme("configure", QIcon::fromTheme("preferences-other")), tr("Options"));
@@ -419,4 +456,68 @@ void ActionManager::initializeActionLibrary()
         clearRecentsList();
     });
     actionLibrary.insert("clearrecents", clearRecentsAction);
+}
+
+void ActionManager::initializeShortcutsList()
+{
+    shortcutsList.append({"Open", "open", keyBindingsToStringList(QKeySequence::Open), {}});
+    shortcutsList.append({"Open URL", "openurl", QStringList(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_O).toString()), {}});
+    //Sets open containing folder to platform-appropriate alternative
+    QString openContainingFolderString = "Open Containing Folder";
+    #ifdef Q_OS_WIN
+    openContainingFolderString = "Show in Explorer";
+    #elif defined(Q_OS_MACX)
+    openContainingFolderString = "Show in Finder";
+    #endif
+    shortcutsList.append({openContainingFolderString, "opencontainingfolder", {}, {}});
+    shortcutsList.append({"Show File Info", "showfileinfo", QStringList(QKeySequence(Qt::Key_I).toString()), {}});
+    shortcutsList.append({"Copy", "copy", keyBindingsToStringList(QKeySequence::Copy), {}});
+    shortcutsList.append({"Paste", "paste", keyBindingsToStringList(QKeySequence::Paste), {}});
+    shortcutsList.append({"First File", "firstfile", QStringList(QKeySequence(Qt::Key_Home).toString()), {}});
+    shortcutsList.append({"Previous File", "previousfile", QStringList(QKeySequence(Qt::Key_Left).toString()), {}});
+    shortcutsList.append({"Next File", "nextfile", QStringList(QKeySequence(Qt::Key_Right).toString()), {}});
+    shortcutsList.append({"Last File", "lastfile", QStringList(QKeySequence(Qt::Key_End).toString()), {}});
+    shortcutsList.append({"Zoom In", "zoomin", keyBindingsToStringList(QKeySequence::ZoomIn), {}});
+    shortcutsList.append({"Zoom Out", "zoomout", keyBindingsToStringList(QKeySequence::ZoomOut), {}});
+    shortcutsList.append({"Reset Zoom", "resetzoom", QStringList(QKeySequence(Qt::CTRL + Qt::Key_0).toString()), {}});
+    shortcutsList.append({"Original Size", "originalsize", QStringList(QKeySequence(Qt::Key_O).toString()), {}});
+    shortcutsList.append({"Rotate Right", "rotateright", QStringList(QKeySequence(Qt::Key_Up).toString()), {}});
+    shortcutsList.append({"Rotate Left", "rotateleft", QStringList(QKeySequence(Qt::Key_Down).toString()), {}});
+    shortcutsList.append({"Mirror", "mirror", QStringList(QKeySequence(Qt::Key_F).toString()), {}});
+    shortcutsList.append({"Flip", "flip", QStringList(QKeySequence(Qt::CTRL + Qt::Key_F).toString()), {}});
+    shortcutsList.append({"Full Screen", "fullscreen", keyBindingsToStringList(QKeySequence::FullScreen), {}});
+    //Fixes alt+enter only working with numpad enter when using qt's standard keybinds
+    #ifdef Q_OS_WIN
+    shortcutsList.replace(shortcutsList.size()-1, {"Full Screen", "fullscreen", keyBindingsToStringList(QKeySequence::FullScreen) << QKeySequence(Qt::ALT + Qt::Key_Return).toString(), {}});
+    #endif
+    shortcutsList.append({"Save Frame As", "saveframeas", keyBindingsToStringList(QKeySequence::Save), {}});
+    shortcutsList.append({"Pause", "pause", QStringList(QKeySequence(Qt::Key_P).toString()), {}});
+    shortcutsList.append({"Next Frame", "nextframe", QStringList(QKeySequence(Qt::Key_N).toString()), {}});
+    shortcutsList.append({"Decrease Speed", "decreasespeed", QStringList(QKeySequence(Qt::Key_BracketLeft).toString()), {}});
+    shortcutsList.append({"Reset Speed", "resetspeed", QStringList(QKeySequence(Qt::Key_Backslash).toString()), {}});
+    shortcutsList.append({"Increase Speed", "increasespeed", QStringList(QKeySequence(Qt::Key_BracketRight).toString()), {}});
+    shortcutsList.append({"Toggle Slideshow", "slideshow", {}, {}});
+    shortcutsList.append({"Options", "options", keyBindingsToStringList(QKeySequence::Preferences), {}});
+    #ifdef Q_OS_MACX
+    shortcutsList.append({"New Window", "newwindow", keyBindingsToStringList(QKeySequence::New), {}});
+    shortcutsList.append({"Close Window", "closewindow", QStringList(QKeySequence(Qt::CTRL + Qt::Key_W).toString()), {}});
+    #endif
+    shortcutsList.append({"Quit", "quit", keyBindingsToStringList(QKeySequence::Quit), {}});
+}
+
+void ActionManager::assignShortcuts()
+{
+    foreach(auto shortcut, shortcutsList)
+    {
+        if (auto action = getAction(shortcut.name))
+        {
+            auto shortcutList = shortcut.shortcuts;
+            if (shortcutList.isEmpty())
+            {
+                shortcutList = shortcut.defaultShortcuts;
+            }
+
+            action->setShortcuts(stringListToKeySequenceList(shortcutList));
+        }
+    }
 }

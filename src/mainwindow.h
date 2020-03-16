@@ -87,8 +87,12 @@ public:
 
     void toggleFullScreen();
 
+    void quit();
+
 public slots:
     void openFile(const QString &fileName);
+
+    void toggleSlideshow();
 
     void slideshowAction();
 
@@ -129,6 +133,7 @@ private:
 
     QVInfoDialog *info;
 
+    bool slideshowDirection;
     int windowResizeMode;
     bool justLaunchedWithImage;
     qreal maxWindowResizedPercentage;

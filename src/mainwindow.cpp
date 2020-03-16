@@ -64,7 +64,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //Timer for slideshow
     slideshowTimer = new QTimer(this);
-//    connect(slideshowTimer, &QTimer::timeout, this, &MainWindow::);
+    connect(slideshowTimer, &QTimer::timeout, this, &MainWindow::slideshowAction);
 
     //Load window geometry
     QSettings settings;
@@ -78,7 +78,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     contextMenu->addAction(actionManager->getAction("open"));
     contextMenu->addAction(actionManager->getAction("openurl"));
-    contextMenu->addMenu(actionManager->buildRecentsMenu());
+    contextMenu->addMenu(actionManager->getRecentsMenu());
     contextMenu->addAction(actionManager->getAction("opencontainingfolder"));
     contextMenu->addAction(actionManager->getAction("showfileinfo"));
     contextMenu->addSeparator();
@@ -129,7 +129,7 @@ void MainWindow::showEvent(QShowEvent *event)
         return;
 
     settings.setValue("firstlaunch", true);
-//    QTimer::singleShot(100, this, &MainWindow::on_actionWelcome_triggered);
+    QTimer::singleShot(100, this, &MainWindow::openWelcome);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -199,8 +199,11 @@ void MainWindow::loadSettings()
 //    else
 //        ui->menuBar->hide();
 
-    //slideshowtimer
+    //slideshow timer
     slideshowTimer->setInterval(static_cast<int>(settings.value("slideshowtimer", 5).toDouble()*1000));
+
+    //slideshow direction
+    slideshowDirection = settings.value("slideshowdirection", 0).toInt();
 
     //window resize mode
     windowResizeMode = settings.value("windowresizemode", 1).toInt();
@@ -208,70 +211,37 @@ void MainWindow::loadSettings()
     //max window resize mode size
     maxWindowResizedPercentage = settings.value("maxwindowresizedpercentage", 70).toReal()/100;
 
-//    //saverecents
-//    isSaveRecentsEnabled = settings.value("saverecents", true).toBool();
-//    recentFilesMenu->menuAction()->setVisible(isSaveRecentsEnabled);
-//    updateRecentsMenu();
+    //saverecents
+    isSaveRecentsEnabled = settings.value("saverecents", true).toBool();
+    qvApp->getActionManager()->getRecentsMenu()->menuAction()->setVisible(isSaveRecentsEnabled);
+    updateRecentsMenu();
 
-//    ui->graphicsView->loadSettings();
+    ui->graphicsView->loadSettings();
 
 //    loadShortcuts();
 }
 
 void MainWindow::loadShortcuts()
 {
-    auto shortcuts = qobject_cast<QVApplication*>(qApp)->getShortcutsList();
-
-    // Set shortcuts by name from above list
-//    ui->actionOpen->setShortcuts(shortcuts.value("open"));
-//    ui->actionOpen_URL->setShortcuts(shortcuts.value("openurl"));
-//    ui->actionOpen_Containing_Folder->setShortcuts(shortcuts.value("opencontainingfolder"));
-//    ui->actionProperties->setShortcuts(shortcuts.value("showfileinfo"));
-//    ui->actionCopy->setShortcuts(shortcuts.value("copy"));
-//    ui->actionPaste->setShortcuts(shortcuts.value("paste"));
-//    ui->actionFirst_File->setShortcuts(shortcuts.value("firstfile"));
-//    ui->actionPrevious_File->setShortcuts(shortcuts.value("previousfile"));
-//    ui->actionNext_File->setShortcuts(shortcuts.value("nextfile"));
-//    ui->actionLast_File->setShortcuts(shortcuts.value("lastfile"));
-//    ui->actionZoom_In->setShortcuts(shortcuts.value("zoomin"));
-//    ui->actionZoom_Out->setShortcuts(shortcuts.value("zoomout"));
-//    ui->actionReset_Zoom->setShortcuts(shortcuts.value("resetzoom"));
-//    ui->actionOriginal_Size->setShortcuts(shortcuts.value("originalsize"));
-//    ui->actionRotate_Right->setShortcuts(shortcuts.value("rotateright"));
-//    ui->actionRotate_Left->setShortcuts(shortcuts.value("rotateleft"));
-//    ui->actionMirror->setShortcuts(shortcuts.value("mirror"));
-//    ui->actionFlip->setShortcuts(shortcuts.value("flip"));
-//    ui->actionFull_Screen->setShortcuts(shortcuts.value("fullscreen"));
-//    ui->actionSave_Frame_As->setShortcuts(shortcuts.value("saveframeas"));
-//    ui->actionPause->setShortcuts(shortcuts.value("pause"));
-//    ui->actionNext_Frame->setShortcuts(shortcuts.value("nextframe"));
-//    ui->actionDecrease_Speed->setShortcuts(shortcuts.value("decreasespeed"));
-//    ui->actionReset_Speed->setShortcuts(shortcuts.value("resetspeed"));
-//    ui->actionIncrease_Speed->setShortcuts(shortcuts.value("increasespeed"));
-//    ui->actionSlideshow->setShortcuts(shortcuts.value("slideshow"));
-//    ui->actionOptions->setShortcuts(shortcuts.value("options"));
-//    ui->actionNew_Window->setShortcuts(shortcuts.value("newwindow"));
-//    ui->actionClose_Window->setShortcuts(shortcuts.value("closewindow"));
-//    ui->actionQuit->setShortcuts(shortcuts.value("quit"));
 
     //Check if esc was used in a shortcut somewhere
-    bool escUsed = false;
-    foreach(auto sequenceList, shortcuts)
-    {
-        if (escUsed == true)
-            break;
+//    bool escUsed = false;
+//    foreach(auto sequenceList, shortcuts)
+//    {
+//        if (escUsed == true)
+//            break;
 
-        if(sequenceList.contains(QKeySequence(Qt::Key_Escape)))
-            escUsed = true;
-    }
-    if (escUsed)
-    {
-        escShortcut->setKey({});
-    }
-    else
-    {
-        escShortcut->setKey(Qt::Key_Escape);
-    }
+//        if(sequenceList.contains(QKeySequence(Qt::Key_Escape)))
+//            escUsed = true;
+//    }
+//    if (escUsed)
+//    {
+//        escShortcut->setKey({});
+//    }
+//    else
+//    {
+//        escShortcut->setKey(Qt::Key_Escape);
+//    }
 }
 
 void MainWindow::updateRecentsMenu()
@@ -337,22 +307,6 @@ void MainWindow::clearRecent()
     settings.setValue("recentFiles", recentFiles);
 
     updateRecentsMenu();
-}
-
-void MainWindow::cancelSlideshow()
-{
-//    if (slideshowTimer->isActive())
-//        on_actionSlideshow_triggered();
-}
-
-void MainWindow::slideshowAction()
-{
-//    QSettings settings;
-//    settings.beginGroup("options");
-//    if(settings.value("slideshowdirection", 0).toInt() == 0)
-//        on_actionNext_File_triggered();
-//    else
-//        on_actionPrevious_File_triggered();
 }
 
 void MainWindow::fileLoaded()
@@ -466,7 +420,7 @@ void MainWindow::openUrl(QUrl url)
     auto *progressDialog = new QProgressDialog(tr("Downloading image..."), tr("Cancel"), 0, 100);
     progressDialog->setAutoClose(false);
     progressDialog->setAutoReset(false);
-//    progressDialog->setWindowTitle(ui->actionOpen_URL->text());
+    progressDialog->setWindowTitle(tr("Open URL..."));
     progressDialog->open();
 
     connect(progressDialog, &QProgressDialog::canceled, [reply]{
@@ -683,7 +637,7 @@ void MainWindow::saveFrameAs()
 
     if (ui->graphicsView->getLoadedMovie().state() == QMovie::Running)
     {
-//        ui->actionPause->trigger();
+        pause();
     }
     QFileDialog *saveDialog = new QFileDialog(this, tr("Save Frame As..."), "", tr("Supported Files (*.bmp *.cur *.icns *.ico *.jp2 *.jpeg *.jpe *.jpg *.pbm *.pgm *.png *.ppm *.tif *.tiff *.wbmp *.webp *.xbm *.xpm);;All Files (*)"));
     saveDialog->setDirectory(settings.value("lastFileDialogDir", QDir::homePath()).toString());
@@ -694,7 +648,7 @@ void MainWindow::saveFrameAs()
     connect(saveDialog, &QFileDialog::fileSelected, this, [=](QString fileName){
         ui->graphicsView->originalSize();
         for(int i=0; i < ui->graphicsView->getLoadedMovie().frameCount(); i++)
-//            ui->actionNext_Frame->trigger();
+            nextFrame();
 
         ui->graphicsView->getLoadedMovie().currentPixmap().save(fileName, nullptr, 100);
         ui->graphicsView->resetScale();
@@ -709,14 +663,14 @@ void MainWindow::pause()
     if (ui->graphicsView->getLoadedMovie().state() == QMovie::Running)
     {
         ui->graphicsView->setPaused(true);
-//        ui->actionPause->setText(tr("Resume"));
-//        ui->actionPause->setIcon(QIcon::fromTheme("media-playback-start"));
+        qvApp->getActionManager()->getAction("pause")->setText(tr("Resume"));
+        qvApp->getActionManager()->getAction("pause")->setIcon(QIcon::fromTheme("media-playback-start"));
     }
     else
     {
         ui->graphicsView->setPaused(false);
-//        ui->actionPause->setText(tr("Pause"));
-//        ui->actionPause->setIcon(QIcon::fromTheme("media-playback-pause"));
+        qvApp->getActionManager()->getAction("pause")->setText(tr("Pause"));
+        qvApp->getActionManager()->getAction("pause")->setIcon(QIcon::fromTheme("media-playback-pause"));
     }
 }
 
@@ -726,6 +680,38 @@ void MainWindow::nextFrame()
         return;
 
     ui->graphicsView->jumpToNextFrame();
+}
+
+void MainWindow::toggleSlideshow()
+{
+    if (slideshowTimer->isActive())
+     {
+         slideshowTimer->stop();
+         qvApp->getActionManager()->getAction("slideshow")->setText(tr("Start Slideshow"));
+         qvApp->getActionManager()->getAction("slideshow")->setIcon(QIcon::fromTheme("media-playback-start"));
+     }
+     else
+     {
+         slideshowTimer->start();
+         qvApp->getActionManager()->getAction("slideshow")->setText(tr("Stop Slideshow"));
+         qvApp->getActionManager()->getAction("slideshow")->setIcon(QIcon::fromTheme("media-playback-stop"));
+     }
+}
+
+void MainWindow::cancelSlideshow()
+{
+    if (slideshowTimer->isActive())
+        toggleSlideshow();
+}
+
+void MainWindow::slideshowAction()
+{
+    QSettings settings;
+    settings.beginGroup("options");
+    if (slideshowDirection == 0)
+        nextFile();
+    else
+        previousFile();
 }
 
 void MainWindow::decreaseSpeed()
@@ -758,4 +744,10 @@ void MainWindow::toggleFullScreen()
         showNormal();
     else
         showFullScreen();
+}
+
+void MainWindow::quit()
+{
+    close();
+    QCoreApplication::quit();
 }
