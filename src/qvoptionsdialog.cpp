@@ -31,7 +31,7 @@ void QVOptionsDialog::showEvent(QShowEvent *event)
 {
     QDialog::showEvent(event);
     loadSettings();
-    populateShortcuts();
+    loadShortcuts();
 }
 
 void QVOptionsDialog::saveSettings()
@@ -65,17 +65,20 @@ void QVOptionsDialog::saveSettings()
     settings.endGroup();
     settings.beginGroup("shortcuts");
 
-//    QListIterator<QVShortcutDialog::SShortcut> iter(transientShortcuts);
-//    while (iter.hasNext())
-//    {
-//        auto value = iter.next();
-//        settings.setValue(value.name, value.shortcuts);
-//    }
+    auto shortcutsList = qvApp->getActionManager()->getShortcutsList();
+
+    QHashIterator<int, QStringList> iter(transientShortcuts);
+    while (iter.hasNext())
+    {
+        iter.next();
+        settings.setValue(shortcutsList.value(iter.key()).name, iter.value());
+    }
+    qvApp->getActionManager()->updateShortcuts();
 
     emit optionsSaved();
 }
 
-void QVOptionsDialog::loadSettings(const bool defaults)
+void QVOptionsDialog::loadSettings(bool defaults)
 {
     QSettings settings;
     if (!defaults)
@@ -218,9 +221,9 @@ void QVOptionsDialog::loadSettings(const bool defaults)
     ui->cursorZoomCheckbox->setChecked(transientSettings.cursorZoom);
 }
 
-void QVOptionsDialog::populateShortcuts(bool defaults) {
-    // Update shortcut list from settings and sync with actions
-    qvApp->getActionManager()->updateShortcuts(defaults);
+void QVOptionsDialog::loadShortcuts(bool defaults)
+{
+    qvApp->getActionManager()->updateShortcuts();
 
     auto shortcutsList = qvApp->getActionManager()->getShortcutsList();
     ui->shortcutsTable->setRowCount(shortcutsList.length());
@@ -232,16 +235,36 @@ void QVOptionsDialog::populateShortcuts(bool defaults) {
     while (iter.hasNext())
     {
         auto value = iter.next();
+        if (defaults)
+        {
+            transientShortcuts.insert(i, value.defaultShortcuts);
+        }
+        else
+        {
+            transientShortcuts.insert(i, value.shortcuts);
+        }
 
         item->setText(value.readableName);
         ui->shortcutsTable->setItem(i, 0, item->clone());
 
-        item->setText(QKeySequence::fromString(value.shortcuts.join(", ")).toString(QKeySequence::NativeText));
+        item->setText(ActionManager::stringListToReadableString(transientShortcuts.value(i)));
         ui->shortcutsTable->setItem(i, 1, item->clone());
         i++;
     }
-
     delete item;
+    updateShortcutsTable();
+}
+
+void QVOptionsDialog::updateShortcutsTable()
+{
+    auto shortcutsList = qvApp->getActionManager()->getShortcutsList();
+
+    QHashIterator<int, QStringList> iter(transientShortcuts);
+    while (iter.hasNext())
+    {
+        iter.next();
+        ui->shortcutsTable->item(iter.key(), 1)->setText(ActionManager::stringListToReadableString(iter.value()));
+    }
 }
 
 void QVOptionsDialog::updateBgColorButton()
@@ -272,7 +295,7 @@ void QVOptionsDialog::on_buttonBox_clicked(QAbstractButton *button)
     else if (ui->buttonBox->buttonRole(button) == QDialogButtonBox::ResetRole)
     {
         loadSettings(true);
-        populateShortcuts(true);
+        loadShortcuts(true);
     }
 }
 
@@ -439,46 +462,13 @@ void QVOptionsDialog::on_preloadingComboBox_currentIndexChanged(int index)
 
 void QVOptionsDialog::on_shortcutsTable_cellDoubleClicked(int row, int column)
 {
-//    Q_UNUSED(column)
-//    auto shortcutDialog = new QVShortcutDialog(transientShortcuts.value(row), row);
-//    shortcutDialog->open();
-//    connect(shortcutDialog, &QVShortcutDialog::newShortcut, [shortcutDialog, this](QVShortcutDialog::SShortcut shortcut, int index){
-//        foreach (auto sequence, shortcut.shortcuts)
-//        {
-//            if (shortcutAlreadyBound(sequence, shortcut.name))
-//            {
-//                auto nativeShortcutString = QKeySequence(sequence).toString(QKeySequence::NativeText);
-//                QMessageBox::warning(this, tr("Shortcut Already Used"), tr("\"") + nativeShortcutString + tr("\" is already bound to another shortcut."));
-//                return;
-//            }
-//        }
-
-//        shortcutDialog->acceptValidated();
-//        transientShortcuts.replace(index, shortcut);
-//        updateShortcuts();
-//    });
-}
-
-bool QVOptionsDialog::shortcutAlreadyBound(QKeySequence chosenSequence, QString exemptShortcut)
-{
-    bool used = false;
-
-//    if (chosenSequence.isEmpty())
-//        return false;
-
-//    foreach(auto shortcut, transientShortcuts)
-//    {
-//        auto sequenceList = stringListToKeySequenceList(shortcut.shortcuts);
-
-//        if (used == true)
-//            break;
-
-//        if (sequenceList.contains(chosenSequence) && shortcut.name != exemptShortcut)
-//        {
-//            used = true;
-//        }
-//    }
-    return used;
+    Q_UNUSED(column)
+    auto shortcutDialog = new QVShortcutDialog(row);
+    shortcutDialog->open();
+    connect(shortcutDialog, &QVShortcutDialog::shortcutsListChanged, [this](int index, QStringList stringListShortcuts){
+        transientShortcuts.insert(index, stringListShortcuts);
+        updateShortcutsTable();
+    });
 }
 
 void QVOptionsDialog::on_sortComboBox_currentIndexChanged(int index)

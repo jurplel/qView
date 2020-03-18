@@ -22,10 +22,6 @@ public:
 
     void updateBgColorButton();
 
-//    const QList<QVShortcutDialog::SShortcut>& getTransientShortcuts() const {return transientShortcuts; }
-
-    bool shortcutAlreadyBound(QKeySequence chosenSequence, QString exemptShortcut = "");
-
 signals:
     void optionsSaved();
 
@@ -88,8 +84,9 @@ protected:
 private:
     Ui::QVOptionsDialog *ui;
     void saveSettings();
-    void loadSettings(const bool defaults = false);
-    void populateShortcuts(const bool defaults = false);
+    void loadSettings(bool defaults = false);
+    void loadShortcuts(bool defaults = false);
+    void updateShortcutsTable();
 
     struct STransientSettings
     {
@@ -118,6 +115,8 @@ private:
     };
 
     STransientSettings transientSettings;
+
+    QHash<int, QStringList> transientShortcuts;
 };
 
 

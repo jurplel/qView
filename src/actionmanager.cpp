@@ -309,6 +309,7 @@ void ActionManager::initializeActionLibrary()
         if (auto *window = qvApp->getCurrentMainWindow())
             window->originalSize();
     });
+    originalSizeAction->setShortcutContext(Qt::ApplicationShortcut);
     actionLibrary.insert("originalsize", originalSizeAction);
 
     auto *rotateRightAction = new QAction(QIcon::fromTheme("object-rotate-right"), tr("Rotate Right"));
@@ -507,13 +508,10 @@ void ActionManager::initializeShortcutsList()
     shortcutsList.append({"Quit", "quit", keyBindingsToStringList(QKeySequence::Quit), {}});
 }
 
-void ActionManager::updateShortcuts(bool defaults)
+void ActionManager::updateShortcuts()
 {
     QSettings settings;
-    if (!defaults)
-        settings.beginGroup("shortcuts");
-    else
-        settings.beginGroup("empty");
+    settings.beginGroup("shortcuts");
 
     // Set shortcut's shortcut field to default or user-set
     QMutableListIterator<SShortcut> iter(shortcutsList);

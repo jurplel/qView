@@ -31,6 +31,17 @@ public:
         return keySequences;
     }
 
+    static QString stringListToReadableString(QStringList stringList)
+    {
+        return QKeySequence::fromString(stringList.join(", ")).toString(QKeySequence::NativeText);
+    }
+
+    static QStringList readableStringToStringList(QString shortcutString)
+    {
+        return QKeySequence::fromString(shortcutString, QKeySequence::NativeText).toString().split(", ");
+    }
+
+
     struct SShortcut {
         QString readableName;
         QString name;
@@ -64,11 +75,11 @@ public:
 
     void initializeShortcutsList();
 
-    void updateShortcuts(bool defaults = false);
+    void updateShortcuts();
 
     QMenu *getRecentsMenu() const { return recentsMenu; }
 
-    QList<SShortcut> getShortcutsList() const { return shortcutsList; }
+    const QList<SShortcut> &getShortcutsList() const { return shortcutsList; }
 
 signals:
 
