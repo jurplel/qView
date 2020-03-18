@@ -52,11 +52,6 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     expensiveScaleTimer->setInterval(10);
     connect(expensiveScaleTimer, &QTimer::timeout, this, [this]{scaleExpensively(scaleMode::resetScale);});
 
-    addRecentFilesTimer = new QTimer(this);
-    addRecentFilesTimer->setSingleShot(true);
-    addRecentFilesTimer->setInterval(250);
-    connect(addRecentFilesTimer, &QTimer::timeout, this, &QVGraphicsView::addRecentFiles);
-
     loadedPixmapItem = new QGraphicsPixmapItem();
     scene->addItem(loadedPixmapItem);
 
@@ -390,52 +385,13 @@ void QVGraphicsView::updateLoadedPixmapItem()
 
 void QVGraphicsView::updateFileInfoDisplays()
 {
-    addRecentFilesTimer->start();
-    addRecentFileQueue.append(getCurrentFileDetails().fileInfo);
+    qvApp->getActionManager()->addFileToRecentsList(getCurrentFileDetails().fileInfo);
 
     // Update window title to reflect new file info
     setWindowTitle();
 
     // This signals the MainWindow to update the file info window
     emit updatedFileInfo();
-}
-
-void QVGraphicsView::addRecentFiles()
-{
-    if (!isSaveRecentsEnabled)
-        return;
-
-    QSettings settings;
-    settings.beginGroup("recents");
-
-    // Get the list of current recent files from the settings
-    QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
-
-    // Check each recent file to make sure it still exists
-    foreach (auto variant, recentFiles) {
-        if (!QFileInfo::exists(variant.toList().last().toString())) {
-            recentFiles.removeOne(variant);
-        }
-    }
-
-    // Add all the new recent files to the list
-    foreach (QFileInfo file, addRecentFileQueue) {
-        QStringList fileInfo;
-
-        fileInfo << file.fileName() << file.absoluteFilePath();
-
-        recentFiles.removeAll(fileInfo);
-        if (QFile::exists(file.absoluteFilePath()))
-            recentFiles.prepend(fileInfo);
-
-        if(recentFiles.size() > 10)
-            recentFiles.removeLast();
-    }
-    addRecentFileQueue.clear();
-
-    settings.setValue("recentFiles", recentFiles);
-
-    qvApp->getActionManager()->updateRecentsList();
 }
 
 void QVGraphicsView::setWindowTitle()
@@ -695,12 +651,6 @@ void QVGraphicsView::error(const QString &errorString, const QString &fileName)
         if (!errorString.isEmpty())
         {
             QMessageBox::critical(this, tr("Error"), tr("Error ") + errorString);
-            // If file cannot be found, remove it from recents
-            if (errorString.at(0) == "1")
-            {
-                addRecentFilesTimer->start();
-                addRecentFileQueue.append(QFileInfo(fileName));
-            }
             return;
         }
 }
@@ -759,9 +709,6 @@ void QVGraphicsView::loadSettings()
 
     //loop folders
     isLoopFoldersEnabled = settings.value("loopfoldersenabled", true).toBool();
-
-    //save recents
-    isSaveRecentsEnabled = settings.value("saverecents", true).toBool();
 
     //cursor zoom
     isCursorZoomEnabled = settings.value("cursorzoom", true).toBool();

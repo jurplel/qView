@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QMenuBar>
 #include <QHash>
+#include <QFileInfo>
 
 class ActionManager : public QObject
 {
@@ -49,6 +50,34 @@ public:
         QStringList shortcuts;
     };
 
+
+    struct SRecent {
+        QString fileName;
+        QString filePath;
+    };
+
+    static QVariantList recentsListToVariantList(QList<SRecent> recentsList)
+    {
+        QVariantList variantList;
+        foreach (auto recent, recentsList)
+        {
+            QStringList stringList = {recent.fileName, recent.filePath};
+            variantList.append(QVariant(stringList));
+        }
+        return variantList;
+    }
+
+    static QList<SRecent> variantListToRecentsList(QVariantList variantList)
+    {
+        QList<SRecent> recentsList;
+        foreach (auto variant, variantList)
+        {
+            auto stringList = variant.value<QStringList>();
+            recentsList.append({stringList.value(0), stringList.value(1)});
+        }
+        return recentsList;
+    }
+
     explicit ActionManager(QObject *parent = nullptr);
 
     QAction *getAction(QString key) const;
@@ -63,13 +92,19 @@ public:
 
     QMenu *buildHelpMenu() const;
 
-    void updateRecentsList();
+    void loadRecentsList();
+
+    void saveRecentsList();
+
+    void addFileToRecentsList(QFileInfo file);
+
+    void auditRecentsList();
 
     void clearRecentsList();
 
-    void initializeRecentsMenu();
+    void updateRecentsMenu();
 
-    void initializeRecentsList();
+    void initializeRecentsMenu();
 
     void initializeActionLibrary();
 
@@ -77,20 +112,28 @@ public:
 
     void updateShortcuts();
 
+    void loadSettings();
+
     QMenu *getRecentsMenu() const { return recentsMenu; }
 
     const QList<SShortcut> &getShortcutsList() const { return shortcutsList; }
 
+    const QList<SRecent> &getRecentsList() const { return recentsList; }
+
 signals:
 
 private:
-    QList<QAction*> recentsList;
+    QList<SRecent> recentsList;
+
+    QList<QAction*> recentsActionList;
 
     QHash<QString, QAction*> actionLibrary;
 
     QList<SShortcut> shortcutsList;
 
     QMenu *recentsMenu;
+
+    bool isSaveRecentsEnabled;
 };
 
 #endif // MENUBUILDER_H

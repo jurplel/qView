@@ -10,13 +10,11 @@ ActionManager::ActionManager(QObject *parent) : QObject(parent)
 {
     initializeActionLibrary();
 
-    initializeRecentsList();
-    initializeRecentsMenu();
-
     initializeShortcutsList();
     updateShortcuts();
 
-    updateRecentsList();
+    initializeRecentsMenu();
+    loadRecentsList();
 }
 
 QAction *ActionManager::getAction(QString key) const
@@ -151,59 +149,105 @@ QMenu *ActionManager::buildHelpMenu() const
     return helpMenu;
 }
 
-void ActionManager::updateRecentsList()
+void ActionManager::loadRecentsList()
 {
     QSettings settings;
     settings.beginGroup("recents");
 
-    QVariantList savedRecentsList = settings.value("recentFiles").value<QVariantList>();
+    QVariantList variantListRecents = settings.value("recentFiles").value<QVariantList>();
+    recentsList = variantListToRecentsList(variantListRecents);
 
-    for (int i = 0; i <= 9; i++)
+    auditRecentsList();
+}
+
+void ActionManager::saveRecentsList()
+{
+    auditRecentsList();
+
+    QSettings settings;
+    settings.beginGroup("recents");
+
+    auto variantList = recentsListToVariantList(recentsList);
+
+    settings.setValue("recentFiles", variantList);
+}
+
+
+void ActionManager::addFileToRecentsList(QFileInfo file)
+{
+    recentsList.prepend({file.fileName(), file.filePath()});
+    auditRecentsList();
+}
+
+void ActionManager::auditRecentsList()
+{
+    // This function should be called whenever there is a change to recentsList,
+    // and take care not to call any functions that call it.
+    if (!isSaveRecentsEnabled)
     {
-        if (i < savedRecentsList.size())
-        {
-            recentsList[i]->setVisible(true);
+        recentsList.clear();
+    }
 
-            QString fileName = savedRecentsList[i].toList().first().toString();
-            recentsList[i]->setText(fileName);
-
-            //set icons for linux users
-            QMimeDatabase mimedb;
-            QMimeType type = mimedb.mimeTypeForFile(savedRecentsList[i].toList().last().toString());
-            if (type.iconName().isNull())
-                recentsList[i]->setIcon(QIcon::fromTheme(type.genericIconName()));
-            else
-                recentsList[i]->setIcon(QIcon::fromTheme(type.iconName()));
-        }
-        else
+    for (int i = 0; i < recentsList.length(); i++)
+    {
+        auto recent =  recentsList.value(i);
+        if (!QFileInfo::exists(recent.filePath))
         {
-            recentsList[i]->setVisible(false);
-            recentsList[i]->setText(tr("Empty"));
+            recentsList.removeAt(i);
         }
     }
+
+    while (recentsList.size() > 10)
+    {
+        recentsList.removeLast();
+    }
+
+    updateRecentsMenu();
 }
 
 void ActionManager::clearRecentsList()
 {
-    QSettings settings;
-    settings.beginGroup("recents");
-    settings.remove("");
-    updateRecentsList();
+    recentsList.clear();
+    saveRecentsList();
+}
+
+void ActionManager::updateRecentsMenu()
+{
+    for (int i = 0; i < recentsActionList.length(); i++)
+    {
+        auto action = recentsActionList.value(i);
+        auto recent = recentsList.value(i);
+
+        // If we are within the bounds of the recent list
+        if (i < recentsList.length())
+        {
+            action->setVisible(true);
+            action->setText(recent.fileName);
+
+            //set icons for linux users
+            QMimeDatabase mimedb;
+            QMimeType type = mimedb.mimeTypeForFile(recent.filePath);
+            if (!type.iconName().isNull())
+            {
+                action->setIcon(QIcon::fromTheme(type.iconName()));
+            }
+            else
+            {
+                action->setIcon(QIcon::fromTheme(type.genericIconName()));
+            }
+
+        }
+        else
+        {
+            action->setVisible(false);
+            action->setText(tr("Empty"));
+        }
+    }
 }
 
 void ActionManager::initializeRecentsMenu()
 {
-    recentsMenu = new QMenu(tr("Open Recent"));
-    recentsMenu->setIcon(QIcon::fromTheme("document-open-recent"));
-
-    recentsMenu->addActions(recentsList);
-    recentsMenu->addSeparator();
-    recentsMenu->addAction(getAction("clearrecents"));
-}
-
-void ActionManager::initializeRecentsList()
-{
-    for ( int i = 0; i <= 9; i++ )
+    for ( int i = 0; i < 10; i++ )
     {
         auto action = new QAction(tr("Empty"), this);
         action->setVisible(false);
@@ -211,9 +255,17 @@ void ActionManager::initializeRecentsList()
             if (auto *window = qvApp->getCurrentMainWindow())
                 window->openRecent(i);
         });
-        recentsList.append(action);
+        recentsActionList.append(action);
     }
+
+    recentsMenu = new QMenu(tr("Open Recent"));
+    recentsMenu->setIcon(QIcon::fromTheme("document-open-recent"));
+
+    recentsMenu->addActions(recentsActionList);
+    recentsMenu->addSeparator();
+    recentsMenu->addAction(getAction("clearrecents"));
 }
+
 
 void ActionManager::initializeActionLibrary()
 {
@@ -532,4 +584,14 @@ void ActionManager::updateShortcuts()
             action->setShortcuts(stringListToKeySequenceList(shortcutList));
         }
     }
+}
+
+void ActionManager::loadSettings()
+{
+    QSettings settings;
+    settings.beginGroup("options");
+
+    isSaveRecentsEnabled = settings.value("saverecents", true).toBool();
+    recentsMenu->menuAction()->setVisible(isSaveRecentsEnabled);
+    saveRecentsList();
 }

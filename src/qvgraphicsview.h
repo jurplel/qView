@@ -39,7 +39,6 @@ public:
     QMimeData* getMimeData() const;
     void loadMimeData(const QMimeData *mimeData);
     void loadFile(const QString &fileName);
-    void addRecentFiles();
     void setWindowTitle();
 
     void resetScale();
@@ -119,7 +118,6 @@ private:
     bool isPastActualSizeEnabled;
     bool isScrollZoomsEnabled;
     bool isLoopFoldersEnabled;
-    bool isSaveRecentsEnabled;
     bool isCursorZoomEnabled;
     int titlebarMode;
     int cropMode;
@@ -131,11 +129,9 @@ private:
     qreal maxScalingTwoSize;
     bool cheapScaledLast;
     bool movieCenterNeedsUpdating;
-    QFileInfoList addRecentFileQueue;
 
     QVImageCore imageCore;
 
     QTimer *expensiveScaleTimer;
-    QTimer *addRecentFilesTimer;
 };
 #endif // QVGRAPHICSVIEW_H

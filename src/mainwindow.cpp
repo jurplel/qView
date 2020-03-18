@@ -103,7 +103,6 @@ MainWindow::MainWindow(QWidget *parent) :
 //    }
 
     loadSettings();
-//    updateRecentsMenu();
 }
 
 MainWindow::~MainWindow()
@@ -114,7 +113,6 @@ MainWindow::~MainWindow()
 void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 {
     QMainWindow::contextMenuEvent(event);
-//    updateRecentsMenu();
     contextMenu->popup(event->globalPos());
 }
 
@@ -159,7 +157,7 @@ void MainWindow::mouseDoubleClickEvent(QMouseEvent *event)
 void MainWindow::pickFile()
 {
     QSettings settings;
-    settings.beginGroup("general");
+    settings.beginGroup("recents");
     QFileDialog *fileDialog = new QFileDialog(this, tr("Open..."), "", tr("Supported Files (*.bmp *.cur *.gif *.icns *.ico *.jp2 *.jpeg *.jpe *.jpg *.mng *.pbm *.pgm *.png *.ppm *.svg *.svgz *.tif *.tiff *.wbmp *.webp *.xbm *.xpm);;All Files (*)"));
     fileDialog->setDirectory(settings.value("lastFileDialogDir", QDir::homePath()).toString());
     fileDialog->setFileMode(QFileDialog::ExistingFiles);
@@ -180,7 +178,7 @@ void MainWindow::pickFile()
 void MainWindow::openFile(const QString &fileName)
 {
     QSettings settings;
-    settings.beginGroup("general");
+    settings.beginGroup("recents");
     settings.setValue("lastFileDialogDir", QFileInfo(fileName).path());
 
     ui->graphicsView->loadFile(fileName);
@@ -210,13 +208,8 @@ void MainWindow::loadSettings()
     //max window resize mode size
     maxWindowResizedPercentage = settings.value("maxwindowresizedpercentage", 70).toReal()/100;
 
-    //saverecents
-    isSaveRecentsEnabled = settings.value("saverecents", true).toBool();
-    qvApp->getActionManager()->getRecentsMenu()->menuAction()->setVisible(isSaveRecentsEnabled);
-    qvApp->getActionManager()->clearRecentsList();
-//    updateRecentsMenu();
-
     ui->graphicsView->loadSettings();
+    qvApp->getActionManager()->loadSettings();
 
 //    loadShortcuts();
 }
@@ -246,10 +239,8 @@ void MainWindow::loadShortcuts()
 
 void MainWindow::openRecent(int i)
 {
-    QSettings settings;
-    settings.beginGroup("recents");
-    QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
-    ui->graphicsView->loadFile(recentFiles[i].toList().last().toString());
+    auto recentsList = qvApp->getActionManager()->getRecentsList();
+    ui->graphicsView->loadFile(recentsList.value(i).filePath);
     cancelSlideshow();
 }
 

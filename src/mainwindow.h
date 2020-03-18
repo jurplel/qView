@@ -122,7 +122,6 @@ private:
     QMenu *contextMenu;
 
     QTimer *slideshowTimer;
-    QList<QAction*> recentItems;
 
     QShortcut *escShortcut;
 
@@ -132,7 +131,6 @@ private:
     int windowResizeMode;
     bool justLaunchedWithImage;
     qreal maxWindowResizedPercentage;
-    bool isSaveRecentsEnabled;
 };
 
 #endif // MAINWINDOW_H
