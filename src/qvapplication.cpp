@@ -10,6 +10,7 @@
 QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
 {
     actionManager = new ActionManager(this);
+    connect(actionManager, &ActionManager::recentsMenuUpdated, this, &QVApplication::updateDockRecents);
 
     //don't even try to show menu icons on mac or windows
     #if defined(Q_OS_MACX) || defined(Q_OS_WIN)
@@ -17,6 +18,7 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     #endif
 
     dockMenu = new QMenu();
+
     #ifdef Q_OS_MACX
     dockMenu->setAsDockMenu();
     setQuitOnLastWindowClosed(false);
@@ -124,41 +126,20 @@ MainWindow *QVApplication::getEmptyMainWindow()
 
 void QVApplication::updateDockRecents()
 {
-    QSettings settings;
-    settings.beginGroup("options");
-
-    bool isSaveRecentsEnabled = settings.value("saverecents", true).toBool();
-
-    settings.endGroup();
-
+    // This entire function is only necessary because invisible actions do not
+    // disappear in mac's dock menu
     dockMenu->clear();
-    if (isSaveRecentsEnabled) {
-        settings.beginGroup("recents");
-        QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
 
-        for (int i = 0; i <= 9; i++)
-        {
-            if (i < recentFiles.size())
-            {
-                auto *action = new QAction(recentFiles[i].toList().first().toString());
-                connect(action, &QAction::triggered, [recentFiles, i]{
-                   openFile(recentFiles[i].toList().last().toString(), false);
-                });
-                dockMenu->addAction(action);
-            }
-        }
-        dockMenu->addSeparator();
+    foreach (auto action, actionManager->getRecentsActionList())
+    {
+        if (action->isVisible())
+            dockMenu->addAction(action);
     }
-    auto *newWindowAction = new QAction(tr("New Window"));
-    connect(newWindowAction, &QAction::triggered, []{
-        newWindow();
-    });
-    auto *openAction = new QAction(tr("Open..."));
-    connect(openAction, &QAction::triggered, []{
-        pickFile();
-    });
-    dockMenu->addAction(newWindowAction);
-    dockMenu->addAction(openAction);
+    if (!dockMenu->isEmpty())
+        dockMenu->addSeparator();
+
+    dockMenu->addAction(actionManager->getAction("newwindow"));
+    dockMenu->addAction(actionManager->getAction("open"));
 }
 
 qint64 QVApplication::getPreviouslyRecordedFileSize(const QString &fileName)
@@ -176,23 +157,3 @@ void QVApplication::setPreviouslyRecordedFileSize(const QString &fileName, long 
 {
     previouslyRecordedFileSizes.insert(fileName, fileSize);
 }
-
-//QHash<QString, QList<QKeySequence>> QVApplication::getShortcutsList()
-//{
-//    QSettings settings;
-//    settings.beginGroup("shortcuts");
-
-//    // To retrieve default bindings, we hackily init an options dialog and use it's constructor values
-//    QVOptionsDialog invisibleOptionsDialog;
-//    auto shortcutData = invisibleOptionsDialog.getTransientShortcuts();
-
-//    // Iterate through all default shortcuts to get saved shortcuts from settings
-//    QHash<QString, QList<QKeySequence>> shortcuts;
-//    QListIterator<QVShortcutDialog::SShortcut> iter(shortcutData);
-//    while (iter.hasNext())
-//    {
-//        auto value = iter.next();
-//        shortcuts.insert(value.name, QVOptionsDialog::stringListToKeySequenceList(settings.value(value.name, value.defaultShortcuts).value<QStringList>()));
-//    }
-//    return shortcuts;
-//}

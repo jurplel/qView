@@ -38,8 +38,6 @@ public:
 
     void setPreviouslyRecordedFileSize(const QString &fileName, long long *fileSize);
 
-    QHash<QString, QList<QKeySequence>> getShortcutsList();
-
     ActionManager *getActionManager() const {return actionManager; }
 
 private:

@@ -124,7 +124,10 @@ public:
 
     const QList<SRecent> &getRecentsList() const { return recentsList; }
 
+    const QList<QAction*> &getRecentsActionList() const { return recentsActionList; }
+
 signals:
+    void recentsMenuUpdated();
 
 private:
     QList<SRecent> recentsList;

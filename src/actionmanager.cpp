@@ -265,6 +265,8 @@ void ActionManager::updateRecentsMenu()
             action->setText(tr("Empty"));
         }
     }
+
+    emit recentsMenuUpdated();
 }
 
 void ActionManager::initializeRecentsMenu()
