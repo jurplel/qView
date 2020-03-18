@@ -3,11 +3,14 @@
 
 #include <QSettings>
 #include <QMimeDatabase>
+#include <QTimer>
 
 #include <QDebug>
 
 ActionManager::ActionManager(QObject *parent) : QObject(parent)
 {
+    isSaveRecentsEnabled = true;
+
     initializeActionLibrary();
 
     initializeShortcutsList();
@@ -15,6 +18,11 @@ ActionManager::ActionManager(QObject *parent) : QObject(parent)
 
     initializeRecentsMenu();
     loadRecentsList();
+
+    recentsSaveTimer = new QTimer(this);
+    recentsSaveTimer->setSingleShot(true);
+    recentsSaveTimer->setInterval(500);
+    connect(recentsSaveTimer, &QTimer::timeout, this, &ActionManager::saveRecentsList);
 }
 
 QAction *ActionManager::getAction(QString key) const
@@ -177,6 +185,7 @@ void ActionManager::addFileToRecentsList(QFileInfo file)
 {
     recentsList.prepend({file.fileName(), file.filePath()});
     auditRecentsList();
+    recentsSaveTimer->start();
 }
 
 void ActionManager::auditRecentsList()
@@ -190,10 +199,23 @@ void ActionManager::auditRecentsList()
 
     for (int i = 0; i < recentsList.length(); i++)
     {
+        // Ensure each file exists
         auto recent =  recentsList.value(i);
         if (!QFileInfo::exists(recent.filePath))
         {
             recentsList.removeAt(i);
+        }
+
+        // Check for duplicates
+        for (int i2 = 0; i2 < recentsList.length(); i2++)
+        {
+            if (i == i2)
+                continue;
+
+            if (recent == recentsList.value(i2))
+            {
+                recentsList.removeAt(i2);
+            }
         }
     }
 
@@ -593,5 +615,6 @@ void ActionManager::loadSettings()
 
     isSaveRecentsEnabled = settings.value("saverecents", true).toBool();
     recentsMenu->menuAction()->setVisible(isSaveRecentsEnabled);
-    saveRecentsList();
+    if (!isSaveRecentsEnabled)
+        clearRecentsList();
 }

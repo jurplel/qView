@@ -54,6 +54,10 @@ public:
     struct SRecent {
         QString fileName;
         QString filePath;
+
+        bool operator==(const SRecent other) const { return (fileName == other.fileName && filePath == other.filePath);}
+
+        operator QString() const { return "SRecent(" + fileName + ", " + filePath + ")"; }
     };
 
     static QVariantList recentsListToVariantList(QList<SRecent> recentsList)
@@ -132,6 +136,8 @@ private:
     QList<SShortcut> shortcutsList;
 
     QMenu *recentsMenu;
+
+    QTimer *recentsSaveTimer;
 
     bool isSaveRecentsEnabled;
 };
