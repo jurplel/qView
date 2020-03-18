@@ -9,10 +9,12 @@
 ActionManager::ActionManager(QObject *parent) : QObject(parent)
 {
     initializeActionLibrary();
+
     initializeRecentsList();
-    initializeShortcutsList();
     initializeRecentsMenu();
-    assignShortcuts();
+
+    initializeShortcutsList();
+    updateShortcuts();
 
     updateRecentsList();
 }
@@ -505,17 +507,29 @@ void ActionManager::initializeShortcutsList()
     shortcutsList.append({"Quit", "quit", keyBindingsToStringList(QKeySequence::Quit), {}});
 }
 
-void ActionManager::assignShortcuts()
+void ActionManager::updateShortcuts(bool defaults)
 {
+    QSettings settings;
+    if (!defaults)
+        settings.beginGroup("shortcuts");
+    else
+        settings.beginGroup("empty");
+
+    // Set shortcut's shortcut field to default or user-set
+    QMutableListIterator<SShortcut> iter(shortcutsList);
+    while (iter.hasNext())
+    {
+        auto value = iter.next();
+        value.shortcuts = settings.value(value.name, value.defaultShortcuts).value<QStringList>();
+        iter.setValue(value);
+    }
+
+    // Set action's shortcuts to current shortcut
     foreach(auto shortcut, shortcutsList)
     {
         if (auto action = getAction(shortcut.name))
         {
             auto shortcutList = shortcut.shortcuts;
-            if (shortcutList.isEmpty())
-            {
-                shortcutList = shortcut.defaultShortcuts;
-            }
 
             action->setShortcuts(stringListToKeySequenceList(shortcutList));
         }

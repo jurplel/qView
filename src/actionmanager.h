@@ -64,16 +64,18 @@ public:
 
     void initializeShortcutsList();
 
-    void assignShortcuts();
+    void updateShortcuts(bool defaults = false);
 
     QMenu *getRecentsMenu() const { return recentsMenu; }
+
+    QList<SShortcut> getShortcutsList() const { return shortcutsList; }
 
 signals:
 
 private:
     QList<QAction*> recentsList;
 
-    QHash<QString, QAction*> actionLibrary; 
+    QHash<QString, QAction*> actionLibrary;
 
     QList<SShortcut> shortcutsList;
 

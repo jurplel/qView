@@ -45,7 +45,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->graphicsView, &QVGraphicsView::fileLoaded, this, &MainWindow::fileLoaded);
     connect(ui->graphicsView, &QVGraphicsView::updatedLoadedPixmapItem, this, &MainWindow::setWindowSize);
     connect(ui->graphicsView, &QVGraphicsView::updatedFileInfo, this, &MainWindow::refreshProperties);
-    connect(ui->graphicsView, &QVGraphicsView::updateRecentMenu, this, &MainWindow::updateRecentsMenu);
     connect(ui->graphicsView, &QVGraphicsView::sendWindowTitle, this, &MainWindow::setWindowTitle);
     connect(ui->graphicsView, &QVGraphicsView::cancelSlideshow, this, &MainWindow::cancelSlideshow);
 
@@ -68,7 +67,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //Load window geometry
     QSettings settings;
-    settings.beginGroup("recents");
+    settings.beginGroup("general");
     restoreGeometry(settings.value("geometry").toByteArray());
 
     //Context menu
@@ -104,7 +103,7 @@ MainWindow::MainWindow(QWidget *parent) :
 //    }
 
     loadSettings();
-    updateRecentsMenu();
+//    updateRecentsMenu();
 }
 
 MainWindow::~MainWindow()
@@ -115,7 +114,7 @@ MainWindow::~MainWindow()
 void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 {
     QMainWindow::contextMenuEvent(event);
-    updateRecentsMenu();
+//    updateRecentsMenu();
     contextMenu->popup(event->globalPos());
 }
 
@@ -123,7 +122,7 @@ void MainWindow::showEvent(QShowEvent *event)
 {
     QMainWindow::showEvent(event);
     QSettings settings;
-    settings.beginGroup("recents");
+    settings.beginGroup("general");
 
     if (settings.value("firstlaunch", false).toBool())
         return;
@@ -135,7 +134,7 @@ void MainWindow::showEvent(QShowEvent *event)
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     QSettings settings;
-    settings.beginGroup("recents");
+    settings.beginGroup("general");
     settings.setValue("geometry", saveGeometry());
     QMainWindow::closeEvent(event);
 }
@@ -160,7 +159,7 @@ void MainWindow::mouseDoubleClickEvent(QMouseEvent *event)
 void MainWindow::pickFile()
 {
     QSettings settings;
-    settings.beginGroup("recents");
+    settings.beginGroup("general");
     QFileDialog *fileDialog = new QFileDialog(this, tr("Open..."), "", tr("Supported Files (*.bmp *.cur *.gif *.icns *.ico *.jp2 *.jpeg *.jpe *.jpg *.mng *.pbm *.pgm *.png *.ppm *.svg *.svgz *.tif *.tiff *.wbmp *.webp *.xbm *.xpm);;All Files (*)"));
     fileDialog->setDirectory(settings.value("lastFileDialogDir", QDir::homePath()).toString());
     fileDialog->setFileMode(QFileDialog::ExistingFiles);
@@ -181,7 +180,7 @@ void MainWindow::pickFile()
 void MainWindow::openFile(const QString &fileName)
 {
     QSettings settings;
-    settings.beginGroup("recents");
+    settings.beginGroup("general");
     settings.setValue("lastFileDialogDir", QFileInfo(fileName).path());
 
     ui->graphicsView->loadFile(fileName);
@@ -214,7 +213,8 @@ void MainWindow::loadSettings()
     //saverecents
     isSaveRecentsEnabled = settings.value("saverecents", true).toBool();
     qvApp->getActionManager()->getRecentsMenu()->menuAction()->setVisible(isSaveRecentsEnabled);
-    updateRecentsMenu();
+    qvApp->getActionManager()->clearRecentsList();
+//    updateRecentsMenu();
 
     ui->graphicsView->loadSettings();
 
@@ -244,40 +244,6 @@ void MainWindow::loadShortcuts()
 //    }
 }
 
-void MainWindow::updateRecentsMenu()
-{
-//    QSettings settings;
-//    settings.beginGroup("recents");
-
-//    //get recent files from config file
-//    QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
-
-//    #ifdef Q_OS_MACX
-//        qobject_cast<QVApplication*>(qApp)->updateDockRecents();
-//    #endif
-//    for (int i = 0; i <= 9; i++)
-//    {
-//        if (i < recentFiles.size())
-//        {
-//            recentItems[i]->setVisible(true);
-//            recentItems[i]->setText(recentFiles[i].toList().first().toString());
-
-//            //set menu icons for linux users
-//            QMimeDatabase mimedb;
-//            QMimeType type = mimedb.mimeTypeForFile(recentFiles[i].toList().last().toString());
-//            if (type.iconName().isNull())
-//                recentItems[i]->setIcon(QIcon::fromTheme(type.genericIconName()));
-//            else
-//                  recentItems[i]->setIcon(QIcon::fromTheme(type.iconName()));
-//        }
-//        else
-//        {
-//            recentItems[i]->setVisible(false);
-//            recentItems[i]->setText(tr("Empty"));
-//        }
-//    }
-}
-
 void MainWindow::openRecent(int i)
 {
     QSettings settings;
@@ -285,28 +251,6 @@ void MainWindow::openRecent(int i)
     QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
     ui->graphicsView->loadFile(recentFiles[i].toList().last().toString());
     cancelSlideshow();
-}
-
-void MainWindow::clearRecent()
-{
-    QSettings settings;
-    settings.beginGroup("recents");
-    QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
-    for (int i = 0; i <= 9; i++)
-    {
-        if (recentFiles.size() > 1)
-        {
-            recentFiles.removeAt(1);
-        }
-        else
-        {
-            if (!ui->graphicsView->getCurrentFileDetails().isPixmapLoaded)
-                recentFiles.removeAt(0);
-        }
-    }
-    settings.setValue("recentFiles", recentFiles);
-
-    updateRecentsMenu();
 }
 
 void MainWindow::fileLoaded()

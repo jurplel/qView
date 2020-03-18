@@ -112,12 +112,7 @@ protected:
     void mouseDoubleClickEvent(QMouseEvent *event) override;
 
 private slots:
-
     void loadSettings();
-
-    void updateRecentsMenu();
-
-    void clearRecent();
 
 private:
     Ui::MainWindow *ui;

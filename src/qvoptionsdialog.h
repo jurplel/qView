@@ -89,8 +89,7 @@ private:
     Ui::QVOptionsDialog *ui;
     void saveSettings();
     void loadSettings(const bool defaults = false);
-    void loadShortcuts(const bool defaults = false);
-    void updateShortcuts();
+    void populateShortcuts(const bool defaults = false);
 
     struct STransientSettings
     {

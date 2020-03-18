@@ -68,8 +68,6 @@ signals:
 
     void updatedFileInfo();
 
-    void updateRecentMenu();
-
     void sendWindowTitle(const QString &newTitle);
 
 protected:

@@ -435,7 +435,7 @@ void QVGraphicsView::addRecentFiles()
 
     settings.setValue("recentFiles", recentFiles);
 
-    emit updateRecentMenu();
+    qvApp->getActionManager()->updateRecentsList();
 }
 
 void QVGraphicsView::setWindowTitle()

@@ -31,7 +31,7 @@ void QVOptionsDialog::showEvent(QShowEvent *event)
 {
     QDialog::showEvent(event);
     loadSettings();
-    loadShortcuts();
+    populateShortcuts();
 }
 
 void QVOptionsDialog::saveSettings()
@@ -81,7 +81,7 @@ void QVOptionsDialog::loadSettings(const bool defaults)
     if (!defaults)
         settings.beginGroup("options");
     else
-        settings.beginGroup("emptygroup");
+        settings.beginGroup("empty");
 
     //bgcolor
     transientSettings.bgColor = settings.value("bgcolor", QString("#212121")).toString();
@@ -218,45 +218,30 @@ void QVOptionsDialog::loadSettings(const bool defaults)
     ui->cursorZoomCheckbox->setChecked(transientSettings.cursorZoom);
 }
 
-void QVOptionsDialog::loadShortcuts(const bool defaults)
-{
-//    QSettings settings;
-//    if (!defaults)
-//        settings.beginGroup("shortcuts");
-//    else
-//        settings.beginGroup("emptygroup");
+void QVOptionsDialog::populateShortcuts(bool defaults) {
+    // Update shortcut list from settings and sync with actions
+    qvApp->getActionManager()->updateShortcuts(defaults);
 
-//    // Read saved custom shortcuts
-//    QMutableListIterator<QVShortcutDialog::SShortcut> iter(transientShortcuts);
-//    while (iter.hasNext())
-//    {
-//        auto value = iter.next();
-//        iter.setValue({value.readableName, value.name, value.defaultShortcuts, settings.value(value.name, value.defaultShortcuts).value<QStringList>()});
-//    }
+    auto shortcutsList = qvApp->getActionManager()->getShortcutsList();
+    ui->shortcutsTable->setRowCount(shortcutsList.length());
 
-//    updateShortcuts();
-}
+    auto item = new QTableWidgetItem();
 
-void QVOptionsDialog::updateShortcuts() {
-//    ui->shortcutsTable->setRowCount(transientShortcuts.length());
+    int i = 0;
+    QListIterator<ActionManager::SShortcut> iter(shortcutsList);
+    while (iter.hasNext())
+    {
+        auto value = iter.next();
 
-//    auto item = new QTableWidgetItem();
+        item->setText(value.readableName);
+        ui->shortcutsTable->setItem(i, 0, item->clone());
 
-//    int i = 0;
-//    QListIterator<QVShortcutDialog::SShortcut> iter(transientShortcuts);
-//    while (iter.hasNext())
-//    {
-//        auto value = iter.next();
+        item->setText(QKeySequence::fromString(value.shortcuts.join(", ")).toString(QKeySequence::NativeText));
+        ui->shortcutsTable->setItem(i, 1, item->clone());
+        i++;
+    }
 
-//        item->setText(value.readableName);
-//        ui->shortcutsTable->setItem(i, 0, item->clone());
-
-//        item->setText(QKeySequence::fromString(value.shortcuts.join(", ")).toString(QKeySequence::NativeText));
-//        ui->shortcutsTable->setItem(i, 1, item->clone());
-//        i++;
-//    }
-
-//    delete item;
+    delete item;
 }
 
 void QVOptionsDialog::updateBgColorButton()
@@ -287,7 +272,7 @@ void QVOptionsDialog::on_buttonBox_clicked(QAbstractButton *button)
     else if (ui->buttonBox->buttonRole(button) == QDialogButtonBox::ResetRole)
     {
         loadSettings(true);
-        loadShortcuts(true);
+        populateShortcuts(true);
     }
 }
 
