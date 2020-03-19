@@ -17,7 +17,6 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     //qgraphicsscene setup
     auto *scene = new QGraphicsScene(0.0, 0.0, 100000.0, 100000.0, this);
     setScene(scene);
-    setFocus();
 
     //initialize configurable variables
     isFilteringEnabled = true;

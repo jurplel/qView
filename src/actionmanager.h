@@ -108,26 +108,29 @@ public:
 
     void updateRecentsMenu();
 
-    void initializeRecentsMenu();
-
-    void initializeActionLibrary();
-
-    void initializeShortcutsList();
-
     void updateShortcuts();
 
     void loadSettings();
 
     QMenu *getRecentsMenu() const { return recentsMenu; }
 
-    const QList<SShortcut> &getShortcutsList() const { return shortcutsList; }
-
     const QList<SRecent> &getRecentsList() const { return recentsList; }
 
     const QList<QAction*> &getRecentsActionList() const { return recentsActionList; }
 
+    const QHash<QString, QAction*> &getActionLibrary() const { return actionLibrary; }
+
+    const QList<SShortcut> &getShortcutsList() const { return shortcutsList; }
+
 signals:
     void recentsMenuUpdated();
+
+protected:
+    void initializeRecentsMenu();
+
+    void initializeActionLibrary();
+
+    void initializeShortcutsList();
 
 private:
     QList<SRecent> recentsList;

@@ -91,16 +91,12 @@ MainWindow::MainWindow(QWidget *parent) :
     contextMenu->addMenu(actionManager->buildToolsMenu());
     contextMenu->addMenu(actionManager->buildHelpMenu());
 
-//    //add actions not used in context menu so that keyboard shortcuts still work
-//    addAction(ui->actionQuit);
-//    addAction(ui->actionFirst_File);
-//    addAction(ui->actionLast_File);
-
-//    //Add to mainwindow's action list so keyboard shortcuts work without a menubar
-//    foreach(QAction *action, contextMenu->actions())
-//    {
-//        addAction(action);
-//    }
+    // Add all actions to mainwindow's action list so that keyboard shortcuts work even if
+    // nothing else captures them
+    foreach(QAction *action, actionManager->getActionLibrary())
+    {
+        addAction(action);
+    }
 
     loadSettings();
 }
