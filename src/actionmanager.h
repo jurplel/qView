@@ -118,7 +118,7 @@ public:
 
     QMenu *buildRecentsMenu(bool includeClearAction = true, QWidget *parent = nullptr);
 
-    void actionTriggered(QAction *triggeredAction, bool useEmptyWindow = false) const;
+    void actionTriggered(QAction *triggeredAction) const;
 
     void actionTriggered(QAction *triggeredAction, MainWindow *relevantWindow) const;
 

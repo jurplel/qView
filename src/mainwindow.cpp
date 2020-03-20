@@ -119,6 +119,15 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+bool MainWindow::event(QEvent *event)
+{
+    if (event->type() == QEvent::WindowActivate)
+    {
+        qvApp->addToLastActiveWindows(this);
+    }
+    return QMainWindow::event(event);
+}
+
 void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 {
     QMainWindow::contextMenuEvent(event);
@@ -143,6 +152,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     QSettings settings;
     settings.beginGroup("general");
     settings.setValue("geometry", saveGeometry());
+    qvApp->deleteFromLastActiveWindows(this);
     QMainWindow::closeEvent(event);
 }
 

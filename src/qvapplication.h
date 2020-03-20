@@ -22,11 +22,11 @@ public:
 
     bool event(QEvent *event) override;
 
-    static void openFile(const QString &file, bool resize = true);
+    void openFile(const QString &file, bool resize = true);
 
     static MainWindow *newWindow();
 
-    static MainWindow *getMainWindow(bool shouldBeEmpty);
+    MainWindow *getMainWindow(bool shouldBeEmpty);
 
     void updateDockRecents();
 
@@ -34,11 +34,17 @@ public:
 
     void setPreviouslyRecordedFileSize(const QString &fileName, long long *fileSize);
 
+    void addToLastActiveWindows(MainWindow *window);
+
+    void deleteFromLastActiveWindows(MainWindow *window);
+
     ActionManager *getActionManager() const {return actionManager; }
 
     QMenuBar *getMenuBar() const {return menuBar; }
 
 private:
+    QList<MainWindow*> lastActiveWindows;
+
     QMenu *dockMenu;
 
     QList<QAction*> dockMenuSuffix;

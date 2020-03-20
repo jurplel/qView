@@ -73,31 +73,26 @@ MainWindow *QVApplication::newWindow()
 
 MainWindow *QVApplication::getMainWindow(bool shouldBeEmpty)
 {
-    // Attempt to use the active window
-    if (auto *activeWidget = activeWindow())
+    // Attempt to use from list of last active windows
+    foreach (auto *window, lastActiveWindows)
     {
-        while (activeWidget->parentWidget() != nullptr)
-        {
-            activeWidget = activeWidget->parentWidget();
-        }
+        if (!window)
+            continue;
 
-        if (auto *window = qobject_cast<MainWindow*>(activeWidget))
+        if (shouldBeEmpty)
         {
-            if (shouldBeEmpty)
-            {
-                if (!window->getIsPixmapLoaded())
-                {
-                    return window;
-                }
-            }
-            else
+            if (!window->getIsPixmapLoaded())
             {
                 return window;
             }
         }
+        else
+        {
+            return window;
+        }
     }
 
-    // If that is not valid, check all windows and use the first valid one
+    // If none of those are valid, scan the list for any existing MainWindow
     foreach (QWidget *widget, QApplication::topLevelWidgets())
     {
         if (auto *window = qobject_cast<MainWindow*>(widget))
@@ -156,4 +151,23 @@ qint64 QVApplication::getPreviouslyRecordedFileSize(const QString &fileName)
 void QVApplication::setPreviouslyRecordedFileSize(const QString &fileName, long long *fileSize)
 {
     previouslyRecordedFileSizes.insert(fileName, fileSize);
+}
+
+void QVApplication::addToLastActiveWindows(MainWindow *window)
+{
+    if (!window)
+        return;
+
+    lastActiveWindows.prepend(window);
+
+    if (lastActiveWindows.length() > 5)
+        lastActiveWindows.removeLast();
+}
+
+void QVApplication::deleteFromLastActiveWindows(MainWindow *window)
+{
+    if (!window)
+        return;
+
+    lastActiveWindows.removeOne(window);
 }

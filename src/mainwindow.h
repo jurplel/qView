@@ -101,6 +101,8 @@ public slots:
     void fileLoaded();
 
 protected:
+    bool event(QEvent *event) override;
+
     void contextMenuEvent(QContextMenuEvent *event) override;
 
     void showEvent(QShowEvent *event) override;

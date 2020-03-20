@@ -333,9 +333,17 @@ QMenu *ActionManager::buildRecentsMenu(bool includeClearAction, QWidget *parent)
     return recentsMenu;
 }
 
-void ActionManager::actionTriggered(QAction *triggeredAction, bool useEmptyWindow) const
+void ActionManager::actionTriggered(QAction *triggeredAction) const
 {
-    if (auto *window = qvApp->getMainWindow(useEmptyWindow))
+    bool shouldBeEmpty = false;
+
+    // If some actions are triggered without an explicit window, we want
+    // to give them a window without an image open
+    auto key = triggeredAction->data().toString();
+    if (key.startsWith("recent") || key == "open" || key == "openurl")
+        shouldBeEmpty = true;
+
+    if (auto *window = qvApp->getMainWindow(shouldBeEmpty))
         actionTriggered(triggeredAction, window);
 }
 
@@ -647,7 +655,7 @@ void ActionManager::loadSettings()
     settings.beginGroup("options");
 
     isSaveRecentsEnabled = settings.value("saverecents", true).toBool();
-    foreach(auto recentsMenu, recentsMenuLibrary)
+    foreach(auto *recentsMenu, recentsMenuLibrary)
     {
         recentsMenu->menuAction()->setVisible(isSaveRecentsEnabled);
     }
