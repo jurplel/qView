@@ -77,7 +77,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     contextMenu->addAction(actionManager->cloneAction("open"));
     contextMenu->addAction(actionManager->cloneAction("openurl"));
-    contextMenu->addMenu(actionManager->buildRecentsMenu());
+    contextMenu->addMenu(actionManager->buildRecentsMenu(true, contextMenu));
     contextMenu->addAction(actionManager->cloneAction("opencontainingfolder"));
     contextMenu->addAction(actionManager->cloneAction("showfileinfo"));
     contextMenu->addSeparator();
@@ -87,20 +87,20 @@ MainWindow::MainWindow(QWidget *parent) :
     contextMenu->addAction(actionManager->cloneAction("nextfile"));
     contextMenu->addAction(actionManager->cloneAction("previousfile"));
     contextMenu->addSeparator();
-    contextMenu->addMenu(actionManager->buildViewMenu());
-    contextMenu->addMenu(actionManager->buildToolsMenu());
-    contextMenu->addMenu(actionManager->buildHelpMenu());
+    contextMenu->addMenu(actionManager->buildViewMenu(true, contextMenu));
+    contextMenu->addMenu(actionManager->buildToolsMenu(contextMenu));
+    contextMenu->addMenu(actionManager->buildHelpMenu(contextMenu));
 
     connect(contextMenu, &QMenu::triggered, [this](QAction *triggeredAction){
         qvApp->getActionManager()->actionTriggered(triggeredAction, this);
     });
 
     // Initialize menubar
-//    setMenuBar(actionManager->buildMenuBar());
-//    menuBar()->setVisible(false);
-//    connect(menuBar(), &QMenuBar::triggered, [this](QAction *triggeredAction){
-//        qvApp->getActionManager()->actionTriggered(triggeredAction, this);
-//    });
+    setMenuBar(actionManager->buildMenuBar());
+    menuBar()->setVisible(false);
+    connect(menuBar(), &QMenuBar::triggered, [this](QAction *triggeredAction){
+        qvApp->getActionManager()->actionTriggered(triggeredAction, this);
+    });
 
     // Add all actions to this window so keyboard shortcuts are always triggered
     // using virtual menu to hold them so i can connect to the triggered signal
@@ -156,6 +156,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
     qvApp->deleteFromLastActiveWindows(this);
     qvApp->getActionManager()->untrackClonedActions(contextMenu);
+    qvApp->getActionManager()->untrackClonedActions(menuBar());
 
     QMainWindow::closeEvent(event);
 }
@@ -353,7 +354,7 @@ QScreen *MainWindow::screenAt(const QPoint &point)
     return nullptr;
 }
 
-const bool& MainWindow::getIsPixmapLoaded() const
+bool MainWindow::getIsPixmapLoaded() const
 {
     if (ui->graphicsView)
         return ui->graphicsView->getCurrentFileDetails().isPixmapLoaded;
@@ -438,7 +439,7 @@ void MainWindow::openUrl(QUrl url)
 void MainWindow::pickUrl()
 {
     auto inputDialog = new QInputDialog(this);
-//    inputDialog->setWindowTitle(ui->actionOpen_URL->text());
+    inputDialog->setWindowTitle("Open URL...");
     inputDialog->setLabelText(tr("URL of a supported image file:"));
     inputDialog->resize(350, inputDialog->height());
     connect(inputDialog, &QInputDialog::finished, [inputDialog, this](int result) {
@@ -713,9 +714,23 @@ void MainWindow::increaseSpeed()
 void MainWindow::toggleFullScreen()
 {
     if (windowState() == Qt::WindowFullScreen)
-        showNormal();
-    else
-        showFullScreen();
+     {
+         showNormal();
+         foreach(auto action, qvApp->getActionManager()->getAllInstancesOfAction("fullscreen"))
+         {
+             action->setText(tr("Enter Full Screen"));
+             action->setIcon(QIcon::fromTheme("view-fullscreen"));
+         }
+     }
+     else
+     {
+         showFullScreen();
+         foreach(auto action, qvApp->getActionManager()->getAllInstancesOfAction("fullscreen"))
+         {
+             action->setText(tr("Exit Full Screen"));
+             action->setIcon(QIcon::fromTheme("view-restore"));
+         }
+     }
 }
 
 void MainWindow::quit()

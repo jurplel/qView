@@ -121,6 +121,8 @@ public:
 
     void untrackClonedActions(QMenu *menu);
 
+    void untrackClonedActions(QMenuBar *menuBar);
+
     QMenuBar *buildMenuBar(QWidget *parent = nullptr);
 
     QMenu *buildGifMenu(QWidget *parent = nullptr);
@@ -130,6 +132,8 @@ public:
     QMenu *buildToolsMenu(QWidget *parent = nullptr);
 
     QMenu *buildHelpMenu(QWidget *parent = nullptr);
+
+    QMenu *buildRecentsMenu(bool includeClearAction = true, QWidget *parent = nullptr);
 
     void loadRecentsList();
 
@@ -142,8 +146,6 @@ public:
     void clearRecentsList();
 
     void updateRecentsMenu();
-
-    QMenu *buildRecentsMenu(bool includeClearAction = true, QWidget *parent = nullptr);
 
     void actionTriggered(QAction *triggeredAction) const;
 

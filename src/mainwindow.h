@@ -21,7 +21,7 @@ public:
 
     void setWindowSize();
 
-    const bool& getIsPixmapLoaded() const;
+    bool getIsPixmapLoaded() const;
 
     void setJustLaunchedWithImage(bool value);
 

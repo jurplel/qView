@@ -98,6 +98,29 @@ void ActionManager::untrackClonedActions(QMenu *menu)
     untrackClonedActions(getAllActionsInMenu(menu));
 }
 
+void ActionManager::untrackClonedActions(QMenuBar *menuBar)
+{
+    QList<QAction*> actionList;
+    foreach(auto *action, menuBar->actions())
+    {
+        if (action->isSeparator())
+        {
+            continue;
+        }
+        else if (action->menu())
+        {
+            actionList.append(getAllActionsInMenu(action->menu()));
+            if (action->data().toString() == "recents")
+                actionList.append(action);
+        }
+        else
+        {
+            actionList.append(action);
+        }
+    }
+    untrackClonedActions(actionList);
+}
+
 QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
 {
     // Global menubar
@@ -224,6 +247,34 @@ QMenu *ActionManager::buildHelpMenu(QWidget *parent)
     return helpMenu;
 }
 
+QMenu *ActionManager::buildRecentsMenu(bool includeClearAction, QWidget *parent)
+{
+    QList<QAction*> recentActions;
+    for ( int i = 0; i < recentsListMaxLength; i++ )
+    {
+        auto action = new QAction(tr("Empty"), this);
+        action->setVisible(false);
+        action->setData("recent" + QString::number(i));
+
+        recentActions.append(action);
+        recentsActionCloneLibrary.insert(i, action);
+    }
+
+    auto recentsMenu = new QMenu(tr("Open Recent"), parent);
+    recentsMenu->setIcon(QIcon::fromTheme("document-open-recent"));
+
+    recentsMenu->addActions(recentActions);
+    if (includeClearAction)
+    {
+        recentsMenu->addSeparator();
+        recentsMenu->addAction(cloneAction("clearrecents"));
+    }
+    recentsMenu->menuAction()->setData("recents");
+    recentsMenuLibrary.append(recentsMenu);
+    updateRecentsMenu();
+    return recentsMenu;
+}
+
 void ActionManager::loadRecentsList()
 {
     QSettings settings;
@@ -335,34 +386,6 @@ void ActionManager::updateRecentsMenu()
         }
     }
     emit recentsMenuUpdated();
-}
-
-QMenu *ActionManager::buildRecentsMenu(bool includeClearAction, QWidget *parent)
-{
-    QList<QAction*> recentActions;
-    for ( int i = 0; i < recentsListMaxLength; i++ )
-    {
-        auto action = new QAction(tr("Empty"), this);
-        action->setVisible(false);
-        action->setData("recent" + QString::number(i));
-
-        recentActions.append(action);
-        recentsActionCloneLibrary.insert(i, action);
-    }
-
-    auto recentsMenu = new QMenu(tr("Open Recent"), parent);
-    recentsMenu->setIcon(QIcon::fromTheme("document-open-recent"));
-
-    recentsMenu->addActions(recentActions);
-    if (includeClearAction)
-    {
-        recentsMenu->addSeparator();
-        recentsMenu->addAction(cloneAction("clearrecents"));
-    }
-    recentsMenu->menuAction()->setData("recents");
-    recentsMenuLibrary.append(recentsMenu);
-    updateRecentsMenu();
-    return recentsMenu;
 }
 
 void ActionManager::actionTriggered(QAction *triggeredAction) const
@@ -532,7 +555,7 @@ void ActionManager::initializeActionLibrary()
     flipAction->setData("flip");
     actionLibrary.insert("flip", flipAction);
 
-    auto *fullScreenAction = new QAction(QIcon::fromTheme("object-flip-vertical"), tr("Full Screen"));
+    auto *fullScreenAction = new QAction(QIcon::fromTheme("view-fullscreen"), tr("Enter Full Screen"));
     fullScreenAction->setData("fullscreen");
     actionLibrary.insert("fullscreen", fullScreenAction);
 
