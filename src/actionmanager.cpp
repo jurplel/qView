@@ -67,6 +67,37 @@ QList<QAction*> ActionManager::getAllInstancesOfAction(QString key) const
     return listOfActions;
 }
 
+void ActionManager::untrackClonedActions(QList<QAction*> actions)
+{
+    foreach(auto *action, actions)
+    {
+        QString key = action->data().toString();
+        if (key.startsWith("recent"))
+        {
+            if (action->menu())
+            {
+                recentsMenuLibrary.removeOne(action->menu());
+            }
+            else
+            {
+                QChar finalChar = key.at(key.length()-1);
+                if (finalChar.digitValue() > -1)
+                    recentsActionCloneLibrary.remove(finalChar.digitValue(), action);
+
+            }
+        }
+        else
+        {
+            actionCloneLibrary.remove(key, action);
+        }
+    }
+}
+
+void ActionManager::untrackClonedActions(QMenu *menu)
+{
+    untrackClonedActions(getAllActionsInMenu(menu));
+}
+
 QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
 {
     // Global menubar
@@ -328,6 +359,7 @@ QMenu *ActionManager::buildRecentsMenu(bool includeClearAction, QWidget *parent)
         recentsMenu->addSeparator();
         recentsMenu->addAction(cloneAction("clearrecents"));
     }
+    recentsMenu->menuAction()->setData("recents");
     recentsMenuLibrary.append(recentsMenu);
     updateRecentsMenu();
     return recentsMenu;

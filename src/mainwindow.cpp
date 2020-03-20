@@ -153,7 +153,10 @@ void MainWindow::closeEvent(QCloseEvent *event)
     QSettings settings;
     settings.beginGroup("general");
     settings.setValue("geometry", saveGeometry());
+
     qvApp->deleteFromLastActiveWindows(this);
+    qvApp->getActionManager()->untrackClonedActions(contextMenu);
+
     QMainWindow::closeEvent(event);
 }
 

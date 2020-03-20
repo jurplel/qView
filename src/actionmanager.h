@@ -12,6 +12,29 @@ class ActionManager : public QObject
 {
     Q_OBJECT
 public:
+    static QList<QAction*> getAllActionsInMenu(QMenu *menu)
+    {
+        QList<QAction*> actionList;
+        foreach(auto *action, menu->actions())
+        {
+            if (action->isSeparator())
+            {
+                continue;
+            }
+            else if (action->menu())
+            {
+                actionList.append(getAllActionsInMenu(action->menu()));
+                if (action->data().toString() == "recents")
+                    actionList.append(action);
+            }
+            else
+            {
+                actionList.append(action);
+            }
+        }
+        return actionList;
+    }
+
     static QStringList keyBindingsToStringList(QKeySequence::StandardKey sequence)
     {
         auto seqList = QKeySequence::keyBindings(sequence);
@@ -93,6 +116,10 @@ public:
     QList<QAction*> getCloneActions(QString key) const;
 
     QList<QAction*> getAllInstancesOfAction(QString key) const;
+
+    void untrackClonedActions(QList<QAction*> actions);
+
+    void untrackClonedActions(QMenu *menu);
 
     QMenuBar *buildMenuBar(QWidget *parent = nullptr);
 
