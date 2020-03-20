@@ -41,8 +41,11 @@ public:
 private:
     QMenu *dockMenu;
 
+    QList<QAction*> dockMenuSuffix;
+
+    QMenu *dockMenuRecentsLibrary;
+
     QMenuBar *menuBar;
-    QList<QAction*> menuBarSuffix;
 
     QCache<QString, qint64> previouslyRecordedFileSizes;
 

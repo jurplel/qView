@@ -77,7 +77,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     contextMenu->addAction(actionManager->cloneAction("open"));
     contextMenu->addAction(actionManager->cloneAction("openurl"));
-    contextMenu->addMenu(actionManager->getRecentsMenu());
+    contextMenu->addMenu(actionManager->buildRecentsMenu());
     contextMenu->addAction(actionManager->cloneAction("opencontainingfolder"));
     contextMenu->addAction(actionManager->cloneAction("showfileinfo"));
     contextMenu->addSeparator();

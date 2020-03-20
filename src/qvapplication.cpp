@@ -22,9 +22,12 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
        qvApp->getActionManager()->actionTriggered(triggeredAction);
     });
 
-    menuBarSuffix.append(actionManager->cloneAction("newwindow"));
-    menuBarSuffix.append(actionManager->cloneAction("open"));
-    updateDockRecents();
+    dockMenuSuffix.append(actionManager->cloneAction("newwindow"));
+    dockMenuSuffix.append(actionManager->cloneAction("open"));
+
+    dockMenuRecentsLibrary = nullptr;
+    dockMenuRecentsLibrary = actionManager->buildRecentsMenu(false);
+    actionManager->updateRecentsMenu();
 
     #ifdef Q_OS_MACX
     dockMenu->setAsDockMenu();
@@ -123,9 +126,12 @@ void QVApplication::updateDockRecents()
 {
     // This entire function is only necessary because invisible actions do not
     // disappear in mac's dock menu
+    if (!dockMenuRecentsLibrary)
+        return;
+
     dockMenu->clear();
 
-    foreach (auto action, actionManager->getRecentsActionList())
+    foreach (auto action, dockMenuRecentsLibrary->actions())
     {
         if (action->isVisible())
             dockMenu->addAction(action);
@@ -133,7 +139,7 @@ void QVApplication::updateDockRecents()
     if (!dockMenu->isEmpty())
         dockMenu->addSeparator();
 
-    dockMenu->addActions(menuBarSuffix);
+    dockMenu->addActions(dockMenuSuffix);
 }
 
 qint64 QVApplication::getPreviouslyRecordedFileSize(const QString &fileName)

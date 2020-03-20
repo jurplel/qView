@@ -116,6 +116,8 @@ public:
 
     void updateRecentsMenu();
 
+    QMenu *buildRecentsMenu(bool includeClearAction = true, QWidget *parent = nullptr);
+
     void actionTriggered(QAction *triggeredAction, bool useEmptyWindow = false) const;
 
     void actionTriggered(QAction *triggeredAction, MainWindow *relevantWindow) const;
@@ -124,11 +126,7 @@ public:
 
     void loadSettings();
 
-    QMenu *getRecentsMenu() const { return recentsMenu; }
-
     const QList<SRecent> &getRecentsList() const { return recentsList; }
-
-    const QList<QAction*> &getRecentsActionList() const { return recentsActionList; }
 
     const QHash<QString, QAction*> &getActionLibrary() const { return actionLibrary; }
 
@@ -138,8 +136,6 @@ signals:
     void recentsMenuUpdated();
 
 protected:
-    void initializeRecentsMenu();
-
     void initializeActionLibrary();
 
     void initializeShortcutsList();
@@ -147,7 +143,9 @@ protected:
 private:
     QList<SRecent> recentsList;
 
-    QList<QAction*> recentsActionList;
+    QMultiHash<int, QAction*> recentsActionCloneLibrary;
+
+    QList<QMenu*> recentsMenuLibrary;
 
     QHash<QString, QAction*> actionLibrary;
 
@@ -155,11 +153,11 @@ private:
 
     QList<SShortcut> shortcutsList;
 
-    QMenu *recentsMenu;
-
     QTimer *recentsSaveTimer;
 
     bool isSaveRecentsEnabled;
+
+    int recentsListMaxLength;
 };
 
 #endif // MENUBUILDER_H
