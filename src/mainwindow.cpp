@@ -111,6 +111,7 @@ MainWindow::MainWindow(QWidget *parent) :
        qvApp->getActionManager()->actionTriggered(triggeredAction, this);
     });
 
+    setFocus();
     loadSettings();
 }
 
@@ -351,7 +352,10 @@ QScreen *MainWindow::screenAt(const QPoint &point)
 
 const bool& MainWindow::getIsPixmapLoaded() const
 {
-    return ui->graphicsView->getCurrentFileDetails().isPixmapLoaded;
+    if (ui->graphicsView)
+        return ui->graphicsView->getCurrentFileDetails().isPixmapLoaded;
+
+    return false;
 }
 
 void MainWindow::setJustLaunchedWithImage(bool value)
