@@ -213,11 +213,11 @@ void MainWindow::loadSettings()
 {
     QSettings settings;
     settings.beginGroup("options");
-//    //menubar
-//    if (settings.value("menubarenabled", false).toBool())
-//        menuBar()->show();
-//    else
-//        menuBar()->hide();
+    //menubar
+    if (settings.value("menubarenabled", false).toBool())
+        menuBar()->show();
+    else
+        menuBar()->hide();
 
     //slideshow timer
     slideshowTimer->setInterval(static_cast<int>(settings.value("slideshowtimer", 5).toDouble()*1000));
@@ -234,30 +234,17 @@ void MainWindow::loadSettings()
     ui->graphicsView->loadSettings();
     qvApp->getActionManager()->loadSettings();
 
-//    loadShortcuts();
-}
-
-void MainWindow::loadShortcuts()
-{
-
-    //Check if esc was used in a shortcut somewhere
-//    bool escUsed = false;
-//    foreach(auto sequenceList, shortcuts)
-//    {
-//        if (escUsed == true)
-//            break;
-
-//        if(sequenceList.contains(QKeySequence(Qt::Key_Escape)))
-//            escUsed = true;
-//    }
-//    if (escUsed)
-//    {
-//        escShortcut->setKey({});
-//    }
-//    else
-//    {
-//        escShortcut->setKey(Qt::Key_Escape);
-//    }
+    // If esc is not used in a shortcut, let it exit fullscreen
+    escShortcut->setKey(Qt::Key_Escape);
+    foreach (auto *action, qvApp->getActionManager()->getActionLibrary())
+    {
+        if (action->shortcuts().contains(QKeySequence(Qt::Key_Escape)))
+        {
+            escShortcut->setKey({});
+            break;
+        }
+    }
+    escShortcut->setKey({});
 }
 
 void MainWindow::openRecent(int i)

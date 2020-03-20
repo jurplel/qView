@@ -119,8 +119,6 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-    void loadShortcuts();
-
     QMenu *contextMenu;
     QMenu *virtualMenu;
 
