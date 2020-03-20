@@ -120,6 +120,7 @@ private:
     void loadShortcuts();
 
     QMenu *contextMenu;
+    QMenu *virtualMenu;
 
     QTimer *slideshowTimer;
 

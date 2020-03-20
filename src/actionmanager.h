@@ -1,9 +1,11 @@
 #ifndef MENUBUILDER_H
 #define MENUBUILDER_H
 
+#include "mainwindow.h"
+
 #include <QObject>
 #include <QMenuBar>
-#include <QHash>
+#include <QMultiHash>
 #include <QFileInfo>
 
 class ActionManager : public QObject
@@ -84,17 +86,23 @@ public:
 
     explicit ActionManager(QObject *parent = nullptr);
 
+    QAction *cloneAction(QString key);
+
     QAction *getAction(QString key) const;
 
-    QMenuBar *buildMenuBar() const;
+    QList<QAction*> getCloneActions(QString key) const;
 
-    QMenu *buildGifMenu() const;
+    QList<QAction*> getAllInstancesOfAction(QString key) const;
 
-    QMenu *buildViewMenu(bool withFullscreen = true) const;
+    QMenuBar *buildMenuBar(QWidget *parent = nullptr);
 
-    QMenu *buildToolsMenu() const;
+    QMenu *buildGifMenu(QWidget *parent = nullptr);
 
-    QMenu *buildHelpMenu() const;
+    QMenu *buildViewMenu(bool withFullscreen = true, QWidget *parent = nullptr);
+
+    QMenu *buildToolsMenu(QWidget *parent = nullptr);
+
+    QMenu *buildHelpMenu(QWidget *parent = nullptr);
 
     void loadRecentsList();
 
@@ -107,6 +115,10 @@ public:
     void clearRecentsList();
 
     void updateRecentsMenu();
+
+    void actionTriggered(QAction *triggeredAction, bool useEmptyWindow = false) const;
+
+    void actionTriggered(QAction *triggeredAction, MainWindow *relevantWindow) const;
 
     void updateShortcuts();
 
@@ -138,6 +150,8 @@ private:
     QList<QAction*> recentsActionList;
 
     QHash<QString, QAction*> actionLibrary;
+
+    QMultiHash<QString, QAction*> actionCloneLibrary;
 
     QList<SShortcut> shortcutsList;
 

@@ -25,45 +25,76 @@ ActionManager::ActionManager(QObject *parent) : QObject(parent)
     connect(recentsSaveTimer, &QTimer::timeout, this, &ActionManager::saveRecentsList);
 }
 
+QAction *ActionManager::cloneAction(QString key)
+{
+    if (auto action = getAction(key))
+    {
+        auto newAction = new QAction();
+        newAction->setIcon(action->icon());
+        newAction->setData(action->data());
+        newAction->setText(action->text());
+        newAction->setShortcuts(action->shortcuts());
+        actionCloneLibrary.insert(key, newAction);
+        return newAction;
+    }
+
+    return nullptr;
+}
+
 QAction *ActionManager::getAction(QString key) const
 {
-    auto action = actionLibrary.value(key);
-
-    if (action)
+    if (auto action = actionLibrary.value(key))
         return action;
 
     return nullptr;
 }
 
-QMenuBar *ActionManager::buildMenuBar() const
+QList<QAction*> ActionManager::getCloneActions(QString key) const
+{
+    return actionCloneLibrary.values(key);
+}
+
+QList<QAction*> ActionManager::getAllInstancesOfAction(QString key) const
+{
+    QList<QAction*> listOfActions;
+
+    if (auto mainAction = getAction(key))
+        listOfActions.append(mainAction);
+
+    listOfActions.append(getCloneActions(key));
+
+    return listOfActions;
+}
+
+QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
 {
     // Global menubar
-    auto *menuBar = new QMenuBar();
+    auto *menuBar = new QMenuBar(parent);
 
     // Beginning of file menu
-    auto *fileMenu = new QMenu(tr("File"));
+    auto *fileMenu = new QMenu(tr("File"), menuBar);
 
     #ifdef Q_OS_MACX
-    fileMenu->addAction(getAction("newwindow"));
+    fileMenu->addAction(cloneAction("newwindow"));
     #endif
-    fileMenu->addAction(getAction("open"));
-    fileMenu->addAction(getAction("openurl"));
+    fileMenu->addAction(cloneAction("open"));
+    fileMenu->addAction(cloneAction("openurl"));
     fileMenu->addMenu(recentsMenu);
     #ifdef Q_OS_MACX
-    fileMenu->addAction(getAction("closewindow"));
+    fileMenu->addAction(cloneAction("closewindow"));
     #endif
     fileMenu->addSeparator();
-    fileMenu->addAction(getAction("opencontainingfolder"));
-    fileMenu->addAction(getAction("showfileinfo"));
+    fileMenu->addAction(cloneAction("opencontainingfolder"));
+    fileMenu->addAction(cloneAction("showfileinfo"));
 
     menuBar->addMenu(fileMenu);
     // End of file menu
 
     // Beginning of edit menu
-    auto *editMenu = new QMenu(tr("Edit"));
+    auto *editMenu = new QMenu(tr("Edit"), menuBar);
 
-    editMenu->addAction(getAction("copy"));
-    editMenu->addAction(getAction("paste"));
+    editMenu->addAction(cloneAction("copy"));
+    editMenu->addAction(cloneAction("paste"));
 
     menuBar->addMenu(editMenu);
     // End of edit menu
@@ -75,88 +106,88 @@ QMenuBar *ActionManager::buildMenuBar() const
         withFullscreen = false;
     #endif
 
-    menuBar->addMenu(buildViewMenu(withFullscreen));
+    menuBar->addMenu(buildViewMenu(withFullscreen, menuBar));
     // End of view menu
 
     // Beginning of go menu
-    auto *goMenu = new QMenu(tr("Go"));
+    auto *goMenu = new QMenu(tr("Go"), menuBar);
 
-    goMenu->addAction(getAction("firstfile"));
-    goMenu->addAction(getAction("previousfile"));
-    goMenu->addAction(getAction("nextfile"));
-    goMenu->addAction(getAction("lastfile"));
+    goMenu->addAction(cloneAction("firstfile"));
+    goMenu->addAction(cloneAction("previousfile"));
+    goMenu->addAction(cloneAction("nextfile"));
+    goMenu->addAction(cloneAction("lastfile"));
 
     menuBar->addMenu(goMenu);
     // End of go menu
 
     // Beginning of tools menu
-    menuBar->addMenu(buildToolsMenu());
+    menuBar->addMenu(buildToolsMenu(menuBar));
     // End of tools menu
 
     // Beginning of help menu
-    menuBar->addMenu(buildHelpMenu());
+    menuBar->addMenu(buildHelpMenu(menuBar));
     // End of help menu
 
     return menuBar;
 }
 
-QMenu *ActionManager::buildGifMenu() const
+QMenu *ActionManager::buildGifMenu(QWidget *parent)
 {
-    auto *gifMenu = new QMenu(tr("GIF Controls"));
+    auto *gifMenu = new QMenu(tr("GIF Controls"), parent);
     gifMenu->setIcon(QIcon::fromTheme("media-playlist-repeat"));
 
-    gifMenu->addAction(getAction("saveframeas"));
-    gifMenu->addAction(getAction("pause"));
-    gifMenu->addAction(getAction("nextframe"));
+    gifMenu->addAction(cloneAction("saveframeas"));
+    gifMenu->addAction(cloneAction("pause"));
+    gifMenu->addAction(cloneAction("nextframe"));
     gifMenu->addSeparator();
-    gifMenu->addAction(getAction("decreasespeed"));
-    gifMenu->addAction(getAction("resetspeed"));
-    gifMenu->addAction(getAction("increasespeed"));
+    gifMenu->addAction(cloneAction("decreasespeed"));
+    gifMenu->addAction(cloneAction("resetspeed"));
+    gifMenu->addAction(cloneAction("increasespeed"));
 
     return gifMenu;
 }
 
-QMenu *ActionManager::buildViewMenu(bool withFullscreen) const
+QMenu *ActionManager::buildViewMenu(bool withFullscreen, QWidget *parent)
 {
-    auto *viewMenu = new QMenu(tr("View"));
+    auto *viewMenu = new QMenu(tr("View"), parent);
     viewMenu->setIcon(QIcon::fromTheme("zoom-fit-best"));
 
-    viewMenu->addAction(getAction("zoomin"));
-    viewMenu->addAction(getAction("zoomout"));
-    viewMenu->addAction(getAction("resetzoom"));
-    viewMenu->addAction(getAction("originalsize"));
+    viewMenu->addAction(cloneAction("zoomin"));
+    viewMenu->addAction(cloneAction("zoomout"));
+    viewMenu->addAction(cloneAction("resetzoom"));
+    viewMenu->addAction(cloneAction("originalsize"));
     viewMenu->addSeparator();
-    viewMenu->addAction(getAction("rotateright"));
-    viewMenu->addAction(getAction("rotateleft"));
+    viewMenu->addAction(cloneAction("rotateright"));
+    viewMenu->addAction(cloneAction("rotateleft"));
     viewMenu->addSeparator();
-    viewMenu->addAction(getAction("mirror"));
-    viewMenu->addAction(getAction("flip"));
+    viewMenu->addAction(cloneAction("mirror"));
+    viewMenu->addAction(cloneAction("flip"));
     viewMenu->addSeparator();
     if (withFullscreen)
-        viewMenu->addAction(getAction("fullscreen"));
+        viewMenu->addAction(cloneAction("fullscreen"));
 
     return viewMenu;
 }
 
-QMenu *ActionManager::buildToolsMenu() const
+QMenu *ActionManager::buildToolsMenu(QWidget *parent)
 {
-    auto *toolsMenu = new QMenu(tr("Tools"));
+    auto *toolsMenu = new QMenu(tr("Tools"), parent);
     toolsMenu->setIcon(QIcon::fromTheme("configure", QIcon::fromTheme("preferences-other")));
 
     toolsMenu->addMenu(buildGifMenu());
-    toolsMenu->addAction(getAction("slideshow"));
-    toolsMenu->addAction(getAction("options"));
+    toolsMenu->addAction(cloneAction("slideshow"));
+    toolsMenu->addAction(cloneAction("options"));
 
     return toolsMenu;
 }
 
-QMenu *ActionManager::buildHelpMenu() const
+QMenu *ActionManager::buildHelpMenu(QWidget *parent)
 {
-    auto *helpMenu = new QMenu(tr("Help"));
+    auto *helpMenu = new QMenu(tr("Help"), parent);
     helpMenu->setIcon(QIcon::fromTheme("help-about"));
 
-    helpMenu->addAction(getAction("about"));
-    helpMenu->addAction(getAction("welcome"));
+    helpMenu->addAction(cloneAction("about"));
+    helpMenu->addAction(cloneAction("welcome"));
 
     return helpMenu;
 }
@@ -280,7 +311,7 @@ void ActionManager::initializeRecentsMenu()
         auto action = new QAction(tr("Empty"), this);
         action->setVisible(false);
         connect(action, &QAction::triggered, [i]{
-            if (auto *window = qvApp->getCurrentMainWindow())
+            if (auto *window = qvApp->getMainWindow(false))
                 window->openRecent(i);
         });
         recentsActionList.append(action);
@@ -291,43 +322,107 @@ void ActionManager::initializeRecentsMenu()
 
     recentsMenu->addActions(recentsActionList);
     recentsMenu->addSeparator();
-    recentsMenu->addAction(getAction("clearrecents"));
+    recentsMenu->addAction(cloneAction("clearrecents"));
 }
 
+void ActionManager::actionTriggered(QAction *triggeredAction, bool useEmptyWindow) const
+{
+    if (auto *window = qvApp->getMainWindow(useEmptyWindow))
+        actionTriggered(triggeredAction, window);
+}
+
+void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *relevantWindow) const
+{
+    auto key = triggeredAction->data().toString();
+    if (key == "quit") {
+        relevantWindow->quit();
+    } else if (key == "newwindow") {
+        qvApp->newWindow();
+    } else if (key == "open") {
+        relevantWindow->pickFile();
+    } else if (key == "openurl") {
+        relevantWindow->pickUrl();
+    } else if (key == "closewindow") {
+        relevantWindow->close();
+    } else if (key == "opencontainingfolder") {
+        relevantWindow->openContainingFolder();
+    } else if (key == "showfileinfo") {
+        relevantWindow->showFileInfo();
+    } else if (key == "copy") {
+        relevantWindow->copy();
+    } else if (key == "paste") {
+        relevantWindow->paste();
+    } else if (key == "zoomin") {
+        relevantWindow->zoomIn();
+    } else if (key == "zoomout") {
+        relevantWindow->zoomOut();
+    } else if (key == "resetzoom") {
+        relevantWindow->resetZoom();
+    } else if (key == "originalsize") {
+        relevantWindow->originalSize();
+    } else if (key == "rotateright") {
+        relevantWindow->rotateRight();
+    } else if (key == "rotateleft") {
+        relevantWindow->rotateLeft();
+    } else if (key == "mirror") {
+        relevantWindow->mirror();
+    } else if (key == "flip") {
+        relevantWindow->flip();
+    } else if (key == "fullscreen") {
+        relevantWindow->toggleFullScreen();
+    } else if (key == "firstfile") {
+        relevantWindow->firstFile();
+    } else if (key == "previousfile") {
+        relevantWindow->previousFile();
+    } else if (key == "nextfile") {
+        relevantWindow->nextFile();
+    } else if (key == "lastfile") {
+        relevantWindow->lastFile();
+    } else if (key == "saveframeas") {
+        relevantWindow->saveFrameAs();
+    } else if (key == "pause") {
+        relevantWindow->pause();
+    } else if (key == "nextframe") {
+        relevantWindow->nextFrame();
+    } else if (key == "decreasespeed") {
+        relevantWindow->decreaseSpeed();
+    } else if (key == "resetspeed") {
+        relevantWindow->resetSpeed();
+    } else if (key == "increasespeed") {
+        relevantWindow->increaseSpeed();
+    } else if (key == "slideshow") {
+        relevantWindow->toggleSlideshow();
+    } else if (key == "options") {
+        relevantWindow->openOptions();
+    } else if (key == "about") {
+        relevantWindow->openAbout();
+    } else if (key == "welcome") {
+        relevantWindow->openWelcome();
+    } else if (key == "clearrecents") {
+        qvApp->getActionManager()->clearRecentsList();
+    }
+}
 
 void ActionManager::initializeActionLibrary()
 {
     auto *quitAction = new QAction(QIcon::fromTheme("application-exit"), tr("Quit"));
-    connect(quitAction, &QAction::triggered, [](){
-       if (auto *window = qvApp->getCurrentMainWindow())
-           window->quit();
-    });
+    quitAction->setData("quit");
+    actionLibrary.insert("quit", quitAction);
 
     auto *newWindowAction = new QAction(QIcon::fromTheme("window-new"), tr("New Window"));
-    connect(newWindowAction, &QAction::triggered, [](){
-        qvApp->newWindow();
-    });
+    newWindowAction->setData("newwindow");
     actionLibrary.insert("newwindow", newWindowAction);
 
     auto *openAction = new QAction(QIcon::fromTheme("document-open"), tr("Open..."));
-    connect(openAction, &QAction::triggered, [](){
-        if (auto *window = qvApp->getCurrentMainWindow())
-            window->pickFile();
-    });
+    openAction->setData("open");
     actionLibrary.insert("open", openAction);
 
     auto *openUrlAction = new QAction(QIcon::fromTheme("document-open-remote", QIcon::fromTheme("folder-remote")), tr("Open URL..."));
-    connect(openUrlAction, &QAction::triggered, [](){
-        if (auto *window = qvApp->getCurrentMainWindow())
-            window->pickUrl();
-    });
+    openUrlAction->setData("openurl");
     actionLibrary.insert("openurl", openUrlAction);
 
     auto *closeWindowAction = new QAction(QIcon::fromTheme("window-close"), tr("Close Window"));
-    connect(closeWindowAction, &QAction::triggered, [](){
-        if (auto *window = qvApp->getCurrentMainWindow())
-            window->close();
-    });
+    closeWindowAction->setData("closewindow");
     actionLibrary.insert("closewindow", closeWindowAction);
 
     auto *openContainingFolderAction = new QAction(QIcon::fromTheme("document-open"), tr("Open Containing Folder..."));
@@ -336,172 +431,99 @@ void ActionManager::initializeActionLibrary()
     #elif defined Q_OS_MACX
         openContainingFolderAction->setText(tr("Show in Finder"));
     #endif
-    connect(openContainingFolderAction, &QAction::triggered, [](){
-        if (auto *window = qvApp->getCurrentMainWindow())
-            window->openContainingFolder();
-    });
+    openContainingFolderAction->setData("opencontainingfolder");
     actionLibrary.insert("opencontainingfolder", openContainingFolderAction);
 
     auto *showFileInfoAction = new QAction(QIcon::fromTheme("document-properties"), tr("Show File Info"));
-    connect(showFileInfoAction, &QAction::triggered, [](){
-        if (auto *window = qvApp->getCurrentMainWindow())
-            window->showFileInfo();
-    });
+    showFileInfoAction->setData("showfileinfo");
     actionLibrary.insert("showfileinfo", showFileInfoAction);
 
     auto *copyAction = new QAction(QIcon::fromTheme("edit-copy"), tr("Copy"));
-    connect(copyAction, &QAction::triggered, [](){
-        if (auto *window = qvApp->getCurrentMainWindow())
-            window->copy();
-    });
+    copyAction->setData("copy");
     actionLibrary.insert("copy", copyAction);
 
     auto *pasteAction = new QAction(QIcon::fromTheme("edit-paste"), tr("Paste"));
-    connect(pasteAction, &QAction::triggered, [](){
-        if (auto *window = qvApp->getCurrentMainWindow())
-            window->paste();
-    });
+    pasteAction->setData("paste");
     actionLibrary.insert("paste", pasteAction);
 
     auto *zoomInAction = new QAction(QIcon::fromTheme("zoom-in"), tr("Zoom In"));
-    connect(zoomInAction, &QAction::triggered, [](){
-        if (auto *window = qvApp->getCurrentMainWindow())
-            window->zoomIn();
-    });
+    zoomInAction->setData("zoomin");
     actionLibrary.insert("zoomin", zoomInAction);
 
     auto *zoomOutAction = new QAction(QIcon::fromTheme("zoom-out"), tr("Zoom Out"));
-    connect(zoomOutAction, &QAction::triggered, [](){
-        if (auto *window = qvApp->getCurrentMainWindow())
-            window->zoomOut();
-    });
+    zoomOutAction->setData("zoomout");
     actionLibrary.insert("zoomout", zoomOutAction);
 
     auto *resetZoomAction = new QAction(QIcon::fromTheme("zoom-fit-best"), tr("Reset Zoom"));
-    connect(resetZoomAction, &QAction::triggered, [](){
-        if (auto *window = qvApp->getCurrentMainWindow())
-            window->resetZoom();
-    });
+    resetZoomAction->setData("resetzoom");
     actionLibrary.insert("resetzoom", resetZoomAction);
 
     auto *originalSizeAction = new QAction(QIcon::fromTheme("zoom-original"), tr("Original Size"));
-    connect(originalSizeAction, &QAction::triggered, [](){
-        if (auto *window = qvApp->getCurrentMainWindow())
-            window->originalSize();
-    });
-    originalSizeAction->setShortcutContext(Qt::ApplicationShortcut);
+    originalSizeAction->setData("originalsize");
     actionLibrary.insert("originalsize", originalSizeAction);
 
     auto *rotateRightAction = new QAction(QIcon::fromTheme("object-rotate-right"), tr("Rotate Right"));
-    connect(rotateRightAction, &QAction::triggered, [](){
-        if (auto *window = qvApp->getCurrentMainWindow())
-            window->rotateRight();
-    });
+    rotateRightAction->setData("rotateright");
     actionLibrary.insert("rotateright", rotateRightAction);
 
     auto *rotateLeftAction = new QAction(QIcon::fromTheme("object-rotate-left"), tr("Rotate Left"));
-    connect(rotateLeftAction, &QAction::triggered, [](){
-        if (auto *window = qvApp->getCurrentMainWindow())
-            window->rotateLeft();
-    });
+    rotateLeftAction->setData("rotateleft");
     actionLibrary.insert("rotateleft", rotateLeftAction);
 
     auto *mirrorAction = new QAction(QIcon::fromTheme("object-flip-horizontal"), tr("Mirror"));
-    connect(mirrorAction, &QAction::triggered, [](){
-        if (auto *window = qvApp->getCurrentMainWindow())
-            window->mirror();
-    });
+    mirrorAction->setData("mirror");
     actionLibrary.insert("mirror", mirrorAction);
 
     auto *flipAction = new QAction(QIcon::fromTheme("object-flip-vertical"), tr("Flip"));
-    connect(flipAction, &QAction::triggered, [](){
-        if (auto *window = qvApp->getCurrentMainWindow())
-            window->flip();
-    });
+    flipAction->setData("flip");
     actionLibrary.insert("flip", flipAction);
 
     auto *fullScreenAction = new QAction(QIcon::fromTheme("object-flip-vertical"), tr("Full Screen"));
-    connect(fullScreenAction, &QAction::triggered, [](){
-        if (auto *window = qvApp->getCurrentMainWindow())
-            window->toggleFullScreen();
-    });
+    fullScreenAction->setData("fullscreen");
     actionLibrary.insert("fullscreen", fullScreenAction);
 
     auto *firstFileAction = new QAction(QIcon::fromTheme("go-first"), tr("First File"));
-    connect(firstFileAction, &QAction::triggered, [](){
-        if (auto *window = qvApp->getCurrentMainWindow())
-            window->firstFile();
-    });
+    firstFileAction->setData("firstfile");
     actionLibrary.insert("firstfile", firstFileAction);
 
     auto *previousFileAction = new QAction(QIcon::fromTheme("go-previous"), tr("Previous File"));
-    connect(previousFileAction, &QAction::triggered, [](){
-        if (auto *window = qvApp->getCurrentMainWindow())
-            window->previousFile();
-    });
+    previousFileAction->setData("previousfile");
     actionLibrary.insert("previousfile", previousFileAction);
 
     auto *nextFileAction = new QAction(QIcon::fromTheme("go-next"), tr("Next File"));
-    connect(nextFileAction, &QAction::triggered, [](){
-        if (auto *window = qvApp->getCurrentMainWindow())
-            window->nextFile();
-    });
+    nextFileAction->setData("nextfile");
     actionLibrary.insert("nextfile", nextFileAction);
 
     auto *lastFileAction = new QAction(QIcon::fromTheme("go-last"), tr("Last File"));
-    connect(lastFileAction, &QAction::triggered, [](){
-        if (auto *window = qvApp->getCurrentMainWindow())
-            window->lastFile();
-    });
+    lastFileAction->setData("lastfile");
     actionLibrary.insert("lastfile", lastFileAction);
 
     auto *saveFrameAsAction = new QAction(QIcon::fromTheme("document-save-as"), tr("Save Frame As..."));
-    connect(saveFrameAsAction, &QAction::triggered, [](){
-        if (auto *window = qvApp->getCurrentMainWindow())
-            window->saveFrameAs();
-    });
+    saveFrameAsAction->setData("saveframeas");
     actionLibrary.insert("saveframeas", saveFrameAsAction);
 
     auto *pauseAction = new QAction(QIcon::fromTheme("media-playback-pause"), tr("Pause"));
-    connect(pauseAction, &QAction::triggered, [](){
-        if (auto *window = qvApp->getCurrentMainWindow())
-            window->pause();
-    });
+    pauseAction->setData("pause");
     actionLibrary.insert("pause", pauseAction);
 
     auto *nextFrameAction = new QAction(QIcon::fromTheme("media-skip-forward"), tr("Next Frame"));
-    connect(nextFrameAction, &QAction::triggered, [](){
-        if (auto *window = qvApp->getCurrentMainWindow())
-            window->nextFrame();
-    });
+    nextFrameAction->setData("nextframe");
     actionLibrary.insert("nextframe", nextFrameAction);
 
     auto *decreaseSpeedAction = new QAction(QIcon::fromTheme("media-seek-backward"), tr("Decrease Speed"));
-    connect(decreaseSpeedAction, &QAction::triggered, [](){
-        if (auto *window = qvApp->getCurrentMainWindow())
-            window->decreaseSpeed();
-    });
+    decreaseSpeedAction->setData("decreasespeed");
     actionLibrary.insert("decreasespeed", decreaseSpeedAction);
 
     auto *resetSpeedAction = new QAction(QIcon::fromTheme("media-playback-start"), tr("Reset Speed"));
-    connect(resetSpeedAction, &QAction::triggered, [](){
-        if (auto *window = qvApp->getCurrentMainWindow())
-            window->resetSpeed();
-    });
+    resetSpeedAction->setData(("resetspeed"));
     actionLibrary.insert("resetspeed", resetSpeedAction);
 
     auto *increaseSpeedAction = new QAction(QIcon::fromTheme("media-skip-forward"), tr("Increase Speed"));
-    connect(increaseSpeedAction, &QAction::triggered, [](){
-        if (auto *window = qvApp->getCurrentMainWindow())
-            window->increaseSpeed();
-    });
+    increaseSpeedAction->setData("increasespeed");
     actionLibrary.insert("increasespeed", increaseSpeedAction);
 
     auto *slideshowAction = new QAction(QIcon::fromTheme("media-playback-start"), tr("Start Slideshow"));
-    connect(slideshowAction, &QAction::triggered, [](){
-        if (auto *window = qvApp->getCurrentMainWindow())
-            window->toggleSlideshow();
-    });
+    slideshowAction->setData("slideshow");
     actionLibrary.insert("slideshow", slideshowAction);
 
     auto *optionsAction = new QAction(QIcon::fromTheme("configure", QIcon::fromTheme("preferences-other")), tr("Options"));
@@ -510,34 +532,23 @@ void ActionManager::initializeActionLibrary()
     #elif defined Q_OS_MACOS
         optionsAction->setText(tr("Preferences..."));
     #endif
-    connect(optionsAction, &QAction::triggered, [](){
-        if (auto *window = qvApp->getCurrentMainWindow())
-            window->openOptions();
-    });
+    optionsAction->setData("options");
     actionLibrary.insert("options", optionsAction);
 
     auto *aboutAction = new QAction(QIcon::fromTheme("help-about"), tr("About"));
     #if defined Q_OS_MACOS
         aboutAction->setText("About qView");
     #endif
-    connect(aboutAction, &QAction::triggered, [](){
-        if (auto *window = qvApp->getCurrentMainWindow())
-            window->openAbout();
-    });
+    aboutAction->setData("about");
     actionLibrary.insert("about", aboutAction);
 
     auto *welcomeAction = new QAction(QIcon::fromTheme("help-faq", QIcon::fromTheme("help-about")), tr("Welcome"));
-    connect(welcomeAction, &QAction::triggered, [](){
-        if (auto *window = qvApp->getCurrentMainWindow())
-            window->openWelcome();
-    });
+    welcomeAction->setData("welcome");
     actionLibrary.insert("welcome", welcomeAction);
 
     // This one is kinda different so here's a separator comment
     auto *clearRecentsAction = new QAction(QIcon::fromTheme("edit-delete"), tr("Clear Menu"));
-    connect(clearRecentsAction, &QAction::triggered, [this](){
-        clearRecentsList();
-    });
+    clearRecentsAction->setData("clearrecents");
     actionLibrary.insert("clearrecents", clearRecentsAction);
 }
 
@@ -605,11 +616,13 @@ void ActionManager::updateShortcuts()
     // Set action's shortcuts to current shortcut
     foreach(auto shortcut, shortcutsList)
     {
-        if (auto action = getAction(shortcut.name))
-        {
-            auto shortcutList = shortcut.shortcuts;
+        auto actionList = getAllInstancesOfAction(shortcut.name);
+        auto shortcutList = shortcut.shortcuts;
 
-            action->setShortcuts(stringListToKeySequenceList(shortcutList));
+        foreach (auto *action, actionList)
+        {
+            if (action)
+                action->setShortcuts(stringListToKeySequenceList(shortcutList));
         }
     }
 }

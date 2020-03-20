@@ -22,15 +22,11 @@ public:
 
     bool event(QEvent *event) override;
 
-    static void pickFile();
-
     static void openFile(const QString &file, bool resize = true);
 
-    static MainWindow *newWindow(const QString &fileToOpen = "");
+    static MainWindow *newWindow();
 
-    static MainWindow *getCurrentMainWindow();
-
-    static MainWindow *getEmptyMainWindow();
+    static MainWindow *getMainWindow(bool shouldBeEmpty);
 
     void updateDockRecents();
 
@@ -46,6 +42,7 @@ private:
     QMenu *dockMenu;
 
     QMenuBar *menuBar;
+    QList<QAction*> menuBarSuffix;
 
     QCache<QString, qint64> previouslyRecordedFileSizes;
 

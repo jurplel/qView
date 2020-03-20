@@ -18,6 +18,13 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     #endif
 
     dockMenu = new QMenu();
+    connect(dockMenu, &QMenu::triggered, [](QAction *triggeredAction){
+       qvApp->getActionManager()->actionTriggered(triggeredAction);
+    });
+
+    menuBarSuffix.append(actionManager->cloneAction("newwindow"));
+    menuBarSuffix.append(actionManager->cloneAction("open"));
+    updateDockRecents();
 
     #ifdef Q_OS_MACX
     dockMenu->setAsDockMenu();
@@ -25,8 +32,9 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     #endif
 
     menuBar = actionManager->buildMenuBar();
-
-    updateDockRecents();
+    connect(menuBar, &QMenuBar::triggered, [](QAction *triggeredAction){
+        qvApp->getActionManager()->actionTriggered(triggeredAction);
+    });
 }
 
 QVApplication::~QVApplication() {
@@ -42,39 +50,25 @@ bool QVApplication::event(QEvent *event)
     return QApplication::event(event);
 }
 
-void QVApplication::pickFile()
-{
-    MainWindow *w = getEmptyMainWindow();
-
-    if (!w)
-        return;
-
-    w->pickFile();
-}
 
 void QVApplication::openFile(const QString &file, bool resize)
 {
-    MainWindow *w = getEmptyMainWindow();
-
-    if (!w)
-        return;
-
-    w->setJustLaunchedWithImage(resize);
-    w->openFile(file);
+    if (auto *window = getMainWindow(true))
+    {
+        window->setJustLaunchedWithImage(resize);
+        window->openFile(file);
+    }
 }
 
-MainWindow *QVApplication::newWindow(const QString &fileToOpen)
+MainWindow *QVApplication::newWindow()
 {
     auto *w = new MainWindow();
     w->show();
 
-    if (!fileToOpen.isEmpty())
-        w->openFile(fileToOpen);
-
     return w;
 }
 
-MainWindow *QVApplication::getCurrentMainWindow()
+MainWindow *QVApplication::getMainWindow(bool shouldBeEmpty)
 {
     // Attempt to use the active window
     if (auto *activeWidget = activeWindow())
@@ -86,38 +80,14 @@ MainWindow *QVApplication::getCurrentMainWindow()
 
         if (auto *window = qobject_cast<MainWindow*>(activeWidget))
         {
-            return window;
-        }
-    }
-
-    // If that is not valid, check all windows and use the first valid one
-    foreach (QWidget *widget, QApplication::topLevelWidgets())
-    {
-        if (auto *window = qobject_cast<MainWindow*>(widget))
-        {
-            return window;
-        }
-    }
-
-    // If there are no valid ones, make a new one.
-    auto *window = newWindow();
-
-    return window;
-}
-
-MainWindow *QVApplication::getEmptyMainWindow()
-{
-    // Attempt to use the active window
-    if (auto *activeWidget = activeWindow())
-    {
-        while (activeWidget->parentWidget() != nullptr)
-        {
-            activeWidget = activeWidget->parentWidget();
-        }
-
-        if (auto *window = qobject_cast<MainWindow*>(activeWidget))
-        {
-            if (!window->getIsPixmapLoaded())
+            if (shouldBeEmpty)
+            {
+                if (!window->getIsPixmapLoaded())
+                {
+                    return window;
+                }
+            }
+            else
             {
                 return window;
             }
@@ -129,7 +99,14 @@ MainWindow *QVApplication::getEmptyMainWindow()
     {
         if (auto *window = qobject_cast<MainWindow*>(widget))
         {
-            if (!window->getIsPixmapLoaded())
+            if (shouldBeEmpty)
+            {
+                if (!window->getIsPixmapLoaded())
+                {
+                    return window;
+                }
+            }
+            else
             {
                 return window;
             }
@@ -156,8 +133,7 @@ void QVApplication::updateDockRecents()
     if (!dockMenu->isEmpty())
         dockMenu->addSeparator();
 
-    dockMenu->addAction(actionManager->getAction("newwindow"));
-    dockMenu->addAction(actionManager->getAction("open"));
+    dockMenu->addActions(menuBarSuffix);
 }
 
 qint64 QVApplication::getPreviouslyRecordedFileSize(const QString &fileName)

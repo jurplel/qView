@@ -75,32 +75,41 @@ MainWindow::MainWindow(QWidget *parent) :
 
     contextMenu = new QMenu(this);
 
-    contextMenu->addAction(actionManager->getAction("open"));
-    contextMenu->addAction(actionManager->getAction("openurl"));
+    contextMenu->addAction(actionManager->cloneAction("open"));
+    contextMenu->addAction(actionManager->cloneAction("openurl"));
     contextMenu->addMenu(actionManager->getRecentsMenu());
-    contextMenu->addAction(actionManager->getAction("opencontainingfolder"));
-    contextMenu->addAction(actionManager->getAction("showfileinfo"));
+    contextMenu->addAction(actionManager->cloneAction("opencontainingfolder"));
+    contextMenu->addAction(actionManager->cloneAction("showfileinfo"));
     contextMenu->addSeparator();
-    contextMenu->addAction(actionManager->getAction("copy"));
-    contextMenu->addAction(actionManager->getAction("paste"));
+    contextMenu->addAction(actionManager->cloneAction("copy"));
+    contextMenu->addAction(actionManager->cloneAction("paste"));
     contextMenu->addSeparator();
-    contextMenu->addAction(actionManager->getAction("nextfile"));
-    contextMenu->addAction(actionManager->getAction("previousfile"));
+    contextMenu->addAction(actionManager->cloneAction("nextfile"));
+    contextMenu->addAction(actionManager->cloneAction("previousfile"));
     contextMenu->addSeparator();
     contextMenu->addMenu(actionManager->buildViewMenu());
     contextMenu->addMenu(actionManager->buildToolsMenu());
     contextMenu->addMenu(actionManager->buildHelpMenu());
 
-    // Initialize menubar
-    setMenuBar(actionManager->buildMenuBar());
-    menuBar()->setVisible(false);
+    connect(contextMenu, &QMenu::triggered, [this](QAction *triggeredAction){
+        qvApp->getActionManager()->actionTriggered(triggeredAction, this);
+    });
 
-    // Add all actions to mainwindow's action list so that keyboard shortcuts work even if
-    // nothing else captures them
-    foreach(QAction *action, actionManager->getActionLibrary())
-    {
-        addAction(action);
-    }
+    // Initialize menubar
+//    setMenuBar(actionManager->buildMenuBar());
+//    menuBar()->setVisible(false);
+//    connect(menuBar(), &QMenuBar::triggered, [this](QAction *triggeredAction){
+//        qvApp->getActionManager()->actionTriggered(triggeredAction, this);
+//    });
+
+    // Add all actions to this window so keyboard shortcuts are always triggered
+    // using virtual menu to hold them so i can connect to the triggered signal
+    virtualMenu = new QMenu(this);
+    virtualMenu->addActions(actionManager->getActionLibrary().values());
+    addActions(virtualMenu->actions());
+    connect(virtualMenu, &QMenu::triggered, [this](QAction *triggeredAction){
+       qvApp->getActionManager()->actionTriggered(triggeredAction, this);
+    });
 
     loadSettings();
 }
@@ -168,8 +177,7 @@ void MainWindow::pickFile()
         {
             for (int i = 1; i < selected.length(); i++)
             {
-                qDebug() << selected[i];
-                QVApplication::newWindow(selected[i]);
+                QVApplication::newWindow()->openFile(selected.value(i));
             }
         }
     });
@@ -190,11 +198,11 @@ void MainWindow::loadSettings()
 {
     QSettings settings;
     settings.beginGroup("options");
-    //menubar
-    if (settings.value("menubarenabled", false).toBool())
-        menuBar()->show();
-    else
-        menuBar()->hide();
+//    //menubar
+//    if (settings.value("menubarenabled", false).toBool())
+//        menuBar()->show();
+//    else
+//        menuBar()->hide();
 
     //slideshow timer
     slideshowTimer->setInterval(static_cast<int>(settings.value("slideshowtimer", 5).toDouble()*1000));
@@ -598,14 +606,20 @@ void MainWindow::pause()
     if (ui->graphicsView->getLoadedMovie().state() == QMovie::Running)
     {
         ui->graphicsView->setPaused(true);
-        qvApp->getActionManager()->getAction("pause")->setText(tr("Resume"));
-        qvApp->getActionManager()->getAction("pause")->setIcon(QIcon::fromTheme("media-playback-start"));
+        foreach(auto action, qvApp->getActionManager()->getAllInstancesOfAction("pause"))
+        {
+            action->setText(tr("Resume"));
+            action->setIcon(QIcon::fromTheme("media-playback-start"));
+        }
     }
     else
     {
         ui->graphicsView->setPaused(false);
-        qvApp->getActionManager()->getAction("pause")->setText(tr("Pause"));
-        qvApp->getActionManager()->getAction("pause")->setIcon(QIcon::fromTheme("media-playback-pause"));
+        foreach(auto action, qvApp->getActionManager()->getAllInstancesOfAction("pause"))
+        {
+            action->setText(tr("Pause"));
+            action->setIcon(QIcon::fromTheme("media-playback-pause"));
+        }
     }
 }
 
@@ -622,14 +636,20 @@ void MainWindow::toggleSlideshow()
     if (slideshowTimer->isActive())
      {
          slideshowTimer->stop();
-         qvApp->getActionManager()->getAction("slideshow")->setText(tr("Start Slideshow"));
-         qvApp->getActionManager()->getAction("slideshow")->setIcon(QIcon::fromTheme("media-playback-start"));
+         foreach(auto action, qvApp->getActionManager()->getAllInstancesOfAction("slideshow"))
+         {
+             action->setText(tr("Start Slideshow"));
+             action->setIcon(QIcon::fromTheme("media-playback-start"));
+         }
      }
      else
      {
          slideshowTimer->start();
-         qvApp->getActionManager()->getAction("slideshow")->setText(tr("Stop Slideshow"));
-         qvApp->getActionManager()->getAction("slideshow")->setIcon(QIcon::fromTheme("media-playback-stop"));
+         foreach(auto action, qvApp->getActionManager()->getAllInstancesOfAction("slideshow"))
+         {
+             action->setText(tr("Stop Slideshow"));
+             action->setIcon(QIcon::fromTheme("media-playback-stop"));
+         }
      }
 }
 
