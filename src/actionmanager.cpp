@@ -43,11 +43,15 @@ QMenuBar *ActionManager::buildMenuBar() const
     // Beginning of file menu
     auto *fileMenu = new QMenu(tr("File"));
 
+    #ifdef Q_OS_MACX
     fileMenu->addAction(getAction("newwindow"));
+    #endif
     fileMenu->addAction(getAction("open"));
     fileMenu->addAction(getAction("openurl"));
     fileMenu->addMenu(recentsMenu);
+    #ifdef Q_OS_MACX
     fileMenu->addAction(getAction("closewindow"));
+    #endif
     fileMenu->addSeparator();
     fileMenu->addAction(getAction("opencontainingfolder"));
     fileMenu->addAction(getAction("showfileinfo"));
@@ -328,7 +332,7 @@ void ActionManager::initializeActionLibrary()
 
     auto *openContainingFolderAction = new QAction(QIcon::fromTheme("document-open"), tr("Open Containing Folder..."));
     #if defined Q_OS_WIN
-        actionOpenContainingFolder->setText(tr("Show in Explorer"));
+        openContainingFolderAction->setText(tr("Show in Explorer"));
     #elif defined Q_OS_MACX
         openContainingFolderAction->setText(tr("Show in Finder"));
     #endif

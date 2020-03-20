@@ -40,8 +40,12 @@ public:
 
     ActionManager *getActionManager() const {return actionManager; }
 
+    QMenuBar *getMenuBar() const {return menuBar; }
+
 private:
     QMenu *dockMenu;
+
+    QMenuBar *menuBar;
 
     QCache<QString, qint64> previouslyRecordedFileSizes;
 

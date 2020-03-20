@@ -70,6 +70,10 @@ MainWindow::MainWindow(QWidget *parent) :
     settings.beginGroup("general");
     restoreGeometry(settings.value("geometry").toByteArray());
 
+    // Initialize menubar
+    setMenuBar(qvApp->getMenuBar());
+    menuBar()->setVisible(false);
+
     //Context menu
     auto *actionManager = qvApp->getActionManager();
 
@@ -187,10 +191,10 @@ void MainWindow::loadSettings()
     QSettings settings;
     settings.beginGroup("options");
     //menubar
-//    if (settings.value("menubarenabled", false).toBool())
-//        ui->menuBar->show();
-//    else
-//        ui->menuBar->hide();
+    if (settings.value("menubarenabled", false).toBool())
+        menuBar()->show();
+    else
+        menuBar()->hide();
 
     //slideshow timer
     slideshowTimer->setInterval(static_cast<int>(settings.value("slideshowtimer", 5).toDouble()*1000));
