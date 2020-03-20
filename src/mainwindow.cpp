@@ -70,10 +70,6 @@ MainWindow::MainWindow(QWidget *parent) :
     settings.beginGroup("general");
     restoreGeometry(settings.value("geometry").toByteArray());
 
-    // Initialize menubar
-    setMenuBar(qvApp->getMenuBar());
-    menuBar()->setVisible(false);
-
     //Context menu
     auto *actionManager = qvApp->getActionManager();
 
@@ -94,6 +90,10 @@ MainWindow::MainWindow(QWidget *parent) :
     contextMenu->addMenu(actionManager->buildViewMenu());
     contextMenu->addMenu(actionManager->buildToolsMenu());
     contextMenu->addMenu(actionManager->buildHelpMenu());
+
+    // Initialize menubar
+    setMenuBar(actionManager->buildMenuBar());
+    menuBar()->setVisible(false);
 
     // Add all actions to mainwindow's action list so that keyboard shortcuts work even if
     // nothing else captures them
