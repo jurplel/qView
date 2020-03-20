@@ -49,7 +49,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->graphicsView, &QVGraphicsView::cancelSlideshow, this, &MainWindow::cancelSlideshow);
 
     //Initialize escape shortcut
-    escShortcut = new QShortcut(this);
+    escShortcut = new QShortcut(Qt::Key_Escape, this);
     connect(escShortcut, &QShortcut::activated, this, [this](){
         if (windowState() == Qt::WindowFullScreen)
             toggleFullScreen();
@@ -111,7 +111,6 @@ MainWindow::MainWindow(QWidget *parent) :
        qvApp->getActionManager()->actionTriggered(triggeredAction, this);
     });
 
-    setFocus();
     loadSettings();
 }
 
@@ -244,7 +243,6 @@ void MainWindow::loadSettings()
             break;
         }
     }
-    escShortcut->setKey({});
 }
 
 void MainWindow::openRecent(int i)
