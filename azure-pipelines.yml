@@ -1,4 +1,4 @@
-name: $(Date:yyyy-MM-dd).$(Rev:r)
+name: qView-nightly-$(Date:yyyy-MM-dd)
 jobs:
 - job: Windows
   pool:
@@ -27,7 +27,7 @@ jobs:
   - task: PublishBuildArtifacts@1
     inputs:
       pathtoPublish: 'bin'
-      artifactName: ${{ format('qView-nightly-{yyyy-MM-dd}') }}
+      artifactName: '${{ Build.BuildNumber }}'
     displayName: 'Publish build artifact'
 
 - job: macOS
@@ -55,5 +55,5 @@ jobs:
   - task: PublishBuildArtifacts@1
     inputs:
       pathtoPublish: 'bin'
-      artifactName: ${{ format('qView-nightly-{yyyy-MM-dd}') }}
+      artifactName: '${{ Build.BuildNumber }}'
     displayName: 'Publish build artifact'
