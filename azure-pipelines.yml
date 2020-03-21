@@ -80,13 +80,17 @@ jobs:
     lfs: true
 
   - script: |
-      sudo apt-get install wget python3-pip -y
+      sudo add-apt-repository ppa:jonathonf/python-3.6
+      sudo apt-get update
+      sudo apt-get install wget python3.6 -y
+      wget https://bootstrap.pypa.io/get-pip.py
+      sudo python3.6 get-pip.py
+      sudo ln -s /usr/local/bin/pip /usr/local/bin/pip3.6
     displayName: 'Install packages'
 
   - script: |
-      pip3 install "aqtinstall==$(aqtVersion)"
-      pip install "aqtinstall==$(aqtVersion)"
-      python3 -m aqt install $(qtVersion) linux desktop
+      pip3.6 install "aqtinstall==$(aqtVersion)"
+      python3.6 -m aqt install $(qtVersion) linux desktop
       echo '##vso[task.prependpath]$(Build.SourcesDirectory)/$(qtVersion)/gcc_64/bin'
     displayName: 'Install Qt'
 
