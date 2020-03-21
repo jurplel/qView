@@ -27,7 +27,7 @@ jobs:
   - task: PublishBuildArtifacts@1
     inputs:
       pathtoPublish: 'bin'
-      artifactName: $(format('qView-nightly-{yyyy-MM-dd}'))
+      artifactName: $[format('{0:yyyyMMdd}', pipeline.startTime)]
     displayName: 'Publish build artifact'
 
 - job: macOS
@@ -55,5 +55,5 @@ jobs:
   - task: PublishBuildArtifacts@1
     inputs:
       pathtoPublish: 'bin'
-      artifactName: $(format('qView-nightly-{yyyy-MM-dd}'))
+      artifactName: $[format('{0:yyyyMMdd}', pipeline.startTime)]
     displayName: 'Publish build artifact'
