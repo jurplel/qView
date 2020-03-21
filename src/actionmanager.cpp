@@ -161,7 +161,7 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
         withFullscreen = false;
     #endif
 
-    menuBar->addMenu(buildViewMenu(withFullscreen, menuBar));
+    menuBar->addMenu(buildViewMenu(false, withFullscreen, menuBar));
     // End of view menu
 
     // Beginning of go menu
@@ -176,11 +176,11 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     // End of go menu
 
     // Beginning of tools menu
-    menuBar->addMenu(buildToolsMenu(menuBar));
+    menuBar->addMenu(buildToolsMenu(false, menuBar));
     // End of tools menu
 
     // Beginning of help menu
-    menuBar->addMenu(buildHelpMenu(menuBar));
+    menuBar->addMenu(buildHelpMenu(false, menuBar));
     // End of help menu
 
     return menuBar;
@@ -202,10 +202,11 @@ QMenu *ActionManager::buildGifMenu(QWidget *parent)
     return gifMenu;
 }
 
-QMenu *ActionManager::buildViewMenu(bool withFullscreen, QWidget *parent)
+QMenu *ActionManager::buildViewMenu(bool addIcon, bool withFullscreen, QWidget *parent)
 {
     auto *viewMenu = new QMenu(tr("View"), parent);
-    viewMenu->setIcon(QIcon::fromTheme("zoom-fit-best"));
+    if (addIcon)
+        viewMenu->setIcon(QIcon::fromTheme("zoom-fit-best"));
 
     viewMenu->addAction(cloneAction("zoomin"));
     viewMenu->addAction(cloneAction("zoomout"));
@@ -224,10 +225,11 @@ QMenu *ActionManager::buildViewMenu(bool withFullscreen, QWidget *parent)
     return viewMenu;
 }
 
-QMenu *ActionManager::buildToolsMenu(QWidget *parent)
+QMenu *ActionManager::buildToolsMenu(bool addIcon, QWidget *parent)
 {
     auto *toolsMenu = new QMenu(tr("Tools"), parent);
-    toolsMenu->setIcon(QIcon::fromTheme("configure", QIcon::fromTheme("preferences-other")));
+    if (addIcon)
+        toolsMenu->setIcon(QIcon::fromTheme("configure", QIcon::fromTheme("preferences-other")));
 
     toolsMenu->addMenu(buildGifMenu());
     toolsMenu->addAction(cloneAction("slideshow"));
@@ -236,10 +238,11 @@ QMenu *ActionManager::buildToolsMenu(QWidget *parent)
     return toolsMenu;
 }
 
-QMenu *ActionManager::buildHelpMenu(QWidget *parent)
+QMenu *ActionManager::buildHelpMenu(bool addIcon, QWidget *parent)
 {
     auto *helpMenu = new QMenu(tr("Help"), parent);
-    helpMenu->setIcon(QIcon::fromTheme("help-about"));
+    if (addIcon)
+        helpMenu->setIcon(QIcon::fromTheme("help-about"));
 
     helpMenu->addAction(cloneAction("about"));
     helpMenu->addAction(cloneAction("welcome"));

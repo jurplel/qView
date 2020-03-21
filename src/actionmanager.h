@@ -127,11 +127,11 @@ public:
 
     QMenu *buildGifMenu(QWidget *parent = nullptr);
 
-    QMenu *buildViewMenu(bool withFullscreen = true, QWidget *parent = nullptr);
+    QMenu *buildViewMenu(bool addIcon = true, bool withFullscreen = true, QWidget *parent = nullptr);
 
-    QMenu *buildToolsMenu(QWidget *parent = nullptr);
+    QMenu *buildToolsMenu(bool addIcon = true, QWidget *parent = nullptr);
 
-    QMenu *buildHelpMenu(QWidget *parent = nullptr);
+    QMenu *buildHelpMenu(bool addIcon = true, QWidget *parent = nullptr);
 
     QMenu *buildRecentsMenu(bool includeClearAction = true, QWidget *parent = nullptr);
 
