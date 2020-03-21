@@ -1,8 +1,4 @@
-name: $(Date:yyyy-MM-dd).$(Rev:r)
-variables: 
-  date-formatted: $[format('{0:yyyy-MM-dd}', pipeline.startTime)]
-
-
+name: '$(Date:yyyy-MM-dd)'
 jobs:
 - job: Windows
   pool:
@@ -31,7 +27,7 @@ jobs:
   - task: PublishBuildArtifacts@1
     inputs:
       pathtoPublish: 'bin'
-      artifactName: $(date-formatted)
+      artifactName: 'qView-nightly-${{ Build.BuildNumber }}'
     displayName: 'Publish build artifact'
 
 - job: macOS
@@ -59,5 +55,5 @@ jobs:
   - task: PublishBuildArtifacts@1
     inputs:
       pathtoPublish: 'bin'
-      artifactName: $(date-formatted)
+      artifactName: 'qView-nightly-${{ Build.BuildNumber }}'
     displayName: 'Publish build artifact'
