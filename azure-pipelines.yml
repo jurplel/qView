@@ -1,16 +1,21 @@
+variables:
+  aqtVersion: '0.8b1'
 name: '$(Date:yyyy-MM-dd).$(Rev:r)'
 jobs:
 - job: Windows
   pool:
     vmImage: 'windows-2019'
+  variables:
+    qtVersion: '5.12.7'
+    qtArch: 'win64_msvc2017_64'
   steps:
   - checkout: self
     lfs: true
 
   - script: |
-      pip3 install "aqtinstall==0.8b1"
-      python -m aqt install 5.12.7 windows desktop win64_msvc2017_64
-      echo ##vso[task.prependpath]$(Build.SourcesDirectory)\5.12.7\msvc2017_64\bin
+      pip3 install "aqtinstall==$(aqtVersion)"
+      python -m aqt install $(qtVersion) windows desktop $(qtArch)
+      echo ##vso[task.prependpath]$(Build.SourcesDirectory)\$(qtVersion)\msvc2017_64\bin
     displayName: 'Install Qt'
 
   - script: |
@@ -35,14 +40,16 @@ jobs:
 - job: macOS
   pool:
     vmImage: 'macOS-10.15'
+  variables:
+    qtVersion: '5.12.7'
   steps:
   - checkout: self
     lfs: true
 
   - script: |
-      pip3 install "aqtinstall==0.8b1"
-      python3 -m aqt install 5.12.7 mac desktop
-      echo '##vso[task.prependpath]$(Build.SourcesDirectory)/5.12.7/clang_64/bin'
+      pip3 install "aqtinstall==$(aqtVersion)"
+      python3 -m aqt install $(qtVersion) mac desktop
+      echo '##vso[task.prependpath]$(Build.SourcesDirectory)/$(qtVersion)/clang_64/bin'
     displayName: 'Install Qt'
 
   - script: |
@@ -60,4 +67,42 @@ jobs:
     inputs:
       pathtoPublish: 'bin'
       artifactName: 'qView-nightly-macOS.$(Build.BuildNumber)'
+    displayName: 'Publish build artifact'
+
+- job: Linux
+  pool:
+    vmImage: 'ubuntu-16.04'
+  container: ubuntu:trusty
+  variables:
+    qtVersion: '5.12.7'
+  steps:
+  - checkout: self
+    lfs: true
+
+  - script: |
+      pip3 install "aqtinstall==$(aqtVersion)"
+      python3 -m aqt install $(qtVersion) linux desktop
+      echo '##vso[task.prependpath]$(Build.SourcesDirectory)/$(qtVersion)/gcc_64/bin'
+    displayName: 'Install Qt'
+
+  - script: |
+        wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+        chmod a+x linuxdeployqt-continuous-x86_64.AppImage
+    displayName: 'Install linuxdeployqt'
+
+  - script: |
+      qmake
+      mkdir bin/appdir
+      make install INSTALL_ROOT=bin/appdir
+    displayName: 'Build qView'
+
+  - script: |
+      ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/*.desktop -appimage
+      ls -R
+    displayName: 'Deploy qView'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathtoPublish: 'bin'
+      artifactName: 'qView-nightly-linux.$(Build.BuildNumber)'
     displayName: 'Publish build artifact'
