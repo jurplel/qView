@@ -13,7 +13,7 @@ jobs:
     displayName: 'Install Qt'
 
   - script: |
-      echo %PATH%
+      env
       call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
       qmake
       nmake
@@ -43,7 +43,6 @@ jobs:
     displayName: 'Install Qt'
 
   - script: |
-      echo $PATH
       qmake
       make
     displayName: 'Build qView'
