@@ -1,4 +1,4 @@
-name: '$(Date:yyyy-MM-dd)'
+name: '$(Date:yyyy-MM-dd).$(Rev:r)'
 jobs:
 - job: Windows
   pool:
@@ -21,13 +21,15 @@ jobs:
     displayName: 'Build qView'
     
   - script: |
-      windeployqt bin --no-compiler-runtime
+      cd bin
+      windeployqt qView.exe --no-compiler-runtime
+      rename qView.exe "qView-nightly.$(Build.BuildNumber).exe"
     displayName: 'Deploy qView'
 
   - task: PublishBuildArtifacts@1
     inputs:
       pathtoPublish: 'bin'
-      artifactName: 'qView-nightly-$(Build.BuildNumber)'
+      artifactName: 'qView-nightly-win64.$(Build.BuildNumber)'
     displayName: 'Publish build artifact'
 
 - job: macOS
@@ -49,11 +51,13 @@ jobs:
     displayName: 'Build qView'
 
   - script: |
-      macdeployqt bin/qView.app/
+      cd bin
+      macdeployqt qView.app/
+      mv qView.app 'qView-nightly.$(Build-BuildNumber)'
     displayName: 'Deploy qView'
 
   - task: PublishBuildArtifacts@1
     inputs:
       pathtoPublish: 'bin'
-      artifactName: 'qView-nightly-$(Build.BuildNumber)'
+      artifactName: 'qView-nightly-macOS.$(Build.BuildNumber)'
     displayName: 'Publish build artifact'
