@@ -53,7 +53,7 @@ jobs:
   - script: |
       cd bin
       macdeployqt qView.app/
-      mv qView.app 'qView-nightly.$(Build-BuildNumber)'
+      mv qView.app 'qView-nightly.$(Build.BuildNumber).app'
     displayName: 'Deploy qView'
 
   - task: PublishBuildArtifacts@1
