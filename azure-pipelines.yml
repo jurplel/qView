@@ -27,7 +27,7 @@ jobs:
   - task: PublishBuildArtifacts@1
     inputs:
       pathtoPublish: 'bin'
-      artifactName: 'qView-nightly-${{ Build.BuildNumber }}'
+      artifactName: 'qView-nightly-$(Build.BuildNumber)'
     displayName: 'Publish build artifact'
 
 - job: macOS
@@ -55,5 +55,5 @@ jobs:
   - task: PublishBuildArtifacts@1
     inputs:
       pathtoPublish: 'bin'
-      artifactName: 'qView-nightly-${{ Build.BuildNumber }}'
+      artifactName: 'qView-nightly-$(Build.BuildNumber)'
     displayName: 'Publish build artifact'
