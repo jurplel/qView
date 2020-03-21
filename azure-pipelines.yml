@@ -10,10 +10,10 @@ jobs:
       pip3 install "aqtinstall==0.8b1"
       python -m aqt install 5.12.7 windows desktop win64_msvc2017_64
       echo '##vso[task.prependpath]$(Build.SourcesDirectory)\5.12.7\msvc2017_64\bin'
-      env
     displayName: 'Install Qt'
 
   - script: |
+      echo %PATH%
       call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
       qmake
       nmake
@@ -40,10 +40,10 @@ jobs:
       pip3 install "aqtinstall==0.8b1"
       python3 -m aqt install 5.12.7 mac desktop
       echo '##vso[task.prependpath]$(Build.SourcesDirectory)/5.12.7/clang_64/bin'
-      env
     displayName: 'Install Qt'
 
   - script: |
+      echo $PATH
       qmake
       make
     displayName: 'Build qView'
