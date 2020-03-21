@@ -1,0 +1,57 @@
+jobs:
+- job: Windows
+  pool:
+    vmImage: 'windows-2019'
+  steps:
+  - checkout: self
+    lfs: true
+
+  - script: |
+      pip3 install aqtinstall 0.8b1
+      python3 -m aqt install -O C:\Qt\ 5.12.7 windows desktop win64_msvc2017_64
+      echo '##vso[task.prependpath]C:\Qt\5.12.7\msvc2017_64\bin'
+    displayName: 'Download Qt'
+
+  - script: |
+      call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+      qmake
+      nmake
+    displayName: 'Build qView'
+    
+  - script: |
+      windeployqt bin --no-compiler-runtime
+    displayName: 'Deploy qView'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathtoPublish: 'bin'
+      artifactName: 'qView-nightly-$(Date:yyyy-MM-dd)'
+    displayName: 'Publish build artifact'
+
+- job: macOS
+  pool:
+    vmImage: 'macOS-10.15'
+  steps:
+  - checkout: self
+    lfs: true
+
+  - script: |
+      pip install aqtinstall 0.8b1
+      python -m aqt install -O /Qt/ 5.12.7 mac desktop
+      echo '##vso[task.prependpath]/Qt/5.12.7/clang_64/bin'
+    displayName: 'Install Qt'
+
+  - script: |
+      qmake
+      make
+    displayName: 'Build qView'
+
+  - script: |
+      macdeployqt bin
+    displayName: 'Deploy qView'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathtoPublish: 'bin'
+      artifactName: 'qView-nightly-$(Date:yyyy-MM-dd)'
+    displayName: 'Publish build artifact'
