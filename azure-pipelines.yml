@@ -1,6 +1,6 @@
 name: $(Date:yyyy-MM-dd).$(Rev:r)
 variables: 
-  date-formatted: $[format('{yyyyMMdd}')]
+  date-formatted: $[format('{0:yyyyMMdd}', pipeline.startTime)]
 
 
 jobs:
