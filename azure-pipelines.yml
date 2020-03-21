@@ -80,10 +80,11 @@ jobs:
     lfs: true
 
   - script: |
-      sudo apt-get install wget -y
+      sudo apt-get install wget python3-pip -y
     displayName: 'Install packages'
 
   - script: |
+      pip3 install "aqtinstall==$(aqtVersion)"
       pip install "aqtinstall==$(aqtVersion)"
       python3 -m aqt install $(qtVersion) linux desktop
       echo '##vso[task.prependpath]$(Build.SourcesDirectory)/$(qtVersion)/gcc_64/bin'
