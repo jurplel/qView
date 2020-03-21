@@ -49,7 +49,7 @@ jobs:
     displayName: 'Build qView'
 
   - script: |
-      macdeployqt bin
+      macdeployqt bin/qView.app/
     displayName: 'Deploy qView'
 
   - task: PublishBuildArtifacts@1
