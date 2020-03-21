@@ -8,8 +8,8 @@ jobs:
 
   - script: |
       pip3 install "aqtinstall==0.8b1"
-      python -m aqt install -O C:\Qt\ 5.12.7 windows desktop win64_msvc2017_64
-      echo '##vso[task.prependpath]C:\Qt\5.12.7\msvc2017_64\bin'
+      python -m aqt install 5.12.7 windows desktop win64_msvc2017_64
+      echo '##vso[task.prependpath]$(Build.SourcesDirectory)\Qt\5.12.7\msvc2017_64\bin'
     displayName: 'Download Qt'
 
   - script: |
@@ -38,7 +38,7 @@ jobs:
   - script: |
       pip3 install "aqtinstall==0.8b1"
       python3 -m aqt install -O /Qt/ 5.12.7 mac desktop
-      echo '##vso[task.prependpath]/Qt/5.12.7/clang_64/bin'
+      echo '##vso[task.prependpath]Build.SourcesDirectory/Qt/5.12.7/clang_64/bin'
     displayName: 'Install Qt'
 
   - script: |
