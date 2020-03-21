@@ -1,6 +1,6 @@
 name: $(Date:yyyy-MM-dd).$(Rev:r)
 variables: 
-  date-formatted: $[format('{:yyyy-MM-dd}')]
+  date-formatted: $[format('{0:yyyy-MM-dd}')]
 
 
 jobs:
