@@ -79,7 +79,7 @@ jobs:
   - checkout: self
     lfs: true
 
-  - script |
+  - script: |
       sudo apt-get install wget -y
     displayName: 'Install packages'
 
