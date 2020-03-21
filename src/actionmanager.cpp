@@ -141,6 +141,8 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     fileMenu->addSeparator();
     fileMenu->addAction(cloneAction("opencontainingfolder"));
     fileMenu->addAction(cloneAction("showfileinfo"));
+    fileMenu->addSeparator();
+    fileMenu->addAction(cloneAction("quit"));
 
     menuBar->addMenu(fileMenu);
     // End of file menu

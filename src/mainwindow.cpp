@@ -67,7 +67,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //Load window geometry
     QSettings settings;
-    settings.beginGroup("general");
     restoreGeometry(settings.value("geometry").toByteArray());
 
     //Context menu
@@ -138,7 +137,6 @@ void MainWindow::showEvent(QShowEvent *event)
 {
     QMainWindow::showEvent(event);
     QSettings settings;
-    settings.beginGroup("general");
 
     if (settings.value("firstlaunch", false).toBool())
         return;
@@ -150,7 +148,6 @@ void MainWindow::showEvent(QShowEvent *event)
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     QSettings settings;
-    settings.beginGroup("general");
     settings.setValue("geometry", saveGeometry());
 
     qvApp->deleteFromLastActiveWindows(this);
