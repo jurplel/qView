@@ -1,17 +1,9 @@
-parameters:
-- name: nightly
-  displayName: Nightly
-  type: boolean
-  default: false
 
 variables:
   aqtVersion: '0.8b1'
-  nightlyDefines: ''
-  nightly: ''
-  ${{ parameters.nightly }}:
-    nightlyDefines: 'DEFINES+=NIGHTLY=$(Build.BuildNumber)'
-    nightlyString: '-nightly'
-    
+  nightlyDefines: 'DEFINES+=NIGHTLY=$(Build.BuildNumber)'
+  nightlyString: '-nightly'
+
 name: '$(Date:yyyy-MM-dd).$(Rev:r)'
 jobs:
 - job: Windows

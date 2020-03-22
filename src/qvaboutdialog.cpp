@@ -33,9 +33,7 @@ QVAboutDialog::QVAboutDialog(QWidget *parent) :
     QString subtitleText = tr("version ") + QString::number(VERSION, 'f', 1);
     // If this is a nightly build, display the build number
     #ifdef NIGHTLY
-        #define STRINGIFY2(s) #s
-        #define STRINGIFY(s) STRINGIFY2(s)
-        subtitleText = tr("nightly ") + STRINGIFY(NIGHTLY);
+        subtitleText = tr("🌒 Nightly");
     #endif
     ui->subtitleLabel->setFont(font2);
     ui->subtitleLabel->setText(subtitleText);
@@ -70,7 +68,9 @@ void QVAboutDialog::requestUpdates()
 {
     // Don't check for updates on nightly builds
     #ifdef NIGHTLY
-        QString text = R"(<a style="color: #03A9F4; text-decoration:none;" href="https://dev.azure.com/jurplel/qView/_build">)" + tr("More nightly builds") + "</a>";
+        #define STRINGIFY2(s) #s
+        #define STRINGIFY(s) STRINGIFY2(s)
+        QString text = tr("Build number #") + STRINGIFY(NIGHTLY);
         ui->updateLabel->setText(text);
         return;
     #endif
