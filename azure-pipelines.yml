@@ -111,7 +111,7 @@ jobs:
     displayName: 'Build qView'
 
   - script: |
-      ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/qView.desktop -appimage
+      sudo ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/qView.desktop -appimage
       ls -R
     displayName: 'Deploy qView'
 
