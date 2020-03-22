@@ -7,6 +7,8 @@ schedules:
 
 variables:
   aqtVersion: '0.8b1'
+  nightlyDefines: ''
+  nightly: ''
   ${{ if eq(variables['Build.Reason'], 'Schedule') }}:
     nightlyDefines: 'DEFINES+=NIGHTLY=$(Build.BuildNumber)'
     nightly: '-nightly'
@@ -30,20 +32,20 @@ jobs:
 
   - script: |
       call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-      qmake $[variables.nightlyDefines]
+      qmake $(nightlyDefines)
       nmake
     displayName: 'Build qView'
     
   - script: |
       cd bin
       windeployqt qView.exe --no-compiler-runtime
-      rename qView.exe "qView$[variables.nightly].$(Build.BuildNumber).exe"
+      rename qView.exe "qView$(nightly).$(Build.BuildNumber).exe"
     displayName: 'Deploy qView'
 
   - task: PublishBuildArtifacts@1
     inputs:
       pathtoPublish: 'bin'
-      artifactName: 'qView$[variables.nightly]-win64.$(Build.BuildNumber)'
+      artifactName: 'qView$(nightly)-win64.$(Build.BuildNumber)'
     displayName: 'Publish build artifact'
 
 - job: macOS
@@ -62,20 +64,20 @@ jobs:
     displayName: 'Install Qt'
 
   - script: |
-      qmake $[variables.nightlyDefines]
+      qmake $(nightlyDefines)
       make
     displayName: 'Build qView'
 
   - script: |
       cd bin
       macdeployqt qView.app/
-      mv qView.app 'qView$[variables.nightly].$(Build.BuildNumber).app'
+      mv qView.app 'qView$(nightly).$(Build.BuildNumber).app'
     displayName: 'Deploy qView'
 
   - task: PublishBuildArtifacts@1
     inputs:
       pathtoPublish: 'bin'
-      artifactName: 'qView$[variables.nightly]-macOS.$(Build.BuildNumber)'
+      artifactName: 'qView$(nightly)-macOS.$(Build.BuildNumber)'
     displayName: 'Publish build artifact'
 
 - job: Linux
@@ -117,7 +119,7 @@ jobs:
     displayName: Get additional themes GTK+2 and qt5ct
 
   - script: |
-      qmake $[variables.nightlyDefines]
+      qmake $(nightlyDefines)
       mkdir bin/appdir
       make install INSTALL_ROOT=bin/appdir
     displayName: 'Build qView'
@@ -126,11 +128,11 @@ jobs:
       cd bin
       ../linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/qView.desktop -appimage -extra-plugins=styles/libqt5ct-style.so,platformthemes/libqt5ct.so,iconengines,platformthemes/libqgtk3.so
       mkdir out
-      mv *.AppImage out/qView$[variables.nightly].$(Build.BuildNumber).x86_64.AppImage
+      mv *.AppImage out/qView$(nightly).$(Build.BuildNumber).x86_64.AppImage
     displayName: 'Deploy qView'
 
   - task: PublishBuildArtifacts@1
     inputs:
       pathtoPublish: 'bin/out'
-      artifactName: 'qView$[variables.nightly]-linux.$(Build.BuildNumber)'
+      artifactName: 'qView$(nightly)-linux.$(Build.BuildNumber)'
     displayName: 'Publish build artifact'
