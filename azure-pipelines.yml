@@ -22,7 +22,6 @@ jobs:
     qtArch: 'win64_msvc2017_64'
   steps:
   - checkout: self
-    lfs: true
 
   - script: |
       pip3 install "aqtinstall==$(aqtVersion)"
@@ -55,7 +54,6 @@ jobs:
     qtVersion: '5.12.7'
   steps:
   - checkout: self
-    lfs: true
 
   - script: |
       pip3 install "aqtinstall==$(aqtVersion)"
@@ -87,7 +85,6 @@ jobs:
     qtVersion: '5.12.7'
   steps:
   - checkout: self
-    lfs: true
 
   - script: |
       sudo apt-get update
