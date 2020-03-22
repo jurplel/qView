@@ -114,7 +114,7 @@ jobs:
 
   - script: |
       cd bin
-      ../linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/qView.desktop -appimage -extra-plugins=styles/libqt5ct-style.so,platformthemes/libqt5ct.so
+      ../linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/qView.desktop -appimage -extra-plugins=styles/libqt5ct-style.so,platformthemes/libqt5ct.so,platformthemes/libqgtk3.so
       mkdir out
       mv *.AppImage out/qView-nightly.$(Build.BuildNumber).x86_64.AppImage
     displayName: 'Deploy qView'
