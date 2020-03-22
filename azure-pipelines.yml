@@ -82,8 +82,6 @@ jobs:
   - script: |
       sudo apt-get update
       sudo apt-get install wget software-properties-common build-essential libgl1-mesa-dev fuse -y
-    
-
 
       sudo add-apt-repository ppa:deadsnakes/ppa
       sudo apt-get update
@@ -111,7 +109,7 @@ jobs:
     displayName: 'Build qView'
 
   - script: |
-      ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/*.desktop -appimage
+      sudo ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/*.desktop -appimage
       ls -R
     displayName: 'Deploy qView'
 
