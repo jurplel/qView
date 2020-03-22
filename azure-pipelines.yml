@@ -72,9 +72,6 @@ jobs:
 - job: Linux
   pool:
     vmImage: 'ubuntu-16.04'
-  container: 
-    image: ubuntu:trusty
-    options: '--privileged --device /dev/fuse'
   variables:
     qtVersion: '5.12.7'
   steps:
@@ -112,7 +109,7 @@ jobs:
 
   - script: |
       cd bin
-      sudo -E env "PATH=$PATH" ../linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/qView.desktop -appimage
+      ../linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/qView.desktop -appimage
       mkdir out
       mv qView-x86_64.AppImage out/qView-nightly.$(Build.BuildNumber).x86_64.AppImage
     displayName: 'Deploy qView'
