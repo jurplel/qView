@@ -72,7 +72,9 @@ jobs:
 - job: Linux
   pool:
     vmImage: 'ubuntu-16.04'
-  container: ubuntu:trusty
+  container: 
+    image: ubuntu:trusty
+    options: '--cap-add MKNOD --cap-add SYS_ADMIN --device /dev/fuse'
   variables:
     qtVersion: '5.12.7'
   steps:
