@@ -111,9 +111,9 @@ jobs:
     displayName: 'Build qView'
 
   - script: |
-      env
-      sudo -E env "PATH=$PATH" ./linuxdeployqt-continuous-x86_64.AppImage bin/appdir/usr/share/applications/qView.desktop -appimage
-      ls -R
+      cd bin
+      sudo -E env "PATH=$PATH" ../linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/qView.desktop -appimage
+      ls
     displayName: 'Deploy qView'
 
   - task: PublishBuildArtifacts@1
