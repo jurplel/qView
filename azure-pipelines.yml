@@ -89,7 +89,6 @@ jobs:
       wget https://bootstrap.pypa.io/get-pip.py
 
       sudo python3.6 get-pip.py
-      sudo ln -s /usr/local/bin/pip /usr/local/bin/pip3.6
     displayName: 'Install packages'
 
   - script: |
