@@ -19,9 +19,8 @@ jobs:
     displayName: 'Install Qt'
 
   - script: |
-      env
       call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-      qmake
+      qmake DEFINES+=NIGHTLY=$(Build.BuildNumber)
       nmake
     displayName: 'Build qView'
     
@@ -53,7 +52,7 @@ jobs:
     displayName: 'Install Qt'
 
   - script: |
-      qmake
+      qmake DEFINES+=NIGHTLY=$(Build.BuildNumber)
       make
     displayName: 'Build qView'
 
@@ -108,7 +107,7 @@ jobs:
     displayName: Get additional themes GTK+2 and qt5ct
 
   - script: |
-      qmake
+      qmake DEFINES+=NIGHTLY=$(Build.BuildNumber)
       mkdir bin/appdir
       make install INSTALL_ROOT=bin/appdir
     displayName: 'Build qView'
