@@ -80,6 +80,7 @@ jobs:
     lfs: true
 
   - script: |
+      sudo apt-get update
       sudo apt-get install wget software-properties-common build-essential -y
 
       sudo add-apt-repository ppa:deadsnakes/python3.6
