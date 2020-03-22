@@ -30,7 +30,13 @@ QVAboutDialog::QVAboutDialog(QWidget *parent) :
     //set subtitle font & text
     QFont font2 = QFont("Lato", 18 + modifier);
     font2.setStyleName("Regular");
-    const QString subtitleText = tr("version ") + QString::number(VERSION, 'f', 1);
+    QString subtitleText = tr("version ") + QString::number(VERSION, 'f', 1);
+    // If this is a nightly build, display the build number
+    #ifdef NIGHTLY
+        #define STRINGIFY2(s) #s
+        #define STRINGIFY(s) STRINGIFY2(s)
+        subtitleText = tr("nightly ") + STRINGIFY(NIGHTLY);
+    #endif
     ui->subtitleLabel->setFont(font2);
     ui->subtitleLabel->setText(subtitleText);
 
@@ -40,6 +46,8 @@ QVAboutDialog::QVAboutDialog(QWidget *parent) :
     const QString updateText = tr("Checking for updates...");
     ui->updateLabel->setFont(font3);
     ui->updateLabel->setText(updateText);
+    ui->updateLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
+    ui->updateLabel->setOpenExternalLinks(true);
 
     //set infolabel2 font, text, and properties
     QFont font4 = QFont("Lato", 8 + modifier);
@@ -60,6 +68,13 @@ QVAboutDialog::~QVAboutDialog()
 
 void QVAboutDialog::requestUpdates()
 {
+    // Don't check for updates on nightly builds
+    #ifdef NIGHTLY
+        QString text = R"(<a style="color: #03A9F4; text-decoration:none;" href="https://dev.azure.com/jurplel/qView/_build">)" + tr("More nightly builds") + "</a>";
+        ui->updateLabel->setText(text);
+        return;
+    #endif
+
     // send network request for update check
     QUrl url("https://api.github.com/repos/jurplel/qview/releases");
     QNetworkRequest request(url);
@@ -95,13 +110,11 @@ void QVAboutDialog::checkUpdates(QNetworkReply* reply)
         ui->updateLabel->setText(tr("Error checking for updates"));
         return;
     }
+
     if (latestVersionNum > VERSION)
     {
-        const QString text = tr(R"(<a style="color: #03A9F4; text-decoration:none;" href="https://github.com/jurplel/qView/releases">%1 update available!</a>)").arg(QString::number(latestVersionNum, 'f', 1));
+        const QString text = (R"(<a style="color: #03A9F4; text-decoration:none;" href="https://github.com/jurplel/qView/releases">)" + tr("%1 update available!") + "</a>").arg(QString::number(latestVersionNum, 'f', 1));
         ui->updateLabel->setText(text);
-        ui->updateLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
-        ui->updateLabel->setOpenExternalLinks(true);
-        ui->updateLabel->setEnabled(true);
     }
     else
     {
