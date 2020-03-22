@@ -111,7 +111,7 @@ jobs:
     displayName: 'Build qView'
 
   - script: |
-      sudo --preserve-env=PATH ./linuxdeployqt-continuous-x86_64.AppImage bin/appdir/usr/share/applications/qView.desktop -appimage
+      sudo -E ./linuxdeployqt-continuous-x86_64.AppImage bin/appdir/usr/share/applications/qView.desktop -appimage
       ls -R
     displayName: 'Deploy qView'
 
