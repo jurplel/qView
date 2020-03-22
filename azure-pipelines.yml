@@ -83,7 +83,7 @@ jobs:
 
   - script: |
       sudo apt-get update
-      sudo apt-get install wget software-properties-common build-essential libgl1-mesa-dev fuse libfontconfig1 libxrender1 -y
+      sudo apt-get install wget software-properties-common build-essential libgl1-mesa-dev fuse libfontconfig1 libxrender1 libxkbcommon0 -y
 
       sudo add-apt-repository ppa:deadsnakes/ppa
       sudo apt-get update
