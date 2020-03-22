@@ -74,7 +74,7 @@ jobs:
     vmImage: 'ubuntu-16.04'
   container: 
     image: ubuntu:trusty
-    options: '--cap-add MKNOD --cap-add SYS_ADMIN --device /dev/fuse'
+    options: '--privileged --device /dev/fuse'
   variables:
     qtVersion: '5.12.7'
   steps:
