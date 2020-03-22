@@ -80,12 +80,12 @@ jobs:
 
   - script: |
       sudo apt-get update
-      sudo apt-get install libgl1-mesa-dev libxkbcommon-x11-0 -y
+      sudo apt-get install libgl1-mesa-dev libxkbcommon-x11-0 libgtk2.0-dev -y
     displayName: 'Install packages'
 
   - script: |
       pip3 install "aqtinstall==$(aqtVersion)"
-      python3 -m aqt install $(qtVersion) linux desktop -m 
+      python3 -m aqt install $(qtVersion) linux desktop
       echo '##vso[task.prependpath]$(Build.SourcesDirectory)/$(qtVersion)/gcc_64/bin'
     displayName: 'Install Qt'
 
@@ -95,7 +95,7 @@ jobs:
     displayName: 'Install linuxdeployqt'
 
   - script: |
-      git clone http://code.qt.io/qt/qtstyleplugins.git
+      git clone https://code.qt.io/qt/qtstyleplugins.git
       cd qtstyleplugins
       qmake
       sudo make install
