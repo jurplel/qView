@@ -101,7 +101,7 @@ jobs:
       sudo make install
 
       wget 'https://sourceforge.net/projects/qt5ct/files/latest/download'
-      tar xf qt5ct*.tar.bz2
+      tar xf download
       cd qt5ct*
       qmake
       sudo make install
