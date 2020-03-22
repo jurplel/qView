@@ -80,19 +80,12 @@ jobs:
 
   - script: |
       sudo apt-get update
-      sudo apt-get install wget software-properties-common build-essential libgl1-mesa-dev fuse libfontconfig1 libxrender1 libxkbcommon0 libxkbcommon-x11-0 libegl1-mesa -y
-
-      sudo add-apt-repository ppa:deadsnakes/ppa
-      sudo apt-get update
-      sudo apt-get install python3.6 -y
-      wget https://bootstrap.pypa.io/get-pip.py
-
-      sudo python3.6 get-pip.py
+      sudo apt-get install libgl1-mesa-dev libxkbcommon-x11-0 -y
     displayName: 'Install packages'
 
   - script: |
-      pip3.6 install "aqtinstall==$(aqtVersion)"
-      python3.6 -m aqt install $(qtVersion) linux desktop
+      pip3 install "aqtinstall==$(aqtVersion)"
+      python3 -m aqt install $(qtVersion) linux desktop
       echo '##vso[task.prependpath]$(Build.SourcesDirectory)/$(qtVersion)/gcc_64/bin'
     displayName: 'Install Qt'
 
@@ -111,7 +104,7 @@ jobs:
       cd bin
       ../linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/qView.desktop -appimage
       mkdir out
-      mv qView-x86_64.AppImage out/qView-nightly.$(Build.BuildNumber).x86_64.AppImage
+      mv qView-ee7dd8d-x86_64.AppImage out/qView-nightly.$(Build.BuildNumber).x86_64.AppImage
     displayName: 'Deploy qView'
 
   - task: PublishBuildArtifacts@1
