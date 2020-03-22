@@ -1,0 +1,11 @@
+schedules:
+- cron: "0 5 * * *"
+  displayName: Nightly build
+  branches:
+    include:
+    - master
+
+extends:
+  template: azure-pipelines.yml
+  parameters:
+    nightly: true
