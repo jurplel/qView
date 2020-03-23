@@ -106,10 +106,10 @@ MainWindow::MainWindow(QWidget *parent) :
     virtualMenu = new QMenu(this);
     virtualMenu->addActions(actionManager->getActionLibrary().values());
 
-    addActions(virtualMenu->actions());
-    connect(virtualMenu, &QMenu::triggered, [this](QAction *triggeredAction){
-       qvApp->getActionManager()->actionTriggered(triggeredAction, this);
-    });
+//    addActions(virtualMenu->actions());
+//    connect(virtualMenu, &QMenu::triggered, [this](QAction *triggeredAction){
+//       qvApp->getActionManager()->actionTriggered(triggeredAction, this);
+//    });
 
     loadSettings();
 }
@@ -340,10 +340,7 @@ QScreen *MainWindow::screenAt(const QPoint &point)
 
 bool MainWindow::getIsPixmapLoaded() const
 {
-    if (ui->graphicsView)
-        return ui->graphicsView->getCurrentFileDetails().isPixmapLoaded;
-
-    return false;
+    return ui->graphicsView->getCurrentFileDetails().isPixmapLoaded;
 }
 
 void MainWindow::setJustLaunchedWithImage(bool value)

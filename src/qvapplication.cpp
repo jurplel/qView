@@ -158,6 +158,9 @@ void QVApplication::addToLastActiveWindows(MainWindow *window)
     if (!window)
         return;
 
+    if (!lastActiveWindows.isEmpty() && window == lastActiveWindows.first())
+        return;
+
     lastActiveWindows.prepend(window);
 
     if (lastActiveWindows.length() > 5)
@@ -169,5 +172,5 @@ void QVApplication::deleteFromLastActiveWindows(MainWindow *window)
     if (!window)
         return;
 
-    lastActiveWindows.removeOne(window);
+    lastActiveWindows.removeAll(window);
 }
