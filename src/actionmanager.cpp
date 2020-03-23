@@ -95,30 +95,12 @@ void ActionManager::untrackClonedActions(QList<QAction*> actions)
 
 void ActionManager::untrackClonedActions(QMenu *menu)
 {
-    untrackClonedActions(getAllActionsInMenu(menu));
+    untrackClonedActions(getAllNestedActions(menu->actions()));
 }
 
 void ActionManager::untrackClonedActions(QMenuBar *menuBar)
 {
-    QList<QAction*> actionList;
-    foreach(auto *action, menuBar->actions())
-    {
-        if (action->isSeparator())
-        {
-            continue;
-        }
-        else if (action->menu())
-        {
-            actionList.append(getAllActionsInMenu(action->menu()));
-            if (action->data().toString() == "recents")
-                actionList.append(action);
-        }
-        else
-        {
-            actionList.append(action);
-        }
-    }
-    untrackClonedActions(actionList);
+    untrackClonedActions(getAllNestedActions(menuBar->actions()));
 }
 
 QMenuBar *ActionManager::buildMenuBar(QWidget *parent)

@@ -95,7 +95,7 @@ MainWindow::MainWindow(QWidget *parent) :
     });
 
     // Initialize menubar
-    setMenuBar(actionManager->buildMenuBar());
+    setMenuBar(actionManager->buildMenuBar(this));
     menuBar()->setVisible(false);
     connect(menuBar(), &QMenuBar::triggered, [this](QAction *triggeredAction){
         qvApp->getActionManager()->actionTriggered(triggeredAction, this);
@@ -105,6 +105,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // using virtual menu to hold them so i can connect to the triggered signal
     virtualMenu = new QMenu(this);
     virtualMenu->addActions(actionManager->getActionLibrary().values());
+
     addActions(virtualMenu->actions());
     connect(virtualMenu, &QMenu::triggered, [this](QAction *triggeredAction){
        qvApp->getActionManager()->actionTriggered(triggeredAction, this);
@@ -142,6 +143,7 @@ void MainWindow::showEvent(QShowEvent *event)
         return;
 
     settings.setValue("firstlaunch", true);
+    settings.setValue("configversion", VERSION);
     QTimer::singleShot(100, this, &MainWindow::openWelcome);
 }
 

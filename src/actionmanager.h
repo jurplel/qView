@@ -12,10 +12,10 @@ class ActionManager : public QObject
 {
     Q_OBJECT
 public:
-    static QList<QAction*> getAllActionsInMenu(QMenu *menu)
+    static QList<QAction*> getAllNestedActions(QList<QAction*> givenActionList)
     {
-        QList<QAction*> actionList;
-        foreach(auto *action, menu->actions())
+        QList<QAction*> totalActionList;
+        foreach(auto *action, givenActionList)
         {
             if (action->isSeparator())
             {
@@ -23,16 +23,16 @@ public:
             }
             else if (action->menu())
             {
-                actionList.append(getAllActionsInMenu(action->menu()));
+                totalActionList.append(getAllNestedActions(action->menu()->actions()));
                 if (action->data().toString() == "recents")
-                    actionList.append(action);
+                    totalActionList.append(action);
             }
             else
             {
-                actionList.append(action);
+                totalActionList.append(action);
             }
         }
-        return actionList;
+        return totalActionList;
     }
 
     static QStringList keyBindingsToStringList(QKeySequence::StandardKey sequence)
