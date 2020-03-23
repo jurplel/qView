@@ -442,9 +442,9 @@ void MainWindow::openContainingFolder()
 
     const QFileInfo selectedFileInfo = ui->graphicsView->getCurrentFileDetails().fileInfo;
 
-    #if defined(Q_OS_WIN)
+    #ifdef Q_OS_WIN
     QProcess::startDetached("explorer", QStringList() << "/select," << QDir::toNativeSeparators(selectedFileInfo.absoluteFilePath()));
-    #elif defined(Q_OS_MACX)
+    #elif defined Q_OS_MACOS
     QProcess::execute("open", QStringList() << "-R" << selectedFileInfo.absoluteFilePath());
     #else
     QDesktopServices::openUrl(selectedFileInfo.absolutePath());

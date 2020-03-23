@@ -13,7 +13,7 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     connect(actionManager, &ActionManager::recentsMenuUpdated, this, &QVApplication::updateDockRecents);
 
     //don't even try to show menu icons on mac or windows
-    #if defined(Q_OS_MACX) || defined(Q_OS_WIN)
+    #if defined Q_OS_MACOS || defined Q_OS_WIN
     setAttribute(Qt::AA_DontShowIconsInMenus);
     #endif
 
@@ -29,7 +29,7 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     dockMenuRecentsLibrary = actionManager->buildRecentsMenu(false);
     actionManager->updateRecentsMenu();
 
-    #ifdef Q_OS_MACX
+    #ifdef Q_OS_MACOS
     dockMenu->setAsDockMenu();
     setQuitOnLastWindowClosed(false);
     #endif
