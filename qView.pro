@@ -9,7 +9,6 @@ TEMPLATE = app
 # allows use of version variable elsewhere
 DEFINES += "VERSION=$$VERSION"
 
-
 # build folder organization
 DESTDIR = bin
 OBJECTS_DIR = intermediate

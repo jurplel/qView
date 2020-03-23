@@ -1,0 +1,127 @@
+
+variables:
+  aqtVersion: '0.8b1'
+  nightlyDefines: 'DEFINES+=NIGHTLY=$(Build.BuildNumber)'
+  nightlyString: '-nightly'
+
+name: '$(Date:yyyy-MM-dd).$(Rev:r)'
+jobs:
+- job: Windows
+  pool:
+    vmImage: 'windows-2019'
+  variables:
+    qtVersion: '5.12.7'
+    qtArch: 'win64_msvc2017_64'
+  steps:
+  - checkout: self
+
+  - script: |
+      pip3 install "aqtinstall==$(aqtVersion)"
+      python -m aqt install $(qtVersion) windows desktop $(qtArch)
+      echo ##vso[task.prependpath]$(Build.SourcesDirectory)\$(qtVersion)\msvc2017_64\bin
+    displayName: 'Install Qt'
+
+  - script: |
+      call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+      qmake $(nightlyDefines)
+      nmake
+    displayName: 'Build qView'
+    
+  - script: |
+      cd bin
+      windeployqt qView.exe --no-compiler-runtime
+      rename qView.exe "qView$(nightlyString).$(Build.BuildNumber).exe"
+    displayName: 'Deploy qView'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathtoPublish: 'bin'
+      artifactName: 'qView$(nightlyString)-win64.$(Build.BuildNumber)'
+    displayName: 'Publish build artifact'
+
+- job: macOS
+  pool:
+    vmImage: 'macOS-10.15'
+  variables:
+    qtVersion: '5.12.7'
+  steps:
+  - checkout: self
+
+  - script: |
+      pip3 install "aqtinstall==$(aqtVersion)"
+      python3 -m aqt install $(qtVersion) mac desktop
+      echo '##vso[task.prependpath]$(Build.SourcesDirectory)/$(qtVersion)/clang_64/bin'
+    displayName: 'Install Qt'
+
+  - script: |
+      qmake $(nightlyDefines)
+      make
+    displayName: 'Build qView'
+
+  - script: |
+      cd bin
+      macdeployqt qView.app/
+      mv qView.app 'qView$(nightlyString).$(Build.BuildNumber).app'
+    displayName: 'Deploy qView'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathtoPublish: 'bin'
+      artifactName: 'qView$(nightlyString)-macOS.$(Build.BuildNumber)'
+    displayName: 'Publish build artifact'
+
+- job: Linux
+  pool:
+    vmImage: 'ubuntu-16.04'
+  variables:
+    qtVersion: '5.12.7'
+  steps:
+  - checkout: self
+
+  - script: |
+      sudo apt-get update
+      sudo apt-get install libgl1-mesa-dev libxkbcommon-x11-0 libgtk2.0-dev -y
+    displayName: 'Install packages'
+
+  - script: |
+      pip3 install "aqtinstall==$(aqtVersion)"
+      python3 -m aqt install $(qtVersion) linux desktop
+      echo '##vso[task.prependpath]$(Build.SourcesDirectory)/$(qtVersion)/gcc_64/bin'
+    displayName: 'Install Qt'
+
+  - script: |
+        wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+        chmod a+x linuxdeployqt-continuous-x86_64.AppImage
+    displayName: 'Install linuxdeployqt'
+
+  - script: |
+      git clone https://code.qt.io/qt/qtstyleplugins.git
+      cd qtstyleplugins
+      qmake
+      sudo make install
+
+      wget 'https://sourceforge.net/projects/qt5ct/files/latest/download'
+      tar xf download
+      cd qt5ct*
+      qmake
+      sudo make install
+    displayName: Get additional themes GTK+2 and qt5ct
+
+  - script: |
+      qmake $(nightlyDefines)
+      mkdir bin/appdir
+      make install INSTALL_ROOT=bin/appdir
+    displayName: 'Build qView'
+
+  - script: |
+      cd bin
+      ../linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/qView.desktop -appimage -extra-plugins=styles/libqt5ct-style.so,platformthemes/libqt5ct.so,iconengines,platformthemes/libqgtk3.so
+      mkdir out
+      mv *.AppImage out/qView$(nightlyString).$(Build.BuildNumber).x86_64.AppImage
+    displayName: 'Deploy qView'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathtoPublish: 'bin/out'
+      artifactName: 'qView$(nightlyString)-linux.$(Build.BuildNumber)'
+    displayName: 'Publish build artifact'
