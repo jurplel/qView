@@ -5,6 +5,12 @@
 #include "mainwindow.h"
 #include <QCache>
 #include <QAction>
+#include "actionmanager.h"
+
+#if defined(qvApp)
+#undef qvApp
+#endif
+#define qvApp (static_cast<QVApplication *>(QCoreApplication::instance()))	// global qvapplication object
 
 class QVApplication : public QApplication
 {
@@ -16,13 +22,11 @@ public:
 
     bool event(QEvent *event) override;
 
-    static void pickFile();
+    void openFile(const QString &file, bool resize = true);
 
-    static void openFile(const QString &file, bool resize = true);
+    static MainWindow *newWindow();
 
-    static MainWindow *newWindow(const QString &fileToOpen = "");
-
-    static MainWindow *getMainWindow();
+    MainWindow *getMainWindow(bool shouldBeEmpty);
 
     void updateDockRecents();
 
@@ -30,12 +34,28 @@ public:
 
     void setPreviouslyRecordedFileSize(const QString &fileName, long long *fileSize);
 
-    QHash<QString, QList<QKeySequence>> getShortcutsList();
+    void addToLastActiveWindows(MainWindow *window);
+
+    void deleteFromLastActiveWindows(MainWindow *window);
+
+    ActionManager *getActionManager() const {return actionManager; }
+
+    QMenuBar *getMenuBar() const {return menuBar; }
 
 private:
+    QList<MainWindow*> lastActiveWindows;
+
     QMenu *dockMenu;
 
+    QList<QAction*> dockMenuSuffix;
+
+    QMenu *dockMenuRecentsLibrary;
+
+    QMenuBar *menuBar;
+
     QCache<QString, qint64> previouslyRecordedFileSizes;
+
+    ActionManager *actionManager;
 
 };
 

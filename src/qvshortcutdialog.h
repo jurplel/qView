@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QAbstractButton>
+#include "actionmanager.h"
 
 namespace Ui {
 class QVShortcutDialog;
@@ -13,21 +14,14 @@ class QVShortcutDialog : public QDialog
     Q_OBJECT
 
 public:
-    struct SShortcut {
-        QString readableName;
-        QString name;
-        QStringList defaultShortcuts;
-        QStringList shortcuts;
-    };
-
-    explicit QVShortcutDialog(const SShortcut &shortcut, int i, QWidget *parent = nullptr);
+    explicit QVShortcutDialog(int index, QWidget *parent = nullptr);
     ~QVShortcutDialog() override;
 
-public slots:
+    QString shortcutAlreadyBound(QKeySequence chosenSequence, QString exemptShortcut);
     void acceptValidated();
 
 signals:
-    void newShortcut(SShortcut shortcut, int index);
+    void shortcutsListChanged(int index, QStringList shortcutsStringList);
 
 private slots:
     void on_buttonBox_clicked(QAbstractButton *button);
@@ -37,7 +31,7 @@ private:
 
     Ui::QVShortcutDialog *ui;
 
-    SShortcut shortcut_obj;
+    ActionManager::SShortcut shortcutObject;
     int index;
 };
 

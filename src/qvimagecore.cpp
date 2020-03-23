@@ -441,9 +441,8 @@ void QVImageCore::loadSettings()
     //sort ascending
     sortAscending = settings.value("sortascending", true).toBool();
 
-    //update folder info to re-sort and send fileinfoupdated to update titlebar
+    //update folder info to re-sort
     updateFolderInfo();
-    emit fileInfoUpdated();
 }
 
 void QVImageCore::setDevicePixelRatio(qreal scaleFactor)

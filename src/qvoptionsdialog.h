@@ -16,36 +16,11 @@ class QVOptionsDialog : public QDialog
     Q_OBJECT
 
 public:
-    static QStringList keyBindingsToStringList(QKeySequence::StandardKey sequence)
-    {
-        auto seqList = QKeySequence::keyBindings(sequence);
-        QStringList strings;
-        foreach (QKeySequence seq, seqList)
-        {
-            strings << seq.toString();
-        }
-        return strings;
-    }
-
-    static QList<QKeySequence> stringListToKeySequenceList(QStringList stringList)
-    {
-
-        QList<QKeySequence> keySequences;
-        foreach (QString string, stringList)
-        {
-            keySequences << QKeySequence::fromString(string);
-        }
-        return keySequences;
-    }
 
     explicit QVOptionsDialog(QWidget *parent = nullptr);
     ~QVOptionsDialog() override;
 
     void updateBgColorButton();
-
-    const QList<QVShortcutDialog::SShortcut>& getTransientShortcuts() const {return transientShortcuts; }
-
-    bool shortcutAlreadyBound(QKeySequence chosenSequence, QString exemptShortcut = "");
 
 signals:
     void optionsSaved();
@@ -109,9 +84,9 @@ protected:
 private:
     Ui::QVOptionsDialog *ui;
     void saveSettings();
-    void loadSettings(const bool defaults = false);
-    void loadShortcuts(const bool defaults = false);
-    void updateShortcuts();
+    void loadSettings(bool defaults = false);
+    void loadShortcuts(bool defaults = false);
+    void updateShortcutsTable();
 
     struct STransientSettings
     {
@@ -141,7 +116,7 @@ private:
 
     STransientSettings transientSettings;
 
-    QList<QVShortcutDialog::SShortcut> transientShortcuts;
+    QHash<int, QStringList> transientShortcuts;
 };
 
 

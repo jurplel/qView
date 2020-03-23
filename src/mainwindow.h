@@ -21,7 +21,7 @@ public:
 
     void setWindowSize();
 
-    const bool& getIsPixmapLoaded() const;
+    bool getIsPixmapLoaded() const;
 
     void setJustLaunchedWithImage(bool value);
 
@@ -29,12 +29,70 @@ public:
 
     void pickFile();
 
+    void openRecent(int i);
+
     void openUrl(QUrl url);
 
     void pickUrl();
 
+    void openContainingFolder();
+
+    void showFileInfo();
+
+    void copy();
+
+    void paste();
+
+    void zoomIn();
+
+    void zoomOut();
+
+    void resetZoom();
+
+    void originalSize();
+
+    void rotateRight();
+
+    void rotateLeft();
+
+    void mirror();
+
+    void flip();
+
+    void firstFile();
+
+    void previousFile();
+
+    void nextFile();
+
+    void lastFile();
+
+    void openOptions();
+
+    void openAbout();
+
+    void openWelcome();
+
+    void saveFrameAs();
+
+    void pause();
+
+    void nextFrame();
+
+    void decreaseSpeed();
+
+    void resetSpeed();
+
+    void increaseSpeed();
+
+    void toggleFullScreen();
+
+    void quit();
+
 public slots:
     void openFile(const QString &fileName);
+
+    void toggleSlideshow();
 
     void slideshowAction();
 
@@ -43,6 +101,8 @@ public slots:
     void fileLoaded();
 
 protected:
+    bool event(QEvent *event) override;
+
     void contextMenuEvent(QContextMenuEvent *event) override;
 
     void showEvent(QShowEvent *event) override;
@@ -54,98 +114,24 @@ protected:
     void mouseDoubleClickEvent(QMouseEvent *event) override;
 
 private slots:
-
     void loadSettings();
-
-    void on_actionOpen_triggered();
-
-    void on_actionAbout_triggered();
-
-    void on_actionCopy_triggered();
-
-    void on_actionPaste_triggered();
-
-    void on_actionOptions_triggered();
-
-    void on_actionPrevious_File_triggered();
-
-    void on_actionNext_File_triggered();
-
-    void on_actionOpen_Containing_Folder_triggered();
-
-    void on_actionWelcome_triggered();
-
-    void on_actionRotate_Right_triggered();
-
-    void on_actionRotate_Left_triggered();
-
-    void on_actionMirror_triggered();
-
-    void on_actionFlip_triggered();
-
-    void on_actionZoom_In_triggered();
-
-    void on_actionZoom_Out_triggered();
-
-    void on_actionReset_Zoom_triggered();
-
-    void updateRecentsMenu();
-
-    void openRecent(int i);
-
-    void clearRecent();
-
-    void on_actionProperties_triggered();
-
-    void on_actionFull_Screen_triggered();
-
-    void on_actionOriginal_Size_triggered();
-
-    void on_actionNew_Window_triggered();
-
-    void on_actionSlideshow_triggered();
-
-    void on_actionPause_triggered();
-
-    void on_actionNext_Frame_triggered();
-
-    void on_actionReset_Speed_triggered();
-
-    void on_actionDecrease_Speed_triggered();
-
-    void on_actionIncrease_Speed_triggered();
-
-    void on_actionSave_Frame_As_triggered();
-
-    void on_actionQuit_triggered();
-
-    void on_actionFirst_File_triggered();
-
-    void on_actionLast_File_triggered();
-
-    void on_actionOpen_URL_triggered();
-
-    void on_actionClose_Window_triggered();
 
 private:
     Ui::MainWindow *ui;
 
-    void loadShortcuts();
-
     QMenu *contextMenu;
-    QMenu *recentFilesMenu;
+    QMenu *virtualMenu;
 
     QTimer *slideshowTimer;
-    QList<QAction*> recentItems;
 
     QShortcut *escShortcut;
 
     QVInfoDialog *info;
 
+    bool slideshowDirection;
     int windowResizeMode;
     bool justLaunchedWithImage;
     qreal maxWindowResizedPercentage;
-    bool isSaveRecentsEnabled;
 };
 
 #endif // MAINWINDOW_H

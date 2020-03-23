@@ -9,17 +9,35 @@
 
 QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
 {
+    actionManager = new ActionManager(this);
+    connect(actionManager, &ActionManager::recentsMenuUpdated, this, &QVApplication::updateDockRecents);
+
     //don't even try to show menu icons on mac or windows
     #if defined(Q_OS_MACX) || defined(Q_OS_WIN)
     setAttribute(Qt::AA_DontShowIconsInMenus);
     #endif
 
     dockMenu = new QMenu();
+    connect(dockMenu, &QMenu::triggered, [](QAction *triggeredAction){
+       qvApp->getActionManager()->actionTriggered(triggeredAction);
+    });
+
+    dockMenuSuffix.append(actionManager->cloneAction("newwindow"));
+    dockMenuSuffix.append(actionManager->cloneAction("open"));
+
+    dockMenuRecentsLibrary = nullptr;
+    dockMenuRecentsLibrary = actionManager->buildRecentsMenu(false);
+    actionManager->updateRecentsMenu();
+
     #ifdef Q_OS_MACX
     dockMenu->setAsDockMenu();
+    setQuitOnLastWindowClosed(false);
     #endif
 
-    updateDockRecents();
+    menuBar = actionManager->buildMenuBar();
+    connect(menuBar, &QMenuBar::triggered, [](QAction *triggeredAction){
+        qvApp->getActionManager()->actionTriggered(triggeredAction);
+    });
 }
 
 QVApplication::~QVApplication() {
@@ -35,107 +53,88 @@ bool QVApplication::event(QEvent *event)
     return QApplication::event(event);
 }
 
-void QVApplication::pickFile()
-{
-    MainWindow *w = getMainWindow();
-
-    if (!w)
-        return;
-
-    w->pickFile();
-}
 
 void QVApplication::openFile(const QString &file, bool resize)
 {
-    MainWindow *w = getMainWindow();
-
-    if (!w)
-        return;
-
-    w->setJustLaunchedWithImage(resize);
-    w->openFile(file);
+    if (auto *window = getMainWindow(true))
+    {
+        window->setJustLaunchedWithImage(resize);
+        window->openFile(file);
+    }
 }
 
-MainWindow *QVApplication::newWindow(const QString &fileToOpen)
+MainWindow *QVApplication::newWindow()
 {
     auto *w = new MainWindow();
     w->show();
 
-    if (!fileToOpen.isEmpty())
-        w->openFile(fileToOpen);
-
     return w;
 }
 
-MainWindow *QVApplication::getMainWindow()
+MainWindow *QVApplication::getMainWindow(bool shouldBeEmpty)
 {
-    auto widget = activeWindow();
-
-    if (widget)
+    // Attempt to use from list of last active windows
+    foreach (auto *window, lastActiveWindows)
     {
-        while (widget->parentWidget() != nullptr)
-            widget = widget->parentWidget();
-        qDebug() << 0;
+        if (!window)
+            continue;
 
-        return qobject_cast<MainWindow*>(widget);
+        if (shouldBeEmpty)
+        {
+            if (!window->getIsPixmapLoaded())
+            {
+                return window;
+            }
+        }
+        else
+        {
+            return window;
+        }
     }
 
-    MainWindow *w = nullptr;
-
+    // If none of those are valid, scan the list for any existing MainWindow
     foreach (QWidget *widget, QApplication::topLevelWidgets())
     {
-        if (auto *mainWin = qobject_cast<MainWindow*>(widget))
+        if (auto *window = qobject_cast<MainWindow*>(widget))
         {
-            if (!mainWin->getIsPixmapLoaded())
+            if (shouldBeEmpty)
             {
-                w = mainWin;
+                if (!window->getIsPixmapLoaded())
+                {
+                    return window;
+                }
+            }
+            else
+            {
+                return window;
             }
         }
     }
 
-    if (!w)
-        w = newWindow();
+    // If there are no valid ones, make a new one.
+    auto *window = newWindow();
 
-    return w;
+    return window;
 }
 
 void QVApplication::updateDockRecents()
 {
-    QSettings settings;
-    settings.beginGroup("options");
-
-    bool isSaveRecentsEnabled = settings.value("saverecents", true).toBool();
-
-    settings.endGroup();
+    // This entire function is only necessary because invisible actions do not
+    // disappear in mac's dock menu
+    if (!dockMenuRecentsLibrary)
+        return;
 
     dockMenu->clear();
-    if (isSaveRecentsEnabled) {
-        settings.beginGroup("recents");
-        QVariantList recentFiles = settings.value("recentFiles").value<QVariantList>();
 
-        for (int i = 0; i <= 9; i++)
-        {
-            if (i < recentFiles.size())
-            {
-                auto *action = new QAction(recentFiles[i].toList().first().toString());
-                connect(action, &QAction::triggered, [recentFiles, i]{
-                   openFile(recentFiles[i].toList().last().toString(), false);
-                });
-                dockMenu->addAction(action);
-            }
-        }
-        dockMenu->addSeparator();
+    foreach (auto action, dockMenuRecentsLibrary->actions())
+    {
+        if (action->isVisible())
+            dockMenu->addAction(action);
     }
-    auto *newWindowAction = new QAction(tr("New Window"));
-    connect(newWindowAction, &QAction::triggered, []{
-        newWindow();
-    });
-    auto *openAction = new QAction(tr("Open..."));
-    connect(openAction, &QAction::triggered, []{
-        pickFile();
-    });
-    dockMenu->addAction(newWindowAction);
-    dockMenu->addAction(openAction);
+    if (!dockMenu->isEmpty())
+        dockMenu->addSeparator();
+
+    dockMenu->addActions(dockMenuSuffix);
 }
 
 qint64 QVApplication::getPreviouslyRecordedFileSize(const QString &fileName)
@@ -154,22 +153,21 @@ void QVApplication::setPreviouslyRecordedFileSize(const QString &fileName, long 
     previouslyRecordedFileSizes.insert(fileName, fileSize);
 }
 
-QHash<QString, QList<QKeySequence>> QVApplication::getShortcutsList()
+void QVApplication::addToLastActiveWindows(MainWindow *window)
 {
-    QSettings settings;
-    settings.beginGroup("shortcuts");
+    if (!window)
+        return;
 
-    // To retrieve default bindings, we hackily init an options dialog and use it's constructor values
-    QVOptionsDialog invisibleOptionsDialog;
-    auto shortcutData = invisibleOptionsDialog.getTransientShortcuts();
+    lastActiveWindows.prepend(window);
 
-    // Iterate through all default shortcuts to get saved shortcuts from settings
-    QHash<QString, QList<QKeySequence>> shortcuts;
-    QListIterator<QVShortcutDialog::SShortcut> iter(shortcutData);
-    while (iter.hasNext())
-    {
-        auto value = iter.next();
-        shortcuts.insert(value.name, QVOptionsDialog::stringListToKeySequenceList(settings.value(value.name, value.defaultShortcuts).value<QStringList>()));
-    }
-    return shortcuts;
+    if (lastActiveWindows.length() > 5)
+        lastActiveWindows.removeLast();
+}
+
+void QVApplication::deleteFromLastActiveWindows(MainWindow *window)
+{
+    if (!window)
+        return;
+
+    lastActiveWindows.removeOne(window);
 }
