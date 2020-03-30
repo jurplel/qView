@@ -10,9 +10,13 @@
 #include <QIcon>
 #include <QGuiApplication>
 #include <QScreen>
+#include <QLibrary>
 
 QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
 {
+    QLibrary webp("qwebp");
+    qDebug() << webp.isLoaded();
+
     loadedPixmap = QPixmap();
     imageReader.setDecideFormatFromContent(true);
     imageReader.setAutoTransform(true);
@@ -144,11 +148,11 @@ QVImageCore::QVImageAndFileInfo QVImageCore::readFile(const QString &fileName)
     }
 
     combinedInfo.readFileInfo = QFileInfo(fileName);
-    if (readImage.isNull())
+    // Only error out when not loading for cache
+    if (readImage.isNull() && fileName == currentFileDetails.fileInfo.absoluteFilePath())
     {
         emit readError(QString::number(newImageReader.error()) + ": " + newImageReader.errorString(), fileName);
         currentFileDetails = lastFileDetails;
-        return combinedInfo;
     }
 
     combinedInfo.readImage = readImage;
