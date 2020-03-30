@@ -10,13 +10,9 @@
 #include <QIcon>
 #include <QGuiApplication>
 #include <QScreen>
-#include <QLibrary>
 
 QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
 {
-    QLibrary webp("qwebp");
-    qDebug() << webp.isLoaded();
-
     loadedPixmap = QPixmap();
     imageReader.setDecideFormatFromContent(true);
     imageReader.setAutoTransform(true);
@@ -223,7 +219,7 @@ void QVImageCore::updateFolderInfo()
     if (!sortAscending)
         sortFlags.setFlag(QDir::Reversed, true);
 
-    currentFileDetails.folder = QDir(currentFileDetails.fileInfo.path()).entryInfoList(filterList, QDir::Files, sortFlags);
+    currentFileDetails.folder = QDir(currentFileDetails.fileInfo.path()).entryInfoList(qvApp->getFilterList(), QDir::Files, sortFlags);
 
     if (sortMode == 0) {
         std::sort(currentFileDetails.folder.begin(), currentFileDetails.folder.end(), [&collator, this](const QFileInfo &file1, const QFileInfo &file2) {

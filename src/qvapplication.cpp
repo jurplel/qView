@@ -4,6 +4,7 @@
 #include <QMenu>
 #include <QSettings>
 #include <QMenuBar>
+#include <QImageReader>
 
 #include <QDebug>
 
@@ -11,6 +12,24 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
 {
     actionManager = new ActionManager(this);
     connect(actionManager, &ActionManager::recentsMenuUpdated, this, &QVApplication::updateDockRecents);
+
+    // Initialize list of supported files and filters
+    QByteArrayList byteList = QImageReader::supportedImageFormats();
+    for (auto byteArray : byteList)
+    {
+        auto fileExtString = QString::fromUtf8(byteArray);
+        supportedList << fileExtString;
+        filterList << "*." + fileExtString;
+    }
+    QString filterString = tr("Supported Files") + " (";
+    for (int i = 0; i < filterList.length(); i++)
+    {
+        filterString += filterList.value(i);
+        if (i != filterList.length()-1)
+            filterString += " ";
+    }
+    filterString += ");;" + tr("All Files") + " (*)";
+    qDebug() << filterString;
 
     //don't even try to show menu icons on mac or windows
     #if defined Q_OS_MACOS || defined Q_OS_WIN

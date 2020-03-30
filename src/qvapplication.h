@@ -38,11 +38,21 @@ public:
 
     void deleteFromLastActiveWindows(MainWindow *window);
 
-    ActionManager *getActionManager() const {return actionManager; }
+    ActionManager *getActionManager() const { return actionManager; }
 
-    QMenuBar *getMenuBar() const {return menuBar; }
+    QMenuBar *getMenuBar() const {  return menuBar; }
+
+    const QStringList &getSupportedList() const { return supportedList; }
+
+    const QStringList &getFilterList() const { return supportedList; }
+
+    const QString &getFilterString() const { return filterString; }
 
 private:
+    QStringList supportedList;
+    QStringList filterList;
+    QString filterString;
+
     QList<MainWindow*> lastActiveWindows;
 
     QMenu *dockMenu;

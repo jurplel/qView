@@ -84,8 +84,6 @@ signals:
     void readError(const QString &errorString, const QString fileName);
 
 private:
-    const QStringList filterList = (QStringList() << "*.bmp" << "*.cur" << "*.gif" << "*.icns" << "*.ico" << "*.jp2" << "*.jpeg" << "*.jpe" << "*.jpg" << "*.mng" << "*.pbm" << "*.pgm" << "*.png" << "*.ppm" << "*.svg" << "*.svgz" << "*.tif" << "*.tiff" << "*.wbmp" << "*.webp" << "*.xbm" << "*.xpm");
-
     QPixmap loadedPixmap;
     QMovie loadedMovie;
     QImageReader imageReader;
