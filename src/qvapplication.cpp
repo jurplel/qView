@@ -14,21 +14,24 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     connect(actionManager, &ActionManager::recentsMenuUpdated, this, &QVApplication::updateDockRecents);
 
     // Initialize list of supported files and filters
-    QByteArrayList byteList = QImageReader::supportedImageFormats();
-    for (auto byteArray : byteList)
+    const auto byteArrayList = QImageReader::supportedImageFormats();
+    for (const auto &byteArray : byteArrayList)
     {
         auto fileExtString = QString::fromUtf8(byteArray);
-        supportedList << fileExtString;
         filterList << "*." + fileExtString;
     }
-    QString filterString = tr("Supported Files") + " (";
-    for (int i = 0; i < filterList.length(); i++)
+
+    auto filterString = tr("Supported Files") + " (";
+    for (const auto &filter : qAsConst(filterList))
     {
-        filterString += filterList.value(i);
-        if (i != filterList.length()-1)
-            filterString += " ";
+        filterString += filter + " ";
     }
-    filterString += ");;" + tr("All Files") + " (*)";
+    filterString.chop(1);
+    filterString += ")";
+
+    nameFilterList << filterString;
+    nameFilterList << (tr("All Files") + " (*)");
+    qDebug() << nameFilterList;
 
     //don't even try to show menu icons on mac or windows
     #if defined Q_OS_MACOS || defined Q_OS_WIN

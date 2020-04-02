@@ -180,9 +180,10 @@ void MainWindow::pickFile()
 {
     QSettings settings;
     settings.beginGroup("recents");
-    QFileDialog *fileDialog = new QFileDialog(this, tr("Open..."), "", tr("Supported Files (*.bmp *.cur *.gif *.icns *.ico *.jp2 *.jpeg *.jpe *.jpg *.mng *.pbm *.pgm *.png *.ppm *.svg *.svgz *.tif *.tiff *.wbmp *.webp *.xbm *.xpm);;All Files (*)"));
+    QFileDialog *fileDialog = new QFileDialog(this, tr("Open..."));
     fileDialog->setDirectory(settings.value("lastFileDialogDir", QDir::homePath()).toString());
     fileDialog->setFileMode(QFileDialog::ExistingFiles);
+    fileDialog->setNameFilters(qvApp->getNameFilterList());
     fileDialog->open();
     connect(fileDialog, &QFileDialog::filesSelected, [this](const QStringList &selected){
         openFile(selected.first());
@@ -581,8 +582,9 @@ void MainWindow::saveFrameAs()
     {
         pause();
     }
-    QFileDialog *saveDialog = new QFileDialog(this, tr("Save Frame As..."), "", tr("Supported Files (*.bmp *.cur *.icns *.ico *.jp2 *.jpeg *.jpe *.jpg *.pbm *.pgm *.png *.ppm *.tif *.tiff *.wbmp *.webp *.xbm *.xpm);;All Files (*)"));
+    QFileDialog *saveDialog = new QFileDialog(this, tr("Save Frame As..."));
     saveDialog->setDirectory(settings.value("lastFileDialogDir", QDir::homePath()).toString());
+    saveDialog->setNameFilters(qvApp->getNameFilterList());
     saveDialog->selectFile(ui->graphicsView->getCurrentFileDetails().fileInfo.baseName() + "-" + QString::number(ui->graphicsView->getLoadedMovie().currentFrameNumber()) + ".png");
     saveDialog->setDefaultSuffix("png");
     saveDialog->setAcceptMode(QFileDialog::AcceptSave);

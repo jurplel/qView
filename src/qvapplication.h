@@ -10,6 +10,7 @@
 #if defined(qvApp)
 #undef qvApp
 #endif
+
 #define qvApp (static_cast<QVApplication *>(QCoreApplication::instance()))	// global qvapplication object
 
 class QVApplication : public QApplication
@@ -42,18 +43,15 @@ public:
 
     QMenuBar *getMenuBar() const {  return menuBar; }
 
-    const QStringList &getSupportedList() const { return supportedList; }
-
     const QStringList &getFilterList() const { return filterList; }
 
-    const QString &getFilterString() const { return filterString; }
+    const QStringList &getNameFilterList() const { return nameFilterList; }
 
 private:
-    QStringList supportedList;
     QStringList filterList;
-    QString filterString;
+    QStringList nameFilterList;
 
-    QList<MainWindow*> lastActiveWindows;
+    QVector<MainWindow*> lastActiveWindows;
 
     QMenu *dockMenu;
 
