@@ -69,7 +69,7 @@ QList<QAction*> ActionManager::getAllInstancesOfAction(const QString &key) const
 
 void ActionManager::untrackClonedActions(const QList<QAction*> &actions)
 {
-    foreach(auto *action, actions)
+    for (const auto &action : actions)
     {
         QString key = action->data().toString();
         if (auto menu = action->menu())

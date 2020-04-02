@@ -126,7 +126,7 @@ jobs:
       artifactName: 'qView$(nightlyString)-linux.$(Build.BuildNumber)'
     displayName: 'Publish build artifact'
 
-- job: Qt 5.9 Test Build
+- job: Test-Qt-5.9
   pool:
     vmImage: 'ubuntu-16.04'
   variables:
