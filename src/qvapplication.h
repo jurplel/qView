@@ -11,7 +11,7 @@
 #undef qvApp
 #endif
 
-#define qvApp (static_cast<QVApplication *>(QCoreApplication::instance()))	// global qvapplication object
+#define qvApp (qobject_cast<QVApplication *>(QCoreApplication::instance()))	// global qvapplication object
 
 class QVApplication : public QApplication
 {

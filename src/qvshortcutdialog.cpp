@@ -40,9 +40,9 @@ void QVShortcutDialog::on_buttonBox_clicked(QAbstractButton *button)
     if (ui->buttonBox->buttonRole(button) == QDialogButtonBox::AcceptRole)
     {
         QStringList shortcutsStringList = ui->keySequenceEdit->keySequence().toString().split(", ");
-        QList<QKeySequence> sequenceList = ActionManager::stringListToKeySequenceList(shortcutsStringList);
+        const auto sequenceList = ActionManager::stringListToKeySequenceList(shortcutsStringList);
 
-        foreach (QKeySequence sequence, sequenceList)
+        for (const auto &sequence : sequenceList)
         {
             auto conflictingShortcut = shortcutAlreadyBound(sequence, shortcutObject.name);
             if (!conflictingShortcut.isEmpty())
@@ -63,13 +63,13 @@ void QVShortcutDialog::on_buttonBox_clicked(QAbstractButton *button)
     }
 }
 
-QString QVShortcutDialog::shortcutAlreadyBound(QKeySequence chosenSequence, QString exemptShortcut)
+QString QVShortcutDialog::shortcutAlreadyBound(const QKeySequence &chosenSequence, const QString &exemptShortcut)
 {
     if (chosenSequence.isEmpty())
         return "";
 
-    auto shortcutsList = qvApp->getActionManager()-> getShortcutsList();
-    foreach(auto shortcut, shortcutsList)
+    const auto &shortcutsList = qvApp->getActionManager()->getShortcutsList();
+    for (const auto &shortcut : shortcutsList)
     {
         auto sequenceList = ActionManager::stringListToKeySequenceList(shortcut.shortcuts);
 

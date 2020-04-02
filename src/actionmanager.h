@@ -12,10 +12,10 @@ class ActionManager : public QObject
 {
     Q_OBJECT
 public:
-    static QList<QAction*> getAllNestedActions(QList<QAction*> givenActionList)
+    static QList<QAction*> getAllNestedActions(const QList<QAction*> &givenActionList)
     {
         QList<QAction*> totalActionList;
-        foreach(auto *action, givenActionList)
+        for (const auto &action : givenActionList)
         {
             if (action->isSeparator())
             {
@@ -24,8 +24,6 @@ public:
             else if (action->menu())
             {
                 totalActionList.append(getAllNestedActions(action->menu()->actions()));
-                if (action->data().toString() == "recents")
-                    totalActionList.append(action);
             }
             else
             {
@@ -37,20 +35,20 @@ public:
 
     static QStringList keyBindingsToStringList(QKeySequence::StandardKey sequence)
     {
-        auto seqList = QKeySequence::keyBindings(sequence);
+        const auto seqList = QKeySequence::keyBindings(sequence);
         QStringList strings;
-        foreach (QKeySequence seq, seqList)
+        for (const auto &seq : seqList)
         {
             strings << seq.toString();
         }
         return strings;
     }
 
-    static QList<QKeySequence> stringListToKeySequenceList(QStringList stringList)
+    static QList<QKeySequence> stringListToKeySequenceList(const QStringList &stringList)
     {
 
         QList<QKeySequence> keySequences;
-        foreach (QString string, stringList)
+        for (const auto &string : stringList)
         {
             keySequences << QKeySequence::fromString(string);
         }
@@ -85,10 +83,10 @@ public:
         operator QString() const { return "SRecent(" + fileName + ", " + filePath + ")"; }
     };
 
-    static QVariantList recentsListToVariantList(QList<SRecent> recentsList)
+    static QVariantList recentsListToVariantList(const QList<SRecent> &recentsList)
     {
         QVariantList variantList;
-        foreach (auto recent, recentsList)
+        for (const auto &recent : recentsList)
         {
             QStringList stringList = {recent.fileName, recent.filePath};
             variantList.append(QVariant(stringList));
@@ -96,12 +94,12 @@ public:
         return variantList;
     }
 
-    static QList<SRecent> variantListToRecentsList(QVariantList variantList)
+    static QList<SRecent> variantListToRecentsList(const QVariantList &variantList)
     {
         QList<SRecent> recentsList;
-        foreach (auto variant, variantList)
+        for (const auto &variant : variantList)
         {
-            auto stringList = variant.value<QStringList>();
+            auto stringList = variant.toStringList();
             recentsList.append({stringList.value(0), stringList.value(1)});
         }
         return recentsList;
@@ -109,19 +107,19 @@ public:
 
     explicit ActionManager(QObject *parent = nullptr);
 
-    QAction *cloneAction(QString key);
+    QAction *cloneAction(const QString &key);
 
-    QAction *getAction(QString key) const;
+    QAction *getAction(const QString &key) const;
 
-    QList<QAction*> getCloneActions(QString key) const;
+    QList<QAction*> getCloneActions(const QString &key) const;
 
-    QList<QAction*> getAllInstancesOfAction(QString key) const;
+    QList<QAction*> getAllInstancesOfAction(const QString &key) const;
 
-    void untrackClonedActions(QList<QAction*> actions);
+    void untrackClonedActions(const QList<QAction*> &actions);
 
-    void untrackClonedActions(QMenu *menu);
+    void untrackClonedActions(const QMenu *menu);
 
-    void untrackClonedActions(QMenuBar *menuBar);
+    void untrackClonedActions(const QMenuBar *menuBar);
 
     QMenuBar *buildMenuBar(QWidget *parent = nullptr);
 
@@ -139,7 +137,7 @@ public:
 
     void saveRecentsList();
 
-    void addFileToRecentsList(QFileInfo file);
+    void addFileToRecentsList(const QFileInfo &file);
 
     void auditRecentsList();
 

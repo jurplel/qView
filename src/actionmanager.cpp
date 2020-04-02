@@ -26,7 +26,7 @@ ActionManager::ActionManager(QObject *parent) : QObject(parent)
     connect(recentsSaveTimer, &QTimer::timeout, this, &ActionManager::saveRecentsList);
 }
 
-QAction *ActionManager::cloneAction(QString key)
+QAction *ActionManager::cloneAction(const QString &key)
 {
     if (auto action = getAction(key))
     {
@@ -42,7 +42,7 @@ QAction *ActionManager::cloneAction(QString key)
     return nullptr;
 }
 
-QAction *ActionManager::getAction(QString key) const
+QAction *ActionManager::getAction(const QString &key) const
 {
     if (auto action = actionLibrary.value(key))
         return action;
@@ -50,12 +50,12 @@ QAction *ActionManager::getAction(QString key) const
     return nullptr;
 }
 
-QList<QAction*> ActionManager::getCloneActions(QString key) const
+QList<QAction*> ActionManager::getCloneActions(const QString &key) const
 {
     return actionCloneLibrary.values(key);
 }
 
-QList<QAction*> ActionManager::getAllInstancesOfAction(QString key) const
+QList<QAction*> ActionManager::getAllInstancesOfAction(const QString &key) const
 {
     QList<QAction*> listOfActions;
 
@@ -67,7 +67,7 @@ QList<QAction*> ActionManager::getAllInstancesOfAction(QString key) const
     return listOfActions;
 }
 
-void ActionManager::untrackClonedActions(QList<QAction*> actions)
+void ActionManager::untrackClonedActions(const QList<QAction*> &actions)
 {
     foreach(auto *action, actions)
     {
@@ -83,12 +83,12 @@ void ActionManager::untrackClonedActions(QList<QAction*> actions)
     }
 }
 
-void ActionManager::untrackClonedActions(QMenu *menu)
+void ActionManager::untrackClonedActions(const QMenu *menu)
 {
     untrackClonedActions(getAllNestedActions(menu->actions()));
 }
 
-void ActionManager::untrackClonedActions(QMenuBar *menuBar)
+void ActionManager::untrackClonedActions(const QMenuBar *menuBar)
 {
     untrackClonedActions(getAllNestedActions(menuBar->actions()));
 }
@@ -284,7 +284,7 @@ void ActionManager::saveRecentsList()
 }
 
 
-void ActionManager::addFileToRecentsList(QFileInfo file)
+void ActionManager::addFileToRecentsList(const QFileInfo &file)
 {
     recentsList.prepend({file.fileName(), file.filePath()});
     auditRecentsList();
@@ -340,7 +340,8 @@ void ActionManager::updateRecentsMenu()
 {
     for (int i = 0; i < recentsListMaxLength; i++)
     {
-        foreach (QAction *action, actionCloneLibrary.values("recent" + QString::number(i)))
+        const auto values = actionCloneLibrary.values("recent" + QString::number(i));
+        for (const auto &action : values)
         {
             auto recent = recentsList.value(i);
 
@@ -687,20 +688,19 @@ void ActionManager::updateShortcuts()
     while (iter.hasNext())
     {
         auto value = iter.next();
-        value.shortcuts = settings.value(value.name, value.defaultShortcuts).value<QStringList>();
+        value.shortcuts = settings.value(value.name, value.defaultShortcuts).toStringList();
         iter.setValue(value);
     }
 
     // Set action's shortcuts to current shortcut
-    foreach(auto shortcut, shortcutsList)
+    for (const auto &shortcut : getShortcutsList())
     {
-        auto actionList = getAllInstancesOfAction(shortcut.name);
-        auto shortcutList = shortcut.shortcuts;
+        const auto actionList = getAllInstancesOfAction(shortcut.name);
 
-        foreach (auto *action, actionList)
+        for (const auto &action : actionList)
         {
             if (action)
-                action->setShortcuts(stringListToKeySequenceList(shortcutList));
+                action->setShortcuts(stringListToKeySequenceList(shortcut.shortcuts));
         }
     }
 }
@@ -711,7 +711,8 @@ void ActionManager::loadSettings()
     settings.beginGroup("options");
 
     isSaveRecentsEnabled = settings.value("saverecents", true).toBool();
-    foreach(auto *recentsMenu, menuCloneLibrary.values("recents"))
+    auto const recentsMenus = menuCloneLibrary.values("recents");
+    for (const auto &recentsMenu : recentsMenus)
     {
         recentsMenu->menuAction()->setVisible(isSaveRecentsEnabled);
     }

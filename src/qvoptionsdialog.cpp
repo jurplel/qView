@@ -47,7 +47,7 @@ void QVOptionsDialog::saveSettings()
     settings.setValue("menubarenabled", transientSettings.menubarEnabled);
     settings.setValue("cropmode", transientSettings.cropMode);
     settings.setValue("slideshowtimer", transientSettings.slideshowTimer);
-    settings.setValue("slideshowdirection", transientSettings.slideshowDirection);
+    settings.setValue("slideshowreversed", transientSettings.slideshowReversed);
     settings.setValue("scalefactor", transientSettings.scaleFactor);
     settings.setValue("scalingtwoenabled", transientSettings.scalingTwoEnabled);
     settings.setValue("pastactualsizeenabled", transientSettings.pastActualSizeEnabled);
@@ -156,9 +156,9 @@ void QVOptionsDialog::loadSettings(bool defaults)
     transientSettings.slideshowTimer = settings.value("slideshowtimer", 5).toDouble();
     ui->slideshowTimerSpinBox->setValue(transientSettings.slideshowTimer);
 
-    //slideshowdirection
-    transientSettings.slideshowDirection = settings.value("slideshowdirection", 0).toInt();
-    ui->slideshowDirectionComboBox->setCurrentIndex(transientSettings.slideshowDirection);
+    //slideshowreversed
+    transientSettings.slideshowReversed = settings.value("slideshowreversed", false).toBool();
+    ui->slideshowDirectionComboBox->setCurrentIndex(transientSettings.slideshowReversed);
 
     //scalefactor
     transientSettings.scaleFactor = settings.value("scalefactor", 25).toInt();
@@ -257,8 +257,6 @@ void QVOptionsDialog::loadShortcuts(bool defaults)
 
 void QVOptionsDialog::updateShortcutsTable()
 {
-    auto shortcutsList = qvApp->getActionManager()->getShortcutsList();
-
     QHashIterator<int, QStringList> iter(transientShortcuts);
     while (iter.hasNext())
     {
@@ -364,7 +362,7 @@ void QVOptionsDialog::on_slideshowTimerSpinBox_valueChanged(double arg1)
 
 void QVOptionsDialog::on_slideshowDirectionComboBox_currentIndexChanged(int index)
 {
-    transientSettings.slideshowDirection = index;
+    transientSettings.slideshowReversed = index;
 }
 
 void QVOptionsDialog::on_scaleFactorSpinBox_valueChanged(int arg1)
@@ -465,7 +463,7 @@ void QVOptionsDialog::on_shortcutsTable_cellDoubleClicked(int row, int column)
     Q_UNUSED(column)
     auto shortcutDialog = new QVShortcutDialog(row);
     shortcutDialog->open();
-    connect(shortcutDialog, &QVShortcutDialog::shortcutsListChanged, [this](int index, QStringList stringListShortcuts){
+    connect(shortcutDialog, &QVShortcutDialog::shortcutsListChanged, [this](int index, const QStringList &stringListShortcuts){
         transientShortcuts.insert(index, stringListShortcuts);
         updateShortcutsTable();
     });

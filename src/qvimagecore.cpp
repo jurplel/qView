@@ -21,6 +21,8 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
 
     isLoopFoldersEnabled = true;
     preloadingMode = 1;
+    sortMode = 0;
+    sortAscending = true;
 
     currentFileDetails.fileInfo = QFileInfo();
     currentFileDetails.isPixmapLoaded = false;

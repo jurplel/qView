@@ -37,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setAttribute(Qt::WA_DeleteOnClose);
 
     //initialize variables
+    slideshowReversed = false;
     windowResizeMode = 0;
     justLaunchedWithImage = false;
     maxWindowResizedPercentage = 0.7;
@@ -226,7 +227,7 @@ void MainWindow::loadSettings()
     slideshowTimer->setInterval(static_cast<int>(settings.value("slideshowtimer", 5).toDouble()*1000));
 
     //slideshow direction
-    slideshowDirection = settings.value("slideshowdirection", 0).toInt();
+    slideshowReversed = settings.value("slideshowreversed", false).toBool();
 
     //window resize mode
     windowResizeMode = settings.value("windowresizemode", 1).toInt();
@@ -239,7 +240,9 @@ void MainWindow::loadSettings()
 
     // If esc is not used in a shortcut, let it exit fullscreen
     escShortcut->setKey(Qt::Key_Escape);
-    foreach (auto *action, qvApp->getActionManager()->getActionLibrary())
+
+    const auto &actionLibrary = qvApp->getActionManager()->getActionLibrary();
+    for (const auto &action : actionLibrary)
     {
         if (action->shortcuts().contains(QKeySequence(Qt::Key_Escape)))
         {
@@ -353,7 +356,7 @@ void MainWindow::setJustLaunchedWithImage(bool value)
     justLaunchedWithImage = value;
 }
 
-void MainWindow::openUrl(QUrl url)
+void MainWindow::openUrl(const QUrl &url)
 {
     auto *networkManager = new QNetworkAccessManager(this);
 
@@ -593,7 +596,7 @@ void MainWindow::saveFrameAs()
     saveDialog->setDefaultSuffix("png");
     saveDialog->setAcceptMode(QFileDialog::AcceptSave);
     saveDialog->open();
-    connect(saveDialog, &QFileDialog::fileSelected, this, [=](QString fileName){
+    connect(saveDialog, &QFileDialog::fileSelected, this, [=](const QString &fileName){
         ui->graphicsView->originalSize();
         for(int i=0; i < ui->graphicsView->getLoadedMovie().frameCount(); i++)
             nextFrame();
@@ -608,22 +611,24 @@ void MainWindow::pause()
     if (!ui->graphicsView->getCurrentFileDetails().isMovieLoaded)
         return;
 
+    const auto pauseActions = qvApp->getActionManager()->getAllInstancesOfAction("pause");
+
     if (ui->graphicsView->getLoadedMovie().state() == QMovie::Running)
     {
         ui->graphicsView->setPaused(true);
-        foreach(auto action, qvApp->getActionManager()->getAllInstancesOfAction("pause"))
+        for (const auto &pauseAction : pauseActions)
         {
-            action->setText(tr("Resume"));
-            action->setIcon(QIcon::fromTheme("media-playback-start"));
+            pauseAction->setText(tr("Resume"));
+            pauseAction->setIcon(QIcon::fromTheme("media-playback-start"));
         }
     }
     else
     {
         ui->graphicsView->setPaused(false);
-        foreach(auto action, qvApp->getActionManager()->getAllInstancesOfAction("pause"))
+        for (const auto &pauseAction : pauseActions)
         {
-            action->setText(tr("Pause"));
-            action->setIcon(QIcon::fromTheme("media-playback-pause"));
+            pauseAction->setText(tr("Pause"));
+            pauseAction->setIcon(QIcon::fromTheme("media-playback-pause"));
         }
     }
 }
@@ -638,24 +643,26 @@ void MainWindow::nextFrame()
 
 void MainWindow::toggleSlideshow()
 {
+    const auto slideshowActions = qvApp->getActionManager()->getAllInstancesOfAction("slideshow");
+
     if (slideshowTimer->isActive())
-     {
-         slideshowTimer->stop();
-         foreach(auto action, qvApp->getActionManager()->getAllInstancesOfAction("slideshow"))
-         {
-             action->setText(tr("Start Slideshow"));
-             action->setIcon(QIcon::fromTheme("media-playback-start"));
-         }
-     }
-     else
-     {
-         slideshowTimer->start();
-         foreach(auto action, qvApp->getActionManager()->getAllInstancesOfAction("slideshow"))
-         {
-             action->setText(tr("Stop Slideshow"));
-             action->setIcon(QIcon::fromTheme("media-playback-stop"));
-         }
-     }
+    {
+        slideshowTimer->stop();
+        for (const auto &slideshowAction : slideshowActions)
+        {
+            slideshowAction->setText(tr("Start Slideshow"));
+            slideshowAction->setIcon(QIcon::fromTheme("media-playback-start"));
+        }
+    }
+    else
+    {
+        slideshowTimer->start();
+        for (const auto &slideshowAction : slideshowActions)
+        {
+            slideshowAction->setText(tr("Stop Slideshow"));
+            slideshowAction->setIcon(QIcon::fromTheme("media-playback-stop"));
+        }
+    }
 }
 
 void MainWindow::cancelSlideshow()
@@ -668,10 +675,10 @@ void MainWindow::slideshowAction()
 {
     QSettings settings;
     settings.beginGroup("options");
-    if (slideshowDirection == 0)
-        nextFile();
-    else
+    if (slideshowReversed)
         previousFile();
+    else
+        nextFile();
 }
 
 void MainWindow::decreaseSpeed()
@@ -700,24 +707,26 @@ void MainWindow::increaseSpeed()
 
 void MainWindow::toggleFullScreen()
 {
+    const auto fullscreenActions = qvApp->getActionManager()->getAllInstancesOfAction("fullscreen");
+
     if (windowState() == Qt::WindowFullScreen)
-     {
-         showNormal();
-         foreach(auto action, qvApp->getActionManager()->getAllInstancesOfAction("fullscreen"))
-         {
-             action->setText(tr("Enter Full Screen"));
-             action->setIcon(QIcon::fromTheme("view-fullscreen"));
-         }
-     }
-     else
-     {
-         showFullScreen();
-         foreach(auto action, qvApp->getActionManager()->getAllInstancesOfAction("fullscreen"))
-         {
-             action->setText(tr("Exit Full Screen"));
-             action->setIcon(QIcon::fromTheme("view-restore"));
-         }
-     }
+    {
+        showNormal();
+        for (const auto &fullscreenAction : fullscreenActions)
+        {
+            fullscreenAction->setText(tr("Enter Full Screen"));
+            fullscreenAction->setIcon(QIcon::fromTheme("view-fullscreen"));
+        }
+    }
+    else
+    {
+        showFullScreen();
+        for (const auto &fullscreenAction : fullscreenActions)
+        {
+            fullscreenAction->setText(tr("Exit Full Screen"));
+            fullscreenAction->setIcon(QIcon::fromTheme("view-restore"));
+        }
+    }
 }
 
 void MainWindow::quit()

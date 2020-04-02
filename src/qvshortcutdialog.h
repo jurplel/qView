@@ -17,7 +17,7 @@ public:
     explicit QVShortcutDialog(int index, QWidget *parent = nullptr);
     ~QVShortcutDialog() override;
 
-    QString shortcutAlreadyBound(QKeySequence chosenSequence, QString exemptShortcut);
+    QString shortcutAlreadyBound(const QKeySequence &chosenSequence, const QString &exemptShortcut);
     void acceptValidated();
 
 signals:

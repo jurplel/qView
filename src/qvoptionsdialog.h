@@ -98,7 +98,7 @@ private:
         bool menubarEnabled;
         int cropMode;
         double slideshowTimer;
-        int slideshowDirection;
+        bool slideshowReversed;
         int scaleFactor;
         bool resizeScaleEnabled;
         bool scalingTwoEnabled;

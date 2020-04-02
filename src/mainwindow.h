@@ -31,7 +31,7 @@ public:
 
     void openRecent(int i);
 
-    void openUrl(QUrl url);
+    void openUrl(const QUrl &url);
 
     void pickUrl();
 
@@ -128,7 +128,7 @@ private:
 
     QVInfoDialog *info;
 
-    bool slideshowDirection;
+    bool slideshowReversed;
     int windowResizeMode;
     bool justLaunchedWithImage;
     qreal maxWindowResizedPercentage;

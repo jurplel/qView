@@ -25,6 +25,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     isPastActualSizeEnabled = true;
     isScrollZoomsEnabled = true;
     isLoopFoldersEnabled = true;
+    isCursorZoomEnabled = true;
     titlebarMode = 0;
     cropMode = 0;
     scaleFactor = 1.25;
