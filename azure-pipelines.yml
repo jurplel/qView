@@ -130,7 +130,7 @@ jobs:
   pool:
     vmImage: 'ubuntu-16.04'
   variables:
-    qtVersion: '5.9.1'
+    qtVersion: '5.9'
   steps:
   - checkout: self
 
