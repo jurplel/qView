@@ -44,7 +44,7 @@ public:
 
     const QStringList &getSupportedList() const { return supportedList; }
 
-    const QStringList &getFilterList() const { return supportedList; }
+    const QStringList &getFilterList() const { return filterList; }
 
     const QString &getFilterString() const { return filterString; }
 

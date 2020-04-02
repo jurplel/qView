@@ -29,7 +29,6 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
             filterString += " ";
     }
     filterString += ");;" + tr("All Files") + " (*)";
-    qDebug() << filterString;
 
     //don't even try to show menu icons on mac or windows
     #if defined Q_OS_MACOS || defined Q_OS_WIN

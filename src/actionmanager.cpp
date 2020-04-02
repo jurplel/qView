@@ -342,7 +342,6 @@ void ActionManager::updateRecentsMenu()
     {
         foreach (QAction *action, actionCloneLibrary.values("recent" + QString::number(i)))
         {
-            qDebug() << action;
             auto recent = recentsList.value(i);
 
             // If we are within the bounds of the recent list

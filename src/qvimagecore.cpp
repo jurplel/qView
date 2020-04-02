@@ -219,8 +219,9 @@ void QVImageCore::updateFolderInfo()
     if (!sortAscending)
         sortFlags.setFlag(QDir::Reversed, true);
 
-    currentFileDetails.folder = QDir(currentFileDetails.fileInfo.path()).entryInfoList(qvApp->getFilterList(), QDir::Files, sortFlags);
+    currentFileDetails.folder = QDir(currentFileDetails.fileInfo.absolutePath()).entryInfoList(qvApp->getFilterList(), QDir::Files, sortFlags);
 
+    // Natural sorting
     if (sortMode == 0) {
         std::sort(currentFileDetails.folder.begin(), currentFileDetails.folder.end(), [&collator, this](const QFileInfo &file1, const QFileInfo &file2) {
             if (sortAscending)

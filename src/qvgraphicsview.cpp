@@ -645,7 +645,7 @@ void QVGraphicsView::fitInViewMarginless(bool setVariables)
     }
 }
 
-void QVGraphicsView::error(const QString &errorString, const QString &fileName)
+void QVGraphicsView::error(const QString &errorString)
 {
         if (!errorString.isEmpty())
         {

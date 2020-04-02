@@ -100,7 +100,7 @@ private slots:
 
     void updateFileInfoDisplays();
 
-    void error(const QString &errorString, const QString &fileName);
+    void error(const QString &errorString);
 
 private:
 
