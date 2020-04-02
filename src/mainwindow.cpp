@@ -186,13 +186,17 @@ void MainWindow::pickFile()
     fileDialog->setNameFilters(qvApp->getNameFilterList());
     fileDialog->open();
     connect(fileDialog, &QFileDialog::filesSelected, [this](const QStringList &selected){
-        openFile(selected.first());
-        if (selected.length() > 1)
+        bool first = true;
+        for (const auto &file : selected)
         {
-            for (int i = 1; i < selected.length(); i++)
+            if (first)
             {
-                QVApplication::newWindow()->openFile(selected.value(i));
+                openFile(file);
+                first = false;
+                continue;
             }
+
+            QVApplication::openFile(QVApplication::newWindow(), file);
         }
     });
 }

@@ -30,8 +30,7 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     filterString += ")";
 
     nameFilterList << filterString;
-    nameFilterList << (tr("All Files") + " (*)");
-    qDebug() << nameFilterList;
+    nameFilterList << tr("All Files") + " (*)";
 
     //don't even try to show menu icons on mac or windows
     #if defined Q_OS_MACOS || defined Q_OS_WIN
@@ -69,19 +68,16 @@ bool QVApplication::event(QEvent *event)
 {
     if (event->type() == QEvent::FileOpen) {
         auto *openEvent = dynamic_cast<QFileOpenEvent *>(event);
-        openFile(openEvent->file());
+        openFile(getMainWindow(true), openEvent->file());
     }
     return QApplication::event(event);
 }
 
 
-void QVApplication::openFile(const QString &file, bool resize)
+void QVApplication::openFile(MainWindow *window, const QString &file, bool resize)
 {
-    if (auto *window = getMainWindow(true))
-    {
-        window->setJustLaunchedWithImage(resize);
-        window->openFile(file);
-    }
+    window->setJustLaunchedWithImage(resize);
+    window->openFile(file);
 }
 
 MainWindow *QVApplication::newWindow()
@@ -95,7 +91,7 @@ MainWindow *QVApplication::newWindow()
 MainWindow *QVApplication::getMainWindow(bool shouldBeEmpty)
 {
     // Attempt to use from list of last active windows
-    foreach (auto *window, lastActiveWindows)
+    for (const auto &window : qAsConst(lastActiveWindows))
     {
         if (!window)
             continue;
@@ -114,7 +110,8 @@ MainWindow *QVApplication::getMainWindow(bool shouldBeEmpty)
     }
 
     // If none of those are valid, scan the list for any existing MainWindow
-    foreach (QWidget *widget, QApplication::topLevelWidgets())
+    const auto topLevelWidgets = QApplication::topLevelWidgets();
+    for (const auto &widget : topLevelWidgets)
     {
         if (auto *window = qobject_cast<MainWindow*>(widget))
         {
@@ -147,7 +144,8 @@ void QVApplication::updateDockRecents()
 
     dockMenu->clear();
 
-    foreach (auto action, dockMenuRecentsLibrary->actions())
+    const auto dockMenuActions = dockMenuRecentsLibrary->actions();
+    for (const auto &action : dockMenuActions)
     {
         if (action->isVisible())
             dockMenu->addAction(action);

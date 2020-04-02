@@ -23,7 +23,7 @@ public:
 
     bool event(QEvent *event) override;
 
-    void openFile(const QString &file, bool resize = true);
+    static void openFile(MainWindow *window, const QString &file, bool resize = true);
 
     static MainWindow *newWindow();
 
@@ -51,7 +51,7 @@ private:
     QStringList filterList;
     QStringList nameFilterList;
 
-    QVector<MainWindow*> lastActiveWindows;
+    QList<MainWindow*> lastActiveWindows;
 
     QMenu *dockMenu;
 

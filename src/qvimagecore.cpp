@@ -55,7 +55,8 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     fileChangeRateTimer->setInterval(60);
 
     largestDimension = 0;
-    foreach (auto screen, QGuiApplication::screens())
+    const auto screenList = QGuiApplication::screens();
+    for (auto const &screen : screenList)
     {
         int largerDimension;
         if (screen->size().height() > screen->size().width())
@@ -97,7 +98,7 @@ void QVImageCore::loadFile(const QString &fileName)
     imageReader.setFileName(currentFileDetails.fileInfo.absoluteFilePath());
     currentFileDetails.imageSize = imageReader.size();
 
-    auto previouslyRecordedFileSize = qobject_cast<QVApplication*>(qApp)->getPreviouslyRecordedFileSize(currentFileDetails.fileInfo.absoluteFilePath());
+    auto previouslyRecordedFileSize = qvApp->getPreviouslyRecordedFileSize(currentFileDetails.fileInfo.absoluteFilePath());
 
     auto *cachedPixmap = new QPixmap();
 
@@ -302,7 +303,7 @@ void QVImageCore::addToCache(const QVImageAndFileInfo &readImageAndFileInfo)
     QPixmapCache::insert(readImageAndFileInfo.readFileInfo.absoluteFilePath(), QPixmap::fromImage(readImageAndFileInfo.readImage));
 
     auto *size = new qint64(readImageAndFileInfo.readFileInfo.size());
-    qobject_cast<QVApplication*>(qApp)->setPreviouslyRecordedFileSize(readImageAndFileInfo.readFileInfo.absoluteFilePath(), size);
+    qvApp->setPreviouslyRecordedFileSize(readImageAndFileInfo.readFileInfo.absoluteFilePath(), size);
 }
 
 void QVImageCore::jumpToNextFrame()

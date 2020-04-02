@@ -77,7 +77,7 @@ void QVGraphicsView::dropEvent(QDropEvent *event)
 void QVGraphicsView::dragEnterEvent(QDragEnterEvent *event)
 {
     QGraphicsView::dragEnterEvent(event);
-    if(event->mimeData()->hasUrls())
+    if (event->mimeData()->hasUrls())
     {
         event->acceptProposedAction();
     }
@@ -307,17 +307,19 @@ void QVGraphicsView::loadMimeData(const QMimeData *mimeData)
     if (!mimeData->hasUrls())
         return;
 
-    QStringList pathList;
     const QList<QUrl> urlList = mimeData->urls();
 
-    for (int i = 0; i < urlList.size() && i < 32; ++i)
+    bool first = true;
+    for (const auto &url : urlList)
     {
-        pathList.append(urlList.at(i).toLocalFile());
-    }
-    if (!pathList.isEmpty())
-    {
-        loadFile(pathList.first());
-        emit cancelSlideshow();
+        if (first)
+        {
+            loadFile(url.toString());
+            emit cancelSlideshow();
+            first = false;
+            continue;
+        }
+        QVApplication::openFile(QVApplication::newWindow(), url.toString());
     }
 }
 
