@@ -125,3 +125,28 @@ jobs:
       pathtoPublish: 'bin/out'
       artifactName: 'qView$(nightlyString)-linux.$(Build.BuildNumber)'
     displayName: 'Publish build artifact'
+
+- job: Qt 5.9 Test Build
+  pool:
+    vmImage: 'ubuntu-16.04'
+  variables:
+    qtVersion: '5.9.0'
+  steps:
+  - checkout: self
+
+  - script: |
+      sudo apt-get update
+      sudo apt-get install libgl1-mesa-dev libxkbcommon-x11-0 libgtk2.0-dev -y
+    displayName: 'Install packages'
+
+  - script: |
+      pip3 install "aqtinstall==$(aqtVersion)"
+      python3 -m aqt install $(qtVersion) linux desktop
+      echo '##vso[task.prependpath]$(Build.SourcesDirectory)/$(qtVersion)/gcc_64/bin'
+    displayName: 'Install Qt'
+
+  - script: |
+      qmake $(nightlyDefines)
+      make
+      ls
+    displayName: 'Build qView'
