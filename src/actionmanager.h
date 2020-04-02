@@ -172,13 +172,11 @@ protected:
 private:
     QList<SRecent> recentsList;
 
-    QMultiHash<int, QAction*> recentsActionCloneLibrary;
-
-    QList<QMenu*> recentsMenuLibrary;
-
     QHash<QString, QAction*> actionLibrary;
 
     QMultiHash<QString, QAction*> actionCloneLibrary;
+
+    QMultiHash<QString, QMenu*> menuCloneLibrary;
 
     QList<SShortcut> shortcutsList;
 

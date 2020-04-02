@@ -72,19 +72,9 @@ void ActionManager::untrackClonedActions(QList<QAction*> actions)
     foreach(auto *action, actions)
     {
         QString key = action->data().toString();
-        if (key.startsWith("recent"))
+        if (auto menu = action->menu())
         {
-            if (action->menu())
-            {
-                recentsMenuLibrary.removeOne(action->menu());
-            }
-            else
-            {
-                QChar finalChar = key.at(key.length()-1);
-                if (finalChar.digitValue() > -1)
-                    recentsActionCloneLibrary.remove(finalChar.digitValue(), action);
-
-            }
+            menuCloneLibrary.remove(key, menu);
         }
         else
         {
@@ -173,6 +163,7 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
 QMenu *ActionManager::buildGifMenu(QWidget *parent)
 {
     auto *gifMenu = new QMenu(tr("GIF Controls"), parent);
+    gifMenu->menuAction()->setData("gif");
     gifMenu->setIcon(QIcon::fromTheme("media-playlist-repeat"));
 
     gifMenu->addAction(cloneAction("saveframeas"));
@@ -183,12 +174,14 @@ QMenu *ActionManager::buildGifMenu(QWidget *parent)
     gifMenu->addAction(cloneAction("resetspeed"));
     gifMenu->addAction(cloneAction("increasespeed"));
 
+    menuCloneLibrary.insert(gifMenu->menuAction()->data().toString(), gifMenu);
     return gifMenu;
 }
 
 QMenu *ActionManager::buildViewMenu(bool addIcon, bool withFullscreen, QWidget *parent)
 {
     auto *viewMenu = new QMenu(tr("View"), parent);
+    viewMenu->menuAction()->setData("view");
     if (addIcon)
         viewMenu->setIcon(QIcon::fromTheme("zoom-fit-best"));
 
@@ -206,12 +199,14 @@ QMenu *ActionManager::buildViewMenu(bool addIcon, bool withFullscreen, QWidget *
     if (withFullscreen)
         viewMenu->addAction(cloneAction("fullscreen"));
 
+    menuCloneLibrary.insert(viewMenu->menuAction()->data().toString(), viewMenu);
     return viewMenu;
 }
 
 QMenu *ActionManager::buildToolsMenu(bool addIcon, QWidget *parent)
 {
     auto *toolsMenu = new QMenu(tr("Tools"), parent);
+    toolsMenu->menuAction()->setData("tools");
     if (addIcon)
         toolsMenu->setIcon(QIcon::fromTheme("configure", QIcon::fromTheme("preferences-other")));
 
@@ -219,18 +214,21 @@ QMenu *ActionManager::buildToolsMenu(bool addIcon, QWidget *parent)
     toolsMenu->addAction(cloneAction("slideshow"));
     toolsMenu->addAction(cloneAction("options"));
 
+    menuCloneLibrary.insert(toolsMenu->menuAction()->data().toString(), toolsMenu);
     return toolsMenu;
 }
 
 QMenu *ActionManager::buildHelpMenu(bool addIcon, QWidget *parent)
 {
     auto *helpMenu = new QMenu(tr("Help"), parent);
+    helpMenu->menuAction()->setData("help");
     if (addIcon)
         helpMenu->setIcon(QIcon::fromTheme("help-about"));
 
     helpMenu->addAction(cloneAction("about"));
     helpMenu->addAction(cloneAction("welcome"));
 
+    menuCloneLibrary.insert(helpMenu->menuAction()->data().toString(), helpMenu);
     return helpMenu;
 }
 
@@ -244,7 +242,7 @@ QMenu *ActionManager::buildRecentsMenu(bool includeClearAction, QWidget *parent)
         action->setData("recent" + QString::number(i));
 
         recentActions.append(action);
-        recentsActionCloneLibrary.insert(i, action);
+        actionCloneLibrary.insert(action->data().toString(), action);
     }
 
     auto recentsMenu = new QMenu(tr("Open Recent"), parent);
@@ -257,7 +255,7 @@ QMenu *ActionManager::buildRecentsMenu(bool includeClearAction, QWidget *parent)
         recentsMenu->addAction(cloneAction("clearrecents"));
     }
     recentsMenu->menuAction()->setData("recents");
-    recentsMenuLibrary.append(recentsMenu);
+    menuCloneLibrary.insert(recentsMenu->menuAction()->data().toString(), recentsMenu);
     updateRecentsMenu();
     return recentsMenu;
 }
@@ -342,8 +340,9 @@ void ActionManager::updateRecentsMenu()
 {
     for (int i = 0; i < recentsListMaxLength; i++)
     {
-        foreach (QAction *action, recentsActionCloneLibrary.values(i))
+        foreach (QAction *action, actionCloneLibrary.values("recent" + QString::number(i)))
         {
+            qDebug() << action;
             auto recent = recentsList.value(i);
 
             // If we are within the bounds of the recent list
@@ -713,7 +712,7 @@ void ActionManager::loadSettings()
     settings.beginGroup("options");
 
     isSaveRecentsEnabled = settings.value("saverecents", true).toBool();
-    foreach(auto *recentsMenu, recentsMenuLibrary)
+    foreach(auto *recentsMenu, menuCloneLibrary.values("recents"))
     {
         recentsMenu->menuAction()->setVisible(isSaveRecentsEnabled);
     }
