@@ -210,7 +210,7 @@ QMenu *ActionManager::buildToolsMenu(bool addIcon, QWidget *parent)
     if (addIcon)
         toolsMenu->setIcon(QIcon::fromTheme("configure", QIcon::fromTheme("preferences-other")));
 
-    toolsMenu->addMenu(buildGifMenu());
+    toolsMenu->addMenu(buildGifMenu(toolsMenu));
     toolsMenu->addAction(cloneAction("slideshow"));
     toolsMenu->addAction(cloneAction("options"));
 
