@@ -265,7 +265,7 @@ void ActionManager::loadRecentsList()
     QSettings settings;
     settings.beginGroup("recents");
 
-    QVariantList variantListRecents = settings.value("recentFiles").value<QVariantList>();
+    QVariantList variantListRecents = settings.value("recentFiles").toList();
     recentsList = variantListToRecentsList(variantListRecents);
 
     auditRecentsList();
