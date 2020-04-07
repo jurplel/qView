@@ -37,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setAttribute(Qt::WA_DeleteOnClose);
 
     //initialize variables
+    menuBarEnabled = false;
     slideshowReversed = false;
     windowResizeMode = 0;
     justLaunchedWithImage = false;
@@ -97,7 +98,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Initialize menubar
     setMenuBar(actionManager->buildMenuBar(this));
-    menuBar()->setVisible(false);
     connect(menuBar(), &QMenuBar::triggered, [this](QAction *triggeredAction){
         qvApp->getActionManager()->actionTriggered(triggeredAction, this);
     });
@@ -106,11 +106,10 @@ MainWindow::MainWindow(QWidget *parent) :
     // using virtual menu to hold them so i can connect to the triggered signal
     virtualMenu = new QMenu(this);
     virtualMenu->addActions(actionManager->getActionLibrary().values());
-
-//    addActions(virtualMenu->actions());
-//    connect(virtualMenu, &QMenu::triggered, [this](QAction *triggeredAction){
-//       qvApp->getActionManager()->actionTriggered(triggeredAction, this);
-//    });
+    addActions(virtualMenu->actions());
+    connect(virtualMenu, &QMenu::triggered, [this](QAction *triggeredAction){
+       qvApp->getActionManager()->actionTriggered(triggeredAction, this);
+    });
 
     loadSettings();
 }
@@ -217,11 +216,15 @@ void MainWindow::loadSettings()
 {
     QSettings settings;
     settings.beginGroup("options");
+
     //menubar
-    if (settings.value("menubarenabled", false).toBool())
-        menuBar()->show();
-    else
-        menuBar()->hide();
+    menuBarEnabled = settings.value("menubarenabled", false).toBool();
+    menuBar()->setVisible(menuBarEnabled);
+    const auto actionList = actions();
+    for (const auto &action : actionList)
+    {
+        action->setVisible(!menuBarEnabled);
+    }
 
     //slideshow timer
     slideshowTimer->setInterval(static_cast<int>(settings.value("slideshowtimer", 5).toDouble()*1000));

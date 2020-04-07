@@ -128,6 +128,7 @@ private:
 
     QVInfoDialog *info;
 
+    bool menuBarEnabled;
     bool slideshowReversed;
     int windowResizeMode;
     bool justLaunchedWithImage;
