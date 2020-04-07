@@ -254,6 +254,11 @@ QMenu *ActionManager::buildRecentsMenu(bool includeClearAction, QWidget *parent)
         recentsMenu->addSeparator();
         recentsMenu->addAction(cloneAction("clearrecents"));
     }
+
+    connect(recentsMenu, &QMenu::aboutToShow, [this]{
+        this->loadRecentsList();
+    });
+
     recentsMenu->menuAction()->setData("recents");
     menuCloneLibrary.insert(recentsMenu->menuAction()->data().toString(), recentsMenu);
     updateRecentsMenu();
