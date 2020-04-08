@@ -234,32 +234,30 @@ QMenu *ActionManager::buildHelpMenu(bool addIcon, QWidget *parent)
 
 QMenu *ActionManager::buildRecentsMenu(bool includeClearAction, QWidget *parent)
 {
-    QList<QAction*> recentActions;
+    auto *recentsMenu = new QMenu(tr("Open Recent"), parent);
+    recentsMenu->menuAction()->setData("recents");
+    recentsMenu->setIcon(QIcon::fromTheme("document-open-recent"));
+
+    connect(recentsMenu, &QMenu::aboutToShow, [this]{
+        this->loadRecentsList();
+    });
+
     for ( int i = 0; i < recentsListMaxLength; i++ )
     {
         auto action = new QAction(tr("Empty"), this);
         action->setVisible(false);
         action->setData("recent" + QString::number(i));
 
-        recentActions.append(action);
+        recentsMenu->addAction(action);
         actionCloneLibrary.insert(action->data().toString(), action);
     }
 
-    auto recentsMenu = new QMenu(tr("Open Recent"), parent);
-    recentsMenu->setIcon(QIcon::fromTheme("document-open-recent"));
-
-    recentsMenu->addActions(recentActions);
     if (includeClearAction)
     {
         recentsMenu->addSeparator();
         recentsMenu->addAction(cloneAction("clearrecents"));
     }
 
-    connect(recentsMenu, &QMenu::aboutToShow, [this]{
-        this->loadRecentsList();
-    });
-
-    recentsMenu->menuAction()->setData("recents");
     menuCloneLibrary.insert(recentsMenu->menuAction()->data().toString(), recentsMenu);
     updateRecentsMenu();
     return recentsMenu;

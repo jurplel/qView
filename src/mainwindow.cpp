@@ -94,6 +94,7 @@ MainWindow::MainWindow(QWidget *parent) :
     contextMenu->addMenu(actionManager->buildHelpMenu(contextMenu));
 
     connect(contextMenu, &QMenu::triggered, [this](QAction *triggeredAction){
+        qDebug() << "triggered " + triggeredAction->text();
         qvApp->getActionManager()->actionTriggered(triggeredAction, this);
     });
 
@@ -132,9 +133,9 @@ bool MainWindow::event(QEvent *event)
 void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 {
     QMainWindow::contextMenuEvent(event);
-//    QVCocoaFunctions::showMenu(contextMenu, event->pos(), windowHandle());
+    QVCocoaFunctions::showMenu(contextMenu, event->pos(), windowHandle());
 
-     contextMenu->popup(event->globalPos());
+//     contextMenu->popup(event->globalPos());
 }
 
 void MainWindow::showEvent(QShowEvent *event)
