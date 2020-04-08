@@ -34,6 +34,8 @@ QMAKE_TARGET_BUNDLE_PREFIX = "com.qview"
 QMAKE_INFO_PLIST = "dist/mac/Info.plist"
 ICON = "dist/mac/qView.icns"
 
+LIBS += -framework Foundation
+
 # Linux specific stuff
 binary.path = /usr/bin
 binary.files = bin/qview
@@ -82,7 +84,8 @@ SOURCES += \
     src/qvinfodialog.cpp \
     src/qvimagecore.cpp \
     src/qvshortcutdialog.cpp \
-    src/actionmanager.cpp
+    src/actionmanager.cpp \
+    src/qvcocoafunctions.mm
 
 HEADERS += \
         src/mainwindow.h \
@@ -94,7 +97,8 @@ HEADERS += \
     src/qvinfodialog.h \
     src/qvimagecore.h \
     src/qvshortcutdialog.h \
-    src/actionmanager.h
+    src/actionmanager.h \
+    src/qvcocoafunctions.h
 
 FORMS += \
         src/mainwindow.ui \

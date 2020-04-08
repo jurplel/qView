@@ -4,6 +4,7 @@
 #include "qvaboutdialog.h"
 #include "qvwelcomedialog.h"
 #include "qvapplication.h"
+#include "qvcocoafunctions.h"
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QString>
@@ -131,7 +132,9 @@ bool MainWindow::event(QEvent *event)
 void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 {
     QMainWindow::contextMenuEvent(event);
-    contextMenu->popup(event->globalPos());
+//    QVCocoaFunctions::showMenu(contextMenu, event->pos(), windowHandle());
+
+     contextMenu->popup(event->globalPos());
 }
 
 void MainWindow::showEvent(QShowEvent *event)
