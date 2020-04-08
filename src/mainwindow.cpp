@@ -28,6 +28,7 @@
 #include <QFutureWatcher>
 #include <QtConcurrent/QtConcurrentRun>
 #include <QMenu>
+#include <QWindow>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -284,6 +285,7 @@ void MainWindow::fileLoaded()
 
     refreshProperties();
     buildWindowTitle();
+    windowHandle()->setFilePath(getCurrentFileDetails().fileInfo.absoluteFilePath());
 }
 
 void MainWindow::refreshProperties()
