@@ -34,7 +34,7 @@ QMAKE_TARGET_BUNDLE_PREFIX = "com.qview"
 QMAKE_INFO_PLIST = "dist/mac/Info.plist"
 ICON = "dist/mac/qView.icns"
 
-LIBS += -framework Foundation
+LIBS += -framework Cocoa
 
 # Linux specific stuff
 binary.path = /usr/bin
