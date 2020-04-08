@@ -46,10 +46,14 @@ MainWindow::MainWindow(QWidget *parent) :
     justLaunchedWithImage = false;
     maxWindowResizedPercentage = 0.7;
 
+    //initialize graphicsview
+    graphicsView = new QVGraphicsView(this);
+    centralWidget()->layout()->addWidget(graphicsView);
+
     //connect graphicsview signals
-    connect(ui->graphicsView, &QVGraphicsView::fileLoaded, this, &MainWindow::fileLoaded);
-    connect(ui->graphicsView, &QVGraphicsView::updatedLoadedPixmapItem, this, &MainWindow::setWindowSize);
-    connect(ui->graphicsView, &QVGraphicsView::cancelSlideshow, this, &MainWindow::cancelSlideshow);
+    connect(graphicsView, &QVGraphicsView::fileLoaded, this, &MainWindow::fileLoaded);
+    connect(graphicsView, &QVGraphicsView::updatedLoadedPixmapItem, this, &MainWindow::setWindowSize);
+    connect(graphicsView, &QVGraphicsView::cancelSlideshow, this, &MainWindow::cancelSlideshow);
 
     //Initialize escape shortcut
     escShortcut = new QShortcut(Qt::Key_Escape, this);
@@ -210,7 +214,7 @@ void MainWindow::openFile(const QString &fileName)
     settings.beginGroup("recents");
     settings.setValue("lastFileDialogDir", QFileInfo(fileName).path());
 
-    ui->graphicsView->loadFile(fileName);
+    graphicsView->loadFile(fileName);
     cancelSlideshow();
 }
 
@@ -249,7 +253,7 @@ void MainWindow::loadSettings()
     //max window resize mode size
     maxWindowResizedPercentage = settings.value("maxwindowresizedpercentage", 70).toReal()/100;
 
-    ui->graphicsView->loadSettings();
+    graphicsView->loadSettings();
     qvApp->getActionManager()->loadSettings();
 
     // If esc is not used in a shortcut, let it exit fullscreen
@@ -269,7 +273,7 @@ void MainWindow::loadSettings()
 void MainWindow::openRecent(int i)
 {
     auto recentsList = qvApp->getActionManager()->getRecentsList();
-    ui->graphicsView->loadFile(recentsList.value(i).filePath);
+    graphicsView->loadFile(recentsList.value(i).filePath);
     cancelSlideshow();
 }
 
@@ -299,7 +303,7 @@ void MainWindow::refreshProperties()
 {
     int value4;
     if (getCurrentFileDetails().isMovieLoaded)
-        value4 = ui->graphicsView->getLoadedMovie().frameCount();
+        value4 = graphicsView->getLoadedMovie().frameCount();
     else
         value4 = 0;
     info->setInfo(getCurrentFileDetails().fileInfo, getCurrentFileDetails().imageSize.width(), getCurrentFileDetails().imageSize.height(), value4);
@@ -516,7 +520,7 @@ void MainWindow::showFileInfo()
 
 void MainWindow::copy()
 {
-    auto *mimeData = ui->graphicsView->getMimeData();
+    auto *mimeData = graphicsView->getMimeData();
     if (!mimeData->hasImage() || !mimeData->hasUrls())
     {
         mimeData->deleteLater();
@@ -541,71 +545,71 @@ void MainWindow::paste()
         }
     }
 
-    ui->graphicsView->loadMimeData(mimeData);
+    graphicsView->loadMimeData(mimeData);
 }
 
 void MainWindow::zoomIn()
 {
-    ui->graphicsView->zoom(120, ui->graphicsView->mapFromGlobal(QCursor::pos()));
+    graphicsView->zoom(120, graphicsView->mapFromGlobal(QCursor::pos()));
 }
 
 void MainWindow::zoomOut()
 {
-    ui->graphicsView->zoom(-120, ui->graphicsView->mapFromGlobal(QCursor::pos()));
+    graphicsView->zoom(-120, graphicsView->mapFromGlobal(QCursor::pos()));
 }
 
 void MainWindow::resetZoom()
 {
-    ui->graphicsView->resetScale();
+    graphicsView->resetScale();
 }
 
 void MainWindow::originalSize()
 {
-    ui->graphicsView->originalSize();
+    graphicsView->originalSize();
 }
 
 void MainWindow::rotateRight()
 {
-    ui->graphicsView->rotateImage(90);
+    graphicsView->rotateImage(90);
     resetZoom();
 }
 
 void MainWindow::rotateLeft()
 {
-    ui->graphicsView->rotateImage(-90);
+    graphicsView->rotateImage(-90);
     resetZoom();
 }
 
 void MainWindow::mirror()
 {
-    ui->graphicsView->scale(-1, 1);
+    graphicsView->scale(-1, 1);
     resetZoom();
 }
 
 void MainWindow::flip()
 {
-    ui->graphicsView->scale(1, -1);
+    graphicsView->scale(1, -1);
     resetZoom();
 }
 
 void MainWindow::firstFile()
 {
-    ui->graphicsView->goToFile(QVGraphicsView::goToFileMode::first);
+    graphicsView->goToFile(QVGraphicsView::goToFileMode::first);
 }
 
 void MainWindow::previousFile()
 {
-    ui->graphicsView->goToFile(QVGraphicsView::goToFileMode::previous);
+    graphicsView->goToFile(QVGraphicsView::goToFileMode::previous);
 }
 
 void MainWindow::nextFile()
 {
-    ui->graphicsView->goToFile(QVGraphicsView::goToFileMode::next);
+    graphicsView->goToFile(QVGraphicsView::goToFileMode::next);
 }
 
 void MainWindow::lastFile()
 {
-    ui->graphicsView->goToFile(QVGraphicsView::goToFileMode::last);
+    graphicsView->goToFile(QVGraphicsView::goToFileMode::last);
 }
 
 void MainWindow::openOptions()
@@ -635,24 +639,24 @@ void MainWindow::saveFrameAs()
     if (!getCurrentFileDetails().isMovieLoaded)
         return;
 
-    if (ui->graphicsView->getLoadedMovie().state() == QMovie::Running)
+    if (graphicsView->getLoadedMovie().state() == QMovie::Running)
     {
         pause();
     }
     QFileDialog *saveDialog = new QFileDialog(this, tr("Save Frame As..."));
     saveDialog->setDirectory(settings.value("lastFileDialogDir", QDir::homePath()).toString());
     saveDialog->setNameFilters(qvApp->getNameFilterList());
-    saveDialog->selectFile(getCurrentFileDetails().fileInfo.baseName() + "-" + QString::number(ui->graphicsView->getLoadedMovie().currentFrameNumber()) + ".png");
+    saveDialog->selectFile(getCurrentFileDetails().fileInfo.baseName() + "-" + QString::number(graphicsView->getLoadedMovie().currentFrameNumber()) + ".png");
     saveDialog->setDefaultSuffix("png");
     saveDialog->setAcceptMode(QFileDialog::AcceptSave);
     saveDialog->open();
     connect(saveDialog, &QFileDialog::fileSelected, this, [=](const QString &fileName){
-        ui->graphicsView->originalSize();
-        for(int i=0; i < ui->graphicsView->getLoadedMovie().frameCount(); i++)
+        graphicsView->originalSize();
+        for(int i=0; i < graphicsView->getLoadedMovie().frameCount(); i++)
             nextFrame();
 
-        ui->graphicsView->getLoadedMovie().currentPixmap().save(fileName, nullptr, 100);
-        ui->graphicsView->resetScale();
+        graphicsView->getLoadedMovie().currentPixmap().save(fileName, nullptr, 100);
+        graphicsView->resetScale();
     });
 }
 
@@ -663,9 +667,9 @@ void MainWindow::pause()
 
     const auto pauseActions = qvApp->getActionManager()->getAllInstancesOfAction("pause");
 
-    if (ui->graphicsView->getLoadedMovie().state() == QMovie::Running)
+    if (graphicsView->getLoadedMovie().state() == QMovie::Running)
     {
-        ui->graphicsView->setPaused(true);
+        graphicsView->setPaused(true);
         for (const auto &pauseAction : pauseActions)
         {
             pauseAction->setText(tr("Resume"));
@@ -674,7 +678,7 @@ void MainWindow::pause()
     }
     else
     {
-        ui->graphicsView->setPaused(false);
+        graphicsView->setPaused(false);
         for (const auto &pauseAction : pauseActions)
         {
             pauseAction->setText(tr("Pause"));
@@ -688,7 +692,7 @@ void MainWindow::nextFrame()
     if (!getCurrentFileDetails().isMovieLoaded)
         return;
 
-    ui->graphicsView->jumpToNextFrame();
+    graphicsView->jumpToNextFrame();
 }
 
 void MainWindow::toggleSlideshow()
@@ -736,7 +740,7 @@ void MainWindow::decreaseSpeed()
     if (!getCurrentFileDetails().isMovieLoaded)
         return;
 
-    ui->graphicsView->setSpeed(ui->graphicsView->getLoadedMovie().speed()-25);
+    graphicsView->setSpeed(graphicsView->getLoadedMovie().speed()-25);
 }
 
 void MainWindow::resetSpeed()
@@ -744,7 +748,7 @@ void MainWindow::resetSpeed()
     if (!getCurrentFileDetails().isMovieLoaded)
         return;
 
-    ui->graphicsView->setSpeed(100);
+    graphicsView->setSpeed(100);
 }
 
 void MainWindow::increaseSpeed()
@@ -752,7 +756,7 @@ void MainWindow::increaseSpeed()
     if (!getCurrentFileDetails().isMovieLoaded)
         return;
 
-    ui->graphicsView->setSpeed(ui->graphicsView->getLoadedMovie().speed()+25);
+    graphicsView->setSpeed(graphicsView->getLoadedMovie().speed()+25);
 }
 
 void MainWindow::toggleFullScreen()
@@ -777,14 +781,4 @@ void MainWindow::toggleFullScreen()
             fullscreenAction->setIcon(QIcon::fromTheme("view-restore"));
         }
     }
-}
-
-void MainWindow::quit()
-{
-    close();
-    QCoreApplication::quit();
-}
-
-const QVImageCore::QVFileDetails& MainWindow::getCurrentFileDetails() const {
-    return ui->graphicsView->getCurrentFileDetails();
 }

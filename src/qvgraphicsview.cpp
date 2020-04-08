@@ -12,13 +12,20 @@
 
 QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 {
+    // GraphicsView setup
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setDragMode(QGraphicsView::ScrollHandDrag);
+    setFrameShape(QFrame::NoFrame);
+
+    // part of a pathetic attempt at gesture support
     grabGesture(Qt::PinchGesture);
 
-    //qgraphicsscene setup
+    // Scene setup
     auto *scene = new QGraphicsScene(0.0, 0.0, 100000.0, 100000.0, this);
     setScene(scene);
 
-    //initialize configurable variables
+    // Initialize configurable variables
     isFilteringEnabled = true;
     isScalingEnabled = true;
     isScalingTwoEnabled = true;
@@ -29,7 +36,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     cropMode = 0;
     scaleFactor = 1.25;
 
-    //initialize other variables
+    // Initialize other variables
     adjustedBoundingRect = QRectF();
     adjustedImageSize = QSize();
     currentScale = 1.0;

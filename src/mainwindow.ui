@@ -10,9 +10,6 @@
     <height>480</height>
    </rect>
   </property>
-  <property name="contextMenuPolicy">
-   <enum>Qt::DefaultContextMenu</enum>
-  </property>
   <property name="windowTitle">
    <string>qView</string>
   </property>
@@ -33,48 +30,10 @@
     <property name="bottomMargin">
      <number>0</number>
     </property>
-    <item>
-     <widget class="QVGraphicsView" name="graphicsView">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="contextMenuPolicy">
-       <enum>Qt::NoContextMenu</enum>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::NoFrame</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Plain</enum>
-      </property>
-      <property name="lineWidth">
-       <number>0</number>
-      </property>
-      <property name="verticalScrollBarPolicy">
-       <enum>Qt::ScrollBarAlwaysOff</enum>
-      </property>
-      <property name="horizontalScrollBarPolicy">
-       <enum>Qt::ScrollBarAlwaysOff</enum>
-      </property>
-      <property name="dragMode">
-       <enum>QGraphicsView::ScrollHandDrag</enum>
-      </property>
-      <property name="transformationAnchor">
-       <enum>QGraphicsView::NoAnchor</enum>
-      </property>
-     </widget>
-    </item>
    </layout>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <customwidgets>
-  <customwidget>
-   <class>QVGraphicsView</class>
-   <extends>QGraphicsView</extends>
-   <header>src/qvgraphicsview.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

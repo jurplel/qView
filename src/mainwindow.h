@@ -3,6 +3,7 @@
 
 #include "qvinfodialog.h"
 #include "qvimagecore.h"
+#include "qvgraphicsview.h"
 #include <QMainWindow>
 #include <QShortcut>
 
@@ -90,9 +91,7 @@ public:
 
     void toggleFullScreen();
 
-    void quit();
-
-    const QVImageCore::QVFileDetails& getCurrentFileDetails() const;
+    const QVImageCore::QVFileDetails& getCurrentFileDetails() const { return graphicsView->getCurrentFileDetails(); }
 
 public slots:
     void openFile(const QString &fileName);
@@ -123,6 +122,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    QVGraphicsView *graphicsView;
 
     QMenu *contextMenu;
     QMenu *virtualMenu;

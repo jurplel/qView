@@ -401,7 +401,7 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
     }
 
     if (key == "quit") {
-        relevantWindow->quit();
+        QCoreApplication::quit();
     } else if (key == "newwindow") {
         qvApp->newWindow();
     } else if (key == "open") {
