@@ -223,6 +223,10 @@ void MainWindow::loadSettings()
 
     //menubar
     menuBarEnabled = settings.value("menubarenabled", false).toBool();
+    #ifdef Q_OS_MACOS
+    // Menu bar is effectively always enabled on macOS
+    menuBarEnabled = true;
+    #endif
     menuBar()->setVisible(menuBarEnabled);
     const auto actionList = actions();
     for (const auto &action : actionList)
