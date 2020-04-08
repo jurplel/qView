@@ -1,7 +1,6 @@
 #ifndef QVGRAPHICSVIEW_H
 #define QVGRAPHICSVIEW_H
 
-#include "mainwindow.h"
 #include "qvimagecore.h"
 #include <QGraphicsView>
 #include <QImageReader>
