@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "qvinfodialog.h"
+#include "qvimagecore.h"
 #include <QMainWindow>
 #include <QShortcut>
 
@@ -18,6 +19,8 @@ public:
     ~MainWindow() override;
 
     void refreshProperties();
+
+    void buildWindowTitle();
 
     void setWindowSize();
 
@@ -89,6 +92,8 @@ public:
 
     void quit();
 
+    const QVImageCore::QVFileDetails& getCurrentFileDetails() const;
+
 public slots:
     void openFile(const QString &fileName);
 
@@ -128,6 +133,7 @@ private:
 
     QVInfoDialog *info;
 
+    int titlebarMode;
     bool menuBarEnabled;
     bool slideshowReversed;
     int windowResizeMode;

@@ -75,11 +75,9 @@ public:
 signals:
     void animatedFrameChanged(QRect rect);
 
-    void fileInfoUpdated();
-
     void updateLoadedPixmapItem();
 
-    void fileRead();
+    void fileLoaded();
 
     void readError(const QString &errorString, const QString fileName);
 

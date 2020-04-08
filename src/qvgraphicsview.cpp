@@ -26,7 +26,6 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     isScrollZoomsEnabled = true;
     isLoopFoldersEnabled = true;
     isCursorZoomEnabled = true;
-    titlebarMode = 0;
     cropMode = 0;
     scaleFactor = 1.25;
 
@@ -42,8 +41,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 
     imageCore.setDevicePixelRatio(devicePixelRatioF());
     connect(&imageCore, &QVImageCore::animatedFrameChanged, this, &QVGraphicsView::animatedFrameChanged);
-    connect(&imageCore, &QVImageCore::fileInfoUpdated, this, &QVGraphicsView::updateFileInfoDisplays);
-    connect(&imageCore, &QVImageCore::fileRead, this, &QVGraphicsView::postLoad);
+    connect(&imageCore, &QVImageCore::fileLoaded, this, &QVGraphicsView::postLoad);
     connect(&imageCore, &QVImageCore::updateLoadedPixmapItem, this, &QVGraphicsView::updateLoadedPixmapItem);
     connect(&imageCore, &QVImageCore::readError, this, &QVGraphicsView::error);
 
@@ -370,6 +368,7 @@ void QVGraphicsView::postLoad()
         movieCenterNeedsUpdating = false;
 
     updateLoadedPixmapItem();
+    qvApp->getActionManager()->addFileToRecentsList(getCurrentFileDetails().fileInfo);
 
     emit fileLoaded();
 }
@@ -383,44 +382,6 @@ void QVGraphicsView::updateLoadedPixmapItem()
 
     resetScale();
     emit updatedLoadedPixmapItem();
-}
-
-void QVGraphicsView::updateFileInfoDisplays()
-{
-    qvApp->getActionManager()->addFileToRecentsList(getCurrentFileDetails().fileInfo);
-
-    // Update window title to reflect new file info
-    setWindowTitle();
-
-    // This signals the MainWindow to update the file info window
-    emit updatedFileInfo();
-}
-
-void QVGraphicsView::setWindowTitle()
-{
-    if (!getCurrentFileDetails().isPixmapLoaded)
-        return;
-
-    QString newString;
-    switch (titlebarMode) {
-    case 0:
-    {
-        newString = "qView";
-        break;
-    }
-    case 1:
-    {
-        newString = getCurrentFileDetails().fileInfo.fileName();
-        break;
-    }
-    case 2:
-    {
-        newString = "qView - " + QString::number(getCurrentFileDetails().folderIndex+1) + "/" + QString::number(getCurrentFileDetails().folder.count()) + " - " + getCurrentFileDetails().fileInfo.fileName() + " - "  + QString::number(getCurrentFileDetails().imageSize.width()) + "x" + QString::number(getCurrentFileDetails().imageSize.height()) + " - " + QVInfoDialog::formatBytes(getCurrentFileDetails().fileInfo.size());
-        break;
-    }
-    }
-
-    emit sendWindowTitle(newString);
 }
 
 void QVGraphicsView::resetScale()
@@ -692,10 +653,6 @@ void QVGraphicsView::loadSettings()
         isScalingTwoEnabled = false;
     else
         isScalingTwoEnabled = settings.value("scalingtwoenabled", true).toBool();
-
-    //titlebar
-    titlebarMode = settings.value("titlebarmode", 1).toInt();
-    setWindowTitle();
 
     //cropmode
     cropMode = settings.value("cropmode", 0).toInt();

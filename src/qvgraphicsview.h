@@ -39,7 +39,6 @@ public:
     QMimeData* getMimeData() const;
     void loadMimeData(const QMimeData *mimeData);
     void loadFile(const QString &fileName);
-    void setWindowTitle();
 
     void resetScale();
     void scaleExpensively(scaleMode mode);
@@ -64,10 +63,6 @@ signals:
     void fileLoaded();
 
     void updatedLoadedPixmapItem();
-
-    void updatedFileInfo();
-
-    void sendWindowTitle(const QString &newTitle);
 
 protected:
     void wheelEvent(QWheelEvent *event) override;
@@ -98,8 +93,6 @@ private slots:
 
     void updateLoadedPixmapItem();
 
-    void updateFileInfoDisplays();
-
     void error(const QString &errorString);
 
 private:
@@ -119,7 +112,6 @@ private:
     bool isScrollZoomsEnabled;
     bool isLoopFoldersEnabled;
     bool isCursorZoomEnabled;
-    int titlebarMode;
     int cropMode;
     qreal scaleFactor;
 

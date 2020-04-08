@@ -194,8 +194,7 @@ void QVImageCore::postLoad()
     currentFileDetails.imageSize = imageReader.size();
     currentFileDetails.loadedPixmapSize = loadedPixmap.size();
 
-    emit fileRead();
-    emit fileInfoUpdated();
+    emit fileLoaded();
 }
 
 void QVImageCore::updateFolderInfo()

@@ -37,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setAttribute(Qt::WA_DeleteOnClose);
 
     //initialize variables
+    titlebarMode = 0;
     menuBarEnabled = false;
     slideshowReversed = false;
     windowResizeMode = 0;
@@ -46,8 +47,6 @@ MainWindow::MainWindow(QWidget *parent) :
     //connect graphicsview signals
     connect(ui->graphicsView, &QVGraphicsView::fileLoaded, this, &MainWindow::fileLoaded);
     connect(ui->graphicsView, &QVGraphicsView::updatedLoadedPixmapItem, this, &MainWindow::setWindowSize);
-    connect(ui->graphicsView, &QVGraphicsView::updatedFileInfo, this, &MainWindow::refreshProperties);
-    connect(ui->graphicsView, &QVGraphicsView::sendWindowTitle, this, &MainWindow::setWindowTitle);
     connect(ui->graphicsView, &QVGraphicsView::cancelSlideshow, this, &MainWindow::cancelSlideshow);
 
     //Initialize escape shortcut
@@ -217,6 +216,10 @@ void MainWindow::loadSettings()
     QSettings settings;
     settings.beginGroup("options");
 
+    //titlebar mode
+    titlebarMode = settings.value("titlebarmode", 1).toInt();
+    buildWindowTitle();
+
     //menubar
     menuBarEnabled = settings.value("menubarenabled", false).toBool();
     menuBar()->setVisible(menuBarEnabled);
@@ -265,7 +268,7 @@ void MainWindow::openRecent(int i)
 void MainWindow::fileLoaded()
 {
     //activate items after item is loaded for the first time
-//    if (ui->graphicsView->getCurrentFileDetails().isPixmapLoaded && !ui->actionOpen_Containing_Folder->isEnabled())
+//    if (getCurrentFileDetails().isPixmapLoaded && !ui->actionOpen_Containing_Folder->isEnabled())
 //    {
 //        foreach(QAction* action, ui->menuView->actions())
 //            action->setEnabled(true);
@@ -277,18 +280,53 @@ void MainWindow::fileLoaded()
 //        ui->actionCopy->setEnabled(true);
 //    }
     //disable gif controls if there is no gif loaded
-//    ui->menuTools->actions().constFirst()->setEnabled(ui->graphicsView->getCurrentFileDetails().isMovieLoaded);
+//    ui->menuTools->actions().constFirst()->setEnabled(getCurrentFileDetails().isMovieLoaded);
+
+    refreshProperties();
+    buildWindowTitle();
 }
 
 void MainWindow::refreshProperties()
 {
     int value4;
-    if (ui->graphicsView->getCurrentFileDetails().isMovieLoaded)
+    if (getCurrentFileDetails().isMovieLoaded)
         value4 = ui->graphicsView->getLoadedMovie().frameCount();
     else
         value4 = 0;
-    info->setInfo(ui->graphicsView->getCurrentFileDetails().fileInfo, ui->graphicsView->getCurrentFileDetails().imageSize.width(), ui->graphicsView->getCurrentFileDetails().imageSize.height(), value4);
+    info->setInfo(getCurrentFileDetails().fileInfo, getCurrentFileDetails().imageSize.width(), getCurrentFileDetails().imageSize.height(), value4);
+}
 
+void MainWindow::buildWindowTitle()
+{
+    if (!getCurrentFileDetails().isPixmapLoaded)
+        return;
+
+    QString newString;
+    switch (titlebarMode) {
+    case 0:
+    {
+        newString = "qView";
+        break;
+    }
+    case 1:
+    {
+        newString = getCurrentFileDetails().fileInfo.fileName();
+        break;
+    }
+    case 2:
+    {
+        newString = "qView - ";
+        newString += QString::number(getCurrentFileDetails().folderIndex+1);
+        newString += "/" + QString::number(getCurrentFileDetails().folder.count());
+        newString += " - " + getCurrentFileDetails().fileInfo.fileName();
+        newString += " - "  + QString::number(getCurrentFileDetails().imageSize.width());
+        newString += "x" + QString::number(getCurrentFileDetails().imageSize.height());
+        newString += " - " + QVInfoDialog::formatBytes(getCurrentFileDetails().fileInfo.size());
+        break;
+    }
+    }
+
+    setWindowTitle(newString);
 }
 
 void MainWindow::setWindowSize()
@@ -303,7 +341,7 @@ void MainWindow::setWindowSize()
 
     justLaunchedWithImage = false;
 
-    QSize imageSize = ui->graphicsView->getCurrentFileDetails().loadedPixmapSize;
+    QSize imageSize = getCurrentFileDetails().loadedPixmapSize;
     imageSize -= QSize(4, 4);
     imageSize /= devicePixelRatioF();
 
@@ -351,7 +389,7 @@ QScreen *MainWindow::screenAt(const QPoint &point)
 
 bool MainWindow::getIsPixmapLoaded() const
 {
-    return ui->graphicsView->getCurrentFileDetails().isPixmapLoaded;
+    return getCurrentFileDetails().isPixmapLoaded;
 }
 
 void MainWindow::setJustLaunchedWithImage(bool value)
@@ -447,10 +485,10 @@ void MainWindow::pickUrl()
 
 void MainWindow::openContainingFolder()
 {
-    if (!ui->graphicsView->getCurrentFileDetails().isPixmapLoaded)
+    if (!getCurrentFileDetails().isPixmapLoaded)
         return;
 
-    const QFileInfo selectedFileInfo = ui->graphicsView->getCurrentFileDetails().fileInfo;
+    const QFileInfo selectedFileInfo = getCurrentFileDetails().fileInfo;
 
     #ifdef Q_OS_WIN
     QProcess::startDetached("explorer", QStringList() << "/select," << QDir::toNativeSeparators(selectedFileInfo.absoluteFilePath()));
@@ -585,7 +623,7 @@ void MainWindow::saveFrameAs()
 {
     QSettings settings;
     settings.beginGroup("recents");
-    if (!ui->graphicsView->getCurrentFileDetails().isMovieLoaded)
+    if (!getCurrentFileDetails().isMovieLoaded)
         return;
 
     if (ui->graphicsView->getLoadedMovie().state() == QMovie::Running)
@@ -595,7 +633,7 @@ void MainWindow::saveFrameAs()
     QFileDialog *saveDialog = new QFileDialog(this, tr("Save Frame As..."));
     saveDialog->setDirectory(settings.value("lastFileDialogDir", QDir::homePath()).toString());
     saveDialog->setNameFilters(qvApp->getNameFilterList());
-    saveDialog->selectFile(ui->graphicsView->getCurrentFileDetails().fileInfo.baseName() + "-" + QString::number(ui->graphicsView->getLoadedMovie().currentFrameNumber()) + ".png");
+    saveDialog->selectFile(getCurrentFileDetails().fileInfo.baseName() + "-" + QString::number(ui->graphicsView->getLoadedMovie().currentFrameNumber()) + ".png");
     saveDialog->setDefaultSuffix("png");
     saveDialog->setAcceptMode(QFileDialog::AcceptSave);
     saveDialog->open();
@@ -611,7 +649,7 @@ void MainWindow::saveFrameAs()
 
 void MainWindow::pause()
 {
-    if (!ui->graphicsView->getCurrentFileDetails().isMovieLoaded)
+    if (!getCurrentFileDetails().isMovieLoaded)
         return;
 
     const auto pauseActions = qvApp->getActionManager()->getAllInstancesOfAction("pause");
@@ -638,7 +676,7 @@ void MainWindow::pause()
 
 void MainWindow::nextFrame()
 {
-    if (!ui->graphicsView->getCurrentFileDetails().isMovieLoaded)
+    if (!getCurrentFileDetails().isMovieLoaded)
         return;
 
     ui->graphicsView->jumpToNextFrame();
@@ -686,7 +724,7 @@ void MainWindow::slideshowAction()
 
 void MainWindow::decreaseSpeed()
 {
-    if (!ui->graphicsView->getCurrentFileDetails().isMovieLoaded)
+    if (!getCurrentFileDetails().isMovieLoaded)
         return;
 
     ui->graphicsView->setSpeed(ui->graphicsView->getLoadedMovie().speed()-25);
@@ -694,7 +732,7 @@ void MainWindow::decreaseSpeed()
 
 void MainWindow::resetSpeed()
 {
-    if (!ui->graphicsView->getCurrentFileDetails().isMovieLoaded)
+    if (!getCurrentFileDetails().isMovieLoaded)
         return;
 
     ui->graphicsView->setSpeed(100);
@@ -702,7 +740,7 @@ void MainWindow::resetSpeed()
 
 void MainWindow::increaseSpeed()
 {
-    if (!ui->graphicsView->getCurrentFileDetails().isMovieLoaded)
+    if (!getCurrentFileDetails().isMovieLoaded)
         return;
 
     ui->graphicsView->setSpeed(ui->graphicsView->getLoadedMovie().speed()+25);
@@ -736,4 +774,8 @@ void MainWindow::quit()
 {
     close();
     QCoreApplication::quit();
+}
+
+const QVImageCore::QVFileDetails& MainWindow::getCurrentFileDetails() const {
+    return ui->graphicsView->getCurrentFileDetails();
 }
