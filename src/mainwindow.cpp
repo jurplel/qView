@@ -594,22 +594,22 @@ void MainWindow::flip()
 
 void MainWindow::firstFile()
 {
-    graphicsView->goToFile(QVGraphicsView::goToFileMode::first);
+    graphicsView->goToFile(QVGraphicsView::GoToFileMode::first);
 }
 
 void MainWindow::previousFile()
 {
-    graphicsView->goToFile(QVGraphicsView::goToFileMode::previous);
+    graphicsView->goToFile(QVGraphicsView::GoToFileMode::previous);
 }
 
 void MainWindow::nextFile()
 {
-    graphicsView->goToFile(QVGraphicsView::goToFileMode::next);
+    graphicsView->goToFile(QVGraphicsView::GoToFileMode::next);
 }
 
 void MainWindow::lastFile()
 {
-    graphicsView->goToFile(QVGraphicsView::goToFileMode::last);
+    graphicsView->goToFile(QVGraphicsView::GoToFileMode::last);
 }
 
 void MainWindow::openOptions()

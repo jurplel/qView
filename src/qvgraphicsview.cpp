@@ -55,7 +55,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     expensiveScaleTimer = new QTimer(this);
     expensiveScaleTimer->setSingleShot(true);
     expensiveScaleTimer->setInterval(10);
-    connect(expensiveScaleTimer, &QTimer::timeout, this, [this]{scaleExpensively(scaleMode::resetScale);});
+    connect(expensiveScaleTimer, &QTimer::timeout, this, [this]{scaleExpensively(ScaleMode::resetScale);});
 
     loadedPixmapItem = new QGraphicsPixmapItem();
     scene->addItem(loadedPixmapItem);
@@ -228,7 +228,7 @@ void QVGraphicsView::zoom(int DeltaY, const QPoint &pos, qreal targetScaleFactor
     if ((currentScale < 0.99999 || (currentScale < 1.00001 && DeltaY > 0)) && shouldUseScaling)
     {
         //zoom expensively
-        scaleExpensively(scaleMode::zoom);
+        scaleExpensively(ScaleMode::zoom);
         cheapScaledLast = false;
     }
     //Use scaling up to the maximum scalingtwo value if we should
@@ -239,7 +239,7 @@ void QVGraphicsView::zoom(int DeltaY, const QPoint &pos, qreal targetScaleFactor
         QPointF doubleMapped = loadedPixmapItem->mapFromScene(originalMappedPos);
         loadedPixmapItem->setTransformOriginPoint(loadedPixmapItem->boundingRect().topLeft());
 
-        scaleExpensively(scaleMode::zoom);
+        scaleExpensively(ScaleMode::zoom);
         if (DeltaY > 0)
             loadedPixmapItem->setScale(targetScaleFactor);
         else
@@ -404,15 +404,15 @@ void QVGraphicsView::resetScale()
     expensiveScaleTimer->start();
 }
 
-void QVGraphicsView::scaleExpensively(scaleMode mode)
+void QVGraphicsView::scaleExpensively(ScaleMode mode)
 {
     if (!getCurrentFileDetails().isPixmapLoaded || !isScalingEnabled)
         return;
 
     switch (mode) {
-    case scaleMode::resetScale:
+    case ScaleMode::resetScale:
     {
-        QVImageCore::scaleMode coreMode = QVImageCore::scaleMode::normal;
+        QVImageCore::ScaleMode coreMode = QVImageCore::ScaleMode::normal;
         switch (cropMode) {
         case 0:
         {
@@ -422,19 +422,19 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
             qreal marginWidth = (windowSize.width()-adjustedBoundingRect.width()*transform().m11())+4;
             qreal marginHeight = (windowSize.height()-adjustedBoundingRect.height()*transform().m22())+4;
             if (marginWidth < marginHeight)
-                coreMode = QVImageCore::scaleMode::width;
+                coreMode = QVImageCore::ScaleMode::width;
             else
-                coreMode = QVImageCore::scaleMode::height;
+                coreMode = QVImageCore::ScaleMode::height;
             break;
         }
         case 1:
         {
-            coreMode = QVImageCore::scaleMode::height;
+            coreMode = QVImageCore::ScaleMode::height;
             break;
         }
         case 2:
         {
-            coreMode = QVImageCore::scaleMode::width;
+            coreMode = QVImageCore::ScaleMode::width;
             break;
         }
         }
@@ -452,7 +452,7 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
         scaledSize = loadedPixmapItem->boundingRect().size().toSize();
         break;
     }
-    case scaleMode::zoom:
+    case ScaleMode::zoom:
     {
         QSize newSize = scaledSize * currentScale;
         if (!getCurrentFileDetails().isMovieLoaded)
@@ -490,7 +490,7 @@ void QVGraphicsView::originalSize(bool setVariables)
 }
 
 
-void QVGraphicsView::goToFile(const goToFileMode &mode, int index)
+void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
 {
     if (getCurrentFileDetails().folder.isEmpty())
         return;
@@ -500,17 +500,17 @@ void QVGraphicsView::goToFile(const goToFileMode &mode, int index)
     int newIndex = getCurrentFileDetails().folderIndex;
 
     switch (mode) {
-    case goToFileMode::constant:
+    case GoToFileMode::constant:
     {
         newIndex = index;
         break;
     }
-    case goToFileMode::first:
+    case GoToFileMode::first:
     {
         newIndex = 0;
         break;
     }
-    case goToFileMode::previous:
+    case GoToFileMode::previous:
     {
         if (newIndex == 0)
         {
@@ -523,7 +523,7 @@ void QVGraphicsView::goToFile(const goToFileMode &mode, int index)
             newIndex--;
         break;
     }
-    case goToFileMode::next:
+    case GoToFileMode::next:
     {
         if (getCurrentFileDetails().folder.size()-1 == newIndex)
         {
@@ -536,7 +536,7 @@ void QVGraphicsView::goToFile(const goToFileMode &mode, int index)
             newIndex++;
         break;
     }
-    case goToFileMode::last:
+    case GoToFileMode::last:
     {
         newIndex = getCurrentFileDetails().folder.size()-1;
         break;
