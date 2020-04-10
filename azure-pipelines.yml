@@ -148,5 +148,4 @@ jobs:
   - script: |
       qmake $(nightlyDefines)
       make
-      ls
     displayName: 'Build qView'
