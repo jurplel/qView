@@ -44,6 +44,7 @@ MainWindow::MainWindow(QWidget *parent) :
     slideshowReversed = false;
     windowResizeMode = 0;
     justLaunchedWithImage = false;
+    minWindowResizedPercentage = 0.2;
     maxWindowResizedPercentage = 0.7;
 
     //initialize graphicsview
@@ -253,6 +254,9 @@ void MainWindow::loadSettings()
     //window resize mode
     windowResizeMode = settings.value("windowresizemode", 1).toInt();
 
+    //min window resize mode size
+    minWindowResizedPercentage = settings.value("minwindowresizedpercentage", 20).toReal()/100;
+
     //max window resize mode size
     maxWindowResizedPercentage = settings.value("maxwindowresizedpercentage", 70).toReal()/100;
 
@@ -331,13 +335,20 @@ void MainWindow::buildWindowTitle()
     }
     case 2:
     {
-        newString = "qView - ";
+        newString += QString::number(getCurrentFileDetails().folderIndex+1);
+        newString += "/" + QString::number(getCurrentFileDetails().folder.count());
+        newString += " - " + getCurrentFileDetails().fileInfo.fileName();
+        break;
+    }
+    case 3:
+    {
         newString += QString::number(getCurrentFileDetails().folderIndex+1);
         newString += "/" + QString::number(getCurrentFileDetails().folder.count());
         newString += " - " + getCurrentFileDetails().fileInfo.fileName();
         newString += " - "  + QString::number(getCurrentFileDetails().imageSize.width());
         newString += "x" + QString::number(getCurrentFileDetails().imageSize.height());
         newString += " - " + QVInfoDialog::formatBytes(getCurrentFileDetails().fileInfo.size());
+        newString += " - qView";
         break;
     }
     }
@@ -362,10 +373,18 @@ void MainWindow::setWindowSize()
     imageSize /= devicePixelRatioF();
 
     QSize currentScreenSize = screenAt(geometry().center())->size();
-    currentScreenSize *= maxWindowResizedPercentage;
 
-    if (imageSize.width() > currentScreenSize.width() || imageSize.height() > currentScreenSize.height())
-        imageSize.scale(currentScreenSize, Qt::KeepAspectRatio);
+    QSize minWindowSize = currentScreenSize * minWindowResizedPercentage;
+    QSize maxWindowSize = currentScreenSize * maxWindowResizedPercentage;
+
+    if (imageSize.width() < minWindowSize.width() || imageSize.height() < minWindowSize.height())
+    {
+        imageSize.scale(minWindowSize, Qt::KeepAspectRatio);
+    }
+    else if (imageSize.width() > maxWindowSize.width() || imageSize.height() > maxWindowSize.height())
+    {
+        imageSize.scale(maxWindowSize, Qt::KeepAspectRatio);
+    }
 
     //Windows reports the wrong minimum width, so we constrain the image size relative to the dpi to stop weirdness with tiny images
     #ifdef Q_OS_WIN

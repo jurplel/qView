@@ -17,6 +17,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setDragMode(QGraphicsView::ScrollHandDrag);
     setFrameShape(QFrame::NoFrame);
+    setTransformationAnchor(QGraphicsView::NoAnchor);
 
     // part of a pathetic attempt at gesture support
     grabGesture(Qt::PinchGesture);

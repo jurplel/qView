@@ -53,6 +53,7 @@ void QVOptionsDialog::saveSettings()
     settings.setValue("pastactualsizeenabled", transientSettings.pastActualSizeEnabled);
     settings.setValue("scrollzoomsenabled", transientSettings.scrollZoomsEnabled);
     settings.setValue("windowresizemode", transientSettings.windowResizeMode);
+    settings.setValue("minwindowresizedpercentage", transientSettings.minWindowResizedPercentage);
     settings.setValue("maxwindowresizedpercentage", transientSettings.maxWindowResizedPercentage);
     settings.setValue("loopfoldersenabled", transientSettings.loopFoldersEnabled);
     settings.setValue("preloadingmode", transientSettings.preloadingMode);
@@ -138,6 +139,10 @@ void QVOptionsDialog::loadSettings(bool defaults)
         ui->titlebarRadioButton2->setChecked(true);
         break;
     }
+    case 3:
+    {
+        ui->titlebarRadioButton3->setChecked(true);
+    }
     }
 
     //menubar
@@ -189,6 +194,10 @@ void QVOptionsDialog::loadSettings(bool defaults)
         ui->maxWindowResizeLabel->setEnabled(true);
         ui->maxWindowResizeSpinBox->setEnabled(true);
     }
+
+    //minimum size for auto window resize
+    transientSettings.minWindowResizedPercentage = settings.value("minwindowresizedpercentage", 20).toInt();
+    ui->minWindowResizeSpinBox->setValue(transientSettings.minWindowResizedPercentage);
 
     //maximum size for auto window resize
     transientSettings.maxWindowResizedPercentage = settings.value("maxwindowresizedpercentage", 70).toInt();
@@ -421,6 +430,11 @@ void QVOptionsDialog::on_titlebarRadioButton2_clicked()
     transientSettings.titlebarMode = 2;
 }
 
+void QVOptionsDialog::on_titlebarRadioButton3_clicked()
+{
+    transientSettings.titlebarMode = 3;
+}
+
 void QVOptionsDialog::on_windowResizeComboBox_currentIndexChanged(int index)
 {
     transientSettings.windowResizeMode = index;
@@ -434,6 +448,11 @@ void QVOptionsDialog::on_windowResizeComboBox_currentIndexChanged(int index)
         ui->maxWindowResizeLabel->setEnabled(true);
         ui->maxWindowResizeSpinBox->setEnabled(true);
     }
+}
+
+void QVOptionsDialog::on_minWindowResizeSpinBox_valueChanged(int arg1)
+{
+    transientSettings.minWindowResizedPercentage = arg1;
 }
 
 void QVOptionsDialog::on_maxWindowResizeSpinBox_valueChanged(int arg1)

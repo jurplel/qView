@@ -138,6 +138,7 @@ private:
     bool slideshowReversed;
     int windowResizeMode;
     bool justLaunchedWithImage;
+    qreal minWindowResizedPercentage;
     qreal maxWindowResizedPercentage;
 };
 
