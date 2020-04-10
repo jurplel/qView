@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>388</width>
-    <height>348</height>
+    <height>358</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,7 +23,7 @@
       <enum>Qt::NoFocus</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="window">
       <property name="layoutDirection">
@@ -101,14 +101,27 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="1">
-        <widget class="QRadioButton" name="titlebarRadioButton2">
+       <item row="4" column="1">
+        <widget class="QRadioButton" name="titlebarRadioButton3">
          <property name="text">
           <string>&amp;Verbose</string>
          </property>
         </widget>
        </item>
-       <item row="7" column="0">
+       <item row="5" column="1">
+        <spacer name="horizontalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>5</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="6" column="0">
         <widget class="QLabel" name="label_6">
          <property name="toolTip">
           <string>Control when the window should resize to fit the image's actual size</string>
@@ -118,7 +131,7 @@
          </property>
         </widget>
        </item>
-       <item row="7" column="1">
+       <item row="6" column="1">
         <widget class="QComboBox" name="windowResizeComboBox">
          <property name="toolTip">
           <string>Control when the window should resize to fit the image's actual size</string>
@@ -143,50 +156,7 @@
          </item>
         </widget>
        </item>
-       <item row="8" column="0">
-        <widget class="QLabel" name="maxWindowResizeLabel">
-         <property name="toolTip">
-          <string>Control the maximum size that the window should reach when matching the image's actual size</string>
-         </property>
-         <property name="text">
-          <string>Up to:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="1">
-        <spacer name="horizontalSpacer_3">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>5</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="10" column="1">
-        <widget class="QCheckBox" name="menubarCheckbox">
-         <property name="text">
-          <string>Show menubar</string>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="1">
-        <spacer name="horizontalSpacer_4">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>5</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="8" column="1">
+       <item row="7" column="1">
         <widget class="QSpinBox" name="maxWindowResizeSpinBox">
          <property name="toolTip">
           <string>Control the maximum size that the window should reach when matching the image's actual size</string>
@@ -205,6 +175,43 @@
          </property>
          <property name="value">
           <number>70</number>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="1">
+        <spacer name="horizontalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>5</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="7" column="0">
+        <widget class="QLabel" name="maxWindowResizeLabel">
+         <property name="toolTip">
+          <string>Control the maximum size that the window should reach when matching the image's actual size</string>
+         </property>
+         <property name="text">
+          <string>Up to:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="1">
+        <widget class="QCheckBox" name="menubarCheckbox">
+         <property name="text">
+          <string>Show menubar</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QRadioButton" name="titlebarRadioButton2">
+         <property name="text">
+          <string>Practical</string>
          </property>
         </widget>
        </item>

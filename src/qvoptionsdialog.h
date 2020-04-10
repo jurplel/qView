@@ -58,6 +58,8 @@ private slots:
 
     void on_titlebarRadioButton2_clicked();
 
+    void on_titlebarRadioButton3_clicked();
+
     void on_windowResizeComboBox_currentIndexChanged(int index);
 
     void on_maxWindowResizeSpinBox_valueChanged(int arg1);

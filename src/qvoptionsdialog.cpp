@@ -138,6 +138,10 @@ void QVOptionsDialog::loadSettings(bool defaults)
         ui->titlebarRadioButton2->setChecked(true);
         break;
     }
+    case 3:
+    {
+        ui->titlebarRadioButton3->setChecked(true);
+    }
     }
 
     //menubar
@@ -419,6 +423,11 @@ void QVOptionsDialog::on_titlebarRadioButton1_clicked()
 void QVOptionsDialog::on_titlebarRadioButton2_clicked()
 {
     transientSettings.titlebarMode = 2;
+}
+
+void QVOptionsDialog::on_titlebarRadioButton3_clicked()
+{
+    transientSettings.titlebarMode = 3;
 }
 
 void QVOptionsDialog::on_windowResizeComboBox_currentIndexChanged(int index)
