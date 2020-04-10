@@ -380,12 +380,19 @@ void ActionManager::updateRecentsMenu()
 }
 
 void ActionManager::actionTriggered(QAction *triggeredAction) const
-{
-    bool shouldBeEmpty = false;
+{ 
+    auto key = triggeredAction->data().toString();
+
+    // For some actions, do not look for a relevant window
+    if (key == "newwindow" || key == "quit" || key == "clearrecents")
+    {
+        actionTriggered(triggeredAction, nullptr);
+        return;
+    }
 
     // If some actions are triggered without an explicit window, we want
     // to give them a window without an image open
-    auto key = triggeredAction->data().toString();
+    bool shouldBeEmpty = false;
     if (key.startsWith("recent") || key == "open" || key == "openurl")
         shouldBeEmpty = true;
 
