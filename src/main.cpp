@@ -17,13 +17,10 @@ int main(int argc, char *argv[])
     parser.addPositionalArgument(QObject::tr("file"), QObject::tr("The file to open."));
     parser.process(app);
 
-    auto window = new MainWindow();
+    auto *window = QVApplication::newWindow();
+
     if (!parser.positionalArguments().isEmpty())
-    {
-        window->setJustLaunchedWithImage(true);
-        window->openFile(parser.positionalArguments().constFirst());
-    }
-    window->show();
+        QVApplication::openFile(window, parser.positionalArguments().constFirst(), true);
 
     return QApplication::exec();
 }
