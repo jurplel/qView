@@ -18,17 +18,12 @@ public:
         for (const auto &action : givenActionList)
         {
             if (action->isSeparator())
-            {
                 continue;
-            }
-            else if (action->menu())
-            {
+
+            if (action->menu())
                 totalActionList.append(getAllNestedActions(action->menu()->actions()));
-            }
-            else
-            {
-                totalActionList.append(action);
-            }
+
+            totalActionList.append(action);
         }
         return totalActionList;
     }
