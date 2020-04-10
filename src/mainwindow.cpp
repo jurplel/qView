@@ -136,7 +136,10 @@ bool MainWindow::event(QEvent *event)
 void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 {
     QMainWindow::contextMenuEvent(event);
+
+    graphicsView->setDragMode(QGraphicsView::NoDrag);
     QVCocoaFunctions::showMenu(contextMenu, event->pos(), windowHandle());
+    graphicsView->setDragMode(QGraphicsView::ScrollHandDrag);
 
 //     contextMenu->popup(event->globalPos());
 }
