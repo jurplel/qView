@@ -1,11 +1,23 @@
 #include "qvcocoafunctions.h"
 
+#include <QDebug>
+
 #import <Cocoa/cocoa.h>
 
 
-QVCocoaFunctions::QVCocoaFunctions()
+static void setNestedSubmenusUnclickable(NSMenu *menu)
 {
-
+    [menu setAutoenablesItems:false];
+    for (NSMenuItem *item in menu.itemArray)
+    {
+        [menu.delegate menu:menu updateItem:item atIndex:0 shouldCancel:false];
+        if (item.hasSubmenu)
+        {
+            [item.submenu update];
+            setNestedSubmenusUnclickable(item.submenu);
+            [item setAction:nullptr];
+        }
+    }
 }
 
 void QVCocoaFunctions::showMenu(QMenu *menu, const QPoint point, QWindow *window)
@@ -13,10 +25,12 @@ void QVCocoaFunctions::showMenu(QMenu *menu, const QPoint point, QWindow *window
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
     NSMenu *nativeMenu = menu->toNSMenu();
+    setNestedSubmenusUnclickable(nativeMenu);
+
     NSView *view = reinterpret_cast<NSView*>(window->winId());
     NSPoint transposedPoint = QPoint(point.x(), static_cast<int>(view.frame.size.height)-point.y()).toCGPoint();
     NSGraphicsContext *graphicsContext = [NSGraphicsContext currentContext];
-    NSEvent *event = [NSEvent mouseEventWithType:NSEventTypeRightMouseDown location:transposedPoint modifierFlags:NULL
+    NSEvent *event = [NSEvent mouseEventWithType:NSEventTypeRightMouseDown location:transposedPoint modifierFlags:0
             timestamp:0 windowNumber:view.window.windowNumber context:graphicsContext eventNumber:0 clickCount:0 pressure:1];
     [NSMenu popUpContextMenu:nativeMenu withEvent:event forView:view];
 
