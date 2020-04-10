@@ -62,6 +62,8 @@ private slots:
 
     void on_windowResizeComboBox_currentIndexChanged(int index);
 
+    void on_minWindowResizeSpinBox_valueChanged(int arg1);
+
     void on_maxWindowResizeSpinBox_valueChanged(int arg1);
 
     void on_loopFoldersCheckbox_stateChanged(int arg1);
@@ -107,6 +109,7 @@ private:
         bool pastActualSizeEnabled;
         bool scrollZoomsEnabled;
         int windowResizeMode;
+        int minWindowResizedPercentage;
         int maxWindowResizedPercentage;
         bool loopFoldersEnabled;
         int preloadingMode;
