@@ -20,14 +20,14 @@ static void setNestedSubmenusUnclickable(NSMenu *menu)
     }
 }
 
-void QVCocoaFunctions::showMenu(QMenu *menu, const QPoint point, QWindow *window)
+void QVCocoaFunctions::showMenu(QMenu *menu, const QPoint &point, QWindow *window)
 {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
     NSMenu *nativeMenu = menu->toNSMenu();
     setNestedSubmenusUnclickable(nativeMenu);
 
-    NSView *view = reinterpret_cast<NSView*>(window->winId());
+    auto *view = reinterpret_cast<NSView*>(window->winId());
     NSPoint transposedPoint = QPoint(point.x(), static_cast<int>(view.frame.size.height)-point.y()).toCGPoint();
     NSGraphicsContext *graphicsContext = [NSGraphicsContext currentContext];
     NSEvent *event = [NSEvent mouseEventWithType:NSEventTypeRightMouseDown location:transposedPoint modifierFlags:0
@@ -46,7 +46,7 @@ void QVCocoaFunctions::changeTitlebarMode(const VibrancyMode vibrancyMode, QWind
 {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-    NSView *view = reinterpret_cast<NSView*>(window->winId());
+    auto *view = reinterpret_cast<NSView*>(window->winId());
     NSWindow *nativeWin = view.window;
     switch (vibrancyMode) {
     case VibrancyMode::none:
@@ -70,4 +70,10 @@ void QVCocoaFunctions::changeTitlebarMode(const VibrancyMode vibrancyMode, QWind
     }
 
     [pool release];
+}
+
+void QVCocoaFunctions::closeWindow(QWindow *window)
+{
+    auto *view = reinterpret_cast<NSView*>(window->winId());
+    [view.window close];
 }

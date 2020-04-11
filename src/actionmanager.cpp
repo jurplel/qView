@@ -1,5 +1,6 @@
 #include "actionmanager.h"
 #include "qvapplication.h"
+#include "qvcocoafunctions.h"
 
 #include <QSettings>
 #include <QMimeDatabase>
@@ -411,6 +412,7 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
     } else if (key == "openurl") {
         relevantWindow->pickUrl();
     } else if (key == "closewindow") {
+        QVCocoaFunctions::closeWindow(relevantWindow->windowHandle());
         relevantWindow->close();
     } else if (key == "opencontainingfolder") {
         relevantWindow->openContainingFolder();

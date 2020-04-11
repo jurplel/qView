@@ -14,11 +14,13 @@ public:
         vibrant,
     };
 
-    static void showMenu(QMenu *menu, QPoint point, QWindow *window);
+    static void showMenu(QMenu *menu, const QPoint &point, QWindow *window);
 
     static void setUserDefaults();
 
     static void changeTitlebarMode(const VibrancyMode mode, QWindow *window);
+
+    static void closeWindow(QWindow *window);
 };
 
 #endif // QVCOCOAFUNCTIONS_H
