@@ -1,5 +1,6 @@
 #include "qvapplication.h"
 #include "qvoptionsdialog.h"
+#include "qvcocoafunctions.h"
 #include <QFileOpenEvent>
 #include <QMenu>
 #include <QSettings>
@@ -58,6 +59,8 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     connect(menuBar, &QMenuBar::triggered, [](QAction *triggeredAction){
         qvApp->getActionManager()->actionTriggered(triggeredAction);
     });
+
+    QVCocoaFunctions::setUserDefaults();
 }
 
 QVApplication::~QVApplication() {

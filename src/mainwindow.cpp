@@ -94,7 +94,7 @@ MainWindow::MainWindow(QWidget *parent) :
     contextMenu->addAction(actionManager->cloneAction("nextfile"));
     contextMenu->addAction(actionManager->cloneAction("previousfile"));
     contextMenu->addSeparator();
-    contextMenu->addMenu(actionManager->buildViewMenu(true, true, contextMenu));
+    contextMenu->addMenu(actionManager->buildViewMenu(true, contextMenu));
     contextMenu->addMenu(actionManager->buildToolsMenu(true, contextMenu));
     contextMenu->addMenu(actionManager->buildHelpMenu(true, contextMenu));
 
@@ -168,6 +168,30 @@ void MainWindow::closeEvent(QCloseEvent *event)
     qvApp->getActionManager()->untrackClonedActions(menuBar());
 
     QMainWindow::closeEvent(event);
+}
+
+void MainWindow::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::WindowStateChange)
+    {
+        const auto fullscreenActions = qvApp->getActionManager()->getAllInstancesOfAction("fullscreen");
+        for (const auto &fullscreenAction : fullscreenActions)
+        {
+                if (windowState() == Qt::WindowFullScreen)
+                {
+                    fullscreenAction->setText(tr("Exit Full Screen"));
+                    fullscreenAction->setIcon(QIcon::fromTheme("view-restore"));
+                }
+                else
+                {
+                    fullscreenAction->setText(tr("Enter Full Screen"));
+                    fullscreenAction->setIcon(QIcon::fromTheme("view-fullscreen"));
+                }
+            QTimer::singleShot(3000, this, [fullscreenAction]{
+                fullscreenAction->setVisible(true);
+             });
+        }
+    }
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
@@ -783,24 +807,12 @@ void MainWindow::increaseSpeed()
 
 void MainWindow::toggleFullScreen()
 {
-    const auto fullscreenActions = qvApp->getActionManager()->getAllInstancesOfAction("fullscreen");
-
     if (windowState() == Qt::WindowFullScreen)
     {
         showNormal();
-        for (const auto &fullscreenAction : fullscreenActions)
-        {
-            fullscreenAction->setText(tr("Enter Full Screen"));
-            fullscreenAction->setIcon(QIcon::fromTheme("view-fullscreen"));
-        }
     }
     else
     {
         showFullScreen();
-        for (const auto &fullscreenAction : fullscreenActions)
-        {
-            fullscreenAction->setText(tr("Exit Full Screen"));
-            fullscreenAction->setIcon(QIcon::fromTheme("view-restore"));
-        }
     }
 }

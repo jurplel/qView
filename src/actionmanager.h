@@ -23,9 +23,23 @@ public:
             if (action->menu())
                 totalActionList.append(getAllNestedActions(action->menu()->actions()));
 
-            totalActionList.append(action);
+            totalActionList << action;
         }
         return totalActionList;
+    }
+
+    static QList<QAction*> getAllActionsOfType(const QList<QAction*> &givenActionList, const QString &type)
+    {
+        QList<QAction*> allActionsOfType;
+
+        auto allNestedActions = getAllNestedActions(givenActionList);
+        for (const auto &action : allNestedActions)
+        {
+            if (action->data() == type)
+                allActionsOfType << action;
+        }
+
+        return allActionsOfType;
     }
 
     static QStringList keyBindingsToStringList(QKeySequence::StandardKey sequence)
@@ -120,7 +134,7 @@ public:
 
     QMenu *buildGifMenu(QWidget *parent = nullptr);
 
-    QMenu *buildViewMenu(bool addIcon = true, bool withFullscreen = true, QWidget *parent = nullptr);
+    QMenu *buildViewMenu(bool addIcon = true, QWidget *parent = nullptr);
 
     QMenu *buildToolsMenu(bool addIcon = true, QWidget *parent = nullptr);
 

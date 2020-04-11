@@ -37,8 +37,15 @@ void QVCocoaFunctions::showMenu(QMenu *menu, const QPoint point, QWindow *window
     [pool release];
 }
 
+void QVCocoaFunctions::setUserDefaults()
+{
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"NSFullScreenMenuItemEverywhere"];
+}
+
 void QVCocoaFunctions::changeTitlebarMode(const VibrancyMode vibrancyMode, QWindow *window)
 {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+
     NSView *view = reinterpret_cast<NSView*>(window->winId());
     NSWindow *nativeWin = view.window;
     switch (vibrancyMode) {
@@ -61,4 +68,6 @@ void QVCocoaFunctions::changeTitlebarMode(const VibrancyMode vibrancyMode, QWind
         break;
     }
     }
+
+    [pool release];
 }

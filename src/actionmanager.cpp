@@ -34,6 +34,7 @@ QAction *ActionManager::cloneAction(const QString &key)
         newAction->setIcon(action->icon());
         newAction->setData(action->data());
         newAction->setText(action->text());
+        newAction->setMenuRole(action->menuRole());
         newAction->setShortcuts(action->shortcuts());
         actionCloneLibrary.insert(key, newAction);
         return newAction;
@@ -129,13 +130,7 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     // End of edit menu
 
     // Beginning of view menu
-    bool withFullscreen = true;
-
-    #ifdef Q_OS_MACOS
-        withFullscreen = false;
-    #endif
-
-    menuBar->addMenu(buildViewMenu(false, withFullscreen, menuBar));
+    menuBar->addMenu(buildViewMenu(false, menuBar));
     // End of view menu
 
     // Beginning of go menu
@@ -178,7 +173,7 @@ QMenu *ActionManager::buildGifMenu(QWidget *parent)
     return gifMenu;
 }
 
-QMenu *ActionManager::buildViewMenu(bool addIcon, bool withFullscreen, QWidget *parent)
+QMenu *ActionManager::buildViewMenu(bool addIcon, QWidget *parent)
 {
     auto *viewMenu = new QMenu(tr("View"), parent);
     viewMenu->menuAction()->setData("view");
@@ -196,8 +191,7 @@ QMenu *ActionManager::buildViewMenu(bool addIcon, bool withFullscreen, QWidget *
     viewMenu->addAction(cloneAction("mirror"));
     viewMenu->addAction(cloneAction("flip"));
     viewMenu->addSeparator();
-    if (withFullscreen)
-        viewMenu->addAction(cloneAction("fullscreen"));
+    viewMenu->addAction(cloneAction("fullscreen"));
 
     menuCloneLibrary.insert(viewMenu->menuAction()->data().toString(), viewMenu);
     return viewMenu;
@@ -382,7 +376,7 @@ void ActionManager::actionTriggered(QAction *triggeredAction) const
     auto key = triggeredAction->data().toString();
 
     // For some actions, do not look for a relevant window
-    if (key == "newwindow" || key == "quit" || key == "clearrecents")
+    if (key == "newwindow" || key == "clearrecents")
     {
         actionTriggered(triggeredAction, nullptr);
         return;
@@ -408,6 +402,7 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
     }
 
     if (key == "quit") {
+        relevantWindow->close(); // a window is closed so geometry is saved
         QCoreApplication::quit();
     } else if (key == "newwindow") {
         qvApp->newWindow();
@@ -553,6 +548,7 @@ void ActionManager::initializeActionLibrary()
 
     auto *fullScreenAction = new QAction(QIcon::fromTheme("view-fullscreen"), tr("Enter Full Screen"));
     fullScreenAction->setData("fullscreen");
+    fullScreenAction->setMenuRole(QAction::NoRole);
     actionLibrary.insert("fullscreen", fullScreenAction);
 
     auto *firstFileAction = new QAction(QIcon::fromTheme("go-first"), tr("First File"));

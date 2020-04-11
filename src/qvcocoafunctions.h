@@ -16,6 +16,8 @@ public:
 
     static void showMenu(QMenu *menu, QPoint point, QWindow *window);
 
+    static void setUserDefaults();
+
     static void changeTitlebarMode(const VibrancyMode mode, QWindow *window);
 };
 
