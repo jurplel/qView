@@ -187,6 +187,8 @@ private:
 
     QList<SShortcut> shortcutsList;
 
+    QMenu *windowMenu;
+
     QTimer *recentsSaveTimer;
 
     bool isSaveRecentsEnabled;

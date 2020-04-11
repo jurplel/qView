@@ -21,6 +21,8 @@ public:
     static void changeTitlebarMode(const VibrancyMode mode, QWindow *window);
 
     static void closeWindow(QWindow *window);
+
+    static void setWindowMenu(QMenu *menu);
 };
 
 #endif // QVCOCOAFUNCTIONS_H

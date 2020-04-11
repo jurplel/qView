@@ -21,6 +21,9 @@ ActionManager::ActionManager(QObject *parent) : QObject(parent)
 
     loadRecentsList();
 
+    windowMenu = new QMenu(tr("Window"));
+    QVCocoaFunctions::setWindowMenu(windowMenu);
+
     recentsSaveTimer = new QTimer(this);
     recentsSaveTimer->setSingleShot(true);
     recentsSaveTimer->setInterval(500);
@@ -148,6 +151,10 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     // Beginning of tools menu
     menuBar->addMenu(buildToolsMenu(false, menuBar));
     // End of tools menu
+
+    // Beginning of window menu
+    menuBar->addMenu(windowMenu);
+    // End of window menu
 
     // Beginning of help menu
     menuBar->addMenu(buildHelpMenu(false, menuBar));
