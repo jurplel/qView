@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "qvapplication.h"
+
 #include <QCommandLineParser>
-#include <QObject>
 
 int main(int argc, char *argv[])
 {

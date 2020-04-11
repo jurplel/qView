@@ -1,11 +1,11 @@
 #ifndef QVAPPLICATION_H
 #define QVAPPLICATION_H
 
-#include <QApplication>
 #include "mainwindow.h"
-#include <QCache>
-#include <QAction>
 #include "actionmanager.h"
+#include "settingsmanager.h"
+
+#include <QApplication>
 
 #if defined(qvApp)
 #undef qvApp
@@ -39,17 +39,17 @@ public:
 
     void deleteFromLastActiveWindows(MainWindow *window);
 
-    ActionManager *getActionManager() const { return actionManager; }
-
     QMenuBar *getMenuBar() const {  return menuBar; }
 
     const QStringList &getFilterList() const { return filterList; }
 
     const QStringList &getNameFilterList() const { return nameFilterList; }
 
+    ActionManager &getActionManager() { return actionManager; }
+
+    SettingsManager &getSettingsManager() { return settingsManager; }
+
 private:
-    QStringList filterList;
-    QStringList nameFilterList;
 
     QList<MainWindow*> lastActiveWindows;
 
@@ -63,8 +63,12 @@ private:
 
     QCache<QString, qint64> previouslyRecordedFileSizes;
 
-    ActionManager *actionManager;
+    QStringList filterList;
+    QStringList nameFilterList;
 
+    // SettingsManager has to be allocated first because ActionManager connects to its signal
+    SettingsManager settingsManager;
+    ActionManager actionManager;
 };
 
 #endif // QVAPPLICATION_H

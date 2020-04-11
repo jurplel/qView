@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>388</width>
-    <height>358</height>
+    <height>376</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,7 +23,7 @@
       <enum>Qt::NoFocus</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="window">
       <property name="layoutDirection">
@@ -41,38 +41,10 @@
          <property name="checked">
           <bool>true</bool>
          </property>
-         <property name="tristate">
-          <bool>false</bool>
-         </property>
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QPushButton" name="bgColorButton">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="focusPolicy">
-          <enum>Qt::NoFocus</enum>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="autoDefault">
-          <bool>true</bool>
-         </property>
-         <property name="default">
-          <bool>false</bool>
-         </property>
-         <property name="flat">
-          <bool>false</bool>
-         </property>
-        </widget>
+        <widget class="QPushButton" name="bgColorButton"/>
        </item>
        <item row="1" column="0">
         <widget class="QLabel" name="label">

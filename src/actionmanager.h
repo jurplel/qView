@@ -3,10 +3,8 @@
 
 #include "mainwindow.h"
 
-#include <QObject>
 #include <QMenuBar>
 #include <QMultiHash>
-#include <QFileInfo>
 
 class ActionManager : public QObject
 {
@@ -101,7 +99,7 @@ public:
 
     explicit ActionManager(QObject *parent = nullptr);
 
-    void loadSettings();
+    void settingsUpdated();
 
     QAction *cloneAction(const QString &key);
 
@@ -153,6 +151,8 @@ public:
 
 signals:
     void recentsMenuUpdated();
+
+    void shortcutsUpdated();
 
 protected:
     void initializeActionLibrary();

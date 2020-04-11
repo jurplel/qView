@@ -3,12 +3,9 @@
 
 #include <QSettings>
 #include <QMimeDatabase>
-#include <QTimer>
-
-#include <QDebug>
 
 ActionManager::ActionManager(QObject *parent) : QObject(parent)
-{
+{    
     isSaveRecentsEnabled = true;
     recentsListMaxLength = 10;
 
@@ -22,14 +19,16 @@ ActionManager::ActionManager(QObject *parent) : QObject(parent)
     recentsSaveTimer->setSingleShot(true);
     recentsSaveTimer->setInterval(500);
     connect(recentsSaveTimer, &QTimer::timeout, this, &ActionManager::saveRecentsList);
+
+    // Connect to settings signal
+    connect(&qvApp->getSettingsManager(), &SettingsManager::settingsUpdated, this, &ActionManager::settingsUpdated);
+    settingsUpdated();
 }
 
-void ActionManager::loadSettings()
+void ActionManager::settingsUpdated()
 {
-    QSettings settings;
-    settings.beginGroup("options");
-
-    isSaveRecentsEnabled = settings.value("saverecents", true).toBool();
+    isSaveRecentsEnabled = qvApp->getSettingsManager().getBoolean("saverecents");
+    qvApp->getSettingsManager().getBoolean("saverecents");
     auto const recentsMenus = menuCloneLibrary.values("recents");
     for (const auto &recentsMenu : recentsMenus)
     {
@@ -482,7 +481,7 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
     } else if (key == "welcome") {
         relevantWindow->openWelcome();
     } else if (key == "clearrecents") {
-        qvApp->getActionManager()->clearRecentsList();
+        qvApp->getActionManager().clearRecentsList();
     }
 }
 
@@ -720,4 +719,6 @@ void ActionManager::updateShortcuts()
                 action->setShortcuts(stringListToKeySequenceList(shortcut.shortcuts));
         }
     }
+
+    emit shortcutsUpdated();
 }

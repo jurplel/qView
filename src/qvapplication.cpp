@@ -1,17 +1,12 @@
 #include "qvapplication.h"
 #include "qvoptionsdialog.h"
-#include <QFileOpenEvent>
-#include <QMenu>
-#include <QSettings>
-#include <QMenuBar>
-#include <QImageReader>
 
-#include <QDebug>
+#include <QFileOpenEvent>
 
 QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
 {
-    actionManager = new ActionManager(this);
-    connect(actionManager, &ActionManager::recentsMenuUpdated, this, &QVApplication::updateDockRecents);
+    // Connections
+    connect(&actionManager, &ActionManager::recentsMenuUpdated, this, &QVApplication::updateDockRecents);
 
     // Initialize list of supported files and filters
     const auto byteArrayList = QImageReader::supportedImageFormats();
@@ -39,24 +34,24 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
 
     dockMenu = new QMenu();
     connect(dockMenu, &QMenu::triggered, [](QAction *triggeredAction){
-       qvApp->getActionManager()->actionTriggered(triggeredAction);
+       qvApp->getActionManager().actionTriggered(triggeredAction);
     });
 
-    dockMenuSuffix.append(actionManager->cloneAction("newwindow"));
-    dockMenuSuffix.append(actionManager->cloneAction("open"));
+    dockMenuSuffix.append(actionManager.cloneAction("newwindow"));
+    dockMenuSuffix.append(actionManager.cloneAction("open"));
 
     dockMenuRecentsLibrary = nullptr;
-    dockMenuRecentsLibrary = actionManager->buildRecentsMenu(false);
-    actionManager->updateRecentsMenu();
+    dockMenuRecentsLibrary = actionManager.buildRecentsMenu(false);
+    actionManager.updateRecentsMenu();
 
     #ifdef Q_OS_MACOS
     dockMenu->setAsDockMenu();
     setQuitOnLastWindowClosed(false);
     #endif
 
-    menuBar = actionManager->buildMenuBar();
+    menuBar = actionManager.buildMenuBar();
     connect(menuBar, &QMenuBar::triggered, [](QAction *triggeredAction){
-        qvApp->getActionManager()->actionTriggered(triggeredAction);
+        qvApp->getActionManager().actionTriggered(triggeredAction);
     });
 }
 

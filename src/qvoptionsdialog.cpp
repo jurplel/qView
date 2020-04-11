@@ -5,6 +5,7 @@
 #include <QPalette>
 #include <QScreen>
 #include <QMessageBox>
+#include <QSettings>
 
 #include <QDebug>
 
@@ -20,6 +21,13 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     #ifdef Q_OS_UNIX
     setWindowTitle("Preferences");
     #endif
+
+    #ifdef Q_OS_MACX
+        ui->menubarCheckbox->hide();
+    #endif
+
+    loadSettings();
+    loadShortcuts();
 }
 
 QVOptionsDialog::~QVOptionsDialog()
@@ -27,46 +35,22 @@ QVOptionsDialog::~QVOptionsDialog()
     delete ui;
 }
 
-void QVOptionsDialog::showEvent(QShowEvent *event)
-{
-    QDialog::showEvent(event);
-    loadSettings();
-    loadShortcuts();
-}
-
 void QVOptionsDialog::saveSettings()
 {
     QSettings settings;
     settings.beginGroup("options");
 
-    settings.setValue("bgcolor", transientSettings.bgColor);
-    settings.setValue("bgcolorenabled", transientSettings.bgColorEnabled);
-    settings.setValue("filteringenabled", transientSettings.filteringEnabled);
-    settings.setValue("scalingenabled", transientSettings.scalingEnabled);
-    settings.setValue("titlebarmode", transientSettings.titlebarMode);
-    settings.setValue("menubarenabled", transientSettings.menubarEnabled);
-    settings.setValue("cropmode", transientSettings.cropMode);
-    settings.setValue("slideshowtimer", transientSettings.slideshowTimer);
-    settings.setValue("slideshowreversed", transientSettings.slideshowReversed);
-    settings.setValue("scalefactor", transientSettings.scaleFactor);
-    settings.setValue("scalingtwoenabled", transientSettings.scalingTwoEnabled);
-    settings.setValue("pastactualsizeenabled", transientSettings.pastActualSizeEnabled);
-    settings.setValue("scrollzoomsenabled", transientSettings.scrollZoomsEnabled);
-    settings.setValue("windowresizemode", transientSettings.windowResizeMode);
-    settings.setValue("minwindowresizedpercentage", transientSettings.minWindowResizedPercentage);
-    settings.setValue("maxwindowresizedpercentage", transientSettings.maxWindowResizedPercentage);
-    settings.setValue("loopfoldersenabled", transientSettings.loopFoldersEnabled);
-    settings.setValue("preloadingmode", transientSettings.preloadingMode);
-    settings.setValue("sortmode", transientSettings.sortMode);
-    settings.setValue("sortascending", transientSettings.sortAscending);
-    settings.setValue("saverecents", transientSettings.saveRecents);
-    settings.setValue("cursorzoom", transientSettings.cursorZoom);
+    const auto keys = transientSettings.keys();
+    for (const auto &key : keys)
+    {
+        const auto &value = transientSettings[key];
+        settings.setValue(key, value);
+    }
 
-    // Shortcuts are saved here too for now
     settings.endGroup();
     settings.beginGroup("shortcuts");
 
-    auto shortcutsList = qvApp->getActionManager()->getShortcutsList();
+    auto shortcutsList = qvApp->getActionManager().getShortcutsList();
 
     QHashIterator<int, QStringList> iter(transientShortcuts);
     while (iter.hasNext())
@@ -74,167 +58,137 @@ void QVOptionsDialog::saveSettings()
         iter.next();
         settings.setValue(shortcutsList.value(iter.key()).name, iter.value());
     }
-    qvApp->getActionManager()->updateShortcuts();
 
-    emit optionsSaved();
+    qvApp->getActionManager().updateShortcuts();
+    qvApp->getSettingsManager().updateSettings();
 }
 
 void QVOptionsDialog::loadSettings(bool defaults)
 {
-    QSettings settings;
-    if (!defaults)
-        settings.beginGroup("options");
-    else
-        settings.beginGroup("empty");
+    auto &settingsManager = qvApp->getSettingsManager();
+    settingsManager.updateSettings();
 
-    //bgcolor
-    transientSettings.bgColor = settings.value("bgcolor", QString("#212121")).toString();
-    ui->bgColorButton->setText(transientSettings.bgColor);
+    // bgcolorenabled
+    syncCheckbox(ui->bgColorCheckbox, "bgcolorenabled", defaults);
+    if (ui->bgColorCheckbox->isChecked())
+        ui->bgColorButton->setEnabled(true);
+    else
+        ui->bgColorButton->setEnabled(false);
+
+    // bgcolor
+    ui->bgColorButton->setText(settingsManager.getString("bgcolor", defaults));
     updateBgColorButton();
 
-    transientSettings.bgColorEnabled = settings.value("bgcolorenabled", true).toBool();
-    if (transientSettings.bgColorEnabled)
+    // titlebarmode
+    syncRadioButtons({ui->titlebarRadioButton0, ui->titlebarRadioButton1,
+                     ui->titlebarRadioButton2, ui->titlebarRadioButton3}, "titlebarmode", defaults);
+
+    // windowresizemode
+    syncComboBox(ui->windowResizeComboBox, "windowresizemode", defaults);
+    if (ui->windowResizeComboBox->currentIndex() == 0)
     {
-        ui->bgColorCheckbox->setChecked(true);
-        ui->bgColorButton->setEnabled(true);
-    }
-    else
-    {
-        ui->bgColorCheckbox->setChecked(false);
-        ui->bgColorButton->setEnabled(false);
-    }
-
-    //filtering
-    transientSettings.filteringEnabled = settings.value("filteringenabled", true).toBool();
-    ui->filteringCheckbox->setChecked(transientSettings.filteringEnabled);
-
-    //scaling
-    transientSettings.scalingEnabled = settings.value("scalingenabled", true).toBool();
-    ui->scalingCheckbox->setChecked(transientSettings.scalingEnabled);
-    if (!transientSettings.scalingEnabled)
-    {
-        ui->scalingTwoCheckbox->setEnabled(false);
-    }
-    else
-    {
-        ui->scalingTwoCheckbox->setEnabled(true);
-    }
-
-    //titlebar
-    transientSettings.titlebarMode = settings.value("titlebarmode", 1).toInt();
-    switch (transientSettings.titlebarMode)
-    {
-    case 0:
-    {
-        ui->titlebarRadioButton0->setChecked(true);
-        break;
-    }
-    case 1:
-    {
-        ui->titlebarRadioButton1->setChecked(true);
-        break;
-    }
-    case 2:
-    {
-        ui->titlebarRadioButton2->setChecked(true);
-        break;
-    }
-    case 3:
-    {
-        ui->titlebarRadioButton3->setChecked(true);
-    }
-    }
-
-    //menubar
-    transientSettings.menubarEnabled = settings.value("menubarenabled", false).toBool();
-    ui->menubarCheckbox->setChecked(transientSettings.menubarEnabled);
-    //hide menubar checkbox if on macOS, because it doesn't even work
-    #ifdef Q_OS_MACX
-    ui->menubarCheckbox->hide();
-    #endif
-
-    //cropmode
-    transientSettings.cropMode = settings.value("cropmode", 0).toInt();
-    ui->cropModeComboBox->setCurrentIndex(transientSettings.cropMode);
-
-    //slideshowtimer
-    transientSettings.slideshowTimer = settings.value("slideshowtimer", 5).toDouble();
-    ui->slideshowTimerSpinBox->setValue(transientSettings.slideshowTimer);
-
-    //slideshowreversed
-    transientSettings.slideshowReversed = settings.value("slideshowreversed", false).toBool();
-    ui->slideshowDirectionComboBox->setCurrentIndex(transientSettings.slideshowReversed);
-
-    //scalefactor
-    transientSettings.scaleFactor = settings.value("scalefactor", 25).toInt();
-    ui->scaleFactorSpinBox->setValue(transientSettings.scaleFactor);
-
-    //scaling2 (while zooming in)
-    transientSettings.scalingTwoEnabled = settings.value("scalingtwoenabled", true).toBool();
-    ui->scalingTwoCheckbox->setChecked(transientSettings.scalingTwoEnabled);
-
-    //resize past actual size
-    transientSettings.pastActualSizeEnabled = settings.value("pastactualsizeenabled", true).toBool();
-    ui->pastActualSizeCheckbox->setChecked(transientSettings.pastActualSizeEnabled);
-
-    //resize past actual size
-    transientSettings.scrollZoomsEnabled = settings.value("scrollzoomsenabled", true).toBool();
-    ui->scrollZoomsCheckbox->setChecked(transientSettings.scrollZoomsEnabled);
-
-    //window resize mode
-    transientSettings.windowResizeMode = settings.value("windowresizemode", 1).toInt();
-    ui->windowResizeComboBox->setCurrentIndex(transientSettings.windowResizeMode);
-    if (transientSettings.windowResizeMode == 0)
-    {
+        ui->minWindowResizeLabel->setEnabled(false);
+        ui->minWindowResizeSpinBox->setEnabled(false);
         ui->maxWindowResizeLabel->setEnabled(false);
         ui->maxWindowResizeSpinBox->setEnabled(false);
     }
     else
     {
+        ui->minWindowResizeLabel->setEnabled(true);
+        ui->minWindowResizeSpinBox->setEnabled(true);
         ui->maxWindowResizeLabel->setEnabled(true);
         ui->maxWindowResizeSpinBox->setEnabled(true);
     }
 
-    //minimum size for auto window resize
-    transientSettings.minWindowResizedPercentage = settings.value("minwindowresizedpercentage", 20).toInt();
-    ui->minWindowResizeSpinBox->setValue(transientSettings.minWindowResizedPercentage);
+    // minwindowresizedpercentage
+    syncSpinBox(ui->minWindowResizeSpinBox, "minwindowresizedpercentage", defaults);
 
-    //maximum size for auto window resize
-    transientSettings.maxWindowResizedPercentage = settings.value("maxwindowresizedpercentage", 70).toInt();
-    ui->maxWindowResizeSpinBox->setValue(transientSettings.maxWindowResizedPercentage);
+    // maxwindowresizedperecentage
+    syncSpinBox(ui->maxWindowResizeSpinBox, "maxwindowresizedpercentage", defaults);
 
-    //loop folders
-    transientSettings.loopFoldersEnabled = settings.value("loopfoldersenabled", true).toBool();
-    ui->loopFoldersCheckbox->setChecked(transientSettings.loopFoldersEnabled);
+    // menubarenabled
+    syncCheckbox(ui->menubarCheckbox, "menubarenabled", defaults);
 
-    //preloading mode
-    transientSettings.preloadingMode = settings.value("preloadingmode", 1).toInt();
-    ui->preloadingComboBox->setCurrentIndex(transientSettings.preloadingMode);
+    // filteringenabled
+    syncCheckbox(ui->filteringCheckbox, "filteringenabled", defaults);
 
-    //sort mode
-    transientSettings.sortMode = settings.value("sortmode", 0).toInt();
-    ui->sortComboBox->setCurrentIndex(transientSettings.sortMode);
-
-    //ascending sort
-    transientSettings.sortAscending = settings.value("sortascending", true).toBool();
-    if (transientSettings.sortAscending)
-        ui->ascendingRadioButton0->setChecked(true);
+    // scalingenabled
+    syncCheckbox(ui->scalingCheckbox, "scalingenabled", defaults);
+    if (ui->scalingCheckbox->isChecked())
+        ui->scalingTwoCheckbox->setEnabled(true);
     else
-        ui->ascendingRadioButton1->setChecked(true);
+        ui->scalingTwoCheckbox->setEnabled(false);
 
-    //save recents
-    transientSettings.saveRecents = settings.value("saverecents", true).toBool();
-    ui->saveRecentsCheckbox->setChecked(transientSettings.saveRecents);
+    // scalingtwoenabled
+    syncCheckbox(ui->scalingTwoCheckbox, "scalingtwoenabled", defaults);
 
-    transientSettings.cursorZoom = settings.value("cursorzoom", true).toBool();
-    ui->cursorZoomCheckbox->setChecked(transientSettings.cursorZoom);
+    // scalefactor
+    syncSpinBox(ui->scaleFactorSpinBox, "scalefactor", defaults);
+
+    // scrollzoomsenabled
+    syncCheckbox(ui->scrollZoomsCheckbox, "scrollzoomsenabled", defaults);
+
+    // cursorzoom
+    syncCheckbox(ui->cursorZoomCheckbox, "cursorzoom", defaults);
+
+    // cropmode
+    syncComboBox(ui->cropModeComboBox, "cropmode", defaults);
+
+    // pastactualsizeenabled
+    syncCheckbox(ui->pastActualSizeCheckbox, "pastactualsizeenabled", defaults);
+
+    // sortmode
+    syncComboBox(ui->sortComboBox, "sortmode", defaults);
+
+    // sortascending
+    syncRadioButtons({ui->ascendingRadioButton0, ui->ascendingRadioButton1}, "sortascending", defaults);
+
+    // preloadingmode
+    syncComboBox(ui->preloadingComboBox, "preloadingmode", defaults);
+
+    // loopfolders
+    syncCheckbox(ui->loopFoldersCheckbox, "loopfoldersenabled", defaults);
+
+    // slideshowreversed
+    syncComboBox(ui->slideshowDirectionComboBox, "slideshowreversed", defaults);
+
+    // slideshowtimer
+    syncDoubleSpinBox(ui->slideshowTimerSpinBox, "slideshowtimer", defaults);
+
+    // saverecents
+    syncCheckbox(ui->saveRecentsCheckbox, "saverecents", defaults);
+}
+
+void QVOptionsDialog::syncCheckbox(QCheckBox *checkbox, const QString &key, bool defaults)
+{
+    checkbox->setChecked(qvApp->getSettingsManager().getBoolean(key, defaults));
+}
+
+void QVOptionsDialog::syncRadioButtons(QList<QRadioButton *> buttons, const QString &key, bool defaults)
+{
+    buttons.value(qvApp->getSettingsManager().getInteger(key, defaults))->setChecked(true);
+}
+
+void QVOptionsDialog::syncComboBox(QComboBox *comboBox, const QString &key, bool defaults)
+{
+    comboBox->setCurrentIndex(qvApp->getSettingsManager().getInteger(key, defaults));
+}
+
+void QVOptionsDialog::syncSpinBox(QSpinBox *spinBox, const QString &key, bool defaults)
+{
+    spinBox->setValue(qvApp->getSettingsManager().getInteger(key, defaults));
+}
+
+void QVOptionsDialog::syncDoubleSpinBox(QDoubleSpinBox *doubleSpinBox, const QString &key, bool defaults)
+{
+    doubleSpinBox->setValue(qvApp->getSettingsManager().getDouble(key, defaults));
 }
 
 void QVOptionsDialog::loadShortcuts(bool defaults)
 {
-    qvApp->getActionManager()->updateShortcuts();
+    qvApp->getActionManager().updateShortcuts();
 
-    auto shortcutsList = qvApp->getActionManager()->getShortcutsList();
+    auto shortcutsList = qvApp->getActionManager().getShortcutsList();
     ui->shortcutsTable->setRowCount(shortcutsList.length());
 
     auto item = new QTableWidgetItem();
@@ -274,21 +228,33 @@ void QVOptionsDialog::updateShortcutsTable()
     }
 }
 
+void QVOptionsDialog::on_shortcutsTable_cellDoubleClicked(int row, int column)
+{
+    Q_UNUSED(column)
+    auto shortcutDialog = new QVShortcutDialog(row);
+    shortcutDialog->open();
+    connect(shortcutDialog, &QVShortcutDialog::shortcutsListChanged, [this](int index, const QStringList &stringListShortcuts){
+        transientShortcuts.insert(index, stringListShortcuts);
+        updateShortcutsTable();
+    });
+}
+
 void QVOptionsDialog::updateBgColorButton()
 {
     QPixmap newPixmap = QPixmap(32, 32);
-    newPixmap.fill(transientSettings.bgColor);
+    newPixmap.fill(ui->bgColorButton->text());
     ui->bgColorButton->setIcon(QIcon(newPixmap));
 }
 
 void QVOptionsDialog::on_bgColorButton_clicked()
 {
-    QColor selectedColor = QColorDialog::getColor(transientSettings.bgColor, this);
+
+    QColor selectedColor = QColorDialog::getColor(qvApp->getSettingsManager().getString("bgcolor"), this);
 
     if (!selectedColor.isValid())
         return;
 
-    transientSettings.bgColor = selectedColor.name();
+    transientSettings.insert("bgcolor", selectedColor.name());
     ui->bgColorButton->setText(selectedColor.name());
     updateBgColorButton();
 }
@@ -308,143 +274,103 @@ void QVOptionsDialog::on_buttonBox_clicked(QAbstractButton *button)
 
 void QVOptionsDialog::on_bgColorCheckbox_stateChanged(int arg1)
 {
+    transientSettings.insert("bgcolorenabled", static_cast<bool>(arg1));
     if (arg1 > 0)
-    {
-        transientSettings.bgColorEnabled = true;
         ui->bgColorButton->setEnabled(true);
-    }
     else
-    {
-        transientSettings.bgColorEnabled = false;
         ui->bgColorButton->setEnabled(false);
-    }
+
     updateBgColorButton();
 }
 
 void QVOptionsDialog::on_filteringCheckbox_stateChanged(int arg1)
 {
-    if (arg1 > 0)
-    {
-        transientSettings.filteringEnabled = true;
-    }
-    else
-    {
-        transientSettings.filteringEnabled = false;
-    }
+    transientSettings.insert("filteringenabled", static_cast<bool>(arg1));
 }
 
 void QVOptionsDialog::on_scalingCheckbox_stateChanged(int arg1)
 {
+    transientSettings.insert("scalingenabled", static_cast<bool>(arg1));
     if (arg1 > 0)
-    {
-        transientSettings.scalingEnabled = true;
         ui->scalingTwoCheckbox->setEnabled(true);
-    }
     else
-    {
-        transientSettings.scalingEnabled = false;
         ui->scalingTwoCheckbox->setEnabled(false);
-    }
 }
 
 void QVOptionsDialog::on_menubarCheckbox_stateChanged(int arg1)
 {
-    if (arg1 > 0)
-    {
-        transientSettings.menubarEnabled = true;
-    }
-    else
-    {
-        transientSettings.menubarEnabled = false;
-    }
+    transientSettings.insert("menubarenabled", static_cast<bool>(arg1));
 }
 
 void QVOptionsDialog::on_cropModeComboBox_currentIndexChanged(int index)
 {
-    transientSettings.cropMode = index;
+    transientSettings.insert("cropmode", index);
 }
 
 void QVOptionsDialog::on_slideshowTimerSpinBox_valueChanged(double arg1)
 {
-    transientSettings.slideshowTimer = arg1;
+    transientSettings.insert("slideshowtimer", arg1);
 }
 
 void QVOptionsDialog::on_slideshowDirectionComboBox_currentIndexChanged(int index)
 {
-    transientSettings.slideshowReversed = index;
+    transientSettings.insert("slideshowreversed", static_cast<bool>(index));
 }
 
 void QVOptionsDialog::on_scaleFactorSpinBox_valueChanged(int arg1)
 {
-    transientSettings.scaleFactor = arg1;
+    transientSettings.insert("scalefactor", arg1);
 }
 
 void QVOptionsDialog::on_scalingTwoCheckbox_stateChanged(int arg1)
 {
-    if (arg1 > 0)
-    {
-        transientSettings.scalingTwoEnabled = true;
-    }
-    else
-    {
-        transientSettings.scalingTwoEnabled = false;
-    }
+    transientSettings.insert("scalingtwoenabled", static_cast<bool>(arg1));
 }
 
 void QVOptionsDialog::on_pastActualSizeCheckbox_stateChanged(int arg1)
 {
-    if (arg1 > 0)
-    {
-        transientSettings.pastActualSizeEnabled = true;
-    }
-    else
-    {
-        transientSettings.pastActualSizeEnabled = false;
-    }
+    transientSettings.insert("pastactualsizeenabled", static_cast<bool>(arg1));
 }
 
 void QVOptionsDialog::on_scrollZoomsCheckbox_stateChanged(int arg1)
 {
-    if (arg1 > 0)
-    {
-        transientSettings.scrollZoomsEnabled = true;
-    }
-    else
-    {
-        transientSettings.scrollZoomsEnabled = false;
-    }
+    transientSettings.insert("scrollzoomsenabled", static_cast<bool>(arg1));
 }
 
 void QVOptionsDialog::on_titlebarRadioButton0_clicked()
 {
-    transientSettings.titlebarMode = 0;
+    transientSettings.insert("titlebarmode", 0);
 }
 
 void QVOptionsDialog::on_titlebarRadioButton1_clicked()
 {
-    transientSettings.titlebarMode = 1;
+    transientSettings.insert("titlebarmode", 1);
 }
 
 void QVOptionsDialog::on_titlebarRadioButton2_clicked()
 {
-    transientSettings.titlebarMode = 2;
+    transientSettings.insert("titlebarmode", 2);
 }
 
 void QVOptionsDialog::on_titlebarRadioButton3_clicked()
 {
-    transientSettings.titlebarMode = 3;
+    transientSettings.insert("titlebarmode", 3);
 }
 
 void QVOptionsDialog::on_windowResizeComboBox_currentIndexChanged(int index)
 {
-    transientSettings.windowResizeMode = index;
+    transientSettings.insert("windowresizemode", index);
     if (index == 0)
     {
+        ui->minWindowResizeLabel->setEnabled(false);
+        ui->minWindowResizeSpinBox->setEnabled(false);
         ui->maxWindowResizeLabel->setEnabled(false);
         ui->maxWindowResizeSpinBox->setEnabled(false);
     }
     else
     {
+        ui->minWindowResizeLabel->setEnabled(true);
+        ui->minWindowResizeSpinBox->setEnabled(true);
         ui->maxWindowResizeLabel->setEnabled(true);
         ui->maxWindowResizeSpinBox->setEnabled(true);
     }
@@ -452,77 +378,45 @@ void QVOptionsDialog::on_windowResizeComboBox_currentIndexChanged(int index)
 
 void QVOptionsDialog::on_minWindowResizeSpinBox_valueChanged(int arg1)
 {
-    transientSettings.minWindowResizedPercentage = arg1;
+    transientSettings.insert("minwindowresizedpercentage", arg1);
 }
 
 void QVOptionsDialog::on_maxWindowResizeSpinBox_valueChanged(int arg1)
 {
-    transientSettings.maxWindowResizedPercentage = arg1;
+    transientSettings.insert("maxwindowresizedpercentage", arg1);
 }
 
 void QVOptionsDialog::on_loopFoldersCheckbox_stateChanged(int arg1)
 {
-    if (arg1 > 0)
-    {
-        transientSettings.loopFoldersEnabled = true;
-    }
-    else
-    {
-        transientSettings.loopFoldersEnabled = false;
-    }
+    transientSettings.insert("loopfolders", static_cast<bool>(arg1));
 }
 
 void QVOptionsDialog::on_preloadingComboBox_currentIndexChanged(int index)
 {
-    transientSettings.preloadingMode = index;
-}
-
-void QVOptionsDialog::on_shortcutsTable_cellDoubleClicked(int row, int column)
-{
-    Q_UNUSED(column)
-    auto shortcutDialog = new QVShortcutDialog(row);
-    shortcutDialog->open();
-    connect(shortcutDialog, &QVShortcutDialog::shortcutsListChanged, [this](int index, const QStringList &stringListShortcuts){
-        transientShortcuts.insert(index, stringListShortcuts);
-        updateShortcutsTable();
-    });
+    transientSettings.insert("preloadingmode", index);
 }
 
 void QVOptionsDialog::on_sortComboBox_currentIndexChanged(int index)
 {
-    transientSettings.sortMode = index;
+    transientSettings.insert("sortmode", index);
 }
 
 void QVOptionsDialog::on_ascendingRadioButton0_clicked()
 {
-    transientSettings.sortAscending = true;
+    transientSettings.insert("sortascending", true);
 }
 
 void QVOptionsDialog::on_ascendingRadioButton1_clicked()
 {
-    transientSettings.sortAscending = false;
+    transientSettings.insert("sortascending", false);
 }
 
 void QVOptionsDialog::on_saveRecentsCheckbox_stateChanged(int arg1)
 {
-    if (arg1 > 0)
-    {
-        transientSettings.saveRecents = true;
-    }
-    else
-    {
-        transientSettings.saveRecents = false;
-    }
+    transientSettings.insert("saverecents", static_cast<bool>(arg1));
 }
 
 void QVOptionsDialog::on_cursorZoomCheckbox_stateChanged(int arg1)
 {
-    if (arg1 > 0)
-    {
-        transientSettings.cursorZoom = true;
-    }
-    else
-    {
-        transientSettings.cursorZoom = false;
-    }
+    transientSettings.insert("cursorzoom", static_cast<bool>(arg1));
 }

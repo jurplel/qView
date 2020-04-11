@@ -15,7 +15,7 @@ QVShortcutDialog::QVShortcutDialog(int index, QWidget *parent) :
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
-    shortcutObject = qvApp->getActionManager()->getShortcutsList().value(index);
+    shortcutObject = qvApp->getActionManager().getShortcutsList().value(index);
     this->index = index;
     ui->keySequenceEdit->setKeySequence(shortcutObject.shortcuts.join(", "));
 }
@@ -68,7 +68,7 @@ QString QVShortcutDialog::shortcutAlreadyBound(const QKeySequence &chosenSequenc
     if (chosenSequence.isEmpty())
         return "";
 
-    const auto &shortcutsList = qvApp->getActionManager()->getShortcutsList();
+    const auto &shortcutsList = qvApp->getActionManager().getShortcutsList();
     for (const auto &shortcut : shortcutsList)
     {
         auto sequenceList = ActionManager::stringListToKeySequenceList(shortcut.shortcuts);

@@ -61,6 +61,9 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     loadedPixmapItem = new QGraphicsPixmapItem();
     scene->addItem(loadedPixmapItem);
 
+    // Connect to settings signal
+    connect(&qvApp->getSettingsManager(), &SettingsManager::settingsUpdated, this, &QVGraphicsView::settingsUpdated);
+    settingsUpdated();
 }
 
 
@@ -376,7 +379,7 @@ void QVGraphicsView::postLoad()
         movieCenterNeedsUpdating = false;
 
     updateLoadedPixmapItem();
-    qvApp->getActionManager()->addFileToRecentsList(getCurrentFileDetails().fileInfo);
+    qvApp->getActionManager().addFileToRecentsList(getCurrentFileDetails().fileInfo);
 
     emit fileLoaded();
 }
@@ -626,59 +629,57 @@ void QVGraphicsView::error(const QString &errorString)
         }
 }
 
-void QVGraphicsView::loadSettings()
+void QVGraphicsView::settingsUpdated()
 {
-    QSettings settings;
-    settings.beginGroup("options");
+    auto &settingsManager = qvApp->getSettingsManager();
 
     //bgcolor
     QBrush newBrush;
     newBrush.setStyle(Qt::SolidPattern);
-    if (!((settings.value("bgcolorenabled", true).toBool())))
+    if (!settingsManager.getBoolean("bgcolorenabled"))
     {
         newBrush.setColor(QColor(0, 0, 0, 0));
     }
     else
     {
         QColor newColor;
-        newColor.setNamedColor(settings.value("bgcolor", "#212121").toString());
+        newColor.setNamedColor(settingsManager.getString("bgcolor"));
         newBrush.setColor(newColor);
     }
     setBackgroundBrush(newBrush);
 
     //filtering
-    isFilteringEnabled = settings.value("filteringenabled", true).toBool();
-    if (isFilteringEnabled)
+    if (settingsManager.getBoolean("filteringenabled"))
         loadedPixmapItem->setTransformationMode(Qt::SmoothTransformation);
     else
         loadedPixmapItem->setTransformationMode(Qt::FastTransformation);
 
     //scaling
-    isScalingEnabled = settings.value("scalingenabled", true).toBool();
+    isScalingEnabled = settingsManager.getBoolean("scalingenabled");
 
     //scaling2
     if (!isScalingEnabled)
         isScalingTwoEnabled = false;
     else
-        isScalingTwoEnabled = settings.value("scalingtwoenabled", true).toBool();
+        isScalingTwoEnabled = settingsManager.getBoolean("scalingtwoenabled");
 
     //cropmode
-    cropMode = settings.value("cropmode", 0).toInt();
+    cropMode = settingsManager.getInteger("cropmode");
 
     //scalefactor
-    scaleFactor = settings.value("scalefactor", 25).toInt()*0.01+1;
+    scaleFactor = settingsManager.getInteger("scalefactor")*0.01+1;
 
     //resize past actual size
-    isPastActualSizeEnabled = settings.value("pastactualsizeenabled", true).toBool();
+    isPastActualSizeEnabled = settingsManager.getBoolean("pastactualsizeenabled");
 
     //scrolling zoom
-    isScrollZoomsEnabled = settings.value("scrollzoomsenabled", true).toBool();
-
-    //loop folders
-    isLoopFoldersEnabled = settings.value("loopfoldersenabled", true).toBool();
+    isScrollZoomsEnabled = settingsManager.getBoolean("scrollzoomsenabled");
 
     //cursor zoom
-    isCursorZoomEnabled = settings.value("cursorzoom", true).toBool();
+    isCursorZoomEnabled = settingsManager.getBoolean("cursorzoom");
+
+    //loop folders
+    isLoopFoldersEnabled = settingsManager.getBoolean("loopfoldersenabled");
 
     if (getCurrentFileDetails().isPixmapLoaded)
     {
@@ -686,8 +687,6 @@ void QVGraphicsView::loadSettings()
         if (getCurrentFileDetails().isMovieLoaded && getLoadedMovie().state() == QMovie::Running)
             movieCenterNeedsUpdating = true;
     }
-
-    imageCore.loadSettings();
 }
 
 void QVGraphicsView::jumpToNextFrame()

@@ -4,6 +4,7 @@
 #include "qvinfodialog.h"
 #include "qvimagecore.h"
 #include "qvgraphicsview.h"
+
 #include <QMainWindow>
 #include <QShortcut>
 
@@ -117,8 +118,9 @@ protected:
 
     void mouseDoubleClickEvent(QMouseEvent *event) override;
 
-private slots:
-    void loadSettings();
+protected slots:
+    void settingsUpdated();
+    void shortcutsUpdated();
 
 private:
     Ui::MainWindow *ui;
@@ -133,13 +135,7 @@ private:
 
     QVInfoDialog *info;
 
-    int titlebarMode;
-    bool menuBarEnabled;
-    bool slideshowReversed;
-    int windowResizeMode;
     bool justLaunchedWithImage;
-    qreal minWindowResizedPercentage;
-    qreal maxWindowResizedPercentage;
 };
 
 #endif // MAINWINDOW_H

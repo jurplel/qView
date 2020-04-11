@@ -12,7 +12,7 @@
 #include <QScreen>
 
 QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
-{
+{  
     loadedPixmap = QPixmap();
     imageReader.setDecideFormatFromContent(true);
     imageReader.setAutoTransform(true);
@@ -75,6 +75,10 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
             largestDimension = largerDimension;
         }
     }
+
+    // Connect to settings signal
+    connect(&qvApp->getSettingsManager(), &SettingsManager::settingsUpdated, this, &QVImageCore::settingsUpdated);
+    settingsUpdated();
 }
 
 void QVImageCore::loadFile(const QString &fileName)
@@ -415,16 +419,15 @@ QPixmap QVImageCore::scaleExpensively(const QSize desiredSize, const scaleMode m
 }
 
 
-void QVImageCore::loadSettings()
+void QVImageCore::settingsUpdated()
 {
-    QSettings settings;
-    settings.beginGroup("options");
+    auto &settingsManager = qvApp->getSettingsManager();
 
     //loop folders
-    isLoopFoldersEnabled = settings.value("loopfoldersenabled", true).toBool();
+    isLoopFoldersEnabled = settingsManager.getBoolean("loopfoldersenabled");
 
     //preloading mode
-    preloadingMode = settings.value("preloadingmode", 1).toInt();
+    preloadingMode = settingsManager.getInteger("preloadingmode");
     switch (preloadingMode) {
     case 1:
     {
@@ -439,10 +442,10 @@ void QVImageCore::loadSettings()
     }
 
     //sort mode
-    sortMode = settings.value("sortmode", 0).toInt();
+    sortMode = settingsManager.getInteger("sortmode");
 
     //sort ascending
-    sortAscending = settings.value("sortascending", true).toBool();
+    sortAscending = settingsManager.getBoolean("sortascending");
 
     //update folder info to re-sort
     updateFolderInfo();

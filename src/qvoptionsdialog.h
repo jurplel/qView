@@ -2,10 +2,13 @@
 #define QVOPTIONSDIALOG_H
 
 #include "qvshortcutdialog.h"
+#include "settingsmanager.h"
 
 #include <QDialog>
-#include <QSettings>
-#include <QAbstractButton>
+#include <QCheckBox>
+#include <QRadioButton>
+#include <QComboBox>
+#include <QSpinBox>
 
 namespace Ui {
 class QVOptionsDialog;
@@ -22,10 +25,21 @@ public:
 
     void updateBgColorButton();
 
-signals:
-    void optionsSaved();
+
+protected:
+    void saveSettings();
+    void loadSettings(bool defaults = false);
+    static void syncCheckbox(QCheckBox *checkbox, const QString &key, bool defaults = false);
+    static void syncRadioButtons(QList<QRadioButton*> buttons, const QString &key, bool defaults = false);
+    static void syncComboBox(QComboBox *comboBox, const QString &key, bool defaults = false);
+    static void syncSpinBox(QSpinBox *spinBox, const QString &key, bool defaults = false);
+    static void syncDoubleSpinBox(QDoubleSpinBox *doubleSpinBox, const QString &key, bool defaults = false);
+    void loadShortcuts(bool defaults = false);
+    void updateShortcutsTable();
 
 private slots:
+    void on_shortcutsTable_cellDoubleClicked(int row, int column);
+
     void on_bgColorButton_clicked();
 
     void on_bgColorCheckbox_stateChanged(int arg1);
@@ -70,8 +84,6 @@ private slots:
 
     void on_preloadingComboBox_currentIndexChanged(int index);
 
-    void on_shortcutsTable_cellDoubleClicked(int row, int column);
-
     void on_sortComboBox_currentIndexChanged(int index);
 
     void on_ascendingRadioButton0_clicked();
@@ -82,44 +94,10 @@ private slots:
 
     void on_cursorZoomCheckbox_stateChanged(int arg1);
 
-protected:
-    virtual void showEvent(QShowEvent *event) override;
-
 private:
     Ui::QVOptionsDialog *ui;
-    void saveSettings();
-    void loadSettings(bool defaults = false);
-    void loadShortcuts(bool defaults = false);
-    void updateShortcutsTable();
 
-    struct STransientSettings
-    {
-        QString bgColor;
-        bool bgColorEnabled;
-        bool filteringEnabled;
-        bool scalingEnabled;
-        int titlebarMode;
-        bool menubarEnabled;
-        int cropMode;
-        double slideshowTimer;
-        bool slideshowReversed;
-        int scaleFactor;
-        bool resizeScaleEnabled;
-        bool scalingTwoEnabled;
-        bool pastActualSizeEnabled;
-        bool scrollZoomsEnabled;
-        int windowResizeMode;
-        int minWindowResizedPercentage;
-        int maxWindowResizedPercentage;
-        bool loopFoldersEnabled;
-        int preloadingMode;
-        int sortMode;
-        bool sortAscending;
-        bool saveRecents;
-        bool cursorZoom;
-    };
-
-    STransientSettings transientSettings;
+    QHash<QString, QVariant> transientSettings;
 
     QHash<int, QStringList> transientShortcuts;
 };
