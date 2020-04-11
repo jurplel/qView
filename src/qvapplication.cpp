@@ -43,8 +43,8 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
        qvApp->getActionManager()->actionTriggered(triggeredAction);
     });
 
-    dockMenuSuffix.append(actionManager->cloneAction("newwindow"));
-    dockMenuSuffix.append(actionManager->cloneAction("open"));
+    dockMenuPrefix.append(actionManager->cloneAction("newwindow"));
+    dockMenuPrefix.append(actionManager->cloneAction("open"));
 
     dockMenuRecentsLibrary = nullptr;
     dockMenuRecentsLibrary = actionManager->buildRecentsMenu(false);
@@ -147,16 +147,17 @@ void QVApplication::updateDockRecents()
 
     dockMenu->clear();
 
+    dockMenu->addActions(dockMenuPrefix);
+
+    if (!dockMenu->isEmpty())
+        dockMenu->addSeparator();
+
     const auto dockMenuActions = dockMenuRecentsLibrary->actions();
     for (const auto &action : dockMenuActions)
     {
         if (action->isVisible())
             dockMenu->addAction(action);
     }
-    if (!dockMenu->isEmpty())
-        dockMenu->addSeparator();
-
-    dockMenu->addActions(dockMenuSuffix);
 }
 
 qint64 QVApplication::getPreviouslyRecordedFileSize(const QString &fileName)

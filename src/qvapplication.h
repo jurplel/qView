@@ -55,7 +55,7 @@ private:
 
     QMenu *dockMenu;
 
-    QList<QAction*> dockMenuSuffix;
+    QList<QAction*> dockMenuPrefix;
 
     QMenu *dockMenuRecentsLibrary;
 
