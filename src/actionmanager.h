@@ -12,6 +12,23 @@ class ActionManager : public QObject
 {
     Q_OBJECT
 public:
+    struct SShortcut {
+        QString readableName;
+        QString name;
+        QStringList defaultShortcuts;
+        QStringList shortcuts;
+    };
+
+
+    struct SRecent {
+        QString fileName;
+        QString filePath;
+
+        bool operator==(const SRecent other) const { return (fileName == other.fileName && filePath == other.filePath);}
+
+        operator QString() const { return "SRecent(" + fileName + ", " + filePath + ")"; }
+    };
+
     static QList<QAction*> getAllNestedActions(const QList<QAction*> &givenActionList)
     {
         QList<QAction*> totalActionList;
@@ -60,24 +77,6 @@ public:
         return QKeySequence::fromString(shortcutString, QKeySequence::NativeText).toString().split(", ");
     }
 
-
-    struct SShortcut {
-        QString readableName;
-        QString name;
-        QStringList defaultShortcuts;
-        QStringList shortcuts;
-    };
-
-
-    struct SRecent {
-        QString fileName;
-        QString filePath;
-
-        bool operator==(const SRecent other) const { return (fileName == other.fileName && filePath == other.filePath);}
-
-        operator QString() const { return "SRecent(" + fileName + ", " + filePath + ")"; }
-    };
-
     static QVariantList recentsListToVariantList(const QList<SRecent> &recentsList)
     {
         QVariantList variantList;
@@ -102,11 +101,11 @@ public:
 
     explicit ActionManager(QObject *parent = nullptr);
 
+    void loadSettings();
+
     QAction *cloneAction(const QString &key);
 
     QAction *getAction(const QString &key) const;
-
-    QList<QAction*> getCloneActions(const QString &key) const;
 
     QList<QAction*> getAllInstancesOfAction(const QString &key) const;
 
@@ -146,8 +145,6 @@ public:
 
     void updateShortcuts();
 
-    void loadSettings();
-
     const QList<SRecent> &getRecentsList() const { return recentsList; }
 
     const QHash<QString, QAction*> &getActionLibrary() const { return actionLibrary; }
@@ -163,8 +160,6 @@ protected:
     void initializeShortcutsList();
 
 private:
-    QList<SRecent> recentsList;
-
     QHash<QString, QAction*> actionLibrary;
 
     QMultiHash<QString, QAction*> actionCloneLibrary;
@@ -173,10 +168,12 @@ private:
 
     QList<SShortcut> shortcutsList;
 
+    QList<SRecent> recentsList;
+
     QTimer *recentsSaveTimer;
 
+    // Settings
     bool isSaveRecentsEnabled;
-
     int recentsListMaxLength;
 };
 

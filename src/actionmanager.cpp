@@ -10,20 +10,33 @@
 ActionManager::ActionManager(QObject *parent) : QObject(parent)
 {
     isSaveRecentsEnabled = true;
-
     recentsListMaxLength = 10;
 
     initializeActionLibrary();
-
     initializeShortcutsList();
-    updateShortcuts();
 
+    updateShortcuts();
     loadRecentsList();
 
     recentsSaveTimer = new QTimer(this);
     recentsSaveTimer->setSingleShot(true);
     recentsSaveTimer->setInterval(500);
     connect(recentsSaveTimer, &QTimer::timeout, this, &ActionManager::saveRecentsList);
+}
+
+void ActionManager::loadSettings()
+{
+    QSettings settings;
+    settings.beginGroup("options");
+
+    isSaveRecentsEnabled = settings.value("saverecents", true).toBool();
+    auto const recentsMenus = menuCloneLibrary.values("recents");
+    for (const auto &recentsMenu : recentsMenus)
+    {
+        recentsMenu->menuAction()->setVisible(isSaveRecentsEnabled);
+    }
+    if (!isSaveRecentsEnabled)
+        clearRecentsList();
 }
 
 QAction *ActionManager::cloneAction(const QString &key)
@@ -50,11 +63,6 @@ QAction *ActionManager::getAction(const QString &key) const
     return nullptr;
 }
 
-QList<QAction*> ActionManager::getCloneActions(const QString &key) const
-{
-    return actionCloneLibrary.values(key);
-}
-
 QList<QAction*> ActionManager::getAllInstancesOfAction(const QString &key) const
 {
     QList<QAction*> listOfActions;
@@ -62,7 +70,7 @@ QList<QAction*> ActionManager::getAllInstancesOfAction(const QString &key) const
     if (auto mainAction = getAction(key))
         listOfActions.append(mainAction);
 
-    listOfActions.append(getCloneActions(key));
+    listOfActions.append(actionCloneLibrary.values(key));
 
     return listOfActions;
 }
@@ -695,16 +703,13 @@ void ActionManager::updateShortcuts()
     QSettings settings;
     settings.beginGroup("shortcuts");
 
-    // Set shortcut's shortcut field to default or user-set
-    QMutableListIterator<SShortcut> iter(shortcutsList);
-    while (iter.hasNext())
+    // Set all shortcuts to the user-set shortcut or the default
+    for (auto &shortcut : shortcutsList)
     {
-        auto value = iter.next();
-        value.shortcuts = settings.value(value.name, value.defaultShortcuts).toStringList();
-        iter.setValue(value);
+        shortcut.shortcuts = settings.value(shortcut.name, shortcut.defaultShortcuts).toStringList();
     }
 
-    // Set action's shortcuts to current shortcut
+    // Set all action shortcuts now that the shortcuts have changed
     for (const auto &shortcut : getShortcutsList())
     {
         const auto actionList = getAllInstancesOfAction(shortcut.name);
@@ -715,19 +720,4 @@ void ActionManager::updateShortcuts()
                 action->setShortcuts(stringListToKeySequenceList(shortcut.shortcuts));
         }
     }
-}
-
-void ActionManager::loadSettings()
-{
-    QSettings settings;
-    settings.beginGroup("options");
-
-    isSaveRecentsEnabled = settings.value("saverecents", true).toBool();
-    auto const recentsMenus = menuCloneLibrary.values("recents");
-    for (const auto &recentsMenu : recentsMenus)
-    {
-        recentsMenu->menuAction()->setVisible(isSaveRecentsEnabled);
-    }
-    if (!isSaveRecentsEnabled)
-        clearRecentsList();
 }
