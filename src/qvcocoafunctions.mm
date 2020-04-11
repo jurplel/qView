@@ -78,5 +78,8 @@ void QVCocoaFunctions::closeWindow(QWindow *window)
 void QVCocoaFunctions::setWindowMenu(QMenu *menu)
 {
     NSMenu *nativeMenu = menu->toNSMenu();
+    [nativeMenu addItemWithTitle:@"Minimize" action:@selector(performMiniaturize:) keyEquivalent:@"m"];
+
+    [nativeMenu addItemWithTitle:@"Zoom" action:@selector(performZoom:) keyEquivalent:@""];
     [[NSApplication sharedApplication] setWindowsMenu:nativeMenu];
 }

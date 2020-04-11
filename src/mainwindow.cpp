@@ -327,7 +327,6 @@ void MainWindow::fileLoaded()
 
     refreshProperties();
     buildWindowTitle();
-    windowHandle()->setFilePath(getCurrentFileDetails().fileInfo.absoluteFilePath());
 }
 
 void MainWindow::refreshProperties()
@@ -378,6 +377,7 @@ void MainWindow::buildWindowTitle()
     }
 
     setWindowTitle(newString);
+    windowHandle()->setFilePath(getCurrentFileDetails().fileInfo.absoluteFilePath());
 }
 
 void MainWindow::setWindowSize()
