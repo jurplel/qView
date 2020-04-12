@@ -29,11 +29,11 @@ public:
 protected:
     void saveSettings();
     void loadSettings(bool defaults = false);
-    static void syncCheckbox(QCheckBox *checkbox, const QString &key, bool defaults = false);
-    static void syncRadioButtons(QList<QRadioButton*> buttons, const QString &key, bool defaults = false);
-    static void syncComboBox(QComboBox *comboBox, const QString &key, bool defaults = false);
-    static void syncSpinBox(QSpinBox *spinBox, const QString &key, bool defaults = false);
-    static void syncDoubleSpinBox(QDoubleSpinBox *doubleSpinBox, const QString &key, bool defaults = false);
+    void syncCheckbox(QCheckBox *checkbox, const QString &key, bool defaults = false);
+    void syncRadioButtons(QList<QRadioButton*> buttons, const QString &key, bool defaults = false);
+    void syncComboBox(QComboBox *comboBox, const QString &key, bool defaults = false);
+    void syncSpinBox(QSpinBox *spinBox, const QString &key, bool defaults = false);
+    void syncDoubleSpinBox(QDoubleSpinBox *doubleSpinBox, const QString &key, bool defaults = false);
     void loadShortcuts(bool defaults = false);
     void updateShortcutsTable();
 

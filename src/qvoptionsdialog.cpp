@@ -77,6 +77,7 @@ void QVOptionsDialog::loadSettings(bool defaults)
 
     // bgcolor
     ui->bgColorButton->setText(settingsManager.getString("bgcolor", defaults));
+    transientSettings.insert("bgcolor", ui->bgColorButton->text());
     updateBgColorButton();
 
     // titlebarmode
@@ -161,27 +162,37 @@ void QVOptionsDialog::loadSettings(bool defaults)
 
 void QVOptionsDialog::syncCheckbox(QCheckBox *checkbox, const QString &key, bool defaults)
 {
-    checkbox->setChecked(qvApp->getSettingsManager().getBoolean(key, defaults));
+    auto val = qvApp->getSettingsManager().getBoolean(key, defaults);
+    checkbox->setChecked(val);
+    transientSettings.insert(key, val);
 }
 
 void QVOptionsDialog::syncRadioButtons(QList<QRadioButton *> buttons, const QString &key, bool defaults)
 {
-    buttons.value(qvApp->getSettingsManager().getInteger(key, defaults))->setChecked(true);
+    auto val = qvApp->getSettingsManager().getInteger(key, defaults);
+    buttons.value(val)->setChecked(true);
+    transientSettings.insert(key, val);
 }
 
 void QVOptionsDialog::syncComboBox(QComboBox *comboBox, const QString &key, bool defaults)
 {
-    comboBox->setCurrentIndex(qvApp->getSettingsManager().getInteger(key, defaults));
+    auto val = qvApp->getSettingsManager().getInteger(key, defaults);
+    comboBox->setCurrentIndex(val);
+    transientSettings.insert(key, val);
 }
 
 void QVOptionsDialog::syncSpinBox(QSpinBox *spinBox, const QString &key, bool defaults)
 {
-    spinBox->setValue(qvApp->getSettingsManager().getInteger(key, defaults));
+    auto val = qvApp->getSettingsManager().getInteger(key, defaults);
+    spinBox->setValue(val);
+    transientSettings.insert(key, val);
 }
 
 void QVOptionsDialog::syncDoubleSpinBox(QDoubleSpinBox *doubleSpinBox, const QString &key, bool defaults)
 {
-    doubleSpinBox->setValue(qvApp->getSettingsManager().getDouble(key, defaults));
+    auto val = qvApp->getSettingsManager().getDouble(key, defaults);
+    doubleSpinBox->setValue(val);
+    transientSettings.insert(key, val);
 }
 
 void QVOptionsDialog::loadShortcuts(bool defaults)
