@@ -82,9 +82,9 @@ private:
     SettingsManager settingsManager;
     ActionManager actionManager;
 
-    bool optionsShown;
-    bool welcomeShown;
-    bool aboutShown;
+    QDialog *optionsDialog;
+    QDialog *welcomeDialog;
+    QDialog *aboutDialog;
 };
 
 #endif // QVAPPLICATION_H

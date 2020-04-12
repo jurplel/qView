@@ -15,9 +15,9 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     connect(&actionManager, &ActionManager::recentsMenuUpdated, this, &QVApplication::updateDockRecents);
 
     // Initialize variables
-    optionsShown = false;
-    welcomeShown = false;
-    aboutShown = false;
+    optionsDialog = nullptr;
+    welcomeDialog = nullptr;
+    aboutDialog = nullptr;
 
     // Show welcome dialog on first launch
     QSettings settings;
@@ -250,39 +250,49 @@ void QVApplication::deleteFromLastActiveWindows(MainWindow *window)
 
 void QVApplication::openOptionsDialog()
 {
-    if (optionsShown)
+    if (optionsDialog)
+    {
+        optionsDialog->raise();
+        optionsDialog->activateWindow();
         return;
 
-    auto *options = new QVOptionsDialog();
-    optionsShown = true;
-    connect(options, &QDialog::finished, [this]{
-        optionsShown = false;
+    }
+
+    optionsDialog = new QVOptionsDialog();
+    connect(optionsDialog, &QDialog::finished, [this]{
+        optionsDialog = nullptr;
     });
-    options->show();
+    optionsDialog->show();
 }
 
 void QVApplication::openWelcomeDialog()
 {
-    if (welcomeShown)
+    if (welcomeDialog)
+    {
+        welcomeDialog->raise();
+        welcomeDialog->activateWindow();
         return;
+    }
 
-    auto *welcome = new QVWelcomeDialog();
-    welcomeShown = true;
-    connect(welcome, &QDialog::finished, [this]{
-        welcomeShown = false;
+    welcomeDialog = new QVWelcomeDialog();
+    connect(welcomeDialog, &QDialog::finished, [this]{
+        welcomeDialog = nullptr;
     });
-    welcome->show();
+    welcomeDialog->show();
 }
 
 void QVApplication::openAboutDialog()
 {
-    if (aboutShown)
+    if (aboutDialog)
+    {
+        aboutDialog->raise();
+        aboutDialog->activateWindow();
         return;
+    }
 
-    auto *about = new QVAboutDialog();
-    aboutShown = true;
-    connect(about, &QDialog::finished, [this]{
-        aboutShown = false;
+    aboutDialog = new QVAboutDialog();
+    connect(aboutDialog, &QDialog::finished, [this]{
+        aboutDialog = nullptr;
     });
-    about->show();
+    aboutDialog->show();
 }
