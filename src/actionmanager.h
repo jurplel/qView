@@ -137,9 +137,9 @@ public:
 
     void updateRecentsMenu();
 
-    void actionTriggered(QAction *triggeredAction) const;
+    static void actionTriggered(QAction *triggeredAction);
 
-    void actionTriggered(QAction *triggeredAction, MainWindow *relevantWindow) const;
+    static void actionTriggered(QAction *triggeredAction, MainWindow *relevantWindow);
 
     void updateShortcuts();
 

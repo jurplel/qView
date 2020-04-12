@@ -32,8 +32,6 @@ public:
 
     QScreen *screenAt(const QPoint &point);
 
-    void pickFile();
-
     void openRecent(int i);
 
     void openUrl(const QUrl &url);
@@ -71,12 +69,6 @@ public:
     void nextFile();
 
     void lastFile();
-
-    void openOptions();
-
-    void openAbout();
-
-    void openWelcome();
 
     void saveFrameAs();
 

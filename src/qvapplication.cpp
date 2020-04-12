@@ -1,12 +1,28 @@
 #include "qvapplication.h"
 #include "qvoptionsdialog.h"
+#include "qvoptionsdialog.h"
+#include "qvaboutdialog.h"
+#include "qvwelcomedialog.h"
 
 #include <QFileOpenEvent>
+#include <QSettings>
+#include <QTimer>
+#include <QFileDialog>
 
 QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
 {
     // Connections
     connect(&actionManager, &ActionManager::recentsMenuUpdated, this, &QVApplication::updateDockRecents);
+
+    // Show welcome dialog on first launch
+    QSettings settings;
+
+    if (!settings.value("firstlaunch", false).toBool())
+    {
+        settings.setValue("firstlaunch", true);
+        settings.setValue("configversion", VERSION);
+        QTimer::singleShot(100, this, &QVApplication::openWelcomeDialog);
+    }
 
     // Initialize list of supported files and filters
     const auto byteArrayList = QImageReader::supportedImageFormats();
@@ -27,14 +43,14 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     nameFilterList << filterString;
     nameFilterList << tr("All Files") + " (*)";
 
-    //don't even try to show menu icons on mac or windows
+    // Don't even try to show menu icons on mac or windows
     #if defined Q_OS_MACOS || defined Q_OS_WIN
     setAttribute(Qt::AA_DontShowIconsInMenus);
     #endif
 
     dockMenu = new QMenu();
     connect(dockMenu, &QMenu::triggered, [](QAction *triggeredAction){
-       qvApp->getActionManager().actionTriggered(triggeredAction);
+       ActionManager::actionTriggered(triggeredAction);
     });
 
     dockMenuSuffix.append(actionManager.cloneAction("newwindow"));
@@ -51,7 +67,7 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
 
     menuBar = actionManager.buildMenuBar();
     connect(menuBar, &QMenuBar::triggered, [](QAction *triggeredAction){
-        qvApp->getActionManager().actionTriggered(triggeredAction);
+        ActionManager::actionTriggered(triggeredAction);
     });
 }
 
@@ -73,6 +89,40 @@ void QVApplication::openFile(MainWindow *window, const QString &file, bool resiz
 {
     window->setJustLaunchedWithImage(resize);
     window->openFile(file);
+}
+
+void QVApplication::pickFile(MainWindow *parent)
+{
+    QSettings settings;
+    settings.beginGroup("recents");
+
+    auto *fileDialog = new QFileDialog(parent, tr("Open..."));
+    fileDialog->setDirectory(settings.value("lastFileDialogDir", QDir::homePath()).toString());
+    fileDialog->setFileMode(QFileDialog::ExistingFiles);
+    fileDialog->setNameFilters(qvApp->getNameFilterList());
+
+    connect(fileDialog, &QFileDialog::filesSelected, [parent](const QStringList &selected){
+        bool isFirstLoop = true;
+        for (const auto &file : selected)
+        {
+            if (isFirstLoop)
+            {
+                parent->openFile(file);
+                isFirstLoop = false;
+            }
+            else
+            {
+                 QVApplication::openFile(QVApplication::newWindow(), file);
+            }
+        }
+
+        // Set lastFileDialogDir
+        QSettings settings;
+        settings.beginGroup("recents");
+        settings.setValue("lastFileDialogDir", QFileInfo(selected.constFirst()).path());
+
+    });
+    fileDialog->open();
 }
 
 MainWindow *QVApplication::newWindow()
@@ -187,4 +237,22 @@ void QVApplication::deleteFromLastActiveWindows(MainWindow *window)
         return;
 
     lastActiveWindows.removeAll(window);
+}
+
+void QVApplication::openOptionsDialog()
+{
+    auto *options = new QVOptionsDialog();
+    options->open();
+}
+
+void QVApplication::openWelcomeDialog()
+{
+    auto *welcome = new QVWelcomeDialog();
+    welcome->open();
+}
+
+void QVApplication::openAboutDialog()
+{
+    auto *about = new QVAboutDialog();
+    about->open();
 }

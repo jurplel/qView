@@ -386,12 +386,12 @@ void ActionManager::updateRecentsMenu()
     emit recentsMenuUpdated();
 }
 
-void ActionManager::actionTriggered(QAction *triggeredAction) const
+void ActionManager::actionTriggered(QAction *triggeredAction)
 { 
     auto key = triggeredAction->data().toString();
 
     // For some actions, do not look for a relevant window
-    if (key == "newwindow" || key == "quit" || key == "clearrecents")
+    if (key == "newwindow" || key == "quit" || key == "clearrecents" ||  key == "open")
     {
         actionTriggered(triggeredAction, nullptr);
         return;
@@ -400,14 +400,14 @@ void ActionManager::actionTriggered(QAction *triggeredAction) const
     // If some actions are triggered without an explicit window, we want
     // to give them a window without an image open
     bool shouldBeEmpty = false;
-    if (key.startsWith("recent") || key == "open" || key == "openurl")
+    if (key.startsWith("recent") || key == "openurl")
         shouldBeEmpty = true;
 
     if (auto *window = qvApp->getMainWindow(shouldBeEmpty))
         actionTriggered(triggeredAction, window);
 }
 
-void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *relevantWindow) const
+void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *relevantWindow)
 {
     auto key = triggeredAction->data().toString();
     if (key.startsWith("recent"))
@@ -421,7 +421,7 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
     } else if (key == "newwindow") {
         qvApp->newWindow();
     } else if (key == "open") {
-        relevantWindow->pickFile();
+        qvApp->pickFile(relevantWindow);
     } else if (key == "openurl") {
         relevantWindow->pickUrl();
     } else if (key == "closewindow") {
@@ -475,11 +475,11 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
     } else if (key == "slideshow") {
         relevantWindow->toggleSlideshow();
     } else if (key == "options") {
-        relevantWindow->openOptions();
+        qvApp->openOptionsDialog();
     } else if (key == "about") {
-        relevantWindow->openAbout();
+        qvApp->openAboutDialog();
     } else if (key == "welcome") {
-        relevantWindow->openWelcome();
+        qvApp->openWelcomeDialog();
     } else if (key == "clearrecents") {
         qvApp->getActionManager().clearRecentsList();
     }

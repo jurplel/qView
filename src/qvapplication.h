@@ -25,6 +25,10 @@ public:
 
     static void openFile(MainWindow *window, const QString &file, bool resize = true);
 
+    static void pickFile(MainWindow *parent = nullptr);
+
+    static void pickUrl(MainWindow *parnet = nullptr);
+
     static MainWindow *newWindow();
 
     MainWindow *getMainWindow(bool shouldBeEmpty);
@@ -38,6 +42,12 @@ public:
     void addToLastActiveWindows(MainWindow *window);
 
     void deleteFromLastActiveWindows(MainWindow *window);
+
+    void openOptionsDialog();
+
+    void openWelcomeDialog();
+
+    void openAboutDialog();
 
     QMenuBar *getMenuBar() const {  return menuBar; }
 

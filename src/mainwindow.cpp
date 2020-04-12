@@ -1,8 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "qvoptionsdialog.h"
-#include "qvaboutdialog.h"
-#include "qvwelcomedialog.h"
 #include "qvapplication.h"
 #include <QFileDialog>
 #include <QMessageBox>
@@ -29,6 +26,10 @@
 #include <QtConcurrent/QtConcurrentRun>
 #include <QMenu>
 #include <QWindow>
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+#include <QTemporaryFile>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -92,13 +93,13 @@ MainWindow::MainWindow(QWidget *parent) :
     contextMenu->addMenu(actionManager.buildHelpMenu(contextMenu));
 
     connect(contextMenu, &QMenu::triggered, [this](QAction *triggeredAction){
-        qvApp->getActionManager().actionTriggered(triggeredAction, this);
+        ActionManager::actionTriggered(triggeredAction, this);
     });
 
     // Initialize menubar
     setMenuBar(actionManager.buildMenuBar(this));
     connect(menuBar(), &QMenuBar::triggered, [this](QAction *triggeredAction){
-        qvApp->getActionManager().actionTriggered(triggeredAction, this);
+        ActionManager::actionTriggered(triggeredAction, this);
     });
 
     // Add all actions to this window so keyboard shortcuts are always triggered
@@ -107,7 +108,7 @@ MainWindow::MainWindow(QWidget *parent) :
     virtualMenu->addActions(actionManager.getActionLibrary().values());
     addActions(virtualMenu->actions());
     connect(virtualMenu, &QMenu::triggered, [this](QAction *triggeredAction){
-       qvApp->getActionManager().actionTriggered(triggeredAction, this);
+       ActionManager::actionTriggered(triggeredAction, this);
     });
 
     // Connect functions to application components
@@ -140,14 +141,6 @@ void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 void MainWindow::showEvent(QShowEvent *event)
 {
     QMainWindow::showEvent(event);
-    QSettings settings;
-
-    if (settings.value("firstlaunch", false).toBool())
-        return;
-
-    settings.setValue("firstlaunch", true);
-    settings.setValue("configversion", VERSION);
-    QTimer::singleShot(100, this, &MainWindow::openWelcome);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -179,37 +172,8 @@ void MainWindow::mouseDoubleClickEvent(QMouseEvent *event)
     QMainWindow::mouseDoubleClickEvent(event);
 }
 
-void MainWindow::pickFile()
-{
-    QSettings settings;
-    settings.beginGroup("recents");
-    QFileDialog *fileDialog = new QFileDialog(this, tr("Open..."));
-    fileDialog->setDirectory(settings.value("lastFileDialogDir", QDir::homePath()).toString());
-    fileDialog->setFileMode(QFileDialog::ExistingFiles);
-    fileDialog->setNameFilters(qvApp->getNameFilterList());
-    fileDialog->open();
-    connect(fileDialog, &QFileDialog::filesSelected, [this](const QStringList &selected){
-        bool first = true;
-        for (const auto &file : selected)
-        {
-            if (first)
-            {
-                openFile(file);
-                first = false;
-                continue;
-            }
-
-            QVApplication::openFile(QVApplication::newWindow(), file);
-        }
-    });
-}
-
 void MainWindow::openFile(const QString &fileName)
 {
-    QSettings settings;
-    settings.beginGroup("recents");
-    settings.setValue("lastFileDialogDir", QFileInfo(fileName).path());
-
     graphicsView->loadFile(fileName);
     cancelSlideshow();
 }
@@ -613,24 +577,6 @@ void MainWindow::nextFile()
 void MainWindow::lastFile()
 {
     graphicsView->goToFile(QVGraphicsView::goToFileMode::last);
-}
-
-void MainWindow::openOptions()
-{
-    auto *options = new QVOptionsDialog(this);
-    options->open();
-}
-
-void MainWindow::openAbout()
-{
-    auto *about = new QVAboutDialog(this);
-    about->exec();
-}
-
-void MainWindow::openWelcome()
-{
-    auto *welcome = new QVWelcomeDialog(this);
-    welcome->exec();
 }
 
 void MainWindow::saveFrameAs()
