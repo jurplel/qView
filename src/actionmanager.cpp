@@ -115,6 +115,7 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     fileMenu->addAction(cloneAction("openurl"));
     fileMenu->addMenu(buildRecentsMenu(true, menuBar));
     #ifdef Q_OS_MACOS
+    fileMenu->addSeparator();
     fileMenu->addAction(cloneAction("closewindow"));
     fileMenu->addAction(cloneAction("closeallwindows"));
     #endif
@@ -158,7 +159,11 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     // End of go menu
 
     // Beginning of tools menu
-    menuBar->addMenu(buildToolsMenu(false, menuBar));
+    auto *toolsMenu = new QMenu(tr("Tools"), menuBar);
+    toolsMenu->addActions(buildGifMenu(menuBar)->actions());
+    toolsMenu->addSeparator();
+    toolsMenu->addAction(cloneAction("slideshow"));
+    menuBar->addMenu(toolsMenu);
     // End of tools menu
 
     // Beginning of help menu
