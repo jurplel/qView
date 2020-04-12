@@ -100,7 +100,7 @@ void SettingsManager::initializeSettingsLibrary()
     settingsLibrary.insert("scalefactor", {25, {}});
     settingsLibrary.insert("scrollzoomsenabled", {true, {}});
     settingsLibrary.insert("cursorzoom", {true, {}});
-    settingsLibrary.insert("cropmode", {1, {}});
+    settingsLibrary.insert("cropmode", {0, {}});
     settingsLibrary.insert("pastactualsizeenabled", {true, {}});
     // Miscellaneous
     settingsLibrary.insert("sortmode", {0, {}});
