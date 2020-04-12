@@ -24,7 +24,7 @@ CONFIG += c++11
 win32:QT += svg # needed for including svg support in static build
 win32:CONFIG += static
 RC_ICONS = "dist/win/qView.ico"
-QMAKE_TARGET_COPYRIGHT = "Copyright © 2020 jurplel and qView contributors"
+QMAKE_TARGET_COPYRIGHT = "Copyright ï¿½ 2020 jurplel and qView contributors"
 QMAKE_TARGET_DESCRIPTION = "qView"
 
 # macOS specific stuff
@@ -85,7 +85,8 @@ SOURCES += \
     src/qvimagecore.cpp \
     src/qvshortcutdialog.cpp \
     src/actionmanager.cpp \
-    src/qvcocoafunctions.mm
+    src/qvcocoafunctions.mm \
+    src/settingsmanager.cpp
 
 HEADERS += \
         src/mainwindow.h \
@@ -98,7 +99,8 @@ HEADERS += \
     src/qvimagecore.h \
     src/qvshortcutdialog.h \
     src/actionmanager.h \
-    src/qvcocoafunctions.h
+    src/qvcocoafunctions.h \
+    src/settingsmanager.h
 
 FORMS += \
         src/mainwindow.ui \

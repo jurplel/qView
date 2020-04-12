@@ -26,11 +26,12 @@ public:
     struct QVFileDetails
     {
         QFileInfo fileInfo;
+        QFileInfoList folderFileInfoList;
+        bool isLoadRequested;
         bool isPixmapLoaded;
         bool isMovieLoaded;
-        QFileInfoList folder;
-        int folderIndex;
-        QSize imageSize;
+        int loadedIndexInFolder;
+        QSize baseImageSize;
         QSize loadedPixmapSize;
     };
 
@@ -51,7 +52,7 @@ public:
     void requestCachingFile(const QString &filePath);
     void addToCache(const QVImageAndFileInfo &readImageAndFileInfo);
 
-    void loadSettings();
+    void settingsUpdated();
 
     void jumpToNextFrame();
     void setPaused(bool desiredState);
@@ -100,7 +101,6 @@ private:
     int preloadingMode;
     int sortMode;
     bool sortAscending;
-
 
     QStringList lastFilesPreloaded;
 

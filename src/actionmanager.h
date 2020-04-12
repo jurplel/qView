@@ -3,15 +3,30 @@
 
 #include "mainwindow.h"
 
-#include <QObject>
 #include <QMenuBar>
 #include <QMultiHash>
-#include <QFileInfo>
 
 class ActionManager : public QObject
 {
     Q_OBJECT
 public:
+    struct SShortcut {
+        QString readableName;
+        QString name;
+        QStringList defaultShortcuts;
+        QStringList shortcuts;
+    };
+
+
+    struct SRecent {
+        QString fileName;
+        QString filePath;
+
+        bool operator==(const SRecent other) const { return (fileName == other.fileName && filePath == other.filePath);}
+
+        operator QString() const { return "SRecent(" + fileName + ", " + filePath + ")"; }
+    };
+
     static QList<QAction*> getAllNestedActions(const QList<QAction*> &givenActionList)
     {
         QList<QAction*> totalActionList;
@@ -74,24 +89,6 @@ public:
         return QKeySequence::fromString(shortcutString, QKeySequence::NativeText).toString().split(", ");
     }
 
-
-    struct SShortcut {
-        QString readableName;
-        QString name;
-        QStringList defaultShortcuts;
-        QStringList shortcuts;
-    };
-
-
-    struct SRecent {
-        QString fileName;
-        QString filePath;
-
-        bool operator==(const SRecent other) const { return (fileName == other.fileName && filePath == other.filePath);}
-
-        operator QString() const { return "SRecent(" + fileName + ", " + filePath + ")"; }
-    };
-
     static QVariantList recentsListToVariantList(const QList<SRecent> &recentsList)
     {
         QVariantList variantList;
@@ -116,11 +113,11 @@ public:
 
     explicit ActionManager(QObject *parent = nullptr);
 
+    void settingsUpdated();
+
     QAction *cloneAction(const QString &key);
 
     QAction *getAction(const QString &key) const;
-
-    QList<QAction*> getCloneActions(const QString &key) const;
 
     QList<QAction*> getAllInstancesOfAction(const QString &key) const;
 
@@ -154,13 +151,11 @@ public:
 
     void updateRecentsMenu();
 
-    void actionTriggered(QAction *triggeredAction) const;
+    static void actionTriggered(QAction *triggeredAction);
 
-    void actionTriggered(QAction *triggeredAction, MainWindow *relevantWindow) const;
+    static void actionTriggered(QAction *triggeredAction, MainWindow *relevantWindow);
 
     void updateShortcuts();
-
-    void loadSettings();
 
     const QList<SRecent> &getRecentsList() const { return recentsList; }
 
@@ -171,14 +166,14 @@ public:
 signals:
     void recentsMenuUpdated();
 
+    void shortcutsUpdated();
+
 protected:
     void initializeActionLibrary();
 
     void initializeShortcutsList();
 
 private:
-    QList<SRecent> recentsList;
-
     QHash<QString, QAction*> actionLibrary;
 
     QMultiHash<QString, QAction*> actionCloneLibrary;
@@ -188,11 +183,13 @@ private:
     QList<SShortcut> shortcutsList;
 
     QMenu *windowMenu;
+    
+    QList<SRecent> recentsList;
 
     QTimer *recentsSaveTimer;
 
+    // Settings
     bool isSaveRecentsEnabled;
-
     int recentsListMaxLength;
 };
 

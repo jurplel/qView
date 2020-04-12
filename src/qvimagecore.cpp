@@ -12,7 +12,7 @@
 #include <QScreen>
 
 QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
-{
+{  
     loadedPixmap = QPixmap();
     imageReader.setDecideFormatFromContent(true);
     imageReader.setAutoTransform(true);
@@ -25,19 +25,21 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     sortAscending = true;
 
     currentFileDetails.fileInfo = QFileInfo();
+    currentFileDetails.folderFileInfoList = QFileInfoList();
+    currentFileDetails.isLoadRequested = false;
     currentFileDetails.isPixmapLoaded = false;
     currentFileDetails.isMovieLoaded = false;
-    currentFileDetails.folder = QFileInfoList();
-    currentFileDetails.folderIndex = -1;
-    currentFileDetails.imageSize = QSize();
+    currentFileDetails.loadedIndexInFolder = -1;
+    currentFileDetails.baseImageSize = QSize();
     currentFileDetails.loadedPixmapSize = QSize();
 
     lastFileDetails.fileInfo = QFileInfo();
+    lastFileDetails.folderFileInfoList = QFileInfoList();
+    lastFileDetails.isLoadRequested = false;
     lastFileDetails.isPixmapLoaded = false;
     lastFileDetails.isMovieLoaded = false;
-    lastFileDetails.folder = QFileInfoList();
-    lastFileDetails.folderIndex = -1;
-    lastFileDetails.imageSize = QSize();
+    lastFileDetails.loadedIndexInFolder = -1;
+    lastFileDetails.baseImageSize = QSize();
     lastFileDetails.loadedPixmapSize = QSize();
 
     currentRotation = 0;
@@ -75,6 +77,10 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
             largestDimension = largerDimension;
         }
     }
+
+    // Connect to settings signal
+    connect(&qvApp->getSettingsManager(), &SettingsManager::settingsUpdated, this, &QVImageCore::settingsUpdated);
+    settingsUpdated();
 }
 
 void QVImageCore::loadFile(const QString &fileName)
@@ -94,11 +100,12 @@ void QVImageCore::loadFile(const QString &fileName)
 
     //define info variables
     currentFileDetails.fileInfo = QFileInfo(sanitaryString);
+    currentFileDetails.isLoadRequested = true;
     setPaused(true);
     updateFolderInfo();
 
     imageReader.setFileName(currentFileDetails.fileInfo.absoluteFilePath());
-    currentFileDetails.imageSize = imageReader.size();
+    currentFileDetails.baseImageSize = imageReader.size();
 
     auto previouslyRecordedFileSize = qvApp->getPreviouslyRecordedFileSize(currentFileDetails.fileInfo.absoluteFilePath());
 
@@ -107,7 +114,7 @@ void QVImageCore::loadFile(const QString &fileName)
     //check if cached already before loading the long way
     if (QPixmapCache::find(currentFileDetails.fileInfo.absoluteFilePath(), cachedPixmap) &&
         !cachedPixmap->isNull() &&
-        cachedPixmap->size() == currentFileDetails.imageSize &&
+        cachedPixmap->size() == currentFileDetails.baseImageSize &&
         previouslyRecordedFileSize == currentFileDetails.fileInfo.size())
     {
         loadedPixmap = matchCurrentRotation(*cachedPixmap);
@@ -191,7 +198,7 @@ void QVImageCore::postLoad()
         currentFileDetails.isMovieLoaded = false;
     }
 
-    currentFileDetails.imageSize = imageReader.size();
+    currentFileDetails.baseImageSize = imageReader.size();
     currentFileDetails.loadedPixmapSize = loadedPixmap.size();
 
     emit fileLoaded();
@@ -221,11 +228,13 @@ void QVImageCore::updateFolderInfo()
     if (!sortAscending)
         sortFlags.setFlag(QDir::Reversed, true);
 
-    currentFileDetails.folder = QDir(currentFileDetails.fileInfo.absolutePath()).entryInfoList(qvApp->getFilterList(), QDir::Files, sortFlags);
+    currentFileDetails.folderFileInfoList = QDir(currentFileDetails.fileInfo.absolutePath()).entryInfoList(qvApp->getFilterList(), QDir::Files, sortFlags);
 
     // Natural sorting
     if (sortMode == 0) {
-        std::sort(currentFileDetails.folder.begin(), currentFileDetails.folder.end(), [&collator, this](const QFileInfo &file1, const QFileInfo &file2) {
+        std::sort(currentFileDetails.folderFileInfoList.begin(),
+                  currentFileDetails.folderFileInfoList.end(),
+                  [&collator, this](const QFileInfo &file1, const QFileInfo &file2) {
             if (sortAscending)
                 return collator.compare(file1.fileName(), file2.fileName()) < 0;
             else
@@ -233,7 +242,7 @@ void QVImageCore::updateFolderInfo()
         });
     }
 
-    currentFileDetails.folderIndex = currentFileDetails.folder.indexOf(currentFileDetails.fileInfo);
+    currentFileDetails.loadedIndexInFolder = currentFileDetails.folderFileInfoList.indexOf(currentFileDetails.fileInfo);
 }
 
 void QVImageCore::requestCaching()
@@ -250,23 +259,23 @@ void QVImageCore::requestCaching()
         preloadingDistance = 4;
 
     QStringList filesToPreload;
-    for (int i = currentFileDetails.folderIndex-preloadingDistance; i <= currentFileDetails.folderIndex+preloadingDistance; i++)
+    for (int i = currentFileDetails.loadedIndexInFolder-preloadingDistance; i <= currentFileDetails.loadedIndexInFolder+preloadingDistance; i++)
     {
         int index = i;
         //keep within index range
         if (isLoopFoldersEnabled)
         {
-            if (index > currentFileDetails.folder.length()-1)
-                index = index-(currentFileDetails.folder.length());
+            if (index > currentFileDetails.folderFileInfoList.length()-1)
+                index = index-(currentFileDetails.folderFileInfoList.length());
             else if (index < 0)
-                index = index+(currentFileDetails.folder.length());
+                index = index+(currentFileDetails.folderFileInfoList.length());
         }
 
         //if still out of range after looping, just cancel the cache for this index
-        if (index > currentFileDetails.folder.length()-1 || index < 0 || currentFileDetails.folder.isEmpty())
+        if (index > currentFileDetails.folderFileInfoList.length()-1 || index < 0 || currentFileDetails.folderFileInfoList.isEmpty())
             return;
 
-        QString filePath = currentFileDetails.folder[index].absoluteFilePath();
+        QString filePath = currentFileDetails.folderFileInfoList[index].absoluteFilePath();
         filesToPreload.append(filePath);
 
         requestCachingFile(filePath);
@@ -415,16 +424,15 @@ QPixmap QVImageCore::scaleExpensively(const QSize desiredSize, const ScaleMode m
 }
 
 
-void QVImageCore::loadSettings()
+void QVImageCore::settingsUpdated()
 {
-    QSettings settings;
-    settings.beginGroup("options");
+    auto &settingsManager = qvApp->getSettingsManager();
 
     //loop folders
-    isLoopFoldersEnabled = settings.value("loopfoldersenabled", true).toBool();
+    isLoopFoldersEnabled = settingsManager.getBoolean("loopfoldersenabled");
 
     //preloading mode
-    preloadingMode = settings.value("preloadingmode", 1).toInt();
+    preloadingMode = settingsManager.getInteger("preloadingmode");
     switch (preloadingMode) {
     case 1:
     {
@@ -439,10 +447,10 @@ void QVImageCore::loadSettings()
     }
 
     //sort mode
-    sortMode = settings.value("sortmode", 0).toInt();
+    sortMode = settingsManager.getInteger("sortmode");
 
     //sort ascending
-    sortAscending = settings.value("sortascending", true).toBool();
+    sortAscending = settingsManager.getBoolean("sortascending");
 
     //update folder info to re-sort
     updateFolderInfo();

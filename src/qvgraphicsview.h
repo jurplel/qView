@@ -45,7 +45,7 @@ public:
 
     void goToFile(const GoToFileMode &mode, int index = 0);
 
-    void loadSettings();
+    void settingsUpdated();
 
     void jumpToNextFrame();
     void setPaused(const bool &desiredState);

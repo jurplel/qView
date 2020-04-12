@@ -1,11 +1,11 @@
 #ifndef QVAPPLICATION_H
 #define QVAPPLICATION_H
 
-#include <QApplication>
 #include "mainwindow.h"
-#include <QCache>
-#include <QAction>
 #include "actionmanager.h"
+#include "settingsmanager.h"
+
+#include <QApplication>
 
 #if defined(qvApp)
 #undef qvApp
@@ -25,6 +25,12 @@ public:
 
     static void openFile(MainWindow *window, const QString &file, bool resize = true);
 
+    static void openFile(const QString &file, bool resize = true);
+
+    static void pickFile(MainWindow *parent = nullptr);
+
+    static void pickUrl(MainWindow *parnet = nullptr);
+
     static MainWindow *newWindow();
 
     MainWindow *getMainWindow(bool shouldBeEmpty);
@@ -39,7 +45,11 @@ public:
 
     void deleteFromLastActiveWindows(MainWindow *window);
 
-    ActionManager *getActionManager() const { return actionManager; }
+    void openOptionsDialog();
+
+    void openWelcomeDialog();
+
+    void openAboutDialog();
 
     QMenuBar *getMenuBar() const {  return menuBar; }
 
@@ -47,9 +57,11 @@ public:
 
     const QStringList &getNameFilterList() const { return nameFilterList; }
 
+    ActionManager &getActionManager() { return actionManager; }
+
+    SettingsManager &getSettingsManager() { return settingsManager; }
+
 private:
-    QStringList filterList;
-    QStringList nameFilterList;
 
     QList<MainWindow*> lastActiveWindows;
 
@@ -63,8 +75,16 @@ private:
 
     QCache<QString, qint64> previouslyRecordedFileSizes;
 
-    ActionManager *actionManager;
+    QStringList filterList;
+    QStringList nameFilterList;
 
+    // SettingsManager has to be allocated first because ActionManager connects to its signal
+    SettingsManager settingsManager;
+    ActionManager actionManager;
+
+    QDialog *optionsDialog;
+    QDialog *welcomeDialog;
+    QDialog *aboutDialog;
 };
 
 #endif // QVAPPLICATION_H

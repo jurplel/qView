@@ -1,18 +1,34 @@
 #include "qvapplication.h"
 #include "qvoptionsdialog.h"
 #include "qvcocoafunctions.h"
-#include <QFileOpenEvent>
-#include <QMenu>
-#include <QSettings>
-#include <QMenuBar>
-#include <QImageReader>
+#include "qvoptionsdialog.h"
+#include "qvaboutdialog.h"
+#include "qvwelcomedialog.h"
 
-#include <QDebug>
+#include <QFileOpenEvent>
+#include <QSettings>
+#include <QTimer>
+#include <QFileDialog>
 
 QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
 {
-    actionManager = new ActionManager(this);
-    connect(actionManager, &ActionManager::recentsMenuUpdated, this, &QVApplication::updateDockRecents);
+    // Connections
+    connect(&actionManager, &ActionManager::recentsMenuUpdated, this, &QVApplication::updateDockRecents);
+
+    // Initialize variables
+    optionsDialog = nullptr;
+    welcomeDialog = nullptr;
+    aboutDialog = nullptr;
+
+    // Show welcome dialog on first launch
+    QSettings settings;
+
+    if (!settings.value("firstlaunch", false).toBool())
+    {
+        settings.setValue("firstlaunch", true);
+        settings.setValue("configversion", VERSION);
+        openWelcomeDialog();
+    }
 
     // Initialize list of supported files and filters
     const auto byteArrayList = QImageReader::supportedImageFormats();
@@ -33,31 +49,31 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     nameFilterList << filterString;
     nameFilterList << tr("All Files") + " (*)";
 
-    //don't even try to show menu icons on mac or windows
+    // Don't even try to show menu icons on mac or windows
     #if defined Q_OS_MACOS || defined Q_OS_WIN
     setAttribute(Qt::AA_DontShowIconsInMenus);
     #endif
 
     dockMenu = new QMenu();
     connect(dockMenu, &QMenu::triggered, [](QAction *triggeredAction){
-       qvApp->getActionManager()->actionTriggered(triggeredAction);
+       ActionManager::actionTriggered(triggeredAction);
     });
 
-    dockMenuPrefix.append(actionManager->cloneAction("newwindow"));
-    dockMenuPrefix.append(actionManager->cloneAction("open"));
+    dockMenuPrefix.append(actionManager.cloneAction("newwindow"));
+    dockMenuPrefix.append(actionManager.cloneAction("open"));
 
     dockMenuRecentsLibrary = nullptr;
-    dockMenuRecentsLibrary = actionManager->buildRecentsMenu(false);
-    actionManager->updateRecentsMenu();
+    dockMenuRecentsLibrary = actionManager.buildRecentsMenu(false);
+    actionManager.updateRecentsMenu();
 
     #ifdef Q_OS_MACOS
     dockMenu->setAsDockMenu();
     setQuitOnLastWindowClosed(false);
     #endif
 
-    menuBar = actionManager->buildMenuBar();
+    menuBar = actionManager.buildMenuBar();
     connect(menuBar, &QMenuBar::triggered, [](QAction *triggeredAction){
-        qvApp->getActionManager()->actionTriggered(triggeredAction);
+        ActionManager::actionTriggered(triggeredAction);
     });
 
     QVCocoaFunctions::setUserDefaults();
@@ -83,6 +99,44 @@ void QVApplication::openFile(MainWindow *window, const QString &file, bool resiz
     window->openFile(file);
 }
 
+void QVApplication::openFile(const QString &file, bool resize)
+{
+    auto *window = qvApp->getMainWindow(true);
+
+    QVApplication::openFile(window, file, resize);
+}
+
+void QVApplication::pickFile(MainWindow *parent)
+{
+    QSettings settings;
+    settings.beginGroup("recents");
+
+    auto *fileDialog = new QFileDialog(parent, tr("Open..."));
+    fileDialog->setDirectory(settings.value("lastFileDialogDir", QDir::homePath()).toString());
+    fileDialog->setFileMode(QFileDialog::ExistingFiles);
+    fileDialog->setNameFilters(qvApp->getNameFilterList());
+
+    connect(fileDialog, &QFileDialog::filesSelected, [parent](const QStringList &selected){
+        bool isFirstLoop = true;
+        for (const auto &file : selected)
+        {
+            if (isFirstLoop && parent)
+                parent->openFile(file);
+            else
+                QVApplication::openFile(file);
+
+            isFirstLoop = false;
+        }
+
+        // Set lastFileDialogDir
+        QSettings settings;
+        settings.beginGroup("recents");
+        settings.setValue("lastFileDialogDir", QFileInfo(selected.constFirst()).path());
+
+    });
+    fileDialog->show();
+}
+
 MainWindow *QVApplication::newWindow()
 {
     auto *w = new MainWindow();
@@ -101,7 +155,8 @@ MainWindow *QVApplication::getMainWindow(bool shouldBeEmpty)
 
         if (shouldBeEmpty)
         {
-            if (!window->getIsPixmapLoaded())
+            // File info is set if an image load is requested, but not loaded
+            if (!window->getCurrentFileDetails().isLoadRequested)
             {
                 return window;
             }
@@ -120,7 +175,7 @@ MainWindow *QVApplication::getMainWindow(bool shouldBeEmpty)
         {
             if (shouldBeEmpty)
             {
-                if (!window->getIsPixmapLoaded())
+                if (!window->getCurrentFileDetails().isLoadRequested)
                 {
                     return window;
                 }
@@ -134,7 +189,6 @@ MainWindow *QVApplication::getMainWindow(bool shouldBeEmpty)
 
     // If there are no valid ones, make a new one.
     auto *window = newWindow();
-
     return window;
 }
 
@@ -196,4 +250,53 @@ void QVApplication::deleteFromLastActiveWindows(MainWindow *window)
         return;
 
     lastActiveWindows.removeAll(window);
+}
+
+void QVApplication::openOptionsDialog()
+{
+    if (optionsDialog)
+    {
+        optionsDialog->raise();
+        optionsDialog->activateWindow();
+        return;
+
+    }
+
+    optionsDialog = new QVOptionsDialog();
+    connect(optionsDialog, &QDialog::finished, [this]{
+        optionsDialog = nullptr;
+    });
+    optionsDialog->show();
+}
+
+void QVApplication::openWelcomeDialog()
+{
+    if (welcomeDialog)
+    {
+        welcomeDialog->raise();
+        welcomeDialog->activateWindow();
+        return;
+    }
+
+    welcomeDialog = new QVWelcomeDialog();
+    connect(welcomeDialog, &QDialog::finished, [this]{
+        welcomeDialog = nullptr;
+    });
+    welcomeDialog->show();
+}
+
+void QVApplication::openAboutDialog()
+{
+    if (aboutDialog)
+    {
+        aboutDialog->raise();
+        aboutDialog->activateWindow();
+        return;
+    }
+
+    aboutDialog = new QVAboutDialog();
+    connect(aboutDialog, &QDialog::finished, [this]{
+        aboutDialog = nullptr;
+    });
+    aboutDialog->show();
 }

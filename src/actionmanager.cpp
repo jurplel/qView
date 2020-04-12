@@ -4,21 +4,16 @@
 
 #include <QSettings>
 #include <QMimeDatabase>
-#include <QTimer>
-
-#include <QDebug>
 
 ActionManager::ActionManager(QObject *parent) : QObject(parent)
-{
+{    
     isSaveRecentsEnabled = true;
-
     recentsListMaxLength = 10;
 
     initializeActionLibrary();
-
     initializeShortcutsList();
-    updateShortcuts();
 
+    updateShortcuts();
     loadRecentsList();
 
     windowMenu = new QMenu(tr("Window"));
@@ -28,6 +23,23 @@ ActionManager::ActionManager(QObject *parent) : QObject(parent)
     recentsSaveTimer->setSingleShot(true);
     recentsSaveTimer->setInterval(500);
     connect(recentsSaveTimer, &QTimer::timeout, this, &ActionManager::saveRecentsList);
+
+    // Connect to settings signal
+    connect(&qvApp->getSettingsManager(), &SettingsManager::settingsUpdated, this, &ActionManager::settingsUpdated);
+    settingsUpdated();
+}
+
+void ActionManager::settingsUpdated()
+{
+    isSaveRecentsEnabled = qvApp->getSettingsManager().getBoolean("saverecents");
+    qvApp->getSettingsManager().getBoolean("saverecents");
+    auto const recentsMenus = menuCloneLibrary.values("recents");
+    for (const auto &recentsMenu : recentsMenus)
+    {
+        recentsMenu->menuAction()->setVisible(isSaveRecentsEnabled);
+    }
+    if (!isSaveRecentsEnabled)
+        clearRecentsList();
 }
 
 QAction *ActionManager::cloneAction(const QString &key)
@@ -55,11 +67,6 @@ QAction *ActionManager::getAction(const QString &key) const
     return nullptr;
 }
 
-QList<QAction*> ActionManager::getCloneActions(const QString &key) const
-{
-    return actionCloneLibrary.values(key);
-}
-
 QList<QAction*> ActionManager::getAllInstancesOfAction(const QString &key) const
 {
     QList<QAction*> listOfActions;
@@ -67,7 +74,7 @@ QList<QAction*> ActionManager::getAllInstancesOfAction(const QString &key) const
     if (auto mainAction = getAction(key))
         listOfActions.append(mainAction);
 
-    listOfActions.append(getCloneActions(key));
+    listOfActions.append(actionCloneLibrary.values(key));
 
     return listOfActions;
 }
@@ -113,7 +120,9 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     fileMenu->addAction(cloneAction("openurl"));
     fileMenu->addMenu(buildRecentsMenu(true, menuBar));
     #ifdef Q_OS_MACOS
+    fileMenu->addSeparator();
     fileMenu->addAction(cloneAction("closewindow"));
+    fileMenu->addAction(cloneAction("closeallwindows"));
     #endif
     fileMenu->addSeparator();
     fileMenu->addAction(cloneAction("opencontainingfolder"));
@@ -149,7 +158,11 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     // End of go menu
 
     // Beginning of tools menu
-    menuBar->addMenu(buildToolsMenu(false, menuBar));
+    auto *toolsMenu = new QMenu(tr("Tools"), menuBar);
+    toolsMenu->addActions(buildGifMenu(menuBar)->actions());
+    toolsMenu->addSeparator();
+    toolsMenu->addAction(cloneAction("slideshow"));
+    menuBar->addMenu(toolsMenu);
     // End of tools menu
 
     // Beginning of window menu
@@ -379,12 +392,12 @@ void ActionManager::updateRecentsMenu()
     emit recentsMenuUpdated();
 }
 
-void ActionManager::actionTriggered(QAction *triggeredAction) const
+void ActionManager::actionTriggered(QAction *triggeredAction)
 { 
     auto key = triggeredAction->data().toString();
 
     // For some actions, do not look for a relevant window
-    if (key == "newwindow" || key == "clearrecents")
+    if (key == "newwindow" || key == "quit" || key == "clearrecents" ||  key == "open")
     {
         actionTriggered(triggeredAction, nullptr);
         return;
@@ -393,14 +406,14 @@ void ActionManager::actionTriggered(QAction *triggeredAction) const
     // If some actions are triggered without an explicit window, we want
     // to give them a window without an image open
     bool shouldBeEmpty = false;
-    if (key.startsWith("recent") || key == "open" || key == "openurl")
+    if (key.startsWith("recent") || key == "openurl")
         shouldBeEmpty = true;
 
     if (auto *window = qvApp->getMainWindow(shouldBeEmpty))
         actionTriggered(triggeredAction, window);
 }
 
-void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *relevantWindow) const
+void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *relevantWindow)
 {
     auto key = triggeredAction->data().toString();
     if (key.startsWith("recent"))
@@ -415,12 +428,18 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
     } else if (key == "newwindow") {
         qvApp->newWindow();
     } else if (key == "open") {
-        relevantWindow->pickFile();
+        qvApp->pickFile(relevantWindow);
     } else if (key == "openurl") {
         relevantWindow->pickUrl();
     } else if (key == "closewindow") {
-        QVCocoaFunctions::closeWindow(relevantWindow->windowHandle());
-        relevantWindow->close();
+        auto *active = QApplication::activeWindow();
+        QVCocoaFunctions::closeWindow(active->windowHandle());
+        active->close();
+    } else if (key == "closeallwindows") {
+        for (auto *widget : QApplication::topLevelWidgets()) {
+            QVCocoaFunctions::closeWindow(widget->windowHandle());
+            widget->close();
+        }
     } else if (key == "opencontainingfolder") {
         relevantWindow->openContainingFolder();
     } else if (key == "showfileinfo") {
@@ -470,13 +489,13 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
     } else if (key == "slideshow") {
         relevantWindow->toggleSlideshow();
     } else if (key == "options") {
-        relevantWindow->openOptions();
+        qvApp->openOptionsDialog();
     } else if (key == "about") {
-        relevantWindow->openAbout();
+        qvApp->openAboutDialog();
     } else if (key == "welcome") {
-        relevantWindow->openWelcome();
+        qvApp->openWelcomeDialog();
     } else if (key == "clearrecents") {
-        qvApp->getActionManager()->clearRecentsList();
+        qvApp->getActionManager().clearRecentsList();
     }
 }
 
@@ -501,6 +520,10 @@ void ActionManager::initializeActionLibrary()
     auto *closeWindowAction = new QAction(QIcon::fromTheme("window-close"), tr("Close Window"));
     closeWindowAction->setData("closewindow");
     actionLibrary.insert("closewindow", closeWindowAction);
+
+    auto *closeAllWindowsAction = new QAction(QIcon::fromTheme("window-close"), tr("Close All"));
+    closeAllWindowsAction->setData("closeallwindows");
+    actionLibrary.insert("closeallwindows", closeAllWindowsAction);
 
     auto *openContainingFolderAction = new QAction(QIcon::fromTheme("document-open"), tr("Open Containing Folder"));
     #if defined Q_OS_WIN
@@ -615,7 +638,7 @@ void ActionManager::initializeActionLibrary()
 
     auto *aboutAction = new QAction(QIcon::fromTheme("help-about"), tr("About"));
     #if defined Q_OS_MACOS
-        aboutAction->setText("About qView");
+        aboutAction->setText(tr("About qView"));
     #endif
     aboutAction->setData("about");
     actionLibrary.insert("about", aboutAction);
@@ -632,8 +655,8 @@ void ActionManager::initializeActionLibrary()
 
 void ActionManager::initializeShortcutsList()
 {
-    shortcutsList.append({"Open", "open", keyBindingsToStringList(QKeySequence::Open), {}});
-    shortcutsList.append({"Open URL", "openurl", QStringList(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_O).toString()), {}});
+    shortcutsList.append({tr("Open"), "open", keyBindingsToStringList(QKeySequence::Open), {}});
+    shortcutsList.append({tr("Open URL"), "openurl", QStringList(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_O).toString()), {}});
     shortcutsList.append({tr("Open Containing Folder"), "opencontainingfolder", {}, {}});
     //Sets open containing folder action name to platform-appropriate alternative
     #ifdef Q_OS_WIN
@@ -641,28 +664,28 @@ void ActionManager::initializeShortcutsList()
     #elif defined Q_OS_MACOS
     shortcutsList.last().readableName  = tr("Show in Finder");
     #endif
-    shortcutsList.append({"Show File Info", "showfileinfo", QStringList(QKeySequence(Qt::Key_I).toString()), {}});
-    shortcutsList.append({"Copy", "copy", keyBindingsToStringList(QKeySequence::Copy), {}});
-    shortcutsList.append({"Paste", "paste", keyBindingsToStringList(QKeySequence::Paste), {}});
-    shortcutsList.append({"First File", "firstfile", QStringList(QKeySequence(Qt::Key_Home).toString()), {}});
-    shortcutsList.append({"Previous File", "previousfile", QStringList(QKeySequence(Qt::Key_Left).toString()), {}});
-    shortcutsList.append({"Next File", "nextfile", QStringList(QKeySequence(Qt::Key_Right).toString()), {}});
-    shortcutsList.append({"Last File", "lastfile", QStringList(QKeySequence(Qt::Key_End).toString()), {}});
-    shortcutsList.append({"Zoom In", "zoomin", keyBindingsToStringList(QKeySequence::ZoomIn), {}});
+    shortcutsList.append({tr("Show File Info"), "showfileinfo", QStringList(QKeySequence(Qt::Key_I).toString()), {}});
+    shortcutsList.append({tr("Copy"), "copy", keyBindingsToStringList(QKeySequence::Copy), {}});
+    shortcutsList.append({tr("Paste"), "paste", keyBindingsToStringList(QKeySequence::Paste), {}});
+    shortcutsList.append({tr("First File"), "firstfile", QStringList(QKeySequence(Qt::Key_Home).toString()), {}});
+    shortcutsList.append({tr("Previous File"), "previousfile", QStringList(QKeySequence(Qt::Key_Left).toString()), {}});
+    shortcutsList.append({tr("Next File"), "nextfile", QStringList(QKeySequence(Qt::Key_Right).toString()), {}});
+    shortcutsList.append({tr("Last File"), "lastfile", QStringList(QKeySequence(Qt::Key_End).toString()), {}});
+    shortcutsList.append({tr("Zoom In"), "zoomin", keyBindingsToStringList(QKeySequence::ZoomIn), {}});
     // Allow zooming with Ctrl + plus like a regular person (without holding shift)
     if (!shortcutsList.last().defaultShortcuts.contains(QKeySequence(Qt::CTRL + Qt::Key_Equal).toString()))
     {
         shortcutsList.last().defaultShortcuts << QKeySequence(Qt::CTRL + Qt::Key_Equal).toString();
     }
 
-    shortcutsList.append({"Zoom Out", "zoomout", keyBindingsToStringList(QKeySequence::ZoomOut), {}});
-    shortcutsList.append({"Reset Zoom", "resetzoom", QStringList(QKeySequence(Qt::CTRL + Qt::Key_0).toString()), {}});
-    shortcutsList.append({"Original Size", "originalsize", QStringList(QKeySequence(Qt::Key_O).toString()), {}});
-    shortcutsList.append({"Rotate Right", "rotateright", QStringList(QKeySequence(Qt::Key_Up).toString()), {}});
-    shortcutsList.append({"Rotate Left", "rotateleft", QStringList(QKeySequence(Qt::Key_Down).toString()), {}});
-    shortcutsList.append({"Mirror", "mirror", QStringList(QKeySequence(Qt::Key_F).toString()), {}});
-    shortcutsList.append({"Flip", "flip", QStringList(QKeySequence(Qt::CTRL + Qt::Key_F).toString()), {}});
-    shortcutsList.append({"Full Screen", "fullscreen", keyBindingsToStringList(QKeySequence::FullScreen), {}});
+    shortcutsList.append({tr("Zoom Out"), "zoomout", keyBindingsToStringList(QKeySequence::ZoomOut), {}});
+    shortcutsList.append({tr("Reset Zoom"), "resetzoom", QStringList(QKeySequence(Qt::CTRL + Qt::Key_0).toString()), {}});
+    shortcutsList.append({tr("Original Size"), "originalsize", QStringList(QKeySequence(Qt::Key_O).toString()), {}});
+    shortcutsList.append({tr("Rotate Right"), "rotateright", QStringList(QKeySequence(Qt::Key_Up).toString()), {}});
+    shortcutsList.append({tr("Rotate Left"), "rotateleft", QStringList(QKeySequence(Qt::Key_Down).toString()), {}});
+    shortcutsList.append({tr("Mirror"), "mirror", QStringList(QKeySequence(Qt::Key_F).toString()), {}});
+    shortcutsList.append({tr("Flip"), "flip", QStringList(QKeySequence(Qt::CTRL + Qt::Key_F).toString()), {}});
+    shortcutsList.append({tr("Full Screen"), "fullscreen", keyBindingsToStringList(QKeySequence::FullScreen), {}});
     //Fixes alt+enter only working with numpad enter when using qt's standard keybinds
     #ifdef Q_OS_WIN
     shortcutsList.last().defaultShortcuts << QKeySequence(Qt::ALT + Qt::Key_Return).toString();
@@ -674,23 +697,24 @@ void ActionManager::initializeShortcutsList()
         shortcutsList.last().defaultShortcuts << QKeySequence(Qt::Key_F11).toString();
     }
     #endif
-    shortcutsList.append({"Save Frame As", "saveframeas", keyBindingsToStringList(QKeySequence::Save), {}});
-    shortcutsList.append({"Pause", "pause", QStringList(QKeySequence(Qt::Key_P).toString()), {}});
-    shortcutsList.append({"Next Frame", "nextframe", QStringList(QKeySequence(Qt::Key_N).toString()), {}});
-    shortcutsList.append({"Decrease Speed", "decreasespeed", QStringList(QKeySequence(Qt::Key_BracketLeft).toString()), {}});
-    shortcutsList.append({"Reset Speed", "resetspeed", QStringList(QKeySequence(Qt::Key_Backslash).toString()), {}});
-    shortcutsList.append({"Increase Speed", "increasespeed", QStringList(QKeySequence(Qt::Key_BracketRight).toString()), {}});
-    shortcutsList.append({"Toggle Slideshow", "slideshow", {}, {}});
-    shortcutsList.append({"Options", "options", keyBindingsToStringList(QKeySequence::Preferences), {}});
+    shortcutsList.append({tr("Save Frame As"), "saveframeas", keyBindingsToStringList(QKeySequence::Save), {}});
+    shortcutsList.append({tr("Pause"), "pause", QStringList(QKeySequence(Qt::Key_P).toString()), {}});
+    shortcutsList.append({tr("Next Frame"), "nextframe", QStringList(QKeySequence(Qt::Key_N).toString()), {}});
+    shortcutsList.append({tr("Decrease Speed"), "decreasespeed", QStringList(QKeySequence(Qt::Key_BracketLeft).toString()), {}});
+    shortcutsList.append({tr("Reset Speed"), "resetspeed", QStringList(QKeySequence(Qt::Key_Backslash).toString()), {}});
+    shortcutsList.append({tr("Increase Speed"), "increasespeed", QStringList(QKeySequence(Qt::Key_BracketRight).toString()), {}});
+    shortcutsList.append({tr("Toggle Slideshow"), "slideshow", {}, {}});
+    shortcutsList.append({tr("Options"), "options", keyBindingsToStringList(QKeySequence::Preferences), {}});
     #ifdef Q_OS_UNIX
         shortcutsList.last().readableName = tr("Preferences");
     #endif
     // mac exclusive shortcuts
     #ifdef Q_OS_MACOS
-    shortcutsList.append({"New Window", "newwindow", keyBindingsToStringList(QKeySequence::New), {}});
-    shortcutsList.append({"Close Window", "closewindow", QStringList(QKeySequence(Qt::CTRL + Qt::Key_W).toString()), {}});
+    shortcutsList.append({tr("New Window"), "newwindow", keyBindingsToStringList(QKeySequence::New), {}});
+    shortcutsList.append({tr("Close Window"), "closewindow", QStringList(QKeySequence(Qt::CTRL + Qt::Key_W).toString()), {}});
+    shortcutsList.append({tr("Close All"), "closeallwindows", QStringList(QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_W).toString()), {}});
     #endif
-    shortcutsList.append({"Quit", "quit", keyBindingsToStringList(QKeySequence::Quit), {}});
+    shortcutsList.append({tr("Quit"), "quit", keyBindingsToStringList(QKeySequence::Quit), {}});
 }
 
 void ActionManager::updateShortcuts()
@@ -698,16 +722,13 @@ void ActionManager::updateShortcuts()
     QSettings settings;
     settings.beginGroup("shortcuts");
 
-    // Set shortcut's shortcut field to default or user-set
-    QMutableListIterator<SShortcut> iter(shortcutsList);
-    while (iter.hasNext())
+    // Set all shortcuts to the user-set shortcut or the default
+    for (auto &shortcut : shortcutsList)
     {
-        auto value = iter.next();
-        value.shortcuts = settings.value(value.name, value.defaultShortcuts).toStringList();
-        iter.setValue(value);
+        shortcut.shortcuts = settings.value(shortcut.name, shortcut.defaultShortcuts).toStringList();
     }
 
-    // Set action's shortcuts to current shortcut
+    // Set all action shortcuts now that the shortcuts have changed
     for (const auto &shortcut : getShortcutsList())
     {
         const auto actionList = getAllInstancesOfAction(shortcut.name);
@@ -718,19 +739,6 @@ void ActionManager::updateShortcuts()
                 action->setShortcuts(stringListToKeySequenceList(shortcut.shortcuts));
         }
     }
-}
 
-void ActionManager::loadSettings()
-{
-    QSettings settings;
-    settings.beginGroup("options");
-
-    isSaveRecentsEnabled = settings.value("saverecents", true).toBool();
-    auto const recentsMenus = menuCloneLibrary.values("recents");
-    for (const auto &recentsMenu : recentsMenus)
-    {
-        recentsMenu->menuAction()->setVisible(isSaveRecentsEnabled);
-    }
-    if (!isSaveRecentsEnabled)
-        clearRecentsList();
+    emit shortcutsUpdated();
 }
