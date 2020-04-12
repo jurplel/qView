@@ -26,7 +26,7 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
         ui->menubarCheckbox->hide();
     #endif
 
-    loadSettings();
+    loadSettings(false, true);
     loadShortcuts();
 }
 
@@ -63,13 +63,13 @@ void QVOptionsDialog::saveSettings()
     qvApp->getSettingsManager().updateSettings();
 }
 
-void QVOptionsDialog::loadSettings(bool defaults)
+void QVOptionsDialog::loadSettings(bool defaults, bool makeConnections)
 {
     auto &settingsManager = qvApp->getSettingsManager();
     settingsManager.updateSettings();
 
     // bgcolorenabled
-    syncCheckbox(ui->bgColorCheckbox, "bgcolorenabled", defaults);
+    syncCheckbox(ui->bgColorCheckbox, "bgcolorenabled", defaults, makeConnections);
     if (ui->bgColorCheckbox->isChecked())
         ui->bgColorButton->setEnabled(true);
     else
@@ -82,10 +82,10 @@ void QVOptionsDialog::loadSettings(bool defaults)
 
     // titlebarmode
     syncRadioButtons({ui->titlebarRadioButton0, ui->titlebarRadioButton1,
-                     ui->titlebarRadioButton2, ui->titlebarRadioButton3}, "titlebarmode", defaults);
+                     ui->titlebarRadioButton2, ui->titlebarRadioButton3}, "titlebarmode", defaults, makeConnections);
 
     // windowresizemode
-    syncComboBox(ui->windowResizeComboBox, "windowresizemode", defaults);
+    syncComboBox(ui->windowResizeComboBox, "windowresizemode", defaults, makeConnections);
     if (ui->windowResizeComboBox->currentIndex() == 0)
     {
         ui->minWindowResizeLabel->setEnabled(false);
@@ -102,94 +102,132 @@ void QVOptionsDialog::loadSettings(bool defaults)
     }
 
     // minwindowresizedpercentage
-    syncSpinBox(ui->minWindowResizeSpinBox, "minwindowresizedpercentage", defaults);
+    syncSpinBox(ui->minWindowResizeSpinBox, "minwindowresizedpercentage", defaults, makeConnections);
 
     // maxwindowresizedperecentage
-    syncSpinBox(ui->maxWindowResizeSpinBox, "maxwindowresizedpercentage", defaults);
+    syncSpinBox(ui->maxWindowResizeSpinBox, "maxwindowresizedpercentage", defaults, makeConnections);
 
     // menubarenabled
-    syncCheckbox(ui->menubarCheckbox, "menubarenabled", defaults);
+    syncCheckbox(ui->menubarCheckbox, "menubarenabled", defaults, makeConnections);
 
     // filteringenabled
-    syncCheckbox(ui->filteringCheckbox, "filteringenabled", defaults);
+    syncCheckbox(ui->filteringCheckbox, "filteringenabled", defaults, makeConnections);
 
     // scalingenabled
-    syncCheckbox(ui->scalingCheckbox, "scalingenabled", defaults);
+    syncCheckbox(ui->scalingCheckbox, "scalingenabled", defaults, makeConnections);
     if (ui->scalingCheckbox->isChecked())
         ui->scalingTwoCheckbox->setEnabled(true);
     else
         ui->scalingTwoCheckbox->setEnabled(false);
 
     // scalingtwoenabled
-    syncCheckbox(ui->scalingTwoCheckbox, "scalingtwoenabled", defaults);
+    syncCheckbox(ui->scalingTwoCheckbox, "scalingtwoenabled", defaults, makeConnections);
 
     // scalefactor
-    syncSpinBox(ui->scaleFactorSpinBox, "scalefactor", defaults);
+    syncSpinBox(ui->scaleFactorSpinBox, "scalefactor", defaults, makeConnections);
 
     // scrollzoomsenabled
-    syncCheckbox(ui->scrollZoomsCheckbox, "scrollzoomsenabled", defaults);
+    syncCheckbox(ui->scrollZoomsCheckbox, "scrollzoomsenabled", defaults, makeConnections);
 
     // cursorzoom
-    syncCheckbox(ui->cursorZoomCheckbox, "cursorzoom", defaults);
+    syncCheckbox(ui->cursorZoomCheckbox, "cursorzoom", defaults, makeConnections);
 
     // cropmode
-    syncComboBox(ui->cropModeComboBox, "cropmode", defaults);
+    syncComboBox(ui->cropModeComboBox, "cropmode", defaults, makeConnections);
 
     // pastactualsizeenabled
-    syncCheckbox(ui->pastActualSizeCheckbox, "pastactualsizeenabled", defaults);
+    syncCheckbox(ui->pastActualSizeCheckbox, "pastactualsizeenabled", defaults, makeConnections);
 
     // sortmode
-    syncComboBox(ui->sortComboBox, "sortmode", defaults);
+    syncComboBox(ui->sortComboBox, "sortmode", defaults, makeConnections);
 
     // sortascending
-    syncRadioButtons({ui->ascendingRadioButton0, ui->ascendingRadioButton1}, "sortascending", defaults);
+    syncRadioButtons({ui->ascendingRadioButton0, ui->ascendingRadioButton1}, "sortascending", defaults, makeConnections);
 
     // preloadingmode
-    syncComboBox(ui->preloadingComboBox, "preloadingmode", defaults);
+    syncComboBox(ui->preloadingComboBox, "preloadingmode", defaults, makeConnections);
 
     // loopfolders
-    syncCheckbox(ui->loopFoldersCheckbox, "loopfoldersenabled", defaults);
+    syncCheckbox(ui->loopFoldersCheckbox, "loopfoldersenabled", defaults, makeConnections);
 
     // slideshowreversed
-    syncComboBox(ui->slideshowDirectionComboBox, "slideshowreversed", defaults);
+    syncComboBox(ui->slideshowDirectionComboBox, "slideshowreversed", defaults, makeConnections);
 
     // slideshowtimer
-    syncDoubleSpinBox(ui->slideshowTimerSpinBox, "slideshowtimer", defaults);
+    syncDoubleSpinBox(ui->slideshowTimerSpinBox, "slideshowtimer", defaults, makeConnections);
 
     // saverecents
-    syncCheckbox(ui->saveRecentsCheckbox, "saverecents", defaults);
+    syncCheckbox(ui->saveRecentsCheckbox, "saverecents", defaults, makeConnections);
 }
 
-void QVOptionsDialog::syncCheckbox(QCheckBox *checkbox, const QString &key, bool defaults)
+void QVOptionsDialog::syncCheckbox(QCheckBox *checkbox, const QString &key, bool defaults, bool makeConnection)
 {
+    if (makeConnection)
+    {
+        connect(checkbox, &QCheckBox::stateChanged, [this, key](int arg1){
+            transientSettings.insert(key, static_cast<bool>(arg1));
+        });
+    }
+
     auto val = qvApp->getSettingsManager().getBoolean(key, defaults);
     checkbox->setChecked(val);
     transientSettings.insert(key, val);
 }
 
-void QVOptionsDialog::syncRadioButtons(QList<QRadioButton *> buttons, const QString &key, bool defaults)
+void QVOptionsDialog::syncRadioButtons(QList<QRadioButton *> buttons, const QString &key, bool defaults, bool makeConnection)
 {
+    if (makeConnection)
+    {
+        for (int i = 0; i < buttons.length(); i++)
+        {
+            connect(buttons.value(i), &QRadioButton::clicked, [this, key, i]{
+                transientSettings.insert(key, i);
+            });
+        }
+    }
+
     auto val = qvApp->getSettingsManager().getInteger(key, defaults);
     buttons.value(val)->setChecked(true);
     transientSettings.insert(key, val);
 }
 
-void QVOptionsDialog::syncComboBox(QComboBox *comboBox, const QString &key, bool defaults)
+void QVOptionsDialog::syncComboBox(QComboBox *comboBox, const QString &key, bool defaults, bool makeConnection)
 {
+    if (makeConnection)
+    {
+        connect(comboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), [this, key](int index){
+            transientSettings.insert(key, index);
+        });
+    }
+
     auto val = qvApp->getSettingsManager().getInteger(key, defaults);
     comboBox->setCurrentIndex(val);
     transientSettings.insert(key, val);
 }
 
-void QVOptionsDialog::syncSpinBox(QSpinBox *spinBox, const QString &key, bool defaults)
+void QVOptionsDialog::syncSpinBox(QSpinBox *spinBox, const QString &key, bool defaults, bool makeConnection)
 {
+    if (makeConnection)
+    {
+        connect(spinBox, QOverload<int>::of(&QSpinBox::valueChanged), [this, key](int arg1){
+            transientSettings.insert(key, arg1);
+        });
+    }
+
     auto val = qvApp->getSettingsManager().getInteger(key, defaults);
     spinBox->setValue(val);
     transientSettings.insert(key, val);
 }
 
-void QVOptionsDialog::syncDoubleSpinBox(QDoubleSpinBox *doubleSpinBox, const QString &key, bool defaults)
+void QVOptionsDialog::syncDoubleSpinBox(QDoubleSpinBox *doubleSpinBox, const QString &key, bool defaults, bool makeConnection)
 {
+    if (makeConnection)
+    {
+        connect(doubleSpinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [this, key](double arg1){
+            transientSettings.insert(key, arg1);
+        });
+    }
+
     auto val = qvApp->getSettingsManager().getDouble(key, defaults);
     doubleSpinBox->setValue(val);
     transientSettings.insert(key, val);
@@ -250,11 +288,17 @@ void QVOptionsDialog::on_shortcutsTable_cellDoubleClicked(int row, int column)
     shortcutDialog->open();
 }
 
-void QVOptionsDialog::updateBgColorButton()
+void QVOptionsDialog::on_buttonBox_clicked(QAbstractButton *button)
 {
-    QPixmap newPixmap = QPixmap(32, 32);
-    newPixmap.fill(ui->bgColorButton->text());
-    ui->bgColorButton->setIcon(QIcon(newPixmap));
+    if (ui->buttonBox->buttonRole(button) == QDialogButtonBox::AcceptRole || ui->buttonBox->buttonRole(button) == QDialogButtonBox::ApplyRole)
+    {
+        saveSettings();
+    }
+    else if (ui->buttonBox->buttonRole(button) == QDialogButtonBox::ResetRole)
+    {
+        loadSettings(true);
+        loadShortcuts(true);
+    }
 }
 
 void QVOptionsDialog::on_bgColorButton_clicked()
@@ -270,17 +314,11 @@ void QVOptionsDialog::on_bgColorButton_clicked()
     updateBgColorButton();
 }
 
-void QVOptionsDialog::on_buttonBox_clicked(QAbstractButton *button)
+void QVOptionsDialog::updateBgColorButton()
 {
-    if (ui->buttonBox->buttonRole(button) == QDialogButtonBox::AcceptRole || ui->buttonBox->buttonRole(button) == QDialogButtonBox::ApplyRole)
-    {
-        saveSettings();
-    }
-    else if (ui->buttonBox->buttonRole(button) == QDialogButtonBox::ResetRole)
-    {
-        loadSettings(true);
-        loadShortcuts(true);
-    }
+    QPixmap newPixmap = QPixmap(32, 32);
+    newPixmap.fill(ui->bgColorButton->text());
+    ui->bgColorButton->setIcon(QIcon(newPixmap));
 }
 
 void QVOptionsDialog::on_bgColorCheckbox_stateChanged(int arg1)
@@ -294,83 +332,16 @@ void QVOptionsDialog::on_bgColorCheckbox_stateChanged(int arg1)
     updateBgColorButton();
 }
 
-void QVOptionsDialog::on_filteringCheckbox_stateChanged(int arg1)
-{
-    transientSettings.insert("filteringenabled", static_cast<bool>(arg1));
-}
-
 void QVOptionsDialog::on_scalingCheckbox_stateChanged(int arg1)
 {
-    transientSettings.insert("scalingenabled", static_cast<bool>(arg1));
     if (arg1 > 0)
         ui->scalingTwoCheckbox->setEnabled(true);
     else
         ui->scalingTwoCheckbox->setEnabled(false);
 }
 
-void QVOptionsDialog::on_menubarCheckbox_stateChanged(int arg1)
-{
-    transientSettings.insert("menubarenabled", static_cast<bool>(arg1));
-}
-
-void QVOptionsDialog::on_cropModeComboBox_currentIndexChanged(int index)
-{
-    transientSettings.insert("cropmode", index);
-}
-
-void QVOptionsDialog::on_slideshowTimerSpinBox_valueChanged(double arg1)
-{
-    transientSettings.insert("slideshowtimer", arg1);
-}
-
-void QVOptionsDialog::on_slideshowDirectionComboBox_currentIndexChanged(int index)
-{
-    transientSettings.insert("slideshowreversed", static_cast<bool>(index));
-}
-
-void QVOptionsDialog::on_scaleFactorSpinBox_valueChanged(int arg1)
-{
-    transientSettings.insert("scalefactor", arg1);
-}
-
-void QVOptionsDialog::on_scalingTwoCheckbox_stateChanged(int arg1)
-{
-    transientSettings.insert("scalingtwoenabled", static_cast<bool>(arg1));
-}
-
-void QVOptionsDialog::on_pastActualSizeCheckbox_stateChanged(int arg1)
-{
-    transientSettings.insert("pastactualsizeenabled", static_cast<bool>(arg1));
-}
-
-void QVOptionsDialog::on_scrollZoomsCheckbox_stateChanged(int arg1)
-{
-    transientSettings.insert("scrollzoomsenabled", static_cast<bool>(arg1));
-}
-
-void QVOptionsDialog::on_titlebarRadioButton0_clicked()
-{
-    transientSettings.insert("titlebarmode", 0);
-}
-
-void QVOptionsDialog::on_titlebarRadioButton1_clicked()
-{
-    transientSettings.insert("titlebarmode", 1);
-}
-
-void QVOptionsDialog::on_titlebarRadioButton2_clicked()
-{
-    transientSettings.insert("titlebarmode", 2);
-}
-
-void QVOptionsDialog::on_titlebarRadioButton3_clicked()
-{
-    transientSettings.insert("titlebarmode", 3);
-}
-
 void QVOptionsDialog::on_windowResizeComboBox_currentIndexChanged(int index)
 {
-    transientSettings.insert("windowresizemode", index);
     if (index == 0)
     {
         ui->minWindowResizeLabel->setEnabled(false);
@@ -385,49 +356,4 @@ void QVOptionsDialog::on_windowResizeComboBox_currentIndexChanged(int index)
         ui->maxWindowResizeLabel->setEnabled(true);
         ui->maxWindowResizeSpinBox->setEnabled(true);
     }
-}
-
-void QVOptionsDialog::on_minWindowResizeSpinBox_valueChanged(int arg1)
-{
-    transientSettings.insert("minwindowresizedpercentage", arg1);
-}
-
-void QVOptionsDialog::on_maxWindowResizeSpinBox_valueChanged(int arg1)
-{
-    transientSettings.insert("maxwindowresizedpercentage", arg1);
-}
-
-void QVOptionsDialog::on_loopFoldersCheckbox_stateChanged(int arg1)
-{
-    transientSettings.insert("loopfolders", static_cast<bool>(arg1));
-}
-
-void QVOptionsDialog::on_preloadingComboBox_currentIndexChanged(int index)
-{
-    transientSettings.insert("preloadingmode", index);
-}
-
-void QVOptionsDialog::on_sortComboBox_currentIndexChanged(int index)
-{
-    transientSettings.insert("sortmode", index);
-}
-
-void QVOptionsDialog::on_ascendingRadioButton0_clicked()
-{
-    transientSettings.insert("sortascending", true);
-}
-
-void QVOptionsDialog::on_ascendingRadioButton1_clicked()
-{
-    transientSettings.insert("sortascending", false);
-}
-
-void QVOptionsDialog::on_saveRecentsCheckbox_stateChanged(int arg1)
-{
-    transientSettings.insert("saverecents", static_cast<bool>(arg1));
-}
-
-void QVOptionsDialog::on_cursorZoomCheckbox_stateChanged(int arg1)
-{
-    transientSettings.insert("cursorzoom", static_cast<bool>(arg1));
 }
