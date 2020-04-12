@@ -22,6 +22,7 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     // Load window geometry
     QSettings settings;
     restoreGeometry(settings.value("optionsgeometry").toByteArray());
+    ui->tabWidget->setCurrentIndex(settings.value("optionstab", 1).toInt());
 
     #ifdef Q_OS_UNIX
     setWindowTitle("Preferences");
@@ -77,6 +78,7 @@ void QVOptionsDialog::actuallyClose(QCloseEvent *event)
     // Save window geometry
     QSettings settings;
     settings.setValue("optionsgeometry", saveGeometry());
+    settings.setValue("optionstab", ui->tabWidget->currentIndex());
 
     QDialog::closeEvent(event);
 }
