@@ -6,6 +6,7 @@
 #include <QScreen>
 #include <QMessageBox>
 #include <QSettings>
+#include <QCloseEvent>
 
 #include <QDebug>
 
@@ -18,21 +19,84 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint | Qt::CustomizeWindowHint);
 
+    // Load window geometry
+    QSettings settings;
+    restoreGeometry(settings.value("optionsgeometry").toByteArray());
+
     #ifdef Q_OS_UNIX
     setWindowTitle("Preferences");
     #endif
 
-    #ifdef Q_OS_MACX
-        ui->menubarCheckbox->hide();
+    #ifdef Q_OS_MACOS
+    ui->menubarCheckbox->hide();
     #endif
 
-    loadSettings(false, true);
-    loadShortcuts();
+    syncSettings(false, true);
+    syncShortcuts();
 }
 
 QVOptionsDialog::~QVOptionsDialog()
 {
     delete ui;
+}
+
+void QVOptionsDialog::closeEvent(QCloseEvent *event)
+{
+    if (isWindowModified())
+    {
+        QMessageBox *messageBox = new QMessageBox(QMessageBox::Question,
+            tr("Unsaved Changes"), tr("Save changes before closing?"),
+            QMessageBox::No | QMessageBox::Yes | QMessageBox::Cancel, this);
+        messageBox->setWindowModality(Qt::WindowModal);
+        messageBox->setAttribute(Qt::WA_DeleteOnClose);
+        connect(messageBox, &QDialog::finished, [this, event](int result){
+            qDebug() << static_cast<QMessageBox::StandardButton>(result);
+            switch(result) {
+            case QMessageBox::StandardButton::Yes: {
+                saveSettings();
+                actuallyClose(event);
+                break;
+            }
+            case QMessageBox::StandardButton::No: {
+                actuallyClose(event);
+                break;
+            }
+            }
+        });
+        messageBox->open();
+        event->ignore();
+    }
+    else
+    {
+    actuallyClose(event);
+    }
+}
+
+void QVOptionsDialog::actuallyClose(QCloseEvent *event)
+{
+    // Save window geometry
+    QSettings settings;
+    settings.setValue("optionsgeometry", saveGeometry());
+
+    QDialog::closeEvent(event);
+}
+
+void QVOptionsDialog::modifySetting(QString key, QVariant value)
+{
+    transientSettings.insert(key, value);
+
+    setWindowModified(false);
+    const auto keys = transientSettings.keys();
+    for (const auto &key : keys)
+    {
+        const auto &value0 = transientSettings.value(key);
+        const auto &value1 = qvApp->getSettingsManager().getSetting(key);
+        if (value1 != value0)
+        {
+            setWindowModified(true);
+            break;
+        }
+    }
 }
 
 void QVOptionsDialog::saveSettings()
@@ -61,9 +125,11 @@ void QVOptionsDialog::saveSettings()
 
     qvApp->getActionManager().updateShortcuts();
     qvApp->getSettingsManager().updateSettings();
+
+    setWindowModified(false);
 }
 
-void QVOptionsDialog::loadSettings(bool defaults, bool makeConnections)
+void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
 {
     auto &settingsManager = qvApp->getSettingsManager();
     settingsManager.updateSettings();
@@ -79,6 +145,7 @@ void QVOptionsDialog::loadSettings(bool defaults, bool makeConnections)
     ui->bgColorButton->setText(settingsManager.getString("bgcolor", defaults));
     transientSettings.insert("bgcolor", ui->bgColorButton->text());
     updateBgColorButton();
+    connect(ui->bgColorButton, &QPushButton::clicked, this, &QVOptionsDialog::bgColorButtonClicked);
 
     // titlebarmode
     syncRadioButtons({ui->titlebarRadioButton0, ui->titlebarRadioButton1,
@@ -162,78 +229,78 @@ void QVOptionsDialog::loadSettings(bool defaults, bool makeConnections)
 
 void QVOptionsDialog::syncCheckbox(QCheckBox *checkbox, const QString &key, bool defaults, bool makeConnection)
 {
-    if (makeConnection)
-    {
-        connect(checkbox, &QCheckBox::stateChanged, [this, key](int arg1){
-            transientSettings.insert(key, static_cast<bool>(arg1));
-        });
-    }
-
     auto val = qvApp->getSettingsManager().getBoolean(key, defaults);
     checkbox->setChecked(val);
     transientSettings.insert(key, val);
+
+    if (makeConnection)
+    {
+        connect(checkbox, &QCheckBox::stateChanged, [this, key](int arg1){
+            modifySetting(key, static_cast<bool>(arg1));
+        });
+    }
 }
 
 void QVOptionsDialog::syncRadioButtons(QList<QRadioButton *> buttons, const QString &key, bool defaults, bool makeConnection)
 {
+    auto val = qvApp->getSettingsManager().getInteger(key, defaults);
+    buttons.value(val)->setChecked(true);
+    transientSettings.insert(key, val);
+
     if (makeConnection)
     {
         for (int i = 0; i < buttons.length(); i++)
         {
             connect(buttons.value(i), &QRadioButton::clicked, [this, key, i]{
-                transientSettings.insert(key, i);
+                modifySetting(key, i);
             });
         }
     }
-
-    auto val = qvApp->getSettingsManager().getInteger(key, defaults);
-    buttons.value(val)->setChecked(true);
-    transientSettings.insert(key, val);
 }
 
 void QVOptionsDialog::syncComboBox(QComboBox *comboBox, const QString &key, bool defaults, bool makeConnection)
 {
-    if (makeConnection)
-    {
-        connect(comboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), [this, key](int index){
-            transientSettings.insert(key, index);
-        });
-    }
-
     auto val = qvApp->getSettingsManager().getInteger(key, defaults);
     comboBox->setCurrentIndex(val);
     transientSettings.insert(key, val);
+
+    if (makeConnection)
+    {
+        connect(comboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), [this, key](int index){
+            modifySetting(key, index);
+        });
+    }
 }
 
 void QVOptionsDialog::syncSpinBox(QSpinBox *spinBox, const QString &key, bool defaults, bool makeConnection)
 {
-    if (makeConnection)
-    {
-        connect(spinBox, QOverload<int>::of(&QSpinBox::valueChanged), [this, key](int arg1){
-            transientSettings.insert(key, arg1);
-        });
-    }
-
     auto val = qvApp->getSettingsManager().getInteger(key, defaults);
     spinBox->setValue(val);
     transientSettings.insert(key, val);
+
+    if (makeConnection)
+    {
+        connect(spinBox, QOverload<int>::of(&QSpinBox::valueChanged), [this, key](int arg1){
+            modifySetting(key, arg1);
+        });
+    }
 }
 
 void QVOptionsDialog::syncDoubleSpinBox(QDoubleSpinBox *doubleSpinBox, const QString &key, bool defaults, bool makeConnection)
 {
-    if (makeConnection)
-    {
-        connect(doubleSpinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [this, key](double arg1){
-            transientSettings.insert(key, arg1);
-        });
-    }
-
     auto val = qvApp->getSettingsManager().getDouble(key, defaults);
     doubleSpinBox->setValue(val);
     transientSettings.insert(key, val);
+
+    if (makeConnection)
+    {
+        connect(doubleSpinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [this, key](double arg1){
+            modifySetting(key, arg1);
+        });
+    }
 }
 
-void QVOptionsDialog::loadShortcuts(bool defaults)
+void QVOptionsDialog::syncShortcuts(bool defaults)
 {
     qvApp->getActionManager().updateShortcuts();
 
@@ -296,22 +363,28 @@ void QVOptionsDialog::on_buttonBox_clicked(QAbstractButton *button)
     }
     else if (ui->buttonBox->buttonRole(button) == QDialogButtonBox::ResetRole)
     {
-        loadSettings(true);
-        loadShortcuts(true);
+        syncSettings(true);
+        syncShortcuts(true);
     }
 }
 
-void QVOptionsDialog::on_bgColorButton_clicked()
+void QVOptionsDialog::bgColorButtonClicked()
 {
 
-    QColor selectedColor = QColorDialog::getColor(qvApp->getSettingsManager().getString("bgcolor"), this);
+    auto *colorDialog = new QColorDialog(ui->bgColorButton->text(), this);
+    colorDialog->setWindowModality(Qt::WindowModal);
+    connect(colorDialog, &QDialog::accepted, [this, colorDialog]{
+        auto selectedColor = colorDialog->currentColor();
 
-    if (!selectedColor.isValid())
-        return;
+        if (!selectedColor.isValid())
+            return;
 
-    transientSettings.insert("bgcolor", selectedColor.name());
-    ui->bgColorButton->setText(selectedColor.name());
-    updateBgColorButton();
+        transientSettings.insert("bgcolor", selectedColor.name());
+        ui->bgColorButton->setText(selectedColor.name());
+        updateBgColorButton();
+        colorDialog->deleteLater();
+    });
+    colorDialog->open();
 }
 
 void QVOptionsDialog::updateBgColorButton()
@@ -323,7 +396,6 @@ void QVOptionsDialog::updateBgColorButton()
 
 void QVOptionsDialog::on_bgColorCheckbox_stateChanged(int arg1)
 {
-    transientSettings.insert("bgcolorenabled", static_cast<bool>(arg1));
     if (arg1 > 0)
         ui->bgColorButton->setEnabled(true);
     else

@@ -23,26 +23,29 @@ public:
     explicit QVOptionsDialog(QWidget *parent = nullptr);
     ~QVOptionsDialog() override;
 
-    void updateBgColorButton();
-
 
 protected:
+    void closeEvent(QCloseEvent *event) override;
+
+    void actuallyClose(QCloseEvent *event);
+
+    void modifySetting(QString key, QVariant value);
     void saveSettings();
-    void loadSettings(bool defaults = false, bool makeConnections = false);
+    void syncSettings(bool defaults = false, bool makeConnections = false);
     void syncCheckbox(QCheckBox *checkbox, const QString &key, bool defaults = false, bool makeConnection = false);
     void syncRadioButtons(QList<QRadioButton*> buttons, const QString &key, bool defaults = false, bool makeConnection = false);
     void syncComboBox(QComboBox *comboBox, const QString &key, bool defaults = false, bool makeConnection = false);
     void syncSpinBox(QSpinBox *spinBox, const QString &key, bool defaults = false, bool makeConnection = false);
     void syncDoubleSpinBox(QDoubleSpinBox *doubleSpinBox, const QString &key, bool defaults = false, bool makeConnection = false);
-    void loadShortcuts(bool defaults = false);
+    void syncShortcuts(bool defaults = false);
     void updateShortcutsTable();
+    void bgColorButtonClicked();
+    void updateBgColorButton();
 
 private slots:
     void on_shortcutsTable_cellDoubleClicked(int row, int column);
 
     void on_buttonBox_clicked(QAbstractButton *button);
-
-    void on_bgColorButton_clicked();
 
     void on_bgColorCheckbox_stateChanged(int arg1);
 
