@@ -7,14 +7,17 @@
 
 static void setNestedSubmenusUnclickable(NSMenu *menu)
 {
+    // Stop menu items with no actions being disabled automatically
     [menu setAutoenablesItems:false];
     for (NSMenuItem *item in menu.itemArray)
     {
+        // Update each item so the submenus actually show up
         [menu.delegate menu:menu updateItem:item atIndex:0 shouldCancel:false];
+        // Hide shortcuts from menu as is typical for context menus
         [item setKeyEquivalent:@""];
         if (item.hasSubmenu)
         {
-            [item.submenu update];
+            // Stop items with submenus from being clickable
             setNestedSubmenusUnclickable(item.submenu);
             [item setAction:nullptr];
         }

@@ -115,6 +115,8 @@ void QVApplication::pickFile(MainWindow *parent)
     fileDialog->setDirectory(settings.value("lastFileDialogDir", QDir::homePath()).toString());
     fileDialog->setFileMode(QFileDialog::ExistingFiles);
     fileDialog->setNameFilters(qvApp->getNameFilterList());
+    if (parent)
+        fileDialog->setWindowModality(Qt::WindowModal);
 
     connect(fileDialog, &QFileDialog::filesSelected, [parent](const QStringList &selected){
         bool isFirstLoop = true;
