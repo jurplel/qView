@@ -96,6 +96,13 @@ void QVApplication::openFile(MainWindow *window, const QString &file, bool resiz
     window->openFile(file);
 }
 
+void QVApplication::openFile(const QString &file, bool resize)
+{
+    auto *window = qvApp->getMainWindow(true);
+
+    QVApplication::openFile(window, file, resize);
+}
+
 void QVApplication::pickFile(MainWindow *parent)
 {
     QSettings settings;
@@ -113,7 +120,7 @@ void QVApplication::pickFile(MainWindow *parent)
             if (isFirstLoop && parent)
                 parent->openFile(file);
             else
-                QVApplication::openFile(QVApplication::newWindow(), file);
+                QVApplication::openFile(file);
 
             isFirstLoop = false;
         }
@@ -145,7 +152,8 @@ MainWindow *QVApplication::getMainWindow(bool shouldBeEmpty)
 
         if (shouldBeEmpty)
         {
-            if (!window->getIsPixmapLoaded())
+            // File info is set if an image load is requested, but not loaded
+            if (!window->getCurrentFileDetails().isLoadRequested)
             {
                 return window;
             }
@@ -164,7 +172,7 @@ MainWindow *QVApplication::getMainWindow(bool shouldBeEmpty)
         {
             if (shouldBeEmpty)
             {
-                if (!window->getIsPixmapLoaded())
+                if (!window->getCurrentFileDetails().isLoadRequested)
                 {
                     return window;
                 }
@@ -178,7 +186,6 @@ MainWindow *QVApplication::getMainWindow(bool shouldBeEmpty)
 
     // If there are no valid ones, make a new one.
     auto *window = newWindow();
-
     return window;
 }
 

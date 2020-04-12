@@ -329,7 +329,7 @@ void QVGraphicsView::loadMimeData(const QMimeData *mimeData)
             first = false;
             continue;
         }
-        QVApplication::openFile(QVApplication::newWindow(), url.toString());
+        QVApplication::openFile(url.toString());
     }
 }
 
@@ -496,12 +496,12 @@ void QVGraphicsView::originalSize(bool setVariables)
 
 void QVGraphicsView::goToFile(const goToFileMode &mode, int index)
 {
-    if (getCurrentFileDetails().folder.isEmpty())
+    if (getCurrentFileDetails().folderFileInfoList.isEmpty())
         return;
 
     imageCore.updateFolderInfo();
 
-    int newIndex = getCurrentFileDetails().folderIndex;
+    int newIndex = getCurrentFileDetails().loadedIndexInFolder;
 
     switch (mode) {
     case goToFileMode::constant:
@@ -519,7 +519,7 @@ void QVGraphicsView::goToFile(const goToFileMode &mode, int index)
         if (newIndex == 0)
         {
             if (isLoopFoldersEnabled)
-                newIndex = getCurrentFileDetails().folder.size()-1;
+                newIndex = getCurrentFileDetails().folderFileInfoList.size()-1;
             else
                 emit cancelSlideshow();
         }
@@ -529,7 +529,7 @@ void QVGraphicsView::goToFile(const goToFileMode &mode, int index)
     }
     case goToFileMode::next:
     {
-        if (getCurrentFileDetails().folder.size()-1 == newIndex)
+        if (getCurrentFileDetails().folderFileInfoList.size()-1 == newIndex)
         {
             if (isLoopFoldersEnabled)
                 newIndex = 0;
@@ -542,12 +542,12 @@ void QVGraphicsView::goToFile(const goToFileMode &mode, int index)
     }
     case goToFileMode::last:
     {
-        newIndex = getCurrentFileDetails().folder.size()-1;
+        newIndex = getCurrentFileDetails().folderFileInfoList.size()-1;
         break;
     }
     }
 
-    const QFileInfo nextImage = getCurrentFileDetails().folder.value(newIndex);
+    const QFileInfo nextImage = getCurrentFileDetails().folderFileInfoList.value(newIndex);
     if (!nextImage.isFile())
         return;
 

@@ -254,7 +254,7 @@ void MainWindow::refreshProperties()
         value4 = graphicsView->getLoadedMovie().frameCount();
     else
         value4 = 0;
-    info->setInfo(getCurrentFileDetails().fileInfo, getCurrentFileDetails().imageSize.width(), getCurrentFileDetails().imageSize.height(), value4);
+    info->setInfo(getCurrentFileDetails().fileInfo, getCurrentFileDetails().baseImageSize.width(), getCurrentFileDetails().baseImageSize.height(), value4);
 }
 
 void MainWindow::buildWindowTitle()
@@ -276,18 +276,18 @@ void MainWindow::buildWindowTitle()
     }
     case 2:
     {
-        newString += QString::number(getCurrentFileDetails().folderIndex+1);
-        newString += "/" + QString::number(getCurrentFileDetails().folder.count());
+        newString += QString::number(getCurrentFileDetails().loadedIndexInFolder+1);
+        newString += "/" + QString::number(getCurrentFileDetails().folderFileInfoList.count());
         newString += " - " + getCurrentFileDetails().fileInfo.fileName();
         break;
     }
     case 3:
     {
-        newString += QString::number(getCurrentFileDetails().folderIndex+1);
-        newString += "/" + QString::number(getCurrentFileDetails().folder.count());
+        newString += QString::number(getCurrentFileDetails().loadedIndexInFolder+1);
+        newString += "/" + QString::number(getCurrentFileDetails().folderFileInfoList.count());
         newString += " - " + getCurrentFileDetails().fileInfo.fileName();
-        newString += " - "  + QString::number(getCurrentFileDetails().imageSize.width());
-        newString += "x" + QString::number(getCurrentFileDetails().imageSize.height());
+        newString += " - "  + QString::number(getCurrentFileDetails().baseImageSize.width());
+        newString += "x" + QString::number(getCurrentFileDetails().baseImageSize.height());
         newString += " - " + QVInfoDialog::formatBytes(getCurrentFileDetails().fileInfo.size());
         newString += " - qView";
         break;

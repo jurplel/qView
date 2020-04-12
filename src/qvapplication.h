@@ -25,6 +25,8 @@ public:
 
     static void openFile(MainWindow *window, const QString &file, bool resize = true);
 
+    static void openFile(const QString &file, bool resize = true);
+
     static void pickFile(MainWindow *parent = nullptr);
 
     static void pickUrl(MainWindow *parnet = nullptr);
