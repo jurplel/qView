@@ -11,6 +11,7 @@ static void setNestedSubmenusUnclickable(NSMenu *menu)
     for (NSMenuItem *item in menu.itemArray)
     {
         [menu.delegate menu:menu updateItem:item atIndex:0 shouldCancel:false];
+        [item setKeyEquivalent:@""];
         if (item.hasSubmenu)
         {
             [item.submenu update];
