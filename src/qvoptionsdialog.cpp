@@ -46,18 +46,18 @@ void QVOptionsDialog::closeEvent(QCloseEvent *event)
     {
         QMessageBox *messageBox = new QMessageBox(QMessageBox::Question,
             tr("Unsaved Changes"), tr("Save changes before closing?"),
-            QMessageBox::No | QMessageBox::Yes | QMessageBox::Cancel, this);
+            QMessageBox::Discard | QMessageBox::Save | QMessageBox::Cancel, this);
         messageBox->setWindowModality(Qt::WindowModal);
         messageBox->setAttribute(Qt::WA_DeleteOnClose);
+        messageBox->setDefaultButton(QMessageBox::Save);
         connect(messageBox, &QDialog::finished, [this, event](int result){
-            qDebug() << static_cast<QMessageBox::StandardButton>(result);
             switch(result) {
-            case QMessageBox::StandardButton::Yes: {
+            case QMessageBox::StandardButton::Save: {
                 saveSettings();
                 actuallyClose(event);
                 break;
             }
-            case QMessageBox::StandardButton::No: {
+            case QMessageBox::StandardButton::Discard: {
                 actuallyClose(event);
                 break;
             }
@@ -68,7 +68,7 @@ void QVOptionsDialog::closeEvent(QCloseEvent *event)
     }
     else
     {
-    actuallyClose(event);
+        actuallyClose(event);
     }
 }
 
@@ -379,7 +379,7 @@ void QVOptionsDialog::bgColorButtonClicked()
         if (!selectedColor.isValid())
             return;
 
-        transientSettings.insert("bgcolor", selectedColor.name());
+        modifySetting("bgcolor", selectedColor.name());
         ui->bgColorButton->setText(selectedColor.name());
         updateBgColorButton();
         colorDialog->deleteLater();
