@@ -129,8 +129,6 @@ public:
 
     QMenuBar *buildMenuBar(QWidget *parent = nullptr);
 
-    QMenu *buildGifMenu(QWidget *parent = nullptr);
-
     QMenu *buildViewMenu(bool addIcon = true, QWidget *parent = nullptr);
 
     QMenu *buildToolsMenu(bool addIcon = true, QWidget *parent = nullptr);
@@ -183,7 +181,7 @@ private:
     QList<SShortcut> shortcutsList;
 
     QMenu *windowMenu;
-    
+
     QList<SRecent> recentsList;
 
     QTimer *recentsSaveTimer;

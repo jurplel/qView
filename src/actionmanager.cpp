@@ -6,7 +6,7 @@
 #include <QMimeDatabase>
 
 ActionManager::ActionManager(QObject *parent) : QObject(parent)
-{    
+{
     isSaveRecentsEnabled = true;
     recentsListMaxLength = 10;
 
@@ -158,11 +158,7 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     // End of go menu
 
     // Beginning of tools menu
-    auto *toolsMenu = new QMenu(tr("Tools"), menuBar);
-    toolsMenu->addActions(buildGifMenu(menuBar)->actions());
-    toolsMenu->addSeparator();
-    toolsMenu->addAction(cloneAction("slideshow"));
-    menuBar->addMenu(toolsMenu);
+    menuBar->addMenu(buildToolsMenu(false, menuBar));
     // End of tools menu
 
     // Beginning of window menu
@@ -174,24 +170,6 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     // End of help menu
 
     return menuBar;
-}
-
-QMenu *ActionManager::buildGifMenu(QWidget *parent)
-{
-    auto *gifMenu = new QMenu(tr("GIF Controls"), parent);
-    gifMenu->menuAction()->setData("gif");
-    gifMenu->setIcon(QIcon::fromTheme("media-playlist-repeat"));
-
-    gifMenu->addAction(cloneAction("saveframeas"));
-    gifMenu->addAction(cloneAction("pause"));
-    gifMenu->addAction(cloneAction("nextframe"));
-    gifMenu->addSeparator();
-    gifMenu->addAction(cloneAction("decreasespeed"));
-    gifMenu->addAction(cloneAction("resetspeed"));
-    gifMenu->addAction(cloneAction("increasespeed"));
-
-    menuCloneLibrary.insert(gifMenu->menuAction()->data().toString(), gifMenu);
-    return gifMenu;
 }
 
 QMenu *ActionManager::buildViewMenu(bool addIcon, QWidget *parent)
@@ -225,7 +203,14 @@ QMenu *ActionManager::buildToolsMenu(bool addIcon, QWidget *parent)
     if (addIcon)
         toolsMenu->setIcon(QIcon::fromTheme("configure", QIcon::fromTheme("preferences-other")));
 
-    toolsMenu->addMenu(buildGifMenu(toolsMenu));
+    toolsMenu->addAction(cloneAction("saveframeas"));
+    toolsMenu->addAction(cloneAction("pause"));
+    toolsMenu->addAction(cloneAction("nextframe"));
+    toolsMenu->addSeparator();
+    toolsMenu->addAction(cloneAction("decreasespeed"));
+    toolsMenu->addAction(cloneAction("resetspeed"));
+    toolsMenu->addAction(cloneAction("increasespeed"));
+    toolsMenu->addSeparator();
     toolsMenu->addAction(cloneAction("slideshow"));
     toolsMenu->addAction(cloneAction("options"));
 
@@ -393,7 +378,7 @@ void ActionManager::updateRecentsMenu()
 }
 
 void ActionManager::actionTriggered(QAction *triggeredAction)
-{ 
+{
     auto key = triggeredAction->data().toString();
 
     // For some actions, do not look for a relevant window
