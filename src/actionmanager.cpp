@@ -116,6 +116,7 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     fileMenu->addMenu(buildRecentsMenu(true, menuBar));
     #ifdef Q_OS_MACOS
     fileMenu->addAction(cloneAction("closewindow"));
+    fileMenu->addAction(cloneAction("closeallwindows"));
     #endif
     fileMenu->addSeparator();
     fileMenu->addAction(cloneAction("opencontainingfolder"));
@@ -425,7 +426,11 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
     } else if (key == "openurl") {
         relevantWindow->pickUrl();
     } else if (key == "closewindow") {
-        relevantWindow->close();
+        QApplication::activeWindow()->close();
+    } else if (key == "closeallwindows") {
+        for (auto &widget : QApplication::topLevelWidgets()) {
+            widget->close();
+        }
     } else if (key == "opencontainingfolder") {
         relevantWindow->openContainingFolder();
     } else if (key == "showfileinfo") {
@@ -506,6 +511,10 @@ void ActionManager::initializeActionLibrary()
     auto *closeWindowAction = new QAction(QIcon::fromTheme("window-close"), tr("Close Window"));
     closeWindowAction->setData("closewindow");
     actionLibrary.insert("closewindow", closeWindowAction);
+
+    auto *closeAllWindowsAction = new QAction(QIcon::fromTheme("window-close"), tr("Close All"));
+    closeAllWindowsAction->setData("closeallwindows");
+    actionLibrary.insert("closeallwindows", closeAllWindowsAction);
 
     auto *openContainingFolderAction = new QAction(QIcon::fromTheme("document-open"), tr("Open Containing Folder"));
     #if defined Q_OS_WIN
@@ -693,6 +702,7 @@ void ActionManager::initializeShortcutsList()
     #ifdef Q_OS_MACOS
     shortcutsList.append({"New Window", "newwindow", keyBindingsToStringList(QKeySequence::New), {}});
     shortcutsList.append({"Close Window", "closewindow", QStringList(QKeySequence(Qt::CTRL + Qt::Key_W).toString()), {}});
+    shortcutsList.append({"Close All", "closeallwindows", QStringList(QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_W).toString()), {}});
     #endif
     shortcutsList.append({"Quit", "quit", keyBindingsToStringList(QKeySequence::Quit), {}});
 }
