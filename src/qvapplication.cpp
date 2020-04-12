@@ -14,6 +14,11 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     // Connections
     connect(&actionManager, &ActionManager::recentsMenuUpdated, this, &QVApplication::updateDockRecents);
 
+    // Initialize variables
+    optionsShown = false;
+    welcomeShown = false;
+    aboutShown = false;
+
     // Show welcome dialog on first launch
     QSettings settings;
 
@@ -21,7 +26,7 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     {
         settings.setValue("firstlaunch", true);
         settings.setValue("configversion", VERSION);
-        QTimer::singleShot(100, this, &QVApplication::openWelcomeDialog);
+        openWelcomeDialog();
     }
 
     // Initialize list of supported files and filters
@@ -105,15 +110,12 @@ void QVApplication::pickFile(MainWindow *parent)
         bool isFirstLoop = true;
         for (const auto &file : selected)
         {
-            if (isFirstLoop)
-            {
+            if (isFirstLoop && parent)
                 parent->openFile(file);
-                isFirstLoop = false;
-            }
             else
-            {
-                 QVApplication::openFile(QVApplication::newWindow(), file);
-            }
+                QVApplication::openFile(QVApplication::newWindow(), file);
+
+            isFirstLoop = false;
         }
 
         // Set lastFileDialogDir
@@ -122,7 +124,7 @@ void QVApplication::pickFile(MainWindow *parent)
         settings.setValue("lastFileDialogDir", QFileInfo(selected.constFirst()).path());
 
     });
-    fileDialog->open();
+    fileDialog->show();
 }
 
 MainWindow *QVApplication::newWindow()
@@ -241,18 +243,39 @@ void QVApplication::deleteFromLastActiveWindows(MainWindow *window)
 
 void QVApplication::openOptionsDialog()
 {
+    if (optionsShown)
+        return;
+
     auto *options = new QVOptionsDialog();
-    options->open();
+    optionsShown = true;
+    connect(options, &QDialog::finished, [this]{
+        optionsShown = false;
+    });
+    options->show();
 }
 
 void QVApplication::openWelcomeDialog()
 {
+    if (welcomeShown)
+        return;
+
     auto *welcome = new QVWelcomeDialog();
-    welcome->open();
+    welcomeShown = true;
+    connect(welcome, &QDialog::finished, [this]{
+        welcomeShown = false;
+    });
+    welcome->show();
 }
 
 void QVApplication::openAboutDialog()
 {
+    if (aboutShown)
+        return;
+
     auto *about = new QVAboutDialog();
-    about->open();
+    aboutShown = true;
+    connect(about, &QDialog::finished, [this]{
+        aboutShown = false;
+    });
+    about->show();
 }

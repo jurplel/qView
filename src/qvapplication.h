@@ -79,6 +79,10 @@ private:
     // SettingsManager has to be allocated first because ActionManager connects to its signal
     SettingsManager settingsManager;
     ActionManager actionManager;
+
+    bool optionsShown;
+    bool welcomeShown;
+    bool aboutShown;
 };
 
 #endif // QVAPPLICATION_H

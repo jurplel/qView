@@ -13,7 +13,7 @@ QVShortcutDialog::QVShortcutDialog(int index, QWidget *parent) :
     ui->setupUi(this);
 
     setAttribute(Qt::WA_DeleteOnClose);
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
+    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint | Qt::CustomizeWindowHint);
 
     shortcutObject = qvApp->getActionManager().getShortcutsList().value(index);
     this->index = index;

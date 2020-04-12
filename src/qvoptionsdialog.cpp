@@ -16,7 +16,7 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     ui->setupUi(this);
 
     setAttribute(Qt::WA_DeleteOnClose);
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
+    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint | Qt::CustomizeWindowHint);
 
     #ifdef Q_OS_UNIX
     setWindowTitle("Preferences");
@@ -242,12 +242,12 @@ void QVOptionsDialog::updateShortcutsTable()
 void QVOptionsDialog::on_shortcutsTable_cellDoubleClicked(int row, int column)
 {
     Q_UNUSED(column)
-    auto shortcutDialog = new QVShortcutDialog(row);
-    shortcutDialog->open();
+    auto shortcutDialog = new QVShortcutDialog(row, this);
     connect(shortcutDialog, &QVShortcutDialog::shortcutsListChanged, [this](int index, const QStringList &stringListShortcuts){
         transientShortcuts.insert(index, stringListShortcuts);
         updateShortcutsTable();
     });
+    shortcutDialog->open();
 }
 
 void QVOptionsDialog::updateBgColorButton()
