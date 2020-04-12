@@ -633,7 +633,7 @@ void ActionManager::initializeActionLibrary()
 
     auto *aboutAction = new QAction(QIcon::fromTheme("help-about"), tr("About"));
     #if defined Q_OS_MACOS
-        aboutAction->setText("About qView");
+        aboutAction->setText(tr("About qView"));
     #endif
     aboutAction->setData("about");
     actionLibrary.insert("about", aboutAction);
