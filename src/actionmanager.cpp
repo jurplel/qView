@@ -123,6 +123,7 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     fileMenu->addSeparator();
     fileMenu->addAction(cloneAction("closewindow"));
     fileMenu->addAction(cloneAction("closeallwindows"));
+    QVCocoaFunctions::setAlternates(fileMenu, fileMenu->actions().length()-1, fileMenu->actions().length()-2);
     #endif
     fileMenu->addSeparator();
     fileMenu->addAction(cloneAction("opencontainingfolder"));

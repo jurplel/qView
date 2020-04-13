@@ -23,6 +23,8 @@ public:
     static void closeWindow(QWindow *window);
 
     static void setWindowMenu(QMenu *menu);
+
+    static void setAlternates(QMenu *menu, int index0, int index1);
 };
 
 #endif // QVCOCOAFUNCTIONS_H

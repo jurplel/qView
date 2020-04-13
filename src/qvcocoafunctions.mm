@@ -87,3 +87,10 @@ void QVCocoaFunctions::setWindowMenu(QMenu *menu)
     [nativeMenu addItemWithTitle:@"Zoom" action:@selector(performZoom:) keyEquivalent:@""];
     [[NSApplication sharedApplication] setWindowsMenu:nativeMenu];
 }
+
+void QVCocoaFunctions::setAlternates(QMenu *menu, int index0, int index1)
+{
+    NSMenu *nativeMenu = menu->toNSMenu();
+    [[nativeMenu.itemArray objectAtIndex:index0] setAlternate:true];
+    [[nativeMenu.itemArray objectAtIndex:index1] setAlternate:true];
+}
