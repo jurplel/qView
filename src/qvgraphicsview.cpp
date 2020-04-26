@@ -307,7 +307,7 @@ QMimeData *QVGraphicsView::getMimeData() const
     if (!getCurrentFileDetails().isPixmapLoaded)
         return mimeData;
 
-    mimeData->setUrls({QUrl(imageCore.getCurrentFileDetails().fileInfo.absoluteFilePath())});
+    mimeData->setUrls({QUrl::fromLocalFile(imageCore.getCurrentFileDetails().fileInfo.absoluteFilePath())});
     mimeData->setImageData(imageCore.getLoadedPixmap().toImage());
     return mimeData;
 }
