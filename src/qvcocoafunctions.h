@@ -18,7 +18,9 @@ public:
 
     static void setUserDefaults();
 
-    static void changeTitlebarMode(const VibrancyMode mode, QWindow *window);
+    static void changeVibrancyMode(const VibrancyMode mode, QWindow *window);
+
+    static int getObscuredHeight(QWindow *window);
 
     static void closeWindow(QWindow *window);
 

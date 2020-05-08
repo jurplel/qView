@@ -84,6 +84,12 @@ protected:
 
     void fitInViewMarginless(bool setVariables = true);
 
+    void centerOn(const QPointF &pos);
+
+    void centerOn(qreal x, qreal y);
+
+    void centerOn(const QGraphicsItem *item);
+
 
 private slots:
     void animatedFrameChanged(QRect rect);

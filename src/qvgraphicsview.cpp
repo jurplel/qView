@@ -1,6 +1,7 @@
 #include "qvgraphicsview.h"
 #include "qvapplication.h"
 #include "qvinfodialog.h"
+#include "qvcocoafunctions.h"
 #include <QWheelEvent>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
@@ -9,6 +10,7 @@
 #include <QMovie>
 #include <QtMath>
 #include <QGestureEvent>
+#include <QScrollBar>
 
 QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 {
@@ -55,7 +57,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 
     expensiveScaleTimer = new QTimer(this);
     expensiveScaleTimer->setSingleShot(true);
-    expensiveScaleTimer->setInterval(10);
+    expensiveScaleTimer->setInterval(50);
     connect(expensiveScaleTimer, &QTimer::timeout, this, [this]{scaleExpensively(ScaleMode::resetScale);});
 
     loadedPixmapItem = new QGraphicsPixmapItem();
@@ -75,7 +77,7 @@ void QVGraphicsView::resizeEvent(QResizeEvent *event)
     if (!isOriginalSize)
         resetScale();
     else
-        centerOn(loadedPixmapItem->boundingRect().center());
+        centerOn(loadedPixmapItem);
 }
 
 void QVGraphicsView::dropEvent(QDropEvent *event)
@@ -482,7 +484,7 @@ void QVGraphicsView::originalSize(bool setVariables)
     else
         loadedPixmapItem->setPixmap(getLoadedPixmap());
     resetTransform();
-    centerOn(loadedPixmapItem->boundingRect().center());
+    centerOn(loadedPixmapItem);
 
     scaledSize = getLoadedPixmap().size();
 
@@ -596,12 +598,18 @@ void QVGraphicsView::fitInViewMarginless(bool setVariables)
         viewRect = QRect(QPoint(), getCurrentFileDetails().loadedPixmapSize / getLoadedPixmap().devicePixelRatioF());
         viewRect.moveCenter(rect().center());
     }
+
+    int obscuredHeight = QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
+    viewRect.setHeight(viewRect.height()-obscuredHeight);
+
     if (viewRect.isEmpty())
         return;
+
     // Find the ideal x / y scaling ratio to fit \a rect in the view.
     QRectF sceneRect = matrix().mapRect(adjustedBoundingRect);
     if (sceneRect.isEmpty())
         return;
+
     qreal xratio = viewRect.width() / sceneRect.width();
     qreal yratio = viewRect.height() / sceneRect.height();
 
@@ -618,6 +626,40 @@ void QVGraphicsView::fitInViewMarginless(bool setVariables)
     {
         currentScale = 1.0;
     }
+}
+
+void QVGraphicsView::centerOn(const QPointF &pos)
+{
+    int obscuredHeight = QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
+
+    qreal width = viewport()->width();
+    qreal height = viewport()->height() - obscuredHeight;
+    QPointF viewPoint = matrix().map(pos);
+
+    if (isRightToLeft())
+    {
+        qint64 horizontal = 0;
+        horizontal += horizontalScrollBar()->minimum();
+        horizontal += horizontalScrollBar()->maximum();
+        horizontal -= int(viewPoint.x() - width / 2.0);
+        horizontalScrollBar()->setValue(horizontal);
+    }
+    else
+    {
+        horizontalScrollBar()->setValue(int(viewPoint.x() - width / 2.0));
+    }
+
+    verticalScrollBar()->setValue(int(viewPoint.y() - obscuredHeight - (height / 2.0)));
+}
+
+void QVGraphicsView::centerOn(qreal x, qreal y)
+{
+    centerOn(QPointF(x, y));
+}
+
+void QVGraphicsView::centerOn(const QGraphicsItem *item)
+{
+    centerOn(item->boundingRect().center());
 }
 
 void QVGraphicsView::error(const QString &errorString)

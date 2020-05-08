@@ -2,7 +2,7 @@
 
 #include <QDebug>
 
-#import <Cocoa/cocoa.h>
+#import <Cocoa/Cocoa.h>
 
 
 static void setNestedSubmenusUnclickable(NSMenu *menu)
@@ -19,7 +19,7 @@ static void setNestedSubmenusUnclickable(NSMenu *menu)
         {
             // Stop items with submenus from being clickable
             setNestedSubmenusUnclickable(item.submenu);
-            [item setAction:nullptr];
+            [item setAction:nil];
         }
     }
 }
@@ -45,7 +45,7 @@ void QVCocoaFunctions::setUserDefaults()
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"NSFullScreenMenuItemEverywhere"];
 }
 
-void QVCocoaFunctions::changeTitlebarMode(const VibrancyMode vibrancyMode, QWindow *window)
+void QVCocoaFunctions::changeVibrancyMode(const VibrancyMode vibrancyMode, QWindow *window)
 {
     auto *view = reinterpret_cast<NSView*>(window->winId());
 
@@ -71,6 +71,19 @@ void QVCocoaFunctions::changeTitlebarMode(const VibrancyMode vibrancyMode, QWind
         break;
     }
     }
+}
+
+int QVCocoaFunctions::getObscuredHeight(QWindow *window)
+{
+    if (!window)
+        return 0;
+
+    auto *view = reinterpret_cast<NSView*>(window->winId());
+
+    int visibleHeight = view.window.contentLayoutRect.size.height;
+    int totalHeight = view.window.contentView.frame.size.height;
+
+    return totalHeight - visibleHeight;
 }
 
 void QVCocoaFunctions::closeWindow(QWindow *window)

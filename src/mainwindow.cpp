@@ -117,6 +117,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&qvApp->getSettingsManager(), &SettingsManager::settingsUpdated, this, &MainWindow::settingsUpdated);
     settingsUpdated();
     shortcutsUpdated();
+
+    QVCocoaFunctions::changeVibrancyMode(QVCocoaFunctions::VibrancyMode::vibrant, windowHandle());
 }
 
 MainWindow::~MainWindow()
@@ -204,6 +206,7 @@ void MainWindow::mouseDoubleClickEvent(QMouseEvent *event)
 
 void MainWindow::openFile(const QString &fileName)
 {
+    QUrl url(fileName);
     graphicsView->loadFile(fileName);
     cancelSlideshow();
 }
@@ -361,21 +364,28 @@ void MainWindow::setWindowSize()
         imageSize.scale(maxWindowSize, Qt::KeepAspectRatio);
     }
 
-    //Windows reports the wrong minimum width, so we constrain the image size relative to the dpi to stop weirdness with tiny images
+    // Windows reports the wrong minimum width, so we constrain the image size relative to the dpi to stop weirdness with tiny images
     #ifdef Q_OS_WIN
     auto minimumImageSize = QSize(qRound(logicalDpiX()*1.5), logicalDpiY()/2);
     if (imageSize.boundedTo(minimumImageSize) == imageSize)
         imageSize = minimumImageSize;
     #endif
 
+    // Adjust image size for fullsizecontentview on mac
+    int obscuredHeight = QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
+    imageSize.setHeight(imageSize.height() + obscuredHeight);
+
+    // Match center after new geometry
     QRect oldRect = geometry();
     resize(imageSize);
     QRect newRect = geometry();
     newRect.moveCenter(oldRect.center());
 
+    // Ensure titlebar is not above the top of the screen
     const int titlebarHeight = QApplication::style()->pixelMetric(QStyle::PM_TitleBarHeight);
     if (newRect.y() < titlebarHeight)
         newRect.setY(titlebarHeight);
+
 
     setGeometry(newRect);
 }
