@@ -10,8 +10,10 @@ public:
     enum class VibrancyMode
     {
         none,
-        buttonsOnly,
         vibrant,
+        dark,
+        darkVibrant,
+        frameless,
     };
 
     static void showMenu(QMenu *menu, const QPoint &point, QWindow *window);

@@ -118,7 +118,7 @@ MainWindow::MainWindow(QWidget *parent) :
     settingsUpdated();
     shortcutsUpdated();
 
-    QVCocoaFunctions::changeVibrancyMode(QVCocoaFunctions::VibrancyMode::vibrant, windowHandle());
+    QVCocoaFunctions::changeVibrancyMode(QVCocoaFunctions::VibrancyMode::darkVibrant, windowHandle());
 }
 
 MainWindow::~MainWindow()

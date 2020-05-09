@@ -54,20 +54,32 @@ void QVCocoaFunctions::changeVibrancyMode(const VibrancyMode vibrancyMode, QWind
     switch (vibrancyMode) {
     case VibrancyMode::none:
     {
-        [nativeWin setTitlebarAppearsTransparent:false];
-        [nativeWin setStyleMask:view.window.styleMask];
-        break;
-    }
-    case VibrancyMode::buttonsOnly:
-    {
-        [nativeWin setTitlebarAppearsTransparent:true];
-        [nativeWin setStyleMask:view.window.styleMask | NSWindowStyleMaskFullSizeContentView];
-        [nativeWin setTitleVisibility:NSWindowTitleHidden];
         break;
     }
     case VibrancyMode::vibrant:
     {
-        [nativeWin setStyleMask:view.window.styleMask | NSWindowStyleMaskFullSizeContentView];
+        [nativeWin setStyleMask:nativeWin.styleMask | NSWindowStyleMaskFullSizeContentView];
+        break;
+    }
+    case VibrancyMode::dark:
+    {
+        [nativeWin setAppearance: [NSAppearance appearanceNamed:NSAppearanceNameVibrantDark]];
+        break;
+    }
+    case VibrancyMode::darkVibrant:
+    {
+        [nativeWin setStyleMask:nativeWin.styleMask | NSWindowStyleMaskFullSizeContentView];
+        [nativeWin setAppearance: [NSAppearance appearanceNamed:NSAppearanceNameVibrantDark]];
+        break;
+    }
+    case VibrancyMode::frameless:
+    {
+        [nativeWin setTitlebarAppearsTransparent:true];
+        [nativeWin setStyleMask:nativeWin.styleMask | NSWindowStyleMaskFullSizeContentView];
+        [nativeWin setTitleVisibility:NSWindowTitleHidden];
+        [[nativeWin standardWindowButton:NSWindowCloseButton] setHidden:true];
+        [[nativeWin standardWindowButton:NSWindowMiniaturizeButton] setHidden:true];
+        [[nativeWin standardWindowButton:NSWindowZoomButton] setHidden:true];
         break;
     }
     }
@@ -79,6 +91,9 @@ int QVCocoaFunctions::getObscuredHeight(QWindow *window)
         return 0;
 
     auto *view = reinterpret_cast<NSView*>(window->winId());
+
+    if (view.window.titlebarAppearsTransparent)
+        return 0;
 
     int visibleHeight = view.window.contentLayoutRect.size.height;
     int totalHeight = view.window.contentView.frame.size.height;
