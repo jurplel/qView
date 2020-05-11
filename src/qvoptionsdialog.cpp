@@ -30,7 +30,6 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
 
     #ifdef Q_OS_MACOS
     ui->menubarCheckbox->hide();
-    ui->buttonBox->hide();
     #else
     ui->darkTitlebarCheckbox->hide();
     #endif
@@ -90,9 +89,6 @@ void QVOptionsDialog::modifySetting(QString key, QVariant value)
 {
     transientSettings.insert(key, value);
 
-    #ifdef Q_OS_MACOS
-    saveSettings();
-    #else
     setWindowModified(false);
     const auto keys = transientSettings.keys();
     for (const auto &key : keys)
@@ -105,7 +101,6 @@ void QVOptionsDialog::modifySetting(QString key, QVariant value)
             break;
         }
     }
-    #endif
 }
 
 void QVOptionsDialog::saveSettings()
