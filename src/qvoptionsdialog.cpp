@@ -31,6 +31,8 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     #ifdef Q_OS_MACOS
     ui->menubarCheckbox->hide();
     ui->buttonBox->hide();
+    #else
+    ui->darkTitlebarCheckbox->hide();
     #endif
 
     syncSettings(false, true);
@@ -180,6 +182,9 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
 
     // maxwindowresizedperecentage
     syncSpinBox(ui->maxWindowResizeSpinBox, "maxwindowresizedpercentage", defaults, makeConnections);
+
+    // titlebaralwaysdark
+    syncCheckbox(ui->darkTitlebarCheckbox, "titlebaralwaysdark", defaults, makeConnections);
 
     // menubarenabled
     syncCheckbox(ui->menubarCheckbox, "menubarenabled", defaults, makeConnections);

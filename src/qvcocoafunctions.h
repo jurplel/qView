@@ -7,20 +7,11 @@
 class QVCocoaFunctions
 {
 public:
-    enum class VibrancyMode
-    {
-        none,
-        vibrant,
-        dark,
-        darkVibrant,
-        frameless,
-    };
-
     static void showMenu(QMenu *menu, const QPoint &point, QWindow *window);
 
     static void setUserDefaults();
 
-    static void changeVibrancyMode(const VibrancyMode mode, QWindow *window);
+    static void setVibrancy(bool alwaysDark, QWindow *window);
 
     static int getObscuredHeight(QWindow *window);
 

@@ -117,8 +117,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&qvApp->getSettingsManager(), &SettingsManager::settingsUpdated, this, &MainWindow::settingsUpdated);
     settingsUpdated();
     shortcutsUpdated();
-
-    QVCocoaFunctions::changeVibrancyMode(QVCocoaFunctions::VibrancyMode::darkVibrant, windowHandle());
 }
 
 MainWindow::~MainWindow()
@@ -217,7 +215,7 @@ void MainWindow::settingsUpdated()
 
     buildWindowTitle();
 
-    //menubar
+    // menubarenabled
     bool menuBarEnabled = settingsManager.getBoolean("menubarenabled");
     #ifdef Q_OS_MACOS
     // Menu bar is effectively always enabled on macOS
@@ -229,6 +227,9 @@ void MainWindow::settingsUpdated()
     {
         action->setVisible(!menuBarEnabled);
     }
+
+    // titlebaralwaysdark
+    QVCocoaFunctions::setVibrancy(settingsManager.getBoolean("titlebaralwaysdark"), windowHandle());
 
     //slideshow timer
     slideshowTimer->setInterval(static_cast<int>(settingsManager.getDouble("slideshowtimer")*1000));

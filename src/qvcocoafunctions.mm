@@ -45,43 +45,21 @@ void QVCocoaFunctions::setUserDefaults()
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"NSFullScreenMenuItemEverywhere"];
 }
 
-void QVCocoaFunctions::changeVibrancyMode(const VibrancyMode vibrancyMode, QWindow *window)
+void QVCocoaFunctions::setVibrancy(bool alwaysDark, QWindow *window)
 {
     auto *view = reinterpret_cast<NSView*>(window->winId());
 
     NSWindow *nativeWin = view.window;
 
-    switch (vibrancyMode) {
-    case VibrancyMode::none:
-    {
-        break;
-    }
-    case VibrancyMode::vibrant:
+    if (alwaysDark)
     {
         [nativeWin setStyleMask:nativeWin.styleMask | NSWindowStyleMaskFullSizeContentView];
-        break;
+        [nativeWin setAppearance: nil];
     }
-    case VibrancyMode::dark:
-    {
-        [nativeWin setAppearance: [NSAppearance appearanceNamed:NSAppearanceNameVibrantDark]];
-        break;
-    }
-    case VibrancyMode::darkVibrant:
+    else
     {
         [nativeWin setStyleMask:nativeWin.styleMask | NSWindowStyleMaskFullSizeContentView];
         [nativeWin setAppearance: [NSAppearance appearanceNamed:NSAppearanceNameVibrantDark]];
-        break;
-    }
-    case VibrancyMode::frameless:
-    {
-        [nativeWin setTitlebarAppearsTransparent:true];
-        [nativeWin setStyleMask:nativeWin.styleMask | NSWindowStyleMaskFullSizeContentView];
-        [nativeWin setTitleVisibility:NSWindowTitleHidden];
-        [[nativeWin standardWindowButton:NSWindowCloseButton] setHidden:true];
-        [[nativeWin standardWindowButton:NSWindowMiniaturizeButton] setHidden:true];
-        [[nativeWin standardWindowButton:NSWindowZoomButton] setHidden:true];
-        break;
-    }
     }
 }
 
