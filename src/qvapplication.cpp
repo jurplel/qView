@@ -49,18 +49,15 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     nameFilterList << filterString;
     nameFilterList << tr("All Files") + " (*)";
 
-    // Don't even try to show menu icons on mac or windows
-    #if defined Q_OS_MACOS || defined Q_OS_WIN
-    setAttribute(Qt::AA_DontShowIconsInMenus);
-    #endif
 
+    // Setup macOS dock menu
     dockMenu = new QMenu();
     connect(dockMenu, &QMenu::triggered, [](QAction *triggeredAction){
        ActionManager::actionTriggered(triggeredAction);
     });
 
-    dockMenuPrefix.append(actionManager.cloneAction("newwindow"));
-    dockMenuPrefix.append(actionManager.cloneAction("open"));
+    dockMenuSuffix.append(actionManager.cloneAction("newwindow"));
+    dockMenuSuffix.append(actionManager.cloneAction("open"));
 
     dockMenuRecentsLibrary = nullptr;
     dockMenuRecentsLibrary = actionManager.buildRecentsMenu(false);
@@ -71,12 +68,19 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     setQuitOnLastWindowClosed(false);
     #endif
 
+    // Build menu bar
     menuBar = actionManager.buildMenuBar();
     connect(menuBar, &QMenuBar::triggered, [](QAction *triggeredAction){
         ActionManager::actionTriggered(triggeredAction);
     });
 
+    // Set mac-specific application settings
     QVCocoaFunctions::setUserDefaults();
+
+    // Don't even try to show menu icons on mac or windows
+    #if defined Q_OS_MACOS || defined Q_OS_WIN
+    setAttribute(Qt::AA_DontShowIconsInMenus);
+    #endif
 }
 
 QVApplication::~QVApplication() {
@@ -203,17 +207,17 @@ void QVApplication::updateDockRecents()
 
     dockMenu->clear();
 
-    dockMenu->addActions(dockMenuPrefix);
-
-    if (!dockMenu->isEmpty())
-        dockMenu->addSeparator();
-
     const auto dockMenuActions = dockMenuRecentsLibrary->actions();
     for (const auto &action : dockMenuActions)
     {
         if (action->isVisible())
             dockMenu->addAction(action);
     }
+
+    if (!dockMenu->isEmpty())
+        dockMenu->addSeparator();
+
+    dockMenu->addActions(dockMenuSuffix);
 }
 
 qint64 QVApplication::getPreviouslyRecordedFileSize(const QString &fileName)
