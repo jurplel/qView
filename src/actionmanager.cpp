@@ -409,7 +409,8 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
     }
 
     if (key == "quit") {
-        relevantWindow->close(); // a window is closed so geometry is saved
+        if (relevantWindow) // if a window was passed
+            relevantWindow->close(); // close it so geometry is saved
         QCoreApplication::quit();
     } else if (key == "newwindow") {
         qvApp->newWindow();
