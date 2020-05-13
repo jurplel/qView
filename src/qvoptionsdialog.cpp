@@ -17,7 +17,7 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     ui->setupUi(this);
 
     setAttribute(Qt::WA_DeleteOnClose);
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint | Qt::CustomizeWindowHint);
+    setWindowFlags(windowFlags() & (~Qt::WindowContextHelpButtonHint | Qt::CustomizeWindowHint));
 
     // On macOS, the dialog should not be dependent on any window
 #ifndef Q_OS_MACOS
