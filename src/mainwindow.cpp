@@ -137,9 +137,12 @@ void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 {
     QMainWindow::contextMenuEvent(event);
 
+    // Show native menu on macOS
+#ifdef Q_OS_MACOS
     QVCocoaFunctions::showMenu(contextMenu, event->pos(), windowHandle());
-
-//     contextMenu->popup(event->pos());
+#else
+    contextMenu->popup(event->globalPos());
+#endif
 }
 
 void MainWindow::showEvent(QShowEvent *event)
@@ -215,10 +218,10 @@ void MainWindow::settingsUpdated()
 
     // menubarenabled
     bool menuBarEnabled = settingsManager.getBoolean("menubarenabled");
-    #ifdef Q_OS_MACOS
+#ifdef Q_OS_MACOS
     // Menu bar is effectively always enabled on macOS
     menuBarEnabled = true;
-    #endif
+#endif
     menuBar()->setVisible(menuBarEnabled);
     const auto actionList = actions();
     for (const auto &action : actionList)
@@ -227,7 +230,9 @@ void MainWindow::settingsUpdated()
     }
 
     // titlebaralwaysdark
+#ifdef Q_OS_MACOS
     QVCocoaFunctions::setVibrancy(settingsManager.getBoolean("titlebaralwaysdark"), windowHandle());
+#endif
 
     //slideshow timer
     slideshowTimer->setInterval(static_cast<int>(settingsManager.getDouble("slideshowtimer")*1000));
@@ -364,15 +369,17 @@ void MainWindow::setWindowSize()
     }
 
     // Windows reports the wrong minimum width, so we constrain the image size relative to the dpi to stop weirdness with tiny images
-    #ifdef Q_OS_WIN
+#ifdef Q_OS_WIN
     auto minimumImageSize = QSize(qRound(logicalDpiX()*1.5), logicalDpiY()/2);
     if (imageSize.boundedTo(minimumImageSize) == imageSize)
         imageSize = minimumImageSize;
-    #endif
+#endif
 
     // Adjust image size for fullsizecontentview on mac
+#ifdef Q_OS_MACOS
     int obscuredHeight = QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
     imageSize.setHeight(imageSize.height() + obscuredHeight);
+#endif
 
     // Match center after new geometry
     QRect oldRect = geometry();
@@ -509,13 +516,13 @@ void MainWindow::openContainingFolder()
 
     const QFileInfo selectedFileInfo = getCurrentFileDetails().fileInfo;
 
-    #ifdef Q_OS_WIN
+#ifdef Q_OS_WIN
     QProcess::startDetached("explorer", QStringList() << "/select," << QDir::toNativeSeparators(selectedFileInfo.absoluteFilePath()));
     #elif defined Q_OS_MACOS
     QProcess::execute("open", QStringList() << "-R" << selectedFileInfo.absoluteFilePath());
-    #else
+#else
     QDesktopServices::openUrl(selectedFileInfo.absolutePath());
-    #endif
+#endif
 }
 
 void MainWindow::showFileInfo()

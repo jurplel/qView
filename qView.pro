@@ -29,12 +29,11 @@ QMAKE_TARGET_DESCRIPTION = "qView"
 
 # macOS specific stuff
 macx:QT += svg # needed for macdeployqt added qsvg plugin automatically
+macx:LIBS += -framework Cocoa
 QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.12
 QMAKE_TARGET_BUNDLE_PREFIX = "com.qview"
 QMAKE_INFO_PLIST = "dist/mac/Info.plist"
 ICON = "dist/mac/qView.icns"
-
-LIBS += -framework Cocoa
 
 # Linux specific stuff
 binary.path = /usr/bin
@@ -74,8 +73,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 DEFINES += QT_NO_FOREACH
 
 SOURCES += \
-        src/main.cpp \
-        src/mainwindow.cpp \
+    src/main.cpp \
+    src/mainwindow.cpp \
     src/qvgraphicsview.cpp \
     src/qvoptionsdialog.cpp \
     src/qvapplication.cpp \
@@ -85,11 +84,12 @@ SOURCES += \
     src/qvimagecore.cpp \
     src/qvshortcutdialog.cpp \
     src/actionmanager.cpp \
-    src/qvcocoafunctions.mm \
     src/settingsmanager.cpp
 
+macx:SOURCES += src/qvcocoafunctions.mm
+
 HEADERS += \
-        src/mainwindow.h \
+    src/mainwindow.h \
     src/qvgraphicsview.h \
     src/qvoptionsdialog.h \
     src/qvapplication.h \
@@ -99,8 +99,9 @@ HEADERS += \
     src/qvimagecore.h \
     src/qvshortcutdialog.h \
     src/actionmanager.h \
-    src/qvcocoafunctions.h \
     src/settingsmanager.h
+
+macx:HEADERS += src/qvcocoafunctions.h
 
 FORMS += \
         src/mainwindow.ui \

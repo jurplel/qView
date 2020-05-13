@@ -19,20 +19,26 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint | Qt::CustomizeWindowHint);
 
+    // On macOS, the dialog should not be dependent on any window
+#ifndef Q_OS_MACOS
+    setWindowModality(Qt::WindowModal);
+#else
     // Load window geometry
     QSettings settings;
     restoreGeometry(settings.value("optionsgeometry").toByteArray());
     ui->tabWidget->setCurrentIndex(settings.value("optionstab", 1).toInt());
+#endif
 
-    #ifdef Q_OS_UNIX
+#ifdef Q_OS_UNIX
     setWindowTitle("Preferences");
-    #endif
+#endif
 
-    #ifdef Q_OS_MACOS
+// Platform specific settings
+#ifdef Q_OS_MACOS
     ui->menubarCheckbox->hide();
-    #else
+#else
     ui->darkTitlebarCheckbox->hide();
-    #endif
+#endif
 
     syncSettings(false, true);
     syncShortcuts();

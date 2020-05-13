@@ -63,10 +63,10 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     dockMenuRecentsLibrary = actionManager.buildRecentsMenu(false);
     actionManager.updateRecentsMenu();
 
-    #ifdef Q_OS_MACOS
+#ifdef Q_OS_MACOS
     dockMenu->setAsDockMenu();
     setQuitOnLastWindowClosed(false);
-    #endif
+#endif
 
     // Build menu bar
     menuBar = actionManager.buildMenuBar();
@@ -75,12 +75,14 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     });
 
     // Set mac-specific application settings
+#ifdef Q_OS_MACOS
     QVCocoaFunctions::setUserDefaults();
+#endif
 
     // Don't even try to show menu icons on mac or windows
-    #if defined Q_OS_MACOS || defined Q_OS_WIN
+#if defined Q_OS_MACOS || defined Q_OS_WIN
     setAttribute(Qt::AA_DontShowIconsInMenus);
-    #endif
+#endif
 }
 
 QVApplication::~QVApplication() {
@@ -258,8 +260,12 @@ void QVApplication::deleteFromLastActiveWindows(MainWindow *window)
     lastActiveWindows.removeAll(window);
 }
 
-void QVApplication::openOptionsDialog()
+void QVApplication::openOptionsDialog(QWidget *parent)
 {
+    // On macOS, the dialog should not be dependent on any window
+#ifdef Q_OS_MACOS
+    parent = nullptr;
+#endif
     if (optionsDialog)
     {
         optionsDialog->raise();
@@ -268,7 +274,7 @@ void QVApplication::openOptionsDialog()
 
     }
 
-    optionsDialog = new QVOptionsDialog();
+    optionsDialog = new QVOptionsDialog(parent);
     connect(optionsDialog, &QDialog::finished, [this]{
         optionsDialog = nullptr;
     });

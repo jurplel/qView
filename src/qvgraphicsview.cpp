@@ -599,8 +599,10 @@ void QVGraphicsView::fitInViewMarginless(bool setVariables)
         viewRect.moveCenter(rect().center());
     }
 
+#ifdef Q_OS_MACOS
     int obscuredHeight = QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
     viewRect.setHeight(viewRect.height()-obscuredHeight);
+#endif
 
     if (viewRect.isEmpty())
         return;
@@ -630,7 +632,11 @@ void QVGraphicsView::fitInViewMarginless(bool setVariables)
 
 void QVGraphicsView::centerOn(const QPointF &pos)
 {
+#ifdef Q_OS_MACOS
     int obscuredHeight = QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
+#else
+    int obscuredHeight = 0;
+#endif
 
     qreal width = viewport()->width();
     qreal height = viewport()->height() - obscuredHeight;

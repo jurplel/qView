@@ -16,8 +16,10 @@ ActionManager::ActionManager(QObject *parent) : QObject(parent)
     updateShortcuts();
     loadRecentsList();
 
+#ifdef Q_OS_MACOS
     windowMenu = new QMenu(tr("Window"));
     QVCocoaFunctions::setWindowMenu(windowMenu);
+#endif
 
     recentsSaveTimer = new QTimer(this);
     recentsSaveTimer->setSingleShot(true);
@@ -26,7 +28,6 @@ ActionManager::ActionManager(QObject *parent) : QObject(parent)
 
     // Connect to settings signal
     connect(&qvApp->getSettingsManager(), &SettingsManager::settingsUpdated, this, &ActionManager::settingsUpdated);
-    settingsUpdated();
 }
 
 void ActionManager::settingsUpdated()
@@ -163,7 +164,9 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     // End of tools menu
 
     // Beginning of window menu
+#ifdef Q_OS_MACOS
     menuBar->addMenu(windowMenu);
+#endif
     // End of window menu
 
     // Beginning of help menu
@@ -261,6 +264,8 @@ QMenu *ActionManager::buildRecentsMenu(bool includeClearAction, QWidget *parent)
 
     menuCloneLibrary.insert(recentsMenu->menuAction()->data().toString(), recentsMenu);
     updateRecentsMenu();
+    // update settings whenever recent menu is created so it can possibly be hidden
+    settingsUpdated();
     return recentsMenu;
 }
 
@@ -420,11 +425,15 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
         relevantWindow->pickUrl();
     } else if (key == "closewindow") {
         auto *active = QApplication::activeWindow();
+#ifdef Q_OS_MACOS
         QVCocoaFunctions::closeWindow(active->windowHandle());
+#endif
         active->close();
     } else if (key == "closeallwindows") {
         for (auto *widget : QApplication::topLevelWidgets()) {
+#ifdef Q_OS_MACOS
             QVCocoaFunctions::closeWindow(widget->windowHandle());
+#endif
             widget->close();
         }
     } else if (key == "opencontainingfolder") {
@@ -476,7 +485,7 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
     } else if (key == "slideshow") {
         relevantWindow->toggleSlideshow();
     } else if (key == "options") {
-        qvApp->openOptionsDialog();
+        qvApp->openOptionsDialog(relevantWindow);
     } else if (key == "about") {
         qvApp->openAboutDialog();
     } else if (key == "welcome") {
