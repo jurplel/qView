@@ -18,12 +18,12 @@ QVWelcomeDialog::QVWelcomeDialog(QWidget *parent) :
 
     int modifier = 0;
     //set main title font
-    #ifdef Q_OS_MACOS
+#ifdef Q_OS_MACOS
     const QFont font1 = QFont("Lato", 72, QFont::Light);
     modifier = 4;
-    #else
+#else
     QFont font1 = QFont("Lato", 54, QFont::Light);
-    #endif
+#endif
     ui->logoLabel->setFont(font1);
 
     //set subtitle font & text

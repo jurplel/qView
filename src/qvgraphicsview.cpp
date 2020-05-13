@@ -1,6 +1,7 @@
 #include "qvgraphicsview.h"
 #include "qvapplication.h"
 #include "qvinfodialog.h"
+#include "qvcocoafunctions.h"
 #include <QWheelEvent>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
@@ -9,6 +10,7 @@
 #include <QMovie>
 #include <QtMath>
 #include <QGestureEvent>
+#include <QScrollBar>
 
 QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 {
@@ -55,8 +57,8 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 
     expensiveScaleTimer = new QTimer(this);
     expensiveScaleTimer->setSingleShot(true);
-    expensiveScaleTimer->setInterval(10);
-    connect(expensiveScaleTimer, &QTimer::timeout, this, [this]{scaleExpensively(scaleMode::resetScale);});
+    expensiveScaleTimer->setInterval(50);
+    connect(expensiveScaleTimer, &QTimer::timeout, this, [this]{scaleExpensively(ScaleMode::resetScale);});
 
     loadedPixmapItem = new QGraphicsPixmapItem();
     scene->addItem(loadedPixmapItem);
@@ -75,7 +77,7 @@ void QVGraphicsView::resizeEvent(QResizeEvent *event)
     if (!isOriginalSize)
         resetScale();
     else
-        centerOn(loadedPixmapItem->boundingRect().center());
+        centerOn(loadedPixmapItem);
 }
 
 void QVGraphicsView::dropEvent(QDropEvent *event)
@@ -176,11 +178,11 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
     else
     {
         //macos automatically scrolls horizontally while holding shift
-        #ifndef Q_OS_MACX
+#ifndef Q_OS_MACOS
         if (event->modifiers() == (Qt::ControlModifier|Qt::ShiftModifier) || event->modifiers() == Qt::ShiftModifier)
             translate(event->angleDelta().y()/2.0, event->angleDelta().x()/2.0);
         else
-        #endif
+#endif
             translate(event->angleDelta().x()/2.0, event->angleDelta().y()/2.0);
     }
 }
@@ -232,7 +234,7 @@ void QVGraphicsView::zoom(int DeltaY, const QPoint &pos, qreal targetScaleFactor
     if ((currentScale < 0.99999 || (currentScale < 1.00001 && DeltaY > 0)) && shouldUseScaling)
     {
         //zoom expensively
-        scaleExpensively(scaleMode::zoom);
+        scaleExpensively(ScaleMode::zoom);
         cheapScaledLast = false;
     }
     //Use scaling up to the maximum scalingtwo value if we should
@@ -243,7 +245,7 @@ void QVGraphicsView::zoom(int DeltaY, const QPoint &pos, qreal targetScaleFactor
         QPointF doubleMapped = loadedPixmapItem->mapFromScene(originalMappedPos);
         loadedPixmapItem->setTransformOriginPoint(loadedPixmapItem->boundingRect().topLeft());
 
-        scaleExpensively(scaleMode::zoom);
+        scaleExpensively(ScaleMode::zoom);
         if (DeltaY > 0)
             loadedPixmapItem->setScale(targetScaleFactor);
         else
@@ -408,15 +410,15 @@ void QVGraphicsView::resetScale()
     expensiveScaleTimer->start();
 }
 
-void QVGraphicsView::scaleExpensively(scaleMode mode)
+void QVGraphicsView::scaleExpensively(ScaleMode mode)
 {
     if (!getCurrentFileDetails().isPixmapLoaded || !isScalingEnabled)
         return;
 
     switch (mode) {
-    case scaleMode::resetScale:
+    case ScaleMode::resetScale:
     {
-        QVImageCore::scaleMode coreMode = QVImageCore::scaleMode::normal;
+        QVImageCore::ScaleMode coreMode = QVImageCore::ScaleMode::normal;
         switch (cropMode) {
         case 0:
         {
@@ -426,19 +428,19 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
             qreal marginWidth = (windowSize.width()-adjustedBoundingRect.width()*transform().m11())+4;
             qreal marginHeight = (windowSize.height()-adjustedBoundingRect.height()*transform().m22())+4;
             if (marginWidth < marginHeight)
-                coreMode = QVImageCore::scaleMode::width;
+                coreMode = QVImageCore::ScaleMode::width;
             else
-                coreMode = QVImageCore::scaleMode::height;
+                coreMode = QVImageCore::ScaleMode::height;
             break;
         }
         case 1:
         {
-            coreMode = QVImageCore::scaleMode::height;
+            coreMode = QVImageCore::ScaleMode::height;
             break;
         }
         case 2:
         {
-            coreMode = QVImageCore::scaleMode::width;
+            coreMode = QVImageCore::ScaleMode::width;
             break;
         }
         }
@@ -456,7 +458,7 @@ void QVGraphicsView::scaleExpensively(scaleMode mode)
         scaledSize = loadedPixmapItem->boundingRect().size().toSize();
         break;
     }
-    case scaleMode::zoom:
+    case ScaleMode::zoom:
     {
         QSize newSize = scaledSize * currentScale;
         if (!getCurrentFileDetails().isMovieLoaded)
@@ -482,7 +484,7 @@ void QVGraphicsView::originalSize(bool setVariables)
     else
         loadedPixmapItem->setPixmap(getLoadedPixmap());
     resetTransform();
-    centerOn(loadedPixmapItem->boundingRect().center());
+    centerOn(loadedPixmapItem);
 
     scaledSize = getLoadedPixmap().size();
 
@@ -494,7 +496,7 @@ void QVGraphicsView::originalSize(bool setVariables)
 }
 
 
-void QVGraphicsView::goToFile(const goToFileMode &mode, int index)
+void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
 {
     if (getCurrentFileDetails().folderFileInfoList.isEmpty())
         return;
@@ -504,17 +506,17 @@ void QVGraphicsView::goToFile(const goToFileMode &mode, int index)
     int newIndex = getCurrentFileDetails().loadedIndexInFolder;
 
     switch (mode) {
-    case goToFileMode::constant:
+    case GoToFileMode::constant:
     {
         newIndex = index;
         break;
     }
-    case goToFileMode::first:
+    case GoToFileMode::first:
     {
         newIndex = 0;
         break;
     }
-    case goToFileMode::previous:
+    case GoToFileMode::previous:
     {
         if (newIndex == 0)
         {
@@ -527,7 +529,7 @@ void QVGraphicsView::goToFile(const goToFileMode &mode, int index)
             newIndex--;
         break;
     }
-    case goToFileMode::next:
+    case GoToFileMode::next:
     {
         if (getCurrentFileDetails().folderFileInfoList.size()-1 == newIndex)
         {
@@ -540,7 +542,7 @@ void QVGraphicsView::goToFile(const goToFileMode &mode, int index)
             newIndex++;
         break;
     }
-    case goToFileMode::last:
+    case GoToFileMode::last:
     {
         newIndex = getCurrentFileDetails().folderFileInfoList.size()-1;
         break;
@@ -596,12 +598,20 @@ void QVGraphicsView::fitInViewMarginless(bool setVariables)
         viewRect = QRect(QPoint(), getCurrentFileDetails().loadedPixmapSize / getLoadedPixmap().devicePixelRatioF());
         viewRect.moveCenter(rect().center());
     }
+
+#ifdef Q_OS_MACOS
+    int obscuredHeight = QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
+    viewRect.setHeight(viewRect.height()-obscuredHeight);
+#endif
+
     if (viewRect.isEmpty())
         return;
+
     // Find the ideal x / y scaling ratio to fit \a rect in the view.
     QRectF sceneRect = matrix().mapRect(adjustedBoundingRect);
     if (sceneRect.isEmpty())
         return;
+
     qreal xratio = viewRect.width() / sceneRect.width();
     qreal yratio = viewRect.height() / sceneRect.height();
 
@@ -618,6 +628,44 @@ void QVGraphicsView::fitInViewMarginless(bool setVariables)
     {
         currentScale = 1.0;
     }
+}
+
+void QVGraphicsView::centerOn(const QPointF &pos)
+{
+#ifdef Q_OS_MACOS
+    int obscuredHeight = QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
+#else
+    int obscuredHeight = 0;
+#endif
+
+    qreal width = viewport()->width();
+    qreal height = viewport()->height() - obscuredHeight;
+    QPointF viewPoint = matrix().map(pos);
+
+    if (isRightToLeft())
+    {
+        qint64 horizontal = 0;
+        horizontal += horizontalScrollBar()->minimum();
+        horizontal += horizontalScrollBar()->maximum();
+        horizontal -= int(viewPoint.x() - width / 2.0);
+        horizontalScrollBar()->setValue(horizontal);
+    }
+    else
+    {
+        horizontalScrollBar()->setValue(int(viewPoint.x() - width / 2.0));
+    }
+
+    verticalScrollBar()->setValue(int(viewPoint.y() - obscuredHeight - (height / 2.0)));
+}
+
+void QVGraphicsView::centerOn(qreal x, qreal y)
+{
+    centerOn(QPointF(x, y));
+}
+
+void QVGraphicsView::centerOn(const QGraphicsItem *item)
+{
+    centerOn(item->boundingRect().center());
 }
 
 void QVGraphicsView::error(const QString &errorString)

@@ -11,6 +11,7 @@ QVAboutDialog::QVAboutDialog(QWidget *parent) :
 
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint | Qt::CustomizeWindowHint);
+    setWindowModality(Qt::ApplicationModal);
 
     // add fonts
     QFontDatabase::addApplicationFont(":/fonts/resources/Lato-Light.ttf");
@@ -18,12 +19,12 @@ QVAboutDialog::QVAboutDialog(QWidget *parent) :
 
     int modifier = 0;
     //set main title font
-    #ifdef Q_OS_MACOS
+#ifdef Q_OS_MACOS
     const QFont font1 = QFont("Lato", 96, QFont::Light);
     modifier = 4;
-    #else
+#else
     const QFont font1 = QFont("Lato", 72, QFont::Light);
-    #endif
+#endif
     ui->logoLabel->setFont(font1);
 
     //set subtitle font & text
@@ -31,9 +32,9 @@ QVAboutDialog::QVAboutDialog(QWidget *parent) :
     font2.setStyleName("Regular");
     QString subtitleText = tr("version ") + QString::number(VERSION, 'f', 1);
     // If this is a nightly build, display the build number
-    #ifdef NIGHTLY
+#ifdef NIGHTLY
         subtitleText = tr("🌒 Nightly");
-    #endif
+#endif
     ui->subtitleLabel->setFont(font2);
     ui->subtitleLabel->setText(subtitleText);
 
@@ -58,6 +59,7 @@ QVAboutDialog::QVAboutDialog(QWidget *parent) :
 
     requestUpdates();
 }
+
 QVAboutDialog::~QVAboutDialog()
 {
     delete ui;
@@ -66,13 +68,13 @@ QVAboutDialog::~QVAboutDialog()
 void QVAboutDialog::requestUpdates()
 {
     // Don't check for updates on nightly builds
-    #ifdef NIGHTLY
-        #define STRINGIFY2(s) #s
-        #define STRINGIFY(s) STRINGIFY2(s)
-        QString text = tr("Build number #") + STRINGIFY(NIGHTLY);
-        ui->updateLabel->setText(text);
-        return;
-    #endif
+#ifdef NIGHTLY
+    #define STRINGIFY2(s) #s
+    #define STRINGIFY(s) STRINGIFY2(s)
+    QString text = tr("Build number #") + STRINGIFY(NIGHTLY);
+    ui->updateLabel->setText(text);
+    return;
+#endif
 
     // send network request for update check
     QUrl url("https://api.github.com/repos/jurplel/qview/releases");

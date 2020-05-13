@@ -46,7 +46,7 @@ bool SettingsManager::getBoolean(const QString &key, bool defaults) const
     if (value.canConvert(QMetaType::Bool))
         return value.toDouble();
 
-    qWarning() << "Error: Can't convert setting key " + key + "to bool";
+    qWarning() << "Error: Can't convert setting key " + key + " to bool";
     return false;
 }
 
@@ -57,7 +57,7 @@ int SettingsManager::getInteger(const QString &key, bool defaults) const
     if (value.canConvert(QMetaType::Int))
         return value.toInt();
 
-    qWarning() << "Error: Can't convert setting key " + key + "to int";
+    qWarning() << "Error: Can't convert setting key " + key + " to int";
     return 0;
 }
 
@@ -68,7 +68,7 @@ double SettingsManager::getDouble(const QString &key, bool defaults) const
     if (value.canConvert(QMetaType::Double))
         return value.toDouble();
 
-    qWarning() << "Error: Can't convert setting key " + key + "to double";
+    qWarning() << "Error: Can't convert setting key " + key + " to double";
     return 0;
 }
 
@@ -79,7 +79,7 @@ const QString SettingsManager::getString(const QString &key, bool defaults) cons
     if (value.canConvert(QMetaType::QString))
         return value.toString();
 
-    qWarning() << "Error: Can't convert setting key " + key + "to string";
+    qWarning() << "Error: Can't convert setting key " + key + " to string";
     return "";
 }
 
@@ -92,6 +92,7 @@ void SettingsManager::initializeSettingsLibrary()
     settingsLibrary.insert("windowresizemode", {1, {}});
     settingsLibrary.insert("minwindowresizedpercentage", {20, {}});
     settingsLibrary.insert("maxwindowresizedpercentage", {70, {}});
+    settingsLibrary.insert("titlebaralwaysdark", {true, {}});
     settingsLibrary.insert("menubarenabled", {false, {}});
     // Image
     settingsLibrary.insert("filteringenabled", {true, {}});

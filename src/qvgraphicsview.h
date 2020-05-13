@@ -16,14 +16,14 @@ class QVGraphicsView : public QGraphicsView
 public:
     QVGraphicsView(QWidget *parent = nullptr);
 
-    enum class scaleMode
+    enum class ScaleMode
     {
        resetScale,
        zoom
     };
-    Q_ENUM(scaleMode)
+    Q_ENUM(ScaleMode)
 
-    enum class goToFileMode
+    enum class GoToFileMode
     {
        constant,
        first,
@@ -31,7 +31,7 @@ public:
        next,
        last
     };
-    Q_ENUM(goToFileMode)
+    Q_ENUM(GoToFileMode)
 
     void zoom(int DeltaY, const QPoint &pos, qreal targetScaleFactor = 0);
 
@@ -40,10 +40,10 @@ public:
     void loadFile(const QString &fileName);
 
     void resetScale();
-    void scaleExpensively(scaleMode mode);
+    void scaleExpensively(ScaleMode mode);
     void originalSize(bool setVariables = true);
 
-    void goToFile(const goToFileMode &mode, int index = 0);
+    void goToFile(const GoToFileMode &mode, int index = 0);
 
     void settingsUpdated();
 
@@ -83,6 +83,12 @@ protected:
     bool event(QEvent *event) override;
 
     void fitInViewMarginless(bool setVariables = true);
+
+    void centerOn(const QPointF &pos);
+
+    void centerOn(qreal x, qreal y);
+
+    void centerOn(const QGraphicsItem *item);
 
 
 private slots:

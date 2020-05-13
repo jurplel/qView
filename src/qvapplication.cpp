@@ -1,5 +1,6 @@
 #include "qvapplication.h"
 #include "qvoptionsdialog.h"
+#include "qvcocoafunctions.h"
 #include "qvoptionsdialog.h"
 #include "qvaboutdialog.h"
 #include "qvwelcomedialog.h"
@@ -48,11 +49,8 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     nameFilterList << filterString;
     nameFilterList << tr("All Files") + " (*)";
 
-    // Don't even try to show menu icons on mac or windows
-    #if defined Q_OS_MACOS || defined Q_OS_WIN
-    setAttribute(Qt::AA_DontShowIconsInMenus);
-    #endif
 
+    // Setup macOS dock menu
     dockMenu = new QMenu();
     connect(dockMenu, &QMenu::triggered, [](QAction *triggeredAction){
        ActionManager::actionTriggered(triggeredAction);
@@ -65,15 +63,26 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     dockMenuRecentsLibrary = actionManager.buildRecentsMenu(false);
     actionManager.updateRecentsMenu();
 
-    #ifdef Q_OS_MACOS
+#ifdef Q_OS_MACOS
     dockMenu->setAsDockMenu();
     setQuitOnLastWindowClosed(false);
-    #endif
+#endif
 
+    // Build menu bar
     menuBar = actionManager.buildMenuBar();
     connect(menuBar, &QMenuBar::triggered, [](QAction *triggeredAction){
         ActionManager::actionTriggered(triggeredAction);
     });
+
+    // Set mac-specific application settings
+#ifdef Q_OS_MACOS
+    QVCocoaFunctions::setUserDefaults();
+#endif
+
+    // Don't even try to show menu icons on mac or windows
+#if defined Q_OS_MACOS || defined Q_OS_WIN
+    setAttribute(Qt::AA_DontShowIconsInMenus);
+#endif
 }
 
 QVApplication::~QVApplication() {
@@ -112,6 +121,8 @@ void QVApplication::pickFile(MainWindow *parent)
     fileDialog->setDirectory(settings.value("lastFileDialogDir", QDir::homePath()).toString());
     fileDialog->setFileMode(QFileDialog::ExistingFiles);
     fileDialog->setNameFilters(qvApp->getNameFilterList());
+    if (parent)
+        fileDialog->setWindowModality(Qt::WindowModal);
 
     connect(fileDialog, &QFileDialog::filesSelected, [parent](const QStringList &selected){
         bool isFirstLoop = true;
@@ -204,6 +215,7 @@ void QVApplication::updateDockRecents()
         if (action->isVisible())
             dockMenu->addAction(action);
     }
+
     if (!dockMenu->isEmpty())
         dockMenu->addSeparator();
 
@@ -248,8 +260,12 @@ void QVApplication::deleteFromLastActiveWindows(MainWindow *window)
     lastActiveWindows.removeAll(window);
 }
 
-void QVApplication::openOptionsDialog()
+void QVApplication::openOptionsDialog(QWidget *parent)
 {
+    // On macOS, the dialog should not be dependent on any window
+#ifdef Q_OS_MACOS
+    parent = nullptr;
+#endif
     if (optionsDialog)
     {
         optionsDialog->raise();
@@ -258,7 +274,7 @@ void QVApplication::openOptionsDialog()
 
     }
 
-    optionsDialog = new QVOptionsDialog();
+    optionsDialog = new QVOptionsDialog(parent);
     connect(optionsDialog, &QDialog::finished, [this]{
         optionsDialog = nullptr;
     });

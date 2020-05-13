@@ -1,11 +1,12 @@
 #include "actionmanager.h"
 #include "qvapplication.h"
+#include "qvcocoafunctions.h"
 
 #include <QSettings>
 #include <QMimeDatabase>
 
 ActionManager::ActionManager(QObject *parent) : QObject(parent)
-{    
+{
     isSaveRecentsEnabled = true;
     recentsListMaxLength = 10;
 
@@ -15,6 +16,11 @@ ActionManager::ActionManager(QObject *parent) : QObject(parent)
     updateShortcuts();
     loadRecentsList();
 
+#ifdef Q_OS_MACOS
+    windowMenu = new QMenu(tr("Window"));
+    QVCocoaFunctions::setWindowMenu(windowMenu);
+#endif
+
     recentsSaveTimer = new QTimer(this);
     recentsSaveTimer->setSingleShot(true);
     recentsSaveTimer->setInterval(500);
@@ -22,7 +28,6 @@ ActionManager::ActionManager(QObject *parent) : QObject(parent)
 
     // Connect to settings signal
     connect(&qvApp->getSettingsManager(), &SettingsManager::settingsUpdated, this, &ActionManager::settingsUpdated);
-    settingsUpdated();
 }
 
 void ActionManager::settingsUpdated()
@@ -46,6 +51,7 @@ QAction *ActionManager::cloneAction(const QString &key)
         newAction->setIcon(action->icon());
         newAction->setData(action->data());
         newAction->setText(action->text());
+        newAction->setMenuRole(action->menuRole());
         newAction->setShortcuts(action->shortcuts());
         actionCloneLibrary.insert(key, newAction);
         return newAction;
@@ -108,17 +114,18 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     // Beginning of file menu
     auto *fileMenu = new QMenu(tr("File"), menuBar);
 
-    #ifdef Q_OS_MACOS
+#ifdef Q_OS_MACOS
     fileMenu->addAction(cloneAction("newwindow"));
-    #endif
+#endif
     fileMenu->addAction(cloneAction("open"));
     fileMenu->addAction(cloneAction("openurl"));
     fileMenu->addMenu(buildRecentsMenu(true, menuBar));
-    #ifdef Q_OS_MACOS
+#ifdef Q_OS_MACOS
     fileMenu->addSeparator();
     fileMenu->addAction(cloneAction("closewindow"));
     fileMenu->addAction(cloneAction("closeallwindows"));
-    #endif
+    QVCocoaFunctions::setAlternates(fileMenu, fileMenu->actions().length()-1, fileMenu->actions().length()-2);
+#endif
     fileMenu->addSeparator();
     fileMenu->addAction(cloneAction("opencontainingfolder"));
     fileMenu->addAction(cloneAction("showfileinfo"));
@@ -138,13 +145,7 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     // End of edit menu
 
     // Beginning of view menu
-    bool withFullscreen = true;
-
-    #ifdef Q_OS_MACOS
-        withFullscreen = false;
-    #endif
-
-    menuBar->addMenu(buildViewMenu(false, withFullscreen, menuBar));
+    menuBar->addMenu(buildViewMenu(false, menuBar));
     // End of view menu
 
     // Beginning of go menu
@@ -162,6 +163,12 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     menuBar->addMenu(buildToolsMenu(false, menuBar));
     // End of tools menu
 
+    // Beginning of window menu
+#ifdef Q_OS_MACOS
+    menuBar->addMenu(windowMenu);
+#endif
+    // End of window menu
+
     // Beginning of help menu
     menuBar->addMenu(buildHelpMenu(false, menuBar));
     // End of help menu
@@ -169,7 +176,7 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     return menuBar;
 }
 
-QMenu *ActionManager::buildViewMenu(bool addIcon, bool withFullscreen, QWidget *parent)
+QMenu *ActionManager::buildViewMenu(bool addIcon, QWidget *parent)
 {
     auto *viewMenu = new QMenu(tr("View"), parent);
     viewMenu->menuAction()->setData("view");
@@ -187,8 +194,7 @@ QMenu *ActionManager::buildViewMenu(bool addIcon, bool withFullscreen, QWidget *
     viewMenu->addAction(cloneAction("mirror"));
     viewMenu->addAction(cloneAction("flip"));
     viewMenu->addSeparator();
-    if (withFullscreen)
-        viewMenu->addAction(cloneAction("fullscreen"));
+    viewMenu->addAction(cloneAction("fullscreen"));
 
     menuCloneLibrary.insert(viewMenu->menuAction()->data().toString(), viewMenu);
     return viewMenu;
@@ -232,34 +238,34 @@ QMenu *ActionManager::buildHelpMenu(bool addIcon, QWidget *parent)
 
 QMenu *ActionManager::buildRecentsMenu(bool includeClearAction, QWidget *parent)
 {
-    QList<QAction*> recentActions;
+    auto *recentsMenu = new QMenu(tr("Open Recent"), parent);
+    recentsMenu->menuAction()->setData("recents");
+    recentsMenu->setIcon(QIcon::fromTheme("document-open-recent"));
+
+    connect(recentsMenu, &QMenu::aboutToShow, [this]{
+        this->loadRecentsList();
+    });
+
     for ( int i = 0; i < recentsListMaxLength; i++ )
     {
         auto action = new QAction(tr("Empty"), this);
         action->setVisible(false);
         action->setData("recent" + QString::number(i));
 
-        recentActions.append(action);
+        recentsMenu->addAction(action);
         actionCloneLibrary.insert(action->data().toString(), action);
     }
 
-    auto recentsMenu = new QMenu(tr("Open Recent"), parent);
-    recentsMenu->setIcon(QIcon::fromTheme("document-open-recent"));
-
-    recentsMenu->addActions(recentActions);
     if (includeClearAction)
     {
         recentsMenu->addSeparator();
         recentsMenu->addAction(cloneAction("clearrecents"));
     }
 
-    connect(recentsMenu, &QMenu::aboutToShow, [this]{
-        this->loadRecentsList();
-    });
-
-    recentsMenu->menuAction()->setData("recents");
     menuCloneLibrary.insert(recentsMenu->menuAction()->data().toString(), recentsMenu);
     updateRecentsMenu();
+    // update settings whenever recent menu is created so it can possibly be hidden
+    settingsUpdated();
     return recentsMenu;
 }
 
@@ -378,7 +384,7 @@ void ActionManager::updateRecentsMenu()
 }
 
 void ActionManager::actionTriggered(QAction *triggeredAction)
-{ 
+{
     auto key = triggeredAction->data().toString();
 
     // For some actions, do not look for a relevant window
@@ -408,6 +414,8 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
     }
 
     if (key == "quit") {
+        if (relevantWindow) // if a window was passed
+            relevantWindow->close(); // close it so geometry is saved
         QCoreApplication::quit();
     } else if (key == "newwindow") {
         qvApp->newWindow();
@@ -416,9 +424,16 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
     } else if (key == "openurl") {
         relevantWindow->pickUrl();
     } else if (key == "closewindow") {
-        QApplication::activeWindow()->close();
+        auto *active = QApplication::activeWindow();
+#ifdef Q_OS_MACOS
+        QVCocoaFunctions::closeWindow(active->windowHandle());
+#endif
+        active->close();
     } else if (key == "closeallwindows") {
-        for (auto &widget : QApplication::topLevelWidgets()) {
+        for (auto *widget : QApplication::topLevelWidgets()) {
+#ifdef Q_OS_MACOS
+            QVCocoaFunctions::closeWindow(widget->windowHandle());
+#endif
             widget->close();
         }
     } else if (key == "opencontainingfolder") {
@@ -470,7 +485,7 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
     } else if (key == "slideshow") {
         relevantWindow->toggleSlideshow();
     } else if (key == "options") {
-        qvApp->openOptionsDialog();
+        qvApp->openOptionsDialog(relevantWindow);
     } else if (key == "about") {
         qvApp->openAboutDialog();
     } else if (key == "welcome") {
@@ -561,6 +576,7 @@ void ActionManager::initializeActionLibrary()
 
     auto *fullScreenAction = new QAction(QIcon::fromTheme("view-fullscreen"), tr("Enter Full Screen"));
     fullScreenAction->setData("fullscreen");
+    fullScreenAction->setMenuRole(QAction::NoRole);
     actionLibrary.insert("fullscreen", fullScreenAction);
 
     auto *firstFileAction = new QAction(QIcon::fromTheme("go-first"), tr("First File"));
@@ -639,11 +655,11 @@ void ActionManager::initializeShortcutsList()
     shortcutsList.append({tr("Open URL"), "openurl", QStringList(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_O).toString()), {}});
     shortcutsList.append({tr("Open Containing Folder"), "opencontainingfolder", {}, {}});
     //Sets open containing folder action name to platform-appropriate alternative
-    #ifdef Q_OS_WIN
+#ifdef Q_OS_WIN
     shortcutsList.last().readableName = tr("Show in Explorer");
     #elif defined Q_OS_MACOS
     shortcutsList.last().readableName  = tr("Show in Finder");
-    #endif
+#endif
     shortcutsList.append({tr("Show File Info"), "showfileinfo", QStringList(QKeySequence(Qt::Key_I).toString()), {}});
     shortcutsList.append({tr("Copy"), "copy", keyBindingsToStringList(QKeySequence::Copy), {}});
     shortcutsList.append({tr("Paste"), "paste", keyBindingsToStringList(QKeySequence::Paste), {}});
@@ -667,16 +683,16 @@ void ActionManager::initializeShortcutsList()
     shortcutsList.append({tr("Flip"), "flip", QStringList(QKeySequence(Qt::CTRL + Qt::Key_F).toString()), {}});
     shortcutsList.append({tr("Full Screen"), "fullscreen", keyBindingsToStringList(QKeySequence::FullScreen), {}});
     //Fixes alt+enter only working with numpad enter when using qt's standard keybinds
-    #ifdef Q_OS_WIN
+#ifdef Q_OS_WIN
     shortcutsList.last().defaultShortcuts << QKeySequence(Qt::ALT + Qt::Key_Return).toString();
-    #elif defined Q_OS_UNIX & !defined Q_OS_MACOS
+#elif defined Q_OS_UNIX & !defined Q_OS_MACOS
     // F11 is for some reason not there by default in GNOME
     if (shortcutsList.last().defaultShortcuts.contains(QKeySequence(Qt::CTRL + Qt::Key_F11).toString()) &&
         !shortcutsList.last().defaultShortcuts.contains(QKeySequence(Qt::Key_F11).toString()))
     {
         shortcutsList.last().defaultShortcuts << QKeySequence(Qt::Key_F11).toString();
     }
-    #endif
+#endif
     shortcutsList.append({tr("Save Frame As"), "saveframeas", keyBindingsToStringList(QKeySequence::Save), {}});
     shortcutsList.append({tr("Pause"), "pause", QStringList(QKeySequence(Qt::Key_P).toString()), {}});
     shortcutsList.append({tr("Next Frame"), "nextframe", QStringList(QKeySequence(Qt::Key_N).toString()), {}});
@@ -685,15 +701,15 @@ void ActionManager::initializeShortcutsList()
     shortcutsList.append({tr("Increase Speed"), "increasespeed", QStringList(QKeySequence(Qt::Key_BracketRight).toString()), {}});
     shortcutsList.append({tr("Toggle Slideshow"), "slideshow", {}, {}});
     shortcutsList.append({tr("Options"), "options", keyBindingsToStringList(QKeySequence::Preferences), {}});
-    #ifdef Q_OS_UNIX
+#ifdef Q_OS_UNIX
         shortcutsList.last().readableName = tr("Preferences");
-    #endif
+#endif
     // mac exclusive shortcuts
-    #ifdef Q_OS_MACOS
+#ifdef Q_OS_MACOS
     shortcutsList.append({tr("New Window"), "newwindow", keyBindingsToStringList(QKeySequence::New), {}});
     shortcutsList.append({tr("Close Window"), "closewindow", QStringList(QKeySequence(Qt::CTRL + Qt::Key_W).toString()), {}});
     shortcutsList.append({tr("Close All"), "closeallwindows", QStringList(QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_W).toString()), {}});
-    #endif
+#endif
     shortcutsList.append({tr("Quit"), "quit", keyBindingsToStringList(QKeySequence::Quit), {}});
 }
 

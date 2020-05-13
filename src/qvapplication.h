@@ -45,7 +45,7 @@ public:
 
     void deleteFromLastActiveWindows(MainWindow *window);
 
-    void openOptionsDialog();
+    void openOptionsDialog(QWidget *parent = nullptr);
 
     void openWelcomeDialog();
 

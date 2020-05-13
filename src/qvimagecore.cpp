@@ -378,12 +378,12 @@ QPixmap QVImageCore::matchCurrentRotation(const QPixmap &pixmapToRotate)
     return QPixmap::fromImage(matchCurrentRotation(pixmapToRotate.toImage()));
 }
 
-QPixmap QVImageCore::scaleExpensively(const int desiredWidth, const int desiredHeight, const scaleMode mode)
+QPixmap QVImageCore::scaleExpensively(const int desiredWidth, const int desiredHeight, const ScaleMode mode)
 {
     return scaleExpensively(QSize(desiredWidth, desiredHeight), mode);
 }
 
-QPixmap QVImageCore::scaleExpensively(const QSize desiredSize, const scaleMode mode)
+QPixmap QVImageCore::scaleExpensively(const QSize desiredSize, const ScaleMode mode)
 {
     if (!currentFileDetails.isPixmapLoaded)
         return QPixmap();
@@ -403,17 +403,17 @@ QPixmap QVImageCore::scaleExpensively(const QSize desiredSize, const scaleMode m
     }
 
     switch (mode) {
-    case scaleMode::normal:
+    case ScaleMode::normal:
     {
         relevantPixmap = relevantPixmap.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
         break;
     }
-    case scaleMode::width:
+    case ScaleMode::width:
     {
         relevantPixmap = relevantPixmap.scaledToWidth(desiredSize.width(), Qt::SmoothTransformation);
         break;
     }
-    case scaleMode::height:
+    case ScaleMode::height:
     {
         relevantPixmap = relevantPixmap.scaledToHeight(desiredSize.height(), Qt::SmoothTransformation);
         break;

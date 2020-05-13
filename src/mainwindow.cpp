@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "qvapplication.h"
+#include "qvcocoafunctions.h"
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QString>
@@ -89,8 +90,8 @@ MainWindow::MainWindow(QWidget *parent) :
     contextMenu->addAction(actionManager.cloneAction("previousfile"));
     contextMenu->addSeparator();
     contextMenu->addMenu(actionManager.buildViewMenu(true, contextMenu));
-    contextMenu->addMenu(actionManager.buildToolsMenu(contextMenu));
-    contextMenu->addMenu(actionManager.buildHelpMenu(contextMenu));
+    contextMenu->addMenu(actionManager.buildToolsMenu(true, contextMenu));
+    contextMenu->addMenu(actionManager.buildHelpMenu(true, contextMenu));
 
     connect(contextMenu, &QMenu::triggered, [this](QAction *triggeredAction){
         ActionManager::actionTriggered(triggeredAction, this);
@@ -135,7 +136,13 @@ bool MainWindow::event(QEvent *event)
 void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 {
     QMainWindow::contextMenuEvent(event);
+
+    // Show native menu on macOS
+#ifdef Q_OS_MACOS
+    QVCocoaFunctions::showMenu(contextMenu, event->pos(), windowHandle());
+#else
     contextMenu->popup(event->globalPos());
+#endif
 }
 
 void MainWindow::showEvent(QShowEvent *event)
@@ -153,6 +160,30 @@ void MainWindow::closeEvent(QCloseEvent *event)
     qvApp->getActionManager().untrackClonedActions(menuBar());
 
     QMainWindow::closeEvent(event);
+}
+
+void MainWindow::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::WindowStateChange)
+    {
+        const auto fullscreenActions = qvApp->getActionManager().getAllInstancesOfAction("fullscreen");
+        for (const auto &fullscreenAction : fullscreenActions)
+        {
+                if (windowState() == Qt::WindowFullScreen)
+                {
+                    fullscreenAction->setText(tr("Exit Full Screen"));
+                    fullscreenAction->setIcon(QIcon::fromTheme("view-restore"));
+                }
+                else
+                {
+                    fullscreenAction->setText(tr("Enter Full Screen"));
+                    fullscreenAction->setIcon(QIcon::fromTheme("view-fullscreen"));
+                }
+            QTimer::singleShot(3000, this, [fullscreenAction]{
+                fullscreenAction->setVisible(true);
+             });
+        }
+    }
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
@@ -174,6 +205,7 @@ void MainWindow::mouseDoubleClickEvent(QMouseEvent *event)
 
 void MainWindow::openFile(const QString &fileName)
 {
+    QUrl url(fileName);
     graphicsView->loadFile(fileName);
     cancelSlideshow();
 }
@@ -184,18 +216,23 @@ void MainWindow::settingsUpdated()
 
     buildWindowTitle();
 
-    //menubar
+    // menubarenabled
     bool menuBarEnabled = settingsManager.getBoolean("menubarenabled");
-    #ifdef Q_OS_MACOS
+#ifdef Q_OS_MACOS
     // Menu bar is effectively always enabled on macOS
     menuBarEnabled = true;
-    #endif
+#endif
     menuBar()->setVisible(menuBarEnabled);
     const auto actionList = actions();
     for (const auto &action : actionList)
     {
         action->setVisible(!menuBarEnabled);
     }
+
+    // titlebaralwaysdark
+#ifdef Q_OS_MACOS
+    QVCocoaFunctions::setVibrancy(settingsManager.getBoolean("titlebaralwaysdark"), windowHandle());
+#endif
 
     //slideshow timer
     slideshowTimer->setInterval(static_cast<int>(settingsManager.getDouble("slideshowtimer")*1000));
@@ -244,7 +281,6 @@ void MainWindow::fileLoaded()
 
     refreshProperties();
     buildWindowTitle();
-    windowHandle()->setFilePath(getCurrentFileDetails().fileInfo.absoluteFilePath());
 }
 
 void MainWindow::refreshProperties()
@@ -295,6 +331,7 @@ void MainWindow::buildWindowTitle()
     }
 
     setWindowTitle(newString);
+    windowHandle()->setFilePath(getCurrentFileDetails().fileInfo.absoluteFilePath());
 }
 
 void MainWindow::setWindowSize()
@@ -331,21 +368,30 @@ void MainWindow::setWindowSize()
         imageSize.scale(maxWindowSize, Qt::KeepAspectRatio);
     }
 
-    //Windows reports the wrong minimum width, so we constrain the image size relative to the dpi to stop weirdness with tiny images
-    #ifdef Q_OS_WIN
+    // Windows reports the wrong minimum width, so we constrain the image size relative to the dpi to stop weirdness with tiny images
+#ifdef Q_OS_WIN
     auto minimumImageSize = QSize(qRound(logicalDpiX()*1.5), logicalDpiY()/2);
     if (imageSize.boundedTo(minimumImageSize) == imageSize)
         imageSize = minimumImageSize;
-    #endif
+#endif
 
+    // Adjust image size for fullsizecontentview on mac
+#ifdef Q_OS_MACOS
+    int obscuredHeight = QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
+    imageSize.setHeight(imageSize.height() + obscuredHeight);
+#endif
+
+    // Match center after new geometry
     QRect oldRect = geometry();
     resize(imageSize);
     QRect newRect = geometry();
     newRect.moveCenter(oldRect.center());
 
+    // Ensure titlebar is not above the top of the screen
     const int titlebarHeight = QApplication::style()->pixelMetric(QStyle::PM_TitleBarHeight);
     if (newRect.y() < titlebarHeight)
         newRect.setY(titlebarHeight);
+
 
     setGeometry(newRect);
 }
@@ -470,13 +516,13 @@ void MainWindow::openContainingFolder()
 
     const QFileInfo selectedFileInfo = getCurrentFileDetails().fileInfo;
 
-    #ifdef Q_OS_WIN
+#ifdef Q_OS_WIN
     QProcess::startDetached("explorer", QStringList() << "/select," << QDir::toNativeSeparators(selectedFileInfo.absoluteFilePath()));
-    #elif defined Q_OS_MACOS
+#elif defined Q_OS_MACOS
     QProcess::execute("open", QStringList() << "-R" << selectedFileInfo.absoluteFilePath());
-    #else
+#else
     QDesktopServices::openUrl(selectedFileInfo.absolutePath());
-    #endif
+#endif
 }
 
 void MainWindow::showFileInfo()
@@ -561,22 +607,22 @@ void MainWindow::flip()
 
 void MainWindow::firstFile()
 {
-    graphicsView->goToFile(QVGraphicsView::goToFileMode::first);
+    graphicsView->goToFile(QVGraphicsView::GoToFileMode::first);
 }
 
 void MainWindow::previousFile()
 {
-    graphicsView->goToFile(QVGraphicsView::goToFileMode::previous);
+    graphicsView->goToFile(QVGraphicsView::GoToFileMode::previous);
 }
 
 void MainWindow::nextFile()
 {
-    graphicsView->goToFile(QVGraphicsView::goToFileMode::next);
+    graphicsView->goToFile(QVGraphicsView::GoToFileMode::next);
 }
 
 void MainWindow::lastFile()
 {
-    graphicsView->goToFile(QVGraphicsView::goToFileMode::last);
+    graphicsView->goToFile(QVGraphicsView::GoToFileMode::last);
 }
 
 void MainWindow::saveFrameAs()
@@ -706,24 +752,12 @@ void MainWindow::increaseSpeed()
 
 void MainWindow::toggleFullScreen()
 {
-    const auto fullscreenActions = qvApp->getActionManager().getAllInstancesOfAction("fullscreen");
-
     if (windowState() == Qt::WindowFullScreen)
     {
         showNormal();
-        for (const auto &fullscreenAction : fullscreenActions)
-        {
-            fullscreenAction->setText(tr("Enter Full Screen"));
-            fullscreenAction->setIcon(QIcon::fromTheme("view-fullscreen"));
-        }
     }
     else
     {
         showFullScreen();
-        for (const auto &fullscreenAction : fullscreenActions)
-        {
-            fullscreenAction->setText(tr("Exit Full Screen"));
-            fullscreenAction->setIcon(QIcon::fromTheme("view-restore"));
-        }
     }
 }
