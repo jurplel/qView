@@ -51,38 +51,6 @@ QVOptionsDialog::~QVOptionsDialog()
 
 void QVOptionsDialog::closeEvent(QCloseEvent *event)
 {
-    if (isWindowModified())
-    {
-        QMessageBox *messageBox = new QMessageBox(QMessageBox::Question,
-            tr("Unsaved Changes"), tr("Save changes before closing?"),
-            QMessageBox::Discard | QMessageBox::Save | QMessageBox::Cancel, this);
-        messageBox->setWindowModality(Qt::WindowModal);
-        messageBox->setAttribute(Qt::WA_DeleteOnClose);
-        messageBox->setDefaultButton(QMessageBox::Save);
-        connect(messageBox, &QDialog::finished, [this, event](int result){
-            switch(result) {
-            case QMessageBox::StandardButton::Save: {
-                saveSettings();
-                actuallyClose(event);
-                break;
-            }
-            case QMessageBox::StandardButton::Discard: {
-                actuallyClose(event);
-                break;
-            }
-            }
-        });
-        messageBox->open();
-        event->ignore();
-    }
-    else
-    {
-        actuallyClose(event);
-    }
-}
-
-void QVOptionsDialog::actuallyClose(QCloseEvent *event)
-{
     // Save window geometry
     QSettings settings;
     settings.setValue("optionsgeometry", saveGeometry());
@@ -94,19 +62,6 @@ void QVOptionsDialog::actuallyClose(QCloseEvent *event)
 void QVOptionsDialog::modifySetting(QString key, QVariant value)
 {
     transientSettings.insert(key, value);
-
-    setWindowModified(false);
-    const auto keys = transientSettings.keys();
-    for (const auto &key : keys)
-    {
-        const auto &value0 = transientSettings.value(key);
-        const auto &value1 = qvApp->getSettingsManager().getSetting(key);
-        if (value1 != value0)
-        {
-            setWindowModified(true);
-            break;
-        }
-    }
 }
 
 void QVOptionsDialog::saveSettings()
@@ -135,8 +90,6 @@ void QVOptionsDialog::saveSettings()
 
     qvApp->getActionManager().updateShortcuts();
     qvApp->getSettingsManager().updateSettings();
-
-    setWindowModified(false);
 }
 
 void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)

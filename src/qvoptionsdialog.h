@@ -27,8 +27,6 @@ public:
 protected:
     void closeEvent(QCloseEvent *event) override;
 
-    void actuallyClose(QCloseEvent *event);
-
     void modifySetting(QString key, QVariant value);
     void saveSettings();
     void syncSettings(bool defaults = false, bool makeConnections = false);
