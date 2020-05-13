@@ -44,7 +44,7 @@ bool SettingsManager::getBoolean(const QString &key, bool defaults) const
     auto value = getSetting(key, defaults);
 
     if (value.canConvert(QMetaType::Bool))
-        return value.toDouble();
+        return value.toBool();
 
     qWarning() << "Error: Can't convert setting key " + key + " to bool";
     return false;
