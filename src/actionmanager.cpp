@@ -114,18 +114,18 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     // Beginning of file menu
     auto *fileMenu = new QMenu(tr("File"), menuBar);
 
-    #ifdef Q_OS_MACOS
+#ifdef Q_OS_MACOS
     fileMenu->addAction(cloneAction("newwindow"));
-    #endif
+#endif
     fileMenu->addAction(cloneAction("open"));
     fileMenu->addAction(cloneAction("openurl"));
     fileMenu->addMenu(buildRecentsMenu(true, menuBar));
-    #ifdef Q_OS_MACOS
+#ifdef Q_OS_MACOS
     fileMenu->addSeparator();
     fileMenu->addAction(cloneAction("closewindow"));
     fileMenu->addAction(cloneAction("closeallwindows"));
     QVCocoaFunctions::setAlternates(fileMenu, fileMenu->actions().length()-1, fileMenu->actions().length()-2);
-    #endif
+#endif
     fileMenu->addSeparator();
     fileMenu->addAction(cloneAction("opencontainingfolder"));
     fileMenu->addAction(cloneAction("showfileinfo"));
@@ -655,11 +655,11 @@ void ActionManager::initializeShortcutsList()
     shortcutsList.append({tr("Open URL"), "openurl", QStringList(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_O).toString()), {}});
     shortcutsList.append({tr("Open Containing Folder"), "opencontainingfolder", {}, {}});
     //Sets open containing folder action name to platform-appropriate alternative
-    #ifdef Q_OS_WIN
+#ifdef Q_OS_WIN
     shortcutsList.last().readableName = tr("Show in Explorer");
     #elif defined Q_OS_MACOS
     shortcutsList.last().readableName  = tr("Show in Finder");
-    #endif
+#endif
     shortcutsList.append({tr("Show File Info"), "showfileinfo", QStringList(QKeySequence(Qt::Key_I).toString()), {}});
     shortcutsList.append({tr("Copy"), "copy", keyBindingsToStringList(QKeySequence::Copy), {}});
     shortcutsList.append({tr("Paste"), "paste", keyBindingsToStringList(QKeySequence::Paste), {}});
@@ -683,16 +683,16 @@ void ActionManager::initializeShortcutsList()
     shortcutsList.append({tr("Flip"), "flip", QStringList(QKeySequence(Qt::CTRL + Qt::Key_F).toString()), {}});
     shortcutsList.append({tr("Full Screen"), "fullscreen", keyBindingsToStringList(QKeySequence::FullScreen), {}});
     //Fixes alt+enter only working with numpad enter when using qt's standard keybinds
-    #ifdef Q_OS_WIN
+#ifdef Q_OS_WIN
     shortcutsList.last().defaultShortcuts << QKeySequence(Qt::ALT + Qt::Key_Return).toString();
-    #elif defined Q_OS_UNIX & !defined Q_OS_MACOS
+#elif defined Q_OS_UNIX & !defined Q_OS_MACOS
     // F11 is for some reason not there by default in GNOME
     if (shortcutsList.last().defaultShortcuts.contains(QKeySequence(Qt::CTRL + Qt::Key_F11).toString()) &&
         !shortcutsList.last().defaultShortcuts.contains(QKeySequence(Qt::Key_F11).toString()))
     {
         shortcutsList.last().defaultShortcuts << QKeySequence(Qt::Key_F11).toString();
     }
-    #endif
+#endif
     shortcutsList.append({tr("Save Frame As"), "saveframeas", keyBindingsToStringList(QKeySequence::Save), {}});
     shortcutsList.append({tr("Pause"), "pause", QStringList(QKeySequence(Qt::Key_P).toString()), {}});
     shortcutsList.append({tr("Next Frame"), "nextframe", QStringList(QKeySequence(Qt::Key_N).toString()), {}});
@@ -701,15 +701,15 @@ void ActionManager::initializeShortcutsList()
     shortcutsList.append({tr("Increase Speed"), "increasespeed", QStringList(QKeySequence(Qt::Key_BracketRight).toString()), {}});
     shortcutsList.append({tr("Toggle Slideshow"), "slideshow", {}, {}});
     shortcutsList.append({tr("Options"), "options", keyBindingsToStringList(QKeySequence::Preferences), {}});
-    #ifdef Q_OS_UNIX
+#ifdef Q_OS_UNIX
         shortcutsList.last().readableName = tr("Preferences");
-    #endif
+#endif
     // mac exclusive shortcuts
-    #ifdef Q_OS_MACOS
+#ifdef Q_OS_MACOS
     shortcutsList.append({tr("New Window"), "newwindow", keyBindingsToStringList(QKeySequence::New), {}});
     shortcutsList.append({tr("Close Window"), "closewindow", QStringList(QKeySequence(Qt::CTRL + Qt::Key_W).toString()), {}});
     shortcutsList.append({tr("Close All"), "closeallwindows", QStringList(QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_W).toString()), {}});
-    #endif
+#endif
     shortcutsList.append({tr("Quit"), "quit", keyBindingsToStringList(QKeySequence::Quit), {}});
 }
 

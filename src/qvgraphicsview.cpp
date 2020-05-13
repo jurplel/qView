@@ -178,11 +178,11 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
     else
     {
         //macos automatically scrolls horizontally while holding shift
-        #ifndef Q_OS_MACX
+#ifndef Q_OS_MACOS
         if (event->modifiers() == (Qt::ControlModifier|Qt::ShiftModifier) || event->modifiers() == Qt::ShiftModifier)
             translate(event->angleDelta().y()/2.0, event->angleDelta().x()/2.0);
         else
-        #endif
+#endif
             translate(event->angleDelta().x()/2.0, event->angleDelta().y()/2.0);
     }
 }

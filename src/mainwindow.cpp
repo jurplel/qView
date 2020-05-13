@@ -518,7 +518,7 @@ void MainWindow::openContainingFolder()
 
 #ifdef Q_OS_WIN
     QProcess::startDetached("explorer", QStringList() << "/select," << QDir::toNativeSeparators(selectedFileInfo.absoluteFilePath()));
-    #elif defined Q_OS_MACOS
+#elif defined Q_OS_MACOS
     QProcess::execute("open", QStringList() << "-R" << selectedFileInfo.absoluteFilePath());
 #else
     QDesktopServices::openUrl(selectedFileInfo.absolutePath());
