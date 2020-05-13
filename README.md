@@ -8,7 +8,7 @@
 
 <h4 align=center>
     <a href="https://interversehq.com/qview/download">Downloads</a> |
-    <a href="https://interversehq.com/qview/changelog">Changelog</a>
+    <a href="https://interversehq.com/qview/changelog">Changelog</a> | <a href="https://interversehq.com/discord">Discord</a>
 </h4>
 
 <p align=center>
