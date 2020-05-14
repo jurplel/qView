@@ -10,14 +10,6 @@ class ActionManager : public QObject
 {
     Q_OBJECT
 public:
-    struct SShortcut {
-        QString readableName;
-        QString name;
-        QStringList defaultShortcuts;
-        QStringList shortcuts;
-    };
-
-
     struct SRecent {
         QString fileName;
         QString filePath;
@@ -55,38 +47,6 @@ public:
         }
 
         return allActionsOfType;
-    }
-
-    static QStringList keyBindingsToStringList(QKeySequence::StandardKey sequence)
-    {
-        const auto seqList = QKeySequence::keyBindings(sequence);
-        QStringList strings;
-        for (const auto &seq : seqList)
-        {
-            strings << seq.toString();
-        }
-        return strings;
-    }
-
-    static QList<QKeySequence> stringListToKeySequenceList(const QStringList &stringList)
-    {
-
-        QList<QKeySequence> keySequences;
-        for (const auto &string : stringList)
-        {
-            keySequences << QKeySequence::fromString(string);
-        }
-        return keySequences;
-    }
-
-    static QString stringListToReadableString(QStringList stringList)
-    {
-        return QKeySequence::fromString(stringList.join(", ")).toString(QKeySequence::NativeText);
-    }
-
-    static QStringList readableStringToStringList(QString shortcutString)
-    {
-        return QKeySequence::fromString(shortcutString, QKeySequence::NativeText).toString().split(", ");
     }
 
     static QVariantList recentsListToVariantList(const QList<SRecent> &recentsList)
@@ -153,23 +113,15 @@ public:
 
     static void actionTriggered(QAction *triggeredAction, MainWindow *relevantWindow);
 
-    void updateShortcuts();
-
     const QList<SRecent> &getRecentsList() const { return recentsList; }
 
     const QHash<QString, QAction*> &getActionLibrary() const { return actionLibrary; }
 
-    const QList<SShortcut> &getShortcutsList() const { return shortcutsList; }
-
 signals:
     void recentsMenuUpdated();
 
-    void shortcutsUpdated();
-
 protected:
     void initializeActionLibrary();
-
-    void initializeShortcutsList();
 
 private:
     QHash<QString, QAction*> actionLibrary;
@@ -177,8 +129,6 @@ private:
     QMultiHash<QString, QAction*> actionCloneLibrary;
 
     QMultiHash<QString, QMenu*> menuCloneLibrary;
-
-    QList<SShortcut> shortcutsList;
 
     QMenu *windowMenu;
 

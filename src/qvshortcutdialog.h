@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include <QAbstractButton>
-#include "actionmanager.h"
+#include "shortcutmanager.h"
 
 namespace Ui {
 class QVShortcutDialog;
@@ -31,7 +31,7 @@ private:
 
     Ui::QVShortcutDialog *ui;
 
-    ActionManager::SShortcut shortcutObject;
+    ShortcutManager::SShortcut shortcutObject;
     int index;
 };
 

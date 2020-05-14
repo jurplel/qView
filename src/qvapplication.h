@@ -2,8 +2,9 @@
 #define QVAPPLICATION_H
 
 #include "mainwindow.h"
-#include "actionmanager.h"
 #include "settingsmanager.h"
+#include "shortcutmanager.h"
+#include "actionmanager.h"
 
 #include <QApplication>
 
@@ -57,9 +58,11 @@ public:
 
     const QStringList &getNameFilterList() const { return nameFilterList; }
 
-    ActionManager &getActionManager() { return actionManager; }
-
     SettingsManager &getSettingsManager() { return settingsManager; }
+
+    ShortcutManager &getShortcutManager() { return shortcutManager; }
+
+    ActionManager &getActionManager() { return actionManager; }
 
 private:
 
@@ -78,9 +81,10 @@ private:
     QStringList filterList;
     QStringList nameFilterList;
 
-    // SettingsManager has to be allocated first because ActionManager connects to its signal
-    SettingsManager settingsManager;
+    // This order is important
+    SettingsManager settingsManager; 
     ActionManager actionManager;
+    ShortcutManager shortcutManager;
 
     QDialog *optionsDialog;
     QDialog *welcomeDialog;

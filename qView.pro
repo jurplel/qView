@@ -84,7 +84,8 @@ SOURCES += \
     src/qvimagecore.cpp \
     src/qvshortcutdialog.cpp \
     src/actionmanager.cpp \
-    src/settingsmanager.cpp
+    src/settingsmanager.cpp \
+    src/shortcutmanager.cpp
 
 macx:SOURCES += src/qvcocoafunctions.mm
 
@@ -99,7 +100,8 @@ HEADERS += \
     src/qvimagecore.h \
     src/qvshortcutdialog.h \
     src/actionmanager.h \
-    src/settingsmanager.h
+    src/settingsmanager.h \
+    src/shortcutmanager.h
 
 macx:HEADERS += src/qvcocoafunctions.h
 

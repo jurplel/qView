@@ -42,6 +42,7 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
 
     syncSettings(false, true);
     syncShortcuts();
+    updateButtonBox();
 }
 
 QVOptionsDialog::~QVOptionsDialog()
@@ -62,6 +63,7 @@ void QVOptionsDialog::closeEvent(QCloseEvent *event)
 void QVOptionsDialog::modifySetting(QString key, QVariant value)
 {
     transientSettings.insert(key, value);
+    updateButtonBox();
 }
 
 void QVOptionsDialog::saveSettings()
@@ -79,16 +81,13 @@ void QVOptionsDialog::saveSettings()
     settings.endGroup();
     settings.beginGroup("shortcuts");
 
-    auto shortcutsList = qvApp->getActionManager().getShortcutsList();
-
-    QHashIterator<int, QStringList> iter(transientShortcuts);
-    while (iter.hasNext())
+    const auto &shortcutsList = qvApp->getShortcutManager().getShortcutsList();
+    for (int i = 0; i < transientShortcuts.length(); i++)
     {
-        iter.next();
-        settings.setValue(shortcutsList.value(iter.key()).name, iter.value());
+        settings.setValue(shortcutsList.value(i).name, transientShortcuts.value(i));
     }
 
-    qvApp->getActionManager().updateShortcuts();
+    qvApp->getShortcutManager().updateShortcuts();
     qvApp->getSettingsManager().updateSettings();
 }
 
@@ -103,92 +102,67 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
         ui->bgColorButton->setEnabled(true);
     else
         ui->bgColorButton->setEnabled(false);
-
     // bgcolor
     ui->bgColorButton->setText(settingsManager.getString("bgcolor", defaults));
     transientSettings.insert("bgcolor", ui->bgColorButton->text());
     updateBgColorButton();
     connect(ui->bgColorButton, &QPushButton::clicked, this, &QVOptionsDialog::bgColorButtonClicked);
-
     // titlebarmode
     syncRadioButtons({ui->titlebarRadioButton0, ui->titlebarRadioButton1,
                      ui->titlebarRadioButton2, ui->titlebarRadioButton3}, "titlebarmode", defaults, makeConnections);
-
     // windowresizemode
     syncComboBox(ui->windowResizeComboBox, "windowresizemode", defaults, makeConnections);
-    if (ui->windowResizeComboBox->currentIndex() == 0)
-    {
+    if (ui->windowResizeComboBox->currentIndex() == 0) {
         ui->minWindowResizeLabel->setEnabled(false);
         ui->minWindowResizeSpinBox->setEnabled(false);
         ui->maxWindowResizeLabel->setEnabled(false);
         ui->maxWindowResizeSpinBox->setEnabled(false);
-    }
-    else
-    {
+    } else {
         ui->minWindowResizeLabel->setEnabled(true);
         ui->minWindowResizeSpinBox->setEnabled(true);
         ui->maxWindowResizeLabel->setEnabled(true);
         ui->maxWindowResizeSpinBox->setEnabled(true);
     }
-
     // minwindowresizedpercentage
     syncSpinBox(ui->minWindowResizeSpinBox, "minwindowresizedpercentage", defaults, makeConnections);
-
     // maxwindowresizedperecentage
     syncSpinBox(ui->maxWindowResizeSpinBox, "maxwindowresizedpercentage", defaults, makeConnections);
-
     // titlebaralwaysdark
     syncCheckbox(ui->darkTitlebarCheckbox, "titlebaralwaysdark", defaults, makeConnections);
-
     // menubarenabled
     syncCheckbox(ui->menubarCheckbox, "menubarenabled", defaults, makeConnections);
-
     // filteringenabled
     syncCheckbox(ui->filteringCheckbox, "filteringenabled", defaults, makeConnections);
-
     // scalingenabled
     syncCheckbox(ui->scalingCheckbox, "scalingenabled", defaults, makeConnections);
     if (ui->scalingCheckbox->isChecked())
         ui->scalingTwoCheckbox->setEnabled(true);
     else
         ui->scalingTwoCheckbox->setEnabled(false);
-
     // scalingtwoenabled
     syncCheckbox(ui->scalingTwoCheckbox, "scalingtwoenabled", defaults, makeConnections);
-
     // scalefactor
     syncSpinBox(ui->scaleFactorSpinBox, "scalefactor", defaults, makeConnections);
-
     // scrollzoomsenabled
     syncCheckbox(ui->scrollZoomsCheckbox, "scrollzoomsenabled", defaults, makeConnections);
-
     // cursorzoom
     syncCheckbox(ui->cursorZoomCheckbox, "cursorzoom", defaults, makeConnections);
-
     // cropmode
     syncComboBox(ui->cropModeComboBox, "cropmode", defaults, makeConnections);
-
     // pastactualsizeenabled
     syncCheckbox(ui->pastActualSizeCheckbox, "pastactualsizeenabled", defaults, makeConnections);
-
     // sortmode
     syncComboBox(ui->sortComboBox, "sortmode", defaults, makeConnections);
-
     // sortascending
     syncRadioButtons({ui->ascendingRadioButton0, ui->ascendingRadioButton1}, "sortascending", defaults, makeConnections);
-
     // preloadingmode
     syncComboBox(ui->preloadingComboBox, "preloadingmode", defaults, makeConnections);
-
     // loopfolders
     syncCheckbox(ui->loopFoldersCheckbox, "loopfoldersenabled", defaults, makeConnections);
-
     // slideshowreversed
     syncComboBox(ui->slideshowDirectionComboBox, "slideshowreversed", defaults, makeConnections);
-
     // slideshowtimer
     syncDoubleSpinBox(ui->slideshowTimerSpinBox, "slideshowtimer", defaults, makeConnections);
-
     // saverecents
     syncCheckbox(ui->saveRecentsCheckbox, "saverecents", defaults, makeConnections);
 }
@@ -201,7 +175,7 @@ void QVOptionsDialog::syncCheckbox(QCheckBox *checkbox, const QString &key, bool
 
     if (makeConnection)
     {
-        connect(checkbox, &QCheckBox::stateChanged, [this, key](int arg1){
+        connect(checkbox, &QCheckBox::stateChanged, [this, key](int arg1) {
             modifySetting(key, static_cast<bool>(arg1));
         });
     }
@@ -217,7 +191,7 @@ void QVOptionsDialog::syncRadioButtons(QList<QRadioButton *> buttons, const QStr
     {
         for (int i = 0; i < buttons.length(); i++)
         {
-            connect(buttons.value(i), &QRadioButton::clicked, [this, key, i]{
+            connect(buttons.value(i), &QRadioButton::clicked, [this, key, i] {
                 modifySetting(key, i);
             });
         }
@@ -232,7 +206,7 @@ void QVOptionsDialog::syncComboBox(QComboBox *comboBox, const QString &key, bool
 
     if (makeConnection)
     {
-        connect(comboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), [this, key](int index){
+        connect(comboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), [this, key](int index) {
             modifySetting(key, index);
         });
     }
@@ -246,7 +220,7 @@ void QVOptionsDialog::syncSpinBox(QSpinBox *spinBox, const QString &key, bool de
 
     if (makeConnection)
     {
-        connect(spinBox, QOverload<int>::of(&QSpinBox::valueChanged), [this, key](int arg1){
+        connect(spinBox, QOverload<int>::of(&QSpinBox::valueChanged), [this, key](int arg1) {
             modifySetting(key, arg1);
         });
     }
@@ -260,7 +234,7 @@ void QVOptionsDialog::syncDoubleSpinBox(QDoubleSpinBox *doubleSpinBox, const QSt
 
     if (makeConnection)
     {
-        connect(doubleSpinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [this, key](double arg1){
+        connect(doubleSpinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [this, key](double arg1) {
             modifySetting(key, arg1);
         });
     }
@@ -268,54 +242,51 @@ void QVOptionsDialog::syncDoubleSpinBox(QDoubleSpinBox *doubleSpinBox, const QSt
 
 void QVOptionsDialog::syncShortcuts(bool defaults)
 {
-    qvApp->getActionManager().updateShortcuts();
+    qvApp->getShortcutManager().updateShortcuts();
 
-    auto shortcutsList = qvApp->getActionManager().getShortcutsList();
+    transientShortcuts.clear();
+    const auto &shortcutsList = qvApp->getShortcutManager().getShortcutsList();
     ui->shortcutsTable->setRowCount(shortcutsList.length());
 
-    auto item = new QTableWidgetItem();
-
-    int i = 0;
-    QListIterator<ActionManager::SShortcut> iter(shortcutsList);
-    while (iter.hasNext())
+    for (int i = 0; i < shortcutsList.length(); i++)
     {
-        auto value = iter.next();
+        const ShortcutManager::SShortcut &shortcut = shortcutsList.value(i);
+
+        // Add shortcut to transient shortcut list
         if (defaults)
-        {
-            transientShortcuts.insert(i, value.defaultShortcuts);
-        }
+            transientShortcuts.append(shortcut.defaultShortcuts);
         else
-        {
-            transientShortcuts.insert(i, value.shortcuts);
-        }
+            transientShortcuts.append(shortcut.shortcuts);
 
-        item->setText(value.readableName);
-        ui->shortcutsTable->setItem(i, 0, item->clone());
+        // Add shortcut to table widget
+        auto *nameItem = new QTableWidgetItem();
+        nameItem->setText(shortcut.readableName);
+        ui->shortcutsTable->setItem(i, 0, nameItem);
 
-        item->setText(ActionManager::stringListToReadableString(transientShortcuts.value(i)));
-        ui->shortcutsTable->setItem(i, 1, item->clone());
-        i++;
+        auto *shortcutsItem = new QTableWidgetItem();
+        shortcutsItem->setText(ShortcutManager::stringListToReadableString(
+                                   transientShortcuts.value(i)));
+        ui->shortcutsTable->setItem(i, 1, shortcutsItem);
     }
-    delete item;
     updateShortcutsTable();
 }
 
 void QVOptionsDialog::updateShortcutsTable()
 {
-    QHashIterator<int, QStringList> iter(transientShortcuts);
-    while (iter.hasNext())
+    for (int i = 0; i < transientShortcuts.length(); i++)
     {
-        iter.next();
-        ui->shortcutsTable->item(iter.key(), 1)->setText(ActionManager::stringListToReadableString(iter.value()));
+        const QStringList &shortcuts = transientShortcuts.value(i);
+        ui->shortcutsTable->item(i, 1)->setText(ShortcutManager::stringListToReadableString(shortcuts));
     }
+    updateButtonBox();
 }
 
 void QVOptionsDialog::on_shortcutsTable_cellDoubleClicked(int row, int column)
 {
     Q_UNUSED(column)
-    auto shortcutDialog = new QVShortcutDialog(row, this);
-    connect(shortcutDialog, &QVShortcutDialog::shortcutsListChanged, [this](int index, const QStringList &stringListShortcuts){
-        transientShortcuts.insert(index, stringListShortcuts);
+    auto *shortcutDialog = new QVShortcutDialog(row, this);
+    connect(shortcutDialog, &QVShortcutDialog::shortcutsListChanged, [this](int index, const QStringList &stringListShortcuts) {
+        transientShortcuts.replace(index, stringListShortcuts);
         updateShortcutsTable();
     });
     shortcutDialog->open();
@@ -323,14 +294,53 @@ void QVOptionsDialog::on_shortcutsTable_cellDoubleClicked(int row, int column)
 
 void QVOptionsDialog::on_buttonBox_clicked(QAbstractButton *button)
 {
-    if (ui->buttonBox->buttonRole(button) == QDialogButtonBox::AcceptRole || ui->buttonBox->buttonRole(button) == QDialogButtonBox::ApplyRole)
+    auto role = ui->buttonBox->buttonRole(button);
+    if (role == QDialogButtonBox::AcceptRole || role == QDialogButtonBox::ApplyRole)
     {
         saveSettings();
+        if (role == QDialogButtonBox::ApplyRole)
+            button->setEnabled(false);
     }
-    else if (ui->buttonBox->buttonRole(button) == QDialogButtonBox::ResetRole)
+    else if (role == QDialogButtonBox::ResetRole)
     {
         syncSettings(true);
         syncShortcuts(true);
+    }
+}
+
+void QVOptionsDialog::updateButtonBox()
+{
+    QPushButton *defaultsButton = ui->buttonBox->button(QDialogButtonBox::RestoreDefaults);
+    QPushButton *applyButton = ui->buttonBox->button(QDialogButtonBox::Apply);
+    defaultsButton->setEnabled(false);
+    applyButton->setEnabled(false);
+
+    // settings
+    const QList<QString> settingKeys = transientSettings.keys();
+    for (const auto &key : settingKeys)
+    {
+        const auto &transientValue = transientSettings.value(key);
+        const auto &savedValue = qvApp->getSettingsManager().getSetting(key);
+        const auto &defaultValue = qvApp->getSettingsManager().getSetting(key, true);
+
+        if (transientValue != savedValue)
+            applyButton->setEnabled(true);
+        if (transientValue != defaultValue)
+            defaultsButton->setEnabled(true);
+    }
+
+    // shortcuts
+    const QList<ShortcutManager::SShortcut> &shortcutsList = qvApp->getShortcutManager().getShortcutsList();
+    for (int i = 0; i < transientShortcuts.length(); i++)
+    {
+        const auto &transientValue = transientShortcuts.value(i);
+        QStringList savedValue = shortcutsList.value(i).shortcuts;
+        QStringList defaultValue = shortcutsList.value(i).defaultShortcuts;
+
+        if (transientValue != savedValue)
+            applyButton->setEnabled(true);
+        if (transientValue != defaultValue)
+            defaultsButton->setEnabled(true);
     }
 }
 
@@ -339,7 +349,7 @@ void QVOptionsDialog::bgColorButtonClicked()
 
     auto *colorDialog = new QColorDialog(ui->bgColorButton->text(), this);
     colorDialog->setWindowModality(Qt::WindowModal);
-    connect(colorDialog, &QDialog::accepted, [this, colorDialog]{
+    connect(colorDialog, &QDialog::accepted, [this, colorDialog] {
         auto selectedColor = colorDialog->currentColor();
 
         if (!selectedColor.isValid())

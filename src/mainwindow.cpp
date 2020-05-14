@@ -113,7 +113,7 @@ MainWindow::MainWindow(QWidget *parent) :
     });
 
     // Connect functions to application components
-    connect(&qvApp->getActionManager(), &ActionManager::shortcutsUpdated, this, &MainWindow::shortcutsUpdated);
+    connect(&qvApp->getShortcutManager(), &ShortcutManager::shortcutsUpdated, this, &MainWindow::shortcutsUpdated);
     connect(&qvApp->getSettingsManager(), &SettingsManager::settingsUpdated, this, &MainWindow::settingsUpdated);
     settingsUpdated();
     shortcutsUpdated();

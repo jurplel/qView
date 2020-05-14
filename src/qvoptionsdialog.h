@@ -37,6 +37,7 @@ protected:
     void syncDoubleSpinBox(QDoubleSpinBox *doubleSpinBox, const QString &key, bool defaults = false, bool makeConnection = false);
     void syncShortcuts(bool defaults = false);
     void updateShortcutsTable();
+    void updateButtonBox();
     void bgColorButtonClicked();
     void updateBgColorButton();
 
@@ -56,7 +57,7 @@ private:
 
     QHash<QString, QVariant> transientSettings;
 
-    QHash<int, QStringList> transientShortcuts;
+    QList<QStringList> transientShortcuts;
 };
 
 

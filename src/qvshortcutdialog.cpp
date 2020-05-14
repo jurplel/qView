@@ -15,7 +15,7 @@ QVShortcutDialog::QVShortcutDialog(int index, QWidget *parent) :
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowFlags(windowFlags() & (~Qt::WindowContextHelpButtonHint | Qt::CustomizeWindowHint));
 
-    shortcutObject = qvApp->getActionManager().getShortcutsList().value(index);
+    shortcutObject = qvApp->getShortcutManager().getShortcutsList().value(index);
     this->index = index;
     ui->keySequenceEdit->setKeySequence(shortcutObject.shortcuts.join(", "));
 }
@@ -40,7 +40,7 @@ void QVShortcutDialog::on_buttonBox_clicked(QAbstractButton *button)
     if (ui->buttonBox->buttonRole(button) == QDialogButtonBox::AcceptRole)
     {
         QStringList shortcutsStringList = ui->keySequenceEdit->keySequence().toString().split(", ");
-        const auto sequenceList = ActionManager::stringListToKeySequenceList(shortcutsStringList);
+        const auto sequenceList = ShortcutManager::stringListToKeySequenceList(shortcutsStringList);
 
         for (const auto &sequence : sequenceList)
         {
@@ -48,7 +48,7 @@ void QVShortcutDialog::on_buttonBox_clicked(QAbstractButton *button)
             if (!conflictingShortcut.isEmpty())
             {
                 QString nativeShortcutString = sequence.toString(QKeySequence::NativeText);
-                QMessageBox::warning(this, tr("Shortcut Already Used"), tr("\"") + nativeShortcutString + tr("\" is already bound to \"") + conflictingShortcut + "\"");
+                QMessageBox::warning(this, tr("Shortcut Already Used"), "\"" + nativeShortcutString + "\" " + tr("is already bound to") + " \"" + conflictingShortcut + "\"");
                 return;
             }
         }
@@ -68,10 +68,10 @@ QString QVShortcutDialog::shortcutAlreadyBound(const QKeySequence &chosenSequenc
     if (chosenSequence.isEmpty())
         return "";
 
-    const auto &shortcutsList = qvApp->getActionManager().getShortcutsList();
+    const auto &shortcutsList = qvApp->getShortcutManager().getShortcutsList();
     for (const auto &shortcut : shortcutsList)
     {
-        auto sequenceList = ActionManager::stringListToKeySequenceList(shortcut.shortcuts);
+        auto sequenceList = ShortcutManager::stringListToKeySequenceList(shortcut.shortcuts);
 
         if (sequenceList.contains(chosenSequence) && shortcut.name != exemptShortcut)
             return shortcut.readableName;
