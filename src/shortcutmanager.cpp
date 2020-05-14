@@ -45,7 +45,7 @@ void ShortcutManager::initializeShortcutsList()
     //Sets open containing folder action name to platform-appropriate alternative
 #ifdef Q_OS_WIN
     shortcutsList.last().readableName = tr("Show in Explorer");
-    #elif defined Q_OS_MACOS
+#elif defined Q_OS_MACOS
     shortcutsList.last().readableName  = tr("Show in Finder");
 #endif
     shortcutsList.append({tr("Show File Info"), "showfileinfo", QStringList(QKeySequence(Qt::Key_I).toString()), {}});
@@ -97,4 +97,7 @@ void ShortcutManager::initializeShortcutsList()
     shortcutsList.append({tr("Close All"), "closeallwindows", QStringList(QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_W).toString()), {}});
 #endif
     shortcutsList.append({tr("Quit"), "quit", keyBindingsToStringList(QKeySequence::Quit), {}});
+#ifdef Q_OS_WIN
+    shortcutsList.last().readableName = tr("Exit");
+#endif
 }

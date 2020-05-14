@@ -498,6 +498,9 @@ void ActionManager::initializeActionLibrary()
     auto *quitAction = new QAction(QIcon::fromTheme("application-exit"), tr("Quit"));
     quitAction->setData("quit");
     actionLibrary.insert("quit", quitAction);
+#ifdef Q_OS_WIN
+    quitAction->setText(tr("Exit"));
+#endif
 
     auto *newWindowAction = new QAction(QIcon::fromTheme("window-new"), tr("New Window"));
     newWindowAction->setData("newwindow");
@@ -520,11 +523,11 @@ void ActionManager::initializeActionLibrary()
     actionLibrary.insert("closeallwindows", closeAllWindowsAction);
 
     auto *openContainingFolderAction = new QAction(QIcon::fromTheme("document-open"), tr("Open Containing Folder"));
-    #if defined Q_OS_WIN
-        openContainingFolderAction->setText(tr("Show in Explorer"));
-    #elif defined Q_OS_MACOS
-        openContainingFolderAction->setText(tr("Show in Finder"));
-    #endif
+#ifdef Q_OS_WIN
+    openContainingFolderAction->setText(tr("Show in Explorer"));
+#elif defined Q_OS_MACOS
+    openContainingFolderAction->setText(tr("Show in Finder"));
+#endif
     openContainingFolderAction->setData("opencontainingfolder");
     actionLibrary.insert("opencontainingfolder", openContainingFolderAction);
 
@@ -622,18 +625,18 @@ void ActionManager::initializeActionLibrary()
     actionLibrary.insert("slideshow", slideshowAction);
 
     auto *optionsAction = new QAction(QIcon::fromTheme("configure", QIcon::fromTheme("preferences-other")), tr("Options"));
-    #if defined Q_OS_UNIX & !defined Q_OS_MACOS
-        optionsAction->setText(tr("Preferences"));
-    #elif defined Q_OS_MACOS
-        optionsAction->setText(tr("Preferences..."));
-    #endif
+#if defined Q_OS_UNIX & !defined Q_OS_MACOS
+    optionsAction->setText(tr("Preferences"));
+#elif defined Q_OS_MACOS
+    optionsAction->setText(tr("Preferences..."));
+#endif
     optionsAction->setData("options");
     actionLibrary.insert("options", optionsAction);
 
     auto *aboutAction = new QAction(QIcon::fromTheme("help-about"), tr("About"));
-    #if defined Q_OS_MACOS
-        aboutAction->setText(tr("About qView"));
-    #endif
+#ifdef Q_OS_MACOS
+    aboutAction->setText(tr("About qView"));
+#endif
     aboutAction->setData("about");
     actionLibrary.insert("about", aboutAction);
 
