@@ -361,15 +361,7 @@ void ActionManager::updateRecentsMenu()
                 //set icons for linux users
                 QMimeDatabase mimedb;
                 QMimeType type = mimedb.mimeTypeForFile(recent.filePath);
-                if (!type.iconName().isNull())
-                {
-                    action->setIcon(QIcon::fromTheme(type.iconName()));
-                }
-                else
-                {
-                    action->setIcon(QIcon::fromTheme(type.genericIconName()));
-                }
-
+                action->setIcon(QIcon::fromTheme(type.iconName(), QIcon::fromTheme(type.genericIconName())));
             }
             else
             {
