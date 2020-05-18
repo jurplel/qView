@@ -4,6 +4,7 @@
 #include "qvoptionsdialog.h"
 #include "qvaboutdialog.h"
 #include "qvwelcomedialog.h"
+#include "updatechecker.h"
 
 #include <QFileOpenEvent>
 #include <QSettings>
@@ -98,6 +99,11 @@ bool QVApplication::event(QEvent *event)
     return QApplication::event(event);
 }
 
+void QVApplication::afterWindow()
+{
+    auto *checker = new UpdateChecker();
+    checker->check();
+}
 
 void QVApplication::openFile(MainWindow *window, const QString &file, bool resize)
 {

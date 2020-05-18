@@ -31,14 +31,14 @@ private:
     int frameCount;
 
 public:
+    // If Qt 5.10 is available, the built-in function will be used--for Qt 5.9, a custom solution will be used
     static QString formatBytes(qint64 bytes)
     {
         QString sizeString;
-        #if (QT_VERSION >= QT_VERSION_CHECK(5, 10, 0))
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 10, 0))
         QLocale locale;
         sizeString = locale.formattedDataSize(bytes);
-        #else
-
+#else
         double size = bytes;
 
         int reductionAmount = 0;
@@ -73,7 +73,7 @@ public:
         }
 
         sizeString = QString::number(newSize, 'f', 2) + unit;
-        #endif
+#endif
         return sizeString;
     }
 };

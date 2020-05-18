@@ -488,7 +488,6 @@ void MainWindow::openUrl(const QUrl &url)
         saveFutureWatcher->setFuture(QtConcurrent::run([reply, tempFile]{
             return QImage::fromData(reply->readAll()).save(tempFile, "png");
         }));
-
     });
 }
 

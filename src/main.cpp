@@ -18,9 +18,9 @@ int main(int argc, char *argv[])
     parser.process(app);
 
     auto *window = QVApplication::newWindow();
-
     if (!parser.positionalArguments().isEmpty())
         QVApplication::openFile(window, parser.positionalArguments().constFirst(), true);
 
+    app.afterWindow();
     return QApplication::exec();
 }
