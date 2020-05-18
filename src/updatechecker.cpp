@@ -53,7 +53,8 @@ void UpdateChecker::readReply(QNetworkReply *reply)
     releaseDate = QDateTime::fromString(object.value("published_at").toString(), Qt::ISODate);
     releaseDate = releaseDate.toTimeSpec(Qt::LocalTime);
 
-    openDialog();
+    //if (latestVersionNum > VERSION)
+        openDialog();
 }
 
 void UpdateChecker::openDialog()
@@ -67,7 +68,6 @@ void UpdateChecker::openDialog()
                     + "\n\n" + releaseDate.toString(locale.dateFormat()) + "\n" + changelog);
     msgBox->setWindowModality(Qt::ApplicationModal);
     msgBox->setStandardButtons(QMessageBox::Close | QMessageBox::Reset);
-    msgBox->button(QMessageBox::Close)->setText(tr("Remind Me Later"));
     msgBox->button(QMessageBox::Reset)->setText(tr("Disable Update Checking"));
     msgBox->addButton(downloadButton, QMessageBox::ActionRole);
     msgBox->open();
