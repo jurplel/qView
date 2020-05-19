@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "qvapplication.h"
 #include "qvcocoafunctions.h"
+#include "qvrenamedialog.h"
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QString>
@@ -85,6 +86,7 @@ MainWindow::MainWindow(QWidget *parent) :
     contextMenu->addSeparator();
     contextMenu->addAction(actionManager.cloneAction("copy"));
     contextMenu->addAction(actionManager.cloneAction("paste"));
+    contextMenu->addAction(actionManager.cloneAction("rename"));
     contextMenu->addSeparator();
     contextMenu->addAction(actionManager.cloneAction("nextfile"));
     contextMenu->addAction(actionManager.cloneAction("previousfile"));
@@ -558,6 +560,26 @@ void MainWindow::paste()
     }
 
     graphicsView->loadMimeData(mimeData);
+}
+
+void MainWindow::rename()
+{
+    auto currentFileInfo{getCurrentFileDetails().fileInfo};
+    if(!currentFileInfo.absoluteFilePath().isEmpty())
+    {
+        auto *renameDialog{new QVRenameDialog(this)};
+        renameDialog->setCurrentName(currentFileInfo.fileName());
+        if(renameDialog->exec() == QDialog::Accepted)
+        {
+            const auto newFileName = QDir::cleanPath(currentFileInfo.path() + QDir::separator() + renameDialog->getNewName());
+            if(currentFileInfo.absoluteFilePath() != newFileName)
+            {
+                QFile::rename(currentFileInfo.absoluteFilePath(), newFileName);
+                openFile(newFileName);
+            }
+        }
+        renameDialog->deleteLater();
+    }
 }
 
 void MainWindow::zoomIn()

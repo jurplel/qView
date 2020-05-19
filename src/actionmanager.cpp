@@ -138,6 +138,7 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
 
     editMenu->addAction(cloneAction("copy"));
     editMenu->addAction(cloneAction("paste"));
+    editMenu->addAction(cloneAction("rename"));
 
     menuBar->addMenu(editMenu);
     // End of edit menu
@@ -442,6 +443,8 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
         relevantWindow->copy();
     } else if (key == "paste") {
         relevantWindow->paste();
+    } else if (key == "rename") {
+        relevantWindow->rename();
     } else if (key == "zoomin") {
         relevantWindow->zoomIn();
     } else if (key == "zoomout") {
@@ -542,6 +545,10 @@ void ActionManager::initializeActionLibrary()
     auto *pasteAction = new QAction(QIcon::fromTheme("edit-paste"), tr("Paste"));
     pasteAction->setData("paste");
     actionLibrary.insert("paste", pasteAction);
+
+    auto *renameAction = new QAction(QIcon::fromTheme("edit-rename"), tr("Rename"));
+    renameAction->setData("rename");
+    actionLibrary.insert("rename", renameAction);
 
     auto *zoomInAction = new QAction(QIcon::fromTheme("zoom-in"), tr("Zoom In"));
     zoomInAction->setData("zoomin");
