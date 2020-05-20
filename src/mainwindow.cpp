@@ -496,16 +496,16 @@ void MainWindow::openUrl(const QUrl &url)
 void MainWindow::pickUrl()
 {
     auto inputDialog = new QInputDialog(this);
-    inputDialog->setWindowTitle("Open URL...");
+    inputDialog->setWindowTitle(tr("Open URL..."));
     inputDialog->setLabelText(tr("URL of a supported image file:"));
     inputDialog->resize(350, inputDialog->height());
     connect(inputDialog, &QInputDialog::finished, [inputDialog, this](int result) {
-        if (!result)
-            return;
-
-        auto url = QUrl(inputDialog->textValue());
+        if (result)
+        {
+            const auto url = QUrl(inputDialog->textValue());
+            openUrl(url);
+        }
         inputDialog->deleteLater();
-        openUrl(url);
     });
     inputDialog->open();
 }
@@ -564,22 +564,32 @@ void MainWindow::paste()
 
 void MainWindow::rename()
 {
-    auto currentFileInfo{getCurrentFileDetails().fileInfo};
-    if(!currentFileInfo.absoluteFilePath().isEmpty())
-    {
-        auto *renameDialog{new QVRenameDialog(this)};
-        renameDialog->setCurrentName(currentFileInfo.fileName());
-        if(renameDialog->exec() == QDialog::Accepted)
+    if (!getCurrentFileDetails().isPixmapLoaded)
+        return;
+
+    auto currentFileInfo = getCurrentFileDetails().fileInfo;
+
+    auto *renameDialog = new QInputDialog(this);
+    renameDialog->setWindowTitle(tr("Rename..."));
+    renameDialog->setLabelText(tr("File name:"));
+    renameDialog->setTextValue(currentFileInfo.fileName());
+    renameDialog->resize(350, renameDialog->height());
+    connect(renameDialog, &QInputDialog::finished, [currentFileInfo, renameDialog, this](int result) {
+        if (result)
         {
-            const auto newFileName = QDir::cleanPath(currentFileInfo.path() + QDir::separator() + renameDialog->getNewName());
-            if(currentFileInfo.absoluteFilePath() != newFileName)
+            const auto newFileName = renameDialog->textValue();
+            const auto newFilePath = QDir::cleanPath(currentFileInfo.absolutePath() + QDir::separator() + newFileName);
+            qDebug() << newFilePath << newFileName << currentFileInfo.absoluteFilePath();
+            if (currentFileInfo.absoluteFilePath() != newFilePath)
             {
-                QFile::rename(currentFileInfo.absoluteFilePath(), newFileName);
-                openFile(newFileName);
+                QFile::rename(currentFileInfo.absoluteFilePath(), newFilePath);
+                openFile(newFilePath);
             }
         }
+
         renameDialog->deleteLater();
-    }
+    });
+    renameDialog->open();
 }
 
 void MainWindow::zoomIn()
