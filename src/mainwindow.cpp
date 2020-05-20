@@ -2,7 +2,6 @@
 #include "ui_mainwindow.h"
 #include "qvapplication.h"
 #include "qvcocoafunctions.h"
-#include "qvrenamedialog.h"
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QString>
@@ -579,11 +578,17 @@ void MainWindow::rename()
         {
             const auto newFileName = renameDialog->textValue();
             const auto newFilePath = QDir::cleanPath(currentFileInfo.absolutePath() + QDir::separator() + newFileName);
-            qDebug() << newFilePath << newFileName << currentFileInfo.absoluteFilePath();
+
             if (currentFileInfo.absoluteFilePath() != newFilePath)
             {
-                QFile::rename(currentFileInfo.absoluteFilePath(), newFilePath);
-                openFile(newFilePath);
+                if (QFile::rename(currentFileInfo.absoluteFilePath(), newFilePath))
+                {
+                    openFile(newFilePath);
+                }
+                else
+                {
+                    QMessageBox::critical(this, tr("Error"), tr("Error: Could not rename file\n(Check that you have write access)"));
+                }
             }
         }
 
