@@ -546,7 +546,7 @@ void ActionManager::initializeActionLibrary()
     pasteAction->setData("paste");
     actionLibrary.insert("paste", pasteAction);
 
-    auto *renameAction = new QAction(QIcon::fromTheme("edit-rename", QIcon::fromTheme("document-properties")) , tr("Rename"));
+    auto *renameAction = new QAction(QIcon::fromTheme("edit-rename", QIcon::fromTheme("document-properties")) , tr("Rename..."));
     renameAction->setData("rename");
     actionLibrary.insert("rename", renameAction);
 
