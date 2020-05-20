@@ -85,6 +85,7 @@ MainWindow::MainWindow(QWidget *parent) :
     contextMenu->addSeparator();
     contextMenu->addAction(actionManager.cloneAction("copy"));
     contextMenu->addAction(actionManager.cloneAction("paste"));
+    contextMenu->addAction(actionManager.cloneAction("rename"));
     contextMenu->addSeparator();
     contextMenu->addAction(actionManager.cloneAction("nextfile"));
     contextMenu->addAction(actionManager.cloneAction("previousfile"));
@@ -494,16 +495,16 @@ void MainWindow::openUrl(const QUrl &url)
 void MainWindow::pickUrl()
 {
     auto inputDialog = new QInputDialog(this);
-    inputDialog->setWindowTitle("Open URL...");
+    inputDialog->setWindowTitle(tr("Open URL..."));
     inputDialog->setLabelText(tr("URL of a supported image file:"));
     inputDialog->resize(350, inputDialog->height());
     connect(inputDialog, &QInputDialog::finished, [inputDialog, this](int result) {
-        if (!result)
-            return;
-
-        auto url = QUrl(inputDialog->textValue());
+        if (result)
+        {
+            const auto url = QUrl(inputDialog->textValue());
+            openUrl(url);
+        }
         inputDialog->deleteLater();
-        openUrl(url);
     });
     inputDialog->open();
 }
@@ -558,6 +559,42 @@ void MainWindow::paste()
     }
 
     graphicsView->loadMimeData(mimeData);
+}
+
+void MainWindow::rename()
+{
+    if (!getCurrentFileDetails().isPixmapLoaded)
+        return;
+
+    auto currentFileInfo = getCurrentFileDetails().fileInfo;
+
+    auto *renameDialog = new QInputDialog(this);
+    renameDialog->setWindowTitle(tr("Rename..."));
+    renameDialog->setLabelText(tr("File name:"));
+    renameDialog->setTextValue(currentFileInfo.fileName());
+    renameDialog->resize(350, renameDialog->height());
+    connect(renameDialog, &QInputDialog::finished, [currentFileInfo, renameDialog, this](int result) {
+        if (result)
+        {
+            const auto newFileName = renameDialog->textValue();
+            const auto newFilePath = QDir::cleanPath(currentFileInfo.absolutePath() + QDir::separator() + newFileName);
+
+            if (currentFileInfo.absoluteFilePath() != newFilePath)
+            {
+                if (QFile::rename(currentFileInfo.absoluteFilePath(), newFilePath))
+                {
+                    openFile(newFilePath);
+                }
+                else
+                {
+                    QMessageBox::critical(this, tr("Error"), tr("Error: Could not rename file\n(Check that you have write access)"));
+                }
+            }
+        }
+
+        renameDialog->deleteLater();
+    });
+    renameDialog->open();
 }
 
 void MainWindow::zoomIn()
