@@ -183,13 +183,12 @@ void QVImageCore::postLoad()
 
     currentFileDetails.isPixmapLoaded = true;
     loadedMovie.stop();
-    loadedMovie.setFileName("");
 
     //animation detection
-    imageReader.setFileName(currentFileDetails.fileInfo.absoluteFilePath());
-    if (imageReader.supportsAnimation() && imageReader.imageCount() != 1)
+    loadedMovie.setFileName(currentFileDetails.fileInfo.absoluteFilePath());
+    loadedMovie.setFormat(currentFileDetails.fileInfo.completeSuffix().toUtf8());
+    if (loadedMovie.isValid() && loadedMovie.frameCount() != 1)
     {
-        loadedMovie.setFileName(currentFileDetails.fileInfo.absoluteFilePath());
         loadedMovie.start();
         currentFileDetails.isMovieLoaded = true;
     }
@@ -198,6 +197,7 @@ void QVImageCore::postLoad()
         currentFileDetails.isMovieLoaded = false;
     }
 
+    imageReader.setFileName(currentFileDetails.fileInfo.absoluteFilePath());
     currentFileDetails.baseImageSize = imageReader.size();
     currentFileDetails.loadedPixmapSize = loadedPixmap.size();
 
