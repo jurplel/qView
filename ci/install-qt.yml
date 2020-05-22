@@ -20,7 +20,7 @@ steps:
 
 - bash: |
     pip install "aqtinstall==0.8"
-    python -m aqt install $(qtVersion) $(os) desktop $(arch)
-    cd $(qtVersion)/*/bin
+    python -m aqt install $(version) $(os) desktop $(arch)
+    cd $(version)/*/bin
     echo ##vso[task.prependpath]$PWD
   displayName: 'Install Qt'
