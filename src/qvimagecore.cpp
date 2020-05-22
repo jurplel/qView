@@ -198,7 +198,6 @@ void QVImageCore::postLoad()
         currentFileDetails.isMovieLoaded = false;
     }
 
-    imageReader.setFileName(currentFileDetails.fileInfo.absoluteFilePath());
     currentFileDetails.baseImageSize = imageReader.size();
     currentFileDetails.loadedPixmapSize = loadedPixmap.size();
 
