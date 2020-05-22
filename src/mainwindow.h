@@ -42,6 +42,8 @@ public:
 
     void showFileInfo();
 
+    void deleteFile();
+
     void copy();
 
     void paste();
