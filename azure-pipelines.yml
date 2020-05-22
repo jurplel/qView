@@ -108,12 +108,7 @@ jobs:
     qtVersion: '5.9'
   steps:
   - checkout: self
-
-  - script: |
-      sudo apt-get update
-      sudo apt-get install libgl1-mesa-dev libxkbcommon-x11-0 libgtk2.0-dev -y
-    displayName: 'Install packages'
-
+  
   - template: ci/install-qt.yml
 
   - script: |

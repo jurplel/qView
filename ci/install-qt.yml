@@ -36,5 +36,5 @@ steps:
 
 - bash: |
     cd ${{ parameters.version }}/*/bin
-    echo ##vso[task.prependpath]$PWD
+    echo "##vso[task.prependpath]$PWD"
   displayName: 'Add Qt to path'
