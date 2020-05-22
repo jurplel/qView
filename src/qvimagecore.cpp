@@ -186,7 +186,8 @@ void QVImageCore::postLoad()
 
     //animation detection
     loadedMovie.setFileName(currentFileDetails.fileInfo.absoluteFilePath());
-    loadedMovie.setFormat(currentFileDetails.fileInfo.completeSuffix().toUtf8());
+    if (imageReader.format() == "png")
+        loadedMovie.setFormat("apng");
     if (loadedMovie.isValid() && loadedMovie.frameCount() != 1)
     {
         loadedMovie.start();
