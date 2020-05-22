@@ -2,20 +2,9 @@ parameters:
 - name: version
   type: string
   default: '5.12.8'
-
 - name: arch
   type: string
-${{ if eq(variables['Agent.OS'], 'Windows_NT') }}:
   default: 'win64_msvc2017_64'
-
-- name: os
-  type: string
-${{ if eq( variables['Agent.OS'], 'Windows_NT' ) }}:
-  default: windows
-${{ if eq( variables['Agent.OS'], 'Darwin' ) }}:
-  default: mac
-${{ if eq( variables['Agent.OS'], 'Linux' ) }}:
-  default: linux
 
 steps:
 - script: |
@@ -29,9 +18,23 @@ steps:
     versionSpec: '3.8'
   displayName: 'Use Python 3.8'
 
+- script: pip install "aqtinstall==0.8"
+  displayName: 'Install aqtinstall'
+
+# I hate splitting this into three but I can't figure out how to do it any better
+- script: python -m aqt install ${{ parameters.version }} windows desktop ${{ parameters.arch }}
+  condition: eq( variables['Agent.OS'], 'Windows_NT' )
+  displayName: 'Install Qt (Windows)'
+
+- script: python -m aqt install ${{ parameters.version }} mac desktop
+  condition: eq( variables['Agent.OS'], 'Darwin' )
+  displayName: 'Install Qt (macOS)'
+
+- script: python -m aqt install ${{ parameters.version }} linux desktop
+  condition: eq( variables['Agent.OS'], 'Linux' )
+  displayName: 'Install Qt (Linux)'
+
 - bash: |
-    pip install "aqtinstall==0.8"
-    python -m aqt install ${{ parameters.version }} ${{ parameters.os }} desktop ${{ parameters.arch }}
     cd ${{ version }}/*/bin
     echo ##vso[task.prependpath]$PWD
-  displayName: 'Install Qt'
+  displayName: 'Add Qt to path'
