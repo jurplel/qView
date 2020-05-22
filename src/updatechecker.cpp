@@ -53,14 +53,14 @@ void UpdateChecker::readReply(QNetworkReply *reply)
     releaseDate = QDateTime::fromString(object.value("published_at").toString(), Qt::ISODate);
     releaseDate = releaseDate.toTimeSpec(Qt::LocalTime);
 
-    //if (latestVersionNum > VERSION)
+    if (latestVersionNum > VERSION)
         openDialog();
 }
 
 void UpdateChecker::openDialog()
 {
     QLocale locale;
-    auto *downloadButton = new QPushButton(QIcon::fromTheme("download"), tr("Download"));
+    auto *downloadButton = new QPushButton(QIcon::fromTheme("edit-download", QIcon::fromTheme("document-save")), tr("Download"));
 
     auto *msgBox = new QMessageBox();
     msgBox->setWindowTitle(tr("qView Update Available"));
