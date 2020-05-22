@@ -2,9 +2,20 @@ parameters:
 - name: version
   type: string
   default: '5.12.8'
+
 - name: arch
   type: string
+${{ if eq(variables['Agent.OS'], 'Windows_NT') }}:
   default: 'win64_msvc2017_64'
+
+- name: os
+  type: string
+${{ if eq( variables['Agent.OS'], 'Windows_NT' ) }}:
+  default: windows
+${{ if eq( variables['Agent.OS'], 'Darwin' ) }}:
+  default: mac
+${{ if eq( variables['Agent.OS'], 'Linux' ) }}:
+  default: linux
 
 steps:
 - script: |
@@ -20,7 +31,7 @@ steps:
 
 - bash: |
     pip install "aqtinstall==0.8"
-    python -m aqt install $(version) $(os) desktop $(arch)
-    cd $(version)/*/bin
+    python -m aqt install ${{ parameters.version }} ${{ parameters.os }} desktop ${{ parameters.arch }}
+    cd ${{ version }}/*/bin
     echo ##vso[task.prependpath]$PWD
   displayName: 'Install Qt'
