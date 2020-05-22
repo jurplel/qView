@@ -1,0 +1,30 @@
+parameters:
+- name: version
+  type: string
+  default: '5.12.8'
+- name: arch
+  type: string
+  default: 'win64_msvc2017_64'
+
+variables:
+  aqtversion: '0.8'
+  pythonversion: '3.8'
+
+steps:
+- script: |
+    sudo apt-get update
+    sudo apt-get install libgl1-mesa-dev libxkbcommon-x11-0 libgtk2.0-dev -y
+  condition: eq( variables['Agent.OS'], 'Linux' )
+  displayName: 'Install packages for Qt'
+
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '$(pythonversion)'
+  displayName: 'Use Python $(pythonversion)'
+
+- bash: |
+    pip install "aqtinstall==$(aqtVersion)"
+    python -m aqt install $(qtVersion) $(os) desktop $(arch)
+    cd $(qtVersion)/*/bin
+    echo ##vso[task.prependpath]$PWD
+  displayName: 'Install Qt'

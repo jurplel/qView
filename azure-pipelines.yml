@@ -1,6 +1,5 @@
 
 variables:
-  aqtVersion: '0.8b1'
   nightlyDefines: 'DEFINES+=NIGHTLY=$(Build.BuildNumber)'
   nightlyString: '-nightly'
 
@@ -9,17 +8,10 @@ jobs:
 - job: Windows
   pool:
     vmImage: 'windows-2019'
-  variables:
-    qtVersion: '5.12.7'
-    qtArch: 'win64_msvc2017_64'
   steps:
   - checkout: self
 
-  - script: |
-      pip3 install "aqtinstall==$(aqtVersion)"
-      python -m aqt install $(qtVersion) windows desktop $(qtArch)
-      echo ##vso[task.prependpath]$(Build.SourcesDirectory)\$(qtVersion)\msvc2017_64\bin
-    displayName: 'Install Qt'
+  - template: ci/install-qt.yml
 
   - script: |
       call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
@@ -42,16 +34,10 @@ jobs:
 - job: macOS
   pool:
     vmImage: 'macOS-10.15'
-  variables:
-    qtVersion: '5.12.7'
   steps:
   - checkout: self
 
-  - script: |
-      pip3 install "aqtinstall==$(aqtVersion)"
-      python3 -m aqt install $(qtVersion) mac desktop
-      echo '##vso[task.prependpath]$(Build.SourcesDirectory)/$(qtVersion)/clang_64/bin'
-    displayName: 'Install Qt'
+  - template: ci/install-qt.yml
 
   - script: |
       qmake $(nightlyDefines)
@@ -73,21 +59,10 @@ jobs:
 - job: Linux
   pool:
     vmImage: 'ubuntu-16.04'
-  variables:
-    qtVersion: '5.12.7'
   steps:
   - checkout: self
 
-  - script: |
-      sudo apt-get update
-      sudo apt-get install libgl1-mesa-dev libxkbcommon-x11-0 libgtk2.0-dev -y
-    displayName: 'Install packages'
-
-  - script: |
-      pip3 install "aqtinstall==$(aqtVersion)"
-      python3 -m aqt install $(qtVersion) linux desktop
-      echo '##vso[task.prependpath]$(Build.SourcesDirectory)/$(qtVersion)/gcc_64/bin'
-    displayName: 'Install Qt'
+  - template: ci/install-qt.yml
 
   - script: |
         wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
@@ -139,11 +114,7 @@ jobs:
       sudo apt-get install libgl1-mesa-dev libxkbcommon-x11-0 libgtk2.0-dev -y
     displayName: 'Install packages'
 
-  - script: |
-      pip3 install "aqtinstall==$(aqtVersion)"
-      python3 -m aqt install $(qtVersion) linux desktop
-      echo '##vso[task.prependpath]$(Build.SourcesDirectory)/$(qtVersion)/gcc_64/bin'
-    displayName: 'Install Qt'
+  - template: ci/install-qt.yml
 
   - script: |
       qmake $(nightlyDefines)
