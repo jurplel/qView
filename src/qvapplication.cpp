@@ -84,6 +84,9 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
 #if defined Q_OS_MACOS || defined Q_OS_WIN
     setAttribute(Qt::AA_DontShowIconsInMenus);
 #endif
+    // Adwaita Qt styles should hide icons for a more consistent look
+    if (style()->objectName() == "adwaita-dark" || style()->objectName() == "adwaita")
+        setAttribute(Qt::AA_DontShowIconsInMenus);
 }
 
 QVApplication::~QVApplication() {
