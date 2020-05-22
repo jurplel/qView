@@ -41,6 +41,7 @@ void ShortcutManager::initializeShortcutsList()
 {
     shortcutsList.append({tr("Open"), "open", keyBindingsToStringList(QKeySequence::Open), {}});
     shortcutsList.append({tr("Open URL"), "openurl", QStringList(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_O).toString()), {}});
+    shortcutsList.append({tr("Delete file"), "deletefile", keyBindingsToStringList(QKeySequence::Delete), {}});
     shortcutsList.append({tr("Open Containing Folder"), "opencontainingfolder", {}, {}});
     //Sets open containing folder action name to platform-appropriate alternative
 #ifdef Q_OS_WIN

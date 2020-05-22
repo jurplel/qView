@@ -83,6 +83,8 @@ MainWindow::MainWindow(QWidget *parent) :
     contextMenu->addAction(actionManager.cloneAction("opencontainingfolder"));
     contextMenu->addAction(actionManager.cloneAction("showfileinfo"));
     contextMenu->addSeparator();
+    contextMenu->addAction(actionManager.cloneAction("deletefile"));
+    contextMenu->addSeparator();
     contextMenu->addAction(actionManager.cloneAction("copy"));
     contextMenu->addAction(actionManager.cloneAction("paste"));
     contextMenu->addSeparator();
@@ -529,6 +531,37 @@ void MainWindow::showFileInfo()
 {
     refreshProperties();
     info->show();
+}
+
+void MainWindow::deleteFile()
+{
+    const QString filepath = getCurrentFileDetails().fileInfo.absoluteFilePath();
+
+    nextFile();
+
+#ifdef Q_OS_WIN
+    /// todo Delete file to trash on Windows
+
+    QFile::remove(filepath);
+#elif defined Q_OS_MACOS
+    QString param = "tell app \"Finder\" to delete POSIX file ";
+    param += "\"" + filepath + "\"";
+
+    const QStringList arguments = { "-e", param };
+
+    QProcess::execute("osascript", arguments);
+#elif defined Q_OS_LINUX
+    /// todo Test delete file to trash on Linux
+
+    QString param = "\"file:";
+    param += filepath;
+    param += "\"";
+
+    const QStringList arguments = { "trash", param };
+
+    QProcess::execute("gio", arguments);
+#else
+#endif
 }
 
 void MainWindow::copy()

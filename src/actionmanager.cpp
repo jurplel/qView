@@ -118,6 +118,8 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     fileMenu->addAction(cloneAction("open"));
     fileMenu->addAction(cloneAction("openurl"));
     fileMenu->addMenu(buildRecentsMenu(true, menuBar));
+    fileMenu->addSeparator();
+    fileMenu->addAction(cloneAction("deletefile"));
 #ifdef Q_OS_MACOS
     fileMenu->addSeparator();
     fileMenu->addAction(cloneAction("closewindow"));
@@ -438,6 +440,8 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
         relevantWindow->openContainingFolder();
     } else if (key == "showfileinfo") {
         relevantWindow->showFileInfo();
+    } else if (key == "deletefile") {
+        relevantWindow->deleteFile();
     } else if (key == "copy") {
         relevantWindow->copy();
     } else if (key == "paste") {
@@ -534,6 +538,10 @@ void ActionManager::initializeActionLibrary()
     auto *showFileInfoAction = new QAction(QIcon::fromTheme("document-properties"), tr("Show File Info"));
     showFileInfoAction->setData("showfileinfo");
     actionLibrary.insert("showfileinfo", showFileInfoAction);
+
+    auto *deleteFileAction = new QAction(QIcon::fromTheme("edit-delete"), tr("Delete file"));
+    deleteFileAction->setData("deletefile");
+    actionLibrary.insert("deletefile", deleteFileAction);
 
     auto *copyAction = new QAction(QIcon::fromTheme("edit-copy"), tr("Copy"));
     copyAction->setData("copy");
