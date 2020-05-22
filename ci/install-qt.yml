@@ -6,10 +6,6 @@ parameters:
   type: string
   default: 'win64_msvc2017_64'
 
-variables:
-  aqtversion: '0.8'
-  pythonversion: '3.8'
-
 steps:
 - script: |
     sudo apt-get update
@@ -19,11 +15,11 @@ steps:
 
 - task: UsePythonVersion@0
   inputs:
-    versionSpec: '$(pythonversion)'
-  displayName: 'Use Python $(pythonversion)'
+    versionSpec: '3.8'
+  displayName: 'Use Python 3.8'
 
 - bash: |
-    pip install "aqtinstall==$(aqtVersion)"
+    pip install "aqtinstall==0.8"
     python -m aqt install $(qtVersion) $(os) desktop $(arch)
     cd $(qtVersion)/*/bin
     echo ##vso[task.prependpath]$PWD
