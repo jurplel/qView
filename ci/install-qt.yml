@@ -1,40 +1,40 @@
 parameters:
-  - name: version
-    type: string
-    default: '5.12.8'
-  - name: arch
-    type: string
-    default: 'win64_msvc2017_64'
-   
+- name: version
+  type: string
+  default: '5.12.8'
+- name: arch
+  type: string
+  default: 'win64_msvc2017_64'
+
 steps:
-  - script: |
-      sudo apt-get update
-      sudo apt-get install libgl1-mesa-dev libxkbcommon-x11-0 libgtk2.0-dev -y
-    condition: eq( variables['Agent.OS'], 'Linux' )
-    displayName: 'Install packages for Qt'
+- script: |
+    sudo apt-get update
+    sudo apt-get install libgl1-mesa-dev libxkbcommon-x11-0 libgtk2.0-dev -y
+  condition: eq( variables['Agent.OS'], 'Linux' )
+  displayName: 'Install packages for Qt'
 
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '3.8'
-    displayName: 'Use Python 3.8'
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.8'
+  displayName: 'Use Python 3.8'
 
-  - script: pip install "aqtinstall==0.8"
-    displayName: 'Install aqtinstall'
+- script: pip install "aqtinstall==0.8"
+  displayName: 'Install aqtinstall'
 
 # I hate splitting this into three but I can't figure out how to do it any better
-  - ${{ if eq( variables['Agent.OS'], 'Windows_NT' ) }}:
-    - script: python -m aqt install ${{ parameters.version }} windows desktop ${{ parameters.arch }}
-      displayName: 'Install Qt'
-    
-  - ${{ if eq( variables['Agent.OS'], 'Darwin' ) }}:
-    - script: python -m aqt install ${{ parameters.version }} mac desktop
-      displayName: 'Install Qt'
+- script: python -m aqt install ${{ parameters.version }} windows desktop ${{ parameters.arch }}
+  condition: eq( variables['Agent.OS'], 'Windows_NT' )
+  displayName: 'Install Qt (Windows)'
 
-  - ${{ if eq( variables['Agent.OS'], 'Linux' ) }}:
-    - script: python -m aqt install ${{ parameters.version }} linux desktop
-      displayName: 'Install Qt'
+- script: python -m aqt install ${{ parameters.version }} mac desktop
+  condition: eq( variables['Agent.OS'], 'Darwin' )
+  displayName: 'Install Qt (macOS)'
 
-  - pwsh: |
-      cd ${{ parameters.version }}/*/bin
-      echo "##vso[task.prependpath]$PWD"
-    displayName: 'Add Qt to path'
+- script: python -m aqt install ${{ parameters.version }} linux desktop
+  condition: eq( variables['Agent.OS'], 'Linux' )
+  displayName: 'Install Qt (Linux)'
+
+- pwsh: |
+    cd ${{ parameters.version }}/*/bin
+    echo "##vso[task.prependpath]$PWD"
+  displayName: 'Add Qt to path'
