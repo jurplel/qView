@@ -22,17 +22,20 @@ steps:
   displayName: 'Install aqtinstall'
 
 # I hate splitting this into three but I can't figure out how to do it any better
-- script: python -m aqt install ${{ parameters.version }} windows desktop ${{ parameters.arch }}
-  condition: eq( variables['Agent.OS'], 'Windows_NT' )
-  displayName: 'Install Qt (Windows)'
+- ${{ if eq( variables['Agent.OS'], 'Windows_NT' ) }}:
+  - script: python -m aqt install ${{ parameters.version }} windows desktop ${{ parameters.arch }}
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
+    displayName: 'Install Qt'
 
-- script: python -m aqt install ${{ parameters.version }} mac desktop
-  condition: eq( variables['Agent.OS'], 'Darwin' )
-  displayName: 'Install Qt (macOS)'
+- ${{ if eq( variables['Agent.OS'], 'Darwin' ) }}:
+  - script: python -m aqt install ${{ parameters.version }} mac desktop
+    condition: eq( variables['Agent.OS'], 'Darwin' )
+    displayName: 'Install Qt'
 
-- script: python -m aqt install ${{ parameters.version }} linux desktop
-  condition: eq( variables['Agent.OS'], 'Linux' )
-  displayName: 'Install Qt (Linux)'
+- ${{ if eq( variables['Agent.OS'], 'Linux' ) }}:
+  - script: python -m aqt install ${{ parameters.version }} linux desktop
+    condition: eq( variables['Agent.OS'], 'Linux' )
+    displayName: 'Install Qt'
 
 - pwsh: |
     cd ${{ parameters.version }}/*/bin
