@@ -34,7 +34,7 @@ steps:
   condition: eq( variables['Agent.OS'], 'Linux' )
   displayName: 'Install Qt (Linux)'
 
-- bash: |
+- pwsh: |
     cd ${{ parameters.version }}/*/bin
     echo "##vso[task.prependpath]$PWD"
   displayName: 'Add Qt to path'
