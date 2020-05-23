@@ -104,12 +104,12 @@ jobs:
 - job: Qt59
   pool:
     vmImage: 'ubuntu-16.04'
-  variables:
-    qtVersion: '5.9'
   steps:
   - checkout: self
-  
+
   - template: ci/install-qt.yml
+    parameters:
+      version: '5.9'
 
   - script: |
       qmake $(nightlyDefines)
