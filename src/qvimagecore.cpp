@@ -183,13 +183,13 @@ void QVImageCore::postLoad()
 
     currentFileDetails.isPixmapLoaded = true;
     loadedMovie.stop();
-    loadedMovie.setFileName("");
 
     //animation detection
-    imageReader.setFileName(currentFileDetails.fileInfo.absoluteFilePath());
-    if (imageReader.supportsAnimation() && imageReader.imageCount() != 1)
+    loadedMovie.setFileName(currentFileDetails.fileInfo.absoluteFilePath());
+    if (imageReader.format() == "png")
+        loadedMovie.setFormat("apng");
+    if (loadedMovie.isValid() && loadedMovie.frameCount() != 1)
     {
-        loadedMovie.setFileName(currentFileDetails.fileInfo.absoluteFilePath());
         loadedMovie.start();
         currentFileDetails.isMovieLoaded = true;
     }
