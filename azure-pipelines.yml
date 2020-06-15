@@ -13,11 +13,9 @@ jobs:
 
   - template: ci/install-qt.yml
 
-  - script: |
-      call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-      qmake $(nightlyDefines)
-      nmake
-    displayName: 'Build qView'
+  - template: ci/build.yml
+    parameters:
+          defines: ${{ nightlyDefines }}
     
   - script: |
       cd bin
@@ -39,10 +37,9 @@ jobs:
 
   - template: ci/install-qt.yml
 
-  - script: |
-      qmake $(nightlyDefines)
-      make
-    displayName: 'Build qView'
+  - template: ci/build.yml
+    parameters:
+          defines: ${{ nightlyDefines }}
 
   - script: |
       cd bin
@@ -82,13 +79,13 @@ jobs:
       sudo make install
     displayName: Get additional themes GTK+2 and qt5ct
 
+  - template: ci/build.yml
+    parameters:
+        defines: ${{ nightlyDefines }}
+        
   - script: |
-      qmake $(nightlyDefines)
       mkdir bin/appdir
       make install INSTALL_ROOT=bin/appdir
-    displayName: 'Build qView'
-
-  - script: |
       cd bin
       ../linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/qView.desktop -appimage -extra-plugins=styles/libqt5ct-style.so,platformthemes/libqt5ct.so,iconengines,platformthemes/libqgtk3.so
       mkdir out
@@ -111,7 +108,6 @@ jobs:
     parameters:
       version: '5.9'
 
-  - script: |
-      qmake $(nightlyDefines)
-      make
-    displayName: 'Build qView'
+  - template: ci/build.yml
+    parameters:
+      defines: ${{ nightlyDefines }}
