@@ -1,0 +1,17 @@
+parameters:
+- name: defines
+  type: string
+
+steps:
+- script: |
+    call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+    qmake ${{ parameters.defines }}
+    nmake
+  condition: eq( variables['Agent.OS'], 'Windows_NT' )
+  displayName: 'Build qView (Windows)'
+
+- script: |
+    qmake ${{ parameters.defines }}
+    make
+  condition: ne( variables['Agent.OS'], 'Windows_NT' )
+  displayName: 'Build qView (Unix)'
