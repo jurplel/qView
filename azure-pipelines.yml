@@ -15,7 +15,7 @@ jobs:
 
   - template: ci/build.yml
     parameters:
-          defines: ${{ nightlyDefines }}
+          defines: $(nightlyDefines)
     
   - script: |
       cd bin
@@ -39,7 +39,7 @@ jobs:
 
   - template: ci/build.yml
     parameters:
-          defines: ${{ nightlyDefines }}
+          defines: $(nightlyDefines)
 
   - script: |
       cd bin
@@ -81,8 +81,8 @@ jobs:
 
   - template: ci/build.yml
     parameters:
-        defines: ${{ nightlyDefines }}
-        
+        defines: $(nightlyDefines)
+
   - script: |
       mkdir bin/appdir
       make install INSTALL_ROOT=bin/appdir
@@ -110,4 +110,4 @@ jobs:
 
   - template: ci/build.yml
     parameters:
-      defines: ${{ nightlyDefines }}
+      defines: $(nightlyDefines)
