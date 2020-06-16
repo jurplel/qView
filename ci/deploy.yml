@@ -36,7 +36,7 @@ steps:
     cd qt5ct*
     qmake
     sudo make install
-  condition: and(ne(parameters.skipdeploy, 'true')), eq( variables['Agent.OS'], 'Linux' ))
+  condition: and(ne(parameters.skipdeploy, 'true'), eq( variables['Agent.OS'], 'Linux' ))
   displayName: Get GTK+2 and qt5ct styles
   
 - script: |
