@@ -7,10 +7,6 @@ name: '$(Date:yyyy-MM-dd).$(Rev:r)'
 jobs:
 - job: Build
 
-  variables:
-  - name: osArchName
-    value: error
-
   strategy:
     matrix:
       linux:
@@ -41,7 +37,7 @@ jobs:
     inputs:
       pathtoPublish: 'bin'
       artifactName: 'qView$(nightlyString)-$(Agent.JobName).$(Build.BuildNumber)'
-    condition: and(succeeded(), ne('${{ dontPublish }}', true))
+    condition: and(succeeded(), ne('$(dontPublish)', true))
     displayName: 'Publish build artifact'
 
   # - script: |
