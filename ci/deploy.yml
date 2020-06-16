@@ -14,4 +14,4 @@ steps:
   displayName: 'Deploy qView (macOS)'
 
 # - ${{ if eq( variables['Agent.OS'], 'Linux' ) }}:
-- template: ci/linuxdeployqt.yml
+- template: linuxdeployqt.yml
