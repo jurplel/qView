@@ -29,7 +29,8 @@ jobs:
 
   steps:
   - bash: |
-      echo '##vso[task.setvariable variable=MatrixName]$(echo $(Agent.JobName) | cut -d' ' -f2)'
+      echo '##vso[task.setvariable variable=MatrixName]'$(echo $(Agent.JobName) | cut -d' ' -f2)
+    condition: and(succeeded(), ne(variables['dontPublish'], 'true'))
     displayName: 'Set matrix name'
 
   - checkout: self
@@ -51,6 +52,6 @@ jobs:
     inputs:
       pathtoPublish: 'bin'
       artifactName: 'qView$(nightlyString)-$(MatrixName).$(Build.BuildNumber)'
-    condition: ne(variables['dontPublish'], 'true')
+    condition: and(succeeded(), ne(variables['dontPublish'], 'true'))
     displayName: 'Publish build artifact'
 

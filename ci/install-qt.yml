@@ -10,8 +10,8 @@ steps:
 - script: |
     sudo apt-get update
     sudo apt-get install libgl1-mesa-dev libxkbcommon-x11-0 libgtk2.0-dev -y
-  condition: eq( variables['Agent.OS'], 'Linux' )
-  displayName: 'Install packages for Qt'
+  condition: and(succeeded(), eq( variables['Agent.OS'], 'Linux' ))
+  displayName: 'Install Ubuntu packages for Qt'
 
 - task: UsePythonVersion@0
   inputs:
@@ -24,17 +24,17 @@ steps:
 # I hate splitting this into three but I can't figure out how to do it any better
 - script: |
     python -m aqt install ${{ parameters.version }} windows desktop ${{ parameters.arch }}
-  condition: eq( variables['Agent.OS'], 'Windows_NT' )
+  condition: and(succeeded(), eq( variables['Agent.OS'], 'Windows_NT' ))
   displayName: 'Install Qt (Windows)'
 
 - script: |
     python -m aqt install ${{ parameters.version }} mac desktop
-  condition: eq( variables['Agent.OS'], 'Darwin' )
+  condition: and(succeeded(), eq( variables['Agent.OS'], 'Darwin' ))
   displayName: 'Install Qt (macOS)'
 
 - script: |
     python -m aqt install ${{ parameters.version }} linux desktop
-  condition: eq( variables['Agent.OS'], 'Linux' )
+  condition: and(succeeded(), eq( variables['Agent.OS'], 'Linux' ))
   displayName: 'Install Qt (Linux)'
 
 - pwsh: |

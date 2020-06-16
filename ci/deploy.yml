@@ -8,20 +8,20 @@ steps:
     cd bin
     windeployqt qView.exe --no-compiler-runtime
     rename qView.exe "qView$(nightlyString).$(Build.BuildNumber).exe"
-  condition: and( ne( variables['skipdeploy'], 'true' ), eq( variables['Agent.OS'], 'Windows_NT' ))
+  condition: and(succeeded(), ne( variables['skipdeploy'], 'true' ), eq( variables['Agent.OS'], 'Windows_NT' ))
   displayName: 'Run windeployqt'
 
 - script: |
     cd bin
     macdeployqt qView.app/
     mv qView.app 'qView$(nightlyString).$(Build.BuildNumber).app'
-  condition: and( ne( variables['skipdeploy'], 'true' ), eq( variables['Agent.OS'], 'Darwin' ))
+  condition: and(succeeded(), ne( variables['skipdeploy'], 'true' ), eq( variables['Agent.OS'], 'Darwin' ))
   displayName: 'Run macdeployqt'
 
 - script: |
     wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
     chmod a+x linuxdeployqt-continuous-x86_64.AppImage
-  condition: and( ne( variables['skipdeploy'], 'true' ), eq( variables['Agent.OS'], 'Linux' ))
+  condition: and(succeeded(), ne( variables['skipdeploy'], 'true' ), eq( variables['Agent.OS'], 'Linux' ))
   displayName: 'Install linuxdeployqt'
 
 - script: |
@@ -35,7 +35,7 @@ steps:
     cd qt5ct*
     qmake
     sudo make install
-  condition: and( ne( variables['skipdeploy'], 'true' ), eq( variables['Agent.OS'], 'Linux' ))
+  condition: and(succeeded(), ne( variables['skipdeploy'], 'true' ), eq( variables['Agent.OS'], 'Linux' ))
   displayName: Get GTK+2 and qt5ct styles
   
 - script: |
@@ -46,5 +46,5 @@ steps:
     ../linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/qView.desktop -appimage -extra-plugins=styles/libqt5ct-style.so,platformthemes/libqt5ct.so,iconengines,platformthemes/libqgtk3.so
     mv *.AppImage qView$(nightlyString).$(Build.BuildNumber).x86_64.AppImage
     rm -r appdir
-  condition: and( ne( variables['skipdeploy'], 'true' ), eq( variables['Agent.OS'], 'Linux' ))
+  condition: and(succeeded(), ne( variables['skipdeploy'], 'true' ), eq( variables['Agent.OS'], 'Linux' ))
   displayName: 'Run linuxdeployqt'
