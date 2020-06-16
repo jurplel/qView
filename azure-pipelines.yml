@@ -40,6 +40,6 @@ jobs:
     inputs:
       pathtoPublish: 'bin'
       artifactName: 'qView$(nightlyString)-$(Agent.JobName).$(Build.BuildNumber)'
-    condition: and(succeeded(), ne(variables['dontPublish'], 'true'))
+    condition: ne(variables['dontPublish'], 'true')
     displayName: 'Publish build artifact'
 
