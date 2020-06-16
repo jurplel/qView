@@ -13,3 +13,5 @@ steps:
   condition: eq( variables['Agent.OS'], 'Darwin' )
   displayName: 'Deploy qView (macOS)'
 
+- template: ci/linuxdeployqt.yml
+  condition: eq( variables['Agent.OS'], 'Linux' )
