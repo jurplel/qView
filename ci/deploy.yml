@@ -22,7 +22,7 @@ steps:
 - script: |
     wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
     chmod a+x linuxdeployqt-continuous-x86_64.AppImage
-  condition: and(eq( parameters.linuxdeployqt, 'true' ), eq( variables['Agent.OS'], 'Linux' ))
+  condition: and(eq( variables[parameters.linuxdeployqt], 'true' ), eq( variables['Agent.OS'], 'Linux' ))
   displayName: 'Install linuxdeployqt'
 
 - script: |
@@ -36,7 +36,7 @@ steps:
     cd qt5ct*
     qmake
     sudo make install
-  condition: and(eq( parameters.linuxdeployqt, 'true' ), eq( variables['Agent.OS'], 'Linux' ))
+  condition: and(eq( variables[parameters.linuxdeployqt], 'true' ), eq( variables['Agent.OS'], 'Linux' ))
   displayName: Get GTK+2 and qt5ct styles
   
 - script: |
@@ -46,5 +46,5 @@ steps:
     ../linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/qView.desktop -appimage -extra-plugins=styles/libqt5ct-style.so,platformthemes/libqt5ct.so,iconengines,platformthemes/libqgtk3.so
     mkdir out
     mv *.AppImage out/qView$(nightlyString).$(Build.BuildNumber).x86_64.AppImage
-  condition: and(eq( parameters.linuxdeployqt, 'true' ), eq( variables['Agent.OS'], 'Linux' ))
+  condition: and(eq( variables[parameters.linuxdeployqt], 'true' ), eq( variables['Agent.OS'], 'Linux' ))
   displayName: 'Deploy qView (Linux)'
