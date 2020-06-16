@@ -24,19 +24,16 @@ steps:
 # I hate splitting this into three but I can't figure out how to do it any better
 - script: |
     python -m aqt install ${{ parameters.version }} windows desktop ${{ parameters.arch }}
-    echo '##vso[task.setvariable variable=osArchName]win64'
   condition: eq( variables['Agent.OS'], 'Windows_NT' )
   displayName: 'Install Qt (Windows)'
 
 - script: |
     python -m aqt install ${{ parameters.version }} mac desktop
-    echo '##vso[task.setvariable variable=osArchName]macos'
   condition: eq( variables['Agent.OS'], 'Darwin' )
   displayName: 'Install Qt (macOS)'
 
 - script: |
     python -m aqt install ${{ parameters.version }} linux desktop
-    echo '##vso[task.setvariable variable=osArchName]linux'
   condition: eq( variables['Agent.OS'], 'Linux' )
   displayName: 'Install Qt (Linux)'
 
