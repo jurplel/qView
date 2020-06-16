@@ -15,6 +15,10 @@ jobs:
         imageName: 'macOS-10.15'
       win64:
         imageName: 'windows-2019'
+        qtArch: 'win64_msvc2017_64'
+      win32:
+        imageName: 'windows-2019'
+        qtArch: 'win32_msvc2017'
       qt59:
         imageName: 'ubuntu-18.04'
         dontPublish: 'true'
@@ -27,6 +31,8 @@ jobs:
   - checkout: self
 
   - template: ci/install-qt.yml
+    parameters:
+      arch: $(qtArch)
 
   - template: ci/build.yml
     parameters:
