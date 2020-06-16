@@ -42,8 +42,9 @@ steps:
     mkdir bin/appdir
     make install INSTALL_ROOT=bin/appdir
     cd bin
+    rm qview
     ../linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/qView.desktop -appimage -extra-plugins=styles/libqt5ct-style.so,platformthemes/libqt5ct.so,iconengines,platformthemes/libqgtk3.so
-    mkdir out
-    mv *.AppImage out/qView$(nightlyString).$(Build.BuildNumber).x86_64.AppImage
+    mv *.AppImage qView$(nightlyString).$(Build.BuildNumber).x86_64.AppImage
+    rm -r appdir
   condition: and( ne( variables['skipdeploy'], 'true' ), eq( variables['Agent.OS'], 'Linux' ))
   displayName: 'Deploy qView (Linux)'
