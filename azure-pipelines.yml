@@ -37,6 +37,7 @@ jobs:
   - template: ci/build.yml
     parameters:
       defines: $(nightlyDefines)
+      arch: $(qtArch)
     
   - template: ci/deploy.yml
     parameters:

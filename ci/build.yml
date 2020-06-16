@@ -1,10 +1,14 @@
 parameters:
 - name: defines
   type: string
+- name: arch
+  type: string
+  default: 'win64_msvc2017_64'
 
 steps:
 - script: |
-    call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+    set "arch=${{ parameters.arch }}"
+    call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\%arch:~3,2%.bat"
     qmake ${{ parameters.defines }}
     nmake
   condition: eq( variables['Agent.OS'], 'Windows_NT' )
@@ -15,3 +19,4 @@ steps:
     make
   condition: ne( variables['Agent.OS'], 'Windows_NT' )
   displayName: 'Build qView (Unix)'
+  set "arch=win64_msvc2017_64"
