@@ -1,7 +1,7 @@
 parameters:
 - name: linuxdeployqt
-  type: boolean
-  default: false
+  type: string
+  default: 'false'
 
 steps:
 - script: |
@@ -18,5 +18,5 @@ steps:
   condition: eq( variables['Agent.OS'], 'Darwin' )
   displayName: 'Deploy qView (macOS)'
 
-- ${{ if not(eq(parameters.linuxdeployqt, true)) }}:
+- ${{ if ne(parameters.linuxdeployqt, 'true') }}:
   - template: linuxdeployqt.yml
