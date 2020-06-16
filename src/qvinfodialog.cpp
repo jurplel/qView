@@ -12,7 +12,7 @@ QVInfoDialog::QVInfoDialog(QWidget *parent) :
     ui(new Ui::QVInfoDialog)
 {
     ui->setupUi(this);
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint | Qt::CustomizeWindowHint);
+    setWindowFlags(windowFlags() & (~Qt::WindowContextHelpButtonHint | Qt::CustomizeWindowHint));
     setFixedSize(0, 0);
 
     width = 0;

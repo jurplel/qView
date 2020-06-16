@@ -9,14 +9,14 @@ steps:
     windeployqt qView.exe --no-compiler-runtime
     rename qView.exe "qView$(nightlyString).$(Build.BuildNumber).exe"
   condition: and( ne( variables['skipdeploy'], 'true' ), eq( variables['Agent.OS'], 'Windows_NT' ))
-  displayName: 'Deploy qView (Windows)'
+  displayName: 'Run windeployqt'
 
 - script: |
     cd bin
     macdeployqt qView.app/
     mv qView.app 'qView$(nightlyString).$(Build.BuildNumber).app'
   condition: and( ne( variables['skipdeploy'], 'true' ), eq( variables['Agent.OS'], 'Darwin' ))
-  displayName: 'Deploy qView (macOS)'
+  displayName: 'Run macdeployqt'
 
 - script: |
     wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
@@ -47,4 +47,4 @@ steps:
     mv *.AppImage qView$(nightlyString).$(Build.BuildNumber).x86_64.AppImage
     rm -r appdir
   condition: and( ne( variables['skipdeploy'], 'true' ), eq( variables['Agent.OS'], 'Linux' ))
-  displayName: 'Deploy qView (Linux)'
+  displayName: 'Run linuxdeployqt'
