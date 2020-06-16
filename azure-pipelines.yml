@@ -5,7 +5,7 @@ variables:
 
 name: '$(Date:yyyy-MM-dd).$(Rev:r)'
 jobs:
-- job: Build
+- job: Build on
 
   variables:
   - name: osArchName
@@ -13,12 +13,12 @@ jobs:
 
   strategy:
     matrix:
-      linux:
+      Linux:
         imageName: 'ubuntu-16.04'
-      macos:
-        imageName: 'macos-10.14'
-      windows:
-        imageName: 'vs2017-win2016'
+      macOS:
+        imageName: 'macOS-10.15'
+      Windows:
+        imageName: 'windows-2019'
 
   pool:
     vmImage: $(imageName)
