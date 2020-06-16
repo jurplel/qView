@@ -17,7 +17,7 @@ jobs:
         imageName: 'windows-2019'
       qt59:
         imageName: 'ubuntu-18.04'
-        dontPublish: true
+        dontPublish: 'true'
 
   pool:
     vmImage: $(imageName)
@@ -37,7 +37,7 @@ jobs:
     inputs:
       pathtoPublish: 'bin'
       artifactName: 'qView$(nightlyString)-$(Agent.JobName).$(Build.BuildNumber)'
-    condition: and(succeeded(), ne('$(dontPublish)', true))
+    condition: and(succeeded(), ne(variable['dontPublish'], 'true'))
     displayName: 'Publish build artifact'
 
   # - script: |
