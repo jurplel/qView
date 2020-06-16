@@ -11,13 +11,14 @@ jobs:
     matrix:
       linux:
         imageName: 'ubuntu-16.04'
+        deployLinux: true
       macos:
         imageName: 'macOS-10.15'
       win64:
         imageName: 'windows-2019'
       qt59:
         imageName: 'ubuntu-18.04'
-        dontPublish: 'true'
+        dontPublish: true
 
   pool:
     vmImage: $(imageName)
@@ -29,14 +30,16 @@ jobs:
 
   - template: ci/build.yml
     parameters:
-          defines: $(nightlyDefines)
+      defines: $(nightlyDefines)
     
   - template: ci/deploy.yml
+    parameters:
+      linuxdeployqt: $(deployLinux)
 
   - task: PublishBuildArtifacts@1
     inputs:
       pathtoPublish: 'bin'
       artifactName: 'qView$(nightlyString)-$(Agent.JobName).$(Build.BuildNumber)'
-    condition: and(succeeded(), ne(variables['dontPublish'], 'true'))
+    condition: and(succeeded(), ne(variables['dontPublish'], true))
     displayName: 'Publish build artifact'
 
