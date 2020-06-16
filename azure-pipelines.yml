@@ -34,7 +34,7 @@ jobs:
     
   - template: ci/deploy.yml
     parameters:
-      linuxdeployqt: 
+      linuxdeployqt: $(deployLinux)
 
   - task: PublishBuildArtifacts@1
     inputs:
