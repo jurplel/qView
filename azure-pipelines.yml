@@ -28,6 +28,10 @@ jobs:
     vmImage: $(imageName)
 
   steps:
+  - bash: |
+      echo '##vso[task.setvariable variable=MatrixName]$(echo $(Agent.JobName) | cut -d' ' -f2)'
+    displayName: 'Set matrix name'
+
   - checkout: self
 
   - template: ci/install-qt.yml
@@ -46,7 +50,7 @@ jobs:
   - task: PublishBuildArtifacts@1
     inputs:
       pathtoPublish: 'bin'
-      artifactName: 'qView$(nightlyString)-$(Agent.JobName).$(Build.BuildNumber)'
+      artifactName: 'qView$(nightlyString)-$(MatrixName).$(Build.BuildNumber)'
     condition: ne(variables['dontPublish'], 'true')
     displayName: 'Publish build artifact'
 
