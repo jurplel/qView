@@ -13,5 +13,5 @@ steps:
   condition: eq( variables['Agent.OS'], 'Darwin' )
   displayName: 'Deploy qView (macOS)'
 
-# - ${{ if eq( variables['Agent.OS'], 'Linux' ) }}:
-- template: linuxdeployqt.yml
+- ${{ if eq( variables['Agent.OS'], 'Linux' ) }}:
+  - template: linuxdeployqt.yml
