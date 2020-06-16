@@ -2,9 +2,6 @@ parameters:
 - name: 'linuxdeployqt'
   default: true
   type: string
-  values:
-  - true
-  - false
 
 steps:
 - script: |
