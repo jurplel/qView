@@ -11,7 +11,6 @@ jobs:
     matrix:
       linux:
         imageName: 'ubuntu-16.04'
-        deployLinux: 'true'
       macos:
         imageName: 'macOS-10.15'
       win64:
@@ -19,6 +18,7 @@ jobs:
       qt59:
         imageName: 'ubuntu-18.04'
         dontPublish: 'true'
+        skipDeploy: 'true'
 
   pool:
     vmImage: $(imageName)
@@ -34,7 +34,7 @@ jobs:
     
   - template: ci/deploy.yml
     parameters:
-      linuxdeployqt: $(deployLinux)
+      skipdeploy: $(skipDeploy)
 
   - task: PublishBuildArtifacts@1
     inputs:

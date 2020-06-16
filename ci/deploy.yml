@@ -1,6 +1,6 @@
 parameters:
-- name: 'linuxdeployqt'
-  default: true
+- name: 'skipdeploy'
+  default: 'false'
   type: string
 
 steps:
@@ -18,30 +18,33 @@ steps:
   condition: eq( variables['Agent.OS'], 'Darwin' )
   displayName: 'Deploy qView (macOS)'
 
-- ${{ if eq(parameters.linuxdeployqt, 'true') }}:
-  - script: |
-      wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
-      chmod a+x linuxdeployqt-continuous-x86_64.AppImage
-    displayName: 'Install linuxdeployqt'
 
-  - script: |
-      git clone https://code.qt.io/qt/qtstyleplugins.git
-      cd qtstyleplugins
-      qmake
-      sudo make install
+- script: |
+    wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+    chmod a+x linuxdeployqt-continuous-x86_64.AppImage
+  condition: and(ne(parameters.skipdeploy, 'true'), eq( variables['Agent.OS'], 'Linux' ))
+  displayName: 'Install linuxdeployqt'
 
-      wget 'https://sourceforge.net/projects/qt5ct/files/latest/download'
-      tar xf download
-      cd qt5ct*
-      qmake
-      sudo make install
-    displayName: Get GTK+2 and qt5ct styles
-    
-  - script: |
-      mkdir bin/appdir
-      make install INSTALL_ROOT=bin/appdir
-      cd bin
-      ../linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/qView.desktop -appimage -extra-plugins=styles/libqt5ct-style.so,platformthemes/libqt5ct.so,iconengines,platformthemes/libqgtk3.so
-      mkdir out
-      mv *.AppImage out/qView$(nightlyString).$(Build.BuildNumber).x86_64.AppImage
-    displayName: 'Deploy qView (Linux)'
+- script: |
+    git clone https://code.qt.io/qt/qtstyleplugins.git
+    cd qtstyleplugins
+    qmake
+    sudo make install
+
+    wget 'https://sourceforge.net/projects/qt5ct/files/latest/download'
+    tar xf download
+    cd qt5ct*
+    qmake
+    sudo make install
+  condition: and(ne(parameters.skipdeploy, 'true'), 'true' ), eq( variables['Agent.OS'], 'Linux' ))
+  displayName: Get GTK+2 and qt5ct styles
+  
+- script: |
+    mkdir bin/appdir
+    make install INSTALL_ROOT=bin/appdir
+    cd bin
+    ../linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/qView.desktop -appimage -extra-plugins=styles/libqt5ct-style.so,platformthemes/libqt5ct.so,iconengines,platformthemes/libqgtk3.so
+    mkdir out
+    mv *.AppImage out/qView$(nightlyString).$(Build.BuildNumber).x86_64.AppImage
+  condition: and(ne(parameters.skipdeploy, 'true'), eq( variables['Agent.OS'], 'Linux' ))
+  displayName: 'Deploy qView (Linux)'
