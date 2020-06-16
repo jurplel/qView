@@ -1,0 +1,15 @@
+steps:
+- script: |
+    cd bin
+    windeployqt qView.exe --no-compiler-runtime
+    rename qView.exe "qView$(nightlyString).$(Build.BuildNumber).exe"
+  condition: eq( variables['Agent.OS'], 'Windows_NT' )
+  displayName: 'Deploy qView (Windows)'
+
+- script: |
+    cd bin
+    macdeployqt qView.app/
+    mv qView.app 'qView$(nightlyString).$(Build.BuildNumber).app'
+  condition: eq( variables['Agent.OS'], 'Darwin' )
+  displayName: 'Deploy qView (macOS)'
+
