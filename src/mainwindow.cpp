@@ -32,6 +32,10 @@
 #include <QNetworkReply>
 #include <QTemporaryFile>
 
+#ifdef Q_OS_WIN
+#include <Windows.h>
+#endif
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -89,6 +93,8 @@ MainWindow::MainWindow(QWidget *parent) :
     contextMenu->addSeparator();
     contextMenu->addAction(actionManager.cloneAction("nextfile"));
     contextMenu->addAction(actionManager.cloneAction("previousfile"));
+    contextMenu->addSeparator();
+    contextMenu->addAction(actionManager.cloneAction("setasdesktopbackground"));
     contextMenu->addSeparator();
     contextMenu->addMenu(actionManager.buildViewMenu(true, contextMenu));
     contextMenu->addMenu(actionManager.buildToolsMenu(true, contextMenu));
@@ -796,4 +802,14 @@ void MainWindow::toggleFullScreen()
     {
         showFullScreen();
     }
+}
+
+void MainWindow::setAsDesktopBackground()
+{
+#ifdef Q_OS_WIN
+    auto filePath = getCurrentFileDetails().fileInfo.absoluteFilePath();
+    if (!filePath.isEmpty()) {
+        SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, reinterpret_cast<LPWSTR>(const_cast<ushort*>(filePath.utf16())), SPIF_UPDATEINIFILE);
+    }
+#endif
 }
