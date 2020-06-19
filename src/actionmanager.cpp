@@ -581,7 +581,7 @@ void ActionManager::initializeActionLibrary()
     actionLibrary.insert("flip", flipAction);
 
 #ifdef Q_OS_WIN
-    auto *setAsDesktopBackgroundAction = new QAction(QIcon::fromTheme("preferences-desktop-wallpaper", QIcon::fromTheme("document-properties")), tr("Set as desktop background"));
+    auto *setAsDesktopBackgroundAction = new QAction(QIcon::fromTheme("preferences-desktop-wallpaper"), tr("Set as desktop background"));
     setAsDesktopBackgroundAction->setData("setasdesktopbackground");
     actionLibrary.insert("setasdesktopbackground", setAsDesktopBackgroundAction);
 #endif
