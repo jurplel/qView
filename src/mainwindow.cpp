@@ -94,8 +94,6 @@ MainWindow::MainWindow(QWidget *parent) :
     contextMenu->addAction(actionManager.cloneAction("nextfile"));
     contextMenu->addAction(actionManager.cloneAction("previousfile"));
     contextMenu->addSeparator();
-    contextMenu->addAction(actionManager.cloneAction("setasdesktopbackground"));
-    contextMenu->addSeparator();
     contextMenu->addMenu(actionManager.buildViewMenu(true, contextMenu));
     contextMenu->addMenu(actionManager.buildToolsMenu(true, contextMenu));
     contextMenu->addMenu(actionManager.buildHelpMenu(true, contextMenu));
