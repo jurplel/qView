@@ -10,7 +10,7 @@ QVAboutDialog::QVAboutDialog(QWidget *parent) :
     ui->setupUi(this);
 
     setAttribute(Qt::WA_DeleteOnClose);
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint | Qt::CustomizeWindowHint);
+    setWindowFlags(windowFlags() & (~Qt::WindowContextHelpButtonHint | Qt::CustomizeWindowHint));
     setWindowModality(Qt::ApplicationModal);
 
     // add fonts
@@ -33,7 +33,7 @@ QVAboutDialog::QVAboutDialog(QWidget *parent) :
     QString subtitleText = tr("version ") + QString::number(VERSION, 'f', 1);
     // If this is a nightly build, display the build number
 #ifdef NIGHTLY
-        subtitleText = tr("🌒 Nightly");
+        subtitleText = tr("Nightly");
 #endif
     ui->subtitleLabel->setFont(font2);
     ui->subtitleLabel->setText(subtitleText);
