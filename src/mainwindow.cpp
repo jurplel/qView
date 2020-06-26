@@ -353,7 +353,8 @@ void MainWindow::setWindowSize()
     imageSize -= QSize(4, 4);
     imageSize /= devicePixelRatioF();
 
-    QSize currentScreenSize = screenAt(geometry().center())->size();
+    QScreen *currentScreen = screenAt(geometry().center());
+    QSize currentScreenSize = currentScreen->size();
 
     QSize minWindowSize = currentScreenSize * minWindowResizedPercentage;
     QSize maxWindowSize = currentScreenSize * maxWindowResizedPercentage;
@@ -388,8 +389,10 @@ void MainWindow::setWindowSize()
 
     // Ensure titlebar is not above the top of the screen
     const int titlebarHeight = QApplication::style()->pixelMetric(QStyle::PM_TitleBarHeight);
-    if (newRect.y() < titlebarHeight)
-        newRect.setY(titlebarHeight);
+    const int topOfScreen = currentScreen->availableGeometry().y();
+
+    if (newRect.y() < (topOfScreen + titlebarHeight))
+        newRect.setY(topOfScreen + titlebarHeight);
 
 
     setGeometry(newRect);
