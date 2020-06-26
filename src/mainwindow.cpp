@@ -170,19 +170,16 @@ void MainWindow::changeEvent(QEvent *event)
         const auto fullscreenActions = qvApp->getActionManager().getAllInstancesOfAction("fullscreen");
         for (const auto &fullscreenAction : fullscreenActions)
         {
-                if (windowState() == Qt::WindowFullScreen)
-                {
-                    fullscreenAction->setText(tr("Exit Full Screen"));
-                    fullscreenAction->setIcon(QIcon::fromTheme("view-restore"));
-                }
-                else
-                {
-                    fullscreenAction->setText(tr("Enter Full Screen"));
-                    fullscreenAction->setIcon(QIcon::fromTheme("view-fullscreen"));
-                }
-            QTimer::singleShot(3000, this, [fullscreenAction]{
-                fullscreenAction->setVisible(true);
-             });
+            if (windowState() == Qt::WindowFullScreen)
+            {
+                fullscreenAction->setText(tr("Exit Full Screen"));
+                fullscreenAction->setIcon(QIcon::fromTheme("view-restore"));
+            }
+            else
+            {
+                fullscreenAction->setText(tr("Enter Full Screen"));
+                fullscreenAction->setIcon(QIcon::fromTheme("view-fullscreen"));
+            }
         }
     }
 }
