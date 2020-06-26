@@ -222,10 +222,12 @@ void MainWindow::settingsUpdated()
     menuBarEnabled = true;
 #endif
     menuBar()->setVisible(menuBarEnabled);
+    // If menu bar is visible, disable all actions
+    // contained within the MainWindow because they will conflict with the menubar's actions
     const auto actionList = actions();
     for (const auto &action : actionList)
     {
-        action->setVisible(!menuBarEnabled);
+        action->setEnabled(!menuBarEnabled);
     }
 
     // titlebaralwaysdark
@@ -381,6 +383,9 @@ void MainWindow::setWindowSize()
     imageSize.setHeight(imageSize.height() + obscuredHeight);
 #endif
 
+    if (menuBar()->isVisible())
+        imageSize.setHeight(imageSize.height() + menuBar()->height());
+
     // Match center after new geometry
     QRect oldRect = geometry();
     resize(imageSize);
@@ -393,7 +398,6 @@ void MainWindow::setWindowSize()
 
     if (newRect.y() < (topOfScreen + titlebarHeight))
         newRect.setY(topOfScreen + titlebarHeight);
-
 
     setGeometry(newRect);
 }
