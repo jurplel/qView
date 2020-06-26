@@ -132,6 +132,8 @@ private:
     QVInfoDialog *info;
 
     bool justLaunchedWithImage;
+
+    Qt::WindowStates storedWindowState;
 };
 
 #endif // MAINWINDOW_H

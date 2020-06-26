@@ -41,6 +41,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Initialize variables
     justLaunchedWithImage = false;
+    storedWindowState = Qt::WindowNoState;
 
     // Initialize graphicsview
     graphicsView = new QVGraphicsView(this);
@@ -787,10 +788,12 @@ void MainWindow::toggleFullScreen()
 {
     if (windowState() == Qt::WindowFullScreen)
     {
+        setWindowState(storedWindowState);
         showNormal();
     }
     else
     {
+        storedWindowState = windowState();
         showFullScreen();
     }
 }
