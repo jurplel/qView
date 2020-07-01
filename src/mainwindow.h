@@ -86,6 +86,8 @@ public:
 
     void toggleFullScreen();
 
+    void setAsDesktopBackground();
+
     const QVImageCore::QVFileDetails& getCurrentFileDetails() const { return graphicsView->getCurrentFileDetails(); }
 
 public slots:

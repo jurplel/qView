@@ -193,6 +193,10 @@ QMenu *ActionManager::buildViewMenu(bool addIcon, QWidget *parent)
     viewMenu->addAction(cloneAction("mirror"));
     viewMenu->addAction(cloneAction("flip"));
     viewMenu->addSeparator();
+#ifdef Q_OS_WIN
+    viewMenu->addAction(cloneAction("setasdesktopbackground"));
+    viewMenu->addSeparator();
+#endif
     viewMenu->addAction(cloneAction("fullscreen"));
 
     menuCloneLibrary.insert(viewMenu->menuAction()->data().toString(), viewMenu);
@@ -485,6 +489,8 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
         qvApp->openWelcomeDialog();
     } else if (key == "clearrecents") {
         qvApp->getActionManager().clearRecentsList();
+    } else if (key == "setasdesktopbackground") {
+        relevantWindow->setAsDesktopBackground();
     }
 }
 
@@ -573,6 +579,12 @@ void ActionManager::initializeActionLibrary()
     auto *flipAction = new QAction(QIcon::fromTheme("object-flip-vertical"), tr("Flip"));
     flipAction->setData("flip");
     actionLibrary.insert("flip", flipAction);
+
+#ifdef Q_OS_WIN
+    auto *setAsDesktopBackgroundAction = new QAction(QIcon::fromTheme("preferences-desktop-wallpaper"), tr("Set as desktop background"));
+    setAsDesktopBackgroundAction->setData("setasdesktopbackground");
+    actionLibrary.insert("setasdesktopbackground", setAsDesktopBackgroundAction);
+#endif
 
     auto *fullScreenAction = new QAction(QIcon::fromTheme("view-fullscreen"), tr("Enter Full Screen"));
     fullScreenAction->setData("fullscreen");

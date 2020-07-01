@@ -32,6 +32,10 @@
 #include <QNetworkReply>
 #include <QTemporaryFile>
 
+#ifdef Q_OS_WIN
+#include <Windows.h>
+#endif
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -803,4 +807,14 @@ void MainWindow::toggleFullScreen()
         storedWindowState = windowState();
         showFullScreen();
     }
+}
+
+void MainWindow::setAsDesktopBackground()
+{
+#ifdef Q_OS_WIN
+    auto filePath = getCurrentFileDetails().fileInfo.absoluteFilePath();
+    if (!filePath.isEmpty()) {
+        SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, reinterpret_cast<LPWSTR>(const_cast<ushort*>(filePath.utf16())), SPIF_UPDATEINIFILE);
+    }
+#endif
 }

@@ -23,6 +23,7 @@ CONFIG += c++11
 # Windows specific stuff
 win32:QT += svg # needed for including svg support in static build
 win32:CONFIG += static
+win32:LIBS += -luser32
 RC_ICONS = "dist/win/qView.ico"
 QMAKE_TARGET_COPYRIGHT = "Copyright � 2020 jurplel and qView contributors"
 QMAKE_TARGET_DESCRIPTION = "qView"
