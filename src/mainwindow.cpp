@@ -387,19 +387,19 @@ void MainWindow::setWindowSize()
         imageSize.setHeight(imageSize.height() + menuBar()->height());
 
     // Match center after new geometry
-    QRect oldRect = geometry();
-    resize(imageSize);
-    QRect newRect = geometry();
-    newRect.moveCenter(oldRect.center());
+    QRect rect = geometry();
+    QPoint prevCenter = rect.center();
+    rect.setSize(imageSize);
+    rect.moveCenter(prevCenter);
 
     // Ensure titlebar is not above the top of the screen
     const int titlebarHeight = QApplication::style()->pixelMetric(QStyle::PM_TitleBarHeight);
     const int topOfScreen = currentScreen->availableGeometry().y();
 
-    if (newRect.y() < (topOfScreen + titlebarHeight))
-        newRect.setY(topOfScreen + titlebarHeight);
+    if (rect.y() < (topOfScreen + titlebarHeight))
+        rect.setY(topOfScreen + titlebarHeight);
 
-    setGeometry(newRect);
+    setGeometry(rect);
 }
 
 //literally just copy pasted from Qt source code to maintain compatibility with 5.9
