@@ -511,7 +511,7 @@
      <property name="sizeHint" stdset="0">
       <size>
        <width>281</width>
-       <height>20</height>
+       <height>17</height>
       </size>
      </property>
     </spacer>

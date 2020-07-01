@@ -5,6 +5,10 @@
 #include "settingsmanager.h"
 #include "shortcutmanager.h"
 #include "actionmanager.h"
+#include "updatechecker.h"
+#include "qvoptionsdialog.h"
+#include "qvaboutdialog.h"
+#include "qvwelcomedialog.h"
 
 #include <QApplication>
 
@@ -37,6 +41,8 @@ public:
     static MainWindow *newWindow();
 
     MainWindow *getMainWindow(bool shouldBeEmpty);
+
+    void checkedUpdates();
 
     void updateDockRecents();
 
@@ -88,9 +94,11 @@ private:
     ActionManager actionManager;
     ShortcutManager shortcutManager;
 
-    QDialog *optionsDialog;
-    QDialog *welcomeDialog;
-    QDialog *aboutDialog;
+    QVOptionsDialog *optionsDialog;
+    QVWelcomeDialog *welcomeDialog;
+    QVAboutDialog *aboutDialog;
+
+    UpdateChecker updateChecker;
 };
 
 #endif // QVAPPLICATION_H

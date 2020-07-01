@@ -1,9 +1,6 @@
 #include "qvapplication.h"
 #include "qvoptionsdialog.h"
 #include "qvcocoafunctions.h"
-#include "qvoptionsdialog.h"
-#include "qvaboutdialog.h"
-#include "qvwelcomedialog.h"
 #include "updatechecker.h"
 
 #include <QFileOpenEvent>
@@ -15,6 +12,7 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
 {
     // Connections
     connect(&actionManager, &ActionManager::recentsMenuUpdated, this, &QVApplication::updateDockRecents);
+    connect(&updateChecker, &UpdateChecker::checkedUpdates, this, &QVApplication::checkedUpdates);
 
     // Initialize variables
     optionsDialog = nullptr;
@@ -111,8 +109,7 @@ bool QVApplication::event(QEvent *event)
 
 void QVApplication::afterWindow()
 {
-    auto *checker = new UpdateChecker();
-    checker->check();
+    updateChecker.check();
 }
 
 void QVApplication::openFile(MainWindow *window, const QString &file, bool resize)
@@ -214,6 +211,16 @@ MainWindow *QVApplication::getMainWindow(bool shouldBeEmpty)
     // If there are no valid ones, make a new one.
     auto *window = newWindow();
     return window;
+}
+
+void QVApplication::checkedUpdates()
+{
+    if (updateChecker.getLatestVersionNum() > VERSION)
+    {
+        updateChecker.openDialog();
+        if (aboutDialog)
+            aboutDialog->setLatestVersionNum(updateChecker.getLatestVersionNum());
+    }
 }
 
 void QVApplication::updateDockRecents()
@@ -323,6 +330,7 @@ void QVApplication::openAboutDialog()
     }
 
     aboutDialog = new QVAboutDialog();
+    aboutDialog->setLatestVersionNum(updateChecker.getLatestVersionNum());
     connect(aboutDialog, &QDialog::finished, [this]{
         aboutDialog = nullptr;
     });

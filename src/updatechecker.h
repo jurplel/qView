@@ -13,7 +13,10 @@ public:
 
     void openDialog();
 
+    double getLatestVersionNum() const { return latestVersionNum; }
+
 signals:
+    void checkedUpdates();
 
 protected:
     void sendRequest(const QUrl &url);

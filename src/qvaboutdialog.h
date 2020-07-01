@@ -16,12 +16,15 @@ public:
     explicit QVAboutDialog(QWidget *parent = nullptr);
     ~QVAboutDialog() override;
 
-private slots:
-    void checkUpdates(QNetworkReply* reply);
+    void updateText();
+
+    double getLatestVersionNum() const;
+    void setLatestVersionNum(double value);
 
 private:
-    void requestUpdates();
     Ui::QVAboutDialog *ui;
+
+    double latestVersionNum;
 };
 
 #endif // QVABOUTDIALOG_H

@@ -53,8 +53,7 @@ void UpdateChecker::readReply(QNetworkReply *reply)
     releaseDate = QDateTime::fromString(object.value("published_at").toString(), Qt::ISODate);
     releaseDate = releaseDate.toTimeSpec(Qt::LocalTime);
 
-    if (latestVersionNum > VERSION)
-        openDialog();
+    emit checkedUpdates();
 }
 
 void UpdateChecker::openDialog()
