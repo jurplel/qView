@@ -7,22 +7,27 @@
 SettingsManager::SettingsManager(QObject *parent) : QObject(parent)
 {
     initializeSettingsLibrary();
-    updateSettings();
+    loadSettings();
 }
 
-void SettingsManager::updateSettings()
+void SettingsManager::loadSettings()
 {
     QSettings settings;
     settings.beginGroup("options");
+    bool changed = false;
 
     const auto keys = settingsLibrary.keys();
     for (const auto &key : keys)
     {
          auto &setting = settingsLibrary[key];
+         if (setting.value != settings.value(key, setting.defaultValue))
+             changed = true;
+
          setting.value = settings.value(key, setting.defaultValue);
     }
 
-    emit settingsUpdated();
+    if (changed)
+        emit settingsUpdated();
 }
 
 const QVariant SettingsManager::getSetting(const QString &key, bool defaults) const

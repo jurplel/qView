@@ -95,9 +95,16 @@ QVApplication::~QVApplication() {
 
 bool QVApplication::event(QEvent *event)
 {
-    if (event->type() == QEvent::FileOpen) {
+    if (event->type() == QEvent::FileOpen)
+    {
         auto *openEvent = dynamic_cast<QFileOpenEvent *>(event);
         openFile(getMainWindow(true), openEvent->file());
+    }
+    else if (event->type() == QEvent::ApplicationStateChange)
+    {
+        auto *stateEvent = dynamic_cast<QApplicationStateChangeEvent*>(event);
+        if (stateEvent->applicationState() == Qt::ApplicationActive)
+            settingsManager.loadSettings();
     }
     return QApplication::event(event);
 }

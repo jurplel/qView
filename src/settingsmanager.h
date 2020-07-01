@@ -23,7 +23,7 @@ public:
 
     explicit SettingsManager(QObject *parent = nullptr);
 
-    void updateSettings();
+    void loadSettings();
 
     const QVariant getSetting(const QString &key, bool defaults = false) const;
 

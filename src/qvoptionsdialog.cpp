@@ -88,13 +88,13 @@ void QVOptionsDialog::saveSettings()
     }
 
     qvApp->getShortcutManager().updateShortcuts();
-    qvApp->getSettingsManager().updateSettings();
+    qvApp->getSettingsManager().loadSettings();
 }
 
 void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
 {
     auto &settingsManager = qvApp->getSettingsManager();
-    settingsManager.updateSettings();
+    settingsManager.loadSettings();
 
     // bgcolorenabled
     syncCheckbox(ui->bgColorCheckbox, "bgcolorenabled", defaults, makeConnections);
