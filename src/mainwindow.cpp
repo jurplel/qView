@@ -796,7 +796,6 @@ void MainWindow::toggleFullScreen()
     if (windowState() == Qt::WindowFullScreen)
     {
         setWindowState(storedWindowState);
-        showNormal();
     }
     else
     {
