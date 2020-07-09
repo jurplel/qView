@@ -46,7 +46,7 @@ public:
 
     void checkedUpdates();
 
-    void updateDockRecents();
+    void recentsMenuUpdated();
 
     qint64 getPreviouslyRecordedFileSize(const QString &fileName);
 
@@ -79,10 +79,6 @@ private:
     QList<MainWindow*> lastActiveWindows;
 
     QMenu *dockMenu;
-
-    QList<QAction*> dockMenuSuffix;
-
-    QMenu *dockMenuRecentsLibrary;
 
     QMenuBar *menuBar;
 

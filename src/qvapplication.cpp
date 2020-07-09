@@ -11,7 +11,7 @@
 QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
 {
     // Connections
-    connect(&actionManager, &ActionManager::recentsMenuUpdated, this, &QVApplication::updateDockRecents);
+    connect(&actionManager, &ActionManager::recentsMenuUpdated, this, &QVApplication::recentsMenuUpdated);
     connect(&updateChecker, &UpdateChecker::checkedUpdates, this, &QVApplication::checkedUpdates);
 
     // Initialize variables
@@ -55,16 +55,12 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
        ActionManager::actionTriggered(triggeredAction);
     });
 
-    dockMenuSuffix.append(actionManager.cloneAction("newwindow"));
-    dockMenuSuffix.append(actionManager.cloneAction("open"));
-
-    dockMenuRecentsLibrary = nullptr;
-    dockMenuRecentsLibrary = actionManager.buildRecentsMenu(false);
     actionManager.updateRecentsMenu();
 
 #ifdef Q_OS_MACOS
+    dockMenu->addAction(actionManager.cloneAction("newwindow"));
+    dockMenu->addAction(actionManager.cloneAction("open"));
     dockMenu->setAsDockMenu();
-    setQuitOnLastWindowClosed(false);
 #endif
 
     // Build menu bar
@@ -76,9 +72,11 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     // Set mac-specific application settings
 #ifdef Q_OS_MACOS
     QVCocoaFunctions::setUserDefaults();
+    setQuitOnLastWindowClosed(false);
 #endif
 
-    // Don't even try to show menu icons on mac or windows
+    // Block any erroneous icons from showing up on mac and windows
+    // (this is overridden in some cases)
 #if defined Q_OS_MACOS || defined Q_OS_WIN
     setAttribute(Qt::AA_DontShowIconsInMenus);
 #endif
@@ -232,26 +230,16 @@ void QVApplication::checkedUpdates()
     }
 }
 
-void QVApplication::updateDockRecents()
+void QVApplication::recentsMenuUpdated()
 {
-    // This entire function is only necessary because invisible actions do not
-    // disappear in mac's dock menu
-    if (!dockMenuRecentsLibrary)
-        return;
-
-    dockMenu->clear();
-
-    const auto dockMenuActions = dockMenuRecentsLibrary->actions();
-    for (const auto &action : dockMenuActions)
+#ifdef Q_OS_MACOS
+    QStringList recentsPathList;
+    for(const auto &recent : actionManager.getRecentsList())
     {
-        if (action->isVisible())
-            dockMenu->addAction(action);
+        recentsPathList << recent.filePath;
     }
-
-    if (!dockMenu->isEmpty())
-        dockMenu->addSeparator();
-
-    dockMenu->addActions(dockMenuSuffix);
+    QVCocoaFunctions::setDockRecents(recentsPathList);
+#endif
 }
 
 qint64 QVApplication::getPreviouslyRecordedFileSize(const QString &fileName)

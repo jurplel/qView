@@ -1,5 +1,6 @@
 #include "qvcocoafunctions.h"
 
+#include <QUrl>
 #include <QDebug>
 
 #import <Cocoa/Cocoa.h>
@@ -108,4 +109,16 @@ void QVCocoaFunctions::setAlternates(QMenu *menu, int index0, int index1)
     NSMenu *nativeMenu = menu->toNSMenu();
     [[nativeMenu.itemArray objectAtIndex:index0] setAlternate:true];
     [[nativeMenu.itemArray objectAtIndex:index1] setAlternate:true];
+}
+
+void QVCocoaFunctions::setDockRecents(const QStringList &recentPathsList)
+{
+    NSDocumentController *documentController = [NSDocumentController sharedDocumentController];
+    [documentController clearRecentDocuments:documentController];
+    for (int i = recentPathsList.size()-1; i >= 0; i--)
+    {
+        const auto &path = recentPathsList[i];
+        auto url = QUrl::fromLocalFile(path);
+        [documentController noteNewRecentDocumentURL:url.toNSURL()];
+    }
 }

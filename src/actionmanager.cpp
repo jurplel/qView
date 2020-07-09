@@ -4,6 +4,7 @@
 
 #include <QSettings>
 #include <QMimeDatabase>
+#include <QFileIconProvider>
 
 ActionManager::ActionManager(QObject *parent) : QObject(parent)
 {
@@ -359,10 +360,18 @@ void ActionManager::updateRecentsMenu()
                 action->setVisible(true);
                 action->setText(recent.fileName);
 
-                //set icons for linux users
+                action->setIconVisibleInMenu(true);
+#if defined Q_OS_UNIX & !defined Q_OS_MACOS
+                // set icons for linux users
                 QMimeDatabase mimedb;
                 QMimeType type = mimedb.mimeTypeForFile(recent.filePath);
+                qDebug() << type.iconName();
                 action->setIcon(QIcon::fromTheme(type.iconName(), QIcon::fromTheme(type.genericIconName())));
+#else
+                // set icons for mac/windows users
+                QFileIconProvider provider;
+                action->setIcon(provider.icon(QFileInfo(recent.filePath)));
+#endif
             }
             else
             {

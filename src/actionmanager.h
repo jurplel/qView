@@ -117,6 +117,8 @@ public:
 
     const QHash<QString, QAction*> &getActionLibrary() const { return actionLibrary; }
 
+    int getRecentsListMaxLength() const { return recentsListMaxLength; };
+
 signals:
     void recentsMenuUpdated();
 
