@@ -165,6 +165,8 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
     syncDoubleSpinBox(ui->slideshowTimerSpinBox, "slideshowtimer", defaults, makeConnections);
     // saverecents
     syncCheckbox(ui->saveRecentsCheckbox, "saverecents", defaults, makeConnections);
+    // updatenotifications
+    syncCheckbox(ui->updateCheckbox, "updatenotifications", defaults, makeConnections);
 }
 
 void QVOptionsDialog::syncCheckbox(QCheckBox *checkbox, const QString &key, bool defaults, bool makeConnection)

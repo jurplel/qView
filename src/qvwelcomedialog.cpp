@@ -1,6 +1,10 @@
 #include "qvwelcomedialog.h"
 #include "ui_qvwelcomedialog.h"
+
+#include "qvapplication.h"
+
 #include <QFontDatabase>
+#include <QSettings>
 
 QVWelcomeDialog::QVWelcomeDialog(QWidget *parent) :
     QDialog(parent),
@@ -42,6 +46,14 @@ QVWelcomeDialog::QVWelcomeDialog(QWidget *parent) :
 
     ui->infoLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
     ui->infoLabel->setOpenExternalLinks(true);
+
+    ui->updateCheckBox->setChecked(qvApp->getSettingsManager().getBoolean("updatenotifications"));
+    connect(ui->updateCheckBox, &QCheckBox::stateChanged, [](int state){
+        QSettings settings;
+        settings.beginGroup("options");
+        settings.setValue("updatenotifications", state > 0);
+        qvApp->getSettingsManager().loadSettings();
+    });
 }
 
 QVWelcomeDialog::~QVWelcomeDialog()

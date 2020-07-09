@@ -215,7 +215,7 @@ MainWindow *QVApplication::getMainWindow(bool shouldBeEmpty)
 
 void QVApplication::checkedUpdates()
 {
-    if (updateChecker.getLatestVersionNum() > VERSION)
+    if (updateChecker.getLatestVersionNum() > VERSION && getSettingsManager().getBoolean("updatenotifications"))
     {
         updateChecker.openDialog();
         if (aboutDialog)

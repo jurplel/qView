@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>388</width>
-    <height>376</height>
+    <width>384</width>
+    <height>404</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -616,6 +616,13 @@
           </size>
          </property>
         </spacer>
+       </item>
+       <item row="11" column="1">
+        <widget class="QCheckBox" name="updateCheckbox">
+         <property name="text">
+          <string>Update notifications on startup</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

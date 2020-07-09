@@ -116,4 +116,5 @@ void SettingsManager::initializeSettingsLibrary()
     settingsLibrary.insert("slideshowreversed", {false, {}});
     settingsLibrary.insert("slideshowtimer", {5, {}});
     settingsLibrary.insert("saverecents", {true, {}});
+    settingsLibrary.insert("updatenotifications", {false, {}});
 }
