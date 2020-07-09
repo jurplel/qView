@@ -51,6 +51,7 @@ QAction *ActionManager::cloneAction(const QString &key)
         newAction->setData(action->data());
         newAction->setText(action->text());
         newAction->setMenuRole(action->menuRole());
+        newAction->setEnabled(action->isEnabled());
         newAction->setShortcuts(action->shortcuts());
         actionCloneLibrary.insert(key, newAction);
         return newAction;
@@ -369,7 +370,6 @@ void ActionManager::updateRecentsMenu()
                 // set icons for linux users
                 QMimeDatabase mimedb;
                 QMimeType type = mimedb.mimeTypeForFile(recent.filePath);
-                qDebug() << type.iconName();
                 action->setIcon(QIcon::fromTheme(type.iconName(), QIcon::fromTheme(type.genericIconName())));
 #else
                 // set icons for mac/windows users
@@ -504,30 +504,24 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
 void ActionManager::initializeActionLibrary()
 {
     auto *quitAction = new QAction(QIcon::fromTheme("application-exit"), tr("Quit"));
-    quitAction->setData("quit");
     actionLibrary.insert("quit", quitAction);
 #ifdef Q_OS_WIN
     quitAction->setText(tr("Exit"));
 #endif
 
     auto *newWindowAction = new QAction(QIcon::fromTheme("window-new"), tr("New Window"));
-    newWindowAction->setData("newwindow");
     actionLibrary.insert("newwindow", newWindowAction);
 
     auto *openAction = new QAction(QIcon::fromTheme("document-open"), tr("Open..."));
-    openAction->setData("open");
     actionLibrary.insert("open", openAction);
 
     auto *openUrlAction = new QAction(QIcon::fromTheme("document-open-remote", QIcon::fromTheme("folder-remote")), tr("Open URL..."));
-    openUrlAction->setData("openurl");
     actionLibrary.insert("openurl", openUrlAction);
 
     auto *closeWindowAction = new QAction(QIcon::fromTheme("window-close"), tr("Close Window"));
-    closeWindowAction->setData("closewindow");
     actionLibrary.insert("closewindow", closeWindowAction);
 
     auto *closeAllWindowsAction = new QAction(QIcon::fromTheme("window-close"), tr("Close All"));
-    closeAllWindowsAction->setData("closeallwindows");
     actionLibrary.insert("closeallwindows", closeAllWindowsAction);
 
     auto *openContainingFolderAction = new QAction(QIcon::fromTheme("document-open"), tr("Open Containing Folder"));
@@ -536,104 +530,102 @@ void ActionManager::initializeActionLibrary()
 #elif defined Q_OS_MACOS
     openContainingFolderAction->setText(tr("Show in Finder"));
 #endif
-    openContainingFolderAction->setData("opencontainingfolder");
+    openContainingFolderAction->setData({"disable"});
     actionLibrary.insert("opencontainingfolder", openContainingFolderAction);
 
     auto *showFileInfoAction = new QAction(QIcon::fromTheme("document-properties"), tr("Show File Info"));
-    showFileInfoAction->setData("showfileinfo");
+    showFileInfoAction->setData({"disable"});
     actionLibrary.insert("showfileinfo", showFileInfoAction);
 
     auto *copyAction = new QAction(QIcon::fromTheme("edit-copy"), tr("Copy"));
-    copyAction->setData("copy");
+    copyAction->setData({"disable"});
     actionLibrary.insert("copy", copyAction);
 
     auto *pasteAction = new QAction(QIcon::fromTheme("edit-paste"), tr("Paste"));
-    pasteAction->setData("paste");
     actionLibrary.insert("paste", pasteAction);
 
     auto *renameAction = new QAction(QIcon::fromTheme("edit-rename", QIcon::fromTheme("document-properties")) , tr("Rename..."));
-    renameAction->setData("rename");
+    renameAction->setData({"disable"});
     actionLibrary.insert("rename", renameAction);
 
     auto *zoomInAction = new QAction(QIcon::fromTheme("zoom-in"), tr("Zoom In"));
-    zoomInAction->setData("zoomin");
+    zoomInAction->setData({"disable"});
     actionLibrary.insert("zoomin", zoomInAction);
 
     auto *zoomOutAction = new QAction(QIcon::fromTheme("zoom-out"), tr("Zoom Out"));
-    zoomOutAction->setData("zoomout");
+    zoomOutAction->setData({"disable"});
     actionLibrary.insert("zoomout", zoomOutAction);
 
     auto *resetZoomAction = new QAction(QIcon::fromTheme("zoom-fit-best"), tr("Reset Zoom"));
-    resetZoomAction->setData("resetzoom");
+    resetZoomAction->setData({"disable"});
     actionLibrary.insert("resetzoom", resetZoomAction);
 
     auto *originalSizeAction = new QAction(QIcon::fromTheme("zoom-original"), tr("Original Size"));
-    originalSizeAction->setData("originalsize");
+    originalSizeAction->setData({"disable"});
     actionLibrary.insert("originalsize", originalSizeAction);
 
     auto *rotateRightAction = new QAction(QIcon::fromTheme("object-rotate-right"), tr("Rotate Right"));
-    rotateRightAction->setData("rotateright");
+    rotateRightAction->setData({"disable"});
     actionLibrary.insert("rotateright", rotateRightAction);
 
     auto *rotateLeftAction = new QAction(QIcon::fromTheme("object-rotate-left"), tr("Rotate Left"));
-    rotateLeftAction->setData("rotateleft");
+    rotateLeftAction->setData({"disable"});
     actionLibrary.insert("rotateleft", rotateLeftAction);
 
     auto *mirrorAction = new QAction(QIcon::fromTheme("object-flip-horizontal"), tr("Mirror"));
-    mirrorAction->setData("mirror");
+    mirrorAction->setData({"disable"});
     actionLibrary.insert("mirror", mirrorAction);
 
     auto *flipAction = new QAction(QIcon::fromTheme("object-flip-vertical"), tr("Flip"));
-    flipAction->setData("flip");
+    flipAction->setData({"disable"});
     actionLibrary.insert("flip", flipAction);
 
     auto *fullScreenAction = new QAction(QIcon::fromTheme("view-fullscreen"), tr("Enter Full Screen"));
-    fullScreenAction->setData("fullscreen");
     fullScreenAction->setMenuRole(QAction::NoRole);
     actionLibrary.insert("fullscreen", fullScreenAction);
 
     auto *firstFileAction = new QAction(QIcon::fromTheme("go-first"), tr("First File"));
-    firstFileAction->setData("firstfile");
+    firstFileAction->setData({"disable"});
     actionLibrary.insert("firstfile", firstFileAction);
 
     auto *previousFileAction = new QAction(QIcon::fromTheme("go-previous"), tr("Previous File"));
-    previousFileAction->setData("previousfile");
+    previousFileAction->setData({"disable"});
     actionLibrary.insert("previousfile", previousFileAction);
 
     auto *nextFileAction = new QAction(QIcon::fromTheme("go-next"), tr("Next File"));
-    nextFileAction->setData("nextfile");
+    nextFileAction->setData({"disable"});
     actionLibrary.insert("nextfile", nextFileAction);
 
     auto *lastFileAction = new QAction(QIcon::fromTheme("go-last"), tr("Last File"));
-    lastFileAction->setData("lastfile");
+    lastFileAction->setData({"disable"});
     actionLibrary.insert("lastfile", lastFileAction);
 
     auto *saveFrameAsAction = new QAction(QIcon::fromTheme("document-save-as"), tr("Save Frame As..."));
-    saveFrameAsAction->setData("saveframeas");
+    saveFrameAsAction->setData({"disable"});
     actionLibrary.insert("saveframeas", saveFrameAsAction);
 
     auto *pauseAction = new QAction(QIcon::fromTheme("media-playback-pause"), tr("Pause"));
-    pauseAction->setData("pause");
+    pauseAction->setData({"disable"});
     actionLibrary.insert("pause", pauseAction);
 
     auto *nextFrameAction = new QAction(QIcon::fromTheme("media-skip-forward"), tr("Next Frame"));
-    nextFrameAction->setData("nextframe");
+    nextFrameAction->setData({"disable"});
     actionLibrary.insert("nextframe", nextFrameAction);
 
     auto *decreaseSpeedAction = new QAction(QIcon::fromTheme("media-seek-backward"), tr("Decrease Speed"));
-    decreaseSpeedAction->setData("decreasespeed");
+    decreaseSpeedAction->setData({"disable"});
     actionLibrary.insert("decreasespeed", decreaseSpeedAction);
 
     auto *resetSpeedAction = new QAction(QIcon::fromTheme("media-playback-start"), tr("Reset Speed"));
-    resetSpeedAction->setData(("resetspeed"));
+    resetSpeedAction->setData({"disable"});
     actionLibrary.insert("resetspeed", resetSpeedAction);
 
     auto *increaseSpeedAction = new QAction(QIcon::fromTheme("media-skip-forward"), tr("Increase Speed"));
-    increaseSpeedAction->setData("increasespeed");
+    increaseSpeedAction->setData({"disable"});
     actionLibrary.insert("increasespeed", increaseSpeedAction);
 
     auto *slideshowAction = new QAction(QIcon::fromTheme("media-playback-start"), tr("Start Slideshow"));
-    slideshowAction->setData("slideshow");
+    slideshowAction->setData({"disable"});
     actionLibrary.insert("slideshow", slideshowAction);
 
     auto *optionsAction = new QAction(QIcon::fromTheme("configure", QIcon::fromTheme("preferences-other")), tr("Options"));
@@ -642,22 +634,30 @@ void ActionManager::initializeActionLibrary()
 #elif defined Q_OS_MACOS
     optionsAction->setText(tr("Preferences..."));
 #endif
-    optionsAction->setData("options");
     actionLibrary.insert("options", optionsAction);
 
     auto *aboutAction = new QAction(QIcon::fromTheme("help-about"), tr("About"));
 #ifdef Q_OS_MACOS
     aboutAction->setText(tr("About qView"));
 #endif
-    aboutAction->setData("about");
     actionLibrary.insert("about", aboutAction);
 
     auto *welcomeAction = new QAction(QIcon::fromTheme("help-faq", QIcon::fromTheme("help-about")), tr("Welcome"));
-    welcomeAction->setData("welcome");
     actionLibrary.insert("welcome", welcomeAction);
 
     // This one is kinda different so here's a separator comment
     auto *clearRecentsAction = new QAction(QIcon::fromTheme("edit-delete"), tr("Clear Menu"));
-    clearRecentsAction->setData("clearrecents");
     actionLibrary.insert("clearrecents", clearRecentsAction);
+
+    const auto keys = actionLibrary.keys();
+    for (const auto &key : keys)
+    {
+        auto *value = actionLibrary.value(key);
+        auto data = value->data().toStringList();
+        data.prepend(key);
+        value->setData(data);
+
+        if (data.last() == "disable")
+            value->setEnabled(false);
+    }
 }

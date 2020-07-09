@@ -141,8 +141,8 @@ void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 
     // Show native menu on macOS
 #ifdef Q_OS_MACOS
-    QVCocoaFunctions::showMenu(contextMenu, event->pos(), windowHandle());
-#else
+//    QVCocoaFunctions::showMenu(contextMenu, event->pos(), windowHandle());
+//#else
     contextMenu->popup(event->globalPos());
 #endif
 }
