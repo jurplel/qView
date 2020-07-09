@@ -63,12 +63,12 @@ void QVCocoaFunctions::setVibrancy(bool alwaysDark, QWindow *window)
     if (alwaysDark)
     {
         [nativeWin setStyleMask:nativeWin.styleMask | NSWindowStyleMaskFullSizeContentView];
-        [nativeWin setAppearance: nil];
+        [nativeWin setAppearance: [NSAppearance appearanceNamed:NSAppearanceNameVibrantDark]];
     }
     else
     {
         [nativeWin setStyleMask:nativeWin.styleMask | NSWindowStyleMaskFullSizeContentView];
-        [nativeWin setAppearance: [NSAppearance appearanceNamed:NSAppearanceNameVibrantDark]];
+        [nativeWin setAppearance: nil];
     }
 }
 
