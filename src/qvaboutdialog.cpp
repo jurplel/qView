@@ -82,7 +82,6 @@ QVAboutDialog::~QVAboutDialog()
 
 void QVAboutDialog::updateText()
 {
-    qDebug() << latestVersionNum;
     QString updateText = tr("Checking for updates...");
     if (latestVersionNum > VERSION)
     {
