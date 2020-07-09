@@ -109,7 +109,8 @@ bool QVApplication::event(QEvent *event)
 
 void QVApplication::afterWindow()
 {
-    updateChecker.check();
+    if (getSettingsManager().getBoolean("updatenotifications"))
+        checkUpdates();
 }
 
 void QVApplication::openFile(MainWindow *window, const QString &file, bool resize)
@@ -213,13 +214,21 @@ MainWindow *QVApplication::getMainWindow(bool shouldBeEmpty)
     return window;
 }
 
+void QVApplication::checkUpdates()
+{
+    updateChecker.check();
+}
+
 void QVApplication::checkedUpdates()
 {
-    if (updateChecker.getLatestVersionNum() > VERSION && getSettingsManager().getBoolean("updatenotifications"))
+    if (aboutDialog)
+    {
+        aboutDialog->setLatestVersionNum(updateChecker.getLatestVersionNum());
+    }
+    else if (updateChecker.getLatestVersionNum() > VERSION &&
+             getSettingsManager().getBoolean("updatenotifications"))
     {
         updateChecker.openDialog();
-        if (aboutDialog)
-            aboutDialog->setLatestVersionNum(updateChecker.getLatestVersionNum());
     }
 }
 
@@ -329,8 +338,7 @@ void QVApplication::openAboutDialog()
         return;
     }
 
-    aboutDialog = new QVAboutDialog();
-    aboutDialog->setLatestVersionNum(updateChecker.getLatestVersionNum());
+    aboutDialog = new QVAboutDialog(updateChecker.getLatestVersionNum());
     connect(aboutDialog, &QDialog::finished, [this]{
         aboutDialog = nullptr;
     });

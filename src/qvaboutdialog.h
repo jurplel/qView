@@ -13,7 +13,7 @@ class QVAboutDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit QVAboutDialog(QWidget *parent = nullptr);
+    explicit QVAboutDialog(double latestVersionNum = -1.0, QWidget *parent = nullptr);
     ~QVAboutDialog() override;
 
     void updateText();

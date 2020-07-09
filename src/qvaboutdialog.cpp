@@ -1,17 +1,18 @@
 #include "qvaboutdialog.h"
 #include "ui_qvaboutdialog.h"
+
+#include "qvapplication.h"
+
 #include <QFontDatabase>
 #include <QJsonDocument>
 
-#include <QMessageBox>
-
-QVAboutDialog::QVAboutDialog(QWidget *parent) :
+QVAboutDialog::QVAboutDialog(double givenLatestVersionNum, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::QVAboutDialog)
 {
     ui->setupUi(this);
 
-    latestVersionNum = 0.0;
+    latestVersionNum = givenLatestVersionNum;
 
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowFlags(windowFlags() & (~Qt::WindowContextHelpButtonHint | Qt::CustomizeWindowHint));
@@ -65,6 +66,12 @@ QVAboutDialog::QVAboutDialog(QWidget *parent) :
     ui->infoLabel2->setTextInteractionFlags(Qt::TextBrowserInteraction);
     ui->infoLabel2->setOpenExternalLinks(true);
 
+    if (latestVersionNum < 0.0)
+    {
+        qvApp->checkUpdates();
+        latestVersionNum = 0.0;
+    }
+
     updateText();
 }
 
@@ -75,14 +82,19 @@ QVAboutDialog::~QVAboutDialog()
 
 void QVAboutDialog::updateText()
 {
-    QString updateText = tr("Error checking for updates");
+    qDebug() << latestVersionNum;
+    QString updateText = tr("Checking for updates...");
     if (latestVersionNum > VERSION)
     {
         updateText = tr("%1 update available").arg(QString::number(latestVersionNum, 'f', 1));
     }
-    else if (latestVersionNum != 0.0)
+    else if (latestVersionNum > 0.0)
     {
         updateText = tr("No updates available");
+    }
+    else if (latestVersionNum < 0.0)
+    {
+        updateText = tr("Error checking for updates");
     }
     ui->updateLabel->setText(updateText +
                              R"(<br><a style="color: #03A9F4; text-decoration:none;" href="https://interversehq.com/qview/">interversehq.com/qview</a>)");

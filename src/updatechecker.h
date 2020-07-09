@@ -27,6 +27,7 @@ protected:
 
 private:
     const QString UPDATE_URL = "https://api.github.com/repos/jurplel/qview/releases";
+    const QString DOWNLOAD_URL = "https://interversehq.com/qview/download/";
 
     double latestVersionNum;
 

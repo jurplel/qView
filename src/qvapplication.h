@@ -42,6 +42,8 @@ public:
 
     MainWindow *getMainWindow(bool shouldBeEmpty);
 
+    void checkUpdates();
+
     void checkedUpdates();
 
     void updateDockRecents();
