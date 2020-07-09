@@ -271,6 +271,10 @@ QMenu *ActionManager::buildRecentsMenu(bool includeClearAction, QWidget *parent)
 
 void ActionManager::loadRecentsList()
 {
+    // Prevents weird bugs when opening the recent menu while the save timer is still running
+    if (recentsSaveTimer->isActive())
+        return;
+
     QSettings settings;
     settings.beginGroup("recents");
 
