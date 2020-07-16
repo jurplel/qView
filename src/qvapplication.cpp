@@ -48,6 +48,10 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     nameFilterList << filterString;
     nameFilterList << tr("All Files") + " (*)";
 
+    // Check for updates
+    // TODO: move this to after first window show event
+    if (getSettingsManager().getBoolean("updatenotifications"))
+        checkUpdates();
 
     // Setup macOS dock menu
     dockMenu = new QMenu();
@@ -55,7 +59,7 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
        ActionManager::actionTriggered(triggeredAction);
     });
 
-    actionManager.updateRecentsMenu();
+    actionManager.loadRecentsList();
 
 #ifdef Q_OS_MACOS
     dockMenu->addAction(actionManager.cloneAction("newwindow"));
@@ -103,12 +107,6 @@ bool QVApplication::event(QEvent *event)
             settingsManager.loadSettings();
     }
     return QApplication::event(event);
-}
-
-void QVApplication::afterWindow()
-{
-    if (getSettingsManager().getBoolean("updatenotifications"))
-        checkUpdates();
 }
 
 void QVApplication::openFile(MainWindow *window, const QString &file, bool resize)
