@@ -69,10 +69,6 @@ MainWindow::MainWindow(QWidget *parent) :
     slideshowTimer = new QTimer(this);
     connect(slideshowTimer, &QTimer::timeout, this, &MainWindow::slideshowAction);
 
-    // Load window geometry
-    QSettings settings;
-    restoreGeometry(settings.value("geometry").toByteArray());
-
     // Context menu
     auto &actionManager = qvApp->getActionManager();
 
@@ -119,6 +115,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&qvApp->getSettingsManager(), &SettingsManager::settingsUpdated, this, &MainWindow::settingsUpdated);
     settingsUpdated();
     shortcutsUpdated();
+
+    // Load window geometry
+    QSettings settings;
+    restoreGeometry(settings.value("geometry").toByteArray());
 }
 
 MainWindow::~MainWindow()
@@ -168,7 +168,7 @@ void MainWindow::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::WindowStateChange)
     {
-        const auto fullscreenActions = qvApp->getActionManager().getAllInstancesOfAction("fullscreen");
+        const auto fullscreenActions = qvApp->getActionManager().getAllInstancesOfAction("fullscreen", this);
         for (const auto &fullscreenAction : fullscreenActions)
         {
             if (windowState() == Qt::WindowFullScreen)
@@ -699,7 +699,7 @@ void MainWindow::pause()
     if (!getCurrentFileDetails().isMovieLoaded)
         return;
 
-    const auto pauseActions = qvApp->getActionManager().getAllInstancesOfAction("pause");
+    const auto pauseActions = qvApp->getActionManager().getAllInstancesOfAction("pause", this);
 
     if (graphicsView->getLoadedMovie().state() == QMovie::Running)
     {
@@ -731,7 +731,7 @@ void MainWindow::nextFrame()
 
 void MainWindow::toggleSlideshow()
 {
-    const auto slideshowActions = qvApp->getActionManager().getAllInstancesOfAction("slideshow");
+    const auto slideshowActions = qvApp->getActionManager().getAllInstancesOfAction("slideshow", this);
 
     if (slideshowTimer->isActive())
     {

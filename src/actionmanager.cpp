@@ -72,12 +72,27 @@ QList<QAction*> ActionManager::getAllInstancesOfAction(const QString &key) const
 {
     QList<QAction*> listOfActions;
 
-    if (auto mainAction = getAction(key))
-        listOfActions.append(mainAction);
-
     listOfActions.append(actionCloneLibrary.values(key));
 
     return listOfActions;
+}
+
+QList<QAction*> ActionManager::getAllInstancesOfAction(const QString &key, QWidget *parent) const
+{
+    QList<QAction*> listOfDistantChildActions;
+    const auto &actions = getAllInstancesOfAction(key);
+    for (const auto &action : actions)
+    {
+        if (action->associatedWidgets().isEmpty())
+            continue;
+
+        auto *parentWidget = action->associatedWidgets().first()->parent();
+        if (parentWidget == parent || parentWidget->parent() == parent)
+        {
+            listOfDistantChildActions.append(action);
+        }
+    };
+    return listOfDistantChildActions;
 }
 
 void ActionManager::untrackClonedActions(const QList<QAction*> &actions)
@@ -390,7 +405,6 @@ void ActionManager::updateRecentsMenu()
 void ActionManager::actionTriggered(QAction *triggeredAction)
 {
     auto key = triggeredAction->data().toStringList().first();
-    qDebug() << key;
 
     // For some actions, do not look for a relevant window
     if (key == "newwindow" || key == "quit" || key == "clearrecents" ||  key == "open")
