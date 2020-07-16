@@ -389,7 +389,8 @@ void ActionManager::updateRecentsMenu()
 
 void ActionManager::actionTriggered(QAction *triggeredAction)
 {
-    auto key = triggeredAction->data().toString();
+    auto key = triggeredAction->data().toStringList().first();
+    qDebug() << key;
 
     // For some actions, do not look for a relevant window
     if (key == "newwindow" || key == "quit" || key == "clearrecents" ||  key == "open")
@@ -410,7 +411,7 @@ void ActionManager::actionTriggered(QAction *triggeredAction)
 
 void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *relevantWindow)
 {
-    auto key = triggeredAction->data().toString();
+    auto key = triggeredAction->data().toStringList().first();
     if (key.startsWith("recent"))
     {
         QChar finalChar = key.at(key.length()-1);
@@ -657,7 +658,7 @@ void ActionManager::initializeActionLibrary()
         data.prepend(key);
         value->setData(data);
 
-        if (data.last() == "disable")
-            value->setEnabled(false);
+//        if (data.last() == "disable")
+//            value->setEnabled(false);
     }
 }
