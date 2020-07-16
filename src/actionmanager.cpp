@@ -79,11 +79,7 @@ QList<QAction*> ActionManager::getAllInstancesOfAction(const QString &key) const
 
 QList<QAction*> ActionManager::getAllClonesOfAction(const QString &key) const
 {
-    QList<QAction*> listOfActions;
-
-    listOfActions.append(actionCloneLibrary.values(key));
-
-    return listOfActions;
+    return actionCloneLibrary.values(key);
 }
 
 QList<QAction*> ActionManager::getAllClonesOfAction(const QString &key, QWidget *parent) const
