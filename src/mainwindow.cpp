@@ -168,7 +168,7 @@ void MainWindow::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::WindowStateChange)
     {
-        const auto fullscreenActions = qvApp->getActionManager().getAllInstancesOfAction("fullscreen", this);
+        const auto fullscreenActions = qvApp->getActionManager().getAllClonesOfAction("fullscreen", this);
         for (const auto &fullscreenAction : fullscreenActions)
         {
             if (windowState() == Qt::WindowFullScreen)
@@ -699,7 +699,7 @@ void MainWindow::pause()
     if (!getCurrentFileDetails().isMovieLoaded)
         return;
 
-    const auto pauseActions = qvApp->getActionManager().getAllInstancesOfAction("pause", this);
+    const auto pauseActions = qvApp->getActionManager().getAllClonesOfAction("pause", this);
 
     if (graphicsView->getLoadedMovie().state() == QMovie::Running)
     {
@@ -731,7 +731,7 @@ void MainWindow::nextFrame()
 
 void MainWindow::toggleSlideshow()
 {
-    const auto slideshowActions = qvApp->getActionManager().getAllInstancesOfAction("slideshow", this);
+    const auto slideshowActions = qvApp->getActionManager().getAllClonesOfAction("slideshow", this);
 
     if (slideshowTimer->isActive())
     {

@@ -68,7 +68,7 @@ QAction *ActionManager::getAction(const QString &key) const
     return nullptr;
 }
 
-QList<QAction*> ActionManager::getAllInstancesOfAction(const QString &key) const
+QList<QAction*> ActionManager::getAllClonesOfAction(const QString &key) const
 {
     QList<QAction*> listOfActions;
 
@@ -77,10 +77,10 @@ QList<QAction*> ActionManager::getAllInstancesOfAction(const QString &key) const
     return listOfActions;
 }
 
-QList<QAction*> ActionManager::getAllInstancesOfAction(const QString &key, QWidget *parent) const
+QList<QAction*> ActionManager::getAllClonesOfAction(const QString &key, QWidget *parent) const
 {
     QList<QAction*> listOfDistantChildActions;
-    const auto &actions = getAllInstancesOfAction(key);
+    const auto &actions = getAllClonesOfAction(key);
     for (const auto &action : actions)
     {
         if (action->associatedWidgets().isEmpty())

@@ -79,9 +79,9 @@ public:
 
     QAction *getAction(const QString &key) const;
 
-    QList<QAction*> getAllInstancesOfAction(const QString &key) const;
+    QList<QAction*> getAllClonesOfAction(const QString &key) const;
 
-    QList<QAction*> getAllInstancesOfAction(const QString &key, QWidget *parent) const;
+    QList<QAction*> getAllClonesOfAction(const QString &key, QWidget *parent) const;
 
     void untrackClonedActions(const QList<QAction*> &actions);
 
