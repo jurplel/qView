@@ -161,6 +161,7 @@ MainWindow *QVApplication::newWindow()
 {
     auto *w = new MainWindow();
     w->show();
+    w->raise();
 
     return w;
 }
