@@ -25,7 +25,7 @@ void ShortcutManager::updateShortcuts()
     const auto &actionManager = qvApp->getActionManager();
     for (const auto &shortcut : getShortcutsList())
     {
-        const auto actionList = actionManager.getAllClonesOfAction(shortcut.name);
+        const auto actionList = actionManager.getAllInstancesOfAction(shortcut.name);
 
         for (const auto &action : actionList)
         {

@@ -68,6 +68,16 @@ QAction *ActionManager::getAction(const QString &key) const
     return nullptr;
 }
 
+QList<QAction*> ActionManager::getAllInstancesOfAction(const QString &key) const
+{
+    QList<QAction*> listOfActions = getAllClonesOfAction(key);
+
+    if (auto mainAction = getAction(key))
+            listOfActions.append(mainAction);
+
+    return listOfActions;
+}
+
 QList<QAction*> ActionManager::getAllClonesOfAction(const QString &key) const
 {
     QList<QAction*> listOfActions;
