@@ -104,7 +104,11 @@ MainWindow::MainWindow(QWidget *parent) :
     // Add all actions to this window so keyboard shortcuts are always triggered
     // using virtual menu to hold them so i can connect to the triggered signal
     virtualMenu = new QMenu(this);
-    virtualMenu->addActions(actionManager.getActionLibrary().values());
+    const auto &actionKeys = actionManager.getActionLibrary().keys();
+    for (const QString &key : actionKeys)
+    {
+        virtualMenu->addAction(actionManager.cloneAction(key));
+    }
     addActions(virtualMenu->actions());
     connect(virtualMenu, &QMenu::triggered, [this](QAction *triggeredAction){
        ActionManager::actionTriggered(triggeredAction, this);
@@ -160,6 +164,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     qvApp->deleteFromLastActiveWindows(this);
     qvApp->getActionManager().untrackClonedActions(contextMenu);
     qvApp->getActionManager().untrackClonedActions(menuBar());
+    qvApp->getActionManager().untrackClonedActions(virtualMenu);
 
     QMainWindow::closeEvent(event);
 }
