@@ -6,22 +6,28 @@
 #import <Cocoa/Cocoa.h>
 
 
-static void setNestedSubmenusUnclickable(NSMenu *menu)
+static void fixNativeMenuEccentricities(QMenu *menu, NSMenu *nativeMenu)
 {
     // Stop menu items with no actions being disabled automatically
-    [menu setAutoenablesItems:false];
-    for (NSMenuItem *item in menu.itemArray)
+    [nativeMenu setAutoenablesItems:false];
+    int i = 0;
+    for (NSMenuItem *item in nativeMenu.itemArray)
     {
+        // Set menu items as disabled again (setAutoenablesItems resets them all to enabled)
+        [item setEnabled:menu->actions().value(i)->isEnabled()];
         // Update each item so the submenus actually show up
-        [menu.delegate menu:menu updateItem:item atIndex:0 shouldCancel:false];
+        [nativeMenu.delegate menu:nativeMenu updateItem:item atIndex:0 shouldCancel:false];
         // Hide shortcuts from menu as is typical for context menus
         [item setKeyEquivalent:@""];
         if (item.hasSubmenu)
         {
             // Stop items with submenus from being clickable
-            setNestedSubmenusUnclickable(item.submenu);
             [item setAction:nil];
+
+            // Do all this stuff for all items within submenu
+            fixNativeMenuEccentricities(menu->actions().value(i)->menu(), item.submenu);
         }
+        i++;
     }
 }
 
@@ -30,7 +36,7 @@ void QVCocoaFunctions::showMenu(QMenu *menu, const QPoint &point, QWindow *windo
     auto *view = reinterpret_cast<NSView*>(window->winId());
 
     NSMenu *nativeMenu = menu->toNSMenu();
-    setNestedSubmenusUnclickable(nativeMenu);
+    fixNativeMenuEccentricities(menu, nativeMenu);
 
     NSPoint transposedPoint = QPoint(point.x(), static_cast<int>(view.frame.size.height)-point.y()).toCGPoint();
     NSGraphicsContext *graphicsContext = [NSGraphicsContext currentContext];
