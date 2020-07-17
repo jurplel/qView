@@ -91,8 +91,9 @@ QList<QAction*> ActionManager::getAllClonesOfAction(const QString &key, QWidget 
         if (action->associatedWidgets().isEmpty())
             continue;
 
-        auto *parentWidget = action->associatedWidgets().first()->parent();
-        if (parentWidget == parent || parentWidget->parent() == parent)
+        auto *parentWidget = action->associatedWidgets().first()->parentWidget();
+
+        if (parentWidget == parent || (parentWidget && parentWidget->parent() == parent))
         {
             listOfDistantChildActions.append(action);
         }
@@ -621,27 +622,27 @@ void ActionManager::initializeActionLibrary()
     actionLibrary.insert("lastfile", lastFileAction);
 
     auto *saveFrameAsAction = new QAction(QIcon::fromTheme("document-save-as"), tr("Save Frame As..."));
-    saveFrameAsAction->setData({"disable"});
+    saveFrameAsAction->setData({"gifdisable"});
     actionLibrary.insert("saveframeas", saveFrameAsAction);
 
     auto *pauseAction = new QAction(QIcon::fromTheme("media-playback-pause"), tr("Pause"));
-    pauseAction->setData({"disable"});
+    pauseAction->setData({"gifdisable"});
     actionLibrary.insert("pause", pauseAction);
 
     auto *nextFrameAction = new QAction(QIcon::fromTheme("media-skip-forward"), tr("Next Frame"));
-    nextFrameAction->setData({"disable"});
+    nextFrameAction->setData({"gifdisable"});
     actionLibrary.insert("nextframe", nextFrameAction);
 
     auto *decreaseSpeedAction = new QAction(QIcon::fromTheme("media-seek-backward"), tr("Decrease Speed"));
-    decreaseSpeedAction->setData({"disable"});
+    decreaseSpeedAction->setData({"gifdisable"});
     actionLibrary.insert("decreasespeed", decreaseSpeedAction);
 
     auto *resetSpeedAction = new QAction(QIcon::fromTheme("media-playback-start"), tr("Reset Speed"));
-    resetSpeedAction->setData({"disable"});
+    resetSpeedAction->setData({"gifdisable"});
     actionLibrary.insert("resetspeed", resetSpeedAction);
 
     auto *increaseSpeedAction = new QAction(QIcon::fromTheme("media-skip-forward"), tr("Increase Speed"));
-    increaseSpeedAction->setData({"disable"});
+    increaseSpeedAction->setData({"gifdisable"});
     actionLibrary.insert("increasespeed", increaseSpeedAction);
 
     auto *slideshowAction = new QAction(QIcon::fromTheme("media-playback-start"), tr("Start Slideshow"));
@@ -677,7 +678,7 @@ void ActionManager::initializeActionLibrary()
         data.prepend(key);
         value->setData(data);
 
-//        if (data.last() == "disable")
-//            value->setEnabled(false);
+        if (data.last() == "disable" || data.last() == "gifdisable")
+            value->setEnabled(false);
     }
 }

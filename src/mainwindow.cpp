@@ -270,20 +270,27 @@ void MainWindow::openRecent(int i)
 
 void MainWindow::fileLoaded()
 {
-    //activate items after item is loaded for the first time
-//    if (getCurrentFileDetails().isPixmapLoaded && !ui->actionOpen_Containing_Folder->isEnabled())
-//    {
-//        foreach(QAction* action, ui->menuView->actions())
-//            action->setEnabled(true);
-//        foreach(QAction* action, contextMenu->actions())
-//            action->setEnabled(true);
-//        foreach(QAction* action, actions())
-//            action->setEnabled(true);
-//        ui->actionSlideshow->setEnabled(true);
-//        ui->actionCopy->setEnabled(true);
-//    }
-    //disable gif controls if there is no gif loaded
-//    ui->menuTools->actions().constFirst()->setEnabled(getCurrentFileDetails().isMovieLoaded);
+    const auto &actionLibrary = qvApp->getActionManager().getActionLibrary();
+    for (const auto &action : actionLibrary)
+    {
+        const auto &data = action->data().toStringList();
+        const auto &clonesOfAction = qvApp->getActionManager().getAllClonesOfAction(data.first(), this);
+        if (data.last() == "disable")
+        {
+            for (const auto &clone : clonesOfAction)
+            {
+                clone->setEnabled(getCurrentFileDetails().isPixmapLoaded);
+            }
+        }
+
+        if (data.last() == "gifdisable")
+        {
+            for (const auto &clone : clonesOfAction)
+            {
+                clone->setEnabled(getCurrentFileDetails().isMovieLoaded);
+            }
+        }
+    }
 
     refreshProperties();
     buildWindowTitle();
