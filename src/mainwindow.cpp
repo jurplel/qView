@@ -332,6 +332,11 @@ void MainWindow::buildWindowTitle()
     }
 
     setWindowTitle(newString);
+    auto details = qvApp->getSettingsManager().getBoolean("fullscreendetails");
+    ui->label->setEnabled(details);
+    if (details and newString.size() != 0) {
+        ui->label->setText(newString);
+    }
     windowHandle()->setFilePath(getCurrentFileDetails().fileInfo.absoluteFilePath());
 }
 

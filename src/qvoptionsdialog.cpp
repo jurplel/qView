@@ -167,6 +167,8 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
     syncCheckbox(ui->saveRecentsCheckbox, "saverecents", defaults, makeConnections);
     // updatenotifications
     syncCheckbox(ui->updateCheckbox, "updatenotifications", defaults, makeConnections);
+    // fullscreendetails
+    syncCheckbox(ui->detailsInFullscreen, "fullscreendetails", defaults, makeConnections);
 }
 
 void QVOptionsDialog::syncCheckbox(QCheckBox *checkbox, const QString &key, bool defaults, bool makeConnection)
