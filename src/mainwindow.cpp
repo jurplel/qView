@@ -239,8 +239,7 @@ void MainWindow::settingsUpdated()
     slideshowTimer->setInterval(static_cast<int>(settingsManager.getDouble("slideshowtimer")*1000));
 
     // details in fullscreen
-    bool showDetails = qvApp->getSettingsManager().getBoolean("fullscreendetails");
-    ui->imageDetails->setVisible(showDetails);
+    ui->imageDetails->setVisible(false);
 
 }
 
@@ -336,10 +335,10 @@ void MainWindow::buildWindowTitle()
     }
 
     setWindowTitle(newString);
-    bool showDetails = qvApp->getSettingsManager().getBoolean("fullscreendetails");
-    if (showDetails and newString.isEmpty()) {
-        ui->imageDetails->setText(newString);
-    }
+
+    // Update details of image at the top in fullscreen
+    ui->imageDetails->setText(newString);
+
     windowHandle()->setFilePath(getCurrentFileDetails().fileInfo.absoluteFilePath());
 }
 
@@ -801,7 +800,8 @@ void MainWindow::increaseSpeed()
 
 void MainWindow::toggleFullScreen()
 {
-    if (windowState() == Qt::WindowFullScreen)
+    bool isFullscreen = windowState() == Qt::WindowFullScreen;
+    if (isFullscreen)
     {
         setWindowState(storedWindowState);
     }
@@ -810,4 +810,6 @@ void MainWindow::toggleFullScreen()
         storedWindowState = windowState();
         showFullScreen();
     }
+    bool showDetails = qvApp->getSettingsManager().getBoolean("fullscreendetails");
+    ui->imageDetails->setVisible(showDetails and !isFullscreen);
 }
