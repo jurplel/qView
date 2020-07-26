@@ -31,7 +31,7 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="QLabel" name="label">
+     <widget class="QLabel" name="imageDetails">
       <property name="enabled">
        <bool>false</bool>
       </property>

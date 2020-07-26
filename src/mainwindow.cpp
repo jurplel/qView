@@ -239,8 +239,8 @@ void MainWindow::settingsUpdated()
     slideshowTimer->setInterval(static_cast<int>(settingsManager.getDouble("slideshowtimer")*1000));
 
     // details in fullscreen
-    auto details = qvApp->getSettingsManager().getBoolean("fullscreendetails");
-    ui->label->setVisible(details);
+    bool details = qvApp->getSettingsManager().getBoolean("fullscreendetails");
+    ui->imageDetails->setVisible(details);
 
 }
 
@@ -337,10 +337,8 @@ void MainWindow::buildWindowTitle()
 
     setWindowTitle(newString);
     bool details = qvApp->getSettingsManager().getBoolean("fullscreendetails");
-    if (details and newString.size() != 0) {
-        ui->label->setText(newString);
-    } else {
-        ui->label->setVisible(false);
+    if (details and newString.isEmpty()) {
+        ui->imageDetails->setText(newString);
     }
     windowHandle()->setFilePath(getCurrentFileDetails().fileInfo.absoluteFilePath());
 }
