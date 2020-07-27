@@ -241,7 +241,7 @@ void MainWindow::settingsUpdated()
     // Show details in fullscreen if akready in fullscreen
     bool isFullscreen = windowState() == Qt::WindowFullScreen;
     bool showDetails = qvApp->getSettingsManager().getBoolean("fullscreendetails");
-    ui->imageDetails->setVisible(showDetails and isFullscreen);
+    ui->imageDetails->setVisible(showDetails && isFullscreen);
 
 }
 
@@ -813,5 +813,5 @@ void MainWindow::toggleFullScreen()
         showFullScreen();
     }
     bool showDetails = qvApp->getSettingsManager().getBoolean("fullscreendetails");
-    ui->imageDetails->setVisible(showDetails and !isFullscreen);
+    ui->imageDetails->setVisible(showDetails && !isFullscreen);
 }
