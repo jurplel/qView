@@ -238,8 +238,10 @@ void MainWindow::settingsUpdated()
     //slideshow timer
     slideshowTimer->setInterval(static_cast<int>(settingsManager.getDouble("slideshowtimer")*1000));
 
-    // details in fullscreen
-    ui->imageDetails->setVisible(false);
+    // Show details in fullscreen if akready in fullscreen
+    bool isFullscreen = windowState() == Qt::WindowFullScreen;
+    bool showDetails = qvApp->getSettingsManager().getBoolean("fullscreendetails");
+    ui->imageDetails->setVisible(showDetails and isFullscreen);
 
 }
 
