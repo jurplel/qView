@@ -13,17 +13,17 @@ ActionManager::ActionManager(QObject *parent) : QObject(parent)
 
     initializeActionLibrary();
 
+    recentsSaveTimer = new QTimer(this);
+    recentsSaveTimer->setSingleShot(true);
+    recentsSaveTimer->setInterval(500);
+    connect(recentsSaveTimer, &QTimer::timeout, this, &ActionManager::saveRecentsList);
+
     loadRecentsList();
 
 #ifdef Q_OS_MACOS
     windowMenu = new QMenu(tr("Window"));
     QVCocoaFunctions::setWindowMenu(windowMenu);
 #endif
-
-    recentsSaveTimer = new QTimer(this);
-    recentsSaveTimer->setSingleShot(true);
-    recentsSaveTimer->setInterval(500);
-    connect(recentsSaveTimer, &QTimer::timeout, this, &ActionManager::saveRecentsList);
 
     // Connect to settings signal
     connect(&qvApp->getSettingsManager(), &SettingsManager::settingsUpdated, this, &ActionManager::settingsUpdated);
