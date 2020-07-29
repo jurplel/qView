@@ -35,6 +35,7 @@ void UpdateChecker::readReply(QNetworkReply *reply)
     {
         qWarning() << "Error checking for updates: " + reply->errorString();
         latestVersionNum = -1.0;
+        emit checkedUpdates();
         return;
     }
 
@@ -45,6 +46,7 @@ void UpdateChecker::readReply(QNetworkReply *reply)
     {
         qWarning() << "Error checking for updates: Received null JSON";
         latestVersionNum = -1.0;
+        emit checkedUpdates();
         return;
     }
 
