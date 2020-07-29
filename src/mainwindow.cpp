@@ -69,10 +69,6 @@ MainWindow::MainWindow(QWidget *parent) :
     slideshowTimer = new QTimer(this);
     connect(slideshowTimer, &QTimer::timeout, this, &MainWindow::slideshowAction);
 
-    // Load window geometry
-    QSettings settings;
-    restoreGeometry(settings.value("geometry").toByteArray());
-
     // Context menu
     auto &actionManager = qvApp->getActionManager();
 
@@ -108,7 +104,11 @@ MainWindow::MainWindow(QWidget *parent) :
     // Add all actions to this window so keyboard shortcuts are always triggered
     // using virtual menu to hold them so i can connect to the triggered signal
     virtualMenu = new QMenu(this);
-    virtualMenu->addActions(actionManager.getActionLibrary().values());
+    const auto &actionKeys = actionManager.getActionLibrary().keys();
+    for (const QString &key : actionKeys)
+    {
+        virtualMenu->addAction(actionManager.cloneAction(key));
+    }
     addActions(virtualMenu->actions());
     connect(virtualMenu, &QMenu::triggered, [this](QAction *triggeredAction){
        ActionManager::actionTriggered(triggeredAction, this);
@@ -119,6 +119,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&qvApp->getSettingsManager(), &SettingsManager::settingsUpdated, this, &MainWindow::settingsUpdated);
     settingsUpdated();
     shortcutsUpdated();
+
+    // Load window geometry
+    QSettings settings;
+    restoreGeometry(settings.value("geometry").toByteArray());
 }
 
 MainWindow::~MainWindow()
@@ -160,6 +164,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     qvApp->deleteFromLastActiveWindows(this);
     qvApp->getActionManager().untrackClonedActions(contextMenu);
     qvApp->getActionManager().untrackClonedActions(menuBar());
+    qvApp->getActionManager().untrackClonedActions(virtualMenu);
 
     QMainWindow::closeEvent(event);
 }
@@ -168,7 +173,7 @@ void MainWindow::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::WindowStateChange)
     {
-        const auto fullscreenActions = qvApp->getActionManager().getAllInstancesOfAction("fullscreen");
+        const auto fullscreenActions = qvApp->getActionManager().getAllClonesOfAction("fullscreen", this);
         for (const auto &fullscreenAction : fullscreenActions)
         {
             if (windowState() == Qt::WindowFullScreen)
@@ -265,20 +270,27 @@ void MainWindow::openRecent(int i)
 
 void MainWindow::fileLoaded()
 {
-    //activate items after item is loaded for the first time
-//    if (getCurrentFileDetails().isPixmapLoaded && !ui->actionOpen_Containing_Folder->isEnabled())
-//    {
-//        foreach(QAction* action, ui->menuView->actions())
-//            action->setEnabled(true);
-//        foreach(QAction* action, contextMenu->actions())
-//            action->setEnabled(true);
-//        foreach(QAction* action, actions())
-//            action->setEnabled(true);
-//        ui->actionSlideshow->setEnabled(true);
-//        ui->actionCopy->setEnabled(true);
-//    }
-    //disable gif controls if there is no gif loaded
-//    ui->menuTools->actions().constFirst()->setEnabled(getCurrentFileDetails().isMovieLoaded);
+    const auto &actionLibrary = qvApp->getActionManager().getActionLibrary();
+    for (const auto &action : actionLibrary)
+    {
+        const auto &data = action->data().toStringList();
+        const auto &clonesOfAction = qvApp->getActionManager().getAllClonesOfAction(data.first(), this);
+        if (data.last() == "disable")
+        {
+            for (const auto &clone : clonesOfAction)
+            {
+                clone->setEnabled(getCurrentFileDetails().isPixmapLoaded);
+            }
+        }
+
+        if (data.last() == "gifdisable")
+        {
+            for (const auto &clone : clonesOfAction)
+            {
+                clone->setEnabled(getCurrentFileDetails().isMovieLoaded);
+            }
+        }
+    }
 
     refreshProperties();
     buildWindowTitle();
@@ -699,7 +711,7 @@ void MainWindow::pause()
     if (!getCurrentFileDetails().isMovieLoaded)
         return;
 
-    const auto pauseActions = qvApp->getActionManager().getAllInstancesOfAction("pause");
+    const auto pauseActions = qvApp->getActionManager().getAllClonesOfAction("pause", this);
 
     if (graphicsView->getLoadedMovie().state() == QMovie::Running)
     {
@@ -731,7 +743,7 @@ void MainWindow::nextFrame()
 
 void MainWindow::toggleSlideshow()
 {
-    const auto slideshowActions = qvApp->getActionManager().getAllInstancesOfAction("slideshow");
+    const auto slideshowActions = qvApp->getActionManager().getAllClonesOfAction("slideshow", this);
 
     if (slideshowTimer->isActive())
     {

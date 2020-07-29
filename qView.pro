@@ -72,48 +72,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # Ban usage of Qt's built in foreach utility for better code style
 DEFINES += QT_NO_FOREACH
 
-SOURCES += \
-    src/main.cpp \
-    src/mainwindow.cpp \
-    src/qvgraphicsview.cpp \
-    src/qvoptionsdialog.cpp \
-    src/qvapplication.cpp \
-    src/qvaboutdialog.cpp \
-    src/qvwelcomedialog.cpp \
-    src/qvinfodialog.cpp \
-    src/qvimagecore.cpp \
-    src/qvshortcutdialog.cpp \
-    src/actionmanager.cpp \
-    src/settingsmanager.cpp \
-    src/shortcutmanager.cpp \
-    src/updatechecker.cpp
+include(src/src.pri)
 
-macx:SOURCES += src/qvcocoafunctions.mm
 
-HEADERS += \
-    src/mainwindow.h \
-    src/qvgraphicsview.h \
-    src/qvoptionsdialog.h \
-    src/qvapplication.h \
-    src/qvaboutdialog.h \
-    src/qvwelcomedialog.h \
-    src/qvinfodialog.h \
-    src/qvimagecore.h \
-    src/qvshortcutdialog.h \
-    src/actionmanager.h \
-    src/settingsmanager.h \
-    src/shortcutmanager.h \
-    src/updatechecker.h
-
-macx:HEADERS += src/qvcocoafunctions.h
-
-FORMS += \
-        src/mainwindow.ui \
-    src/qvoptionsdialog.ui \
-    src/qvaboutdialog.ui \
-    src/qvwelcomedialog.ui \
-    src/qvinfodialog.ui \
-    src/qvshortcutdialog.ui
 
 RESOURCES += \
     resources.qrc

@@ -28,8 +28,6 @@ public:
 
     bool event(QEvent *event) override;
 
-    void afterWindow();
-
     static void openFile(MainWindow *window, const QString &file, bool resize = true);
 
     static void openFile(const QString &file, bool resize = true);
