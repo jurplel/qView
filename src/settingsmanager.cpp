@@ -110,7 +110,7 @@ void SettingsManager::initializeSettingsLibrary()
     settingsLibrary.insert("pastactualsizeenabled", {true, {}});
     // Miscellaneous
     settingsLibrary.insert("sortmode", {0, {}});
-    settingsLibrary.insert("sortascending", {true, {}});
+    settingsLibrary.insert("sortdescending", {false, {}});
     settingsLibrary.insert("preloadingmode", {1, {}});
     settingsLibrary.insert("loopfoldersenabled", {true, {}});
     settingsLibrary.insert("slideshowreversed", {false, {}});

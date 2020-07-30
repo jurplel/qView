@@ -23,7 +23,7 @@
       <enum>Qt::NoFocus</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="window">
       <property name="layoutDirection">
@@ -567,7 +567,7 @@
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QRadioButton" name="ascendingRadioButton0">
+        <widget class="QRadioButton" name="descendingRadioButton0">
          <property name="text">
           <string>Ascending</string>
          </property>
@@ -577,7 +577,7 @@
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QRadioButton" name="ascendingRadioButton1">
+        <widget class="QRadioButton" name="descendingRadioButton1">
          <property name="text">
           <string>Descending</string>
          </property>

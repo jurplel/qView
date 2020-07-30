@@ -100,7 +100,7 @@ private:
     bool isLoopFoldersEnabled;
     int preloadingMode;
     int sortMode;
-    bool sortAscending;
+    bool sortDescending;
 
     unsigned randomSortSeed;
 

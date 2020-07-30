@@ -22,7 +22,7 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     isLoopFoldersEnabled = true;
     preloadingMode = 1;
     sortMode = 0;
-    sortAscending = true;
+    sortDescending = false;
 
     randomSortSeed = 0;
 
@@ -208,11 +208,9 @@ void QVImageCore::postLoad()
 
 void QVImageCore::updateFolderInfo()
 {
-    qDebug() << currentFileDetails.fileInfo.path() << lastFileDetails.fileInfo.path();
     // If the current folder changed since the last image, assign a new seed for random sorting
     if (currentFileDetails.fileInfo.dir() != lastFileDetails.fileInfo.dir())
     {
-        qDebug() << "hit";
         randomSortSeed = std::chrono::system_clock::now().time_since_epoch().count();
     }
 
@@ -234,7 +232,7 @@ void QVImageCore::updateFolderInfo()
     }
     }
 
-    if (!sortAscending)
+    if (sortDescending)
         sortFlags.setFlag(QDir::Reversed, true);
 
     currentFileDetails.folderFileInfoList = currentFileDetails.fileInfo.dir().entryInfoList(qvApp->getFilterList(), QDir::Files, sortFlags);
@@ -248,10 +246,10 @@ void QVImageCore::updateFolderInfo()
                   currentFileDetails.folderFileInfoList.end(),
                   [&collator, this](const QFileInfo &file1, const QFileInfo &file2)
         {
-            if (sortAscending)
-                return collator.compare(file1.fileName(), file2.fileName()) < 0;
-            else
+            if (sortDescending)
                 return collator.compare(file1.fileName(), file2.fileName()) > 0;
+            else
+                return collator.compare(file1.fileName(), file2.fileName()) < 0;
         });
     }
     else if (sortMode == 4) // Random sorting
@@ -468,7 +466,7 @@ void QVImageCore::settingsUpdated()
     sortMode = settingsManager.getInteger("sortmode");
 
     //sort ascending
-    sortAscending = settingsManager.getBoolean("sortascending");
+    sortDescending = settingsManager.getBoolean("sortdescending");
 
     //update folder info to re-sort
     updateFolderInfo();
