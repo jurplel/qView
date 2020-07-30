@@ -538,7 +538,7 @@ void MainWindow::openContainingFolder()
 #elif defined Q_OS_MACOS
     QProcess::execute("open", QStringList() << "-R" << selectedFileInfo.absoluteFilePath());
 #else
-    QDesktopServices::openUrl(selectedFileInfo.absolutePath());
+    QDesktopServices::openUrl(QUrl::fromLocalFile(selectedFileInfo.absolutePath()));
 #endif
 }
 
