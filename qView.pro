@@ -52,6 +52,8 @@ icon256.path = /usr/share/icons/hicolor/256x256/apps/
 icon256.files = dist/linux/hicolor/256x256/apps/qview.png
 iconsvg.path = /usr/share/icons/hicolor/scalable/apps/
 iconsvg.files = dist/linux/hicolor/scalable/apps/qview.svg
+iconsym.path = /usr/share/icons/hicolor/symbolic/apps/
+iconsym.files = dist/linux/hicolor/symbolic/apps/qview-symbolic.svg
 license.path = /usr/share/licenses/qview/
 license.files = LICENSE
 
