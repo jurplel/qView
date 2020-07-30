@@ -501,8 +501,6 @@ void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
     if (getCurrentFileDetails().folderFileInfoList.isEmpty())
         return;
 
-    imageCore.updateFolderInfo();
-
     int newIndex = getCurrentFileDetails().loadedIndexInFolder;
 
     switch (mode) {

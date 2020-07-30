@@ -24,6 +24,8 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     sortMode = 0;
     sortAscending = true;
 
+    randomSortSeed = 0;
+
     currentFileDetails.fileInfo = QFileInfo();
     currentFileDetails.folderFileInfoList = QFileInfoList();
     currentFileDetails.isLoadRequested = false;
@@ -206,10 +208,17 @@ void QVImageCore::postLoad()
 
 void QVImageCore::updateFolderInfo()
 {
-    QCollator collator;
-    collator.setNumericMode(true);
+    qDebug() << currentFileDetails.fileInfo.path() << lastFileDetails.fileInfo.path();
+    // If the current folder changed since the last image, assign a new seed for random sorting
+    if (currentFileDetails.fileInfo.dir() != lastFileDetails.fileInfo.dir())
+    {
+        qDebug() << "hit";
+        randomSortSeed = std::chrono::system_clock::now().time_since_epoch().count();
+    }
+
     QDir::SortFlags sortFlags = QDir::NoSort;
 
+    // Deal with sort flags
     switch (sortMode) {
     case 1: {
         sortFlags = QDir::Time;
@@ -228,20 +237,29 @@ void QVImageCore::updateFolderInfo()
     if (!sortAscending)
         sortFlags.setFlag(QDir::Reversed, true);
 
-    currentFileDetails.folderFileInfoList = QDir(currentFileDetails.fileInfo.absolutePath()).entryInfoList(qvApp->getFilterList(), QDir::Files, sortFlags);
+    currentFileDetails.folderFileInfoList = currentFileDetails.fileInfo.dir().entryInfoList(qvApp->getFilterList(), QDir::Files, sortFlags);
 
-    // Natural sorting
-    if (sortMode == 0) {
+    // For more special types of sorting
+    if (sortMode == 0) // Natural sorting
+    {
+        QCollator collator;
+        collator.setNumericMode(true);
         std::sort(currentFileDetails.folderFileInfoList.begin(),
                   currentFileDetails.folderFileInfoList.end(),
-                  [&collator, this](const QFileInfo &file1, const QFileInfo &file2) {
+                  [&collator, this](const QFileInfo &file1, const QFileInfo &file2)
+        {
             if (sortAscending)
                 return collator.compare(file1.fileName(), file2.fileName()) < 0;
             else
                 return collator.compare(file1.fileName(), file2.fileName()) > 0;
         });
     }
+    else if (sortMode == 4) // Random sorting
+    {
+        std::shuffle(currentFileDetails.folderFileInfoList.begin(), currentFileDetails.folderFileInfoList.end(), std::default_random_engine(randomSortSeed));
+    }
 
+    // Set current file index variable
     currentFileDetails.loadedIndexInFolder = currentFileDetails.folderFileInfoList.indexOf(currentFileDetails.fileInfo);
 }
 

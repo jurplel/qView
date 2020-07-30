@@ -102,6 +102,8 @@ private:
     int sortMode;
     bool sortAscending;
 
+    unsigned randomSortSeed;
+
     QStringList lastFilesPreloaded;
 
     QTimer *fileChangeRateTimer;
