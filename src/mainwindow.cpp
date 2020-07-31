@@ -47,6 +47,9 @@ MainWindow::MainWindow(QWidget *parent) :
     graphicsView = new QVGraphicsView(this);
     centralWidget()->layout()->addWidget(graphicsView);
 
+    // Hide fullscreen label by default
+    ui->fullscreenLabel->hide();
+
     // Connect graphicsview signals
     connect(graphicsView, &QVGraphicsView::fileLoaded, this, &MainWindow::fileLoaded);
     connect(graphicsView, &QVGraphicsView::updatedLoadedPixmapItem, this, &MainWindow::setWindowSize);
@@ -182,6 +185,9 @@ void MainWindow::changeEvent(QEvent *event)
                 fullscreenAction->setIcon(QIcon::fromTheme("view-fullscreen"));
             }
         }
+
+        if (qvApp->getSettingsManager().getBoolean("fullscreendetails"))
+            ui->fullscreenLabel->setVisible(windowState() == Qt::WindowFullScreen);
     }
 }
 
@@ -238,11 +244,8 @@ void MainWindow::settingsUpdated()
     //slideshow timer
     slideshowTimer->setInterval(static_cast<int>(settingsManager.getDouble("slideshowtimer")*1000));
 
-    // Show details in fullscreen if akready in fullscreen
-    bool isFullscreen = windowState() == Qt::WindowFullScreen;
-    bool showDetails = qvApp->getSettingsManager().getBoolean("fullscreendetails");
-    ui->imageDetails->setVisible(showDetails && isFullscreen);
 
+    ui->fullscreenLabel->setVisible(qvApp->getSettingsManager().getBoolean("fullscreendetails") && (windowState() == Qt::WindowFullScreen));
 }
 
 void MainWindow::shortcutsUpdated()
@@ -338,8 +341,8 @@ void MainWindow::buildWindowTitle()
 
     setWindowTitle(newString);
 
-    // Update details of image at the top in fullscreen
-    ui->imageDetails->setText(newString);
+    // Update fullscreen label to titlebar text as well
+    ui->fullscreenLabel->setText(newString);
 
     windowHandle()->setFilePath(getCurrentFileDetails().fileInfo.absoluteFilePath());
 }
@@ -802,8 +805,7 @@ void MainWindow::increaseSpeed()
 
 void MainWindow::toggleFullScreen()
 {
-    bool isFullscreen = windowState() == Qt::WindowFullScreen;
-    if (isFullscreen)
+    if (windowState() == Qt::WindowFullScreen)
     {
         setWindowState(storedWindowState);
     }
@@ -812,6 +814,4 @@ void MainWindow::toggleFullScreen()
         storedWindowState = windowState();
         showFullScreen();
     }
-    bool showDetails = qvApp->getSettingsManager().getBoolean("fullscreendetails");
-    ui->imageDetails->setVisible(showDetails && !isFullscreen);
 }
