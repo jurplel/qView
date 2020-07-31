@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>384</width>
-    <height>404</height>
+    <width>401</width>
+    <height>408</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -213,13 +213,6 @@
          </property>
         </spacer>
        </item>
-       <item row="12" column="1">
-        <widget class="QCheckBox" name="menubarCheckbox">
-         <property name="text">
-          <string>Show menubar</string>
-         </property>
-        </widget>
-       </item>
        <item row="11" column="1">
         <widget class="QCheckBox" name="darkTitlebarCheckbox">
          <property name="toolTip">
@@ -233,10 +226,20 @@
          </property>
         </widget>
        </item>
-       <item row="5" column="1">
-        <widget class="QCheckBox" name="detailsInFullscreen">
+       <item row="12" column="1">
+        <widget class="QCheckBox" name="menubarCheckbox">
          <property name="text">
-          <string>Also show in fullscren</string>
+          <string>Show menubar</string>
+         </property>
+        </widget>
+       </item>
+       <item row="13" column="1">
+        <widget class="QCheckBox" name="detailsInFullscreen">
+         <property name="toolTip">
+          <string>Choose whether or not to display a label that displays the titlebar text while in fullscreen</string>
+         </property>
+         <property name="text">
+          <string>Show titlebar text in fullscreen</string>
          </property>
         </widget>
        </item>
