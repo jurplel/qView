@@ -152,6 +152,7 @@ void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 
 void MainWindow::showEvent(QShowEvent *event)
 {
+    ui->fullscreenLabel->setMinimumHeight(menuBar()->sizeHint().height());
     QMainWindow::showEvent(event);
 }
 
