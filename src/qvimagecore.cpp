@@ -146,12 +146,16 @@ QVImageCore::QVImageAndFileInfo QVImageCore::readFile(const QString &fileName)
     QImage readImage;
     if (newImageReader.format() == "svg" || newImageReader.format() == "svgz")
     {
+        // Render vectors into a high resolution
         QIcon icon;
         icon.addFile(fileName);
         readImage = icon.pixmap(largestDimension).toImage();
-
+        // If this fails, try reading the normal way so that a proper error message is given
+        if (readImage.isNull())
+            readImage = newImageReader.read();
     }
-    else {
+    else
+    {
         readImage = newImageReader.read();
     }
 
