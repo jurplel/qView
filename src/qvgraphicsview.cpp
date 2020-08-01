@@ -666,11 +666,11 @@ void QVGraphicsView::centerOn(const QGraphicsItem *item)
     centerOn(item->boundingRect().center());
 }
 
-void QVGraphicsView::error(const QString &errorString)
+void QVGraphicsView::error(int errorNum, const QString &errorString, const QString &fileName)
 {
         if (!errorString.isEmpty())
         {
-            QMessageBox::critical(this, tr("Error"), tr("Error ") + errorString);
+            QMessageBox::critical(this, tr("Read Error"), tr("Error occurred opening \"%3\":\n%2 (Error %1)").arg(errorNum).arg(errorString).arg(fileName));
             return;
         }
 }

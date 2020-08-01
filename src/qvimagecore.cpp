@@ -163,7 +163,7 @@ QVImageCore::QVImageAndFileInfo QVImageCore::readFile(const QString &fileName)
     // Only error out when not loading for cache
     if (readImage.isNull() && fileName == currentFileDetails.fileInfo.absoluteFilePath())
     {
-        emit readError(QString::number(newImageReader.error()) + ": " + newImageReader.errorString(), fileName);
+        emit readError(newImageReader.error(), newImageReader.errorString(), combinedInfo.readFileInfo.fileName());
         currentFileDetails = lastFileDetails;
     }
 

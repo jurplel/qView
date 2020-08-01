@@ -80,7 +80,7 @@ signals:
 
     void fileLoaded();
 
-    void readError(const QString &errorString, const QString fileName);
+    void readError(int errorNum, const QString &errorString, const QString &fileName);
 
 private:
     QPixmap loadedPixmap;

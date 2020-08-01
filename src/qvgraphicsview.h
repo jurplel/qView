@@ -98,7 +98,7 @@ private slots:
 
     void updateLoadedPixmapItem();
 
-    void error(const QString &errorString);
+    void error(int errorNum, const QString &errorString, const QString &fileName);
 
 private:
 
