@@ -670,7 +670,7 @@ void QVGraphicsView::error(int errorNum, const QString &errorString, const QStri
 {
         if (!errorString.isEmpty())
         {
-            QMessageBox::critical(this, tr("Read Error"), tr("Error occurred opening \"%3\":\n%2 (Error %1)").arg(errorNum).arg(errorString).arg(fileName));
+            QMessageBox::critical(this, tr("Error"), tr("Error occurred opening \"%3\":\n%2 (Error %1)").arg(errorNum).arg(errorString).arg(fileName));
             return;
         }
 }
