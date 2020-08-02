@@ -1,6 +1,7 @@
 SOURCES += \
     $$PWD/main.cpp \
     $$PWD/mainwindow.cpp \
+    $$PWD/openwith.cpp \
     $$PWD/qvgraphicsview.cpp \
     $$PWD/qvoptionsdialog.cpp \
     $$PWD/qvapplication.cpp \
@@ -18,6 +19,7 @@ macx:SOURCES += $$PWD/qvcocoafunctions.mm
 
 HEADERS += \
     $$PWD/mainwindow.h \
+    $$PWD/openwith.h \
     $$PWD/qvgraphicsview.h \
     $$PWD/qvoptionsdialog.h \
     $$PWD/qvapplication.h \

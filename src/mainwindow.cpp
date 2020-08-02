@@ -2,6 +2,8 @@
 #include "ui_mainwindow.h"
 #include "qvapplication.h"
 #include "qvcocoafunctions.h"
+#include "openwith.h"
+
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QString>
@@ -151,6 +153,12 @@ bool MainWindow::event(QEvent *event)
 
 void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 {
+    for (OpenWith::OpenWithItem item : OpenWith::getOpenWithItems())
+    {
+        qDebug() << item.name;
+        qDebug() << item.icon;
+        qDebug() << item.exec;
+    }
     QMainWindow::contextMenuEvent(event);
 
     // Show native menu on macOS
