@@ -678,7 +678,7 @@ void ActionManager::initializeActionLibrary()
         data.prepend(key);
         value->setData(data);
 
-        if (data.last() == "disable" || data.last() == "gifdisable")
+        if (data.last().contains("disable"))
             value->setEnabled(false);
     }
 }

@@ -107,7 +107,17 @@ MainWindow::MainWindow(QWidget *parent) :
     const auto &actionKeys = actionManager.getActionLibrary().keys();
     for (const QString &key : actionKeys)
     {
-        virtualMenu->addAction(actionManager.cloneAction(key));
+        // Remove disable flags from this virtual menu because these actions are
+        // disabled and enabled based on the presence of a menubar
+        auto *action = actionManager.cloneAction(key);
+        auto data = action->data().toStringList();
+        if (data.last().contains("disable"))
+        {
+            data.removeLast();
+        }
+        action->setData(data);
+
+        virtualMenu->addAction(action);
     }
     addActions(virtualMenu->actions());
     connect(virtualMenu, &QMenu::triggered, [this](QAction *triggeredAction){
@@ -275,19 +285,20 @@ void MainWindow::fileLoaded()
     {
         const auto &data = action->data().toStringList();
         const auto &clonesOfAction = qvApp->getActionManager().getAllClonesOfAction(data.first(), this);
-        if (data.last() == "disable")
-        {
-            for (const auto &clone : clonesOfAction)
-            {
-                clone->setEnabled(getCurrentFileDetails().isPixmapLoaded);
-            }
-        }
 
-        if (data.last() == "gifdisable")
+        if (data.last().contains("disable"))
         {
             for (const auto &clone : clonesOfAction)
             {
-                clone->setEnabled(getCurrentFileDetails().isMovieLoaded);
+                const auto &cloneData = clone->data().toStringList();
+                if (cloneData.last() == "disable")
+                {
+                    clone->setEnabled(getCurrentFileDetails().isPixmapLoaded);
+                }
+                else if (cloneData.last() == "gifdisable")
+                {
+                    clone->setEnabled(getCurrentFileDetails().isMovieLoaded);
+                }
             }
         }
     }
