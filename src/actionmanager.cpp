@@ -465,6 +465,11 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
         QChar finalChar = key.at(key.length()-1);
         relevantWindow->openRecent(finalChar.digitValue());
     }
+    else if (key.startsWith("openwith"))
+    {
+        const QString &exec = triggeredAction->data().toStringList().value(1);
+        relevantWindow->openWith(exec);
+    }
 
     if (key == "quit") {
         if (relevantWindow) // if a window was passed

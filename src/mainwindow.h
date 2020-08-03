@@ -40,6 +40,8 @@ public:
 
     void openContainingFolder();
 
+    void openWith(const QString &exec);
+
     void showFileInfo();
 
     void copy();

@@ -578,6 +578,14 @@ void MainWindow::pickUrl()
     inputDialog->open();
 }
 
+void MainWindow::openWith(const QString &exec)
+{
+    if (exec.isEmpty() || exec.isNull())
+        return;
+
+    QProcess::startDetached(exec.trimmed(), {getCurrentFileDetails().fileInfo.absoluteFilePath()});
+}
+
 void MainWindow::openContainingFolder()
 {
     if (!getCurrentFileDetails().isPixmapLoaded)
