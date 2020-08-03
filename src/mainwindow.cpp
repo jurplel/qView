@@ -79,6 +79,7 @@ MainWindow::MainWindow(QWidget *parent) :
     contextMenu->addAction(actionManager.cloneAction("open"));
     contextMenu->addAction(actionManager.cloneAction("openurl"));
     contextMenu->addMenu(actionManager.buildRecentsMenu(true, contextMenu));
+    contextMenu->addMenu(actionManager.buildOpenWithMenu(contextMenu));
     contextMenu->addAction(actionManager.cloneAction("opencontainingfolder"));
     contextMenu->addAction(actionManager.cloneAction("showfileinfo"));
     contextMenu->addSeparator();
@@ -153,12 +154,6 @@ bool MainWindow::event(QEvent *event)
 
 void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 {
-    for (OpenWith::OpenWithItem item : OpenWith::getOpenWithItems())
-    {
-        qDebug() << item.name;
-        qDebug() << item.icon;
-        qDebug() << item.exec;
-    }
     QMainWindow::contextMenuEvent(event);
 
     // Show native menu on macOS
@@ -288,12 +283,22 @@ void MainWindow::openRecent(int i)
 
 void MainWindow::fileLoaded()
 {
+    disableActions();
+    populateOpenWithMenu();
+
+    refreshProperties();
+    buildWindowTitle();
+}
+
+void MainWindow::disableActions()
+{
     const auto &actionLibrary = qvApp->getActionManager().getActionLibrary();
     for (const auto &action : actionLibrary)
     {
         const auto &data = action->data().toStringList();
         const auto &clonesOfAction = qvApp->getActionManager().getAllClonesOfAction(data.first(), this);
 
+        // Enable this window's actions when a file is loaded
         if (data.last().contains("disable"))
         {
             for (const auto &clone : clonesOfAction)
@@ -310,9 +315,37 @@ void MainWindow::fileLoaded()
             }
         }
     }
+}
 
-    refreshProperties();
-    buildWindowTitle();
+void MainWindow::populateOpenWithMenu()
+{
+    QList<OpenWith::OpenWithItem> openWithItems = OpenWith::getOpenWithItems();
+
+    for (int i = 0; i < qvApp->getActionManager().getOpenWithMaxLength(); i++)
+    {
+        qDebug() << "ll";
+        const auto clonedActions = qvApp->getActionManager().getAllClonesOfAction("openwith" + QString::number(i), this);
+        for (const auto &action : clonedActions)
+        {
+            // If we are within the bounds of the open with list
+            if (i < openWithItems.length())
+            {
+                auto openWithItem = openWithItems.value(i);
+
+                action->setVisible(true);
+                action->setText(openWithItem.name);
+                action->setIcon(openWithItem.icon);
+                auto data = action->data().toStringList();
+                data.replace(1, openWithItem.exec);
+                action->setData(data);
+            }
+            else
+            {
+                action->setVisible(false);
+                action->setText(tr("Empty"));
+            }
+        }
+    }
 }
 
 void MainWindow::refreshProperties()

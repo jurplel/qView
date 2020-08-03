@@ -10,6 +10,7 @@ ActionManager::ActionManager(QObject *parent) : QObject(parent)
 {
     isSaveRecentsEnabled = true;
     recentsListMaxLength = 10;
+    openWithMaxLength = 10;
 
     initializeActionLibrary();
 
@@ -148,6 +149,7 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     QVCocoaFunctions::setAlternates(fileMenu, fileMenu->actions().length()-1, fileMenu->actions().length()-2);
 #endif
     fileMenu->addSeparator();
+    fileMenu->addMenu(buildOpenWithMenu(menuBar));
     fileMenu->addAction(cloneAction("opencontainingfolder"));
     fileMenu->addAction(cloneAction("showfileinfo"));
     fileMenu->addSeparator();
@@ -272,10 +274,11 @@ QMenu *ActionManager::buildRecentsMenu(bool includeClearAction, QWidget *parent)
     {
         auto action = new QAction(tr("Empty"), this);
         action->setVisible(false);
+        action->setIconVisibleInMenu(true);
         action->setData("recent" + QString::number(i));
 
         recentsMenu->addAction(action);
-        actionCloneLibrary.insert(action->data().toString(), action);
+        actionCloneLibrary.insert(action->data().toStringList().first(), action);
     }
 
     if (includeClearAction)
@@ -378,15 +381,14 @@ void ActionManager::updateRecentsMenu()
         const auto values = actionCloneLibrary.values("recent" + QString::number(i));
         for (const auto &action : values)
         {
-            auto recent = recentsList.value(i);
-
             // If we are within the bounds of the recent list
             if (i < recentsList.length())
             {
+                auto recent = recentsList.value(i);
+
                 action->setVisible(true);
                 action->setText(recent.fileName);
 
-                action->setIconVisibleInMenu(true);
 #if defined Q_OS_UNIX & !defined Q_OS_MACOS
                 // set icons for linux users
                 QMimeDatabase mimedb;
@@ -406,6 +408,32 @@ void ActionManager::updateRecentsMenu()
         }
     }
     emit recentsMenuUpdated();
+}
+
+QMenu *ActionManager::buildOpenWithMenu(QWidget *parent)
+{
+    auto *openWithMenu = new QMenu(tr("Open With"), parent);
+    openWithMenu->menuAction()->setData("openwith");
+    openWithMenu->setIcon(QIcon::fromTheme("system-run"));
+
+    for (int i = 0; i < openWithMaxLength; i++)
+    {
+        auto action = new QAction(tr("Empty"), this);
+        action->setVisible(false);
+        action->setIconVisibleInMenu(true);
+        action->setData(QStringList({"openwith" + QString::number(i), ""}));
+
+        openWithMenu->addAction(action);
+        actionCloneLibrary.insert(action->data().toStringList().first(), action);
+    }
+
+    openWithMenu->addSeparator();
+    openWithMenu->addAction(cloneAction("openwithother"));
+
+    menuCloneLibrary.insert(openWithMenu->menuAction()->data().toString(), openWithMenu);
+    // update settings whenever recent menu is created so it can possibly be hidden
+    settingsUpdated();
+    return openWithMenu;
 }
 
 void ActionManager::actionTriggered(QAction *triggeredAction)
@@ -670,6 +698,11 @@ void ActionManager::initializeActionLibrary()
     auto *clearRecentsAction = new QAction(QIcon::fromTheme("edit-delete"), tr("Clear Menu"));
     actionLibrary.insert("clearrecents", clearRecentsAction);
 
+    // This one is also kinda different
+    auto *openWithOtherAction = new QAction(tr("Other Application..."));
+    actionLibrary.insert("openwithother", openWithOtherAction);
+
+    // Set data values and disable actions
     const auto keys = actionLibrary.keys();
     for (const auto &key : keys)
     {

@@ -113,6 +113,8 @@ public:
 
     void updateRecentsMenu();
 
+    QMenu *buildOpenWithMenu(QWidget *parent = nullptr);
+
     static void actionTriggered(QAction *triggeredAction);
 
     static void actionTriggered(QAction *triggeredAction, MainWindow *relevantWindow);
@@ -122,6 +124,8 @@ public:
     const QHash<QString, QAction*> &getActionLibrary() const { return actionLibrary; }
 
     int getRecentsListMaxLength() const { return recentsListMaxLength; };
+    int getOpenWithMaxLength() const { return openWithMaxLength; };
+
 
 signals:
     void recentsMenuUpdated();
@@ -145,6 +149,7 @@ private:
     // Settings
     bool isSaveRecentsEnabled;
     int recentsListMaxLength;
+    int openWithMaxLength;
 };
 
 #endif // MENUBUILDER_H

@@ -99,6 +99,10 @@ public slots:
 
     void fileLoaded();
 
+    void disableActions();
+
+    void populateOpenWithMenu();
+
 protected:
     bool event(QEvent *event) override;
 
