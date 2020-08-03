@@ -23,10 +23,7 @@ public:
     explicit QVOptionsDialog(QWidget *parent = nullptr);
     ~QVOptionsDialog() override;
 
-
 protected:
-    void closeEvent(QCloseEvent *event) override;
-
     void modifySetting(QString key, QVariant value);
     void saveSettings();
     void syncSettings(bool defaults = false, bool makeConnections = false);

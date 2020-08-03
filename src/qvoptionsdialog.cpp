@@ -19,15 +19,16 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowFlags(windowFlags() & (~Qt::WindowContextHelpButtonHint | Qt::CustomizeWindowHint));
 
+    QSettings settings;
     // On macOS, the dialog should not be dependent on any window
 #ifndef Q_OS_MACOS
     setWindowModality(Qt::WindowModal);
 #else
     // Load window geometry
-    QSettings settings;
     restoreGeometry(settings.value("optionsgeometry").toByteArray());
-    ui->tabWidget->setCurrentIndex(settings.value("optionstab", 1).toInt());
 #endif
+
+    ui->tabWidget->setCurrentIndex(settings.value("optionstab", 1).toInt());
 
 #ifdef Q_OS_UNIX
     setWindowTitle("Preferences");
@@ -47,17 +48,12 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
 
 QVOptionsDialog::~QVOptionsDialog()
 {
-    delete ui;
-}
-
-void QVOptionsDialog::closeEvent(QCloseEvent *event)
-{
     // Save window geometry
     QSettings settings;
     settings.setValue("optionsgeometry", saveGeometry());
     settings.setValue("optionstab", ui->tabWidget->currentIndex());
 
-    QDialog::closeEvent(event);
+    delete ui;
 }
 
 void QVOptionsDialog::modifySetting(QString key, QVariant value)
