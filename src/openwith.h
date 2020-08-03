@@ -12,7 +12,7 @@ public:
         QString exec;
     };
 
-    static const QList<OpenWithItem> getOpenWithItems();
+    static const QList<OpenWithItem> getOpenWithItems(const QString &mimeName);
 
     static void showOpenWithDialog();
 };

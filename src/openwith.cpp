@@ -1,12 +1,18 @@
 #include "openwith.h"
 
 #include <QDir>
+#include <QProcess>
 #include <QStandardPaths>
 
 #include <QDebug>
 
-const QList<OpenWith::OpenWithItem> OpenWith::getOpenWithItems()
+const QList<OpenWith::OpenWithItem> OpenWith::getOpenWithItems(const QString &mimeName)
 {
+    QProcess process;
+    process.start("xdg-mime", {"query", "default", mimeName});
+    process.waitForFinished();
+    QString defaultApplication = process.readAllStandardOutput().trimmed();
+
     QList<OpenWithItem> listOfOpenWithItems;
 
     QList<QMap<QString, QString>> programList;
@@ -18,6 +24,10 @@ const QList<OpenWith::OpenWithItem> OpenWith::getOpenWithItems()
         const auto &entryInfoList = dir.entryInfoList();
         for(const auto &fileInfo : entryInfoList)
         {
+            // Don't add qView to the open with menu!
+            if (fileInfo.fileName() == "qView.desktop")
+                continue;
+
             OpenWithItem openWithItem;
 
             QFile file(fileInfo.absoluteFilePath());
@@ -48,14 +58,25 @@ const QList<OpenWith::OpenWithItem> OpenWith::getOpenWithItems()
                 }
                 else if (line.startsWith("MimeType=", Qt::CaseInsensitive))
                 {
-                    if (line.contains("image/png", Qt::CaseInsensitive))
+                    if (line.contains(mimeName, Qt::CaseInsensitive))
                         addToList = true;
                 }
             }
             if (addToList)
-                listOfOpenWithItems.append(openWithItem);
+            {
+                // Add the default program to the beginning of the menu
+                if (fileInfo.fileName() == defaultApplication)
+                {
+                    listOfOpenWithItems.prepend(openWithItem);
+                }
+                else
+                {
+                    listOfOpenWithItems.append(openWithItem);
+                }
+            }
         }
     }
+
     return listOfOpenWithItems;
 }
 

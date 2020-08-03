@@ -319,11 +319,13 @@ void MainWindow::disableActions()
 
 void MainWindow::populateOpenWithMenu()
 {
-    QList<OpenWith::OpenWithItem> openWithItems = OpenWith::getOpenWithItems();
+    QMimeDatabase mimedb;
+    QMimeType mime = mimedb.mimeTypeForFile(getCurrentFileDetails().fileInfo.absoluteFilePath(), QMimeDatabase::MatchContent);
+
+    QList<OpenWith::OpenWithItem> openWithItems = OpenWith::getOpenWithItems(mime.name());
 
     for (int i = 0; i < qvApp->getActionManager().getOpenWithMaxLength(); i++)
     {
-        qDebug() << "ll";
         const auto clonedActions = qvApp->getActionManager().getAllClonesOfAction("openwith" + QString::number(i), this);
         for (const auto &action : clonedActions)
         {
