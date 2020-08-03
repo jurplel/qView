@@ -85,6 +85,10 @@ public:
 
     QList<QAction*> getAllClonesOfAction(const QString &key, QWidget *parent) const;
 
+    QList<QMenu*> getAllClonesOfMenu(const QString &key) const;
+
+    QList<QMenu*> getAllClonesOfMenu(const QString &key, QWidget *parent) const;
+
     void untrackClonedActions(const QList<QAction*> &actions);
 
     void untrackClonedActions(const QMenu *menu);

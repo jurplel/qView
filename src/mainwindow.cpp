@@ -315,6 +315,12 @@ void MainWindow::disableActions()
             }
         }
     }
+
+    const auto &openWithMenus = qvApp->getActionManager().getAllClonesOfMenu("openwith");
+    for (const auto &menu : openWithMenus)
+    {
+        menu->setEnabled(true);
+    }
 }
 
 void MainWindow::populateOpenWithMenu()

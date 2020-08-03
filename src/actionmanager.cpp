@@ -85,7 +85,7 @@ QList<QAction*> ActionManager::getAllClonesOfAction(const QString &key) const
 
 QList<QAction*> ActionManager::getAllClonesOfAction(const QString &key, QWidget *parent) const
 {
-    QList<QAction*> listOfDistantChildActions;
+    QList<QAction*> listOfChildActions;
     const auto &actions = getAllClonesOfAction(key);
     for (const auto &action : actions)
     {
@@ -96,10 +96,35 @@ QList<QAction*> ActionManager::getAllClonesOfAction(const QString &key, QWidget 
 
         if (parentWidget == parent || (parentWidget && parentWidget->parent() == parent))
         {
-            listOfDistantChildActions.append(action);
+            listOfChildActions.append(action);
         }
     };
-    return listOfDistantChildActions;
+    return listOfChildActions;
+}
+
+QList<QMenu*> ActionManager::getAllClonesOfMenu(const QString &key) const
+{
+    return menuCloneLibrary.values(key);
+}
+
+QList<QMenu*> ActionManager::getAllClonesOfMenu(const QString &key, QWidget *parent) const
+{
+    QList<QMenu*> listOfChildMenus;
+    const auto &menus = getAllClonesOfMenu(key);
+    for (const auto &menu : menus)
+    {
+        auto action = menu->menuAction();
+        if (action->associatedWidgets().isEmpty())
+            continue;
+
+        auto *parentWidget = action->associatedWidgets().first()->parentWidget();
+
+        if (parentWidget == parent || (parentWidget && parentWidget->parent() == parent))
+        {
+            listOfChildMenus.append(menu);
+        }
+    };
+    return listOfChildMenus;
 }
 
 void ActionManager::untrackClonedActions(const QList<QAction*> &actions)
@@ -415,6 +440,7 @@ QMenu *ActionManager::buildOpenWithMenu(QWidget *parent)
     auto *openWithMenu = new QMenu(tr("Open With"), parent);
     openWithMenu->menuAction()->setData("openwith");
     openWithMenu->setIcon(QIcon::fromTheme("system-run"));
+    openWithMenu->setDisabled(true);
 
     for (int i = 0; i < openWithMaxLength; i++)
     {
@@ -431,8 +457,6 @@ QMenu *ActionManager::buildOpenWithMenu(QWidget *parent)
     openWithMenu->addAction(cloneAction("openwithother"));
 
     menuCloneLibrary.insert(openWithMenu->menuAction()->data().toString(), openWithMenu);
-    // update settings whenever recent menu is created so it can possibly be hidden
-    settingsUpdated();
     return openWithMenu;
 }
 
