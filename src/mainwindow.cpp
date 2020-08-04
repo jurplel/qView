@@ -588,10 +588,15 @@ void MainWindow::pickUrl()
 
 void MainWindow::openWith(const QString &exec)
 {
+    qDebug() << exec.trimmed();
     if (exec.isEmpty() || exec.isNull())
         return;
 
-    QProcess::startDetached(exec.trimmed(), {getCurrentFileDetails().fileInfo.absoluteFilePath()});
+    QStringList arguments = exec.trimmed().split(" ");
+    arguments.append(getCurrentFileDetails().fileInfo.absoluteFilePath());
+    QString executable = arguments.takeFirst();
+
+    QProcess::startDetached(executable, arguments);
 }
 
 void MainWindow::openContainingFolder()

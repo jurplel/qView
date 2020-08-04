@@ -1,6 +1,7 @@
 #include "actionmanager.h"
 #include "qvapplication.h"
 #include "qvcocoafunctions.h"
+#include "openwith.h"
 
 #include <QSettings>
 #include <QMimeDatabase>
@@ -491,8 +492,12 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
     }
     else if (key.startsWith("openwith"))
     {
-        const QString &exec = triggeredAction->data().toStringList().value(1);
-        relevantWindow->openWith(exec);
+        QChar finalChar = key.at(key.length()-1);
+        if (finalChar.isDigit())
+        {
+            const QString &exec = triggeredAction->data().toStringList().value(1);
+            relevantWindow->openWith(exec);
+        }
     }
 
     if (key == "quit") {
@@ -576,6 +581,8 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
         qvApp->openWelcomeDialog();
     } else if (key == "clearrecents") {
         qvApp->getActionManager().clearRecentsList();
+    } else if (key == "openwithother") {
+        OpenWith::showOpenWithDialog(relevantWindow);
     }
 }
 

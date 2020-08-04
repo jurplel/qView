@@ -37,6 +37,7 @@ macx:HEADERS += $$PWD/qvcocoafunctions.h
 
 FORMS += \
         $$PWD/mainwindow.ui \
+    $$PWD/qvopenwithdialog.ui \
     $$PWD/qvoptionsdialog.ui \
     $$PWD/qvaboutdialog.ui \
     $$PWD/qvwelcomedialog.ui \
