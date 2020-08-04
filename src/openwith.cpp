@@ -4,6 +4,7 @@
 
 #include <QCollator>
 #include <QDir>
+#include <QFileDialog>
 #include <QProcess>
 #include <QStandardPaths>
 
@@ -124,8 +125,17 @@ const QList<OpenWith::OpenWithItem> OpenWith::getOpenWithItems(const QString &mi
 
 void OpenWith::showOpenWithDialog(QWidget *parent)
 {
+#ifdef Q_OS_MACOS
+    auto openWithDialog = new QFileDialog(parent);
+    openWithDialog->setNameFilters({QT_TR_NOOP("All Applications (*.app)")});
+    openWithDialog->setDirectory("/Applications");
+    openWithDialog->open();
+#elif defined Q_OS_WIN
+
+#else
     auto openWithDialog = new QVOpenWithDialog(parent);
     openWithDialog->open();
+#endif
 }
 
 // OpenWithDialog

@@ -736,6 +736,9 @@ void ActionManager::initializeActionLibrary()
 
     // This one is also kinda different
     auto *openWithOtherAction = new QAction(tr("Other Application..."));
+#ifdef Q_OS_MACOS
+    openWithOtherAction->setText(tr("Other..."));
+#endif
     actionLibrary.insert("openwithother", openWithOtherAction);
 
     // Set data values and disable actions
