@@ -8,6 +8,7 @@
 #include <QFileDialog>
 #include <QProcess>
 #include <QStandardPaths>
+#include <QMimeDatabase>
 
 #include <QDebug>
 
