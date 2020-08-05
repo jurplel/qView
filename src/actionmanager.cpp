@@ -736,7 +736,9 @@ void ActionManager::initializeActionLibrary()
 
     // This one is also kinda different
     auto *openWithOtherAction = new QAction(tr("Other Application..."));
-#ifdef Q_OS_MACOS
+#ifdef Q_OS_WIN
+    openWithOtherAction->setText(tr("Choose program..."));
+#elif defined Q_OS_MACOS
     openWithOtherAction->setText(tr("Other..."));
 #endif
     actionLibrary.insert("openwithother", openWithOtherAction);

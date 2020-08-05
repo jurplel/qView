@@ -37,7 +37,7 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
         filterList << "*." + fileExtString;
     }
 
-    auto filterString = tr("Supported Files") + " (";
+    auto filterString = tr("Supported Images") + " (";
     for (const auto &filter : qAsConst(filterList))
     {
         filterString += filter + " ";
