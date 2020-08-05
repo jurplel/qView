@@ -158,8 +158,9 @@ QList<OpenWith::OpenWithItem> QVCocoaFunctions::getOpenWithItems(const QString &
             continue;
 
         OpenWith::OpenWithItem openWithItem;
+        openWithItem.exec = "open -b " + QString::fromNSString(appId);
+
         NSString *absolutePath = [[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:appId];
-        openWithItem.exec = QString::fromNSString(absolutePath);
 
         NSString *appName = [[NSFileManager defaultManager] displayNameAtPath:absolutePath];
         openWithItem.name = QString::fromNSString(appName);
