@@ -13,9 +13,10 @@
 
 const QList<OpenWith::OpenWithItem> OpenWith::getOpenWithItems(const QString &filePath)
 {
-#ifdef Q_OS_MACOS
-    return QVCocoaFunctions::getOpenWithItems(filePath);
+    QList<OpenWithItem> listOfOpenWithItems;
 
+#ifdef Q_OS_MACOS
+    listOfOpenWithItems = QVCocoaFunctions::getOpenWithItems(filePath);
 #elif defined Q_OS_WIN
 #else
     QMimeDatabase mimedb;
@@ -28,8 +29,6 @@ const QList<OpenWith::OpenWithItem> OpenWith::getOpenWithItems(const QString &fi
     QString defaultApplication = process.readAllStandardOutput().trimmed();
 
     OpenWithItem defaultOpenWithItem;
-
-    QList<OpenWithItem> listOfOpenWithItems;
 
     QList<QMap<QString, QString>> programList;
 
@@ -130,8 +129,8 @@ const QList<OpenWith::OpenWithItem> OpenWith::getOpenWithItems(const QString &fi
         listOfOpenWithItems.prepend(defaultOpenWithItem);
 
 
-    return listOfOpenWithItems;
 #endif
+    return listOfOpenWithItems;
 }
 
 void OpenWith::showOpenWithDialog(QWidget *parent)
