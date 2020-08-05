@@ -2,6 +2,8 @@
 
 #include <QUrl>
 #include <QDebug>
+#include <QFileIconProvider>
+#include <QCollator>
 
 #import <Cocoa/Cocoa.h>
 
@@ -127,4 +129,63 @@ void QVCocoaFunctions::setDockRecents(const QStringList &recentPathsList)
         auto url = QUrl::fromLocalFile(path);
         [documentController noteNewRecentDocumentURL:url.toNSURL()];
     }
+}
+
+QList<OpenWith::OpenWithItem> QVCocoaFunctions::getOpenWithItems(const QString &filePath)
+{
+    auto fileUrl = QUrl(filePath);
+    fileUrl.setScheme("file");
+
+    NSString *utiType = nil;
+    NSError *error = nil;
+    BOOL success = [fileUrl.toNSURL() getResourceValue:&utiType forKey:NSURLTypeIdentifierKey error:&error];
+
+    if (!success)
+    {
+        NSLog(@"getResourceValue:forKey:error: returned error == %@", error);
+        return QList<OpenWith::OpenWithItem>();
+    }
+
+
+    NSArray *supportedApplications = [(NSArray *)LSCopyAllRoleHandlersForContentType((CFStringRef)utiType, kLSRolesAll) autorelease];
+    NSString *defaultApplication = [(NSString *)LSCopyDefaultRoleHandlerForContentType((CFStringRef)utiType, kLSRolesAll) autorelease];
+
+    OpenWith::OpenWithItem defaultOpenWithItem;
+    QList<OpenWith::OpenWithItem> listOfOpenWithItems;
+    for (NSString *appId in supportedApplications)
+    {
+        if ([appId isEqualToString:@"com.qview.qView"])
+            continue;
+
+        OpenWith::OpenWithItem openWithItem;
+        NSString *absolutePath = [[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:appId];
+        openWithItem.exec = QString::fromNSString(absolutePath);
+
+        NSString *appName = [[NSFileManager defaultManager] displayNameAtPath:absolutePath];
+        openWithItem.name = QString::fromNSString(appName);
+
+        QFileIconProvider fiProvider;
+        openWithItem.icon = fiProvider.icon(QFileInfo(QString::fromNSString(absolutePath)));
+
+        // If the program is the default program, save it to add to the beginning after sorting
+        if ([appId isEqualToString:defaultApplication])
+            defaultOpenWithItem = openWithItem;
+        else
+            listOfOpenWithItems.append(openWithItem);
+    }
+
+    QCollator collator;
+    collator.setNumericMode(true);
+    std::sort(listOfOpenWithItems.begin(),
+              listOfOpenWithItems.end(),
+              [&collator](const OpenWith::OpenWithItem &item0, const OpenWith::OpenWithItem &item1)
+    {
+            return collator.compare(item0.name, item1.name) < 0;
+    });
+
+    // add default program to the beginning after sorting
+    if (!defaultOpenWithItem.name.isEmpty())
+        listOfOpenWithItems.prepend(defaultOpenWithItem);
+
+    return listOfOpenWithItems;
 }

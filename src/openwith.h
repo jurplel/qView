@@ -13,10 +13,10 @@ public:
         QIcon icon;
         QString name;
         QString exec;
-        QStringList categories;
+        QStringList categories; // this is only used on linux
     };
 
-    static const QList<OpenWithItem> getOpenWithItems(const QString &mimeName);
+    static const QList<OpenWithItem> getOpenWithItems(const QString &filePath);
 
     static void showOpenWithDialog(QWidget *parent);
 };

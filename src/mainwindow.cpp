@@ -325,10 +325,7 @@ void MainWindow::disableActions()
 
 void MainWindow::populateOpenWithMenu()
 {
-    QMimeDatabase mimedb;
-    QMimeType mime = mimedb.mimeTypeForFile(getCurrentFileDetails().fileInfo.absoluteFilePath(), QMimeDatabase::MatchContent);
-
-    QList<OpenWith::OpenWithItem> openWithItems = OpenWith::getOpenWithItems(mime.name());
+    QList<OpenWith::OpenWithItem> openWithItems = OpenWith::getOpenWithItems(getCurrentFileDetails().fileInfo.absoluteFilePath());
 
     for (int i = 0; i < qvApp->getActionManager().getOpenWithMaxLength(); i++)
     {

@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "openwith.h"
+#include "qvcocoafunctions.h"
 #include "ui_qvopenwithdialog.h"
 
 #include <QCollator>
@@ -10,8 +11,17 @@
 
 #include <QDebug>
 
-const QList<OpenWith::OpenWithItem> OpenWith::getOpenWithItems(const QString &mimeName)
+const QList<OpenWith::OpenWithItem> OpenWith::getOpenWithItems(const QString &filePath)
 {
+#ifdef Q_OS_MACOS
+    return QVCocoaFunctions::getOpenWithItems(filePath);
+
+#elif defined Q_OS_WIN
+#else
+    QMimeDatabase mimedb;
+    QMimeType mime = mimedb.mimeTypeForFile(filePath, QMimeDatabase::MatchContent);
+    QString mimeName = mime.name();
+
     QProcess process;
     process.start("xdg-mime", {"query", "default", mimeName});
     process.waitForFinished();
@@ -121,6 +131,7 @@ const QList<OpenWith::OpenWithItem> OpenWith::getOpenWithItems(const QString &mi
 
 
     return listOfOpenWithItems;
+#endif
 }
 
 void OpenWith::showOpenWithDialog(QWidget *parent)
