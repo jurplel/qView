@@ -98,6 +98,9 @@ void ShortcutManager::initializeShortcutsList()
     shortcutsList.append({tr("Close All"), "closeallwindows", QStringList(QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_W).toString()), {}});
 #endif
     shortcutsList.append({tr("Quit"), "quit", keyBindingsToStringList(QKeySequence::Quit), {}});
+#ifndef Q_OS_MACOS
+    shortcutsList.last().defaultShortcuts << QKeySequence(Qt::CTRL + Qt::Key_W).toString();
+#endif
 #ifdef Q_OS_WIN
     shortcutsList.last().readableName = tr("Exit");
 #endif
