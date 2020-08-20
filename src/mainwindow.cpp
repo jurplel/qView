@@ -97,6 +97,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Initialize menubar
     setMenuBar(actionManager.buildMenuBar(this));
+    // Stop actions conflicting with the window's actions
+    for (auto action : ActionManager::getAllNestedActions(menuBar()->actions()))
+    {
+        action->setShortcutContext(Qt::WidgetShortcut);
+    }
     connect(menuBar(), &QMenuBar::triggered, [this](QAction *triggeredAction){
         ActionManager::actionTriggered(triggeredAction, this);
     });
@@ -107,17 +112,7 @@ MainWindow::MainWindow(QWidget *parent) :
     const auto &actionKeys = actionManager.getActionLibrary().keys();
     for (const QString &key : actionKeys)
     {
-        // Remove disable flags from this virtual menu because these actions are
-        // disabled and enabled based on the presence of a menubar
-        auto *action = actionManager.cloneAction(key);
-        auto data = action->data().toStringList();
-        if (data.last().contains("disable"))
-        {
-            data.removeLast();
-        }
-        action->setData(data);
-
-        virtualMenu->addAction(action);
+        virtualMenu->addAction(actionManager.cloneAction(key));
     }
     addActions(virtualMenu->actions());
     connect(virtualMenu, &QMenu::triggered, [this](QAction *triggeredAction){
@@ -237,13 +232,6 @@ void MainWindow::settingsUpdated()
     menuBarEnabled = true;
 #endif
     menuBar()->setVisible(menuBarEnabled);
-    // If menu bar is visible, disable all actions
-    // contained within the MainWindow because they will conflict with the menubar's actions
-    const auto actionList = actions();
-    for (const auto &action : actionList)
-    {
-        action->setEnabled(!menuBarEnabled);
-    }
 
     // titlebaralwaysdark
 #ifdef Q_OS_MACOS
