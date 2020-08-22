@@ -452,6 +452,7 @@ void MainWindow::openUrl(const QUrl &url)
     auto request = QNetworkRequest(url);
     auto *reply = networkManager->get(request);
     auto *progressDialog = new QProgressDialog(tr("Downloading image..."), tr("Cancel"), 0, 100);
+    progressDialog->setWindowFlag(Qt::WindowContextHelpButtonHint, false);
     progressDialog->setAutoClose(false);
     progressDialog->setAutoReset(false);
     progressDialog->setWindowTitle(tr("Open URL..."));
@@ -514,6 +515,7 @@ void MainWindow::pickUrl()
     inputDialog->setWindowTitle(tr("Open URL..."));
     inputDialog->setLabelText(tr("URL of a supported image file:"));
     inputDialog->resize(350, inputDialog->height());
+    inputDialog->setWindowFlag(Qt::WindowContextHelpButtonHint, false);
     connect(inputDialog, &QInputDialog::finished, [inputDialog, this](int result) {
         if (result)
         {
@@ -589,6 +591,7 @@ void MainWindow::rename()
     renameDialog->setLabelText(tr("File name:"));
     renameDialog->setTextValue(currentFileInfo.fileName());
     renameDialog->resize(350, renameDialog->height());
+    renameDialog->setWindowFlag(Qt::WindowContextHelpButtonHint, false);
     connect(renameDialog, &QInputDialog::finished, [currentFileInfo, renameDialog, this](int result) {
         if (result)
         {
