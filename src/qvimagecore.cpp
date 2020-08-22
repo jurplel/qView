@@ -282,6 +282,11 @@ void QVImageCore::requestCaching()
     for (int i = currentFileDetails.loadedIndexInFolder-preloadingDistance; i <= currentFileDetails.loadedIndexInFolder+preloadingDistance; i++)
     {
         int index = i;
+
+        // Don't try to cache the currently loaded image
+        if (index == currentFileDetails.loadedIndexInFolder)
+            continue;
+
         //keep within index range
         if (isLoopFoldersEnabled)
         {
@@ -293,7 +298,7 @@ void QVImageCore::requestCaching()
 
         //if still out of range after looping, just cancel the cache for this index
         if (index > currentFileDetails.folderFileInfoList.length()-1 || index < 0 || currentFileDetails.folderFileInfoList.isEmpty())
-            return;
+            continue;
 
         QString filePath = currentFileDetails.folderFileInfoList[index].absoluteFilePath();
         filesToPreload.append(filePath);
