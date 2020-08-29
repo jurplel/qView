@@ -74,8 +74,10 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     });
 
     // Set mac-specific application settings
-#ifdef Q_OS_MACOS
+#ifdef COCOA_LOADED
     QVCocoaFunctions::setUserDefaults();
+#endif
+#ifdef Q_OS_MACOS
     setQuitOnLastWindowClosed(false);
 #endif
 
@@ -231,7 +233,7 @@ void QVApplication::checkedUpdates()
 
 void QVApplication::recentsMenuUpdated()
 {
-#ifdef Q_OS_MACOS
+#ifdef COCOA_LOADED
     QStringList recentsPathList;
     for(const auto &recent : actionManager.getRecentsList())
     {

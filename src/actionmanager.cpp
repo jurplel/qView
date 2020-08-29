@@ -20,7 +20,7 @@ ActionManager::ActionManager(QObject *parent) : QObject(parent)
 
     loadRecentsList();
 
-#ifdef Q_OS_MACOS
+#ifdef COCOA_LOADED
     windowMenu = new QMenu(tr("Window"));
     QVCocoaFunctions::setWindowMenu(windowMenu);
 #endif
@@ -145,6 +145,8 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     fileMenu->addSeparator();
     fileMenu->addAction(cloneAction("closewindow"));
     fileMenu->addAction(cloneAction("closeallwindows"));
+#endif
+#ifdef COCOA_LOADED
     QVCocoaFunctions::setAlternates(fileMenu, fileMenu->actions().length()-1, fileMenu->actions().length()-2);
 #endif
     fileMenu->addSeparator();
@@ -186,7 +188,7 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     // End of tools menu
 
     // Beginning of window menu
-#ifdef Q_OS_MACOS
+#ifdef COCOA_LOADED
     menuBar->addMenu(windowMenu);
 #endif
     // End of window menu
@@ -450,13 +452,13 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
         relevantWindow->pickUrl();
     } else if (key == "closewindow") {
         auto *active = QApplication::activeWindow();
-#ifdef Q_OS_MACOS
+#ifdef COCOA_LOADED
         QVCocoaFunctions::closeWindow(active->windowHandle());
 #endif
         active->close();
     } else if (key == "closeallwindows") {
         for (auto *widget : QApplication::topLevelWidgets()) {
-#ifdef Q_OS_MACOS
+#ifdef COCOA_LOADED
             QVCocoaFunctions::closeWindow(widget->windowHandle());
 #endif
             widget->close();

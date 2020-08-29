@@ -14,7 +14,7 @@ SOURCES += \
     $$PWD/shortcutmanager.cpp \
     $$PWD/updatechecker.cpp
 
-macx:SOURCES += $$PWD/qvcocoafunctions.mm
+macx:!CONFIG(NO_COCOA):SOURCES += $$PWD/qvcocoafunctions.mm
 
 HEADERS += \
     $$PWD/mainwindow.h \
@@ -31,7 +31,7 @@ HEADERS += \
     $$PWD/shortcutmanager.h \
     $$PWD/updatechecker.h
 
-macx:HEADERS += $$PWD/qvcocoafunctions.h
+macx:!CONFIG(NO_COCOA):HEADERS += $$PWD/qvcocoafunctions.h
 
 FORMS += \
         $$PWD/mainwindow.ui \

@@ -148,8 +148,8 @@ void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 {
     QMainWindow::contextMenuEvent(event);
 
-    // Show native menu on macOS
-#ifdef Q_OS_MACOS
+    // Show native menu on macOS with cocoa framework loaded
+#ifdef COCOA_LOADED
     QVCocoaFunctions::showMenu(contextMenu, event->pos(), windowHandle());
 #else
     contextMenu->popup(event->globalPos());
@@ -234,7 +234,7 @@ void MainWindow::settingsUpdated()
     menuBar()->setVisible(menuBarEnabled);
 
     // titlebaralwaysdark
-#ifdef Q_OS_MACOS
+#ifdef COCOA_LOADED
     QVCocoaFunctions::setVibrancy(settingsManager.getBoolean("titlebaralwaysdark"), windowHandle());
 #endif
 
@@ -389,7 +389,7 @@ void MainWindow::setWindowSize()
 #endif
 
     // Adjust image size for fullsizecontentview on mac
-#ifdef Q_OS_MACOS
+#ifdef COCOA_LOADED
     int obscuredHeight = QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
     imageSize.setHeight(imageSize.height() + obscuredHeight);
 #endif
