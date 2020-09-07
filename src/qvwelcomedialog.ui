@@ -469,7 +469,7 @@ QCheckBox::indicator:checked:pressed {
 }</string>
      </property>
      <property name="text">
-      <string>Enable update notifications on startup</string>
+      <string>&amp;Enable update notifications on startup</string>
      </property>
     </widget>
    </item>

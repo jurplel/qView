@@ -23,7 +23,7 @@
       <enum>Qt::NoFocus</enum>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="window">
       <property name="layoutDirection">
@@ -36,7 +36,7 @@
        <item row="0" column="0">
         <widget class="QCheckBox" name="bgColorCheckbox">
          <property name="text">
-          <string>Background color:</string>
+          <string>Back&amp;ground color:</string>
          </property>
          <property name="checked">
           <bool>true</bool>
@@ -63,7 +63,7 @@
        <item row="1" column="1">
         <widget class="QRadioButton" name="titlebarRadioButton0">
          <property name="text">
-          <string>Basic</string>
+          <string>&amp;Basic</string>
          </property>
         </widget>
        </item>
@@ -80,7 +80,7 @@
        <item row="3" column="1">
         <widget class="QRadioButton" name="titlebarRadioButton2">
          <property name="text">
-          <string>Practical</string>
+          <string>&amp;Practical</string>
          </property>
         </widget>
        </item>
@@ -120,7 +120,7 @@
           <string>Control when the window should resize to fit the image's actual size</string>
          </property>
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <item>
           <property name="text">
@@ -216,7 +216,7 @@
        <item row="11" column="1">
         <widget class="QCheckBox" name="menubarCheckbox">
          <property name="text">
-          <string>Show menubar</string>
+          <string>&amp;Show menubar</string>
          </property>
         </widget>
        </item>
@@ -226,7 +226,7 @@
           <string>Choose whether or not the titlebar should always be dark regardless of your chosen macOS appearance</string>
          </property>
          <property name="text">
-          <string>Titlebar always dark</string>
+          <string>&amp;Titlebar always dark</string>
          </property>
          <property name="checked">
           <bool>true</bool>
@@ -253,7 +253,7 @@
           <string>Turn this off to see individual pixels</string>
          </property>
          <property name="text">
-          <string>Bilinear filtering</string>
+          <string>&amp;Bilinear filtering</string>
          </property>
          <property name="checked">
           <bool>true</bool>
@@ -266,7 +266,7 @@
           <string>Images appear aliased (having jagged edges) without this, but it is faster</string>
          </property>
          <property name="text">
-          <string>Image scaling</string>
+          <string>&amp;Image scaling</string>
          </property>
          <property name="checked">
           <bool>true</bool>
@@ -279,7 +279,7 @@
           <string>Choose whether or not the image continues to be scaled when zooming above the window size (can be laggier with large images)</string>
          </property>
          <property name="text">
-          <string>Scaling above window size</string>
+          <string>&amp;Scaling &amp;above window size</string>
          </property>
          <property name="checked">
           <bool>true</bool>
@@ -324,7 +324,7 @@
           <string>Choose whether scrolling zooms or moves the image (alternative can be accessed at any time by holding ctrl/cmd)</string>
          </property>
          <property name="text">
-          <string>Scrolling zooms</string>
+          <string>Scrolling &amp;zooms</string>
          </property>
          <property name="checked">
           <bool>true</bool>
@@ -350,7 +350,7 @@
           <string>Stop the image from going past its actual size when resizing the window - you can still zoom past it though</string>
          </property>
          <property name="text">
-          <string>Image resizes past actual size</string>
+          <string>Image resizes &amp;past actual size</string>
          </property>
          <property name="checked">
           <bool>true</bool>
@@ -414,7 +414,7 @@
           <string>Choose whether or not zooming in and out above 100% zoom will zoom towards the cursor</string>
          </property>
          <property name="text">
-          <string>Zoom towards cursor</string>
+          <string>Zoom &amp;towards cursor</string>
          </property>
          <property name="checked">
           <bool>true</bool>
@@ -518,7 +518,7 @@
           <string>Controls whether or not qView should go back to the first item after reaching the end of a folder</string>
          </property>
          <property name="text">
-          <string>Loop through folders</string>
+          <string>&amp;Loop through folders</string>
          </property>
          <property name="checked">
           <bool>true</bool>
@@ -569,7 +569,7 @@
        <item row="1" column="1">
         <widget class="QRadioButton" name="descendingRadioButton0">
          <property name="text">
-          <string>Ascending</string>
+          <string>A&amp;scending</string>
          </property>
          <property name="checked">
           <bool>true</bool>
@@ -579,7 +579,7 @@
        <item row="2" column="1">
         <widget class="QRadioButton" name="descendingRadioButton1">
          <property name="text">
-          <string>Descending</string>
+          <string>D&amp;escending</string>
          </property>
         </widget>
        </item>
@@ -605,7 +605,7 @@
        <item row="10" column="1">
         <widget class="QCheckBox" name="saveRecentsCheckbox">
          <property name="text">
-          <string>Save recent files</string>
+          <string>Save &amp;recent files</string>
          </property>
         </widget>
        </item>
@@ -625,7 +625,7 @@
        <item row="11" column="1">
         <widget class="QCheckBox" name="updateCheckbox">
          <property name="text">
-          <string>Update notifications on startup</string>
+          <string>&amp;Update notifications on startup</string>
          </property>
         </widget>
        </item>

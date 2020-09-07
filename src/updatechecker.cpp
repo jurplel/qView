@@ -75,7 +75,7 @@ void UpdateChecker::openDialog()
                     + "\n\n" + releaseDate.toString(locale.dateFormat()) + "\n" + changelog);
     msgBox->setWindowModality(Qt::ApplicationModal);
     msgBox->setStandardButtons(QMessageBox::Close | QMessageBox::Reset);
-    msgBox->button(QMessageBox::Reset)->setText(tr("Disable Update Checking"));
+    msgBox->button(QMessageBox::Reset)->setText(tr("&Disable Update Checking"));
     msgBox->addButton(downloadButton, QMessageBox::ActionRole);
     connect(downloadButton, &QAbstractButton::clicked, [this]{
         QDesktopServices::openUrl(DOWNLOAD_URL);

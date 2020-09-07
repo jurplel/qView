@@ -183,12 +183,12 @@ void MainWindow::changeEvent(QEvent *event)
         {
             if (windowState() == Qt::WindowFullScreen)
             {
-                fullscreenAction->setText(tr("Exit Full Screen"));
+                fullscreenAction->setText(tr("Exit F&ull Screen"));
                 fullscreenAction->setIcon(QIcon::fromTheme("view-restore"));
             }
             else
             {
-                fullscreenAction->setText(tr("Enter Full Screen"));
+                fullscreenAction->setText(tr("Enter F&ull Screen"));
                 fullscreenAction->setIcon(QIcon::fromTheme("view-fullscreen"));
             }
         }
@@ -720,7 +720,7 @@ void MainWindow::pause()
         graphicsView->setPaused(true);
         for (const auto &pauseAction : pauseActions)
         {
-            pauseAction->setText(tr("Resume"));
+            pauseAction->setText(tr("Res&ume"));
             pauseAction->setIcon(QIcon::fromTheme("media-playback-start"));
         }
     }
@@ -752,7 +752,7 @@ void MainWindow::toggleSlideshow()
         slideshowTimer->stop();
         for (const auto &slideshowAction : slideshowActions)
         {
-            slideshowAction->setText(tr("Start Slideshow"));
+            slideshowAction->setText(tr("Start S&lideshow"));
             slideshowAction->setIcon(QIcon::fromTheme("media-playback-start"));
         }
     }
@@ -761,7 +761,7 @@ void MainWindow::toggleSlideshow()
         slideshowTimer->start();
         for (const auto &slideshowAction : slideshowActions)
         {
-            slideshowAction->setText(tr("Stop Slideshow"));
+            slideshowAction->setText(tr("Stop S&lideshow"));
             slideshowAction->setIcon(QIcon::fromTheme("media-playback-stop"));
         }
     }
