@@ -1,7 +1,7 @@
 parameters:
 - name: version
   type: string
-  default: '5.12.8'
+  default: '5.12.9'
 - name: arch
   type: string
   default: 'win64_msvc2017_64'
