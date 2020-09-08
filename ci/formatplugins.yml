@@ -4,5 +4,5 @@ steps:
     cd QtApng
     qmake "CONFIG += libpng_static"
     make
-    make install INSTALL_ROOT=$(Build.SourcesDirectory)/bin/appdir
+    sudo make install
   displayName: Get QtApng image format plugin
