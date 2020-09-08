@@ -43,10 +43,13 @@ jobs:
       defines: $(nightlyDefines)
       arch: $(qtArch)
     
+  - template: ci/formatplugins.yml
+
   - template: ci/deploy.yml
     parameters:
       skipDeploy: $(skipDeploy)
       extraPlugins: 'imageformats/libqapng.so'
+
 
   - task: PublishBuildArtifacts@1
     inputs:
