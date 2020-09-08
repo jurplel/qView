@@ -3,5 +3,6 @@ steps:
     git clone --depth 1 --branch $(curl --silent "https://api.github.com/repos/Skycoder42/QtApng/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")') https://github.com/Skycoder42/QtApng
     cd QtApng
     qmake "CONFIG += libpng_static"
+    make
     make install INSTALL_ROOT=$(Build.SourcesDirectory)/bin/appdir
   displayName: Get QtApng image format plugin
