@@ -9,7 +9,7 @@ parameters:
 steps:
 - script: |
     sudo apt-get update
-    sudo apt-get install libgl1-mesa-dev libxkbcommon-x11-0 libgtk2.0-dev -y
+    sudo apt-get install libgl1-mesa-dev libxkbcommon-x11-0 libgtk2.0-dev nasm -y
   condition: and(succeeded(), eq( variables['Agent.OS'], 'Linux' ))
   displayName: 'Install Ubuntu packages for Qt'
 
