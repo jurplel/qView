@@ -22,8 +22,9 @@ steps:
     sudo make install
     
     git clone --depth 1 --branch applejack https://aomedia.googlesource.com/aom
-    cd aom
-    cmake .
+    mkdir aom_build
+    cd aom_build
+    cmake ../aom
     make
     sudo make install
 
