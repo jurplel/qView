@@ -6,9 +6,32 @@ steps:
     make
     sudo make install
   displayName: Get APNG plugin
+# - script: |
+#     git clone --depth 1 --branch $(curl --silent "https://api.github.com/repos/novomesk/qt-avif-image-plugin/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")') https://github.com/novomesk/qt-avif-image-plugin
+#     cd qt-avif-image-plugin
+#     ./build_libqavif_static.sh
+#     make
+#     sudo make install
+#   displayName: Get AVIF plugin
 - script: |
-    git clone --depth 1 --branch $(curl --silent "https://api.github.com/repos/novomesk/qt-avif-image-plugin/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")') https://github.com/novomesk/qt-avif-image-plugin
-    cd qt-avif-image-plugin
-    ./build_libqavif_static.sh
+    git clone --depth 1 --branch $(curl --silent "https://api.github.com/repos/strukturag/strukturag/libde265/latest" | grep -Po '"tag_name": "\K.*?(?=")') https://github.com/strukturag/libde265
+    cd libde265
+    ./autogen.sh
+    ./configure --disable-sherlock265
+    make
     sudo make install
-  displayName: Get AVIF plugin
+    
+    git clone --depth 1 --branch $(curl --silent "https://api.github.com/repos/strukturag/libheif/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")') https://github.com/strukturag/libheif
+    cd libheif
+    ./autogen.sh
+    ./configure
+    make
+    sudo make install
+    
+    git clone --depth 1 --branch $(curl --silent "https://api.github.com/repos/jakar/qt-heif-image-plugin/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")') https://github.com/jakar/qt-heif-image-plugin
+    cd qt-heif-image-plugin
+    cmake .
+    make
+    sudo make install
+  condition: ne( variables['Agent.OS'], 'Darwin' )
+  displayName: Get HEIF plugin
