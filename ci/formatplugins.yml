@@ -14,7 +14,7 @@ steps:
 #     sudo make install
 #   displayName: Get AVIF plugin
 - script: |
-    git clone --depth 1 --branch $(curl --silent "https://api.github.com/repos/strukturag/libde265/latest" | grep -Po '"tag_name": "\K.*?(?=")') https://github.com/strukturag/libde265
+    git clone --depth 1 --branch $(curl --silent "https://api.github.com/repos/strukturag/libde265/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")') https://github.com/strukturag/libde265
     cd libde265
     ./autogen.sh
     ./configure --disable-sherlock265
