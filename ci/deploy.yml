@@ -45,9 +45,8 @@ steps:
     make install INSTALL_ROOT=bin/appdir
     cd bin
     rm qview
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
     ../linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/qView.desktop -appimage -extra-plugins=styles/libqt5ct-style.so,platformthemes/libqt5ct.so,iconengines,platformthemes/libqgtk3.so,${{ parameters.extraPlugins }}
-    find /usr/lib -type f -iname 'libheif.so.1'
-    find /usr/local/lib -type f -iname 'libheif.so.1'
     mv *.AppImage qView$(nightlyString).$(Build.BuildNumber).x86_64.AppImage
     rm -r appdir
   condition: and(succeeded(), ne( variables['skipDeploy'], 'true' ), eq( variables['Agent.OS'], 'Linux' ))
