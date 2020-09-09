@@ -6,3 +6,9 @@ steps:
     make
     sudo make install
   displayName: Get QtApng image format plugin
+- script: |
+    git clone --depth 1 --branch $(curl --silent "https://api.github.com/repos/novomesk/qt-avif-image-plugin/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")') https://github.com/novomesk/qt-avif-image-plugin
+    cd qt-avif-image-plugin
+    ./build_libqavif_static.sh
+    sudo make install
+  displayName: Get QtApng image format plugin

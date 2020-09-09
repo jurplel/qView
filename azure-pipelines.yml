@@ -48,7 +48,7 @@ jobs:
   - template: ci/deploy.yml
     parameters:
       skipDeploy: $(skipDeploy)
-      extraPlugins: 'imageformats/libqapng.so'
+      extraPlugins: 'imageformats/libqapng.so,imageformats/libqavif.so'
 
 
   - task: PublishBuildArtifacts@1
