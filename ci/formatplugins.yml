@@ -21,6 +21,12 @@ steps:
     make
     sudo make install
     
+    git clone --depth 1 --branch applejack https://aomedia.googlesource.com/aom
+    cd aom
+    cmake .
+    make
+    sudo make install
+
     git clone --depth 1 --branch $(curl --silent "https://api.github.com/repos/strukturag/libheif/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")') https://github.com/strukturag/libheif
     cd libheif
     ./autogen.sh
