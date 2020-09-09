@@ -5,26 +5,19 @@ steps:
     qmake "CONFIG += libpng_static"
     make
     sudo make install
-  displayName: Get APNG plugin
-# - script: |
-#     git clone --depth 1 --branch $(curl --silent "https://api.github.com/repos/novomesk/qt-avif-image-plugin/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")') https://github.com/novomesk/qt-avif-image-plugin
-#     cd qt-avif-image-plugin
-#     ./build_libqavif_static.sh
-#     make
-#     sudo make install
-#   displayName: Get AVIF plugin
+  displayName: Build APNG plugin
+- script: |
+    git clone --depth 1 --branch $(curl --silent "https://api.github.com/repos/novomesk/qt-avif-image-plugin/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")') https://github.com/novomesk/qt-avif-image-plugin
+    cd qt-avif-image-plugin
+    ./build_libqavif_static.sh
+    make
+    sudo make install
+  displayName: Build AVIF plugin
 - script: |
     git clone --depth 1 --branch $(curl --silent "https://api.github.com/repos/strukturag/libde265/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")') https://github.com/strukturag/libde265
     cd libde265
     ./autogen.sh
     ./configure --disable-sherlock265
-    make
-    sudo make install
-    
-    git clone --depth 1 --branch applejack https://aomedia.googlesource.com/aom
-    mkdir aom_build
-    cd aom_build
-    cmake ../aom
     make
     sudo make install
 
@@ -41,4 +34,11 @@ steps:
     make
     sudo make install
   condition: ne( variables['Agent.OS'], 'Darwin' )
-  displayName: Get HEIF plugin
+  displayName: Build HEIF plugin
+- script: |
+    git clone --depth 1 --branch v5.73.0 https://invent.kde.org/frameworks/kimageformats.git
+    cd kimageformats
+    cmake .
+    make
+    sudo make install
+  displayName: Build KDE image formats plugin

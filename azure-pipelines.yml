@@ -48,7 +48,7 @@ jobs:
   - template: ci/deploy.yml
     parameters:
       skipDeploy: $(skipDeploy)
-      extraPlugins: 'imageformats/libqapng.so,imageformats/libqheif.so'
+      extraPlugins: 'imageformats/libqapng.so,imageformats/libqheif.so,imageformats/kimg_eps.so,imageformats/kimg_exr.so,imageformats/kimg_hdr.so,imageformats/kimg_kra.so,imageformats/kimg_ora.so,imageformats/kimg_pcx.so,imageformats/kimg_pic.so,imageformats/kimg_psd.so,imageformats/kimg_ras.so,imageformats/kimg_rgb.so,imageformats/kimg_tga.so,imageformats/kimg_xcf.so'
 
 
   - task: PublishBuildArtifacts@1
