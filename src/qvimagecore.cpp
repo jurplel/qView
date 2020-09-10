@@ -1,5 +1,6 @@
 #include "qvimagecore.h"
 #include "qvapplication.h"
+#include <random>
 #include <QMessageBox>
 #include <QDir>
 #include <QUrl>
