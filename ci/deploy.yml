@@ -17,8 +17,8 @@ steps:
     cd bin
     macdeployqt qView.app/
 
-    cp $Qt5_DIR/imageformats/libqapng.dylib qView.app/Contents/PlugIns/imageformats/
-    cp $Qt5_DIR/imageformats/libqavif.dylib qView.app/Contents/PlugIns/imageformats/
+    cp $(Qt5_DIR)/imageformats/libqapng.dylib qView.app/Contents/PlugIns/imageformats/
+    cp $(Qt5_DIR)/imageformats/libqavif.dylib qView.app/Contents/PlugIns/imageformats/
 
     mv qView.app 'qView$(nightlyString).$(Build.BuildNumber).app'
   condition: and(succeeded(), ne( variables['skipDeploy'], 'true' ), eq( variables['Agent.OS'], 'Darwin' ))
