@@ -35,10 +35,3 @@ steps:
     sudo make install
   condition: ne( variables['Agent.OS'], 'Darwin' )
   displayName: Build HEIF plugin
-- script: |
-    git clone --depth 1 --branch v5.73.0 https://invent.kde.org/frameworks/kimageformats.git
-    cd kimageformats
-    cmake .
-    make
-    sudo make install
-  displayName: Build KDE image formats plugin
