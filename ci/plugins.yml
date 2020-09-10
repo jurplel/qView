@@ -1,6 +1,6 @@
 steps:
 - script: |
-    git clone --depth 1 --branch $(curl --silent "https://api.github.com/repos/Skycoder42/QtApng/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")') https://github.com/Skycoder42/QtApng
+    git clone --depth 1 --branch $(curl --silent "https://api.github.com/repos/Skycoder42/QtApng/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/') https://github.com/Skycoder42/QtApng
     cd QtApng
     qmake "CONFIG += libpng_static"
     make
@@ -8,7 +8,7 @@ steps:
   displayName: Build APNG plugin
 
 - script: |
-    git clone --depth 1 --branch $(curl --silent "https://api.github.com/repos/novomesk/qt-avif-image-plugin/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")') https://github.com/novomesk/qt-avif-image-plugin
+    git clone --depth 1 --branch $(curl --silent "https://api.github.com/repos/novomesk/qt-avif-image-plugin/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/') https://github.com/novomesk/qt-avif-image-plugin
     cd qt-avif-image-plugin
     ./build_libqavif_static.sh
     make
@@ -17,21 +17,21 @@ steps:
 
   # Skip HEIF on mac because Qt supports HEIF on mac for some reason
 - script: |
-    git clone --depth 1 --branch $(curl --silent "https://api.github.com/repos/strukturag/libde265/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")') https://github.com/strukturag/libde265
+    git clone --depth 1 --branch $(curl --silent "https://api.github.com/repos/strukturag/libde265/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/') https://github.com/strukturag/libde265
     cd libde265
     ./autogen.sh
     ./configure --disable-sherlock265
     make
     sudo make install
 
-    git clone --depth 1 --branch $(curl --silent "https://api.github.com/repos/strukturag/libheif/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")') https://github.com/strukturag/libheif
+    git clone --depth 1 --branch $(curl --silent "https://api.github.com/repos/strukturag/libheif/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/') https://github.com/strukturag/libheif
     cd libheif
     ./autogen.sh
     ./configure
     make
     sudo make install
     
-    git clone --depth 1 --branch $(curl --silent "https://api.github.com/repos/jakar/qt-heif-image-plugin/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")') https://github.com/jakar/qt-heif-image-plugin
+    git clone --depth 1 --branch $(curl --silent "https://api.github.com/repos/jakar/qt-heif-image-plugin/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/') https://github.com/jakar/qt-heif-image-plugin
     cd qt-heif-image-plugin
     cmake .
     make
