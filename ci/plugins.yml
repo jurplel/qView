@@ -1,7 +1,7 @@
 steps:
 - script: |
     git clone https://github.com/Skycoder42/QtApng
-    git tag | tail -1
+    git checkout $(git tag | tail -1)
     cd QtApng
     qmake "CONFIG += libpng_static"
     make
@@ -10,7 +10,7 @@ steps:
 
 - script: |
     git clone https://github.com/novomesk/qt-avif-image-plugin
-    git tag | tail -1
+    git checkout $(git tag | tail -1)
     cd qt-avif-image-plugin
     ./build_libqavif_static.sh
     make
@@ -20,7 +20,7 @@ steps:
   # Skip HEIF on mac because Qt supports HEIF on mac for some reason
 - script: |
     git clone https://github.com/strukturag/libde265
-    git tag | tail -1
+    git checkout $(git tag | tail -1)
     cd libde265
     ./autogen.sh
     ./configure --disable-sherlock265
@@ -28,7 +28,7 @@ steps:
     sudo make install
 
     git clone https://github.com/strukturag/libheif
-    git tag | tail -1
+    git checkout $(git tag | tail -1)
     cd libheif
     ./autogen.sh
     ./configure
@@ -36,7 +36,7 @@ steps:
     sudo make install
     
     git clone https://github.com/jakar/qt-heif-image-plugin
-    git tag | tail -1
+    git checkout $(git tag | tail -1)
     cd qt-heif-image-plugin
     cmake .
     make

@@ -28,6 +28,7 @@ steps:
   displayName: 'Install Qt (Windows)'
 
 - script: |
+    brew install yasm
     python -m aqt install ${{ parameters.version }} mac desktop
   condition: and(succeeded(), eq( variables['Agent.OS'], 'Darwin' ))
   displayName: 'Install Qt (macOS)'
