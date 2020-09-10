@@ -43,7 +43,7 @@ jobs:
       defines: $(nightlyDefines)
       arch: $(qtArch)
     
-  - template: ci/formatplugins.yml
+  - template: ci/plugins.yml
 
   - template: ci/deploy.yml
     parameters:

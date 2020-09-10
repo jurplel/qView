@@ -6,6 +6,7 @@ steps:
     make
     sudo make install
   displayName: Build APNG plugin
+
 - script: |
     git clone --depth 1 --branch $(curl --silent "https://api.github.com/repos/novomesk/qt-avif-image-plugin/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")') https://github.com/novomesk/qt-avif-image-plugin
     cd qt-avif-image-plugin
@@ -13,6 +14,8 @@ steps:
     make
     sudo make install
   displayName: Build AVIF plugin
+
+  # Skip HEIF on mac because Qt supports HEIF on mac for some reason
 - script: |
     git clone --depth 1 --branch $(curl --silent "https://api.github.com/repos/strukturag/libde265/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")') https://github.com/strukturag/libde265
     cd libde265
@@ -35,3 +38,18 @@ steps:
     sudo make install
   condition: ne( variables['Agent.OS'], 'Darwin' )
   displayName: Build HEIF plugin
+
+  # gtk2 and qt5ct style plugins for linux appimages
+- script: |
+    git clone https://code.qt.io/qt/qtstyleplugins.git
+    cd qtstyleplugins
+    qmake
+    sudo make install
+
+    wget 'https://sourceforge.net/projects/qt5ct/files/latest/download'
+    tar xf download
+    cd qt5ct*
+    qmake
+    sudo make install
+  condition: eq( variables['Agent.OS'], 'Linux' )
+  displayName: Get GTK+2 and qt5ct styles
