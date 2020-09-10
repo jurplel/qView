@@ -16,7 +16,11 @@ steps:
 - script: |
     cd bin
     macdeployqt qView.app/
-    chmod a+x qView.app/Contents/MacOS/qView
+
+  # copy plugins
+    cp $Qt5_DIR/imageformats/libqapng.dylib qView.app/Contents/PlugIns/imageformats/
+    cp $Qt5_DIR/imageformats/libqavif.dylib qView.app/Contents/PlugIns/imageformats/
+
     mv qView.app 'qView$(nightlyString).$(Build.BuildNumber).app'
   condition: and(succeeded(), ne( variables['skipDeploy'], 'true' ), eq( variables['Agent.OS'], 'Darwin' ))
   displayName: 'Run macdeployqt'
@@ -24,10 +28,7 @@ steps:
 - script: |
     wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
     chmod a+x linuxdeployqt-continuous-x86_64.AppImage
-  condition: and(succeeded(), ne( variables['skipDeploy'], 'true' ), eq( variables['Agent.OS'], 'Linux' ))
-  displayName: 'Install linuxdeployqt'
-  
-- script: |
+
     mkdir bin/appdir
     make install INSTALL_ROOT=bin/appdir
     cd bin

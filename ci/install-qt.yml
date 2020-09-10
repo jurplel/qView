@@ -38,6 +38,8 @@ steps:
   displayName: 'Install Qt (Linux)'
 
 - pwsh: |
-    cd ${{ parameters.version }}/*/bin
+    cd ${{ parameters.version }}/*/
+    echo "##vso[task.setvariable variable=Qt5_DIR]$PWD"
+    cd bin
     echo "##vso[task.prependpath]$PWD"
-  displayName: 'Add Qt to path'
+  displayName: 'Add Qt to path and set Qt5_DIR'
