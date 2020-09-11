@@ -1,3 +1,8 @@
+parameters:
+- name: arch
+  type: string
+  default: 'win64_msvc2017_64'
+
 steps:
 - bash: |
     git clone https://github.com/Skycoder42/QtApng

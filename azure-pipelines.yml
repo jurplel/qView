@@ -44,6 +44,8 @@ jobs:
       arch: $(qtArch)
     
   - template: ci/plugins.yml
+    parameters:
+      arch: $(qtArch)
 
   - template: ci/deploy.yml
     parameters:
