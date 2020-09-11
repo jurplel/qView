@@ -1,5 +1,5 @@
 steps:
-- script: |
+- bash: |
     git clone https://github.com/Skycoder42/QtApng
     git checkout $(git tag | tail -1)
     cd QtApng
@@ -8,7 +8,7 @@ steps:
     sudo make install
   displayName: Build APNG plugin
 
-- script: |
+- bash: |
     git clone https://github.com/novomesk/qt-avif-image-plugin
     git checkout $(git tag | tail -1)
     cd qt-avif-image-plugin
@@ -18,7 +18,7 @@ steps:
   displayName: Build AVIF plugin
 
   # Skip HEIF on mac because Qt supports HEIF on mac for some reason
-- script: |
+- bash: |
     git clone https://github.com/strukturag/libde265
     git checkout $(git tag | tail -1)
     cd libde265
@@ -45,7 +45,7 @@ steps:
   displayName: Build HEIF plugin
 
   # gtk2 and qt5ct style plugins for linux appimages
-- script: |
+- bash: |
     git clone https://code.qt.io/qt/qtstyleplugins.git
     cd qtstyleplugins
     qmake
