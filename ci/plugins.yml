@@ -19,6 +19,7 @@ steps:
 
 - script: |
     cd QtApng
+    set "arch=${{ parameters.arch }}"
     call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars%arch:~3,2%.bat"
     qmake "CONFIG += libpng_static"
     nmake
@@ -39,6 +40,8 @@ steps:
   displayName: Build AVIF plugin (Unix)
 
 - script: |
+    set "arch=${{ parameters.arch }}"
+    call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars%arch:~3,2%.bat"
     choco install yasm
     cd qt-avif-image-plugin/ext/libavif/ext/aom
     mkdir build
