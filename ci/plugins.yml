@@ -2,20 +2,56 @@ steps:
 - bash: |
     git clone https://github.com/Skycoder42/QtApng
     git checkout $(git tag | tail -1)
+  displayName: Clone APNG plugin
+  
+- bash: |
     cd QtApng
     qmake "CONFIG += libpng_static"
     make
     sudo make install
-  displayName: Build APNG plugin
+  condition: and(succeeded(), ne( variables['Agent.OS'], 'Windows_NT' ))
+  displayName: Build APNG plugin (Unix)
+
+- script: |
+    cd QtApng
+    call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars%arch:~3,2%.bat"
+    qmake "CONFIG += libpng_static"
+    nmake
+  condition: and(succeeded(), eq( variables['Agent.OS'], 'Windows_NT' ))
+  displayName: Build APNG plugin (Windows)
 
 - bash: |
     git clone https://github.com/novomesk/qt-avif-image-plugin
     git checkout $(git tag | tail -1)
+  displayName: Clone AVIF plugin
+
+- bash: |
     cd qt-avif-image-plugin
     ./build_libqavif_static.sh
     make
     sudo make install
-  displayName: Build AVIF plugin
+  condition: and(succeeded(), ne( variables['Agent.OS'], 'Windows_NT' ))
+  displayName: Build AVIF plugin (Unix)
+
+- script: |
+    choco install yasm
+    cd qt-avif-image-plugin/ext/libavif/ext/aom
+    mkdir build
+    cd build
+    cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DENABLE_DOCS=0 -DENABLE_EXAMPLES=0 -DENABLE_TESTDATA=0 -DENABLE_TESTS=0 -DENABLE_TOOLS=0 -DCONFIG_PIC=1 ..
+    ninja
+    copy aom.lib libaom.a
+    cd ..\..\..\
+    mkdir build
+    cd build
+    cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DAVIF_CODEC_AOM=ON -DAVIF_LOCAL_AOM=ON
+    ninja
+    copy avif.lib libavif.a
+    cd ..\..\..\
+    qmake qt-avif-image-plugin_local-libavif.pro
+    nmake
+  condition: and(succeeded(), eq( variables['Agent.OS'], 'Windows_NT' ))
+  displayName: Build AVIF plugin (Windows)
 
   # Skip HEIF on mac because Qt supports HEIF on mac for some reason
 - bash: |
