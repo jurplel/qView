@@ -10,3 +10,5 @@ Comment=Minimal image viewer
 Categories=Qt;Graphics;Viewer;Photography;
 Terminal=false
 MimeType=image/bmp;image/x-win-bitmap;image/gif;image/icns;image/x-icon;image/jp2;image/jpeg;image/jpg;video/x-mng;video/mng;image/x-portable-bitmap;image/x-portable-graymap;image/png;image/x-portable-pixmap;image/svg+xml;image/tiff;image/vnd.wap.wbmp;image/webp;image/x-xbitmap;image/x-xpixmap;
+GenericName[pt]=Visualizador de imagens
+Comment[pt]=Visualizador de imagens minimalista
