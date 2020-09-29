@@ -81,7 +81,7 @@ steps:
 
 - script: |
     cd libde265
-    ./build.bat
+    call .\build.bat
 
     cd libheif
     cmake -DLIBDE265_LIBRARY="..\bin_%arch:~3,2%\lib\libde265.lib" -DLIBDE265_INCLUDE_DIR="..\bin_%arch:~3,2%\lib\" .
