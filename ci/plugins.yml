@@ -64,47 +64,48 @@ steps:
   displayName: Build AVIF plugin (Windows)
 
   # Skip HEIF on mac because Qt supports HEIF on mac for some reason
-- script: |
-    git clone https://github.com/strukturag/libde265
-    cd libde265
-    git checkout $(git tag | tail -1)
-    ./build.bat
-
-    git clone https://github.com/strukturag/libheif
-    git checkout $(git tag | tail -1)
-    cd libheif
-    cmake -DLIBDE265_LIBRARY="..\bin_%arch:~3,2%\lib\libde265.lib" -DLIBDE265_INCLUDE_DIR="..\bin_%arch:~3,2%\lib\" .
-    nmake
-    sudo make install
-    
-    git clone https://github.com/jakar/qt-heif-image-plugin
-    git checkout $(git tag | tail -1)
-    cd qt-heif-image-plugin
-    cmake .
-    make
-    sudo make install
-  condition: and(succeeded(), eq( variables['Agent.OS'], 'Windows_NT' ))
-  displayName: Build HEIF plugin (Windows)
-
 - bash: |
     git clone https://github.com/strukturag/libde265
     cd libde265
     git checkout $(git tag | tail -1)
+
+    git clone https://github.com/strukturag/libheif
+    cd libheif
+    git checkout $(git tag | tail -1)
+
+    git clone https://github.com/jakar/qt-heif-image-plugin
+    cd qt-heif-image-plugin
+    git checkout $(git tag | tail -1)
+  condition: ne( variables['Agent.OS'], 'Darwin' )
+  displayName: Clone HEIF plugin
+
+- script: |
+    cd libde265
+    ./build.bat
+
+    cd libheif
+    cmake -DLIBDE265_LIBRARY="..\bin_%arch:~3,2%\lib\libde265.lib" -DLIBDE265_INCLUDE_DIR="..\bin_%arch:~3,2%\lib\" .
+    nmake
+    
+    cd qt-heif-image-plugin
+    cmake .
+    nmake
+  condition: and(succeeded(), eq( variables['Agent.OS'], 'Windows_NT' ))
+  displayName: Build HEIF plugin (Windows)
+
+- bash: |
+    cd libde265
     ./autogen.sh
     ./configure --disable-sherlock265
     make
     sudo make install
 
-    git clone https://github.com/strukturag/libheif
-    git checkout $(git tag | tail -1)
     cd libheif
     ./autogen.sh
     ./configure
     make
     sudo make install
     
-    git clone https://github.com/jakar/qt-heif-image-plugin
-    git checkout $(git tag | tail -1)
     cd qt-heif-image-plugin
     cmake .
     make
