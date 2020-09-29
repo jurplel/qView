@@ -48,6 +48,7 @@ steps:
     cd build.libavif
     cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DENABLE_DOCS=0 -DENABLE_EXAMPLES=0 -DENABLE_TESTDATA=0 -DENABLE_TESTS=0 -DENABLE_TOOLS=0 -DCONFIG_PIC=1 ..
     ninja
+    copy aom.lib libaom.a
     cd ..\..\..\
     mkdir build
     cd build
