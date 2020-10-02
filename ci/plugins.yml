@@ -80,17 +80,12 @@ steps:
   displayName: Clone HEIF plugin
 
 - script: |
+    vcpkg install libheif
     set "arch=${{ parameters.arch }}"
     call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars%arch:~3,2%.bat"
-    cd libde265
-    call .\build.bat
-
-    cd libheif
-    cmake -DLIBDE265_LIBRARY="..\bin_%arch:~3,2%\lib\libde265.lib" -DLIBDE265_INCLUDE_DIR="..\bin_%arch:~3,2%\lib\" .
-    nmake
     
-    cd qt-heif-image-plugin
-    cmake .
+    cd libde265/libheif/qt-heif-image-plugin
+    cmake . -DCMAKE_TOOLCHAIN_FILE=vcpkg\scripts\buildsystems\vcpkg.cmake
     nmake
   condition: and(succeeded(), eq( variables['Agent.OS'], 'Windows_NT' ))
   displayName: Build HEIF plugin (Windows)
