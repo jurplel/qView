@@ -8,11 +8,11 @@ parameters:
 steps:
 - script: |
     cd bin
-    
+    windeployqt qView.exe --no-compiler-runtime
+
     copy ..\QtApng\plugins\imageformats\qapng.dll imageformats\
     copy ..\qt-avif-image-plugin\qavif.dll imageformats\
 
-    windeployqt qView.exe --no-compiler-runtime
     rename qView.exe "qView$(nightlyString).$(Build.BuildNumber).exe"
   condition: and(succeeded(), ne( variables['skipDeploy'], 'true' ), eq( variables['Agent.OS'], 'Windows_NT' ))
   displayName: 'Run windeployqt'
