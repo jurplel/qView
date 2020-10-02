@@ -39,7 +39,7 @@ steps:
   condition: and(succeeded(), ne( variables['Agent.OS'], 'Windows_NT' ))
   displayName: Build AVIF plugin (Unix)
 
-- script: |
+- bash: |
     mkdir -p qt-avif-image-plugin/build
     cd qt-avif-image-plugin/build
     curl -s https://api.github.com/repos/novomesk/qt-avif-image-plugin/releases/latest \
