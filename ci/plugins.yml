@@ -80,8 +80,9 @@ steps:
   displayName: Clone HEIF plugin
 
 - script: |
-    cd libde265
+    set "arch=${{ parameters.arch }}"
     call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars%arch:~3,2%.bat"
+    cd libde265
     call .\build.bat
 
     cd libheif
