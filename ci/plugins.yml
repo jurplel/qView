@@ -73,7 +73,7 @@ steps:
     cd libheif
     git checkout $(git tag | tail -1)
 
-    git clone https://github.com/jakar/qt-heif-image-plugin
+    git clone https://github.com/jurplel/qt-heif-image-plugin.git
     cd qt-heif-image-plugin
     git checkout $(git tag | tail -1)
   condition: ne( variables['Agent.OS'], 'Darwin' )
@@ -85,7 +85,7 @@ steps:
     call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars%arch:~3,2%.bat"
     
     cd libde265/libheif/qt-heif-image-plugin
-    cmake . -DCMAKE_TOOLCHAIN_FILE=vcpkg\scripts\buildsystems\vcpkg.cmake
+    cmake . -DCMAKE_TOOLCHAIN_FILE=%VCPKG_DIR%\scripts\buildsystems\vcpkg.cmake
     nmake
   condition: and(succeeded(), eq( variables['Agent.OS'], 'Windows_NT' ))
   displayName: Build HEIF plugin (Windows)
