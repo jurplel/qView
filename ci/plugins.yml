@@ -100,7 +100,7 @@ steps:
     ninja install
     
     choco install pkgconfiglite
-    set PKG_CONFIG_PATH="C:\"
+    set PKG_CONFIG_PATH="C:\libheif\lib\pkgconfig"
     
     cd qt-heif-image-plugin
     cmake -G Ninja -DCMAKE_BUILD_TYPE=Release .
