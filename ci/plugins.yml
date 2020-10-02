@@ -40,6 +40,7 @@ steps:
   displayName: Build AVIF plugin (Unix)
 
 - bash: |
+    choco install wget
     mkdir -p qt-avif-image-plugin/build
     cd qt-avif-image-plugin/build
     curl -s https://api.github.com/repos/novomesk/qt-avif-image-plugin/releases/latest \
