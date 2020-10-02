@@ -114,4 +114,4 @@ steps:
     qmake
     sudo make install
   condition: eq( variables['Agent.OS'], 'Linux' )
-  displayName: Get GTK+2 and qt5ct styles
+  displayName: Get extra styles (Linux)
