@@ -41,8 +41,8 @@ steps:
 
 - bash: |
     choco install wget
-    mkdir -p qt-avif-image-plugin/build
-    cd qt-avif-image-plugin/build
+    mkdir -p qt-avif-image-plugin
+    cd qt-avif-image-plugin
     curl -s https://api.github.com/repos/novomesk/qt-avif-image-plugin/releases/latest \
     | grep "browser_download_url.*dll" \
     | cut -d : -f 2,3 \

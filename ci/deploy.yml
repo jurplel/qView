@@ -9,7 +9,7 @@ steps:
 - script: |
     cd bin
     
-    copy ..\QtApng\qapng.dll imageformats\
+    copy ..\QtApng\plugins\imageformats\qapng.dll imageformats\
     copy ..\qt-avif-image-plugin\qavif.dll imageformats\
 
     windeployqt qView.exe --no-compiler-runtime
