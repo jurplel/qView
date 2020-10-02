@@ -63,7 +63,7 @@ steps:
 
     git clone https://github.com/jurplel/qt-heif-image-plugin.git
     cd qt-heif-image-plugin
-    git checkout $(git tag | tail -1)
+    git checkout patch-1
   condition: ne( variables['Agent.OS'], 'Darwin' )
   displayName: Clone HEIF plugin
 - bash: |
@@ -86,20 +86,27 @@ steps:
   condition: and(succeeded(), eq( variables['Agent.OS'], 'Linux' ))
   displayName: Build HEIF plugin (Linux)
 
-  # - script: |
-  #   set "arch=${{ parameters.arch }}"
-  #   call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars%arch:~3,2%.bat"
-  #   cd libde265
-  #   call .\build.bat
-  #   cd libheif
-  #   cmake -DLIBDE265_LIBRARY="..\bin_%arch:~3,2%\lib\libde265.lib" -DLIBDE265_INCLUDE_DIR="..\bin_%arch:~3,2%\lib\" .
-  #   nmake
+  - script: |
+    set "arch=${{ parameters.arch }}"
+    call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars%arch:~3,2%.bat"
     
-  #   cd qt-heif-image-plugin
-  #   cmake .
-  #   nmake
-  # condition: and(succeeded(), eq( variables['Agent.OS'], 'Windows_NT' ))
-  # displayName: Build HEIF plugin (Windows)
+    cd libde265
+    cmake -G Ninja -DCMAKE_BUILD_TYPE=Release
+    ninja
+
+    cd libheif
+    cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DLIBDE265_LIBRARY="../libde265/libde265.lib" -DLIBDE265_INCLUDE_DIR="../" -DCMAKE_INSTALL_PREFIX="C:/libheif" .
+    ninja
+    ninja install
+    
+    choco install pkgconfiglite
+    set PKG_CONFIG_PATH="C:\"
+    
+    cd qt-heif-image-plugin
+    cmake -G Ninja -DCMAKE_BUILD_TYPE=Release .
+    ninja
+  condition: and(succeeded(), eq( variables['Agent.OS'], 'Windows_NT' ))
+  displayName: Build HEIF plugin (Windows)
 
 
   # gtk2 and qt5ct style plugins for linux appimages

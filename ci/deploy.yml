@@ -12,6 +12,7 @@ steps:
 
     copy ..\QtApng\plugins\imageformats\qapng.dll imageformats\
     copy ..\qt-avif-image-plugin\qavif.dll imageformats\
+    copy ..\libde265\libheif\qt-heif-image-plugin\bin\imageformats\qheif.dll imageformats\
 
     rename qView.exe "qView$(nightlyString).$(Build.BuildNumber).exe"
   condition: and(succeeded(), ne( variables['skipDeploy'], 'true' ), eq( variables['Agent.OS'], 'Windows_NT' ))
