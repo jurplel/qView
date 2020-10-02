@@ -40,24 +40,13 @@ steps:
   displayName: Build AVIF plugin (Unix)
 
 - script: |
-    set "arch=${{ parameters.arch }}"
-    call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars%arch:~3,2%.bat"
-    choco install yasm
-    cd qt-avif-image-plugin/ext/libavif/ext/aom
-    mkdir build.libavif
-    cd build.libavif
-    cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DENABLE_DOCS=0 -DENABLE_EXAMPLES=0 -DENABLE_TESTDATA=0 -DENABLE_TESTS=0 -DENABLE_TOOLS=0 -DCONFIG_PIC=1 ..
-    ninja
-    copy aom.lib libaom.a
-    cd ..\..\..\
-    mkdir build
-    cd build
-    cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DAVIF_CODEC_AOM=ON -DAVIF_LOCAL_AOM=ON ..
-    ninja
-    copy avif.lib libavif.a
-    cd ..\..\..\
-    qmake qt-avif-image-plugin_local-libavif.pro
-    nmake
+    mkdir -p qt-avif-image-plugin/build
+    cd qt-avif-image-plugin/build
+    curl -s https://api.github.com/repos/novomesk/qt-avif-image-plugin/releases/latest \
+    | grep "browser_download_url.*dll" \
+    | cut -d : -f 2,3 \
+    | tr -d \" \
+    | wget -qi -
   condition: and(succeeded(), eq( variables['Agent.OS'], 'Windows_NT' ))
   displayName: Download AVIF plugin (Windows)
 
@@ -96,16 +85,20 @@ steps:
   condition: and(succeeded(), eq( variables['Agent.OS'], 'Linux' ))
   displayName: Build HEIF plugin (Linux)
 
-  - script: |
-    vcpkg install libheif
-    set "arch=${{ parameters.arch }}"
-    call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars%arch:~3,2%.bat"
+  # - script: |
+  #   set "arch=${{ parameters.arch }}"
+  #   call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars%arch:~3,2%.bat"
+  #   cd libde265
+  #   call .\build.bat
+  #   cd libheif
+  #   cmake -DLIBDE265_LIBRARY="..\bin_%arch:~3,2%\lib\libde265.lib" -DLIBDE265_INCLUDE_DIR="..\bin_%arch:~3,2%\lib\" .
+  #   nmake
     
-    cd libde265/libheif/qt-heif-image-plugin
-    cmake . -DCMAKE_TOOLCHAIN_FILE=%VCPKG_DIR%\scripts\buildsystems\vcpkg.cmake
-    nmake
-  condition: and(succeeded(), eq( variables['Agent.OS'], 'Windows_NT' ))
-  displayName: Build HEIF plugin (Windows)
+  #   cd qt-heif-image-plugin
+  #   cmake .
+  #   nmake
+  # condition: and(succeeded(), eq( variables['Agent.OS'], 'Windows_NT' ))
+  # displayName: Build HEIF plugin (Windows)
 
 
   # gtk2 and qt5ct style plugins for linux appimages
