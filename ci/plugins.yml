@@ -111,7 +111,7 @@ steps:
     ninja
     
     cd qt-heif-image-plugin/src
-    qmake LIBS+=../../libheif INCLUDEPATH+=../../libheif 
+    qmake LIBS+=../../libheif INCLUDEPATH+=../../libheif .
     make
   condition: and(succeeded(), eq( variables['Agent.OS'], 'Windows_NT' ))
   displayName: Build HEIF plugin (Windows)
