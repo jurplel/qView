@@ -109,14 +109,10 @@ steps:
     cd libheif
     cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DLIBDE265_LIBRARY="../libde265/libde265.lib" -DLIBDE265_INCLUDE_DIR="../" -DCMAKE_INSTALL_PREFIX="C:/libheif" .
     ninja
-    ninja install
     
-    choco install pkgconfiglite
-    set PKG_CONFIG_PATH="C:\libheif\lib\pkgconfig"
-    
-    cd qt-heif-image-plugin
-    cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DSTATIC=true -DLIBHEIF_STATIC_BUILD=true .
-    ninja
+    cd qt-heif-image-plugin/src
+    qmake LIBS+=../../libheif INCLUDEPATH+=../../libheif 
+    make
   condition: and(succeeded(), eq( variables['Agent.OS'], 'Windows_NT' ))
   displayName: Build HEIF plugin (Windows)
 
