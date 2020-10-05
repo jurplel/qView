@@ -115,7 +115,7 @@ steps:
     set PKG_CONFIG_PATH="C:\libheif\lib\pkgconfig"
     
     cd qt-heif-image-plugin
-    cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DSTATIC=true .
+    cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILDER_STATIC_DEFINE .
     ninja
   condition: and(succeeded(), eq( variables['Agent.OS'], 'Windows_NT' ))
   displayName: Build HEIF plugin (Windows)
