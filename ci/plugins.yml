@@ -4,6 +4,9 @@ parameters:
   default: 'win64_msvc2017_64'
 
 steps:
+
+  # APNG
+
 - bash: |
     git clone https://github.com/Skycoder42/QtApng
     cd QtApng
@@ -26,6 +29,67 @@ steps:
     nmake
   condition: and(succeeded(), eq( variables['Agent.OS'], 'Windows_NT' ))
   displayName: Build APNG plugin (Windows)
+
+  # HEIF
+  # Skip HEIF on mac because Qt supports HEIF on mac for some reason
+- bash: |
+    git clone https://github.com/strukturag/libde265
+    cd libde265
+    git checkout $(git tag | tail -1)
+
+    git clone https://github.com/strukturag/libheif
+    cd libheif
+    git checkout $(git tag | tail -1)
+
+    git clone https://github.com/jurplel/qt-heif-image-plugin.git
+    cd qt-heif-image-plugin
+    git checkout patch-1
+  condition: ne( variables['Agent.OS'], 'Darwin' )
+  displayName: Clone HEIF plugin
+  
+- bash: |
+    cd libde265
+    ./autogen.sh
+    ./configure --disable-sherlock265
+    make
+    sudo make install
+
+    cd libheif
+    ./autogen.sh
+    ./configure
+    make
+    sudo make install
+    
+    cd qt-heif-image-plugin
+    cmake .
+    make
+    sudo make install
+  condition: and(succeeded(), eq( variables['Agent.OS'], 'Linux' ))
+  displayName: Build HEIF plugin (Linux)
+
+- script: |
+    set "arch=${{ parameters.arch }}"
+    call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars%arch:~3,2%.bat"
+    
+    cd libde265
+    cmake -G Ninja -DCMAKE_BUILD_TYPE=Release
+    ninja
+    
+    cd libheif
+    cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DLIBDE265_LIBRARY="../libde265/libde265.lib" -DLIBDE265_INCLUDE_DIR="../" -DCMAKE_INSTALL_PREFIX="C:/libheif" .
+    ninja
+    ninja install
+    
+    choco install pkgconfiglite
+    set PKG_CONFIG_PATH=C:\libheif\lib\pkgconfig
+    
+    cd qt-heif-image-plugin
+    cmake -G Ninja -DCMAKE_BUILD_TYPE=Release .
+    ninja
+  condition: and(succeeded(), eq( variables['Agent.OS'], 'Windows_NT' ))
+  displayName: Build HEIF plugin (Windows)
+
+  # AVIF
 
 - bash: |
     git clone https://github.com/novomesk/qt-avif-image-plugin
@@ -62,63 +126,6 @@ steps:
     nmake
   condition: and(succeeded(), eq( variables['Agent.OS'], 'Windows_NT' ))
   displayName: Build AVIF plugin (Windows)
-
-  # Skip HEIF on mac because Qt supports HEIF on mac for some reason
-- bash: |
-    git clone https://github.com/strukturag/libde265
-    cd libde265
-    git checkout $(git tag | tail -1)
-
-    git clone https://github.com/strukturag/libheif
-    cd libheif
-    git checkout $(git tag | tail -1)
-
-    git clone https://github.com/jurplel/qt-heif-image-plugin.git
-    cd qt-heif-image-plugin
-    git checkout patch-1
-  condition: ne( variables['Agent.OS'], 'Darwin' )
-  displayName: Clone HEIF plugin
-- bash: |
-    cd libde265
-    ./autogen.sh
-    ./configure --disable-sherlock265
-    make
-    sudo make install
-
-    cd libheif
-    ./autogen.sh
-    ./configure
-    make
-    sudo make install
-    
-    cd qt-heif-image-plugin
-    cmake .
-    make
-    sudo make install
-  condition: and(succeeded(), eq( variables['Agent.OS'], 'Linux' ))
-  displayName: Build HEIF plugin (Linux)
-
-- script: |
-    set "arch=${{ parameters.arch }}"
-    call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars%arch:~3,2%.bat"
-    
-    cd libde265
-    cmake -G Ninja -DCMAKE_BUILD_TYPE=Release
-    ninja
-    
-    cd libheif
-    cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DLIBDE265_LIBRARY="../libde265/libde265.lib" -DLIBDE265_INCLUDE_DIR="../" -DCMAKE_INSTALL_PREFIX="C:/libheif" .
-    ninja
-    ninja install
-    
-    choco install pkgconfiglite
-    set PKG_CONFIG_PATH="C:\libheif\lib\pkgconfig"
-    
-    cd qt-heif-image-plugin
-    cmake -G Ninja -DCMAKE_BUILD_TYPE=Release .
-    ninja
-  condition: and(succeeded(), eq( variables['Agent.OS'], 'Windows_NT' ))
-  displayName: Build HEIF plugin (Windows)
 
 
   # gtk2 and qt5ct style plugins for linux appimages
