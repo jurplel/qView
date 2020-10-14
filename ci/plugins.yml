@@ -107,7 +107,11 @@ steps:
 
 - script: |
     set "arch=${{ parameters.arch }}"
-    call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars%arch:~3,2%.bat"
+    if %arch:~3,2%==32 (
+        call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsamd64_x86.bat"
+    ) else (
+        call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\%arch:~3,2%.bat"
+    )
     choco install yasm
     cd qt-avif-image-plugin/ext/libavif/ext/aom
     mkdir build.libavif
