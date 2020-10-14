@@ -108,7 +108,7 @@ steps:
 - script: |
     set "arch=${{ parameters.arch }}"
     if %arch:~3,2%==32 (
-        call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsamd64_x86.bat"
+        call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsx86_amd64.bat"
     ) else (
         call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars%arch:~3,2%.bat"
     )
