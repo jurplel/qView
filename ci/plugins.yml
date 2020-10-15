@@ -122,6 +122,7 @@ steps:
     cd build
     cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DAVIF_CODEC_AOM=ON -DAVIF_LOCAL_AOM=ON ..
     ninja
+    copy avif.lib libavif.a
     
     cd ..\..\..\
     qmake qt-avif-image-plugin_local-libavif.pro
