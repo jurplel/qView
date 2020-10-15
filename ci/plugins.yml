@@ -3,7 +3,7 @@ parameters:
   type: string
   default: 'win64_msvc2017_64'
 - name: buildPlugins
-  type: boolean
+  type: string
   default: false
 
 
