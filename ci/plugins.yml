@@ -80,7 +80,7 @@ steps:
     ninja
     ninja install
     
-    choco install pkgconfiglite
+    choco install pkgconfiglite --allow-empty-checksums
     set PKG_CONFIG_PATH=C:\libheif\lib\pkgconfig
     
     cd qt-heif-image-plugin
@@ -115,7 +115,8 @@ steps:
     cd build.libavif
     cmake -DENABLE_DOCS=0 -DENABLE_EXAMPLES=0 -DENABLE_TESTDATA=0 -DENABLE_TESTS=0 -DENABLE_TOOLS=0 -DCONFIG_PIC=1 ..
     msbuild ALL_BUILD.vcxproj /p:Configuration=Release /m
-    copy Release\aom.lib libaom.a
+    copy Release\aom.lib aom.lib
+    copy aom.lib libaom.a
     
     cd ..\..\..\
     mkdir build
