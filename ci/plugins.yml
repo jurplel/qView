@@ -94,7 +94,7 @@ steps:
 - bash: |
     git clone https://github.com/novomesk/qt-avif-image-plugin
     cd qt-avif-image-plugin
-    git checkout $(git tag | tail -1)
+    git checkout v0.3.2
   displayName: Clone AVIF plugin
 
 - bash: |
