@@ -94,6 +94,8 @@ steps:
     git clone https://github.com/novomesk/qt-avif-image-plugin
     cd qt-avif-image-plugin
     git checkout v0.3.2
+    cd ext/libavif/ext/
+    git clone -b 0.7.1 --depth 1 https://code.videolan.org/videolan/dav1d.git
   displayName: Clone AVIF plugin
 
 - bash: |
@@ -107,26 +109,24 @@ steps:
 - script: |
     set "arch=${{ parameters.arch }}"
     call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars%arch:~3,2%.bat"
-    choco install yasm
-    
-    cd qt-avif-image-plugin/ext/libavif/ext/aom
-    mkdir build.libavif
-    cd build.libavif
-    if %arch:~3,2%==32 (set "mightBeWin32=-A Win32")
-    cmake %mightBeWin32% -DENABLE_DOCS=0 -DENABLE_EXAMPLES=0 -DENABLE_TESTDATA=0 -DENABLE_TESTS=0 -DENABLE_TOOLS=0 -DCONFIG_PIC=1 ..
-    cmake --build . --config Release
-    copy Release\aom.lib aom.lib
-    copy aom.lib libaom.a
+    choco install wget meson
+
+    cd qt-avif-image-plugin/ext/libavif/ext/dav1d
+    wget https://www.nasm.us/pub/nasm/releasebuilds/2.14/win64/nasm-2.14-win64.zip
+    7z e -y nasm-2.14-win64.zip
+    mkdir build
+    cd build
+    meson --default-library=static --buildtype release ..
+    ninja
     
     cd ..\..\..\
     mkdir build
     cd build
-    cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DAVIF_CODEC_AOM=ON -DAVIF_LOCAL_AOM=ON ..
+    cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DAVIF_CODEC_DAV1D=ON -DAVIF_LOCAL_DAV1D=ON ..
     ninja
-    copy avif.lib libavif.a
     
     cd ..\..\..\
-    qmake qt-avif-image-plugin_local-libavif.pro
+    qmake qt-avif-image-plugin.pro "INCLUDEPATH += $$PWD/ext/libavif/include" "LIBS += -L$$PWD/ext/libavif/build -L$$PWD/ext/libavif/ext/dav1d/build/src -ldav1d"
     nmake
   condition: eq( variables['Agent.OS'], 'Windows_NT' )
   displayName: Build AVIF plugin (Windows)
