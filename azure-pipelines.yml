@@ -1,3 +1,8 @@
+parameters:
+- name: buildPlugins
+  displayName: Build Plugins
+  type: boolean
+  default: true
 
 variables:
   nightlyDefines: 'DEFINES+=NIGHTLY=$(Build.BuildNumber)'
@@ -46,6 +51,7 @@ jobs:
   - template: ci/plugins.yml
     parameters:
       arch: $(qtArch)
+      buildPlugins: $(buildPlugins)
 
   - template: ci/deploy.yml
     parameters:
