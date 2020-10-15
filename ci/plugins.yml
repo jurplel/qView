@@ -15,14 +15,14 @@ steps:
     cd QtApng
     git checkout $(git tag | tail -1)
   displayName: Clone APNG plugin
-  condition: eq('${{ parameters.buildPlugins }}', True)
+  condition: eq('${{ parameters.buildPlugins }}', 'True')
   
 - bash: |
     cd QtApng
     qmake "CONFIG += libpng_static"
     make
     sudo make install
-  condition: and(eq('${{ parameters.buildPlugins }}', True), ne( variables['Agent.OS'], 'Windows_NT' ))
+  condition: and(eq('${{ parameters.buildPlugins }}', 'True'), ne( variables['Agent.OS'], 'Windows_NT' ))
   displayName: Build APNG plugin (Unix)
 
 - script: |
@@ -31,7 +31,7 @@ steps:
     call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars%arch:~3,2%.bat"
     qmake "CONFIG += libpng_static"
     nmake
-  condition: and(eq('${{ parameters.buildPlugins }}', True), eq( variables['Agent.OS'], 'Windows_NT' ))
+  condition: and(eq('${{ parameters.buildPlugins }}', 'True'), eq( variables['Agent.OS'], 'Windows_NT' ))
   displayName: Build APNG plugin (Windows)
 
   # HEIF
@@ -48,7 +48,7 @@ steps:
     git clone https://github.com/jurplel/qt-heif-image-plugin.git
     cd qt-heif-image-plugin
     git checkout patch-1
-  condition: and(eq('${{ parameters.buildPlugins }}', True), ne( variables['Agent.OS'], 'Darwin' ))
+  condition: and(eq('${{ parameters.buildPlugins }}', 'True'), ne( variables['Agent.OS'], 'Darwin' ))
   displayName: Clone HEIF plugin
   
 - bash: |
@@ -68,7 +68,7 @@ steps:
     cmake .
     make
     sudo make install
-  condition: and(eq('${{ parameters.buildPlugins }}', True), eq( variables['Agent.OS'], 'Linux' ))
+  condition: and(eq('${{ parameters.buildPlugins }}', 'True'), eq( variables['Agent.OS'], 'Linux' ))
   displayName: Build HEIF plugin (Linux)
 
 - script: |
@@ -90,7 +90,7 @@ steps:
     cd qt-heif-image-plugin
     cmake -G Ninja -DCMAKE_BUILD_TYPE=Release .
     ninja
-  condition: and(eq('${{ parameters.buildPlugins }}', True), eq( variables['Agent.OS'], 'Windows_NT' ))
+  condition: and(eq('${{ parameters.buildPlugins }}', 'True'), eq( variables['Agent.OS'], 'Windows_NT' ))
   displayName: Build HEIF plugin (Windows)
 
   # AVIF
@@ -100,14 +100,14 @@ steps:
     cd qt-avif-image-plugin
     git checkout v0.3.2
   displayName: Clone AVIF plugin
-  condition: eq('${{ parameters.buildPlugins }}', True)
+  condition: eq('${{ parameters.buildPlugins }}', 'True')
 
 - bash: |
     cd qt-avif-image-plugin
     ./build_libqavif_static.sh
     make
     sudo make install
-  condition: and(eq('${{ parameters.buildPlugins }}', True), ne( variables['Agent.OS'], 'Windows_NT' ))
+  condition: and(eq('${{ parameters.buildPlugins }}', 'True'), ne( variables['Agent.OS'], 'Windows_NT' ))
   displayName: Build AVIF plugin (Unix)
 
 - script: |
@@ -134,7 +134,7 @@ steps:
     cd ..\..\..\
     qmake qt-avif-image-plugin_local-libavif.pro
     nmake
-  condition: and(eq('${{ parameters.buildPlugins }}', True), eq( variables['Agent.OS'], 'Windows_NT' ))
+  condition: and(eq('${{ parameters.buildPlugins }}', 'True'), eq( variables['Agent.OS'], 'Windows_NT' ))
   displayName: Build AVIF plugin (Windows)
 
 
@@ -150,5 +150,5 @@ steps:
     cd qt5ct*
     qmake
     sudo make install
-  condition: and(eq('${{ parameters.buildPlugins }}', True), eq( variables['Agent.OS'], 'Linux' ))
+  condition: and(eq('${{ parameters.buildPlugins }}', 'True'), eq( variables['Agent.OS'], 'Linux' ))
   displayName: Get extra styles (Linux)
