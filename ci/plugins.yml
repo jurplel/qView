@@ -2,10 +2,6 @@ parameters:
 - name: arch
   type: string
   default: 'win64_msvc2017_64'
-- name: buildPlugins
-  type: string
-  default: false
-
 
 steps:
   # APNG
@@ -15,14 +11,13 @@ steps:
     cd QtApng
     git checkout $(git tag | tail -1)
   displayName: Clone APNG plugin
-  condition: eq('${{ parameters.buildPlugins }}', 'True')
   
 - bash: |
     cd QtApng
     qmake "CONFIG += libpng_static"
     make
     sudo make install
-  condition: and(eq('${{ parameters.buildPlugins }}', 'True'), ne( variables['Agent.OS'], 'Windows_NT' ))
+  condition: ne( variables['Agent.OS'], 'Windows_NT' )
   displayName: Build APNG plugin (Unix)
 
 - script: |
@@ -31,7 +26,7 @@ steps:
     call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars%arch:~3,2%.bat"
     qmake "CONFIG += libpng_static"
     nmake
-  condition: and(eq('${{ parameters.buildPlugins }}', 'True'), eq( variables['Agent.OS'], 'Windows_NT' ))
+  condition: eq( variables['Agent.OS'], 'Windows_NT' )
   displayName: Build APNG plugin (Windows)
 
   # HEIF
@@ -48,7 +43,7 @@ steps:
     git clone https://github.com/jurplel/qt-heif-image-plugin.git
     cd qt-heif-image-plugin
     git checkout patch-1
-  condition: and(eq('${{ parameters.buildPlugins }}', 'True'), ne( variables['Agent.OS'], 'Darwin' ))
+  condition: ne( variables['Agent.OS'], 'Darwin' )
   displayName: Clone HEIF plugin
   
 - bash: |
@@ -68,7 +63,7 @@ steps:
     cmake .
     make
     sudo make install
-  condition: and(eq('${{ parameters.buildPlugins }}', 'True'), eq( variables['Agent.OS'], 'Linux' ))
+  condition: eq( variables['Agent.OS'], 'Linux' )
   displayName: Build HEIF plugin (Linux)
 
 - script: |
@@ -90,7 +85,7 @@ steps:
     cd qt-heif-image-plugin
     cmake -G Ninja -DCMAKE_BUILD_TYPE=Release .
     ninja
-  condition: and(eq('${{ parameters.buildPlugins }}', 'True'), eq( variables['Agent.OS'], 'Windows_NT' ))
+  condition: eq( variables['Agent.OS'], 'Windows_NT' )
   displayName: Build HEIF plugin (Windows)
 
   # AVIF
@@ -99,42 +94,41 @@ steps:
     git clone https://github.com/novomesk/qt-avif-image-plugin
     cd qt-avif-image-plugin
     git checkout v0.3.2
+    cd ext/libavif/ext/
+    git clone -b 0.7.1 --depth 1 https://code.videolan.org/videolan/dav1d.git
   displayName: Clone AVIF plugin
-  condition: eq('${{ parameters.buildPlugins }}', 'True')
 
 - bash: |
     cd qt-avif-image-plugin
     ./build_libqavif_static.sh
     make
     sudo make install
-  condition: and(eq('${{ parameters.buildPlugins }}', 'True'), ne( variables['Agent.OS'], 'Windows_NT' ))
+  condition: ne( variables['Agent.OS'], 'Windows_NT' )
   displayName: Build AVIF plugin (Unix)
 
 - script: |
     set "arch=${{ parameters.arch }}"
     call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars%arch:~3,2%.bat"
-    choco install yasm
-    
-    cd qt-avif-image-plugin/ext/libavif/ext/aom
-    mkdir build.libavif
-    cd build.libavif
-    if %arch:~3,2%==32 (set "mightBeWin32=-A Win32")
-    cmake %mightBeWin32% -DENABLE_DOCS=0 -DENABLE_EXAMPLES=0 -DENABLE_TESTDATA=0 -DENABLE_TESTS=0 -DENABLE_TOOLS=0 -DCONFIG_PIC=1 ..
-    cmake --build . --config Release
-    copy Release\aom.lib aom.lib
-    copy aom.lib libaom.a
+    choco install wget meson
+
+    cd qt-avif-image-plugin/ext/libavif/ext/dav1d
+    wget https://www.nasm.us/pub/nasm/releasebuilds/2.14/win64/nasm-2.14-win64.zip
+    7z e -y nasm-2.14-win64.zip
+    mkdir build
+    cd build
+    meson --default-library=static --buildtype release ..
+    ninja
     
     cd ..\..\..\
     mkdir build
     cd build
-    cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DAVIF_CODEC_AOM=ON -DAVIF_LOCAL_AOM=ON ..
+    cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DAVIF_CODEC_DAV1D=ON -DAVIF_LOCAL_DAV1D=ON ..
     ninja
-    copy avif.lib libavif.a
     
     cd ..\..\..\
-    qmake qt-avif-image-plugin_local-libavif.pro
+    qmake qt-avif-image-plugin.pro "INCLUDEPATH += $$PWD/ext/libavif/include" "LIBS += $$PWD/ext/libavif/build/"
     nmake
-  condition: and(eq('${{ parameters.buildPlugins }}', 'True'), eq( variables['Agent.OS'], 'Windows_NT' ))
+  condition: eq( variables['Agent.OS'], 'Windows_NT' )
   displayName: Build AVIF plugin (Windows)
 
 
@@ -150,5 +144,5 @@ steps:
     cd qt5ct*
     qmake
     sudo make install
-  condition: and(eq('${{ parameters.buildPlugins }}', 'True'), eq( variables['Agent.OS'], 'Linux' ))
+  condition: eq( variables['Agent.OS'], 'Linux' )
   displayName: Get extra styles (Linux)
