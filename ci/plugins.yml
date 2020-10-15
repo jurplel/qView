@@ -126,7 +126,7 @@ steps:
     ninja
     
     cd ..\..\..\
-    qmake qt-avif-image-plugin.pro "INCLUDEPATH += $$PWD/ext/libavif/include" "LIBS += -L$$PWD/ext/libavif/build -L$$PWD/ext/libavif/ext/dav1d/build/src -ldav1d"
+    qmake qt-avif-image-plugin.pro "INCLUDEPATH += $$PWD/ext/libavif/include" "LIBS += -L$$PWD/ext/libavif/build -L$$PWD/ext/libavif/ext/dav1d/build/src -llibdav1da"
     nmake
   condition: eq( variables['Agent.OS'], 'Windows_NT' )
   displayName: Build AVIF plugin (Windows)
