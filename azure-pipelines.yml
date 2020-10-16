@@ -63,7 +63,7 @@ jobs:
   - task: PublishBuildArtifacts@1
     inputs:
       pathtoPublish: 'bin'
-      artifactName: 'qView$(nightlyString)-$(MatrixName).$(Build.BuildNumber)'
+      artifactName: 'qView$[nightlyString]-$(MatrixName).$(Build.BuildNumber)'
     condition: and(succeeded(), ne(variables['dontPublish'], 'true'))
     displayName: 'Publish build artifact'
 
