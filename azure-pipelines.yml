@@ -2,11 +2,11 @@ parameters:
 - name: buildPlugins
   displayName: Build Plugins
   type: boolean
-  default: false
+  default: true
 - name: useNightly
   displayName: Use Nightly version number
   type: boolean
-  default: true
+  default: false
 
 variables:
   defines: 'DEFINES+=NIGHTLY=$(Build.BuildNumber)'
@@ -44,8 +44,8 @@ jobs:
         echo "##vso[task.setvariable variable=nightlyDefines]$(defines)"
         echo "##vso[task.setvariable variable=nightlyString]$(nightly)"
       else
-        echo "##vso[task.setvariable variable=nightlyDefines]''"
-        echo "##vso[task.setvariable variable=nightlyString]''"
+        echo "##vso[task.setvariable variable=nightlyDefines]"
+        echo "##vso[task.setvariable variable=nightlyString]"
       fi
     condition: and(succeeded(), ne(variables['dontPublish'], 'true'))
     displayName: 'Set matrix env variables'
