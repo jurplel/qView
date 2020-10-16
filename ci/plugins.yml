@@ -4,6 +4,10 @@ parameters:
   default: 'win64_msvc2017_64'
 
 steps:
+- script: choco install wget meson pkgconfiglite --allow-empty-checksums
+  condition: eq( variables['Agent.OS'], 'Windows_NT' )
+  displayName: Install chocolatey packages for plugins
+
   # APNG
 
 - bash: |
@@ -79,7 +83,6 @@ steps:
     ninja
     ninja install
     
-    choco install pkgconfiglite --allow-empty-checksums
     set PKG_CONFIG_PATH=C:\libheif\lib\pkgconfig
     
     cd qt-heif-image-plugin
@@ -106,10 +109,7 @@ steps:
   condition: ne( variables['Agent.OS'], 'Windows_NT' )
   displayName: Build AVIF plugin (Unix)
 
-- script: |
-    choco install wget meson
-    refreshenv
-    
+- script: |    
     set "arch=${{ parameters.arch }}"
     call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars%arch:~3,2%.bat"
 
