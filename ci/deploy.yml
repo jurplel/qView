@@ -2,24 +2,23 @@ parameters:
 - name: 'skipDeploy'
   default: 'false'
   type: string
-- name: 'extraPlugins'
-  type: string
 - name: arch
   type: string
   default: 'win64_msvc2017_64'
 
 steps:
-- script: |
-    choco install wget
-    wget https://mirror.firedaemon.com/OpenSSL/openssl-1.1.1i-dev.zip
-    7z e -y openssl-1.1.1i-dev.zip
+- pwsh: |
+    $ProgressPreference = 'SilentlyContinue'
+    Invoke-WebRequest https://mirror.firedaemon.com/OpenSSL/openssl-1.1.1i-dev.zip -O openssl.zip
+
+    7z x -y .\openssl.zip
     set "arch=${{ parameters.arch }}"
     if %arch:~3,2%==32 (
-        copy openssl-1.1.1i-dev\openssl-1.1\x86\bin\libssl-1_1.dll bin\
-        copy openssl-1.1.1i-dev\openssl-1.1\x86\bin\libcrypto-1_1.dll bin\
+        copy openssl-1.1\x86\bin\libssl-1_1.dll bin\
+        copy openssl-1.1\x86\bin\libcrypto-1_1.dll bin\
     ) else (
-        copy openssl-1.1.1i-dev\openssl-1.1\x64\bin\libssl-1_1-x64.dll bin\
-        copy openssl-1.1.1i-dev\openssl-1.1\x64\bin\libcrypto-1_1-x64.dll bin\
+        copy openssl-1.1\x64\bin\libssl-1_1-x64.dll bin\
+        copy openssl-1.1\x64\bin\libcrypto-1_1-x64.dll bin\
     )
 
     cd bin
@@ -57,7 +56,7 @@ steps:
     cd bin
     rm qview
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
-    ../linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/qView.desktop -appimage -extra-plugins=${{ parameters.extraPlugins }}
+    ../linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/qView.desktop -appimage $(extra_plugins_maybe)
     mv *.AppImage qView$(nightlyString).$(Build.BuildNumber).x86_64.AppImage
     rm -r appdir
   condition: and(succeeded(), ne( variables['skipDeploy'], 'true' ), eq( variables['Agent.OS'], 'Linux' ))

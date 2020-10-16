@@ -56,7 +56,6 @@ jobs:
   - template: ci/deploy.yml
     parameters:
       skipDeploy: $(skipDeploy)
-      extraPlugins: 'styles/libqt5ct-style.so,platformthemes/libqt5ct.so,iconengines,platformthemes/libqgtk3.so,imageformats/libqapng.so,imageformats/libqavif.so,imageformats/libqheif.so'
       arch: $(qtArch)
 
   - task: PublishBuildArtifacts@1

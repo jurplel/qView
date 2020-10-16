@@ -110,8 +110,8 @@ steps:
     cd ..\..\..\
     mkdir build
     cd build
-    cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DAVIF_CODEC_DAV1D=ON -DAVIF_LOCAL_DAV1D=ON ..
-    ninja
+    cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DAVIF_CODEC_DAV1D=ON -DAVIF_LOCAL_DAV1D=ON ..
+    make
 
     cd ..\..\..\
     qmake qt-avif-image-plugin.pro "INCLUDEPATH += $$PWD/ext/libavif/include" "LIBS += -L$$PWD/ext/libavif/build -L$$PWD/ext/libavif/ext/dav1d/build/src -ldav1d"
@@ -160,5 +160,7 @@ steps:
     cd qt5ct*
     qmake
     sudo make install
+    
+    echo "##vso[task.setvariable variable=extra_plugins_maybe]'-extra-plugins=styles/libqt5ct-style.so,platformthemes/libqt5ct.so,iconengines,platformthemes/libqgtk3.so,imageformats/libqapng.so,imageformats/libqavif.so,imageformats/libqheif.so'"
   condition: eq( variables['Agent.OS'], 'Linux' )
   displayName: Get extra styles (Linux)
