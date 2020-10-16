@@ -118,7 +118,7 @@ steps:
     7z e -y nasm-2.14-win64.zip
     mkdir build
     cd build
-    python -m meson --default-library=static --buildtype release ..
+    meson --default-library=static --buildtype release ..
     ninja
     copy src\libdav1d.a src\dav1d.lib
     
