@@ -20,13 +20,23 @@ steps:
     cd bin
     windeployqt qView.exe --no-compiler-runtime
 
-    copy ..\QtApng\plugins\imageformats\qapng.dll imageformats\
 
-    copy ..\libde265\build\libde265.dll .\
-    copy ..\libde265\libheif\libheif\heif.dll .\
-    copy ..\libde265\libheif\qt-heif-image-plugin\bin\imageformats\qheif.dll imageformats\
-    
-    copy ..\qt-avif-image-plugin\plugins\imageformats\qavif.dll imageformats\
+    try
+    {
+      copy ..\QtApng\plugins\imageformats\qapng.dll imageformats\
+
+      copy ..\libde265\build\libde265.dll .\
+      copy ..\libde265\libheif\libheif\heif.dll .\
+      copy ..\libde265\libheif\qt-heif-image-plugin\bin\imageformats\qheif.dll imageformats\
+      
+      copy ..\qt-avif-image-plugin\plugins\imageformats\qavif.dll imageformats\
+
+      Write-Host "Successfully copied plugins"
+    }
+    catch
+    {
+        Write-Host "Failed to copy plugins"
+    }
 
     rename qView.exe "qView$(nightlyString).$(Build.BuildNumber).exe"
   condition: and(succeeded(), ne( variables['skipDeploy'], 'true' ), eq( variables['Agent.OS'], 'Windows_NT' ))
