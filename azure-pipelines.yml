@@ -38,15 +38,14 @@ jobs:
 
   steps:
   - bash: |
+      echo '##vso[task.setvariable variable=MatrixName]'$(echo $(Agent.JobName) | cut -d' ' -f2)
       echo "##vso[task.setvariable variable=arch]$(qtArch)"
       if [ ${{ parameters.useNightly }} = True ]; then
         echo "##vso[task.setvariable variable=nightlyDefines]$(defines)"
-        echo "##vso[task.setvariable variable=fileName]$(nightly).$(Build.BuildNumber)"
-        echo "##vso[task.setvariable variable=artifactName]$(nightly)-$(echo $(Agent.JobName) | cut -d' ' -f2).$(Build.BuildNumber)"
+        echo "##vso[task.setvariable variable=nightlyString]$(nightly)"
       else
         echo "##vso[task.setvariable variable=nightlyDefines]"
-        echo "##vso[task.setvariable variable=fileName]"
-        echo "##vso[task.setvariable variable=artifactName]"
+        echo "##vso[task.setvariable variable=nightlyString]"
       fi
     condition: and(succeeded(), ne(variables['dontPublish'], 'true'))
     displayName: 'Set matrix env variables'
@@ -67,7 +66,7 @@ jobs:
   - task: PublishBuildArtifacts@1
     inputs:
       pathtoPublish: 'bin'
-      artifactName: 'qView$(artifactName)'
+      artifactName: 'qView$(nightlyString)-$(MatrixName).$(Build.BuildNumber)'
     condition: and(succeeded(), ne(variables['dontPublish'], 'true'))
     displayName: 'Publish build artifact'
 
