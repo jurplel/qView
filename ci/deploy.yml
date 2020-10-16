@@ -15,11 +15,11 @@ steps:
     7z e -y openssl-1.1.1i-dev.zip
     set "arch=${{ parameters.arch }}"
     if %arch:~3,2%==32 (
-        copy openssl-1.1\x86\bin\libssl-1_1.dll bin\
-        copy openssl-1.1\x86\bin\libcrypto-1_1.dll bin\
+        copy openssl-1.1.1i-dev\openssl-1.1\x86\bin\libssl-1_1.dll bin\
+        copy openssl-1.1.1i-dev\openssl-1.1\x86\bin\libcrypto-1_1.dll bin\
     ) else (
-        copy openssl-1.1\x64\bin\libssl-1_1-x64.dll bin\
-        copy openssl-1.1\x64\bin\libcrypto-1_1-x64.dll bin\
+        copy openssl-1.1.1i-dev\openssl-1.1\x64\bin\libssl-1_1-x64.dll bin\
+        copy openssl-1.1.1i-dev\openssl-1.1\x64\bin\libcrypto-1_1-x64.dll bin\
     )
 
     cd bin
