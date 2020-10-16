@@ -48,7 +48,7 @@ jobs:
       defines: $(nightlyDefines)
       arch: $(qtArch)
 
-  - ${{ if eq(parameters.buildPlugins, true) }}:
+  - ${{ if and(eq(parameters.buildPlugins, true), ne($(skipDeploy), true)) }}:
     - template: ci/plugins.yml
       parameters:
         arch: $(qtArch)
