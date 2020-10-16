@@ -7,7 +7,7 @@ steps:
   displayName: 'Build qView (Windows)'
 
 - script: |
-    qmake ${{ parameters.defines }}
+    qmake $(nightlyDefines)
     make
   condition: and(succeeded(), ne( variables['Agent.OS'], 'Windows_NT' ))
   displayName: 'Build qView (Unix)'

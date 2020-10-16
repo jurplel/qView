@@ -40,7 +40,7 @@ jobs:
   - bash: |
       echo '##vso[task.setvariable variable=MatrixName]'$(echo $(Agent.JobName) | cut -d' ' -f2)
       echo "##vso[task.setvariable variable=arch]$(qtArch)"
-      if [ ${{ parameters.useNightly }} = "True"]; then
+      if [ ${{ parameters.useNightly }} = True ]; then
         echo "##vso[task.setvariable variable=nightlyDefines]$(defines)"
         echo "##vso[task.setvariable variable=nightlyString]$(nightly)"
       fi
