@@ -3,10 +3,14 @@ parameters:
   displayName: Build Plugins
   type: boolean
   default: false
+- name: useNightly
+  displayName: Use Nightly version number
+  type: boolean
+  default: true
 
 variables:
-  nightlyDefines: 'DEFINES+=NIGHTLY=$(Build.BuildNumber)'
-  nightlyString: '-nightly'
+  defines: 'DEFINES+=NIGHTLY=$(Build.BuildNumber)'
+  nightly: '-nightly'
 
 name: '$(Date:yyyy-MM-dd).$(Rev:r)'
 jobs:
@@ -36,6 +40,10 @@ jobs:
   - bash: |
       echo '##vso[task.setvariable variable=MatrixName]'$(echo $(Agent.JobName) | cut -d' ' -f2)
       echo "##vso[task.setvariable variable=arch]$(qtArch)"
+      if [ ${{ parameters.useNightly }} = "True"]; then
+        echo "##vso[task.setvariable variable=nightlyDefines]$(defines)"
+        echo "##vso[task.setvariable variable=nightlyString]$(nightly)"
+      fi
     condition: and(succeeded(), ne(variables['dontPublish'], 'true'))
     displayName: 'Set matrix env variables'
 
@@ -44,8 +52,6 @@ jobs:
   - template: ci/install-qt.yml
 
   - template: ci/build.yml
-    parameters:
-      defines: $(nightlyDefines)
 
   - ${{ if eq(parameters.buildPlugins, true) }}:
     - template: ci/plugins.yml

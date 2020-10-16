@@ -20,9 +20,7 @@ steps:
     cd bin
     windeployqt qView.exe --no-compiler-runtime
 
-
-    try
-    {
+    try {
       copy ..\QtApng\plugins\imageformats\qapng.dll imageformats\
 
       copy ..\libde265\build\libde265.dll .\
@@ -32,9 +30,7 @@ steps:
       copy ..\qt-avif-image-plugin\plugins\imageformats\qavif.dll imageformats\
 
       Write-Host "Successfully copied plugins"
-    }
-    catch
-    {
+    } catch {
         Write-Host "Failed to copy plugins"
     }
 
