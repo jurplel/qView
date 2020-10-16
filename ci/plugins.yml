@@ -107,9 +107,11 @@ steps:
   displayName: Build AVIF plugin (Unix)
 
 - script: |
+    choco install wget meson
+    refreshenv
+    
     set "arch=${{ parameters.arch }}"
     call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars%arch:~3,2%.bat"
-    choco install wget meson
 
     cd qt-avif-image-plugin/ext/libavif/ext/dav1d
     wget https://www.nasm.us/pub/nasm/releasebuilds/2.14/win64/nasm-2.14-win64.zip
