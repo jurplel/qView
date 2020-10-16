@@ -20,7 +20,7 @@ steps:
 
 # I hate splitting this into three but I can't figure out how to do it any better
 - script: |
-    python -m aqt install ${{ parameters.version }} windows desktop %qtArch%
+    python -m aqt install ${{ parameters.version }} windows desktop %arch%
   condition: and(succeeded(), eq( variables['Agent.OS'], 'Windows_NT' ))
   displayName: 'Install Qt (Windows)'
 

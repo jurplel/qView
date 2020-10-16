@@ -4,7 +4,7 @@ parameters:
 
 steps:
 - script: |
-    call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars%qtArch:~3,2%.bat"
+    call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars%arch:~3,2%.bat"
     qmake ${{ parameters.defines }}
     nmake
   condition: and(succeeded(), eq( variables['Agent.OS'], 'Windows_NT' ))

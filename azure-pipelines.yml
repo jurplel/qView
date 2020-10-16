@@ -35,7 +35,7 @@ jobs:
   steps:
   - bash: |
       echo '##vso[task.setvariable variable=MatrixName]'$(echo $(Agent.JobName) | cut -d' ' -f2)
-      echo "##vso[task.setvariable variable=qtArch]$(qtArch)"
+      echo "##vso[task.setvariable variable=arch]$(qtArch)"
     condition: and(succeeded(), ne(variables['dontPublish'], 'true'))
     displayName: 'Set matrix env variables'
 
