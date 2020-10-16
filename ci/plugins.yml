@@ -99,9 +99,22 @@ steps:
   displayName: Clone AVIF plugin
 
 - bash: |
-    cd qt-avif-image-plugin
-    ./build_libqavif_static.sh
-    make
+    python -m pip install meson
+
+    cd qt-avif-image-plugin/ext/libavif/ext/dav1d
+    mkdir build
+    cd build
+    meson --default-library=static --buildtype release ..
+    ninja
+
+    cd ..\..\..\
+    mkdir build
+    cd build
+    cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DAVIF_CODEC_DAV1D=ON -DAVIF_LOCAL_DAV1D=ON ..
+    ninja
+
+    cd ..\..\..\
+    qmake qt-avif-image-plugin.pro "INCLUDEPATH += $$PWD/ext/libavif/include" "LIBS += -L$$PWD/ext/libavif/build -L$$PWD/ext/libavif/ext/dav1d/build/src -ldav1d"
     sudo make install
   condition: ne( variables['Agent.OS'], 'Windows_NT' )
   displayName: Build AVIF plugin (Unix)
