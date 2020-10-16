@@ -38,7 +38,7 @@ steps:
         Write-Host "Failed to copy plugins"
     }
 
-    rename qView.exe "qView$(nightlyString).$(Build.BuildNumber).exe"
+    mv qView.exe "qView$(nightlyString).$(Build.BuildNumber).exe"
   condition: and(succeeded(), ne( variables['skipDeploy'], 'true' ), eq( variables['Agent.OS'], 'Windows_NT' ))
   displayName: 'Run windeployqt'
 
