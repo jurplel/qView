@@ -107,7 +107,7 @@ steps:
   displayName: Build AVIF plugin (Unix)
 
 - script: |
-    pip install meson
+    python -m pip install meson
     choco install wget
     
     set "arch=${{ parameters.arch }}"
