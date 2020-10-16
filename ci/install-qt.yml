@@ -2,9 +2,6 @@ parameters:
 - name: version
   type: string
   default: '5.12.9'
-- name: arch
-  type: string
-  default: 'win64_msvc2017_64'
 
 steps:
 - script: |
@@ -23,7 +20,7 @@ steps:
 
 # I hate splitting this into three but I can't figure out how to do it any better
 - script: |
-    python -m aqt install ${{ parameters.version }} windows desktop ${{ parameters.arch }}
+    python -m aqt install ${{ parameters.version }} windows desktop %qtArch%
   condition: and(succeeded(), eq( variables['Agent.OS'], 'Windows_NT' ))
   displayName: 'Install Qt (Windows)'
 

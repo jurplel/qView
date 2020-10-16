@@ -2,9 +2,6 @@ parameters:
 - name: 'skipDeploy'
   default: 'false'
   type: string
-- name: arch
-  type: string
-  default: 'win64_msvc2017_64'
 
 steps:
 - pwsh: |
@@ -12,14 +9,13 @@ steps:
     Invoke-WebRequest https://mirror.firedaemon.com/OpenSSL/openssl-1.1.1i-dev.zip -O openssl.zip
 
     7z x -y .\openssl.zip
-    set "arch=${{ parameters.arch }}"
-    if %arch:~3,2%==32 (
+    If ($qtArch.substring(3, 2)  -eq '32') {
         copy openssl-1.1\x86\bin\libssl-1_1.dll bin\
         copy openssl-1.1\x86\bin\libcrypto-1_1.dll bin\
-    ) else (
+      }  Else {
         copy openssl-1.1\x64\bin\libssl-1_1-x64.dll bin\
         copy openssl-1.1\x64\bin\libcrypto-1_1-x64.dll bin\
-    )
+    } 
 
     cd bin
     windeployqt qView.exe --no-compiler-runtime
