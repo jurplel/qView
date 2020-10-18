@@ -22,16 +22,15 @@ jobs:
         imageName: 'ubuntu-16.04'
       macos:
         imageName: 'macOS-10.15'
+      macosx:
+        imageName: 'macOS-10.15'
+        qtVersion: '5.9.9'
       win64:
         imageName: 'windows-2019'
         qtArch: 'win64_msvc2017_64'
       win32:
         imageName: 'windows-2019'
         qtArch: 'win32_msvc2017'
-      qt59:
-        imageName: 'ubuntu-18.04'
-        dontPublish: 'true'
-        skipDeploy: 'true'
 
   pool:
     vmImage: $(imageName)
@@ -53,6 +52,8 @@ jobs:
   - checkout: self
 
   - template: ci/install-qt.yml
+    parameters:
+      version: $(qtVersion)
 
   - template: ci/build.yml
 
