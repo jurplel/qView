@@ -67,14 +67,17 @@ void QVCocoaFunctions::setVibrancy(bool alwaysDark, QWindow *window)
 
     NSWindow *nativeWin = view.window;
 
+    // If this Qt and macOS version combination is already using layer-backed view, then enable full size content view
+    if (view.wantsLayer)
+        nativeWin.styleMask |= NSWindowStyleMaskFullSizeContentView;
+
     if (alwaysDark)
     {
-        [nativeWin setStyleMask:nativeWin.styleMask | NSWindowStyleMaskFullSizeContentView];
+
         [nativeWin setAppearance: [NSAppearance appearanceNamed:NSAppearanceNameVibrantDark]];
     }
     else
     {
-        [nativeWin setStyleMask:nativeWin.styleMask | NSWindowStyleMaskFullSizeContentView];
         [nativeWin setAppearance: nil];
     }
 }
