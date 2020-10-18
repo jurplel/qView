@@ -284,9 +284,6 @@ void QVApplication::deleteFromLastActiveWindows(MainWindow *window)
 void QVApplication::openOptionsDialog(QWidget *parent)
 {
     // On macOS, the dialog should not be dependent on any window
-#ifdef Q_OS_MACOS
-    parent = nullptr;
-#endif
     if (optionsDialog)
     {
         optionsDialog->raise();
@@ -302,7 +299,7 @@ void QVApplication::openOptionsDialog(QWidget *parent)
     optionsDialog->show();
 }
 
-void QVApplication::openWelcomeDialog()
+void QVApplication::openWelcomeDialog(QWidget *parent)
 {
     if (welcomeDialog)
     {
@@ -311,14 +308,14 @@ void QVApplication::openWelcomeDialog()
         return;
     }
 
-    welcomeDialog = new QVWelcomeDialog();
+    welcomeDialog = new QVWelcomeDialog(parent);
     connect(welcomeDialog, &QDialog::finished, [this]{
         welcomeDialog = nullptr;
     });
     welcomeDialog->show();
 }
 
-void QVApplication::openAboutDialog()
+void QVApplication::openAboutDialog(QWidget *parent)
 {
     if (aboutDialog)
     {
@@ -327,7 +324,7 @@ void QVApplication::openAboutDialog()
         return;
     }
 
-    aboutDialog = new QVAboutDialog(updateChecker.getLatestVersionNum());
+    aboutDialog = new QVAboutDialog(updateChecker.getLatestVersionNum(), parent);
     connect(aboutDialog, &QDialog::finished, [this]{
         aboutDialog = nullptr;
     });

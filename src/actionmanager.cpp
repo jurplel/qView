@@ -415,10 +415,17 @@ void ActionManager::actionTriggered(QAction *triggeredAction)
     auto key = triggeredAction->data().toStringList().first();
 
     // For some actions, do not look for a relevant window
-    if (key == "newwindow" || key == "quit" || key == "clearrecents" ||  key == "open")
+    QStringList windowlessActions = {"newwindow", "quit", "clearrecents", "open"};
+#ifdef Q_OS_MACOS
+    windowlessActions << "about" << "welcome" << "options";
+#endif
+    for (const auto &actionName : qAsConst(windowlessActions))
     {
-        actionTriggered(triggeredAction, nullptr);
-        return;
+        if (key == actionName)
+        {
+            actionTriggered(triggeredAction, nullptr);
+            return;
+        }
     }
 
     // If some actions are triggered without an explicit window, we want
@@ -516,9 +523,9 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
     } else if (key == "options") {
         qvApp->openOptionsDialog(relevantWindow);
     } else if (key == "about") {
-        qvApp->openAboutDialog();
+        qvApp->openAboutDialog(relevantWindow);
     } else if (key == "welcome") {
-        qvApp->openWelcomeDialog();
+        qvApp->openWelcomeDialog(relevantWindow);
     } else if (key == "clearrecents") {
         qvApp->getActionManager().clearRecentsList();
     }

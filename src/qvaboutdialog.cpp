@@ -16,7 +16,13 @@ QVAboutDialog::QVAboutDialog(double givenLatestVersionNum, QWidget *parent) :
 
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowFlags(windowFlags() & (~Qt::WindowContextHelpButtonHint | Qt::CustomizeWindowHint));
+
+    // Application modal on mac, window modal everywhere else
+#ifdef Q_OS_MACOS
     setWindowModality(Qt::ApplicationModal);
+#else
+    setWindowModality(Qt::WindowModal);
+#endif
 
     // add fonts
     QFontDatabase::addApplicationFont(":/fonts/resources/Lato-Light.ttf");
