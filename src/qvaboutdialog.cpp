@@ -38,7 +38,7 @@ QVAboutDialog::QVAboutDialog(double givenLatestVersionNum, QWidget *parent) :
     QString subtitleText = tr("version %1").arg(QString::number(VERSION, 'f', 1));
     // If this is a nightly build, display the build number
 #ifdef NIGHTLY
-        subtitleText = tr("Nightly");
+        subtitleText = tr("Nightly %1").arg(QT_STRINGIFY(NIGHTLY));
 #endif
     ui->subtitleLabel->setFont(font2);
     ui->subtitleLabel->setText(subtitleText);
