@@ -125,6 +125,10 @@ MainWindow::MainWindow(QWidget *parent) :
     settingsUpdated();
     shortcutsUpdated();
 
+#ifdef COCOA_LOADED
+    QVCocoaFunctions::setFullSizeContentView(windowHandle());
+#endif
+
     // Load window geometry
     QSettings settings;
     restoreGeometry(settings.value("geometry").toByteArray());

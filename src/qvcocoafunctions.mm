@@ -61,24 +61,41 @@ void QVCocoaFunctions::setUserDefaults()
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"NSFullScreenMenuItemEverywhere"];
 }
 
+// This function should only be called once because it sets observers
+void QVCocoaFunctions::setFullSizeContentView(QWindow *window)
+{
+    auto *view = reinterpret_cast<NSView*>(window->winId());
+
+    // If this Qt and macOS version combination is already using layer-backed view, then enable full size content view
+    if (view.wantsLayer)
+    {
+        view.window.styleMask |= NSWindowStyleMaskFullSizeContentView;
+
+        // workaround for QTBUG-69975
+        [[NSNotificationCenter defaultCenter] addObserverForName:NSWindowDidExitFullScreenNotification object:view.window queue:nil usingBlock:^(NSNotification *notification){
+            auto *window = reinterpret_cast<NSWindow*>(notification.object);
+            window.styleMask |= NSWindowStyleMaskFullSizeContentView;
+        }];
+
+        [[NSNotificationCenter defaultCenter] addObserverForName:NSWindowDidEnterFullScreenNotification object:view.window queue:nil usingBlock:^(NSNotification *notification){
+            auto *window = reinterpret_cast<NSWindow*>(notification.object);
+            window.styleMask |= NSWindowStyleMaskFullSizeContentView;
+        }];
+    }
+}
+
 void QVCocoaFunctions::setVibrancy(bool alwaysDark, QWindow *window)
 {
     auto *view = reinterpret_cast<NSView*>(window->winId());
 
-    NSWindow *nativeWin = view.window;
-
-    // If this Qt and macOS version combination is already using layer-backed view, then enable full size content view
-    if (view.wantsLayer)
-        nativeWin.styleMask |= NSWindowStyleMaskFullSizeContentView;
-
     if (alwaysDark)
     {
 
-        [nativeWin setAppearance: [NSAppearance appearanceNamed:NSAppearanceNameVibrantDark]];
+        [view.window setAppearance: [NSAppearance appearanceNamed:NSAppearanceNameVibrantDark]];
     }
     else
     {
-        [nativeWin setAppearance: nil];
+        [view.window setAppearance: nil];
     }
 }
 

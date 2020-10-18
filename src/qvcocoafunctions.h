@@ -11,6 +11,8 @@ public:
 
     static void setUserDefaults();
 
+    static void setFullSizeContentView(QWindow *window);
+
     static void setVibrancy(bool alwaysDark, QWindow *window);
 
     static int getObscuredHeight(QWindow *window);
