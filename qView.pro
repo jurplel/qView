@@ -34,7 +34,14 @@ macx:!CONFIG(NO_COCOA) {
     DEFINES += COCOA_LOADED
 }
 QMAKE_TARGET_BUNDLE_PREFIX = "com.qview"
-QMAKE_INFO_PLIST = "dist/mac/Info.plist"
+
+equals(QT_MAJOR_VERSION, 5):lessThan(QT_MINOR_VERSION, 10) {
+    QMAKE_INFO_PLIST = "dist/mac/Info_legacy.plist"
+} else {
+    QMAKE_INFO_PLIST = "dist/mac/Info.plist"
+}
+
+
 ICON = "dist/mac/qView.icns"
 
 # Linux specific stuff
