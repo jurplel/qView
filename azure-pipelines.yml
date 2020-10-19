@@ -26,6 +26,7 @@ jobs:
       macosx:
         imageName: 'macOS-10.15'
         qtVersion: '5.9.9'
+        skipHardPlugins: 'true'
       win64:
         imageName: 'windows-2019'
         qtArch: 'win64_msvc2017_64'
@@ -60,6 +61,8 @@ jobs:
 
   - ${{ if eq(parameters.buildPlugins, true) }}:
     - template: ci/plugins.yml
+      parameters:
+        skipHardOnes: $(skipHardPlugins)
 
   - template: ci/deploy.yml
     parameters:

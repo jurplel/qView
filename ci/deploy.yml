@@ -1,5 +1,5 @@
 parameters:
-- name: 'skipDeploy'
+- name: skipDeploy
   default: 'false'
   type: string
 
