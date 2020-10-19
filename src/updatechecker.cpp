@@ -10,6 +10,8 @@
 UpdateChecker::UpdateChecker(QObject *parent) : QObject(parent)
 {
     latestVersionNum = -1.0;
+
+    connect(&netAccessManager, &QNetworkAccessManager::finished, this, &UpdateChecker::readReply);
 }
 
 void UpdateChecker::check()
@@ -23,10 +25,7 @@ void UpdateChecker::sendRequest(const QUrl &url)
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
-    auto *netAccessManager = new QNetworkAccessManager;
-    connect(netAccessManager, &QNetworkAccessManager::finished, this, &UpdateChecker::readReply);
-
-    netAccessManager->get(request);
+    netAccessManager.get(request);
 }
 
 void UpdateChecker::readReply(QNetworkReply *reply)

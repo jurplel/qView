@@ -34,6 +34,8 @@ private:
     QString changelog;
 
     QDateTime releaseDate;
+
+    QNetworkAccessManager netAccessManager;
 };
 
 #endif // UPDATECHECKER_H
