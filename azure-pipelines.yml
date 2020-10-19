@@ -11,6 +11,7 @@ parameters:
 variables:
   defines: 'DEFINES+=NIGHTLY=$(Build.BuildNumber)'
   nightly: '-nightly'
+  qtVersion: '5.12.9'
 
 name: '$(Date:yyyy-MM-dd).$(Rev:r)'
 jobs:
