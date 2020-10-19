@@ -1,8 +1,3 @@
-parameters:
-- name: skipDeploy
-  default: 'false'
-  type: string
-
 steps:
 - pwsh: |
     $ProgressPreference = 'SilentlyContinue'

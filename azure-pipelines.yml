@@ -2,7 +2,7 @@ parameters:
 - name: buildPlugins
   displayName: Build Plugins
   type: boolean
-  default: false
+  default: true
 - name: useNightly
   displayName: Use Nightly version number
   type: boolean
@@ -61,12 +61,8 @@ jobs:
 
   - ${{ if eq(parameters.buildPlugins, true) }}:
     - template: ci/plugins.yml
-      parameters:
-        skipHardOnes: $(skipHardPlugins)
 
   - template: ci/deploy.yml
-    parameters:
-      skipDeploy: $(skipDeploy)
 
   - task: PublishBuildArtifacts@1
     inputs:

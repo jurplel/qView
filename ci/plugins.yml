@@ -1,8 +1,3 @@
-parameters:
-- name: skipHardOnes
-  type: string
-  default: 'false'
-
 steps:
   # APNG
 
@@ -42,7 +37,7 @@ steps:
     git clone https://github.com/jurplel/qt-heif-image-plugin.git
     cd qt-heif-image-plugin
     git checkout patch-1
-  condition: and(ne( variables['skipHardOnes'], 'true' ), ne( variables['Agent.OS'], 'Darwin' ))
+  condition: and(ne( variables['skipHardPlugins'], 'true' ), ne( variables['Agent.OS'], 'Darwin' ))
   displayName: Clone HEIF plugin
   
 - bash: |
@@ -62,7 +57,7 @@ steps:
     cmake .
     make
     sudo make install
-  condition: and(ne( variables['skipHardOnes'], 'true' ), eq( variables['Agent.OS'], 'Linux' ))
+  condition: and(ne( variables['skipHardPlugins'], 'true' ), eq( variables['Agent.OS'], 'Linux' ))
   displayName: Build HEIF plugin (Linux)
 
 - script: |
@@ -83,7 +78,7 @@ steps:
     cd qt-heif-image-plugin
     cmake -G Ninja -DCMAKE_BUILD_TYPE=Release .
     ninja
-  condition: and(ne( variables['skipHardOnes'], 'true' ), eq( variables['Agent.OS'], 'Windows_NT' ))
+  condition: and(ne( variables['skipHardPlugins'], 'true' ), eq( variables['Agent.OS'], 'Windows_NT' ))
   displayName: Build HEIF plugin (Windows)
 
   # AVIF
@@ -94,7 +89,7 @@ steps:
     git checkout v0.3.2
     cd ext/libavif/ext/
     git clone -b 0.7.1 --depth 1 https://code.videolan.org/videolan/dav1d.git
-  condition: ne( variables['skipHardOnes'], 'true' )
+  condition: ne( variables['skipHardPlugins'], 'true' )
   displayName: Clone AVIF plugin
 
 - bash: |
@@ -102,7 +97,7 @@ steps:
     ./build_libqavif_static.sh
     make
     sudo make install
-  condition: and(ne( variables['skipHardOnes'], 'true' ), ne( variables['Agent.OS'], 'Windows_NT' ))
+  condition: and(ne( variables['skipHardPlugins'], 'true' ), ne( variables['Agent.OS'], 'Windows_NT' ))
   displayName: Build AVIF plugin (Unix)
 
 - script: |
@@ -129,7 +124,7 @@ steps:
     cd ..\..\..\
     qmake qt-avif-image-plugin.pro "INCLUDEPATH += $$PWD/ext/libavif/include" "LIBS += -L$$PWD/ext/libavif/build -L$$PWD/ext/libavif/ext/dav1d/build/src -ldav1d"
     nmake
-  condition: and(ne( variables['skipHardOnes'], 'true' ), eq( variables['Agent.OS'], 'Windows_NT' ))
+  condition: and(ne( variables['skipHardPlugins'], 'true' ), eq( variables['Agent.OS'], 'Windows_NT' ))
   displayName: Build AVIF plugin (Windows)
 
 
