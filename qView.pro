@@ -65,8 +65,10 @@ iconsym.path = /usr/share/icons/hicolor/symbolic/apps/
 iconsym.files = dist/linux/hicolor/symbolic/apps/qview-symbolic.svg
 license.path = /usr/share/licenses/qview/
 license.files = LICENSE
+appstream.path = /usr/share/metainfo/
+appstream.files = dist/linux/qview.appdata.xml
 
-unix:!macx:INSTALLS += binary desktop icon16 icon32 icon64 icon128 icon256 iconsvg license
+unix:!macx:INSTALLS += binary desktop icon16 icon32 icon64 icon128 icon256 iconsvg license appstream
 unix:!macx:TARGET = qview
 
 # The following define makes your compiler emit warnings if you use
