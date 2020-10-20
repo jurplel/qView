@@ -46,13 +46,12 @@ steps:
   displayName: 'Run macdeployqt'
 
 - script: |
-    if [[ -z $nightlyDefines ]]
-    then
-          VERSION=$(sed -n 's/[^0-9.]*//g;2p' qView.pro)
-    else
+    if [ "$nightlyString" == -nightly ]; then
           VERSION=$(Build.BuildNumber)
+    else
+          VERSION=$(sed -n 's/[^0-9.]*//g;2p' qView.pro)
     fi
-    echo VERSION is set to $VERSION
+    echo VERSION was set to $VERSION
 
     wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
     chmod a+x linuxdeployqt-continuous-x86_64.AppImage
