@@ -46,6 +46,14 @@ steps:
   displayName: 'Run macdeployqt'
 
 - script: |
+    if [ -z "$nightlyDefines" ]
+    then
+          VERSION=$(sed -n 's/[^0-9.]*//g;2p' qView.pro)
+    else
+          VERSION=$(Build.BuildNumber)
+    fi
+    echo VERSION is set to $VERSION
+
     wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
     chmod a+x linuxdeployqt-continuous-x86_64.AppImage
 
@@ -54,7 +62,7 @@ steps:
     cd bin
     rm qview
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
-    ../linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/qView.desktop -appimage $(extra_plugins_maybe)
+    ../linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/qView.desktop -appimage -updateinformation="gh-releases-zsync|jurplel|qView|latest|qView-*x86_64.AppImage.zsync" $(extra_plugins_maybe)
     mv *.AppImage qView$(nightlyString).$(Build.BuildNumber).x86_64.AppImage
     rm -r appdir
   condition: and(succeeded(), ne( variables['skipDeploy'], 'true' ), eq( variables['Agent.OS'], 'Linux' ))
