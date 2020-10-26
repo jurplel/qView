@@ -41,7 +41,9 @@ steps:
     cp $(Qt5_DIR)/plugins/imageformats/libqapng.dylib qView.app/Contents/PlugIns/imageformats/
     cp $(Qt5_DIR)/plugins/imageformats/libqavif.dylib qView.app/Contents/PlugIns/imageformats/
 
-    mv qView.app 'qView$(nightlyString)$(buildNumString).app'
+    if [ $(nightlyString) == -nightly ]; then
+        mv qView.app 'qView$(nightlyString)$(buildNumString).app'
+    fi
   condition: and(succeeded(), ne( variables['skipDeploy'], 'true' ), eq( variables['Agent.OS'], 'Darwin' ))
   displayName: 'Run macdeployqt'
 
