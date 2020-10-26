@@ -132,6 +132,14 @@ MainWindow::MainWindow(QWidget *parent) :
     // Load window geometry
     QSettings settings;
     restoreGeometry(settings.value("geometry").toByteArray());
+
+    // Show welcome dialog on first launch
+    if (!settings.value("firstlaunch", false).toBool())
+    {
+        settings.setValue("firstlaunch", true);
+        settings.setValue("configversion", VERSION);
+        qvApp->openWelcomeDialog(this);
+    }
 }
 
 MainWindow::~MainWindow()

@@ -19,16 +19,6 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     welcomeDialog = nullptr;
     aboutDialog = nullptr;
 
-    // Show welcome dialog on first launch
-    QSettings settings;
-
-    if (!settings.value("firstlaunch", false).toBool())
-    {
-        settings.setValue("firstlaunch", true);
-        settings.setValue("configversion", VERSION);
-        openWelcomeDialog();
-    }
-
     // Initialize list of supported files and filters
     const auto byteArrayList = QImageReader::supportedImageFormats();
     for (const auto &byteArray : byteArrayList)
