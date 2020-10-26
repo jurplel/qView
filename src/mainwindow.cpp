@@ -27,7 +27,6 @@
 #include <QtConcurrent/QtConcurrentRun>
 #include <QMenu>
 #include <QWindow>
-#include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QTemporaryFile>
@@ -91,18 +90,19 @@ MainWindow::MainWindow(QWidget *parent) :
     contextMenu->addMenu(actionManager.buildToolsMenu(true, contextMenu));
     contextMenu->addMenu(actionManager.buildHelpMenu(true, contextMenu));
 
-    connect(contextMenu, &QMenu::triggered, [this](QAction *triggeredAction){
+    connect(contextMenu, &QMenu::triggered, this, [this](QAction *triggeredAction){
         ActionManager::actionTriggered(triggeredAction, this);
     });
 
     // Initialize menubar
     setMenuBar(actionManager.buildMenuBar(this));
     // Stop actions conflicting with the window's actions
-    for (auto action : ActionManager::getAllNestedActions(menuBar()->actions()))
+    const auto menubarActions = ActionManager::getAllNestedActions(menuBar()->actions());
+    for (auto action : menubarActions)
     {
         action->setShortcutContext(Qt::WidgetShortcut);
     }
-    connect(menuBar(), &QMenuBar::triggered, [this](QAction *triggeredAction){
+    connect(menuBar(), &QMenuBar::triggered, this, [this](QAction *triggeredAction){
         ActionManager::actionTriggered(triggeredAction, this);
     });
 
@@ -115,7 +115,7 @@ MainWindow::MainWindow(QWidget *parent) :
         virtualMenu->addAction(actionManager.cloneAction(key));
     }
     addActions(virtualMenu->actions());
-    connect(virtualMenu, &QMenu::triggered, [this](QAction *triggeredAction){
+    connect(virtualMenu, &QMenu::triggered, this, [this](QAction *triggeredAction){
        ActionManager::actionTriggered(triggeredAction, this);
     });
 
@@ -218,7 +218,6 @@ void MainWindow::mouseDoubleClickEvent(QMouseEvent *event)
 
 void MainWindow::openFile(const QString &fileName)
 {
-    QUrl url(fileName);
     graphicsView->loadFile(fileName);
     cancelSlideshow();
 }
@@ -417,15 +416,17 @@ void MainWindow::setWindowSize()
     setGeometry(rect);
 }
 
-//literally just copy pasted from Qt source code to maintain compatibility with 5.9
+//literally just copy pasted from Qt source code to maintain compatibility with 5.9 (although i've edited it now)
 QScreen *MainWindow::screenAt(const QPoint &point)
 {
     QVarLengthArray<const QScreen *, 8> visitedScreens;
-    for (const QScreen *screen : QGuiApplication::screens()) {
+    const auto screens = QGuiApplication::screens();
+    for (const QScreen *screen : screens) {
         if (visitedScreens.contains(screen))
             continue;
         // The virtual siblings include the screen itself, so iterate directly
-        for (QScreen *sibling : screen->virtualSiblings()) {
+        const auto siblings = screen->virtualSiblings();
+        for (QScreen *sibling : siblings) {
             if (sibling->geometry().contains(point))
                 return sibling;
             visitedScreens.append(sibling);
@@ -446,15 +447,13 @@ void MainWindow::setJustLaunchedWithImage(bool value)
 
 void MainWindow::openUrl(const QUrl &url)
 {
-    auto *networkManager = new QNetworkAccessManager(this);
-
     if (!url.isValid()) {
         QMessageBox::critical(this, tr("Error"), tr("Error: URL is invalid"));
         return;
     }
 
     auto request = QNetworkRequest(url);
-    auto *reply = networkManager->get(request);
+    auto *reply = networkAccessManager.get(request);
     auto *progressDialog = new QProgressDialog(tr("Downloading image..."), tr("Cancel"), 0, 100);
     progressDialog->setWindowFlag(Qt::WindowContextHelpButtonHint, false);
     progressDialog->setAutoClose(false);
@@ -462,23 +461,22 @@ void MainWindow::openUrl(const QUrl &url)
     progressDialog->setWindowTitle(tr("Open URL..."));
     progressDialog->open();
 
-    connect(progressDialog, &QProgressDialog::canceled, [reply]{
+    connect(progressDialog, &QProgressDialog::canceled, reply, [reply]{
         reply->abort();
     });
 
-    connect(reply, &QNetworkReply::downloadProgress, [progressDialog](qreal bytesReceived, qreal bytesTotal){
+    connect(reply, &QNetworkReply::downloadProgress, progressDialog, [progressDialog](qreal bytesReceived, qreal bytesTotal){
         auto percent = (bytesReceived/bytesTotal)*100;
         progressDialog->setValue(qRound(percent));
     });
 
 
-    connect(reply, &QNetworkReply::finished, [networkManager, progressDialog, reply, this]{
+    connect(reply, &QNetworkReply::finished, progressDialog, [progressDialog, reply, this]{
         if (reply->error())
         {
             progressDialog->close();
             QMessageBox::critical(this, tr("Error"), tr("Error ") + QString::number(reply->error()) + ": " + reply->errorString());
 
-            networkManager->deleteLater();
             progressDialog->deleteLater();
             return;
         }
@@ -488,7 +486,7 @@ void MainWindow::openUrl(const QUrl &url)
         auto *tempFile = new QTemporaryFile(this);
 
         auto *saveFutureWatcher = new QFutureWatcher<bool>();
-        connect(saveFutureWatcher, &QFutureWatcher<bool>::finished, this, [networkManager, progressDialog, tempFile, saveFutureWatcher, this](){
+        connect(saveFutureWatcher, &QFutureWatcher<bool>::finished, this, [progressDialog, tempFile, saveFutureWatcher, this](){
             progressDialog->close();
             if (saveFutureWatcher->result())
             {
@@ -503,7 +501,6 @@ void MainWindow::openUrl(const QUrl &url)
                  tempFile->deleteLater();
             }
             progressDialog->deleteLater();
-            networkManager->deleteLater();
             saveFutureWatcher->deleteLater();
         });
 
@@ -520,7 +517,7 @@ void MainWindow::pickUrl()
     inputDialog->setLabelText(tr("URL of a supported image file:"));
     inputDialog->resize(350, inputDialog->height());
     inputDialog->setWindowFlag(Qt::WindowContextHelpButtonHint, false);
-    connect(inputDialog, &QInputDialog::finished, [inputDialog, this](int result) {
+    connect(inputDialog, &QInputDialog::finished, this, [inputDialog, this](int result) {
         if (result)
         {
             const auto url = QUrl(inputDialog->textValue());
@@ -596,7 +593,7 @@ void MainWindow::rename()
     renameDialog->setTextValue(currentFileInfo.fileName());
     renameDialog->resize(350, renameDialog->height());
     renameDialog->setWindowFlag(Qt::WindowContextHelpButtonHint, false);
-    connect(renameDialog, &QInputDialog::finished, [currentFileInfo, renameDialog, this](int result) {
+    connect(renameDialog, &QInputDialog::finished, this, [currentFileInfo, renameDialog, this](int result) {
         if (result)
         {
             const auto newFileName = renameDialog->textValue();

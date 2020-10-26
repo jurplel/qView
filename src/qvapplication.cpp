@@ -55,7 +55,7 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
 
     // Setup macOS dock menu
     dockMenu = new QMenu();
-    connect(dockMenu, &QMenu::triggered, [](QAction *triggeredAction){
+    connect(dockMenu, &QMenu::triggered, this, [](QAction *triggeredAction){
        ActionManager::actionTriggered(triggeredAction);
     });
 
@@ -69,7 +69,7 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
 
     // Build menu bar
     menuBar = actionManager.buildMenuBar();
-    connect(menuBar, &QMenuBar::triggered, [](QAction *triggeredAction){
+    connect(menuBar, &QMenuBar::triggered, this, [](QAction *triggeredAction){
         ActionManager::actionTriggered(triggeredAction);
     });
 
@@ -136,7 +136,7 @@ void QVApplication::pickFile(MainWindow *parent)
     if (parent)
         fileDialog->setWindowModality(Qt::WindowModal);
 
-    connect(fileDialog, &QFileDialog::filesSelected, [parent](const QStringList &selected){
+    connect(fileDialog, &QFileDialog::filesSelected, parent, [parent](const QStringList &selected){
         bool isFirstLoop = true;
         for (const auto &file : selected)
         {
@@ -293,7 +293,7 @@ void QVApplication::openOptionsDialog(QWidget *parent)
     }
 
     optionsDialog = new QVOptionsDialog(parent);
-    connect(optionsDialog, &QDialog::finished, [this]{
+    connect(optionsDialog, &QDialog::finished, this, [this]{
         optionsDialog = nullptr;
     });
     optionsDialog->show();
@@ -309,7 +309,7 @@ void QVApplication::openWelcomeDialog(QWidget *parent)
     }
 
     welcomeDialog = new QVWelcomeDialog(parent);
-    connect(welcomeDialog, &QDialog::finished, [this]{
+    connect(welcomeDialog, &QDialog::finished, this, [this]{
         welcomeDialog = nullptr;
     });
     welcomeDialog->show();
@@ -325,7 +325,7 @@ void QVApplication::openAboutDialog(QWidget *parent)
     }
 
     aboutDialog = new QVAboutDialog(updateChecker.getLatestVersionNum(), parent);
-    connect(aboutDialog, &QDialog::finished, [this]{
+    connect(aboutDialog, &QDialog::finished, this, [this]{
         aboutDialog = nullptr;
     });
     aboutDialog->show();

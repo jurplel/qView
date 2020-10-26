@@ -15,6 +15,8 @@ QVShortcutDialog::QVShortcutDialog(int index, QWidget *parent) :
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowFlags(windowFlags() & (~Qt::WindowContextHelpButtonHint | Qt::CustomizeWindowHint));
 
+    connect(ui->buttonBox, &QDialogButtonBox::clicked, this, &QVShortcutDialog::buttonBoxClicked);
+
     shortcutObject = qvApp->getShortcutManager().getShortcutsList().value(index);
     this->index = index;
     ui->keySequenceEdit->setKeySequence(shortcutObject.shortcuts.join(", "));
@@ -35,7 +37,7 @@ void QVShortcutDialog::done(int r)
     QDialog::done(r);
 }
 
-void QVShortcutDialog::on_buttonBox_clicked(QAbstractButton *button)
+void QVShortcutDialog::buttonBoxClicked(QAbstractButton *button)
 {
     if (ui->buttonBox->buttonRole(button) == QDialogButtonBox::AcceptRole)
     {

@@ -24,7 +24,7 @@ signals:
     void shortcutsListChanged(int index, QStringList shortcutsStringList);
 
 private slots:
-    void on_buttonBox_clicked(QAbstractButton *button);
+    void buttonBoxClicked(QAbstractButton *button);
 
 private:
     void done(int r) override;

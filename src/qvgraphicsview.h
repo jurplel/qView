@@ -107,8 +107,8 @@ private:
     QRectF adjustedBoundingRect;
     QSize adjustedImageSize;
 
-    QTransform fittedMatrix;
-    QTransform scaledMatrix;
+    QTransform fittedTransform;
+    QTransform scaledTransform;
 
     bool isFilteringEnabled;
     bool isScalingEnabled;

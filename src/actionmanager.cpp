@@ -91,7 +91,8 @@ QList<QAction*> ActionManager::getAllClonesOfAction(const QString &key, QWidget 
         if (action->associatedWidgets().isEmpty())
             continue;
 
-        auto *parentWidget = action->associatedWidgets().first()->parentWidget();
+        const auto &associatedWidgets = action->associatedWidgets();
+        auto *parentWidget = associatedWidgets.first()->parentWidget();
 
         if (parentWidget == parent || (parentWidget && parentWidget->parent() == parent))
         {
@@ -266,7 +267,7 @@ QMenu *ActionManager::buildRecentsMenu(bool includeClearAction, QWidget *parent)
     recentsMenu->menuAction()->setData("recents");
     recentsMenu->setIcon(QIcon::fromTheme("document-open-recent"));
 
-    connect(recentsMenu, &QMenu::aboutToShow, [this]{
+    connect(recentsMenu, &QMenu::aboutToShow, this, [this]{
         this->loadRecentsList();
     });
 
@@ -440,13 +441,8 @@ void ActionManager::actionTriggered(QAction *triggeredAction)
 
 void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *relevantWindow)
 {
+    // Conditions that will work with a nullptr window passed
     auto key = triggeredAction->data().toStringList().first();
-    if (key.startsWith("recent"))
-    {
-        QChar finalChar = key.at(key.length()-1);
-        relevantWindow->openRecent(finalChar.digitValue());
-    }
-
     if (key == "quit") {
         if (relevantWindow) // if a window was passed
             relevantWindow->close(); // close it so geometry is saved
@@ -455,8 +451,14 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
         qvApp->newWindow();
     } else if (key == "open") {
         qvApp->pickFile(relevantWindow);
-    } else if (key == "openurl") {
-        relevantWindow->pickUrl();
+    } else if (key == "quit") {
+        if (relevantWindow) // if a window was passed
+            relevantWindow->close(); // close it so geometry is saved
+        QCoreApplication::quit();
+    } else if (key == "newwindow") {
+        qvApp->newWindow();
+    } else if (key == "open") {
+        qvApp->pickFile(relevantWindow);
     } else if (key == "closewindow") {
         auto *active = QApplication::activeWindow();
 #ifdef COCOA_LOADED
@@ -464,12 +466,33 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
 #endif
         active->close();
     } else if (key == "closeallwindows") {
-        for (auto *widget : QApplication::topLevelWidgets()) {
+        const auto topLevelWidgets = QApplication::topLevelWidgets();
+        for (auto *widget : topLevelWidgets) {
 #ifdef COCOA_LOADED
             QVCocoaFunctions::closeWindow(widget->windowHandle());
 #endif
             widget->close();
         }
+    } else if (key == "options") {
+        qvApp->openOptionsDialog(relevantWindow);
+    } else if (key == "about") {
+        qvApp->openAboutDialog(relevantWindow);
+    } else if (key == "welcome") {
+        qvApp->openWelcomeDialog(relevantWindow);
+    } else if (key == "clearrecents") {
+        qvApp->getActionManager().clearRecentsList();
+    }
+
+    // The great filter
+    if (!relevantWindow)
+        return;
+
+    // Conditions that require a valid window pointer
+    if (key.startsWith("recent")) {
+        QChar finalChar = key.at(key.length()-1);
+        relevantWindow->openRecent(finalChar.digitValue());
+    } else if (key == "openurl") {
+        relevantWindow->pickUrl();
     } else if (key == "opencontainingfolder") {
         relevantWindow->openContainingFolder();
     } else if (key == "showfileinfo") {
@@ -520,14 +543,6 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
         relevantWindow->increaseSpeed();
     } else if (key == "slideshow") {
         relevantWindow->toggleSlideshow();
-    } else if (key == "options") {
-        qvApp->openOptionsDialog(relevantWindow);
-    } else if (key == "about") {
-        qvApp->openAboutDialog(relevantWindow);
-    } else if (key == "welcome") {
-        qvApp->openWelcomeDialog(relevantWindow);
-    } else if (key == "clearrecents") {
-        qvApp->getActionManager().clearRecentsList();
     }
 }
 

@@ -54,7 +54,7 @@ QVWelcomeDialog::QVWelcomeDialog(QWidget *parent) :
     ui->infoLabel->setOpenExternalLinks(true);
 
     ui->updateCheckBox->setChecked(qvApp->getSettingsManager().getBoolean("updatenotifications"));
-    connect(ui->updateCheckBox, &QCheckBox::stateChanged, [](int state){
+    connect(ui->updateCheckBox, &QCheckBox::stateChanged, qvApp, [](int state){
         QSettings settings;
         settings.beginGroup("options");
         settings.setValue("updatenotifications", state > 0);

@@ -42,15 +42,15 @@ protected:
     void updateBgColorButton();
 
 private slots:
-    void on_shortcutsTable_cellDoubleClicked(int row, int column);
+    void shortcutCellDoubleClicked(int row, int column);
 
-    void on_buttonBox_clicked(QAbstractButton *button);
+    void buttonBoxClicked(QAbstractButton *button);
 
-    void on_bgColorCheckbox_stateChanged(int arg1);
+    void bgColorCheckboxStateChanged(int arg1);
 
-    void on_scalingCheckbox_stateChanged(int arg1);
+    void scalingCheckboxStateChanged(int arg1);
 
-    void on_windowResizeComboBox_currentIndexChanged(int index);
+    void windowResizeComboBoxCurrentIndexChanged(int index);
 
 private:
     Ui::QVOptionsDialog *ui;

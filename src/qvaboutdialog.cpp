@@ -64,7 +64,7 @@ QVAboutDialog::QVAboutDialog(double givenLatestVersionNum, QWidget *parent) :
                                   R"(Source code available under GPLv3 on <a style="color: #03A9F4; text-decoration:none;" href="https://github.com/jurplel/qView">Github</a><br>)"
                                   "Icon glyph created by Guilhem from the Noun Project<br>"
                                   "Copyright © 2018-2020 jurplel and qView contributors")
-                                  .arg(QT_VERSION_STR).arg(QSysInfo::buildCpuArchitecture());
+                                  .arg(QT_VERSION_STR, QSysInfo::buildCpuArchitecture());
 
     ui->infoLabel2->setFont(font4);
     ui->infoLabel2->setText(labelText2);

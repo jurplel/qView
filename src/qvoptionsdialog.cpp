@@ -19,6 +19,12 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowFlags(windowFlags() & (~Qt::WindowContextHelpButtonHint | Qt::CustomizeWindowHint));
 
+    connect(ui->buttonBox, &QDialogButtonBox::clicked, this, &QVOptionsDialog::buttonBoxClicked);
+    connect(ui->shortcutsTable, &QTableWidget::cellDoubleClicked, this, &QVOptionsDialog::shortcutCellDoubleClicked);
+    connect(ui->bgColorCheckbox, &QCheckBox::stateChanged, this, &QVOptionsDialog::bgColorCheckboxStateChanged);
+    connect(ui->scalingCheckbox, &QCheckBox::stateChanged, this, &QVOptionsDialog::scalingCheckboxStateChanged);
+    connect(ui->windowResizeComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &QVOptionsDialog::windowResizeComboBoxCurrentIndexChanged);
+
     // On macOS, the dialog should not be dependent on any window
 #ifndef Q_OS_MACOS
     setWindowModality(Qt::WindowModal);
@@ -177,7 +183,7 @@ void QVOptionsDialog::syncCheckbox(QCheckBox *checkbox, const QString &key, bool
 
     if (makeConnection)
     {
-        connect(checkbox, &QCheckBox::stateChanged, [this, key](int arg1) {
+        connect(checkbox, &QCheckBox::stateChanged, this, [this, key](int arg1) {
             modifySetting(key, static_cast<bool>(arg1));
         });
     }
@@ -193,7 +199,7 @@ void QVOptionsDialog::syncRadioButtons(QList<QRadioButton *> buttons, const QStr
     {
         for (int i = 0; i < buttons.length(); i++)
         {
-            connect(buttons.value(i), &QRadioButton::clicked, [this, key, i] {
+            connect(buttons.value(i), &QRadioButton::clicked, this, [this, key, i] {
                 modifySetting(key, i);
             });
         }
@@ -208,7 +214,7 @@ void QVOptionsDialog::syncComboBox(QComboBox *comboBox, const QString &key, bool
 
     if (makeConnection)
     {
-        connect(comboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), [this, key](int index) {
+        connect(comboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [this, key](int index) {
             modifySetting(key, index);
         });
     }
@@ -222,7 +228,7 @@ void QVOptionsDialog::syncSpinBox(QSpinBox *spinBox, const QString &key, bool de
 
     if (makeConnection)
     {
-        connect(spinBox, QOverload<int>::of(&QSpinBox::valueChanged), [this, key](int arg1) {
+        connect(spinBox, QOverload<int>::of(&QSpinBox::valueChanged), this, [this, key](int arg1) {
             modifySetting(key, arg1);
         });
     }
@@ -236,7 +242,7 @@ void QVOptionsDialog::syncDoubleSpinBox(QDoubleSpinBox *doubleSpinBox, const QSt
 
     if (makeConnection)
     {
-        connect(doubleSpinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [this, key](double arg1) {
+        connect(doubleSpinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, [this, key](double arg1) {
             modifySetting(key, arg1);
         });
     }
@@ -283,18 +289,18 @@ void QVOptionsDialog::updateShortcutsTable()
     updateButtonBox();
 }
 
-void QVOptionsDialog::on_shortcutsTable_cellDoubleClicked(int row, int column)
+void QVOptionsDialog::shortcutCellDoubleClicked(int row, int column)
 {
     Q_UNUSED(column)
     auto *shortcutDialog = new QVShortcutDialog(row, this);
-    connect(shortcutDialog, &QVShortcutDialog::shortcutsListChanged, [this](int index, const QStringList &stringListShortcuts) {
+    connect(shortcutDialog, &QVShortcutDialog::shortcutsListChanged, this, [this](int index, const QStringList &stringListShortcuts) {
         transientShortcuts.replace(index, stringListShortcuts);
         updateShortcutsTable();
     });
     shortcutDialog->open();
 }
 
-void QVOptionsDialog::on_buttonBox_clicked(QAbstractButton *button)
+void QVOptionsDialog::buttonBoxClicked(QAbstractButton *button)
 {
     auto role = ui->buttonBox->buttonRole(button);
     if (role == QDialogButtonBox::AcceptRole || role == QDialogButtonBox::ApplyRole)
@@ -351,7 +357,7 @@ void QVOptionsDialog::bgColorButtonClicked()
 
     auto *colorDialog = new QColorDialog(ui->bgColorButton->text(), this);
     colorDialog->setWindowModality(Qt::WindowModal);
-    connect(colorDialog, &QDialog::accepted, [this, colorDialog] {
+    connect(colorDialog, &QDialog::accepted, colorDialog, [this, colorDialog] {
         auto selectedColor = colorDialog->currentColor();
 
         if (!selectedColor.isValid())
@@ -372,7 +378,7 @@ void QVOptionsDialog::updateBgColorButton()
     ui->bgColorButton->setIcon(QIcon(newPixmap));
 }
 
-void QVOptionsDialog::on_bgColorCheckbox_stateChanged(int arg1)
+void QVOptionsDialog::bgColorCheckboxStateChanged(int arg1)
 {
     if (arg1 > 0)
         ui->bgColorButton->setEnabled(true);
@@ -382,7 +388,7 @@ void QVOptionsDialog::on_bgColorCheckbox_stateChanged(int arg1)
     updateBgColorButton();
 }
 
-void QVOptionsDialog::on_scalingCheckbox_stateChanged(int arg1)
+void QVOptionsDialog::scalingCheckboxStateChanged(int arg1)
 {
     if (arg1 > 0)
         ui->scalingTwoCheckbox->setEnabled(true);
@@ -390,7 +396,7 @@ void QVOptionsDialog::on_scalingCheckbox_stateChanged(int arg1)
         ui->scalingTwoCheckbox->setEnabled(false);
 }
 
-void QVOptionsDialog::on_windowResizeComboBox_currentIndexChanged(int index)
+void QVOptionsDialog::windowResizeComboBoxCurrentIndexChanged(int index)
 {
     if (index == 0)
     {

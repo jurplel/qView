@@ -76,10 +76,10 @@ void UpdateChecker::openDialog()
     msgBox->setStandardButtons(QMessageBox::Close | QMessageBox::Reset);
     msgBox->button(QMessageBox::Reset)->setText(tr("&Disable Update Checking"));
     msgBox->addButton(downloadButton, QMessageBox::ActionRole);
-    connect(downloadButton, &QAbstractButton::clicked, [this]{
+    connect(downloadButton, &QAbstractButton::clicked, this, [this]{
         QDesktopServices::openUrl(DOWNLOAD_URL);
     });
-    connect(msgBox->button(QMessageBox::Reset), &QAbstractButton::clicked, []{
+    connect(msgBox->button(QMessageBox::Reset), &QAbstractButton::clicked, qvApp, []{
         QSettings settings;
         settings.beginGroup("options");
         settings.setValue("updatenotifications", false);
