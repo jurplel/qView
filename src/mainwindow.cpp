@@ -549,6 +549,7 @@ void MainWindow::showFileInfo()
 {
     refreshProperties();
     info->show();
+    info->raise();
 }
 
 void MainWindow::copy()
