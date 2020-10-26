@@ -484,6 +484,7 @@ void MainWindow::openUrl(const QUrl &url)
         progressDialog->setMaximum(0);
 
         auto *tempFile = new QTemporaryFile(this);
+        tempFile->setFileTemplate(qvApp->applicationName() + ".XXXXXX.png");
 
         auto *saveFutureWatcher = new QFutureWatcher<bool>();
         connect(saveFutureWatcher, &QFutureWatcher<bool>::finished, this, [progressDialog, tempFile, saveFutureWatcher, this](){
