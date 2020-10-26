@@ -30,7 +30,7 @@ steps:
         echo $Error[0]
     }
 
-    mv qView.exe "qView$(nightlyString).$(Build.BuildNumber).exe"
+    mv qView.exe "qView$(nightlyString)$(Build.BuildNumber).exe"
   condition: and(succeeded(), ne( variables['skipDeploy'], 'true' ), eq( variables['Agent.OS'], 'Windows_NT' ))
   displayName: 'Run windeployqt'
 
@@ -41,7 +41,7 @@ steps:
     cp $(Qt5_DIR)/plugins/imageformats/libqapng.dylib qView.app/Contents/PlugIns/imageformats/
     cp $(Qt5_DIR)/plugins/imageformats/libqavif.dylib qView.app/Contents/PlugIns/imageformats/
 
-    mv qView.app 'qView$(nightlyString).$(Build.BuildNumber).app'
+    mv qView.app 'qView$(nightlyString)$(Build.BuildNumber).app'
   condition: and(succeeded(), ne( variables['skipDeploy'], 'true' ), eq( variables['Agent.OS'], 'Darwin' ))
   displayName: 'Run macdeployqt'
 
@@ -62,7 +62,7 @@ steps:
     rm qview
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
     ../linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/qView.desktop -appimage -updateinformation="gh-releases-zsync|jurplel|qView|latest|qView-*x86_64.AppImage.zsync" $(extra_plugins_maybe)
-    mv *.AppImage qView$(nightlyString).$(Build.BuildNumber).x86_64.AppImage
+    mv *.AppImage qView$(nightlyString)$(Build.BuildNumber).x86_64.AppImage
     rm -r appdir
   condition: and(succeeded(), ne( variables['skipDeploy'], 'true' ), eq( variables['Agent.OS'], 'Linux' ))
   displayName: 'Run linuxdeployqt'

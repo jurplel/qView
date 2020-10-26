@@ -43,9 +43,11 @@ jobs:
       if [ ${{ parameters.useNightly }} = True ]; then
         echo "##vso[task.setvariable variable=nightlyDefines]$(defines)"
         echo "##vso[task.setvariable variable=nightlyString]-nightly"
+        echo "##vso[task.setvariable variable=buildNumString].$(Build.BuildNumber)"
       else
         echo "##vso[task.setvariable variable=nightlyDefines]"
         echo "##vso[task.setvariable variable=nightlyString]"
+        echo "##vso[task.setvariable variable=buildNumString]"
       fi
     condition: and(succeeded(), ne(variables['dontPublish'], 'true'))
     displayName: 'Set matrix env variables'
@@ -66,7 +68,7 @@ jobs:
   - task: PublishBuildArtifacts@1
     inputs:
       pathtoPublish: 'bin'
-      artifactName: 'qView$(nightlyString)-$(MatrixName).$(Build.BuildNumber)'
+      artifactName: 'qView$(nightlyString)-$(MatrixName)$(buildNumString)'
     condition: and(succeeded(), ne(variables['dontPublish'], 'true'))
     displayName: 'Publish build artifact'
 
