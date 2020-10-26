@@ -48,9 +48,7 @@
 				<string>avif</string>
 				<string>avifs</string>
 				<string>heic</string>
-				<string>heics</string>
 				<string>heif</string>
-				<string>heifs</string>
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
