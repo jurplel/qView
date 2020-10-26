@@ -4,7 +4,7 @@
 #define MyAppExeName "qView.exe"
 
 ; Update these when building
-#define MyAppVersion "3.0"
+#define MyAppVersion "4.0"
 #define MyAppYear "2020"
 
 [Setup]

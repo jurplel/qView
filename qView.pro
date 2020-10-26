@@ -1,5 +1,5 @@
 TARGET = qView
-VERSION = 3.0
+VERSION = 4.0
 
 QT += core gui network widgets
 
@@ -23,7 +23,7 @@ CONFIG += c++11
 win32:QT += svg # needed for including svg support in static build
 win32:CONFIG += static
 RC_ICONS = "dist/win/qView.ico"
-QMAKE_TARGET_COPYRIGHT = "Copyright ï¿½ 2020 jurplel and qView contributors"
+QMAKE_TARGET_COPYRIGHT = "Copyright © 2020 jurplel and qView contributors"
 QMAKE_TARGET_DESCRIPTION = "qView"
 
 # macOS specific stuff
@@ -34,6 +34,7 @@ macx:!CONFIG(NO_COCOA) {
 }
 QMAKE_TARGET_BUNDLE_PREFIX = "com.qview"
 
+# Special info.plist for qt 5.9 on mac
 equals(QT_MAJOR_VERSION, 5):lessThan(QT_MINOR_VERSION, 10) {
     QMAKE_INFO_PLIST = "dist/mac/Info_legacy.plist"
 } else {
