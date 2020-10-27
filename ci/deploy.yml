@@ -59,7 +59,7 @@ steps:
     chmod a+x linuxdeployqt-continuous-x86_64.AppImage
 
     mkdir -p bin/appdir/usr
-    make install INSTALL_ROOT=bin/appdir/usr
+    make install INSTALL_ROOT=bin/appdir
     cd bin
     rm qview
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
