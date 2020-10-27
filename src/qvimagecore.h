@@ -71,8 +71,6 @@ public:
     const QVFileDetails& getCurrentFileDetails() const {return currentFileDetails; }
     int getCurrentRotation() const {return currentRotation; }
 
-    void setDevicePixelRatio(qreal scaleFactor);
-
 signals:
     void animatedFrameChanged(QRect rect);
 
@@ -90,8 +88,6 @@ private:
     QVFileDetails currentFileDetails;
     QVFileDetails lastFileDetails;
     int currentRotation;
-
-    qreal devicePixelRatio;
 
     QFutureWatcher<QVImageAndFileInfo> loadFutureWatcher;
 

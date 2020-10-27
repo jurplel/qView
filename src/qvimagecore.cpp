@@ -47,8 +47,6 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
 
     currentRotation = 0;
 
-    devicePixelRatio = 0;
-
     QPixmapCache::setCacheLimit(51200);
 
     connect(&loadedMovie, &QMovie::updated, this, &QVImageCore::animatedFrameChanged);
@@ -184,8 +182,6 @@ void QVImageCore::postRead(const QVImageAndFileInfo &readImageAndFileInfo)
 
 void QVImageCore::postLoad()
 {
-    loadedPixmap.setDevicePixelRatio(devicePixelRatio);
-
     fileChangeRateTimer->start();
 
     currentFileDetails.isPixmapLoaded = true;
@@ -485,9 +481,4 @@ void QVImageCore::settingsUpdated()
 
     //update folder info to re-sort
     updateFolderInfo();
-}
-
-void QVImageCore::setDevicePixelRatio(qreal scaleFactor)
-{
-    devicePixelRatio = scaleFactor;
 }
