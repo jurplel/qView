@@ -66,7 +66,11 @@ macx {
 
 # Stuff for make install
 # To use a custom prefix: qmake PREFIX=/usr
+# An environment variable will also work: PREFIX=/usr qmake
 # You can also use at install time: make install INSTALL_ROOT=/usr but this will not override the prefix, just set where it begins
+isEmpty(PREFIX) {
+    PREFIX = $$(PREFIX)
+}
 isEmpty(PREFIX) {
     PREFIX = /usr/local
 }
@@ -97,7 +101,7 @@ appstream.path = $$PREFIX/share/metainfo/
 appstream.files = dist/linux/qview.appdata.xml
 
 unix:INSTALLS += binary desktop icon16 icon32 icon64 icon128 icon256 iconsvg license appstream
-unix:TARGET = qview
+unix:!macx:TARGET = qview
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
