@@ -96,10 +96,8 @@ license.files = LICENSE
 appstream.path = $$PREFIX/share/metainfo/
 appstream.files = dist/linux/qview.appdata.xml
 
-#unix:!macx:INSTALLS += binary desktop icon16 icon32 icon64 icon128 icon256 iconsvg license appstream
-#unix:!macx:TARGET = qview
-
-unix:INSTALLS += binary desktop icon16 icon32 icon64 icon128 icon256 iconsvg license appstream
+unix:!macx:INSTALLS += binary desktop icon16 icon32 icon64 icon128 icon256 iconsvg license appstream
+unix:!macx:TARGET = qview
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
