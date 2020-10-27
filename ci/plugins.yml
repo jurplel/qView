@@ -133,7 +133,7 @@ steps:
     git clone https://code.qt.io/qt/qtstyleplugins.git
     cd qtstyleplugins
     qmake
-    sudo make installt
+    sudo make install
 
     wget 'https://sourceforge.net/projects/qt5ct/files/latest/download'
     tar xf download

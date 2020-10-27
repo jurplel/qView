@@ -64,8 +64,9 @@ macx {
     ICON = "dist/mac/qView.icns"
 }
 
-# stuff for make install
+# Stuff for make install
 # To use a custom prefix: qmake PREFIX=/usr
+# You can also use at install time: make install INSTALL_ROOT=/usr
 isEmpty(PREFIX) {
  PREFIX = /usr/local
 }

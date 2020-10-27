@@ -58,8 +58,8 @@ steps:
     wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
     chmod a+x linuxdeployqt-continuous-x86_64.AppImage
 
-    mkdir bin/appdir
-    make install INSTALL_ROOT=bin/appdir
+    mkdir -p bin/appdir/usr
+    make install INSTALL_ROOT=bin/appdir/usr
     cd bin
     rm qview
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/

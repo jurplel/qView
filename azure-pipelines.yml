@@ -9,7 +9,7 @@ parameters:
   default: true
 
 variables:
-  defines: 'DEFINES+=NIGHTLY=$(Build.BuildNumber)'
+  defines: 'NIGHTLY=$(Build.BuildNumber)'
   qtVersion: '5.12.9'
 
 name: '$(Date:yyyy-MM-dd).$(Rev:r)'
