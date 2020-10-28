@@ -126,7 +126,7 @@ void QVApplication::pickFile(MainWindow *parent)
     if (parent)
         fileDialog->setWindowModality(Qt::WindowModal);
 
-    connect(fileDialog, &QFileDialog::filesSelected, parent, [parent](const QStringList &selected){
+    connect(fileDialog, &QFileDialog::filesSelected, fileDialog, [parent](const QStringList &selected){
         bool isFirstLoop = true;
         for (const auto &file : selected)
         {
