@@ -24,6 +24,10 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     for (const auto &byteArray : byteArrayList)
     {
         auto fileExtString = QString::fromUtf8(byteArray);
+        // Qt 5.15 seems to have added pdf support for QImageReader but it is super broken in qView at the moment
+        if (fileExtString == "pdf")
+            continue;
+
         filterList << "*." + fileExtString;
     }
 
