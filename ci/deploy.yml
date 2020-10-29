@@ -32,6 +32,7 @@ steps:
 
     mv qView.exe "qView$(nightlyString)$(buildNumString).exe"
 
+    mkdir ..\dist\win\qView-$(MatrixName)
     copy * ..\dist\win\qView-$(MatrixName)
     iscc ..\dist\win\qView$($env:arch.substring(3, 2)).iss
     copy ..\dist\win\Output\* .\
