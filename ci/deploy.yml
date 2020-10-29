@@ -31,6 +31,10 @@ steps:
     }
 
     mv qView.exe "qView$(nightlyString)$(buildNumString).exe"
+
+    copy * ..\dist\win\qView-$(MatrixName)
+    iscc ..\dist\win\qView$($env:arch.substring(3, 2)).iss
+    copy ..\dist\win\Output\* .\
   condition: and(succeeded(), ne( variables['skipDeploy'], 'true' ), eq( variables['Agent.OS'], 'Windows_NT' ))
   displayName: 'Run windeployqt'
 
