@@ -42,16 +42,26 @@ steps:
   displayName: 'Run windeployqt'
 
 - script: |
+    if [ $(nightlyString) == -nightly ]; then
+          VERSION=$(Build.BuildNumber)
+    else
+          VERSION=$(sed -n 's/[^0-9.]*//g;2p' qView.pro)
+    fi
+    
     cd bin
 
     cp $(Qt5_DIR)/plugins/imageformats/libqapng.dylib qView.app/Contents/PlugIns/imageformats/
     cp $(Qt5_DIR)/plugins/imageformats/libqavif.dylib qView.app/Contents/PlugIns/imageformats/
     
+    macdeployqt qView.app
     if [ $(nightlyString) == -nightly ]; then
         mv qView.app 'qView$(nightlyString)$(buildNumString).app'
+        macdeployqt *.app -dmg
+    else
+        brew install create-dmg
+        create-dmg --volname "qView $VERSION" --window-size 660 400 --icon-size 160 --icon "qView.app" 180 170 --hide-extension qView.app --app-drop-link 480 170 "qView-$VERSION.dmg" "qView.app"
     fi
 
-    macdeployqt *.app -dmg
     rm -r *.app
   condition: and(succeeded(), ne( variables['skipDeploy'], 'true' ), eq( variables['Agent.OS'], 'Darwin' ))
   displayName: 'Run macdeployqt'

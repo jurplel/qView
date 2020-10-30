@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleExecutable</key>
 	<string>@EXECUTABLE@</string>
+	<key>CFBundleName</key>
+	<string>qView</string>
 	<key>CFBundleGetInfoString</key>
 	<string>@SHORT_VERSION@</string>
 	<key>CFBundleIconFile</key>
