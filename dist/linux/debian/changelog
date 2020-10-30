@@ -1,5 +1,5 @@
-qview (4.0-1) bionic; urgency=low
+qview (4.0-2) bionic; urgency=low
 
-  * Initial release
+  * Fixed packaging error in control file
 
- -- jurplel <jurplel@interversehq.com>  Mon, 26 Oct 2020 13:09:44 -0400
+ -- jurplel <jurplel@interversehq.com>  Fri, 30 Oct 2020 16:08:59 -0400
