@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>384</width>
-    <height>404</height>
+    <width>401</width>
+    <height>408</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -91,7 +91,7 @@
          </property>
         </widget>
        </item>
-       <item row="5" column="1">
+       <item row="6" column="1">
         <spacer name="horizontalSpacer_4">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -104,7 +104,7 @@
          </property>
         </spacer>
        </item>
-       <item row="6" column="0">
+       <item row="7" column="0">
         <widget class="QLabel" name="label_6">
          <property name="toolTip">
           <string>Control when the window should resize to fit the image's actual size</string>
@@ -114,7 +114,7 @@
          </property>
         </widget>
        </item>
-       <item row="6" column="1">
+       <item row="7" column="1">
         <widget class="QComboBox" name="windowResizeComboBox">
          <property name="toolTip">
           <string>Control when the window should resize to fit the image's actual size</string>
@@ -139,14 +139,14 @@
          </item>
         </widget>
        </item>
-       <item row="7" column="0">
+       <item row="8" column="0">
         <widget class="QLabel" name="minWindowResizeLabel">
          <property name="text">
           <string>Minimum size:</string>
          </property>
         </widget>
        </item>
-       <item row="7" column="1">
+       <item row="8" column="1">
         <widget class="QSpinBox" name="minWindowResizeSpinBox">
          <property name="toolTip">
           <string>Control the minimum size that the window should reach when matching the image's actual size</string>
@@ -168,7 +168,7 @@
          </property>
         </widget>
        </item>
-       <item row="8" column="0">
+       <item row="9" column="0">
         <widget class="QLabel" name="maxWindowResizeLabel">
          <property name="toolTip">
           <string>Control the maximum size that the window should reach when matching the image's actual size</string>
@@ -178,7 +178,7 @@
          </property>
         </widget>
        </item>
-       <item row="8" column="1">
+       <item row="9" column="1">
         <widget class="QSpinBox" name="maxWindowResizeSpinBox">
          <property name="toolTip">
           <string>Control the maximum size that the window should reach when matching the image's actual size</string>
@@ -200,7 +200,7 @@
          </property>
         </widget>
        </item>
-       <item row="9" column="1">
+       <item row="10" column="1">
         <spacer name="horizontalSpacer_3">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -214,13 +214,6 @@
         </spacer>
        </item>
        <item row="11" column="1">
-        <widget class="QCheckBox" name="menubarCheckbox">
-         <property name="text">
-          <string>&amp;Show menubar</string>
-         </property>
-        </widget>
-       </item>
-       <item row="10" column="1">
         <widget class="QCheckBox" name="darkTitlebarCheckbox">
          <property name="toolTip">
           <string>Choose whether or not the titlebar should always be dark regardless of your chosen macOS appearance</string>
@@ -230,6 +223,23 @@
          </property>
          <property name="checked">
           <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="1">
+        <widget class="QCheckBox" name="menubarCheckbox">
+         <property name="text">
+          <string>Show menubar</string>
+         </property>
+        </widget>
+       </item>
+       <item row="13" column="1">
+        <widget class="QCheckBox" name="detailsInFullscreen">
+         <property name="toolTip">
+          <string>Choose whether or not to display the titlebar text while in fullscreen</string>
+         </property>
+         <property name="text">
+          <string>Show titlebar text in fullscreen</string>
          </property>
         </widget>
        </item>

@@ -99,6 +99,7 @@ void SettingsManager::initializeSettingsLibrary()
     settingsLibrary.insert("maxwindowresizedpercentage", {70, {}});
     settingsLibrary.insert("titlebaralwaysdark", {true, {}});
     settingsLibrary.insert("menubarenabled", {false, {}});
+    settingsLibrary.insert("fullscreendetails", {false, {}});
     // Image
     settingsLibrary.insert("filteringenabled", {true, {}});
     settingsLibrary.insert("scalingenabled", {true, {}});
