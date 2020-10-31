@@ -46,6 +46,9 @@ MainWindow::MainWindow(QWidget *parent) :
     graphicsView = new QVGraphicsView(this);
     centralWidget()->layout()->addWidget(graphicsView);
 
+    // Hide fullscreen label by default
+    ui->fullscreenLabel->hide();
+
     // Connect graphicsview signals
     connect(graphicsView, &QVGraphicsView::fileLoaded, this, &MainWindow::fileLoaded);
     connect(graphicsView, &QVGraphicsView::updatedLoadedPixmapItem, this, &MainWindow::setWindowSize);
@@ -170,6 +173,12 @@ void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 
 void MainWindow::showEvent(QShowEvent *event)
 {
+    if (!menuBar()->sizeHint().isEmpty())
+    {
+        ui->fullscreenLabel->setMargin(0);
+        ui->fullscreenLabel->setMinimumHeight(menuBar()->sizeHint().height());
+    }
+
     QMainWindow::showEvent(event);
 }
 
@@ -204,6 +213,9 @@ void MainWindow::changeEvent(QEvent *event)
                 fullscreenAction->setIcon(QIcon::fromTheme("view-fullscreen"));
             }
         }
+
+        if (qvApp->getSettingsManager().getBoolean("fullscreendetails"))
+            ui->fullscreenLabel->setVisible(windowState() == Qt::WindowFullScreen);
     }
 }
 
@@ -252,6 +264,8 @@ void MainWindow::settingsUpdated()
     //slideshow timer
     slideshowTimer->setInterval(static_cast<int>(settingsManager.getDouble("slideshowtimer")*1000));
 
+
+    ui->fullscreenLabel->setVisible(qvApp->getSettingsManager().getBoolean("fullscreendetails") && (windowState() == Qt::WindowFullScreen));
 }
 
 void MainWindow::shortcutsUpdated()
@@ -354,6 +368,10 @@ void MainWindow::buildWindowTitle()
     }
 
     setWindowTitle(newString);
+
+    // Update fullscreen label to titlebar text as well
+    ui->fullscreenLabel->setText(newString);
+
     windowHandle()->setFilePath(getCurrentFileDetails().fileInfo.absoluteFilePath());
 }
 

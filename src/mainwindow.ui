@@ -18,6 +18,9 @@
     <enum>Qt::LeftToRight</enum>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>0</number>
+    </property>
     <property name="leftMargin">
      <number>0</number>
     </property>
@@ -30,6 +33,13 @@
     <property name="bottomMargin">
      <number>0</number>
     </property>
+    <item>
+     <widget class="QLabel" name="fullscreenLabel">
+      <property name="margin">
+       <number>3</number>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
  </widget>
