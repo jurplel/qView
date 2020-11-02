@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-	<id>qview</id>
+	<id>com.interversehq.qView</id>
 	<metadata_license>CC0-1.0</metadata_license>
 	<project_license>GPL-3.0+</project_license>
 	<name>qView</name>
@@ -9,12 +9,18 @@
 	<description>
 		<p>qView is a Qt image viewer designed with minimalism and usability in mind. It is designed to get out of your way and let you view your image without excess GUI elements, while also being flexible enough for everyday use.</p>
 	</description>
-	<launchable type="desktop-id">qview.desktop</launchable>
+	<launchable type="desktop-id">qView.desktop</launchable>
 	<url type="homepage">https://interversehq.com/qview/</url>
 	<url type="bugtracker">https://github.com/jurplel/qview/</url>
 	<screenshots>
 		<screenshot type="default">
 			<image>https://interversehq.com/qview/assets/img/screenshot1.png</image>
+		</screenshot>
+		<screenshot>
+			<image>https://interversehq.com/qview/assets/img/screenshot2.png</image>
+		</screenshot>
+		<screenshot>
+			<image>https://interversehq.com/qview/assets/img/screenshot3.png</image>
 		</screenshot>
 	</screenshots>
 	<provides>
