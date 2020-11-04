@@ -52,7 +52,7 @@ macx {
         DEFINES += COCOA_LOADED
         message("Linked to cocoa framework")
     }
-    QMAKE_TARGET_BUNDLE_PREFIX = "com.qview"
+    QMAKE_TARGET_BUNDLE_PREFIX = "com.interversehq"
 
     # Special info.plist for qt 5.9 on mac
     equals(QT_MAJOR_VERSION, 5):lessThan(QT_MINOR_VERSION, 10) {
@@ -80,27 +80,27 @@ message("Installation prefix is $$PREFIX")
 binary.path = $$PREFIX/bin
 binary.files = bin/qview
 desktop.path = $$PREFIX/share/applications
-desktop.files = dist/linux/qView.desktop
+desktop.files = dist/linux/com.interversehq.qView.desktop
 icon16.path = $$PREFIX/share/icons/hicolor/16x16/apps/
-icon16.files = dist/linux/hicolor/16x16/apps/qview.png
+icon16.files = dist/linux/hicolor/16x16/apps/com.interversehq.qView.png
 icon32.path = $$PREFIX/share/icons/hicolor/32x32/apps/
-icon32.files = dist/linux/hicolor/32x32/apps/qview.png
+icon32.files = dist/linux/hicolor/32x32/apps/com.interversehq.qView.png
 icon64.path = $$PREFIX/share/icons/hicolor/64x64/apps/
-icon64.files = dist/linux/hicolor/64x64/apps/qview.png
+icon64.files = dist/linux/hicolor/64x64/apps/com.interversehq.qView.png
 icon128.path = $$PREFIX/share/icons/hicolor/128x128/apps/
-icon128.files = dist/linux/hicolor/128x128/apps/qview.png
+icon128.files = dist/linux/hicolor/128x128/apps/com.interversehq.qView.png
 icon256.path = $$PREFIX/share/icons/hicolor/256x256/apps/
-icon256.files = dist/linux/hicolor/256x256/apps/qview.png
+icon256.files = dist/linux/hicolor/256x256/apps/com.interversehq.qView.png
 iconsvg.path = $$PREFIX/share/icons/hicolor/scalable/apps/
-iconsvg.files = dist/linux/hicolor/scalable/apps/qview.svg
+iconsvg.files = dist/linux/hicolor/scalable/apps/com.interversehq.qView.svg
 iconsym.path = $$PREFIX/share/icons/hicolor/symbolic/apps/
-iconsym.files = dist/linux/hicolor/symbolic/apps/qview-symbolic.svg
+iconsym.files = dist/linux/hicolor/symbolic/apps/com.interversehq.qView-symbolic.svg
 license.path = $$PREFIX/share/licenses/qview/
 license.files = LICENSE
 appstream.path = $$PREFIX/share/metainfo/
-appstream.files = dist/linux/qview.appdata.xml
+appstream.files = dist/linux/com.interversehq.qView.appdata.xml
 
-unix:INSTALLS += binary desktop icon16 icon32 icon64 icon128 icon256 iconsvg license appstream
+unix:INSTALLS += binary desktop icon16 icon32 icon64 icon128 icon256 iconsvg iconsym license appstream
 unix:!macx:TARGET = qview
 
 # The following define makes your compiler emit warnings if you use
