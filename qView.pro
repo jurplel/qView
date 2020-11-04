@@ -52,7 +52,7 @@ macx {
         DEFINES += COCOA_LOADED
         message("Linked to cocoa framework")
     }
-    QMAKE_TARGET_BUNDLE_PREFIX = "com.qview"
+    QMAKE_TARGET_BUNDLE_PREFIX = "com.interversehq"
 
     # Special info.plist for qt 5.9 on mac
     equals(QT_MAJOR_VERSION, 5):lessThan(QT_MINOR_VERSION, 10) {
