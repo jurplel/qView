@@ -9,7 +9,7 @@
 	<description>
 		<p>qView is a Qt image viewer designed with minimalism and usability in mind. It is designed to get out of your way and let you view your image without excess GUI elements, while also being flexible enough for everyday use.</p>
 	</description>
-	<launchable type="desktop-id">qView.desktop</launchable>
+	<launchable type="desktop-id">com.interversehq.qView.desktop</launchable>
 	<url type="homepage">https://interversehq.com/qview/</url>
 	<url type="bugtracker">https://github.com/jurplel/qview/</url>
 	<screenshots>
