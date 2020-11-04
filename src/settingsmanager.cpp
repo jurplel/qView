@@ -21,7 +21,7 @@ bool SettingsManager::loadTranslation()
     bool success = translator->load(":/i18n/qview_test.ts");
     if (success)
     {
-        qInfo() << "Loaded translation for " + translator->language();
+        qInfo() << "Loaded translation";
         QCoreApplication::installTranslator(translator);
     }
     return success;
