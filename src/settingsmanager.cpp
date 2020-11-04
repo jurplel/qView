@@ -17,8 +17,7 @@ SettingsManager::SettingsManager(QObject *parent) : QObject(parent)
 bool SettingsManager::loadTranslation()
 {
     QTranslator *translator = new QTranslator();
-//    bool success = translator->load(QLocale::system(), QLatin1String("qview"), QLatin1String("_"), QLatin1String(":/i18n"));
-    bool success = translator->load(":/i18n/qview_test.ts");
+    bool success = translator->load(QLocale::system(), QLatin1String("qview"), QLatin1String("_"), QLatin1String(":/i18n"));
     if (success)
     {
         qInfo() << "Loaded translation";
