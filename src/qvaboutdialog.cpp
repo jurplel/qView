@@ -25,8 +25,8 @@ QVAboutDialog::QVAboutDialog(double givenLatestVersionNum, QWidget *parent) :
 #endif
 
     // add fonts
-    QFontDatabase::addApplicationFont(":/fonts/resources/Lato-Light.ttf");
-    QFontDatabase::addApplicationFont(":/fonts/resources/Lato-Regular.ttf");
+    QFontDatabase::addApplicationFont(":/fonts/Lato-Light.ttf");
+    QFontDatabase::addApplicationFont(":/fonts/Lato-Regular.ttf");
 
     int modifier = 0;
     //set main title font

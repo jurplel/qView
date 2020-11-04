@@ -23,6 +23,8 @@ public:
 
     explicit SettingsManager(QObject *parent = nullptr);
 
+    static bool loadTranslation();
+
     void loadSettings();
 
     const QVariant getSetting(const QString &key, bool defaults = false) const;

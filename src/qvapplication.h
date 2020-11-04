@@ -85,7 +85,7 @@ private:
     QStringList filterList;
     QStringList nameFilterList;
 
-    // This order is important
+    // This order is very important
     SettingsManager settingsManager; 
     ActionManager actionManager;
     ShortcutManager shortcutManager;

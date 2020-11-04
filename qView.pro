@@ -119,5 +119,10 @@ DEFINES += QT_NO_FOREACH
 
 include(src/src.pri)
 
+
+CONFIG += lrelease embed_translations
+TRANSLATIONS += $$files(i18n/qview_*.ts)
+
 RESOURCES += \
-    resources.qrc
+    resources/resources.qrc
+

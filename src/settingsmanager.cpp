@@ -1,13 +1,29 @@
 #include "settingsmanager.h"
 
 #include <QSettings>
+#include <QTranslator>
+#include <QLocale>
+#include <QCoreApplication>
 
 #include <QDebug>
 
 SettingsManager::SettingsManager(QObject *parent) : QObject(parent)
 {
     initializeSettingsLibrary();
+    loadTranslation();
     loadSettings();
+}
+
+bool SettingsManager::loadTranslation()
+{
+    QTranslator *translator = new QTranslator();
+    bool success = translator->load(QLocale::system(), QLatin1String("qview"), QLatin1String("_"), QLatin1String(":/i18n"));
+    if (success)
+    {
+        qInfo() << "Loaded translation for " + translator->language();
+        QCoreApplication::installTranslator(translator);
+    }
+    return success;
 }
 
 void SettingsManager::loadSettings()

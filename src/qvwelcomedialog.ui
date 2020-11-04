@@ -457,7 +457,7 @@ QCheckBox::indicator:unchecked:pressed {
 }
 
 QCheckBox::indicator:checked {	
-	image: url(:/images/resources/checkmark.png);
+	image: url(:/images/checkmark.png);
 }
 
 QCheckBox::indicator:checked:hover {	
