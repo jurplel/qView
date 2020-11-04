@@ -26,4 +26,8 @@
 	<provides>
 		<binary>qview</binary>
 	</provides>
+	<content_rating type="oars-1.0" />
+	<releases>
+		<release version="4.0" date="2020-10-30" />
+	</releases>
 </component>
