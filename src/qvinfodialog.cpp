@@ -46,9 +46,9 @@ void QVInfoDialog::updateInfo()
     ui->nameLabel->setText(selectedFileInfo.fileName());
     ui->typeLabel->setText(mime.name());
     ui->locationLabel->setText(selectedFileInfo.path());
-    ui->sizeLabel->setText(formatBytes(selectedFileInfo.size()) + " (" + locale.toString(selectedFileInfo.size()) + tr(" bytes"));
+    ui->sizeLabel->setText(tr("%1 (%2 bytes)").arg(formatBytes(selectedFileInfo.size()), locale.toString(selectedFileInfo.size())));
     ui->modifiedLabel->setText(selectedFileInfo.lastModified().toString(locale.dateTimeFormat()));
-    ui->dimensionsLabel->setText(QString::number(width) + " x " + QString::number(height) + " (" + QString::number(megapixels) + tr("MP)"));
+    ui->dimensionsLabel->setText(tr("%1 x %2 (%3 MP)").arg(QString::number(width), QString::number(height), QString::number(megapixels)));
     int gcd = getGcd(width,height);
     ui->ratioLabel->setText(QString::number(width/gcd) + ":" + QString::number(height/gcd));
     if (frameCount != 0)

@@ -571,9 +571,9 @@ void ActionManager::initializeActionLibrary()
 
     auto *openContainingFolderAction = new QAction(QIcon::fromTheme("document-open"), tr("Open Containing &Folder"));
 #ifdef Q_OS_WIN
-    openContainingFolderAction->setText(tr("Show in Explorer"));
+    openContainingFolderAction->setText(tr("Show in E&xplorer"));
 #elif defined Q_OS_MACOS
-    openContainingFolderAction->setText(tr("Show in Finder"));
+    openContainingFolderAction->setText(tr("Show in &Finder"));
 #endif
     openContainingFolderAction->setData({"disable"});
     actionLibrary.insert("opencontainingfolder", openContainingFolderAction);
@@ -677,13 +677,13 @@ void ActionManager::initializeActionLibrary()
 #if defined Q_OS_UNIX & !defined Q_OS_MACOS
     optionsAction->setText(tr("Preference&s"));
 #elif defined Q_OS_MACOS
-    optionsAction->setText(tr("Preferences..."));
+    optionsAction->setText(tr("Preference&s..."));
 #endif
     actionLibrary.insert("options", optionsAction);
 
     auto *aboutAction = new QAction(QIcon::fromTheme("help-about"), tr("&About"));
 #ifdef Q_OS_MACOS
-    aboutAction->setText(tr("About qView"));
+    aboutAction->setText(tr("&About qView"));
 #endif
     actionLibrary.insert("about", aboutAction);
 

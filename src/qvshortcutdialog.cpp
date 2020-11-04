@@ -50,7 +50,7 @@ void QVShortcutDialog::buttonBoxClicked(QAbstractButton *button)
             if (!conflictingShortcut.isEmpty())
             {
                 QString nativeShortcutString = sequence.toString(QKeySequence::NativeText);
-                QMessageBox::warning(this, tr("Shortcut Already Used"), "\"" + nativeShortcutString + "\" " + tr("is already bound to") + " \"" + conflictingShortcut + "\"");
+                QMessageBox::warning(this, tr("Shortcut Already Used"), tr("\"%1\" is already bound to \"%2\"").arg(nativeShortcutString, conflictingShortcut));
                 return;
             }
         }

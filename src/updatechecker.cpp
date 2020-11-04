@@ -70,7 +70,7 @@ void UpdateChecker::openDialog()
 
     auto *msgBox = new QMessageBox();
     msgBox->setWindowTitle(tr("qView Update Available"));
-    msgBox->setText("qView " + QString::number(latestVersionNum, 'f', 1) + tr(" is available to download.")
+    msgBox->setText(tr("qView %1 is available to download.").arg(QString::number(latestVersionNum, 'f', 1))
                     + "\n\n" + releaseDate.toString(locale.dateFormat()) + "\n" + changelog);
     msgBox->setWindowModality(Qt::ApplicationModal);
     msgBox->setStandardButtons(QMessageBox::Close | QMessageBox::Reset);
