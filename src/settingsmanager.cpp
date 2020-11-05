@@ -4,6 +4,7 @@
 #include <QTranslator>
 #include <QLocale>
 #include <QCoreApplication>
+#include <QDir>
 
 #include <QDebug>
 
@@ -14,16 +15,39 @@ SettingsManager::SettingsManager(QObject *parent) : QObject(parent)
     loadTranslation();
 }
 
-bool SettingsManager::loadTranslation()
+QString SettingsManager::getDefaultLanguage() const
 {
-    //    bool success = translator->load(QLocale::system(), QLatin1String("qview"), QLatin1String("_"), QLatin1String(":/i18n"));
+    const auto entries = QDir(":/i18n/").entryList();
+    const auto languages = QLocale::system().uiLanguages();
+    for (auto language : languages)
+    {
+        language.replace('-', '_');
+        const auto lang_countryless = language.left(2);
 
+        for (auto entry : entries)
+        {
+            entry.remove(0, 6);
+            entry.remove(entry.length()-3, 3);
+
+            if (entry == language)
+                return language;
+
+            if (entry == lang_countryless)
+                return lang_countryless;
+        }
+    }
+    return "en";
+}
+
+bool SettingsManager::loadTranslation() const
+{
+    getDefaultLanguage();
     QString lang = getString("language");
     QTranslator *translator = new QTranslator();
     bool success = translator->load("qview_" + lang + ".qm", QLatin1String(":/i18n"));
     if (success)
     {
-        qInfo() << "Loaded translation " << lang;
+        qInfo() << "Loaded translation" << lang;
         QCoreApplication::installTranslator(translator);
     }
     return success;
@@ -134,7 +158,7 @@ void SettingsManager::initializeSettingsLibrary()
     settingsLibrary.insert("cropmode", {0, {}});
     settingsLibrary.insert("pastactualsizeenabled", {true, {}});
     // Miscellaneous
-    settingsLibrary.insert("language", {"en", {}});
+    settingsLibrary.insert("language", {getDefaultLanguage(), {}});
     settingsLibrary.insert("sortmode", {0, {}});
     settingsLibrary.insert("sortdescending", {false, {}});
     settingsLibrary.insert("preloadingmode", {1, {}});
