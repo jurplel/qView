@@ -10,17 +10,20 @@
 SettingsManager::SettingsManager(QObject *parent) : QObject(parent)
 {
     initializeSettingsLibrary();
-    loadTranslation();
     loadSettings();
+    loadTranslation();
 }
 
 bool SettingsManager::loadTranslation()
 {
+    //    bool success = translator->load(QLocale::system(), QLatin1String("qview"), QLatin1String("_"), QLatin1String(":/i18n"));
+
+    QString lang = getString("language");
     QTranslator *translator = new QTranslator();
-    bool success = translator->load(QLocale::system(), QLatin1String("qview"), QLatin1String("_"), QLatin1String(":/i18n"));
+    bool success = translator->load("qview_" + lang + ".qm", QLatin1String(":/i18n"));
     if (success)
     {
-        qInfo() << "Loaded translation";
+        qInfo() << "Loaded translation " << lang;
         QCoreApplication::installTranslator(translator);
     }
     return success;
@@ -104,6 +107,11 @@ const QString SettingsManager::getString(const QString &key, bool defaults) cons
     return "";
 }
 
+bool SettingsManager::isDefault(const QString &key) const
+{
+    return getSetting(key) == getSetting(key, true);
+}
+
 void SettingsManager::initializeSettingsLibrary()
 {
     // Window
@@ -126,6 +134,7 @@ void SettingsManager::initializeSettingsLibrary()
     settingsLibrary.insert("cropmode", {0, {}});
     settingsLibrary.insert("pastactualsizeenabled", {true, {}});
     // Miscellaneous
+    settingsLibrary.insert("language", {"en", {}});
     settingsLibrary.insert("sortmode", {0, {}});
     settingsLibrary.insert("sortdescending", {false, {}});
     settingsLibrary.insert("preloadingmode", {1, {}});

@@ -16,6 +16,8 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    languageRestartMessageShown = false;
+
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowFlags(windowFlags() & (~Qt::WindowContextHelpButtonHint | Qt::CustomizeWindowHint));
 
@@ -23,7 +25,8 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     connect(ui->shortcutsTable, &QTableWidget::cellDoubleClicked, this, &QVOptionsDialog::shortcutCellDoubleClicked);
     connect(ui->bgColorCheckbox, &QCheckBox::stateChanged, this, &QVOptionsDialog::bgColorCheckboxStateChanged);
     connect(ui->scalingCheckbox, &QCheckBox::stateChanged, this, &QVOptionsDialog::scalingCheckboxStateChanged);
-    connect(ui->windowResizeComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &QVOptionsDialog::windowResizeComboBoxCurrentIndexChanged);
+
+    populateLanguages();
 
     // On macOS, the dialog should not be dependent on any window
 #ifndef Q_OS_MACOS
@@ -47,6 +50,7 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
 #endif
 
     syncSettings(false, true);
+    connect(ui->langComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &QVOptionsDialog::languageComboBoxCurrentIndexChanged);
     syncShortcuts();
     updateButtonBox();
 }
@@ -159,6 +163,8 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
     syncComboBox(ui->cropModeComboBox, "cropmode", defaults, makeConnections);
     // pastactualsizeenabled
     syncCheckbox(ui->pastActualSizeCheckbox, "pastactualsizeenabled", defaults, makeConnections);
+    // language
+    syncComboBoxData(ui->langComboBox, "language", defaults, makeConnections);
     // sortmode
     syncComboBox(ui->sortComboBox, "sortmode", defaults, makeConnections);
     // sortdescending
@@ -218,6 +224,20 @@ void QVOptionsDialog::syncComboBox(QComboBox *comboBox, const QString &key, bool
     {
         connect(comboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [this, key](int index) {
             modifySetting(key, index);
+        });
+    }
+}
+
+void QVOptionsDialog::syncComboBoxData(QComboBox *comboBox, const QString &key, bool defaults, bool makeConnection)
+{
+    auto val = qvApp->getSettingsManager().getString(key, defaults);
+    comboBox->setCurrentIndex(comboBox->findData(val));
+    transientSettings.insert(key, val);
+
+    if (makeConnection)
+    {
+        connect(comboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [this, key, comboBox](int index) {
+            modifySetting(key, comboBox->currentData());
         });
     }
 }
@@ -413,5 +433,36 @@ void QVOptionsDialog::windowResizeComboBoxCurrentIndexChanged(int index)
         ui->minWindowResizeSpinBox->setEnabled(true);
         ui->maxWindowResizeLabel->setEnabled(true);
         ui->maxWindowResizeSpinBox->setEnabled(true);
+    }
+}
+
+void QVOptionsDialog::populateLanguages()
+{
+    ui->langComboBox->clear();
+
+    // Put english at the top seperately because it has no file
+    QLocale eng("en");
+    ui->langComboBox->addItem(eng.nativeLanguageName() + " (en)", "en");
+
+    const auto entries = QDir(":/i18n/").entryList();
+    for (auto entry : entries)
+    {
+        entry.remove(0, 6);
+        entry.remove(entry.length()-3, 3);
+        QLocale locale(entry);
+
+        const QString langString = locale.nativeLanguageName() + " (" + entry + ")";
+
+        ui->langComboBox->addItem(langString, entry);
+    }
+}
+
+void QVOptionsDialog::languageComboBoxCurrentIndexChanged(int index)
+{
+    Q_UNUSED(index)
+    if (!languageRestartMessageShown)
+    {
+        QMessageBox::information(this, tr("Restart Required"), tr("You must restart qView to change the language."));
+        languageRestartMessageShown = true;
     }
 }

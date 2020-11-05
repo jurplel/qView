@@ -23,7 +23,7 @@
       <enum>Qt::NoFocus</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="window">
       <property name="layoutDirection">
@@ -289,7 +289,7 @@
           <string>Choose whether or not the image continues to be scaled when zooming above the window size (can be laggier with large images)</string>
          </property>
          <property name="text">
-          <string>&amp;Scaling &amp;above window size</string>
+          <string>&amp;Scaling above window size</string>
          </property>
          <property name="checked">
           <bool>true</bool>
@@ -438,14 +438,14 @@
        <string>Miscellaneous</string>
       </attribute>
       <layout class="QFormLayout" name="formLayout_3">
-       <item row="0" column="0">
+       <item row="1" column="0">
         <widget class="QLabel" name="label_8">
          <property name="text">
           <string>Sort files by:</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
+       <item row="1" column="1">
         <widget class="QComboBox" name="sortComboBox">
          <item>
           <property name="text">
@@ -474,7 +474,24 @@
          </item>
         </widget>
        </item>
+       <item row="2" column="1">
+        <widget class="QRadioButton" name="descendingRadioButton0">
+         <property name="text">
+          <string>A&amp;scending</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
        <item row="3" column="1">
+        <widget class="QRadioButton" name="descendingRadioButton1">
+         <property name="text">
+          <string>D&amp;escending</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
         <spacer name="horizontalSpacer_6">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -487,7 +504,7 @@
          </property>
         </spacer>
        </item>
-       <item row="4" column="0">
+       <item row="5" column="0">
         <widget class="QLabel" name="label_7">
          <property name="toolTip">
           <string>Controls the amount of images preloaded</string>
@@ -497,7 +514,7 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="1">
+       <item row="5" column="1">
         <widget class="QComboBox" name="preloadingComboBox">
          <property name="toolTip">
           <string>Controls the amount of images preloaded</string>
@@ -522,7 +539,7 @@
          </item>
         </widget>
        </item>
-       <item row="5" column="1">
+       <item row="6" column="1">
         <widget class="QCheckBox" name="loopFoldersCheckbox">
          <property name="toolTip">
           <string>Controls whether or not qView should go back to the first item after reaching the end of a folder</string>
@@ -535,7 +552,7 @@
          </property>
         </widget>
        </item>
-       <item row="6" column="1">
+       <item row="7" column="1">
         <spacer name="horizontalSpacer_5">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -548,14 +565,14 @@
          </property>
         </spacer>
        </item>
-       <item row="7" column="0">
+       <item row="8" column="0">
         <widget class="QLabel" name="label_4">
          <property name="text">
           <string>Slideshow direction:</string>
          </property>
         </widget>
        </item>
-       <item row="7" column="1">
+       <item row="8" column="1">
         <widget class="QComboBox" name="slideshowDirectionComboBox">
          <item>
           <property name="text">
@@ -569,31 +586,14 @@
          </item>
         </widget>
        </item>
-       <item row="8" column="0">
+       <item row="9" column="0">
         <widget class="QLabel" name="label_5">
          <property name="text">
           <string>Slideshow timer:</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
-        <widget class="QRadioButton" name="descendingRadioButton0">
-         <property name="text">
-          <string>A&amp;scending</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QRadioButton" name="descendingRadioButton1">
-         <property name="text">
-          <string>D&amp;escending</string>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="1">
+       <item row="9" column="1">
         <widget class="QDoubleSpinBox" name="slideshowTimerSpinBox">
          <property name="suffix">
           <string> sec</string>
@@ -613,13 +613,6 @@
         </widget>
        </item>
        <item row="10" column="1">
-        <widget class="QCheckBox" name="saveRecentsCheckbox">
-         <property name="text">
-          <string>Save &amp;recent files</string>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="1">
         <spacer name="horizontalSpacer_7">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -633,11 +626,28 @@
         </spacer>
        </item>
        <item row="11" column="1">
-        <widget class="QCheckBox" name="updateCheckbox">
+        <widget class="QCheckBox" name="saveRecentsCheckbox">
          <property name="text">
-          <string>&amp;Update notifications on startup</string>
+          <string>Save &amp;recent files</string>
          </property>
         </widget>
+       </item>
+       <item row="12" column="1">
+        <widget class="QCheckBox" name="updateCheckbox">
+         <property name="text">
+          <string extracomment="The notifications are for new qView releases">&amp;Update notifications on startup</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_9">
+         <property name="text">
+          <string>Language:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QComboBox" name="langComboBox"/>
        </item>
       </layout>
      </widget>

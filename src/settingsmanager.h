@@ -23,7 +23,7 @@ public:
 
     explicit SettingsManager(QObject *parent = nullptr);
 
-    static bool loadTranslation();
+    bool loadTranslation();
 
     void loadSettings();
 
@@ -38,6 +38,8 @@ public:
     const QString getString(const QString &key, bool defaults = false) const;
 
     const QHash<QString, SSetting> &getSettings() const { return settingsLibrary; }
+
+    bool isDefault(const QString &key) const;
 
 signals:
     void settingsUpdated();

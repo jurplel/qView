@@ -551,6 +551,7 @@ void ActionManager::initializeActionLibrary()
     auto *quitAction = new QAction(QIcon::fromTheme("application-exit"), tr("&Quit"));
     actionLibrary.insert("quit", quitAction);
 #ifdef Q_OS_WIN
+    //: The quit action is called "Exit" on windows
     quitAction->setText(tr("Exit"));
 #endif
 
@@ -673,16 +674,20 @@ void ActionManager::initializeActionLibrary()
     slideshowAction->setData({"disable"});
     actionLibrary.insert("slideshow", slideshowAction);
 
+    //: This is for the options dialog on windows
     auto *optionsAction = new QAction(QIcon::fromTheme("configure", QIcon::fromTheme("preferences-other")), tr("Option&s"));
 #if defined Q_OS_UNIX & !defined Q_OS_MACOS
+    //: This is for the options dialog on non-mac unix platforms
     optionsAction->setText(tr("Preference&s"));
 #elif defined Q_OS_MACOS
+    //: This is for the options dialog on mac
     optionsAction->setText(tr("Preference&s..."));
 #endif
     actionLibrary.insert("options", optionsAction);
 
     auto *aboutAction = new QAction(QIcon::fromTheme("help-about"), tr("&About"));
 #ifdef Q_OS_MACOS
+    //: This is for the about dialog on mac
     aboutAction->setText(tr("&About qView"));
 #endif
     actionLibrary.insert("about", aboutAction);
@@ -691,6 +696,7 @@ void ActionManager::initializeActionLibrary()
     actionLibrary.insert("welcome", welcomeAction);
 
     // This one is kinda different so here's a separator comment
+    //: This is for clearing the recents menu
     auto *clearRecentsAction = new QAction(QIcon::fromTheme("edit-delete"), tr("Clear &Menu"));
     actionLibrary.insert("clearrecents", clearRecentsAction);
 
