@@ -123,6 +123,10 @@ include(src/src.pri)
 CONFIG += lrelease embed_translations
 TRANSLATIONS += $$files(i18n/qview_*.ts)
 
+lupdate_only {
+    TRANSLATIONS += i18n/template.ts
+}
+
 RESOURCES += \
     resources/resources.qrc
 
