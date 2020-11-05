@@ -892,12 +892,17 @@
         <translation>Aktion</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="465"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="443"/>
+        <source>System Language</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/qvoptionsdialog.cpp" line="467"/>
         <source>Restart Required</source>
         <translation>Programmneustart erforderlich</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="465"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="467"/>
         <source>You must restart qView to change the language.</source>
         <translation>Du musst qView neustarten, um die Spracheinstellungen wirksam zu machen.</translation>
     </message>
