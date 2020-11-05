@@ -15,7 +15,7 @@ SettingsManager::SettingsManager(QObject *parent) : QObject(parent)
     loadTranslation();
 }
 
-QString SettingsManager::getDefaultLanguage() const
+QString SettingsManager::getSystemLanguage() const
 {
     const auto entries = QDir(":/i18n/").entryList();
     const auto languages = QLocale::system().uiLanguages();
@@ -41,8 +41,13 @@ QString SettingsManager::getDefaultLanguage() const
 
 bool SettingsManager::loadTranslation() const
 {
-    getDefaultLanguage();
     QString lang = getString("language");
+    if (lang == "system")
+        lang = getSystemLanguage();
+
+    if (lang == "en")
+        return true;
+
     QTranslator *translator = new QTranslator();
     bool success = translator->load("qview_" + lang + ".qm", QLatin1String(":/i18n"));
     if (success)
@@ -158,7 +163,7 @@ void SettingsManager::initializeSettingsLibrary()
     settingsLibrary.insert("cropmode", {0, {}});
     settingsLibrary.insert("pastactualsizeenabled", {true, {}});
     // Miscellaneous
-    settingsLibrary.insert("language", {getDefaultLanguage(), {}});
+    settingsLibrary.insert("language", {"system", {}});
     settingsLibrary.insert("sortmode", {0, {}});
     settingsLibrary.insert("sortdescending", {false, {}});
     settingsLibrary.insert("preloadingmode", {1, {}});

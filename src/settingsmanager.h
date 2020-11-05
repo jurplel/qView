@@ -23,7 +23,7 @@ public:
 
     explicit SettingsManager(QObject *parent = nullptr);
 
-    QString getDefaultLanguage() const;
+    QString getSystemLanguage() const;
 
     bool loadTranslation() const;
 

@@ -440,9 +440,11 @@ void QVOptionsDialog::populateLanguages()
 {
     ui->langComboBox->clear();
 
+    ui->langComboBox->addItem(tr("System Language"), "system");
+
     // Put english at the top seperately because it has no file
     QLocale eng("en");
-    ui->langComboBox->addItem(eng.nativeLanguageName() + " (en)", "en");
+    ui->langComboBox->addItem("English (en)", "en");
 
     const auto entries = QDir(":/i18n/").entryList();
     for (auto entry : entries)
