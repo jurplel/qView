@@ -567,6 +567,7 @@ void ActionManager::initializeActionLibrary()
     auto *closeWindowAction = new QAction(QIcon::fromTheme("window-close"), tr("Close Window"));
     actionLibrary.insert("closewindow", closeWindowAction);
 
+    //: Close all windows, that is
     auto *closeAllWindowsAction = new QAction(QIcon::fromTheme("window-close"), tr("Close All"));
     actionLibrary.insert("closeallwindows", closeAllWindowsAction);
 
