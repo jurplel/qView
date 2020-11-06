@@ -68,17 +68,17 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="561"/>
         <source>&amp;Open...</source>
-        <translation>&amp;Öffnen...</translation>
+        <translation>&amp;Öffnen …</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="564"/>
         <source>Open &amp;URL...</source>
-        <translation>&amp;URL öffnen...</translation>
+        <translation>&amp;URL öffnen …</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="567"/>
         <source>Close Window</source>
-        <translation>Fenster Schließen</translation>
+        <translation>Fenster schließen</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="571"/>
@@ -119,7 +119,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="594"/>
         <source>R&amp;ename...</source>
-        <translation>&amp;Umbenennen...</translation>
+        <translation>&amp;Umbenennen …</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="598"/>
@@ -189,7 +189,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="650"/>
         <source>Save Frame &amp;As...</source>
-        <translation>Frame speichern als...</translation>
+        <translation>Frame speichern als …</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="654"/>
@@ -237,7 +237,7 @@
         <location filename="../src/actionmanager.cpp" line="685"/>
         <source>Preference&amp;s...</source>
         <extracomment>This is for the options dialog on mac</extracomment>
-        <translation>&amp;Einstellungen...</translation>
+        <translation>&amp;Einstellungen …</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="689"/>
@@ -290,7 +290,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="482"/>
         <source>Downloading image...</source>
-        <translation>Bild herunterladen...</translation>
+        <translation>Bild herunterladen …</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="482"/>
@@ -301,7 +301,7 @@
         <location filename="../src/mainwindow.cpp" line="486"/>
         <location filename="../src/mainwindow.cpp" line="542"/>
         <source>Open URL...</source>
-        <translation>URL öffnen...</translation>
+        <translation>URL öffnen …</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="503"/>
@@ -321,7 +321,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="618"/>
         <source>Rename...</source>
-        <translation>Umbenennen...</translation>
+        <translation>Umbenennen …</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="619"/>
@@ -338,7 +338,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="722"/>
         <source>Save Frame As...</source>
-        <translation>Frame speichern als...</translation>
+        <translation>Frame speichern als …</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="751"/>
@@ -399,23 +399,23 @@
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="90"/>
         <source>Checking for updates...</source>
-        <translation>Überprüfe auf Updates...</translation>
+        <translation>Überprüfe auf Aktualisierungen …</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="94"/>
         <source>%1 update available</source>
         <extracomment>%1 is a version number e.g. &quot;4.0 update available&quot;</extracomment>
-        <translation>%1 Update verfügbar</translation>
+        <translation>%1 Aktualisierung verfügbar</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="98"/>
         <source>No updates available</source>
-        <translation>Keine Updates verfügbar</translation>
+        <translation>Keine Aktualisierungen verfügbar</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="102"/>
         <source>Error checking for updates</source>
-        <translation>Fehler beim Überprüfen auf Updates</translation>
+        <translation>Fehler beim Überprüfen auf Aktualisierungen</translation>
     </message>
 </context>
 <context>
@@ -433,7 +433,7 @@
     <message>
         <location filename="../src/qvapplication.cpp" line="126"/>
         <source>Open...</source>
-        <translation>Öffnen...</translation>
+        <translation>Öffnen …</translation>
     </message>
 </context>
 <context>
@@ -447,7 +447,7 @@
         <location filename="../src/qvgraphicsview.cpp" line="670"/>
         <source>Error occurred opening &quot;%3&quot;:
 %2 (Error %1)</source>
-        <translation>Fehler beim Öffnen von &quot;%3&quot;:
+        <translation>Fehler beim Öffnen von „%3“:
 %2 (Fehler %1)</translation>
     </message>
 </context>
@@ -523,7 +523,7 @@
     <message>
         <location filename="../src/qvinfodialog.cpp" line="51"/>
         <source>%1 x %2 (%3 MP)</source>
-        <translation>%1 x %2 (%3 MP)</translation>
+        <translation>%1 × %2 (%3 MP)</translation>
     </message>
 </context>
 <context>
@@ -674,7 +674,7 @@
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="276"/>
         <source>Images appear aliased (having jagged edges) without this, but it is faster</source>
-        <translation>Ohne diese Option erscheinen die Bilder im &quot;aliased&quot;-Modus, d.h. sie können kantig wirken; der &quot;aliased&quot;-Modus ist jedoch schneller</translation>
+        <translation>Ohne diese Option erscheinen die Bilder im „aliased“-Modus, d.h. sie können kantig wirken; der „aliased“-Modus ist jedoch schneller</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="279"/>
@@ -715,7 +715,7 @@
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="360"/>
         <source>Stop the image from going past its actual size when resizing the window - you can still zoom past it though</source>
-        <translation type="unfinished">Verhindert, dass beim Ändern der Fenstergröße das Bild seine tatsächliche Größe überschreitet - du kannst dennoch weiterhin zoomen</translation>
+        <translation type="unfinished">Verhindert, dass beim Ändern der Fenstergröße das Bild seine tatsächliche Größe überschreitet – du kannst dennoch weiterhin zoomen</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="363"/>
@@ -751,7 +751,7 @@
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="424"/>
         <source>Choose whether or not zooming in and out above 100% zoom will zoom towards the cursor</source>
-        <translation type="unfinished">Legt fest, ob beim Zoomen über 100 % in Richtung Mauszeiger gezoomt wird.</translation>
+        <translation type="unfinished">Legt fest, ob beim Zoomen über 100 % in Richtung Mauszeiger gezoomt wird.</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="427"/>
@@ -873,7 +873,7 @@
         <location filename="../src/qvoptionsdialog.ui" line="638"/>
         <source>&amp;Update notifications on startup</source>
         <extracomment>The notifications are for new qView releases</extracomment>
-        <translation>Benachrichtige über qView-Updates beim Programmstart</translation>
+        <translation>Benachrichtige über qView-Aktualisierungen beim Programmstart</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="645"/>
@@ -936,7 +936,7 @@
     <message>
         <location filename="../src/qvwelcomedialog.ui" line="472"/>
         <source>&amp;Enable update notifications on startup</source>
-        <translation>Benachrichtigungen über verfügbare Updates beim Programmstart &amp;zulassen</translation>
+        <translation>Benachrichtigungen über verfügbare Aktualisierungen beim Programmstart &amp;zulassen</translation>
     </message>
     <message>
         <location filename="../src/qvwelcomedialog.cpp" line="42"/>
@@ -1142,28 +1142,28 @@
     <message>
         <location filename="../src/updatechecker.cpp" line="72"/>
         <source>qView Update Available</source>
-        <translation>Udpate für qView verfügbar</translation>
+        <translation>Aktualisierung für qView verfügbar</translation>
     </message>
     <message>
         <location filename="../src/updatechecker.cpp" line="73"/>
         <source>qView %1 is available to download.</source>
-        <translation>qView %1 ist zum Download bereit.</translation>
+        <translation>qView %1 ist zum Herunterladen bereit.</translation>
     </message>
     <message>
         <location filename="../src/updatechecker.cpp" line="77"/>
         <source>&amp;Disable Update Checking</source>
-        <translation>&amp;Prüfe nicht auf Updates</translation>
+        <translation>&amp;Prüfe nicht auf Aktualisierungen</translation>
     </message>
     <message>
         <location filename="../src/updatechecker.cpp" line="87"/>
         <source>qView Update Checking Disabled</source>
-        <translation>Prüfe nicht auf qView-Updates</translation>
+        <translation>Prüfe nicht auf qView-Aktualisierungen</translation>
     </message>
     <message>
         <location filename="../src/updatechecker.cpp" line="87"/>
         <source>Update notifications on startup have been disabled.
 You can reenable them in the options dialog.</source>
-        <translation>Benachrichtigungen über Updates beim Programmstart sind deaktiviert.
+        <translation>Benachrichtigungen über Aktualisierungen beim Programmstart sind deaktiviert.
 Du kannst sie in den Einstellungen wieder aktvieren.</translation>
     </message>
 </context>
