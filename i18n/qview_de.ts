@@ -894,7 +894,7 @@
     <message>
         <location filename="../src/qvoptionsdialog.cpp" line="443"/>
         <source>System Language</source>
-        <translation type="unfinished"></translation>
+        <translation>Systemsprache</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.cpp" line="467"/>
