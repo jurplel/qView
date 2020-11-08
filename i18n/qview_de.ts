@@ -389,7 +389,7 @@
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="47"/>
         <source>Nightly %1</source>
-        <translation>Nightly %1</translation>
+        <translation>Nächtlich %1</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="62"/>
@@ -720,7 +720,7 @@
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="363"/>
         <source>Image resizes &amp;past actual size</source>
-        <translation type="unfinished">Bildänderung jenseits tatsächlicher Größe</translation>
+        <translation>Bildänderung jenseits tatsächlicher Größe</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="379"/>
@@ -751,7 +751,7 @@
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="424"/>
         <source>Choose whether or not zooming in and out above 100% zoom will zoom towards the cursor</source>
-        <translation type="unfinished">Legt fest, ob beim Zoomen über 100 % in Richtung Mauszeiger gezoomt wird.</translation>
+        <translation>Legt fest, ob beim Zoomen über 100 % in Richtung Mauszeiger gezoomt wird</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="427"/>
@@ -827,7 +827,7 @@
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="537"/>
         <source>Extended</source>
-        <translation type="unfinished">Erweiterte</translation>
+        <translation>Erweiterte</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="545"/>
