@@ -159,7 +159,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="626"/>
         <source>&amp;Flip</source>
-        <translation type="unfinished">&amp;Umdrehen</translation>
+        <translation>&amp;Umdrehen</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="630"/>
@@ -715,7 +715,7 @@
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="360"/>
         <source>Stop the image from going past its actual size when resizing the window - you can still zoom past it though</source>
-        <translation type="unfinished">Verhindert, dass beim Ändern der Fenstergröße das Bild seine tatsächliche Größe überschreitet – du kannst dennoch weiterhin zoomen</translation>
+        <translation>Verhindert, dass beim Ändern der Fenstergröße das Bild seine tatsächliche Größe überschreitet – du kannst dennoch weiterhin zoomen</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="363"/>
@@ -1054,7 +1054,7 @@
     <message>
         <location filename="../src/shortcutmanager.cpp" line="70"/>
         <source>Flip</source>
-        <translation type="unfinished">Flip</translation>
+        <translation>Umdrehen</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="71"/>
