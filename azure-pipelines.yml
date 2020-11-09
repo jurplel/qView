@@ -1,7 +1,16 @@
+parameters:
+- name: buildPlugins
+  displayName: Build Plugins
+  type: boolean
+  default: false
+- name: useNightly
+  displayName: Use Nightly version number
+  type: boolean
+  default: true
 
 variables:
-  nightlyDefines: 'DEFINES+=NIGHTLY=$(Build.BuildNumber)'
-  nightlyString: '-nightly'
+  defines: 'NIGHTLY=$(Build.BuildNumber)'
+  qtVersion: '5.12.9'
 
 name: '$(Date:yyyy-MM-dd).$(Rev:r)'
 jobs:
@@ -13,44 +22,53 @@ jobs:
         imageName: 'ubuntu-16.04'
       macos:
         imageName: 'macOS-10.15'
+      macosx:
+        imageName: 'macOS-10.15'
+        qtVersion: '5.9.9'
+        skipHardPlugins: 'true'
       win64:
         imageName: 'windows-2019'
         qtArch: 'win64_msvc2017_64'
       win32:
         imageName: 'windows-2019'
         qtArch: 'win32_msvc2017'
-      qt59:
-        imageName: 'ubuntu-18.04'
-        dontPublish: 'true'
-        skipDeploy: 'true'
 
   pool:
     vmImage: $(imageName)
 
   steps:
-  - bash: echo '##vso[task.setvariable variable=MatrixName]'$(echo $(Agent.JobName) | cut -d' ' -f2)
+  - bash: |
+      echo '##vso[task.setvariable variable=MatrixName]'$(echo $(Agent.JobName) | cut -d' ' -f2)
+      echo "##vso[task.setvariable variable=arch]$(qtArch)"
+      if [ ${{ parameters.useNightly }} = True ]; then
+        echo "##vso[task.setvariable variable=nightlyDefines]$(defines)"
+        echo "##vso[task.setvariable variable=nightlyString]-nightly"
+        echo "##vso[task.setvariable variable=buildNumString].$(Build.BuildNumber)"
+      else
+        echo "##vso[task.setvariable variable=nightlyDefines]"
+        echo "##vso[task.setvariable variable=nightlyString]"
+        echo "##vso[task.setvariable variable=buildNumString]"
+      fi
     condition: and(succeeded(), ne(variables['dontPublish'], 'true'))
-    displayName: 'Set matrix name'
+    displayName: 'Set matrix env variables'
 
   - checkout: self
 
   - template: ci/install-qt.yml
     parameters:
-      arch: $(qtArch)
+      version: $(qtVersion)
 
   - template: ci/build.yml
-    parameters:
-      defines: $(nightlyDefines)
-      arch: $(qtArch)
-    
+
+  - ${{ if eq(parameters.buildPlugins, true) }}:
+    - template: ci/plugins.yml
+
   - template: ci/deploy.yml
-    parameters:
-      skipdeploy: $(skipDeploy)
 
   - task: PublishBuildArtifacts@1
     inputs:
       pathtoPublish: 'bin'
-      artifactName: 'qView$(nightlyString)-$(MatrixName).$(Build.BuildNumber)'
+      artifactName: 'qView$(nightlyString)-$(MatrixName)$(buildNumString)'
     condition: and(succeeded(), ne(variables['dontPublish'], 'true'))
     displayName: 'Publish build artifact'
 

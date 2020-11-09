@@ -19,21 +19,15 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     welcomeDialog = nullptr;
     aboutDialog = nullptr;
 
-    // Show welcome dialog on first launch
-    QSettings settings;
-
-    if (!settings.value("firstlaunch", false).toBool())
-    {
-        settings.setValue("firstlaunch", true);
-        settings.setValue("configversion", VERSION);
-        openWelcomeDialog();
-    }
-
     // Initialize list of supported files and filters
     const auto byteArrayList = QImageReader::supportedImageFormats();
     for (const auto &byteArray : byteArrayList)
     {
         auto fileExtString = QString::fromUtf8(byteArray);
+        // Qt 5.15 seems to have added pdf support for QImageReader but it is super broken in qView at the moment
+        if (fileExtString == "pdf")
+            continue;
+
         filterList << "*." + fileExtString;
     }
 
@@ -55,7 +49,7 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
 
     // Setup macOS dock menu
     dockMenu = new QMenu();
-    connect(dockMenu, &QMenu::triggered, [](QAction *triggeredAction){
+    connect(dockMenu, &QMenu::triggered, this, [](QAction *triggeredAction){
        ActionManager::actionTriggered(triggeredAction);
     });
 
@@ -69,13 +63,15 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
 
     // Build menu bar
     menuBar = actionManager.buildMenuBar();
-    connect(menuBar, &QMenuBar::triggered, [](QAction *triggeredAction){
+    connect(menuBar, &QMenuBar::triggered, this, [](QAction *triggeredAction){
         ActionManager::actionTriggered(triggeredAction);
     });
 
     // Set mac-specific application settings
-#ifdef Q_OS_MACOS
+#ifdef COCOA_LOADED
     QVCocoaFunctions::setUserDefaults();
+#endif
+#ifdef Q_OS_MACOS
     setQuitOnLastWindowClosed(false);
 #endif
 
@@ -134,7 +130,7 @@ void QVApplication::pickFile(MainWindow *parent)
     if (parent)
         fileDialog->setWindowModality(Qt::WindowModal);
 
-    connect(fileDialog, &QFileDialog::filesSelected, [parent](const QStringList &selected){
+    connect(fileDialog, &QFileDialog::filesSelected, fileDialog, [parent](const QStringList &selected){
         bool isFirstLoop = true;
         for (const auto &file : selected)
         {
@@ -231,7 +227,7 @@ void QVApplication::checkedUpdates()
 
 void QVApplication::recentsMenuUpdated()
 {
-#ifdef Q_OS_MACOS
+#ifdef COCOA_LOADED
     QStringList recentsPathList;
     for(const auto &recent : actionManager.getRecentsList())
     {
@@ -282,9 +278,6 @@ void QVApplication::deleteFromLastActiveWindows(MainWindow *window)
 void QVApplication::openOptionsDialog(QWidget *parent)
 {
     // On macOS, the dialog should not be dependent on any window
-#ifdef Q_OS_MACOS
-    parent = nullptr;
-#endif
     if (optionsDialog)
     {
         optionsDialog->raise();
@@ -294,13 +287,13 @@ void QVApplication::openOptionsDialog(QWidget *parent)
     }
 
     optionsDialog = new QVOptionsDialog(parent);
-    connect(optionsDialog, &QDialog::finished, [this]{
+    connect(optionsDialog, &QDialog::finished, this, [this]{
         optionsDialog = nullptr;
     });
     optionsDialog->show();
 }
 
-void QVApplication::openWelcomeDialog()
+void QVApplication::openWelcomeDialog(QWidget *parent)
 {
     if (welcomeDialog)
     {
@@ -309,14 +302,14 @@ void QVApplication::openWelcomeDialog()
         return;
     }
 
-    welcomeDialog = new QVWelcomeDialog();
-    connect(welcomeDialog, &QDialog::finished, [this]{
+    welcomeDialog = new QVWelcomeDialog(parent);
+    connect(welcomeDialog, &QDialog::finished, this, [this]{
         welcomeDialog = nullptr;
     });
     welcomeDialog->show();
 }
 
-void QVApplication::openAboutDialog()
+void QVApplication::openAboutDialog(QWidget *parent)
 {
     if (aboutDialog)
     {
@@ -325,8 +318,8 @@ void QVApplication::openAboutDialog()
         return;
     }
 
-    aboutDialog = new QVAboutDialog(updateChecker.getLatestVersionNum());
-    connect(aboutDialog, &QDialog::finished, [this]{
+    aboutDialog = new QVAboutDialog(updateChecker.getLatestVersionNum(), parent);
+    connect(aboutDialog, &QDialog::finished, this, [this]{
         aboutDialog = nullptr;
     });
     aboutDialog->show();

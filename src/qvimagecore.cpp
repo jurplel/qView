@@ -1,5 +1,6 @@
 #include "qvimagecore.h"
 #include "qvapplication.h"
+#include <random>
 #include <QMessageBox>
 #include <QDir>
 #include <QUrl>
@@ -45,8 +46,6 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     lastFileDetails.loadedPixmapSize = QSize();
 
     currentRotation = 0;
-
-    devicePixelRatio = 0;
 
     QPixmapCache::setCacheLimit(51200);
 
@@ -183,8 +182,6 @@ void QVImageCore::postRead(const QVImageAndFileInfo &readImageAndFileInfo)
 
 void QVImageCore::postLoad()
 {
-    loadedPixmap.setDevicePixelRatio(devicePixelRatio);
-
     fileChangeRateTimer->start();
 
     currentFileDetails.isPixmapLoaded = true;
@@ -206,6 +203,11 @@ void QVImageCore::postLoad()
 
     currentFileDetails.baseImageSize = imageReader.size();
     currentFileDetails.loadedPixmapSize = loadedPixmap.size();
+    if (currentFileDetails.baseImageSize == QSize(-1, -1))
+    {
+        qInfo() << "QImageReader::size gave an invalid size for " + currentFileDetails.fileInfo.fileName() + ", using size from loaded pixmap";
+        currentFileDetails.baseImageSize = loadedPixmap.size();
+    }
 
     emit fileLoaded();
 }
@@ -282,6 +284,11 @@ void QVImageCore::requestCaching()
     for (int i = currentFileDetails.loadedIndexInFolder-preloadingDistance; i <= currentFileDetails.loadedIndexInFolder+preloadingDistance; i++)
     {
         int index = i;
+
+        // Don't try to cache the currently loaded image
+        if (index == currentFileDetails.loadedIndexInFolder)
+            continue;
+
         //keep within index range
         if (isLoopFoldersEnabled)
         {
@@ -293,7 +300,7 @@ void QVImageCore::requestCaching()
 
         //if still out of range after looping, just cancel the cache for this index
         if (index > currentFileDetails.folderFileInfoList.length()-1 || index < 0 || currentFileDetails.folderFileInfoList.isEmpty())
-            return;
+            continue;
 
         QString filePath = currentFileDetails.folderFileInfoList[index].absoluteFilePath();
         filesToPreload.append(filePath);
@@ -311,10 +318,10 @@ void QVImageCore::requestCachingFile(const QString &filePath)
         return;
 
     //check if too big for caching
-    imageReader.setFileName(filePath);
+    QImageReader newImageReader(filePath);
     QTransform transform;
     transform.rotate(currentRotation);
-    if (((imageReader.size().width()*imageReader.size().height()*32)/8)/1000 > QPixmapCache::cacheLimit()/2)
+    if (((newImageReader.size().width()*newImageReader.size().height()*32)/8)/1000 > QPixmapCache::cacheLimit()/2)
         return;
 
     auto *cacheFutureWatcher = new QFutureWatcher<QVImageAndFileInfo>();
@@ -474,9 +481,4 @@ void QVImageCore::settingsUpdated()
 
     //update folder info to re-sort
     updateFolderInfo();
-}
-
-void QVImageCore::setDevicePixelRatio(qreal scaleFactor)
-{
-    devicePixelRatio = scaleFactor;
 }

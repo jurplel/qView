@@ -39,7 +39,7 @@ public:
     {
         QList<QAction*> allActionsOfType;
 
-        auto allNestedActions = getAllNestedActions(givenActionList);
+        const auto allNestedActions = getAllNestedActions(givenActionList);
         for (const auto &action : allNestedActions)
         {
             if (action->data() == type)

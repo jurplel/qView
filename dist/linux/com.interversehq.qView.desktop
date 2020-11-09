@@ -1,0 +1,16 @@
+[Desktop Entry]
+Name=qView
+GenericName=Image Viewer
+GenericName[pt]=Visualizador de imagens
+Type=Application
+Exec=qview %U
+Icon=com.interversehq.qView
+StartupNotify=true
+StartupWMClass=qview
+Comment=Minimal image viewer
+Comment[pt]=Visualizador de imagens minimalista
+Keywords=photos;pictures;jpeg;png;gif;webp;
+Keywords[pt]=fotos;imagens;jpeg;png;gif;webp;
+Categories=Qt;Graphics;Viewer;Photography;
+Terminal=false
+MimeType=image/bmp;image/x-win-bitmap;image/gif;image/icns;image/x-icon;image/jp2;image/jpeg;image/jpg;video/x-mng;video/mng;image/x-portable-bitmap;image/x-portable-graymap;image/png;image/x-portable-pixmap;image/svg+xml;image/tiff;image/vnd.wap.wbmp;image/webp;image/x-xbitmap;image/x-xpixmap;image/avif;image/avif-sequence;image/heic;image/heic-sequence;image/heif;image/heif-sequence;

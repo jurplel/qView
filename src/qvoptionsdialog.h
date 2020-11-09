@@ -30,6 +30,7 @@ protected:
     void syncCheckbox(QCheckBox *checkbox, const QString &key, bool defaults = false, bool makeConnection = false);
     void syncRadioButtons(QList<QRadioButton*> buttons, const QString &key, bool defaults = false, bool makeConnection = false);
     void syncComboBox(QComboBox *comboBox, const QString &key, bool defaults = false, bool makeConnection = false);
+    void syncComboBoxData(QComboBox *comboBox, const QString &key, bool defaults = false, bool makeConnection = false);
     void syncSpinBox(QSpinBox *spinBox, const QString &key, bool defaults = false, bool makeConnection = false);
     void syncDoubleSpinBox(QDoubleSpinBox *doubleSpinBox, const QString &key, bool defaults = false, bool makeConnection = false);
     void syncShortcuts(bool defaults = false);
@@ -37,17 +38,20 @@ protected:
     void updateButtonBox();
     void bgColorButtonClicked();
     void updateBgColorButton();
+    void populateLanguages();
 
 private slots:
-    void on_shortcutsTable_cellDoubleClicked(int row, int column);
+    void shortcutCellDoubleClicked(int row, int column);
 
-    void on_buttonBox_clicked(QAbstractButton *button);
+    void buttonBoxClicked(QAbstractButton *button);
 
-    void on_bgColorCheckbox_stateChanged(int arg1);
+    void bgColorCheckboxStateChanged(int arg1);
 
-    void on_scalingCheckbox_stateChanged(int arg1);
+    void scalingCheckboxStateChanged(int arg1);
 
-    void on_windowResizeComboBox_currentIndexChanged(int index);
+    void windowResizeComboBoxCurrentIndexChanged(int index);
+
+    void languageComboBoxCurrentIndexChanged(int index);
 
 private:
     Ui::QVOptionsDialog *ui;
@@ -55,6 +59,8 @@ private:
     QHash<QString, QVariant> transientSettings;
 
     QList<QStringList> transientShortcuts;
+
+    bool languageRestartMessageShown;
 };
 
 

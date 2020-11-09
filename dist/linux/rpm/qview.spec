@@ -1,10 +1,10 @@
 Name:		qview
-Version:	3.0
+Version:	4.0
 Release:	1
 Summary:	Practical and minimal image viewer
 
 Group:		Productivity/Graphics/Viewers
-License:	GPL-3.0-only
+License:	GPL-3.0-or-later
 URL:		https://interversehq.com/qview/
 Source:	    https://github.com/jurplel/qView/releases/download/%{version}/qView-%{version}.tar.gz
 

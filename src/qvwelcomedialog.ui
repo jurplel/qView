@@ -457,7 +457,7 @@ QCheckBox::indicator:unchecked:pressed {
 }
 
 QCheckBox::indicator:checked {	
-	image: url(:/images/resources/checkmark.png);
+	image: url(:/images/checkmark.png);
 }
 
 QCheckBox::indicator:checked:hover {	
@@ -469,7 +469,7 @@ QCheckBox::indicator:checked:pressed {
 }</string>
      </property>
      <property name="text">
-      <string>Enable update notifications on startup</string>
+      <string>&amp;Enable update notifications on startup</string>
      </property>
     </widget>
    </item>

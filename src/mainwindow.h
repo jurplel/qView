@@ -7,6 +7,7 @@
 
 #include <QMainWindow>
 #include <QShortcut>
+#include <QNetworkAccessManager>
 
 namespace Ui {
 class MainWindow;
@@ -140,6 +141,8 @@ private:
     bool justLaunchedWithImage;
 
     Qt::WindowStates storedWindowState;
+
+    QNetworkAccessManager networkAccessManager;
 };
 
 #endif // MAINWINDOW_H

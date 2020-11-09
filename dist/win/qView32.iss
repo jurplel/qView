@@ -4,7 +4,7 @@
 #define MyAppExeName "qView.exe"
 
 ; Update these when building
-#define MyAppVersion "3.0"
+#define MyAppVersion "4.0"
 #define MyAppYear "2020"
 
 [Setup]
@@ -25,7 +25,7 @@ WizardImageFile=wiz.bmp
 UninstallDisplayName={#MyAppName}
 UninstallDisplayIcon={app}\{#MyAppExeName}
 VersionInfoVersion={#MyAppVersion}
-AppCopyright=Copyright ï¿½ 2018-{#MyAppYear}, {#MyAppPublisher}
+AppCopyright=Copyright © 2018-{#MyAppYear}, {#MyAppPublisher}
 MinVersion=0,6.1
 DisableProgramGroupPage=yes
 ChangesAssociations=yes
@@ -42,7 +42,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "fileassociation"; Description: "Create file associations"; GroupDescription: "Other:";
 
 [Files]
-Source: "qView32.exe"; DestDir: "{app}"; DestName: "{#MyAppExeName}"; Flags: ignoreversion
+Source: "qView-win32/*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 Source: "qView.VisualElementsManifest.xml"; DestDir: "{app}"; Flags: ignoreversion
 Source: "win-tile-m.png"; DestDir: "{app}"; Flags: ignoreversion
 Source: "win-tile-s.png"; DestDir: "{app}"; Flags: ignoreversion
@@ -81,6 +81,13 @@ Root: HKCR; Subkey: ".wbmp\OpenWithProgids"; ValueType: string; ValueName: "{#My
 Root: HKCR; Subkey: ".webp\OpenWithProgids"; ValueType: string; ValueName: "{#MyAppName}.1"; ValueData: ""; Flags: uninsdeletevalue; Tasks: fileassociation
 Root: HKCR; Subkey: ".xbm\OpenWithProgids"; ValueType: string; ValueName: "{#MyAppName}.1"; ValueData: ""; Flags: uninsdeletevalue; Tasks: fileassociation
 Root: HKCR; Subkey: ".xpm\OpenWithProgids"; ValueType: string; ValueName: "{#MyAppName}.1"; ValueData: ""; Flags: uninsdeletevalue; Tasks: fileassociation
+Root: HKCR; Subkey: ".apng\OpenWithProgids"; ValueType: string; ValueName: "{#MyAppName}.1"; ValueData: ""; Flags: uninsdeletevalue; Tasks: fileassociation
+Root: HKCR; Subkey: ".avif\OpenWithProgids"; ValueType: string; ValueName: "{#MyAppName}.1"; ValueData: ""; Flags: uninsdeletevalue; Tasks: fileassociation
+Root: HKCR; Subkey: ".avifs\OpenWithProgids"; ValueType: string; ValueName: "{#MyAppName}.1"; ValueData: ""; Flags: uninsdeletevalue; Tasks: fileassociation
+Root: HKCR; Subkey: ".heic\OpenWithProgids"; ValueType: string; ValueName: "{#MyAppName}.1"; ValueData: ""; Flags: uninsdeletevalue; Tasks: fileassociation
+Root: HKCR; Subkey: ".heics\OpenWithProgids"; ValueType: string; ValueName: "{#MyAppName}.1"; ValueData: ""; Flags: uninsdeletevalue; Tasks: fileassociation
+Root: HKCR; Subkey: ".heif\OpenWithProgids"; ValueType: string; ValueName: "{#MyAppName}.1"; ValueData: ""; Flags: uninsdeletevalue; Tasks: fileassociation
+Root: HKCR; Subkey: ".heifs\OpenWithProgids"; ValueType: string; ValueName: "{#MyAppName}.1"; ValueData: ""; Flags: uninsdeletevalue; Tasks: fileassociation
 
 ; Capabilities keys for default programs/apps to work
 Root: HKLM; Subkey: "Software\{#MyAppName}"; Flags: uninsdeletekey; Tasks: fileassociation
@@ -108,6 +115,13 @@ Root: HKLM; Subkey: "Software\{#MyAppName}\Capabilities\FileAssociations"; Value
 Root: HKLM; Subkey: "Software\{#MyAppName}\Capabilities\FileAssociations"; ValueType: string; ValueName: ".webp"; ValueData: "{#MyAppName}.1"; Tasks: fileassociation
 Root: HKLM; Subkey: "Software\{#MyAppName}\Capabilities\FileAssociations"; ValueType: string; ValueName: ".xbm"; ValueData: "{#MyAppName}.1"; Tasks: fileassociation
 Root: HKLM; Subkey: "Software\{#MyAppName}\Capabilities\FileAssociations"; ValueType: string; ValueName: ".xpm"; ValueData: "{#MyAppName}.1"; Tasks: fileassociation
+Root: HKLM; Subkey: "Software\{#MyAppName}\Capabilities\FileAssociations"; ValueType: string; ValueName: ".apng"; ValueData: "{#MyAppName}.1"; Tasks: fileassociation
+Root: HKLM; Subkey: "Software\{#MyAppName}\Capabilities\FileAssociations"; ValueType: string; ValueName: ".avif"; ValueData: "{#MyAppName}.1"; Tasks: fileassociation
+Root: HKLM; Subkey: "Software\{#MyAppName}\Capabilities\FileAssociations"; ValueType: string; ValueName: ".avifs"; ValueData: "{#MyAppName}.1"; Tasks: fileassociation
+Root: HKLM; Subkey: "Software\{#MyAppName}\Capabilities\FileAssociations"; ValueType: string; ValueName: ".heic"; ValueData: "{#MyAppName}.1"; Tasks: fileassociation
+Root: HKLM; Subkey: "Software\{#MyAppName}\Capabilities\FileAssociations"; ValueType: string; ValueName: ".heics"; ValueData: "{#MyAppName}.1"; Tasks: fileassociation
+Root: HKLM; Subkey: "Software\{#MyAppName}\Capabilities\FileAssociations"; ValueType: string; ValueName: ".heif"; ValueData: "{#MyAppName}.1"; Tasks: fileassociation
+Root: HKLM; Subkey: "Software\{#MyAppName}\Capabilities\FileAssociations"; ValueType: string; ValueName: ".heifs"; ValueData: "{#MyAppName}.1"; Tasks: fileassociation
 
 Root: HKLM; Subkey: "Software\RegisteredApplications"; ValueType: string; ValueName: "qView"; ValueData: "Software\qView\Capabilities"; Flags: uninsdeletevalue; Tasks: fileassociation
 

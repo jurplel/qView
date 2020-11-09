@@ -10,6 +10,8 @@
 UpdateChecker::UpdateChecker(QObject *parent) : QObject(parent)
 {
     latestVersionNum = -1.0;
+
+    connect(&netAccessManager, &QNetworkAccessManager::finished, this, &UpdateChecker::readReply);
 }
 
 void UpdateChecker::check()
@@ -23,10 +25,7 @@ void UpdateChecker::sendRequest(const QUrl &url)
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
-    auto *netAccessManager = new QNetworkAccessManager;
-    connect(netAccessManager, &QNetworkAccessManager::finished, this, &UpdateChecker::readReply);
-
-    netAccessManager->get(request);
+    netAccessManager.get(request);
 }
 
 void UpdateChecker::readReply(QNetworkReply *reply)
@@ -71,16 +70,16 @@ void UpdateChecker::openDialog()
 
     auto *msgBox = new QMessageBox();
     msgBox->setWindowTitle(tr("qView Update Available"));
-    msgBox->setText("qView " + QString::number(latestVersionNum, 'f', 1) + tr(" is available to download.")
+    msgBox->setText(tr("qView %1 is available to download.").arg(QString::number(latestVersionNum, 'f', 1))
                     + "\n\n" + releaseDate.toString(locale.dateFormat()) + "\n" + changelog);
     msgBox->setWindowModality(Qt::ApplicationModal);
     msgBox->setStandardButtons(QMessageBox::Close | QMessageBox::Reset);
-    msgBox->button(QMessageBox::Reset)->setText(tr("Disable Update Checking"));
+    msgBox->button(QMessageBox::Reset)->setText(tr("&Disable Update Checking"));
     msgBox->addButton(downloadButton, QMessageBox::ActionRole);
-    connect(downloadButton, &QAbstractButton::clicked, [this]{
+    connect(downloadButton, &QAbstractButton::clicked, this, [this]{
         QDesktopServices::openUrl(DOWNLOAD_URL);
     });
-    connect(msgBox->button(QMessageBox::Reset), &QAbstractButton::clicked, []{
+    connect(msgBox->button(QMessageBox::Reset), &QAbstractButton::clicked, qvApp, []{
         QSettings settings;
         settings.beginGroup("options");
         settings.setValue("updatenotifications", false);

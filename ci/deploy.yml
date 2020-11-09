@@ -1,50 +1,89 @@
-parameters:
-- name: 'skipdeploy'
-  default: 'false'
-  type: string
-
 steps:
-- script: |
+- pwsh: |
+    $ProgressPreference = 'SilentlyContinue'
+    Invoke-WebRequest https://mirror.firedaemon.com/OpenSSL/openssl-1.1.1i-dev.zip -O openssl.zip
+
+    7z x -y .\openssl.zip
+    If ($env:arch.substring(3, 2) -eq '32') {
+        copy openssl-1.1\x86\bin\libssl-1_1.dll bin\
+        copy openssl-1.1\x86\bin\libcrypto-1_1.dll bin\
+    }  Else {
+        copy openssl-1.1\x64\bin\libssl-1_1-x64.dll bin\
+        copy openssl-1.1\x64\bin\libcrypto-1_1-x64.dll bin\
+    } 
+
     cd bin
     windeployqt qView.exe --no-compiler-runtime
-    rename qView.exe "qView$(nightlyString).$(Build.BuildNumber).exe"
-  condition: and(succeeded(), ne( variables['skipdeploy'], 'true' ), eq( variables['Agent.OS'], 'Windows_NT' ))
+
+    try {
+      copy ..\QtApng\plugins\imageformats\qapng.dll imageformats\
+
+      copy ..\libde265\libde265\libde265.dll .\
+      copy ..\libde265\libheif\libheif\heif.dll .\
+      copy ..\libde265\libheif\qt-heif-image-plugin\bin\imageformats\qheif.dll imageformats\
+      
+      copy ..\qt-avif-image-plugin\plugins\imageformats\qavif.dll imageformats\
+
+      Write-Host "Successfully copied plugins"
+    } catch {
+        Write-Host "Failed to copy plugins"
+        echo $Error[0]
+    }
+
+    mv qView.exe "qView$(nightlyString)$(buildNumString).exe"
+
+    If ($env:nightlyString -ne '-nightly') {
+      mkdir ..\dist\win\qView-$(MatrixName)
+      copy -R * ..\dist\win\qView-$(MatrixName)
+      iscc ..\dist\win\qView$($env:arch.substring(3, 2)).iss
+      copy ..\dist\win\Output\* .\
+    }
+  condition: and(succeeded(), ne( variables['skipDeploy'], 'true' ), eq( variables['Agent.OS'], 'Windows_NT' ))
   displayName: 'Run windeployqt'
 
 - script: |
+    if [ $(nightlyString) == -nightly ]; then
+          VERSION=$(Build.BuildNumber)
+    else
+          VERSION=$(sed -n 's/[^0-9.]*//g;2p' qView.pro)
+    fi
+    
     cd bin
-    macdeployqt qView.app/
-    mv qView.app 'qView$(nightlyString).$(Build.BuildNumber).app'
-  condition: and(succeeded(), ne( variables['skipdeploy'], 'true' ), eq( variables['Agent.OS'], 'Darwin' ))
+
+    cp $(Qt5_DIR)/plugins/imageformats/libqapng.dylib qView.app/Contents/PlugIns/imageformats/
+    cp $(Qt5_DIR)/plugins/imageformats/libqavif.dylib qView.app/Contents/PlugIns/imageformats/
+    
+    macdeployqt qView.app
+    if [ $(nightlyString) == -nightly ]; then
+        mv qView.app 'qView$(nightlyString)$(buildNumString).app'
+        macdeployqt *.app -dmg
+    else
+        brew install create-dmg
+        create-dmg --volname "qView $VERSION" --window-size 660 400 --icon-size 160 --icon "qView.app" 180 170 --hide-extension qView.app --app-drop-link 480 170 "qView-$VERSION.dmg" "qView.app"
+    fi
+
+    rm -r *.app
+  condition: and(succeeded(), ne( variables['skipDeploy'], 'true' ), eq( variables['Agent.OS'], 'Darwin' ))
   displayName: 'Run macdeployqt'
 
 - script: |
+    if [ $(nightlyString) == -nightly ]; then
+          VERSION=$(Build.BuildNumber)
+    else
+          VERSION=$(sed -n 's/[^0-9.]*//g;2p' qView.pro)
+    fi
+    echo VERSION was set to $VERSION
+
     wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
     chmod a+x linuxdeployqt-continuous-x86_64.AppImage
-  condition: and(succeeded(), ne( variables['skipdeploy'], 'true' ), eq( variables['Agent.OS'], 'Linux' ))
-  displayName: 'Install linuxdeployqt'
 
-- script: |
-    git clone https://code.qt.io/qt/qtstyleplugins.git
-    cd qtstyleplugins
-    qmake
-    sudo make install
-
-    wget 'https://sourceforge.net/projects/qt5ct/files/latest/download'
-    tar xf download
-    cd qt5ct*
-    qmake
-    sudo make install
-  condition: and(succeeded(), ne( variables['skipdeploy'], 'true' ), eq( variables['Agent.OS'], 'Linux' ))
-  displayName: Get GTK+2 and qt5ct styles
-  
-- script: |
-    mkdir bin/appdir
+    mkdir -p bin/appdir/usr
     make install INSTALL_ROOT=bin/appdir
     cd bin
     rm qview
-    ../linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/qView.desktop -appimage -extra-plugins=styles/libqt5ct-style.so,platformthemes/libqt5ct.so,iconengines,platformthemes/libqgtk3.so
-    mv *.AppImage qView$(nightlyString).$(Build.BuildNumber).x86_64.AppImage
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
+    ../linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/qView.desktop -appimage -updateinformation="gh-releases-zsync|jurplel|qView|latest|qView-*x86_64.AppImage.zsync" $(extra_plugins_maybe)
+    mv *.AppImage qView$(nightlyString)$(buildNumString)-x86_64.AppImage
     rm -r appdir
-  condition: and(succeeded(), ne( variables['skipdeploy'], 'true' ), eq( variables['Agent.OS'], 'Linux' ))
+  condition: and(succeeded(), ne( variables['skipDeploy'], 'true' ), eq( variables['Agent.OS'], 'Linux' ))
   displayName: 'Run linuxdeployqt'

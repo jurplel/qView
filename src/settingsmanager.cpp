@@ -1,6 +1,10 @@
 #include "settingsmanager.h"
 
 #include <QSettings>
+#include <QTranslator>
+#include <QLocale>
+#include <QCoreApplication>
+#include <QDir>
 
 #include <QDebug>
 
@@ -8,6 +12,50 @@ SettingsManager::SettingsManager(QObject *parent) : QObject(parent)
 {
     initializeSettingsLibrary();
     loadSettings();
+    loadTranslation();
+}
+
+QString SettingsManager::getSystemLanguage() const
+{
+    const auto entries = QDir(":/i18n/").entryList();
+    const auto languages = QLocale::system().uiLanguages();
+    for (auto language : languages)
+    {
+        language.replace('-', '_');
+        const auto lang_countryless = language.left(2);
+
+        for (auto entry : entries)
+        {
+            entry.remove(0, 6);
+            entry.remove(entry.length()-3, 3);
+
+            if (entry == language)
+                return language;
+
+            if (entry == lang_countryless)
+                return lang_countryless;
+        }
+    }
+    return "en";
+}
+
+bool SettingsManager::loadTranslation() const
+{
+    QString lang = getString("language");
+    if (lang == "system")
+        lang = getSystemLanguage();
+
+    if (lang == "en")
+        return true;
+
+    QTranslator *translator = new QTranslator();
+    bool success = translator->load("qview_" + lang + ".qm", QLatin1String(":/i18n"));
+    if (success)
+    {
+        qInfo() << "Loaded translation" << lang;
+        QCoreApplication::installTranslator(translator);
+    }
+    return success;
 }
 
 void SettingsManager::loadSettings()
@@ -88,6 +136,11 @@ const QString SettingsManager::getString(const QString &key, bool defaults) cons
     return "";
 }
 
+bool SettingsManager::isDefault(const QString &key) const
+{
+    return getSetting(key) == getSetting(key, true);
+}
+
 void SettingsManager::initializeSettingsLibrary()
 {
     // Window
@@ -99,6 +152,7 @@ void SettingsManager::initializeSettingsLibrary()
     settingsLibrary.insert("maxwindowresizedpercentage", {70, {}});
     settingsLibrary.insert("titlebaralwaysdark", {true, {}});
     settingsLibrary.insert("menubarenabled", {false, {}});
+    settingsLibrary.insert("fullscreendetails", {false, {}});
     // Image
     settingsLibrary.insert("filteringenabled", {true, {}});
     settingsLibrary.insert("scalingenabled", {true, {}});
@@ -109,6 +163,7 @@ void SettingsManager::initializeSettingsLibrary()
     settingsLibrary.insert("cropmode", {0, {}});
     settingsLibrary.insert("pastactualsizeenabled", {true, {}});
     // Miscellaneous
+    settingsLibrary.insert("language", {"system", {}});
     settingsLibrary.insert("sortmode", {0, {}});
     settingsLibrary.insert("sortdescending", {false, {}});
     settingsLibrary.insert("preloadingmode", {1, {}});

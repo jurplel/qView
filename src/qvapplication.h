@@ -56,9 +56,9 @@ public:
 
     void openOptionsDialog(QWidget *parent = nullptr);
 
-    void openWelcomeDialog();
+    void openWelcomeDialog(QWidget *parent = nullptr);
 
-    void openAboutDialog();
+    void openAboutDialog(QWidget *parent = nullptr);
 
     QMenuBar *getMenuBar() const {  return menuBar; }
 
@@ -85,7 +85,7 @@ private:
     QStringList filterList;
     QStringList nameFilterList;
 
-    // This order is important
+    // This order is very important
     SettingsManager settingsManager; 
     ActionManager actionManager;
     ShortcutManager shortcutManager;

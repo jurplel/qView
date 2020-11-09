@@ -23,6 +23,10 @@ public:
 
     explicit SettingsManager(QObject *parent = nullptr);
 
+    QString getSystemLanguage() const;
+
+    bool loadTranslation() const;
+
     void loadSettings();
 
     const QVariant getSetting(const QString &key, bool defaults = false) const;
@@ -36,6 +40,8 @@ public:
     const QString getString(const QString &key, bool defaults = false) const;
 
     const QHash<QString, SSetting> &getSettings() const { return settingsLibrary; }
+
+    bool isDefault(const QString &key) const;
 
 signals:
     void settingsUpdated();
