@@ -545,13 +545,11 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
     if (key.startsWith("recent")) {
         QChar finalChar = key.at(key.length()-1);
         relevantWindow->openRecent(finalChar.digitValue());
+    } else if (key == "openwithother") {
+        OpenWith::showOpenWithDialog(relevantWindow);
     } else if (key.startsWith("openwith")) {
-        QChar finalChar = key.at(key.length()-1);
-        if (finalChar.isDigit())
-        {
-            const QString &exec = triggeredAction->data().toStringList().value(1);
-            relevantWindow->openWith(exec);
-        }
+        const QString &exec = triggeredAction->data().toStringList().value(1);
+        relevantWindow->openWith(exec);
     } else if (key == "openurl") {
         relevantWindow->pickUrl();
     } else if (key == "opencontainingfolder") {
@@ -604,8 +602,6 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
         relevantWindow->increaseSpeed();
     } else if (key == "slideshow") {
         relevantWindow->toggleSlideshow();
-    } else if (key == "openwithother") {
-        OpenWith::showOpenWithDialog(relevantWindow);
     }
 }
 
@@ -636,8 +632,10 @@ void ActionManager::initializeActionLibrary()
 
     auto *openContainingFolderAction = new QAction(QIcon::fromTheme("document-open"), tr("Open Containing &Folder"));
 #ifdef Q_OS_WIN
+    //: Open containing folder on windows
     openContainingFolderAction->setText(tr("Show in E&xplorer"));
 #elif defined Q_OS_MACOS
+    //: Open containing folder on macOS
     openContainingFolderAction->setText(tr("Show in &Finder"));
 #endif
     openContainingFolderAction->setData({"disable"});
@@ -759,16 +757,17 @@ void ActionManager::initializeActionLibrary()
     auto *welcomeAction = new QAction(QIcon::fromTheme("help-faq", QIcon::fromTheme("help-about")), tr("&Welcome"));
     actionLibrary.insert("welcome", welcomeAction);
 
-    // This one is kinda different so here's a separator comment
     //: This is for clearing the recents menu
     auto *clearRecentsAction = new QAction(QIcon::fromTheme("edit-delete"), tr("Clear &Menu"));
     actionLibrary.insert("clearrecents", clearRecentsAction);
 
-    // This one is also kinda different
+    //: Open with other program for unix non-mac
     auto *openWithOtherAction = new QAction(tr("Other Application..."));
 #ifdef Q_OS_WIN
+    //: Open with other program for windows
     openWithOtherAction->setText(tr("Choose program..."));
 #elif defined Q_OS_MACOS
+    //: Open with other program for macos
     openWithOtherAction->setText(tr("Other..."));
 #endif
     actionLibrary.insert("openwithother", openWithOtherAction);
