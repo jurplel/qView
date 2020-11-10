@@ -20,10 +20,15 @@ const QList<OpenWith::OpenWithItem> OpenWith::getOpenWithItems(const QString &fi
     listOfOpenWithItems = QVCocoaFunctions::getOpenWithItems(filePath);
 #elif defined Q_OS_WIN
 #else
-    QMimeDatabase mimedb;
-    QMimeType mime = mimedb.mimeTypeForFile(filePath, QMimeDatabase::MatchContent);
-    QString mimeName = mime.name();
+    QString mimeName;
+    if (!filePath.isEmpty())
+    {
+        QMimeDatabase mimedb;
+        QMimeType mime = mimedb.mimeTypeForFile(filePath, QMimeDatabase::MatchContent);
+        mimeName = mime.name();
+    }
 
+    // This should probably be async dude
     QProcess process;
     process.start("xdg-mime", {"query", "default", mimeName});
     process.waitForFinished();
