@@ -41,7 +41,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="266"/>
         <source>Open &amp;Recent</source>
-        <translation>Abrir &amp;reciente</translation>
+        <translation>&amp;Recientes</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="276"/>
@@ -68,7 +68,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="561"/>
         <source>&amp;Open...</source>
-        <translation>Abrir...</translation>
+        <translation>&amp;Abrir...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="564"/>
@@ -104,7 +104,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="583"/>
         <source>Show File &amp;Info</source>
-        <translation>Mostrar &amp;propiedades del archivo</translation>
+        <translation>&amp;Propiedades del archivo</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="587"/>
@@ -119,7 +119,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="594"/>
         <source>R&amp;ename...</source>
-        <translation>R&amp;enombrar...</translation>
+        <translation>&amp;Cambiar nombre</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="598"/>
@@ -134,7 +134,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="606"/>
         <source>Reset &amp;Zoom</source>
-        <translation>Restablecer el nivel de &amp;zoom</translation>
+        <translation>Restablecer &amp;zoom</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="610"/>
@@ -149,7 +149,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="618"/>
         <source>Rotate &amp;Left</source>
-        <translation>Girar a &amp;la izquierda</translation>
+        <translation>Girar a la &amp;izquierda</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="622"/>
@@ -159,47 +159,47 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="626"/>
         <source>&amp;Flip</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Voltear</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="630"/>
         <source>Enter F&amp;ull Screen</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Pantalla completa</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="634"/>
         <source>&amp;First File</source>
-        <translation type="unfinished"></translation>
+        <translation>P&amp;rimer archivo</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="638"/>
         <source>Previous Fi&amp;le</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Archivo anterior</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="642"/>
         <source>&amp;Next File</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Siguiente archivo</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="646"/>
         <source>Las&amp;t File</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Ultimo Archivo</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="650"/>
         <source>Save Frame &amp;As...</source>
-        <translation type="unfinished"></translation>
+        <translation>Gu&amp;ardar cuadro como...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="654"/>
         <source>Pa&amp;use</source>
-        <translation type="unfinished"></translation>
+        <translation>Pa&amp;usar</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="658"/>
         <source>&amp;Next Frame</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Siguiente cuadro</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="662"/>
@@ -225,19 +225,19 @@
         <location filename="../src/actionmanager.cpp" line="679"/>
         <source>Option&amp;s</source>
         <extracomment>This is for the options dialog on windows</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Opcione&amp;s</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="682"/>
         <source>Preference&amp;s</source>
         <extracomment>This is for the options dialog on non-mac unix platforms</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Configuración</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="685"/>
         <source>Preference&amp;s...</source>
         <extracomment>This is for the options dialog on mac</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Configuración...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="689"/>
@@ -321,7 +321,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="618"/>
         <source>Rename...</source>
-        <translation type="unfinished"></translation>
+        <translation>Cambiar nombre...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="619"/>
