@@ -204,7 +204,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="662"/>
         <source>&amp;Decrease Speed</source>
-        <translation>Geschwindigkeit &amp;erhöhen</translation>
+        <translation>Geschwindigkeit &amp;verringern</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="666"/>
@@ -922,7 +922,7 @@
     <message>
         <location filename="../src/qvshortcutdialog.cpp" line="53"/>
         <source>&quot;%1&quot; is already bound to &quot;%2&quot;</source>
-        <translation>&quot;%1&quot; ist schon verknüpft mit &quot;%2&quot;</translation>
+        <translation>„%1“ ist schon verknüpft mit „%2“</translation>
     </message>
 </context>
 <context>
