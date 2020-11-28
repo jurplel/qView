@@ -6,260 +6,260 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="24"/>
         <source>Window</source>
-        <translation type="unfinished"></translation>
+        <translation>창</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="137"/>
         <source>&amp;File</source>
-        <translation type="unfinished"></translation>
+        <translation>파일(&amp;F)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="163"/>
         <source>&amp;Edit</source>
-        <translation type="unfinished"></translation>
+        <translation>편집(&amp;E)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="177"/>
         <source>&amp;Go</source>
-        <translation type="unfinished"></translation>
+        <translation>이동(&amp;G)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="206"/>
         <source>&amp;View</source>
-        <translation type="unfinished"></translation>
+        <translation>보기(&amp;V)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="230"/>
         <source>&amp;Tools</source>
-        <translation type="unfinished"></translation>
+        <translation>도구(&amp;T)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="252"/>
         <source>&amp;Help</source>
-        <translation type="unfinished"></translation>
+        <translation>도움말(&amp;H)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="266"/>
         <source>Open &amp;Recent</source>
-        <translation type="unfinished"></translation>
+        <translation>마지막으로 연 파일(&amp;R)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="276"/>
         <location filename="../src/actionmanager.cpp" line="407"/>
         <source>Empty</source>
-        <translation type="unfinished"></translation>
+        <translation>없음</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="551"/>
         <source>&amp;Quit</source>
-        <translation type="unfinished"></translation>
+        <translation>종료(&amp;Q)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="555"/>
         <source>Exit</source>
         <extracomment>The quit action is called &quot;Exit&quot; on windows</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>종료</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="558"/>
         <source>New Window</source>
-        <translation type="unfinished"></translation>
+        <translation>새 창</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="561"/>
         <source>&amp;Open...</source>
-        <translation type="unfinished"></translation>
+        <translation>열기(&amp;O)...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="564"/>
         <source>Open &amp;URL...</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;URL로 열기...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="567"/>
         <source>Close Window</source>
-        <translation type="unfinished"></translation>
+        <translation>창 닫기</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="571"/>
         <source>Close All</source>
         <extracomment>Close all windows, that is</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>모두 닫기</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="574"/>
         <source>Open Containing &amp;Folder</source>
-        <translation type="unfinished"></translation>
+        <translation>폴더 열기(&amp;F)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="576"/>
         <source>Show in E&amp;xplorer</source>
-        <translation type="unfinished"></translation>
+        <translation>탐색기에서 보기(&amp;X)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="578"/>
         <source>Show in &amp;Finder</source>
-        <translation type="unfinished"></translation>
+        <translation>검색에서 보기(&amp;F)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="583"/>
         <source>Show File &amp;Info</source>
-        <translation type="unfinished"></translation>
+        <translation>파일 정보 보기(&amp;I)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="587"/>
         <source>&amp;Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>복사하기(&amp;C)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="591"/>
         <source>&amp;Paste</source>
-        <translation type="unfinished"></translation>
+        <translation>붙여넣기(&amp;P)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="594"/>
         <source>R&amp;ename...</source>
-        <translation type="unfinished"></translation>
+        <translation>이름 변경(&amp;E)...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="598"/>
         <source>Zoom &amp;In</source>
-        <translation type="unfinished"></translation>
+        <translation>크게 보기(&amp;I)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="602"/>
         <source>Zoom &amp;Out</source>
-        <translation type="unfinished"></translation>
+        <translation>작게 보기(&amp;O)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="606"/>
         <source>Reset &amp;Zoom</source>
-        <translation type="unfinished"></translation>
+        <translation>원래대로 보기(&amp;Z)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="610"/>
         <source>Ori&amp;ginal Size</source>
-        <translation type="unfinished"></translation>
+        <translation>원본 크기로 보기(&amp;G)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="614"/>
         <source>Rotate &amp;Right</source>
-        <translation type="unfinished"></translation>
+        <translation>오른쪽으로 회전(&amp;R)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="618"/>
         <source>Rotate &amp;Left</source>
-        <translation type="unfinished"></translation>
+        <translation>왼쪽으로 회전(&amp;L)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="622"/>
         <source>&amp;Mirror</source>
-        <translation type="unfinished"></translation>
+        <translation>좌우반전(&amp;M)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="626"/>
         <source>&amp;Flip</source>
-        <translation type="unfinished"></translation>
+        <translation>상하반전(&amp;F)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="630"/>
         <source>Enter F&amp;ull Screen</source>
-        <translation type="unfinished"></translation>
+        <translation>전체 화면(&amp;U)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="634"/>
         <source>&amp;First File</source>
-        <translation type="unfinished"></translation>
+        <translation>처음 파일(&amp;F)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="638"/>
         <source>Previous Fi&amp;le</source>
-        <translation type="unfinished"></translation>
+        <translation>이전 파일(&amp;L)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="642"/>
         <source>&amp;Next File</source>
-        <translation type="unfinished"></translation>
+        <translation>다음 파일(&amp;N)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="646"/>
         <source>Las&amp;t File</source>
-        <translation type="unfinished"></translation>
+        <translation>마지막 파일(&amp;T)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="650"/>
         <source>Save Frame &amp;As...</source>
-        <translation type="unfinished"></translation>
+        <translation>프레임을 다른 이름으로 저장(&amp;A)...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="654"/>
         <source>Pa&amp;use</source>
-        <translation type="unfinished"></translation>
+        <translation>일시중지(&amp;U)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="658"/>
         <source>&amp;Next Frame</source>
-        <translation type="unfinished"></translation>
+        <translation>다음 프레임(&amp;N)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="662"/>
         <source>&amp;Decrease Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>속도 감소(&amp;D)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="666"/>
         <source>&amp;Reset Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>속도 초기화(&amp;R)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="670"/>
         <source>&amp;Increase Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>속도 증가(&amp;I)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="674"/>
         <source>Start S&amp;lideshow</source>
-        <translation type="unfinished"></translation>
+        <translation>슬라이드쇼 시작(&amp;L)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="679"/>
         <source>Option&amp;s</source>
         <extracomment>This is for the options dialog on windows</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>환경설정(&amp;S)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="682"/>
         <source>Preference&amp;s</source>
         <extracomment>This is for the options dialog on non-mac unix platforms</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>환경설정(&amp;S)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="685"/>
         <source>Preference&amp;s...</source>
         <extracomment>This is for the options dialog on mac</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>환경설정(&amp;S)...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="689"/>
         <source>&amp;About</source>
-        <translation type="unfinished"></translation>
+        <translation>qView에 대해(&amp;A)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="692"/>
         <source>&amp;About qView</source>
         <extracomment>This is for the about dialog on mac</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>qView에 대해(&amp;A)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="696"/>
         <source>&amp;Welcome</source>
-        <translation type="unfinished"></translation>
+        <translation>환영문구(&amp;W)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="701"/>
         <source>Clear &amp;Menu</source>
         <extracomment>This is for clearing the recents menu</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>목록 제거( &amp;M)</translation>
     </message>
 </context>
 <context>
@@ -267,12 +267,12 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="207"/>
         <source>Exit F&amp;ull Screen</source>
-        <translation type="unfinished"></translation>
+        <translation>전체화면 종료(&amp;U)</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="212"/>
         <source>Enter F&amp;ull Screen</source>
-        <translation type="unfinished"></translation>
+        <translation>전체화면 시작(&amp;U)</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="476"/>
@@ -280,84 +280,85 @@
         <location filename="../src/mainwindow.cpp" line="526"/>
         <location filename="../src/mainwindow.cpp" line="637"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>오류</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="476"/>
         <source>Error: URL is invalid</source>
-        <translation type="unfinished"></translation>
+        <translation>오류: 유효하지 않은 URL</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="482"/>
         <source>Downloading image...</source>
-        <translation type="unfinished"></translation>
+        <translation>이미지를 내려받는 중...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="482"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>취소</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="486"/>
         <location filename="../src/mainwindow.cpp" line="542"/>
         <source>Open URL...</source>
-        <translation type="unfinished"></translation>
+        <translation>URL 열기...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="503"/>
         <source>Error </source>
-        <translation type="unfinished"></translation>
+        <translation>오류 </translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="526"/>
         <source>Error: Invalid image</source>
-        <translation type="unfinished"></translation>
+        <translation>오류: 유효하지 않은 이미지</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="543"/>
         <source>URL of a supported image file:</source>
-        <translation type="unfinished"></translation>
+        <translation>지원되는 이미지 파일의 URL:</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="618"/>
         <source>Rename...</source>
-        <translation type="unfinished"></translation>
+        <translation>이름변경...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="619"/>
         <source>File name:</source>
-        <translation type="unfinished"></translation>
+        <translation>파일 이름:</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="637"/>
         <source>Error: Could not rename file
 (Check that you have write access)</source>
-        <translation type="unfinished"></translation>
+        <translation>오류: 파일의 이름을 변경할 수 없음
+(쓰기 권한 확인 요망)</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="722"/>
         <source>Save Frame As...</source>
-        <translation type="unfinished"></translation>
+        <translation>프레임을 다른 이름으로 저장...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="751"/>
         <source>Res&amp;ume</source>
-        <translation type="unfinished"></translation>
+        <translation>재시작(&amp;U)</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="760"/>
         <source>Pause</source>
-        <translation type="unfinished"></translation>
+        <translation>일시중지</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="783"/>
         <source>Start S&amp;lideshow</source>
-        <translation type="unfinished"></translation>
+        <translation>슬라이드쇼 시작(&amp;L)</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="792"/>
         <source>Stop S&amp;lideshow</source>
-        <translation type="unfinished"></translation>
+        <translation>슬라이드 쇼 중지(&amp;L)</translation>
     </message>
 </context>
 <context>
@@ -365,7 +366,7 @@
     <message>
         <location filename="../src/main.cpp" line="17"/>
         <source>file</source>
-        <translation type="unfinished"></translation>
+        <translation>파일</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="17"/>
@@ -378,43 +379,43 @@
     <message>
         <location filename="../src/qvaboutdialog.ui" line="20"/>
         <source>About qView</source>
-        <translation type="unfinished"></translation>
+        <translation>qView에 대해</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="44"/>
         <source>version %1</source>
-        <translation type="unfinished"></translation>
+        <translation>배포판 %1</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="47"/>
         <source>Nightly %1</source>
-        <translation type="unfinished"></translation>
+        <translation>야간판 %1</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="62"/>
         <source>Built with Qt %1 (%2)&lt;br&gt;Source code available under GPLv3 on &lt;a style=&quot;color: #03A9F4; text-decoration:none;&quot; href=&quot;https://github.com/jurplel/qView&quot;&gt;Github&lt;/a&gt;&lt;br&gt;Icon glyph created by Guilhem from the Noun Project&lt;br&gt;Copyright © %3 jurplel and qView contributors</source>
-        <translation type="unfinished"></translation>
+        <translation>Qt %1 (%2)로 빌드됨&lt;br&gt;소스 코드는 &lt;a style=&quot;color: #03A9F4; text-decoration:none;&quot; href=&quot;https://github.com/jurplel/qView&quot;&gt;깃허브(Github)&lt;/a&gt;에서 GPLv3 라이선스 하에 사용 가능&lt;br&gt;나운 프로젝트(Noun Project)의 기엠(Guilhem)이 만든 아이콘 글리프를 사용함&lt;br&gt;© %3 jurplel과 qView 기여자들</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="90"/>
         <source>Checking for updates...</source>
-        <translation type="unfinished"></translation>
+        <translation>판올림 확인 중...</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="94"/>
         <source>%1 update available</source>
         <extracomment>%1 is a version number e.g. &quot;4.0 update available&quot;</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>%1 판올림 사용 가능</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="98"/>
         <source>No updates available</source>
-        <translation type="unfinished"></translation>
+        <translation>최신 버전 사용 중</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="102"/>
         <source>Error checking for updates</source>
-        <translation type="unfinished"></translation>
+        <translation>판올림 확인 중 오류 발생</translation>
     </message>
 </context>
 <context>
@@ -422,17 +423,17 @@
     <message>
         <location filename="../src/qvapplication.cpp" line="34"/>
         <source>Supported Files</source>
-        <translation type="unfinished"></translation>
+        <translation>지원되는 파일 형식</translation>
     </message>
     <message>
         <location filename="../src/qvapplication.cpp" line="43"/>
         <source>All Files</source>
-        <translation type="unfinished"></translation>
+        <translation>모든 파일</translation>
     </message>
     <message>
         <location filename="../src/qvapplication.cpp" line="126"/>
         <source>Open...</source>
-        <translation type="unfinished"></translation>
+        <translation>열기...</translation>
     </message>
 </context>
 <context>
@@ -440,13 +441,14 @@
     <message>
         <location filename="../src/qvgraphicsview.cpp" line="670"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>오류</translation>
     </message>
     <message>
         <location filename="../src/qvgraphicsview.cpp" line="670"/>
         <source>Error occurred opening &quot;%3&quot;:
 %2 (Error %1)</source>
-        <translation type="unfinished"></translation>
+        <translation>&quot;%3&quot; 파일을 여는 중 오류 발생:
+%2 (오류 %1)</translation>
     </message>
 </context>
 <context>
@@ -454,12 +456,12 @@
     <message>
         <location filename="../src/qvinfodialog.ui" line="20"/>
         <source>File Info</source>
-        <translation type="unfinished"></translation>
+        <translation>파일 정보</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="26"/>
         <source>Name:</source>
-        <translation type="unfinished"></translation>
+        <translation>이름:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="36"/>
@@ -471,57 +473,57 @@
         <location filename="../src/qvinfodialog.ui" line="183"/>
         <location filename="../src/qvinfodialog.ui" line="203"/>
         <source>error</source>
-        <translation type="unfinished"></translation>
+        <translation>오류</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="52"/>
         <source>Type:</source>
-        <translation type="unfinished"></translation>
+        <translation>형식:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="75"/>
         <source>Location:</source>
-        <translation type="unfinished"></translation>
+        <translation>위치:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="101"/>
         <source>Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>크기:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="130"/>
         <source>Modified:</source>
-        <translation type="unfinished"></translation>
+        <translation>변경일:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="153"/>
         <source>Dimensions:</source>
-        <translation type="unfinished"></translation>
+        <translation>크기:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="173"/>
         <source>Aspect Ratio:</source>
-        <translation type="unfinished"></translation>
+        <translation>종횡비:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="193"/>
         <source>Frames:</source>
-        <translation type="unfinished"></translation>
+        <translation>프레임:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="213"/>
         <source>Refresh</source>
-        <translation type="unfinished"></translation>
+        <translation>새로고침</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.cpp" line="49"/>
         <source>%1 (%2 bytes)</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 (%2 바이트)</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.cpp" line="51"/>
         <source>%1 x %2 (%3 MP)</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 x %2 (%3 메가픽셀)</translation>
     </message>
 </context>
 <context>
@@ -529,196 +531,196 @@
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="17"/>
         <source>Options</source>
-        <translation type="unfinished"></translation>
+        <translation>환경설정</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="33"/>
         <source>Window</source>
-        <translation type="unfinished"></translation>
+        <translation>창</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="39"/>
         <source>Back&amp;ground color:</source>
-        <translation type="unfinished"></translation>
+        <translation>배경색(&amp;G):</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="56"/>
         <source>Changes the amount of information displayed in the titlebar</source>
-        <translation type="unfinished"></translation>
+        <translation>제목 표시줄에 표시되는 정보의 양을 변경</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="59"/>
         <source>Titlebar text:</source>
-        <translation type="unfinished"></translation>
+        <translation>제목 표시줄 글자표시:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="66"/>
         <source>&amp;Basic</source>
-        <translation type="unfinished"></translation>
+        <translation>기본(&amp;B)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="73"/>
         <source>&amp;Minimal</source>
-        <translation type="unfinished"></translation>
+        <translation>최소(&amp;M)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="83"/>
         <source>&amp;Practical</source>
-        <translation type="unfinished"></translation>
+        <translation>실용(&amp;P)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="90"/>
         <source>&amp;Verbose</source>
-        <translation type="unfinished"></translation>
+        <translation>상세(&amp;V)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="110"/>
         <location filename="../src/qvoptionsdialog.ui" line="120"/>
         <source>Control when the window should resize to fit the image&apos;s actual size</source>
-        <translation type="unfinished"></translation>
+        <translation>이미지의 실제 크기에 맞게 창 크기를 조정해야 할 때</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="113"/>
         <source>Window matches image size:</source>
-        <translation type="unfinished"></translation>
+        <translation>창을 이미지 크기에 일치:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="127"/>
         <source>Never</source>
-        <translation type="unfinished"></translation>
+        <translation>사용하지 않음</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="132"/>
         <source>When launching</source>
-        <translation type="unfinished"></translation>
+        <translation>프로그램을 실행할 때</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="137"/>
         <source>When opening images</source>
-        <translation type="unfinished"></translation>
+        <translation>이미지를 열 때</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="145"/>
         <source>Minimum size:</source>
-        <translation type="unfinished"></translation>
+        <translation>최소 크기:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="152"/>
         <source>Control the minimum size that the window should reach when matching the image&apos;s actual size</source>
-        <translation type="unfinished"></translation>
+        <translation>창 크기가 이미지의 실제 크기와 일치할 때 창의 최소 크기</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="155"/>
         <location filename="../src/qvoptionsdialog.ui" line="187"/>
         <source>% of screen size</source>
-        <translation type="unfinished"></translation>
+        <translation>화면 크기의 %</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="174"/>
         <location filename="../src/qvoptionsdialog.ui" line="184"/>
         <source>Control the maximum size that the window should reach when matching the image&apos;s actual size</source>
-        <translation type="unfinished"></translation>
+        <translation>창 크기가 이미지의 실제 크기와 일치할 때 창의 최대 크기</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="177"/>
         <source>Maximum size:</source>
-        <translation type="unfinished"></translation>
+        <translation>최대 크기:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="219"/>
         <source>Choose whether or not the titlebar should always be dark regardless of your chosen macOS appearance</source>
-        <translation type="unfinished"></translation>
+        <translation>선택한 macOS 외관에 관계없이 제목 표시줄을 항상 어둡게 할지 여부를 선택</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="222"/>
         <source>&amp;Titlebar always dark</source>
-        <translation type="unfinished"></translation>
+        <translation>제목 표시줄을 항상 어둡게(&amp;T)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="232"/>
         <source>Show menubar</source>
-        <translation type="unfinished"></translation>
+        <translation>메뉴 표시줄 보기</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="239"/>
         <source>Choose whether or not to display the titlebar text while in fullscreen</source>
-        <translation type="unfinished"></translation>
+        <translation>전체화면에서 제목 표시줄을 표시할지 여부를 선택</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="242"/>
         <source>Show titlebar text in fullscreen</source>
-        <translation type="unfinished"></translation>
+        <translation>전체화면에서 제목 표시줄 표시</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="250"/>
         <source>Image</source>
-        <translation type="unfinished"></translation>
+        <translation>이미지</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="256"/>
         <source>Scaling:</source>
-        <translation type="unfinished"></translation>
+        <translation>배율:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="263"/>
         <source>Turn this off to see individual pixels</source>
-        <translation type="unfinished"></translation>
+        <translation>개별 픽셀을 보려면 비활성화해야 함</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="266"/>
         <source>&amp;Bilinear filtering</source>
-        <translation type="unfinished"></translation>
+        <translation>이중 선형 필터링(&amp;B)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="276"/>
         <source>Images appear aliased (having jagged edges) without this, but it is faster</source>
-        <translation type="unfinished"></translation>
+        <translation>이 옵션이 없으면 이미지 가장자리가 들쭉날쭉하지만, 더 빠르게 출력함</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="279"/>
         <source>&amp;Image scaling</source>
-        <translation type="unfinished"></translation>
+        <translation>이미지 배율(&amp;I)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="289"/>
         <source>Choose whether or not the image continues to be scaled when zooming above the window size (can be laggier with large images)</source>
-        <translation type="unfinished"></translation>
+        <translation>창 크기 이상으로 확대할 때 이미지 크기를 계속 조정할지 여부를 선택 (큰 이미지에서는 느려질 수 있음)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="292"/>
         <source>&amp;Scaling above window size</source>
-        <translation type="unfinished"></translation>
+        <translation>창 크기 이상으로 조정(&amp;S)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="302"/>
         <location filename="../src/qvoptionsdialog.ui" line="312"/>
         <source>The amount to zoom every scroll wheel click</source>
-        <translation type="unfinished"></translation>
+        <translation>스크롤 휠을 클릭할 때마다 확대/축소할 양</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="305"/>
         <source>Zoom amount:</source>
-        <translation type="unfinished"></translation>
+        <translation>확대/축소량:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="334"/>
         <source>Choose whether scrolling zooms or moves the image (alternative can be accessed at any time by holding ctrl/cmd)</source>
-        <translation type="unfinished"></translation>
+        <translation>스크롤링으로 이미지를 확대하거나 이동할지 여부를 선택 (Ctrl/cmd 키를 눌러 언제든지 액세스)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="337"/>
         <source>Scrolling &amp;zooms</source>
-        <translation type="unfinished"></translation>
+        <translation>스크롤링 확대/축소(&amp;Z)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="360"/>
         <source>Stop the image from going past its actual size when resizing the window - you can still zoom past it though</source>
-        <translation type="unfinished"></translation>
+        <translation>창 크기를 조정할 때 이미지가 실제 크기를 초과하지 않도록 - 그래도 확대 할 수 있음</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="363"/>
         <source>Image resizes &amp;past actual size</source>
-        <translation type="unfinished"></translation>
+        <translation>이미지를 실제 크기보다 크게 조정(&amp;P)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="379"/>
