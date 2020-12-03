@@ -14,11 +14,6 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     connect(&actionManager, &ActionManager::recentsMenuUpdated, this, &QVApplication::recentsMenuUpdated);
     connect(&updateChecker, &UpdateChecker::checkedUpdates, this, &QVApplication::checkedUpdates);
 
-    // Initialize variables
-    optionsDialog = nullptr;
-    welcomeDialog = nullptr;
-    aboutDialog = nullptr;
-
     // Initialize list of supported files and filters
     const auto byteArrayList = QImageReader::supportedImageFormats();
     for (const auto &byteArray : byteArrayList)
@@ -277,24 +272,30 @@ void QVApplication::deleteFromLastActiveWindows(MainWindow *window)
 
 void QVApplication::openOptionsDialog(QWidget *parent)
 {
+#ifdef Q_OS_MACOS
     // On macOS, the dialog should not be dependent on any window
+    parent = nullptr;
+#endif
+
+
     if (optionsDialog)
     {
         optionsDialog->raise();
         optionsDialog->activateWindow();
         return;
-
     }
 
     optionsDialog = new QVOptionsDialog(parent);
-    connect(optionsDialog, &QDialog::finished, this, [this]{
-        optionsDialog = nullptr;
-    });
     optionsDialog->show();
 }
 
 void QVApplication::openWelcomeDialog(QWidget *parent)
 {
+#ifdef Q_OS_MACOS
+    // On macOS, the dialog should not be dependent on any window
+    parent = nullptr;
+#endif
+
     if (welcomeDialog)
     {
         welcomeDialog->raise();
@@ -303,14 +304,16 @@ void QVApplication::openWelcomeDialog(QWidget *parent)
     }
 
     welcomeDialog = new QVWelcomeDialog(parent);
-    connect(welcomeDialog, &QDialog::finished, this, [this]{
-        welcomeDialog = nullptr;
-    });
     welcomeDialog->show();
 }
 
 void QVApplication::openAboutDialog(QWidget *parent)
 {
+#ifdef Q_OS_MACOS
+    // On macOS, the dialog should not be dependent on any window
+    parent = nullptr;
+#endif
+
     if (aboutDialog)
     {
         aboutDialog->raise();
@@ -319,8 +322,5 @@ void QVApplication::openAboutDialog(QWidget *parent)
     }
 
     aboutDialog = new QVAboutDialog(updateChecker.getLatestVersionNum(), parent);
-    connect(aboutDialog, &QDialog::finished, this, [this]{
-        aboutDialog = nullptr;
-    });
     aboutDialog->show();
 }
