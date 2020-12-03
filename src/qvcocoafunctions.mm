@@ -174,7 +174,7 @@ QList<OpenWith::OpenWithItem> QVCocoaFunctions::getOpenWithItems(const QString &
     QList<OpenWith::OpenWithItem> listOfOpenWithItems;
     for (NSString *appId in supportedApplications)
     {
-        if ([appId isEqualToString:@"com.qview.qView"])
+        if ([appId isEqualToString:@"com.qview.qView"] || [appId isEqualToString:@"com.interversehq.qView"])
             continue;
 
         OpenWith::OpenWithItem openWithItem;
@@ -206,7 +206,11 @@ QList<OpenWith::OpenWithItem> QVCocoaFunctions::getOpenWithItems(const QString &
 
     // add default program to the beginning after sorting
     if (!defaultOpenWithItem.name.isEmpty())
+    {
+        //= On mac, this goes in the open with menu after the name of the default app
+        defaultOpenWithItem.name += QT_TR_NOOP(" (default)");
         listOfOpenWithItems.prepend(defaultOpenWithItem);
+    }
 
     return listOfOpenWithItems;
 }
