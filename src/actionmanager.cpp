@@ -461,7 +461,6 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
         qvApp->pickFile(relevantWindow);
     } else if (key == "closewindow") {
         auto *active = QApplication::activeWindow();
-        qDebug() << QApplication::topLevelWindows() << QApplication::activeWindow();
 #ifdef COCOA_LOADED
         QVCocoaFunctions::closeWindow(active->windowHandle());
 #endif
