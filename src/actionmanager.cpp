@@ -466,12 +466,12 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
 #endif
         active->close();
     } else if (key == "closeallwindows") {
-        const auto topLevelWidgets = QApplication::topLevelWidgets();
-        for (auto *widget : topLevelWidgets) {
+        const auto topLevelWindows = QApplication::topLevelWindows();
+        for (auto *window : topLevelWindows) {
 #ifdef COCOA_LOADED
-            QVCocoaFunctions::closeWindow(widget->windowHandle());
+            QVCocoaFunctions::closeWindow(window);
 #endif
-            widget->close();
+            window->close();
         }
     } else if (key == "options") {
         qvApp->openOptionsDialog(relevantWindow);
