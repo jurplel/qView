@@ -25,7 +25,7 @@ public:
 
 
 protected:
-    void closeEvent(QCloseEvent *event) override;
+    void done(int r) override;
 
     void modifySetting(QString key, QVariant value);
     void saveSettings();

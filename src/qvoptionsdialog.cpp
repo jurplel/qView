@@ -28,14 +28,15 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
 
     populateLanguages();
 
+    QSettings settings;
+    ui->tabWidget->setCurrentIndex(settings.value("optionstab", 1).toInt());
+
     // On macOS, the dialog should not be dependent on any window
 #ifndef Q_OS_MACOS
     setWindowModality(Qt::WindowModal);
 #else
     // Load window geometry
-    QSettings settings;
     restoreGeometry(settings.value("optionsgeometry").toByteArray());
-    ui->tabWidget->setCurrentIndex(settings.value("optionstab", 1).toInt());
 #endif
 
 #ifdef Q_OS_UNIX
@@ -60,14 +61,14 @@ QVOptionsDialog::~QVOptionsDialog()
     delete ui;
 }
 
-void QVOptionsDialog::closeEvent(QCloseEvent *event)
+void QVOptionsDialog::done(int r)
 {
     // Save window geometry
     QSettings settings;
     settings.setValue("optionsgeometry", saveGeometry());
     settings.setValue("optionstab", ui->tabWidget->currentIndex());
 
-    QDialog::closeEvent(event);
+    QDialog::done(r);
 }
 
 void QVOptionsDialog::modifySetting(QString key, QVariant value)
