@@ -371,7 +371,7 @@
     <message>
         <location filename="../src/main.cpp" line="17"/>
         <source>The file to open.</source>
-        <translation type="unfinished"></translation>
+        <translation>파일을 엽니다.</translation>
     </message>
 </context>
 <context>
@@ -726,185 +726,185 @@
         <location filename="../src/qvoptionsdialog.ui" line="379"/>
         <location filename="../src/qvoptionsdialog.ui" line="401"/>
         <source>Ignores select sides of an image when fitting to window (some sides will extend beyond the window boundaries)</source>
-        <translation type="unfinished"></translation>
+        <translation>창에 이미지 크기를 맞출 때 선택된 면을 무시 (일부 면은 창 경계를 넘어 확장됨)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="383"/>
         <source>Fit whole image</source>
-        <translation type="unfinished"></translation>
+        <translation>이미지 전체 크기</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="388"/>
         <source>Fit height</source>
-        <translation type="unfinished"></translation>
+        <translation>이미지 세로 크기</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="393"/>
         <source>Fit width</source>
-        <translation type="unfinished"></translation>
+        <translation>이미지 가로 크기</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="404"/>
         <source>On window resize:</source>
-        <translation type="unfinished"></translation>
+        <translation>창 크기 조정 :</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="424"/>
         <source>Choose whether or not zooming in and out above 100% zoom will zoom towards the cursor</source>
-        <translation type="unfinished"></translation>
+        <translation>100% 이상 또는 이하로 줌할 때 커서 쪽으로 확대할지 여부를 선택</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="427"/>
         <source>Zoom &amp;towards cursor</source>
-        <translation type="unfinished"></translation>
+        <translation>커서 쪽으로 줌</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="438"/>
         <source>Miscellaneous</source>
-        <translation type="unfinished"></translation>
+        <translation>기타</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="444"/>
         <source>Sort files by:</source>
-        <translation type="unfinished"></translation>
+        <translation>파일 정렬:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="452"/>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation>이름순</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="457"/>
         <source>Last Modified</source>
-        <translation type="unfinished"></translation>
+        <translation>변경순</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="462"/>
         <source>Size</source>
-        <translation type="unfinished"></translation>
+        <translation>크기순</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="467"/>
         <source>Type</source>
-        <translation type="unfinished"></translation>
+        <translation>유형순</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="472"/>
         <source>Random</source>
-        <translation type="unfinished"></translation>
+        <translation>무작위</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="480"/>
         <source>A&amp;scending</source>
-        <translation type="unfinished"></translation>
+        <translation>오름차순(&amp;S)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="490"/>
         <source>D&amp;escending</source>
-        <translation type="unfinished"></translation>
+        <translation>내림차순(&amp;E)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="510"/>
         <location filename="../src/qvoptionsdialog.ui" line="520"/>
         <source>Controls the amount of images preloaded</source>
-        <translation type="unfinished"></translation>
+        <translation>사전 로드된 이미지의 양을 제어</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="513"/>
         <source>Preloading:</source>
-        <translation type="unfinished"></translation>
+        <translation>사전 로드:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="527"/>
         <source>Disabled</source>
-        <translation type="unfinished"></translation>
+        <translation>비활성화</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="532"/>
         <source>Adjacent</source>
-        <translation type="unfinished"></translation>
+        <translation>인접한 이미지</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="537"/>
         <source>Extended</source>
-        <translation type="unfinished"></translation>
+        <translation>디렉터리 전체</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="545"/>
         <source>Controls whether or not qView should go back to the first item after reaching the end of a folder</source>
-        <translation type="unfinished"></translation>
+        <translation>qView가 폴더의 마지막 이미지에 도달한 후 첫 번째 항목으로 돌아갈지 여부를 제어</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="548"/>
         <source>&amp;Loop through folders</source>
-        <translation type="unfinished"></translation>
+        <translation>폴더 내 반복(&amp;L)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="571"/>
         <source>Slideshow direction:</source>
-        <translation type="unfinished"></translation>
+        <translation>슬라이드쇼 방향:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="579"/>
         <source>Forward</source>
-        <translation type="unfinished"></translation>
+        <translation>앞으로</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="584"/>
         <source>Backward</source>
-        <translation type="unfinished"></translation>
+        <translation>뒤로</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="592"/>
         <source>Slideshow timer:</source>
-        <translation type="unfinished"></translation>
+        <translation>슬라이드쇼 타이머:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="599"/>
         <source> sec</source>
-        <translation type="unfinished"></translation>
+        <translation> 초</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="631"/>
         <source>Save &amp;recent files</source>
-        <translation type="unfinished"></translation>
+        <translation>최근 파일 저장(&amp;R)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="638"/>
         <source>&amp;Update notifications on startup</source>
         <extracomment>The notifications are for new qView releases</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>시작할 때 판올림 알림</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="645"/>
         <source>Language:</source>
-        <translation type="unfinished"></translation>
+        <translation>언어:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="656"/>
         <location filename="../src/qvoptionsdialog.ui" line="704"/>
         <source>Shortcuts</source>
-        <translation type="unfinished"></translation>
+        <translation>단축키</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="699"/>
         <source>Action</source>
-        <translation type="unfinished"></translation>
+        <translation>행동</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.cpp" line="443"/>
         <source>System Language</source>
-        <translation type="unfinished"></translation>
+        <translation>시스템 언어</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.cpp" line="467"/>
         <source>Restart Required</source>
-        <translation type="unfinished"></translation>
+        <translation>재시작 필요</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.cpp" line="467"/>
         <source>You must restart qView to change the language.</source>
-        <translation type="unfinished"></translation>
+        <translation>언어를 변경하려면 qView를 재시작해야합니다.</translation>
     </message>
 </context>
 <context>
@@ -912,17 +912,17 @@
     <message>
         <location filename="../src/qvshortcutdialog.ui" line="14"/>
         <source>Modify Shortcuts</source>
-        <translation type="unfinished"></translation>
+        <translation>단축키 변경</translation>
     </message>
     <message>
         <location filename="../src/qvshortcutdialog.cpp" line="53"/>
         <source>Shortcut Already Used</source>
-        <translation type="unfinished"></translation>
+        <translation>이미 사용 중인 단축키</translation>
     </message>
     <message>
         <location filename="../src/qvshortcutdialog.cpp" line="53"/>
         <source>&quot;%1&quot; is already bound to &quot;%2&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>&quot;%1&quot;이 이미 &quot;%2&quot;에 지정됨</translation>
     </message>
 </context>
 <context>
@@ -931,22 +931,22 @@
         <location filename="../src/qvwelcomedialog.ui" line="14"/>
         <location filename="../src/qvwelcomedialog.ui" line="155"/>
         <source>Welcome</source>
-        <translation type="unfinished"></translation>
+        <translation>환영문구</translation>
     </message>
     <message>
         <location filename="../src/qvwelcomedialog.ui" line="472"/>
         <source>&amp;Enable update notifications on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>시작할 때 판올림 알림 활성화(&amp;E)</translation>
     </message>
     <message>
         <location filename="../src/qvwelcomedialog.cpp" line="42"/>
         <source>Thank you for downloading qView.&lt;br&gt;Here&apos;s a few tips to get you started:</source>
-        <translation type="unfinished"></translation>
+        <translation>qView를 사용해주셔서 감사합니다.&lt;br&gt;다음은 시작하는 데 도움이 되는 몇 가지 팁입니다:</translation>
     </message>
     <message>
         <location filename="../src/qvwelcomedialog.cpp" line="49"/>
         <source>&lt;ul&gt;&lt;li&gt;Right click to access the main menu&lt;/li&gt;&lt;li&gt;Drag the image to reposition it&lt;/li&gt;&lt;li&gt;Scroll to zoom in and out&lt;/li&gt;&lt;li&gt;Use arrow keys to switch files&lt;/li&gt;&lt;/ul&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;ul&gt;&lt;li&gt;우클릭으로 메인 메뉴 진입&lt;/li&gt;&lt;li&gt;이미지를 드래그해 위치 변경&lt;/li&gt;&lt;li&gt;스크롤로 확대/축소&lt;/li&gt;&lt;li&gt;화살표 키를 이용해 파일 전환&lt;/li&gt;&lt;/ul&gt;</translation>
     </message>
 </context>
 <context>
@@ -954,182 +954,182 @@
     <message>
         <location filename="../src/shortcutmanager.cpp" line="42"/>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation>열기</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="43"/>
         <source>Open URL</source>
-        <translation type="unfinished"></translation>
+        <translation>URL 열기</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="44"/>
         <source>Open Containing Folder</source>
-        <translation type="unfinished"></translation>
+        <translation>파일이 포함된 폴더 열기</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="47"/>
         <source>Show in Explorer</source>
-        <translation type="unfinished"></translation>
+        <translation>탐색기에서 보기</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="49"/>
         <source>Show in Finder</source>
-        <translation type="unfinished"></translation>
+        <translation>검색에서 보기</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="51"/>
         <source>Show File Info</source>
-        <translation type="unfinished"></translation>
+        <translation>파일 정보 보기</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="52"/>
         <source>Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>복사하기</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="53"/>
         <source>Paste</source>
-        <translation type="unfinished"></translation>
+        <translation>붙여넣기</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="54"/>
         <source>Rename</source>
-        <translation type="unfinished"></translation>
+        <translation>이름변경</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="55"/>
         <source>First File</source>
-        <translation type="unfinished"></translation>
+        <translation>처음 파일</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="56"/>
         <source>Previous File</source>
-        <translation type="unfinished"></translation>
+        <translation>이전 파일</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="57"/>
         <source>Next File</source>
-        <translation type="unfinished"></translation>
+        <translation>다음 파일</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="58"/>
         <source>Last File</source>
-        <translation type="unfinished"></translation>
+        <translation>마지막 파일</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="59"/>
         <source>Zoom In</source>
-        <translation type="unfinished"></translation>
+        <translation>확대</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="64"/>
         <source>Zoom Out</source>
-        <translation type="unfinished"></translation>
+        <translation>축소</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="65"/>
         <source>Reset Zoom</source>
-        <translation type="unfinished"></translation>
+        <translation>줌 초기화</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="66"/>
         <source>Original Size</source>
-        <translation type="unfinished"></translation>
+        <translation>원본 크기</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="67"/>
         <source>Rotate Right</source>
-        <translation type="unfinished"></translation>
+        <translation>오른쪽으로 회전</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="68"/>
         <source>Rotate Left</source>
-        <translation type="unfinished"></translation>
+        <translation>왼쪽으로 회전</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="69"/>
         <source>Mirror</source>
-        <translation type="unfinished"></translation>
+        <translation>좌우반전</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="70"/>
         <source>Flip</source>
-        <translation type="unfinished"></translation>
+        <translation>상하반전</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="71"/>
         <source>Full Screen</source>
-        <translation type="unfinished"></translation>
+        <translation>전체화면</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="83"/>
         <source>Save Frame As</source>
-        <translation type="unfinished"></translation>
+        <translation>프레임을 다른 이름으로 저장</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="84"/>
         <source>Pause</source>
-        <translation type="unfinished"></translation>
+        <translation>일시중지</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="85"/>
         <source>Next Frame</source>
-        <translation type="unfinished"></translation>
+        <translation>다음 프레임</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="86"/>
         <source>Decrease Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>속도 감소</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="87"/>
         <source>Reset Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>속도 초기화</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="88"/>
         <source>Increase Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>속도 증가</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="89"/>
         <source>Toggle Slideshow</source>
-        <translation type="unfinished"></translation>
+        <translation>슬라이드쇼 토글</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="90"/>
         <source>Options</source>
-        <translation type="unfinished"></translation>
+        <translation>환경설정</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="92"/>
         <source>Preferences</source>
-        <translation type="unfinished"></translation>
+        <translation>환경설정</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="96"/>
         <source>New Window</source>
-        <translation type="unfinished"></translation>
+        <translation>새 창</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="97"/>
         <source>Close Window</source>
-        <translation type="unfinished"></translation>
+        <translation>창 닫기</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="98"/>
         <source>Close All</source>
-        <translation type="unfinished"></translation>
+        <translation>모두 닫기</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="100"/>
         <source>Quit</source>
-        <translation type="unfinished"></translation>
+        <translation>종료</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="105"/>
         <source>Exit</source>
-        <translation type="unfinished"></translation>
+        <translation>종료</translation>
     </message>
 </context>
 <context>
@@ -1137,33 +1137,34 @@
     <message>
         <location filename="../src/updatechecker.cpp" line="69"/>
         <source>Download</source>
-        <translation type="unfinished"></translation>
+        <translation>내려받기</translation>
     </message>
     <message>
         <location filename="../src/updatechecker.cpp" line="72"/>
         <source>qView Update Available</source>
-        <translation type="unfinished"></translation>
+        <translation>qView 판올림 사용 가능</translation>
     </message>
     <message>
         <location filename="../src/updatechecker.cpp" line="73"/>
         <source>qView %1 is available to download.</source>
-        <translation type="unfinished"></translation>
+        <translation>qView %1 버전을 내려받을 수 있습니다.</translation>
     </message>
     <message>
         <location filename="../src/updatechecker.cpp" line="77"/>
         <source>&amp;Disable Update Checking</source>
-        <translation type="unfinished"></translation>
+        <translation>판올림 확인 비활성화(&amp;D)</translation>
     </message>
     <message>
         <location filename="../src/updatechecker.cpp" line="87"/>
         <source>qView Update Checking Disabled</source>
-        <translation type="unfinished"></translation>
+        <translation>qView 판올림 확인이 비활성화됨</translation>
     </message>
     <message>
         <location filename="../src/updatechecker.cpp" line="87"/>
         <source>Update notifications on startup have been disabled.
 You can reenable them in the options dialog.</source>
-        <translation type="unfinished"></translation>
+        <translation>판올림 알림이 비활성화됐습니다.
+환경설정에서 활성화할 수 있습니다.</translation>
     </message>
 </context>
 </TS>
