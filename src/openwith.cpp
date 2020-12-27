@@ -1,7 +1,10 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 #include "openwith.h"
 #include "qvcocoafunctions.h"
 #include "ui_qvopenwithdialog.h"
+
+#include "ShlObj_core.h"
+#include "winuser.h"
 
 #include <QCollator>
 #include <QDir>
@@ -9,6 +12,8 @@
 #include <QProcess>
 #include <QStandardPaths>
 #include <QMimeDatabase>
+#include <QSettings>
+#include <QVersionNumber>
 
 #include <QDebug>
 
@@ -19,6 +24,105 @@ const QList<OpenWith::OpenWithItem> OpenWith::getOpenWithItems(const QString &fi
 #ifdef Q_OS_MACOS
     listOfOpenWithItems = QVCocoaFunctions::getOpenWithItems(filePath);
 #elif defined Q_OS_WIN
+    QFileInfo info(filePath);
+
+    IEnumAssocHandlers *assocHandlers = 0;
+    HRESULT result = SHAssocEnumHandlers(qUtf16Printable("." + info.suffix()), ASSOC_FILTER_RECOMMENDED, &assocHandlers);
+    if (!SUCCEEDED(result))
+        qDebug() << "win32 failed point 1";
+
+    ULONG retrieved = 0;
+    HRESULT nextResult = S_OK;
+    while (nextResult == S_OK)
+    {
+        IAssocHandler *handlers = 0;
+        nextResult = assocHandlers->Next(1, &handlers, &retrieved);
+        if (!SUCCEEDED(nextResult) || retrieved < 1)
+        {
+            qDebug() << "win32 failed point 2";
+            break;
+        }
+        WCHAR *uiName = 0;
+        result = handlers[0].GetUIName(&uiName);
+        if (!SUCCEEDED(result))
+        {
+            qDebug() << "win32 failed point 3";
+            continue;
+        }
+
+        WCHAR *name = 0;
+        result = handlers[0].GetName(&name);
+        if (!SUCCEEDED(result))
+        {
+            qDebug() << "win32 failed point 4";
+            continue;
+        }
+
+        WCHAR *icon = 0;
+        int index = 0;
+        result = handlers[0].GetIconLocation(&icon, &index);
+        if (!SUCCEEDED(result))
+        {
+            qDebug() << "win32 failed point 5";
+            continue;
+        }
+
+        QString title = QString::fromWCharArray(uiName);
+        QString path = QString::fromWCharArray(name);
+        QString iconLocation = QString::fromWCharArray(icon);
+        if (title == path) // If it's either invalid or a windows store app
+        {
+            qDebug() << QSysInfo::kernelVersion();
+            if (QVersionNumber::fromString(QSysInfo::kernelVersion()) >= QVersionNumber(11) && iconLocation.contains("ms-resource")) // If it's a windows store app
+            {
+                QStringList split = iconLocation.split('?');
+                QString packageFullName = split.first().remove(0, 2);
+                qDebug() << packageFullName;
+            }
+            else
+            {
+                continue;
+            }
+        }
+        else
+        {
+            // Remove items that have a path that does not exist
+            QFile file(path);
+            QFile iconFile(iconLocation);
+            if (!file.exists() || !iconFile.exists())
+            {
+                qDebug() << title << "openwith item file does not exist";
+                continue;
+            }
+        }
+
+        // Don't include qView in open with menu
+        if (title == "qView")
+            continue;
+
+        qDebug() << title << path << iconLocation;
+
+        OpenWithItem openWithItem;
+        openWithItem.name = title;
+        openWithItem.exec = path;
+
+        listOfOpenWithItems.append(openWithItem);
+    }
+
+    // Natural/alphabetic sort
+    QCollator collator;
+    collator.setNumericMode(true);
+    std::sort(listOfOpenWithItems.begin(),
+              listOfOpenWithItems.end(),
+              [&collator](const OpenWithItem &item0, const OpenWithItem &item1)
+    {
+            return collator.compare(item0.name, item1.name) < 0;
+    });
+
+    // add default program to the beginning after sorting
+//    if (!defaultOpenWithItem.name.isEmpty())
+//        listOfOpenWithItems.prepend(defaultOpenWithItem);
+
 #else
     QString mimeName;
     if (!filePath.isEmpty())

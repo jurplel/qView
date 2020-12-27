@@ -606,10 +606,12 @@ void MainWindow::openWith(const QString &exec)
     if (exec.isEmpty() || exec.isNull())
         return;
 
-    QStringList arguments = exec.trimmed().split(" ");
-    arguments.append(getCurrentFileDetails().fileInfo.absoluteFilePath());
+    QStringList arguments = {exec.trimmed()};
+//    QStringList arguments = exec.trimmed().split(" ");
+    arguments.append(QDir::toNativeSeparators(getCurrentFileDetails().fileInfo.absoluteFilePath()));
     QString executable = arguments.takeFirst();
 
+    qDebug() << executable << arguments;
     QProcess::startDetached(executable, arguments);
 }
 
