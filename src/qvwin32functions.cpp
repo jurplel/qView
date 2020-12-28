@@ -11,6 +11,7 @@
 #include <QCollator>
 #include <QVersionNumber>
 #include <QXmlStreamReader>
+#include <QWindow>
 
 #include <QDebug>
 
@@ -75,59 +76,14 @@ QList<OpenWith::OpenWithItem> QVWin32Functions::getOpenWithItems(const QString &
             {
                 QString firstHalf = iconLocation.mid(0, iconLocation.indexOf("?"));
                 QString packageFullName = firstHalf.remove(0, 2);
-                QString packageFamilyName = packageFullName;
-                packageFamilyName.remove(packageFullName.indexOf("_"), packageFullName.lastIndexOf("_")-packageFullName.indexOf("_"));
-                PACKAGE_INFO_REFERENCE info = 0;
-                OpenPackageInfoByFullName(qUtf16Printable(packageFullName), 0, &info);
-                UINT32 bufferLen = 0;
-                UINT32 bufferAmount = 0;
-                LONG error = GetPackageInfo(info, PACKAGE_INFORMATION_BASIC, &bufferLen, 0, &bufferAmount);
-                if (error)
-                    qDebug() << "win32 failed point 6" << error;
 
-                BYTE *buffer = (BYTE*)malloc(bufferLen);
-                error = GetPackageInfo(info, PACKAGE_INFORMATION_BASIC, &bufferLen, buffer, &bufferAmount);
-                if (error)
-                    qDebug() << "win32 failed point 7" << error;
 
-                auto *packageInfoArray = reinterpret_cast<PACKAGE_INFO*>(buffer);
-                QString appDirectory = QString::fromWCharArray(packageInfoArray[0].path);
-                QFile manifest(appDirectory + "/AppxManifest.xml");
-                if (!manifest.exists())
-                    qDebug() << "manifest doesn't exist?!";
-
-                if (!manifest.open(QFile::ReadOnly | QFile::Text)) {
-                    qDebug() << "cant open manifest" << manifest.errorString();
-                }
-
-                QString praid;
-                QXmlStreamReader manifestReader(&manifest);
-                if (manifestReader.readNextStartElement()) {
-                    if (manifestReader.name() == "Package") {
-                        while (manifestReader.readNextStartElement()) {
-                            if (manifestReader.name() == "Applications") {
-                                while (manifestReader.readNextStartElement()) {
-                                    if (manifestReader.name() == "Application") {
-                                        praid = manifestReader.attributes().value("Id").toString();
-                                        break;
-                                    }
-                                    else
-                                        manifestReader.skipCurrentElement();
-                                }
-                            }
-                            else
-                                manifestReader.skipCurrentElement();
-                        }
-                    }
-                }
-                QString aumid = packageFamilyName + "!" + praid;
-
-                // Set exec to package name so we can run the package through a special codepath
-                openWithItem.exec = aumid;
+                // Set exec to application user model id so we can run it using native win32 functions
+                openWithItem.exec = getAumid(packageFullName);
                 openWithItem.isWindowsStore = true;
 
             }
-            else
+            else // skip if invalid
             {
                 qDebug() << "Skipping" << openWithItem.name;
                 continue;
@@ -171,6 +127,8 @@ QList<OpenWith::OpenWithItem> QVWin32Functions::getOpenWithItems(const QString &
     return listOfOpenWithItems;
 }
 
+
+
 void QVWin32Functions::openWithAppx(const QString &filePath, const QString &amuid)
 {
     const QString &nativeFilePath = QDir::toNativeSeparators(filePath);
@@ -192,4 +150,69 @@ void QVWin32Functions::openWithAppx(const QString &filePath, const QString &amui
     DWORD pid = 0;
     activationManager->ActivateForFile(qUtf16Printable(amuid), shellItemArray, L"Open", &pid);
 
+}
+
+QString QVWin32Functions::getAumid(const QString &packageFullName)
+{
+    QString packageFamilyName = packageFullName;
+    packageFamilyName.remove(packageFullName.indexOf("_"), packageFullName.lastIndexOf("_")-packageFullName.indexOf("_"));
+    PACKAGE_INFO_REFERENCE info = 0;
+    OpenPackageInfoByFullName(qUtf16Printable(packageFullName), 0, &info);
+    UINT32 bufferLen = 0;
+    UINT32 bufferAmount = 0;
+    LONG error = GetPackageInfo(info, PACKAGE_INFORMATION_BASIC, &bufferLen, 0, &bufferAmount);
+    if (error)
+        qDebug() << "win32 failed point 6" << error;
+
+    BYTE *buffer = (BYTE*)malloc(bufferLen);
+    error = GetPackageInfo(info, PACKAGE_INFORMATION_BASIC, &bufferLen, buffer, &bufferAmount);
+    if (error)
+        qDebug() << "win32 failed point 7" << error;
+
+    auto *packageInfoArray = reinterpret_cast<PACKAGE_INFO*>(buffer);
+    QString appDirectory = QString::fromWCharArray(packageInfoArray[0].path);
+    QFile manifest(appDirectory + "/AppxManifest.xml");
+    if (!manifest.exists())
+        qDebug() << "manifest doesn't exist?!";
+
+    if (!manifest.open(QFile::ReadOnly | QFile::Text)) {
+        qDebug() << "cant open manifest" << manifest.errorString();
+    }
+
+    QString praid;
+    QXmlStreamReader manifestReader(&manifest);
+    if (manifestReader.readNextStartElement()) {
+        if (manifestReader.name() == "Package") {
+            while (manifestReader.readNextStartElement()) {
+                if (manifestReader.name() == "Applications") {
+                    while (manifestReader.readNextStartElement()) {
+                        if (manifestReader.name() == "Application") {
+                            praid = manifestReader.attributes().value("Id").toString();
+                            break;
+                        }
+                        else
+                            manifestReader.skipCurrentElement();
+                    }
+                }
+                else
+                    manifestReader.skipCurrentElement();
+            }
+        }
+    }
+    QString aumid = packageFamilyName + "!" + praid;
+    return aumid;
+}
+
+void QVWin32Functions::showOpenWithDialog(const QString &filePath, const QWindow *parent)
+{
+    const QString &nativeFilePath = QDir::toNativeSeparators(filePath);
+    const OPENASINFO info = {
+        qUtf16Printable(nativeFilePath),
+        0,
+        OAIF_EXEC
+    };
+    HWND winId = reinterpret_cast<HWND>(parent->winId());
+    HRESULT result = SHOpenWithDialog(winId, &info);
+    if (!SUCCEEDED(result))
+        qDebug() << "win32 openwithdialog failed point 1";
 }

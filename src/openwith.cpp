@@ -150,11 +150,9 @@ void OpenWith::showOpenWithDialog(QWidget *parent)
     openWithDialog->setDirectory("/Applications");
     openWithDialog->open();
 #elif defined Q_OS_WIN
-    auto openWithDialog = new QFileDialog(parent);
-    openWithDialog->setWindowTitle("Open with...");
-    openWithDialog->setNameFilters({QT_TR_NOOP("Programs (*.exe *.pif *.com *.bat *.cmd)"), QT_TR_NOOP("All Files (*)")});
-    openWithDialog->setDirectory(QProcessEnvironment::systemEnvironment().value("PROGRAMFILES", "C:\\"));
-    openWithDialog->open();
+    auto mainWindow = reinterpret_cast<MainWindow*>(parent);
+    QString filePath = mainWindow->getCurrentFileDetails().fileInfo.absoluteFilePath();
+    QVWin32Functions::showOpenWithDialog(filePath, mainWindow->windowHandle());
 #else
     auto openWithDialog = new QVOpenWithDialog(parent);
     openWithDialog->open();
