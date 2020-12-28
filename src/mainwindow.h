@@ -4,6 +4,7 @@
 #include "qvinfodialog.h"
 #include "qvimagecore.h"
 #include "qvgraphicsview.h"
+#include "openwith.h"
 
 #include <QMainWindow>
 #include <QShortcut>
@@ -41,7 +42,7 @@ public:
 
     void openContainingFolder();
 
-    void openWith(const QString &exec);
+    void openWith(const OpenWith::OpenWithItem &exec);
 
     void showFileInfo();
 

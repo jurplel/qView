@@ -2,7 +2,6 @@
 #include "ui_mainwindow.h"
 #include "qvapplication.h"
 #include "qvcocoafunctions.h"
-#include "openwith.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -353,8 +352,8 @@ void MainWindow::populateOpenWithMenu()
                 action->setVisible(true);
                 action->setText(openWithItem.name);
                 action->setIcon(openWithItem.icon);
-                auto data = action->data().toStringList();
-                data.replace(1, openWithItem.exec);
+                auto data = action->data().toList();
+                data.replace(1, QVariant::fromValue(openWithItem));
                 action->setData(data);
             }
             else
@@ -600,19 +599,9 @@ void MainWindow::pickUrl()
     inputDialog->open();
 }
 
-void MainWindow::openWith(const QString &exec)
+void MainWindow::openWith(const OpenWith::OpenWithItem &openWithItem)
 {
-    qDebug() << exec.trimmed();
-    if (exec.isEmpty() || exec.isNull())
-        return;
-
-    QStringList arguments = {exec.trimmed()};
-//    QStringList arguments = exec.trimmed().split(" ");
-    arguments.append(QDir::toNativeSeparators(getCurrentFileDetails().fileInfo.absoluteFilePath()));
-    QString executable = arguments.takeFirst();
-
-    qDebug() << executable << arguments;
-    QProcess::startDetached(executable, arguments);
+    OpenWith::openWith(getCurrentFileDetails().fileInfo.absoluteFilePath(), openWithItem);
 }
 
 void MainWindow::openContainingFolder()

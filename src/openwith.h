@@ -14,12 +14,16 @@ public:
         QString name;
         QString exec;
         QStringList categories; // this is only used on linux
+        bool isWindowsStore = false;
     };
 
     static const QList<OpenWithItem> getOpenWithItems(const QString &filePath);
 
     static void showOpenWithDialog(QWidget *parent);
+
+    static void openWith(const QString &filePath, const OpenWithItem &openWithItem);
 };
+Q_DECLARE_METATYPE(OpenWith::OpenWithItem);
 
 namespace Ui {
 class QVOpenWithDialog;

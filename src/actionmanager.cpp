@@ -451,7 +451,7 @@ QMenu *ActionManager::buildOpenWithMenu(QWidget *parent)
         auto action = new QAction(tr("Empty"), this);
         action->setVisible(false);
         action->setIconVisibleInMenu(true);
-        action->setData(QStringList({"openwith" + QString::number(i), ""}));
+        action->setData(QVariantList({"openwith" + QString::number(i), ""}));
 
         openWithMenu->addAction(action);
         actionCloneLibrary.insert(action->data().toStringList().first(), action);
@@ -548,8 +548,8 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
     } else if (key == "openwithother") {
         OpenWith::showOpenWithDialog(relevantWindow);
     } else if (key.startsWith("openwith")) {
-        const QString &exec = triggeredAction->data().toStringList().value(1);
-        relevantWindow->openWith(exec);
+        const auto &openWithItem = triggeredAction->data().toList().at(1).value<OpenWith::OpenWithItem>();
+        relevantWindow->openWith(openWithItem);
     } else if (key == "openurl") {
         relevantWindow->pickUrl();
     } else if (key == "opencontainingfolder") {
