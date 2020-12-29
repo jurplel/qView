@@ -11,7 +11,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="137"/>
         <source>&amp;File</source>
-        <translation>Archivo</translation>
+        <translation>&amp;Archivo</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="163"/>
@@ -36,7 +36,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="252"/>
         <source>&amp;Help</source>
-        <translation>&amp;Ayuda</translation>
+        <translation>Ay&amp;uda</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="266"/>
@@ -63,7 +63,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="558"/>
         <source>New Window</source>
-        <translation>Nueva ventana</translation>
+        <translation>Ventana nueva</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="561"/>
@@ -73,33 +73,33 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="564"/>
         <source>Open &amp;URL...</source>
-        <translation>Abrir &amp;URL...</translation>
+        <translation>Abrir &amp;ubicación...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="567"/>
         <source>Close Window</source>
-        <translation>Cerrar ventana</translation>
+        <translation>Cerrar la ventana</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="571"/>
         <source>Close All</source>
         <extracomment>Close all windows, that is</extracomment>
-        <translation>Cerrar todo</translation>
+        <translation>Cerrar todas</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="574"/>
         <source>Open Containing &amp;Folder</source>
-        <translation>Abrir &amp;carpeta contenedora</translation>
+        <translation>Abrir la &amp;carpeta contenedora</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="576"/>
         <source>Show in E&amp;xplorer</source>
-        <translation>Mostrar en el E&amp;xplorador</translation>
+        <translation>Mostrar en el e&amp;xplorador</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="578"/>
         <source>Show in &amp;Finder</source>
-        <translation>Mostrar en &amp;Finder</translation>
+        <translation>Mostrar en &amp;finder</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="583"/>
@@ -119,7 +119,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="594"/>
         <source>R&amp;ename...</source>
-        <translation>&amp;Cambiar nombre</translation>
+        <translation>&amp;Cambiar el nombre...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="598"/>
@@ -134,7 +134,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="606"/>
         <source>Reset &amp;Zoom</source>
-        <translation>Restablecer &amp;zoom</translation>
+        <translation>Restablecer el &amp;zoom</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="610"/>
@@ -154,7 +154,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="622"/>
         <source>&amp;Mirror</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Reflejar</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="626"/>
@@ -179,12 +179,12 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="642"/>
         <source>&amp;Next File</source>
-        <translation>&amp;Siguiente archivo</translation>
+        <translation>Archivo &amp;siguiente</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="646"/>
         <source>Las&amp;t File</source>
-        <translation>&amp;Ultimo Archivo</translation>
+        <translation>&amp;Último archivo</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="650"/>
@@ -199,7 +199,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="658"/>
         <source>&amp;Next Frame</source>
-        <translation>&amp;Siguiente cuadro</translation>
+        <translation>Fotograma &amp;siguiente</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="662"/>
