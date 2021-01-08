@@ -4,6 +4,7 @@
 #include "winuser.h"
 #include "Objbase.h"
 #include "appmodel.h"
+#include "Shlwapi.h"
 
 #include <QFileInfo>
 #include <QFile>
@@ -82,6 +83,11 @@ QList<OpenWith::OpenWithItem> QVWin32Functions::getOpenWithItems(const QString &
                 openWithItem.exec = getAumid(packageFullName);
                 openWithItem.isWindowsStore = true;
 
+                WCHAR realIconPath[MAX_PATH];
+                SHLoadIndirectString(icon, realIconPath, MAX_PATH, NULL);
+                qDebug() << QString::fromWCharArray(realIconPath);
+                openWithItem.icon = QIcon(QString::fromWCharArray(realIconPath));
+
             }
             else // skip if invalid
             {
@@ -99,11 +105,17 @@ QList<OpenWith::OpenWithItem> QVWin32Functions::getOpenWithItems(const QString &
                 qDebug() << openWithItem.name << "openwith item file does not exist";
                 continue;
             }
+
+            QFileIconProvider iconProvider;
+            openWithItem.icon = iconProvider.icon(QFileInfo(iconLocation));
         }
 
         // Don't include qView in open with menu
         if (openWithItem.name == "qView")
             continue;
+
+        // Replace ampersands with escaped ampersands for menu items
+        openWithItem.name.replace("&", "&&");
 
         qDebug() << openWithItem.name << openWithItem.exec << iconLocation;
 

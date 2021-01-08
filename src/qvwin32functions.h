@@ -3,6 +3,8 @@
 
 #include "openwith.h"
 
+#include <qfileiconprovider.h>
+
 class QVWin32Functions
 {
 public:
@@ -13,6 +15,7 @@ public:
     static QString getAumid(const QString &packageFullName);
 
     static void showOpenWithDialog(const QString &filePath, const QWindow *parent);
+
 };
 
 #endif // QVWIN32FUNCTIONS_H
