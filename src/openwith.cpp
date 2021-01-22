@@ -1,4 +1,4 @@
-﻿#include "mainwindow.h"
+﻿    #include "mainwindow.h"
 #include "openwith.h"
 #include "qvcocoafunctions.h"
 #include "qvwin32functions.h"
@@ -21,7 +21,9 @@ const QList<OpenWith::OpenWithItem> OpenWith::getOpenWithItems(const QString &fi
 #ifdef Q_OS_MACOS
     listOfOpenWithItems = QVCocoaFunctions::getOpenWithItems(filePath);
 #elif defined Q_OS_WIN
+#ifdef WIN32_LOADED
     listOfOpenWithItems = QVWin32Functions::getOpenWithItems(filePath);
+#endif
 #else
     QString mimeName;
     if (!filePath.isEmpty())
@@ -144,19 +146,43 @@ const QList<OpenWith::OpenWithItem> OpenWith::getOpenWithItems(const QString &fi
 
 void OpenWith::showOpenWithDialog(QWidget *parent)
 {
+    auto mainWindow = reinterpret_cast<MainWindow*>(parent);
+    QString filePath = mainWindow->getCurrentFileDetails().fileInfo.absoluteFilePath();
 #ifdef Q_OS_MACOS
     auto openWithDialog = new QFileDialog(parent);
     openWithDialog->setNameFilters({QT_TR_NOOP("All Applications (*.app)")});
     openWithDialog->setDirectory("/Applications");
     openWithDialog->open();
+    connect(openWithDialog, &QFileDialog::fileSelected, [filePath](const QString &executablePath){
+        openWithExecutable("open -b " + executablePath, filePath);
+    });
 #elif defined Q_OS_WIN
-    auto mainWindow = reinterpret_cast<MainWindow*>(parent);
-    QString filePath = mainWindow->getCurrentFileDetails().fileInfo.absoluteFilePath();
+#ifdef WIN32_LOADED
     QVWin32Functions::showOpenWithDialog(filePath, mainWindow->windowHandle());
+#else
+    auto openWithDialog = new QFileDialog(parent);
+    openWithDialog->setWindowTitle("Open with...");
+    openWithDialog->setNameFilters({QT_TR_NOOP("Programs (*.exe *.pif *.com *.bat *.cmd)"), QT_TR_NOOP("All Files (*)")});
+    openWithDialog->setDirectory(QProcessEnvironment::systemEnvironment().value("PROGRAMFILES", "C:\\"));
+    openWithDialog->open();
+    connect(openWithDialog, &QFileDialog::fileSelected, [filePath](const QString &executablePath){
+        openWithExecutable(executablePath, filePath);
+    });
+#endif
 #else
     auto openWithDialog = new QVOpenWithDialog(parent);
     openWithDialog->open();
+    connect(openWithDialog, &QFileDialog::selected, [filePath](const QString &exec){
+        openWithExecutable(exec, filePath);
+    });
 #endif
+}
+
+void OpenWith::openWithExecutable(const QString &executablePath, const QString &filePath)
+{
+    OpenWithItem item;
+    item.exec = executablePath;
+    openWith(filePath, item);
 }
 
 void OpenWith::openWith(const QString &filePath, const OpenWithItem &openWithItem)
@@ -166,6 +192,7 @@ void OpenWith::openWith(const QString &filePath, const OpenWithItem &openWithIte
     qDebug() << exec.trimmed();
     if (exec.isEmpty() || exec.isNull())
         return;
+
 
     if (!openWithItem.isWindowsStore)
     {
@@ -178,7 +205,9 @@ void OpenWith::openWith(const QString &filePath, const OpenWithItem &openWithIte
     }
     else
     {
+#if defined Q_OS_WIN && WIN32_LOADED
         QVWin32Functions::openWithAppx(nativeFilePath, exec);
+#endif
     }
 }
 
@@ -234,7 +263,7 @@ void QVOpenWithDialog::triggeredOpen()
             return;
 
         QString exec = selectedIndexes.first().data(Qt::UserRole).toString();
-//        window->openWith(exec);
+        emit selected(exec);
     }
 }
 

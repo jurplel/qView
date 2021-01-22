@@ -6,8 +6,9 @@
 #include <QAbstractButton>
 #include <QStandardItemModel>
 
-class OpenWith
+class OpenWith : public QObject
 {
+    Q_OBJECT
 public:
     struct OpenWithItem {
         QIcon icon;
@@ -20,6 +21,8 @@ public:
     static const QList<OpenWithItem> getOpenWithItems(const QString &filePath);
 
     static void showOpenWithDialog(QWidget *parent);
+
+    static void openWithExecutable(const QString &executablePath, const QString &filePath);
 
     static void openWith(const QString &filePath, const OpenWithItem &openWithItem);
 };
@@ -46,6 +49,9 @@ public:
     void triggeredOpen();
 
     ~QVOpenWithDialog();
+
+signals:
+    void selected(const QString exec);
 private:
     Ui::QVOpenWithDialog *ui;
 
