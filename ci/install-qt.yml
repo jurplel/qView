@@ -15,7 +15,7 @@ steps:
     versionSpec: '3.8'
   displayName: 'Use Python 3.8'
 
-- script: pip install "aqtinstall==0.8"
+- script: pip install aqtinstall
   displayName: 'Install aqtinstall'
 
 # I hate splitting this into three but I can't figure out how to do it any better
