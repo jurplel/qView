@@ -172,7 +172,7 @@ void OpenWith::showOpenWithDialog(QWidget *parent)
 #else
     auto openWithDialog = new QVOpenWithDialog(parent);
     openWithDialog->open();
-    connect(openWithDialog, &QFileDialog::selected, [filePath](const QString &exec){
+    connect(openWithDialog, &QFileDialog::fileSelected, [filePath](const QString &exec){
         openWithExecutable(exec, filePath);
     });
 #endif
