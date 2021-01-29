@@ -418,7 +418,7 @@ void ActionManager::updateRecentsMenu()
                 action->setVisible(true);
                 action->setText(recent.fileName);
 
-#if defined Q_OS_UNIX & !defined Q_OS_MACOS
+#if defined Q_OS_UNIX && !defined Q_OS_MACOS
                 // set icons for linux users
                 QMimeDatabase mimedb;
                 QMimeType type = mimedb.mimeTypeForFile(recent.filePath);

@@ -19,8 +19,10 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     welcomeDialog = nullptr;
     aboutDialog = nullptr;
 
-    // Add fallback fromTheme icon search path
-    QIcon::setFallbackSearchPaths({"/usr/share/pixmaps"});
+    // Add fallback fromTheme icon search on linux with qt >5.11
+#if defined Q_OS_UNIX && !defined Q_OS_MACOS && QT_VERSION >= QT_VERSION_CHECK(5, 11, 0)
+    QIcon::setFallbackSearchPaths(QIcon::fallbackSearchPaths() << "/usr/share/pixmaps");
+#endif
 
     // Initialize list of supported files and filters
     const auto byteArrayList = QImageReader::supportedImageFormats();
