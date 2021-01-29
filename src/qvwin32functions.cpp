@@ -16,15 +16,27 @@
 
 #include <QDebug>
 
+// All this win32 code is currently likely full of memory leaks (hooray!)
+// It's also kinda slow and if I recall correctly is meant to be called on another thread.
+
 
 QList<OpenWith::OpenWithItem> QVWin32Functions::getOpenWithItems(const QString &filePath)
 {
     QList<OpenWith::OpenWithItem> listOfOpenWithItems;
 
+    OpenWith::OpenWithItem defaultOpenWithItem;
+
     bool isWin10 = QVersionNumber::fromString(QSysInfo::kernelVersion()) >= QVersionNumber(10);
 
     QFileInfo info(filePath);
     QString extension = "." + info.suffix();
+
+    // Get default program first
+    WCHAR assocString[MAX_PATH];
+    DWORD assocStringSize = MAX_PATH;
+    AssocQueryStringW(0, ASSOCSTR_FRIENDLYAPPNAME, qUtf16Printable(extension), L"open", assocString, &assocStringSize);
+    QString defaultProgramName = QString::fromWCharArray(assocString);
+    qDebug() << "default!" << defaultProgramName;
 
     IEnumAssocHandlers *assocHandlers = 0;
     HRESULT result = SHAssocEnumHandlers(qUtf16Printable(extension), ASSOC_FILTER_RECOMMENDED, &assocHandlers);
@@ -78,7 +90,6 @@ QList<OpenWith::OpenWithItem> QVWin32Functions::getOpenWithItems(const QString &
                 QString firstHalf = iconLocation.mid(0, iconLocation.indexOf("?"));
                 QString packageFullName = firstHalf.remove(0, 2);
 
-
                 // Set exec to application user model id so we can run it using native win32 functions
                 openWithItem.exec = getAumid(packageFullName);
                 openWithItem.isWindowsStore = true;
@@ -119,7 +130,15 @@ QList<OpenWith::OpenWithItem> QVWin32Functions::getOpenWithItems(const QString &
 
         qDebug() << openWithItem.name << openWithItem.exec << iconLocation;
 
-        listOfOpenWithItems.append(openWithItem);
+        if (openWithItem.name == defaultProgramName)
+        {
+            openWithItem.isDefault = true;
+            defaultOpenWithItem = openWithItem;
+        }
+        else
+        {
+            listOfOpenWithItems.append(openWithItem);
+        }
     }
 
     // Natural/alphabetic sort
@@ -133,8 +152,8 @@ QList<OpenWith::OpenWithItem> QVWin32Functions::getOpenWithItems(const QString &
     });
 
     // add default program to the beginning after sorting
-//    if (!defaultOpenWithItem.name.isEmpty())
-//        listOfOpenWithItems.prepend(defaultOpenWithItem);
+    if (!defaultOpenWithItem.name.isEmpty())
+        listOfOpenWithItems.prepend(defaultOpenWithItem);
 
     return listOfOpenWithItems;
 }
