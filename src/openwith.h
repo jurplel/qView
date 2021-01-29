@@ -14,6 +14,7 @@ public:
         QIcon icon;
         QString name;
         QString exec;
+        QStringList args;
         QStringList categories; // this is only used on linux
         bool isWindowsStore = false;
     };

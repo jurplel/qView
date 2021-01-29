@@ -178,7 +178,8 @@ QList<OpenWith::OpenWithItem> QVCocoaFunctions::getOpenWithItems(const QString &
             continue;
 
         OpenWith::OpenWithItem openWithItem;
-        openWithItem.exec = "open -b " + QString::fromNSString(appId);
+        openWithItem.exec = "open";
+        openWithItem.args = {"-b", QString::fromNSString(appId)};
 
         NSString *absolutePath = [[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:appId];
 

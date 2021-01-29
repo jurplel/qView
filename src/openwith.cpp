@@ -188,20 +188,18 @@ void OpenWith::openWithExecutable(const QString &executablePath, const QString &
 void OpenWith::openWith(const QString &filePath, const OpenWithItem &openWithItem)
 {
     const QString &nativeFilePath = QDir::toNativeSeparators(filePath);
-    const QString &exec = openWithItem.exec;
-    qDebug() << exec.trimmed();
+    const QString &exec = openWithItem.exec.trimmed();
+    QStringList args = openWithItem.args;
     if (exec.isEmpty() || exec.isNull())
         return;
 
 
     if (!openWithItem.isWindowsStore)
     {
-        QStringList arguments = {exec.trimmed()};
-    //    QStringList arguments = exec.trimmed().split(" ");
-        arguments.append(nativeFilePath);
-        QString executable = arguments.takeFirst();
+        args.append(nativeFilePath);
+        qDebug() << exec << args;
 
-        QProcess::startDetached(executable, arguments);
+        QProcess::startDetached(exec, args);
     }
     else
     {
