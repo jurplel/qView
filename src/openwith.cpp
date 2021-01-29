@@ -242,7 +242,7 @@ void QVOpenWithDialog::populateTreeView()
 
     for (const auto &category : categories)
     {
-        auto *categoryItem = new QStandardItem(QIcon::fromTheme(category.iconName), category.readableName);
+        auto *categoryItem = new QStandardItem(QIcon::fromTheme(category.iconName, QIcon::fromTheme("applications-other")), category.readableName);
 
         QMutableListIterator<OpenWith::OpenWithItem> i(listOfAllApps);
         while (i.hasNext()) {
