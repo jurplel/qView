@@ -118,7 +118,10 @@ const QList<OpenWith::OpenWithItem> OpenWith::getOpenWithItems(const QString &fi
             {
                 // If the program is the default program, save it to add to the beginning after sorting
                 if (fileInfo.fileName() == defaultApplication)
+                {
+                    openWithItem.isDefault = true;
                     defaultOpenWithItem = openWithItem;
+                }
                 else
                     listOfOpenWithItems.append(openWithItem);
             }
@@ -172,8 +175,8 @@ void OpenWith::showOpenWithDialog(QWidget *parent)
 #else
     auto openWithDialog = new QVOpenWithDialog(parent);
     openWithDialog->open();
-    connect(openWithDialog, &QVOpenWithDialog::selected, [filePath](const QString &exec){
-        openWithExecutable(exec, filePath);
+    connect(openWithDialog, &QVOpenWithDialog::selected, [filePath](const QString &exec, const QStringList &args){
+        openWithExecutable(exec, args, filePath);
     });
 #endif
 }
@@ -269,7 +272,9 @@ void QVOpenWithDialog::triggeredOpen()
             return;
 
         QString exec = selectedIndexes.first().data(Qt::UserRole).toString();
-        emit selected(exec);
+        QStringList args = exec.split(" ");
+        exec = args.takeFirst();
+        emit selected(exec, args);
     }
 }
 

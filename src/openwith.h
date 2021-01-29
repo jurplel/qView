@@ -55,7 +55,7 @@ public:
     ~QVOpenWithDialog();
 
 signals:
-    void selected(const QString exec);
+    void selected(const QString exec, const QStringList args);
 private:
     Ui::QVOpenWithDialog *ui;
 
