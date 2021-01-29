@@ -346,7 +346,7 @@ void MainWindow::populateOpenWithMenu()
         {
             // If we are within the bounds of the open with list
             if (i < openWithItems.length())
-            {
+            {        
                 auto openWithItem = openWithItems.value(i);
 
                 action->setVisible(true);

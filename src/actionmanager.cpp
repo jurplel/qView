@@ -448,6 +448,7 @@ QMenu *ActionManager::buildOpenWithMenu(QWidget *parent)
 
     for (int i = 0; i < openWithMaxLength; i++)
     {
+
         auto action = new QAction(tr("Empty"), this);
         action->setVisible(false);
         action->setIconVisibleInMenu(true);
@@ -455,6 +456,17 @@ QMenu *ActionManager::buildOpenWithMenu(QWidget *parent)
 
         openWithMenu->addAction(action);
         actionCloneLibrary.insert(action->data().toStringList().first(), action);
+        // Some madness that will show or hide separator if an item marked as default is in the first position
+        if (i == 0)
+        {
+            connect(action, &QAction::changed, action, [action, openWithMenu]{
+                // If this menu item is default
+                if (action->data().toList().at(1).value<OpenWith::OpenWithItem>().isDefault && !openWithMenu->actions().at(1)->isSeparator())
+                    openWithMenu->insertSeparator(openWithMenu->actions().at(1));
+                else if (openWithMenu->actions().at(1)->isSeparator())
+                    openWithMenu->removeAction(openWithMenu->actions().at(1));
+            });
+        }
     }
 
     openWithMenu->addSeparator();

@@ -191,7 +191,10 @@ QList<OpenWith::OpenWithItem> QVCocoaFunctions::getOpenWithItems(const QString &
 
         // If the program is the default program, save it to add to the beginning after sorting
         if ([appId isEqualToString:defaultApplication])
+        {
+            openWithItem.isDefault = true;
             defaultOpenWithItem = openWithItem;
+        }
         else
             listOfOpenWithItems.append(openWithItem);
     }

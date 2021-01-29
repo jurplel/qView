@@ -17,6 +17,7 @@ public:
         QStringList args;
         QStringList categories; // this is only used on linux
         bool isWindowsStore = false;
+        bool isDefault = false;
     };
 
     static const QList<OpenWithItem> getOpenWithItems(const QString &filePath);
