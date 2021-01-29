@@ -154,7 +154,7 @@ void OpenWith::showOpenWithDialog(QWidget *parent)
     openWithDialog->setDirectory("/Applications");
     openWithDialog->open();
     connect(openWithDialog, &QFileDialog::fileSelected, [filePath](const QString &executablePath){
-        openWithExecutable("open -b " + executablePath, filePath);
+        openWithExecutable("open", {"-a", executablePath}, filePath);
     });
 #elif defined Q_OS_WIN
 #ifdef WIN32_LOADED
@@ -182,6 +182,14 @@ void OpenWith::openWithExecutable(const QString &executablePath, const QString &
 {
     OpenWithItem item;
     item.exec = executablePath;
+    openWith(filePath, item);
+}
+
+void OpenWith::openWithExecutable(const QString &executablePath, const QStringList &args, const QString &filePath)
+{
+    OpenWithItem item;
+    item.exec = executablePath;
+    item.args = args;
     openWith(filePath, item);
 }
 
