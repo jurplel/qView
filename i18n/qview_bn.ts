@@ -6,90 +6,90 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="24"/>
         <source>Window</source>
-        <translation type="unfinished"></translation>
+        <translation>উইন্ডো</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="137"/>
         <source>&amp;File</source>
-        <translation type="unfinished"></translation>
+        <translation>ওফাইল</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="163"/>
         <source>&amp;Edit</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;সম্পাদনা</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="177"/>
         <source>&amp;Go</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;যাও</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="206"/>
         <source>&amp;View</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;প্রদর্শন</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="230"/>
         <source>&amp;Tools</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;টুল</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="252"/>
         <source>&amp;Help</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;সাহায্য</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="266"/>
         <source>Open &amp;Recent</source>
-        <translation type="unfinished"></translation>
+        <translation>নতুন কিংবা অধুনা</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="276"/>
         <location filename="../src/actionmanager.cpp" line="407"/>
         <source>Empty</source>
-        <translation type="unfinished"></translation>
+        <translation>খালি</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="551"/>
         <source>&amp;Quit</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;বের হোন</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="555"/>
         <source>Exit</source>
         <extracomment>The quit action is called &quot;Exit&quot; on windows</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>বের হোন</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="558"/>
         <source>New Window</source>
-        <translation type="unfinished"></translation>
+        <translation>নতুন উইন্ডো</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="561"/>
         <source>&amp;Open...</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;খুলুন...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="564"/>
         <source>Open &amp;URL...</source>
-        <translation type="unfinished"></translation>
+        <translation>খুলুন &amp;ইউআরএল...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="567"/>
         <source>Close Window</source>
-        <translation type="unfinished"></translation>
+        <translation>উইন্ডো বন্ধ করুন</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="571"/>
         <source>Close All</source>
         <extracomment>Close all windows, that is</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>সবগুলো বন্ধ করুন</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="574"/>
         <source>Open Containing &amp;Folder</source>
-        <translation type="unfinished"></translation>
+        <translation>সংযুক্ত &amp;Folder খুলুন</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="576"/>
