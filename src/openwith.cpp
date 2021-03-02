@@ -207,10 +207,21 @@ void OpenWith::openWith(const QString &filePath, const OpenWithItem &openWithIte
 
     if (!openWithItem.isWindowsStore)
     {
-        args.append(nativeFilePath);
         qDebug() << exec << args;
-
-        QProcess::startDetached(exec, args);
+        // Special case for windows photo viewer which is run from dll
+        if (exec.contains("rundll32.exe"))
+        {
+            QProcess process;
+            process.setProgram(exec);
+            process.setArguments(args);
+            process.setNativeArguments(nativeFilePath);
+            process.startDetached();
+        }
+        else
+        {
+            args.append(nativeFilePath);
+            QProcess::startDetached(exec, args);
+        }
     }
     else
     {

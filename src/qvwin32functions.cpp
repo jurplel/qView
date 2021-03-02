@@ -119,6 +119,13 @@ QList<OpenWith::OpenWithItem> QVWin32Functions::getOpenWithItems(const QString &
 
             QFileIconProvider iconProvider;
             openWithItem.icon = iconProvider.icon(QFileInfo(iconLocation));
+
+            // Set exec for dll (windows photo viewer)
+            if (openWithItem.exec.endsWith("PhotoViewer.dll"))
+            {
+                openWithItem.args.append({openWithItem.exec, "ImageView_Fullscreen"});
+                openWithItem.exec = qgetenv("SystemRoot") + "\\System32\\rundll32.exe";
+            }
         }
 
         // Don't include qView in open with menu
