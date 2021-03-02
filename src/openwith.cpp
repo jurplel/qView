@@ -1,4 +1,4 @@
-﻿    #include "mainwindow.h"
+﻿#include "mainwindow.h"
 #include "openwith.h"
 #include "qvcocoafunctions.h"
 #include "qvwin32functions.h"
@@ -201,34 +201,32 @@ void OpenWith::openWith(const QString &filePath, const OpenWithItem &openWithIte
     const QString &nativeFilePath = QDir::toNativeSeparators(filePath);
     const QString &exec = openWithItem.exec.trimmed();
     QStringList args = openWithItem.args;
+
     if (exec.isEmpty() || exec.isNull())
         return;
 
-
-    if (!openWithItem.isWindowsStore)
-    {
-        qDebug() << exec << args;
-        // Special case for windows photo viewer which is run from dll
-        if (exec.contains("rundll32.exe"))
-        {
-            QProcess process;
-            process.setProgram(exec);
-            process.setArguments(args);
-            process.setNativeArguments(nativeFilePath);
-            process.startDetached();
-        }
-        else
-        {
-            args.append(nativeFilePath);
-            QProcess::startDetached(exec, args);
-        }
-    }
-    else
-    {
 #if defined Q_OS_WIN && WIN32_LOADED
+    // For windows store apps
+    if (openWithItem.isWindowsStore)
+    {
         QVWin32Functions::openWithAppx(nativeFilePath, exec);
-#endif
+        return;
     }
+#endif
+#if defined Q_OS_WIN
+    // Special case for windows photo viewer
+    if (exec.contains("rundll32.exe"))
+    {
+        QProcess process;
+        process.setProgram(exec);
+        process.setArguments(args);
+        process.setNativeArguments(nativeFilePath);
+        process.startDetached();
+        return;
+    }
+#endif
+    args.append(nativeFilePath);
+    QProcess::startDetached(exec, args);
 }
 
 // OpenWithDialog (for linux)
