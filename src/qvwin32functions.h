@@ -10,9 +10,7 @@ class QVWin32Functions
 public:
     static QList<OpenWith::OpenWithItem> getOpenWithItems(const QString &filePath);
 
-    static void openWithAppx(const QString &filePath, const QString &amuid);
-
-    static QString getAumid(const QString &packageFullName);
+    static void openWithInvokeAssocHandler(const QString &filePath, void *winAssocHandler);
 
     static void showOpenWithDialog(const QString &filePath, const QWindow *parent);
 

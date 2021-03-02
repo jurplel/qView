@@ -206,22 +206,10 @@ void OpenWith::openWith(const QString &filePath, const OpenWithItem &openWithIte
         return;
 
 #if defined Q_OS_WIN && WIN32_LOADED
-    // For windows store apps
-    if (openWithItem.isWindowsStore)
+    // Windows-only native app launch method
+    if (openWithItem.winAssocHandler)
     {
-        QVWin32Functions::openWithAppx(nativeFilePath, exec);
-        return;
-    }
-#endif
-#if defined Q_OS_WIN
-    // Special case for windows photo viewer
-    if (exec.contains("rundll32.exe"))
-    {
-        QProcess process;
-        process.setProgram(exec);
-        process.setArguments(args);
-        process.setNativeArguments(nativeFilePath);
-        process.startDetached();
+        QVWin32Functions::openWithInvokeAssocHandler(nativeFilePath, openWithItem.winAssocHandler);
         return;
     }
 #endif

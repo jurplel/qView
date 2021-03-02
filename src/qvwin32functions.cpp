@@ -26,8 +26,6 @@ QList<OpenWith::OpenWithItem> QVWin32Functions::getOpenWithItems(const QString &
 
     OpenWith::OpenWithItem defaultOpenWithItem;
 
-    bool isWin10 = QVersionNumber::fromString(QSysInfo::kernelVersion()) >= QVersionNumber(10);
-
     QFileInfo info(filePath);
     QString extension = "." + info.suffix();
 
@@ -82,25 +80,19 @@ QList<OpenWith::OpenWithItem> QVWin32Functions::getOpenWithItems(const QString &
         OpenWith::OpenWithItem openWithItem;
         openWithItem.name = QString::fromWCharArray(uiName);
         openWithItem.exec = QString::fromWCharArray(name);
+        openWithItem.winAssocHandler = handlers;
         QString iconLocation = QString::fromWCharArray(icon);
         if (openWithItem.name == openWithItem.exec) // If it's either invalid or a windows store app
         {
-            if (isWin10 && iconLocation.contains("ms-resource")) // If it's a windows store app
+            if (iconLocation.contains("ms-resource")) // If it's a windows store app
             {
-                QString firstHalf = iconLocation.mid(0, iconLocation.indexOf("?"));
-                QString packageFullName = firstHalf.remove(0, 2);
-
-                // Set exec to application user model id so we can run it using native win32 functions
-                openWithItem.exec = getAumid(packageFullName);
-                openWithItem.isWindowsStore = true;
-
+                // Set a working icon path
                 WCHAR realIconPath[MAX_PATH];
                 SHLoadIndirectString(icon, realIconPath, MAX_PATH, NULL);
-                qDebug() << QString::fromWCharArray(realIconPath);
                 openWithItem.icon = QIcon(QString::fromWCharArray(realIconPath));
 
             }
-            else // skip if invalid
+            else // If invalid
             {
                 qDebug() << "Skipping" << openWithItem.name;
                 continue;
@@ -119,13 +111,6 @@ QList<OpenWith::OpenWithItem> QVWin32Functions::getOpenWithItems(const QString &
 
             QFileIconProvider iconProvider;
             openWithItem.icon = iconProvider.icon(QFileInfo(iconLocation));
-
-            // Set exec for dll (windows photo viewer)
-            if (openWithItem.exec.endsWith("PhotoViewer.dll"))
-            {
-                openWithItem.args.append({openWithItem.exec, "ImageView_Fullscreen"});
-                openWithItem.exec = qgetenv("SystemRoot") + "\\System32\\rundll32.exe";
-            }
         }
 
         // Don't include qView in open with menu
@@ -165,80 +150,21 @@ QList<OpenWith::OpenWithItem> QVWin32Functions::getOpenWithItems(const QString &
     return listOfOpenWithItems;
 }
 
-
-
-void QVWin32Functions::openWithAppx(const QString &filePath, const QString &amuid)
+void QVWin32Functions::openWithInvokeAssocHandler(const QString &filePath, void *winAssocHandler)
 {
     const QString &nativeFilePath = QDir::toNativeSeparators(filePath);
     IShellItem *shellItem = 0;
-    HRESULT result = SHCreateItemFromParsingName(qUtf16Printable(nativeFilePath), 0, IID_IShellItem, (void**)&shellItem);
+    HRESULT result = SHCreateItemFromParsingName(qUtf16Printable(nativeFilePath), NULL, IID_IShellItem, (void**)&shellItem);
     if (!SUCCEEDED(result))
         qDebug() << "win32 openwith failed point 1";
 
-    IApplicationActivationManager *activationManager = 0;
-    result = CoCreateInstance(CLSID_ApplicationActivationManager, 0, CLSCTX_INPROC_SERVER, IID_IApplicationActivationManager, (void**)&activationManager);
+    IDataObject *dataObject = 0;
+    result = shellItem->BindToHandler(NULL, BHID_DataObject, IID_IDataObject, (void**)&dataObject);
     if (!SUCCEEDED(result))
         qDebug() << "win32 openwith failed point 2";
 
-    IShellItemArray *shellItemArray = 0;
-    result = SHCreateShellItemArrayFromShellItem(shellItem, IID_IShellItemArray, (void**)&shellItemArray);
-    if (!SUCCEEDED(result))
-        qDebug() << "win32 openwith failed point 3";
-
-    DWORD pid = 0;
-    activationManager->ActivateForFile(qUtf16Printable(amuid), shellItemArray, L"Open", &pid);
-
-}
-
-QString QVWin32Functions::getAumid(const QString &packageFullName)
-{
-    QString packageFamilyName = packageFullName;
-    packageFamilyName.remove(packageFullName.indexOf("_"), packageFullName.lastIndexOf("_")-packageFullName.indexOf("_"));
-    PACKAGE_INFO_REFERENCE info = 0;
-    OpenPackageInfoByFullName(qUtf16Printable(packageFullName), 0, &info);
-    UINT32 bufferLen = 0;
-    UINT32 bufferAmount = 0;
-    LONG error = GetPackageInfo(info, PACKAGE_INFORMATION_BASIC, &bufferLen, 0, &bufferAmount);
-    if (error)
-        qDebug() << "win32 failed point 6" << error;
-
-    BYTE *buffer = (BYTE*)malloc(bufferLen);
-    error = GetPackageInfo(info, PACKAGE_INFORMATION_BASIC, &bufferLen, buffer, &bufferAmount);
-    if (error)
-        qDebug() << "win32 failed point 7" << error;
-
-    auto *packageInfoArray = reinterpret_cast<PACKAGE_INFO*>(buffer);
-    QString appDirectory = QString::fromWCharArray(packageInfoArray[0].path);
-    QFile manifest(appDirectory + "/AppxManifest.xml");
-    if (!manifest.exists())
-        qDebug() << "manifest doesn't exist?!";
-
-    if (!manifest.open(QFile::ReadOnly | QFile::Text)) {
-        qDebug() << "cant open manifest" << manifest.errorString();
-    }
-
-    QString praid;
-    QXmlStreamReader manifestReader(&manifest);
-    if (manifestReader.readNextStartElement()) {
-        if (manifestReader.name() == "Package") {
-            while (manifestReader.readNextStartElement()) {
-                if (manifestReader.name() == "Applications") {
-                    while (manifestReader.readNextStartElement()) {
-                        if (manifestReader.name() == "Application") {
-                            praid = manifestReader.attributes().value("Id").toString();
-                            break;
-                        }
-                        else
-                            manifestReader.skipCurrentElement();
-                    }
-                }
-                else
-                    manifestReader.skipCurrentElement();
-            }
-        }
-    }
-    QString aumid = packageFamilyName + "!" + praid;
-    return aumid;
+    IAssocHandler *assocHandler = static_cast<IAssocHandler*>(winAssocHandler);
+    assocHandler->Invoke(dataObject);
 }
 
 void QVWin32Functions::showOpenWithDialog(const QString &filePath, const QWindow *parent)
