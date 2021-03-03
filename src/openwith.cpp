@@ -25,6 +25,34 @@ const QList<OpenWith::OpenWithItem> OpenWith::getOpenWithItems(const QString &fi
     listOfOpenWithItems = QVWin32Functions::getOpenWithItems(filePath);
 #endif
 #else
+    listOfOpenWithItems = getOpenWithItemsFromDesktopFiles(filePath);
+#endif
+
+    // Natural/alphabetic sort
+    QCollator collator;
+    collator.setNumericMode(true);
+    std::sort(listOfOpenWithItems.begin(),
+              listOfOpenWithItems.end(),
+              [&collator](const OpenWith::OpenWithItem &item0, const OpenWith::OpenWithItem &item1)
+    {
+            return collator.compare(item0.name, item1.name) < 0;
+    });
+
+    // Move default item to beginning
+    for (int i = 0; i < listOfOpenWithItems.length(); i++)
+    {
+        const auto &item = listOfOpenWithItems.at(i);
+        if (item.isDefault)
+            listOfOpenWithItems.move(i, 0);
+    }
+
+    return listOfOpenWithItems;
+}
+
+QList<OpenWith::OpenWithItem> OpenWith::getOpenWithItemsFromDesktopFiles(const QString &filePath)
+{
+    QList<OpenWithItem> listOfOpenWithItems;
+
     QString mimeName;
     if (!filePath.isEmpty())
     {
@@ -38,8 +66,6 @@ const QList<OpenWith::OpenWithItem> OpenWith::getOpenWithItems(const QString &fi
     process.start("xdg-mime", {"query", "default", mimeName});
     process.waitForFinished();
     QString defaultApplication = process.readAllStandardOutput().trimmed();
-
-    OpenWithItem defaultOpenWithItem;
 
     QList<QMap<QString, QString>> programList;
 
@@ -117,33 +143,13 @@ const QList<OpenWith::OpenWithItem> OpenWith::getOpenWithItems(const QString &fi
             if ((mimeTypes.contains(mimeName, Qt::CaseInsensitive) || mimeName.isEmpty()) && !noDisplay)
             {
                 // If the program is the default program, save it to add to the beginning after sorting
-                if (fileInfo.fileName() == defaultApplication)
-                {
-                    openWithItem.isDefault = true;
-                    defaultOpenWithItem = openWithItem;
-                }
-                else
-                    listOfOpenWithItems.append(openWithItem);
+                openWithItem.isDefault = fileInfo.fileName() == defaultApplication;
+
+                listOfOpenWithItems.append(openWithItem);
             }
         }
     }
 
-    // Natural/alphabetic sort
-    QCollator collator;
-    collator.setNumericMode(true);
-    std::sort(listOfOpenWithItems.begin(),
-              listOfOpenWithItems.end(),
-              [&collator](const OpenWithItem &item0, const OpenWithItem &item1)
-    {
-            return collator.compare(item0.name, item1.name) < 0;
-    });
-
-    // add default program to the beginning after sorting
-    if (!defaultOpenWithItem.name.isEmpty())
-        listOfOpenWithItems.prepend(defaultOpenWithItem);
-
-
-#endif
     return listOfOpenWithItems;
 }
 
@@ -205,16 +211,18 @@ void OpenWith::openWith(const QString &filePath, const OpenWithItem &openWithIte
     if (exec.isEmpty() || exec.isNull())
         return;
 
-#if defined Q_OS_WIN && WIN32_LOADED
     // Windows-only native app launch method
     if (openWithItem.winAssocHandler)
     {
+#if defined Q_OS_WIN && WIN32_LOADED
         QVWin32Functions::openWithInvokeAssocHandler(nativeFilePath, openWithItem.winAssocHandler);
-        return;
-    }
 #endif
-    args.append(nativeFilePath);
-    QProcess::startDetached(exec, args);
+    }
+    else
+    {
+        args.append(nativeFilePath);
+        QProcess::startDetached(exec, args);
+    }
 }
 
 // OpenWithDialog (for linux)

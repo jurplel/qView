@@ -16,15 +16,11 @@
 
 #include <QDebug>
 
-// All this win32 code is currently likely full of memory leaks (hooray!)
-// It's also kinda slow and if I recall correctly is meant to be called on another thread.
-
+// All this win32 code if I recall correctly is meant to be called on another thread.
 
 QList<OpenWith::OpenWithItem> QVWin32Functions::getOpenWithItems(const QString &filePath)
 {
     QList<OpenWith::OpenWithItem> listOfOpenWithItems;
-
-    OpenWith::OpenWithItem defaultOpenWithItem;
 
     QFileInfo info(filePath);
     QString extension = "." + info.suffix();
@@ -33,119 +29,79 @@ QList<OpenWith::OpenWithItem> QVWin32Functions::getOpenWithItems(const QString &
     WCHAR assocString[MAX_PATH];
     DWORD assocStringSize = MAX_PATH;
     AssocQueryStringW(0, ASSOCSTR_FRIENDLYAPPNAME, qUtf16Printable(extension), L"open", assocString, &assocStringSize);
-    QString defaultProgramName = QString::fromWCharArray(assocString);
-    qDebug() << "default!" << defaultProgramName;
 
+    QString defaultProgramName = QString::fromWCharArray(assocString);
+
+    // Get the big list of recommended assochandlers for this file type
     IEnumAssocHandlers *assocHandlers = 0;
-    HRESULT result = SHAssocEnumHandlers(qUtf16Printable(extension), ASSOC_FILTER_RECOMMENDED, &assocHandlers);
-    if (!SUCCEEDED(result))
-        qDebug() << "win32 failed point 1";
+    if (!SUCCEEDED(SHAssocEnumHandlers(qUtf16Printable(extension), ASSOC_FILTER_RECOMMENDED, &assocHandlers)))
+    {
+        qDebug() << "Failed to retrieve enum handlers";
+        return listOfOpenWithItems;
+    }
 
     ULONG retrieved = 0;
-    HRESULT nextResult = S_OK;
-    while (nextResult == S_OK)
+    IAssocHandler *retrievedHandlers = 0; // this is an array with one element
+    while (assocHandlers->Next(1, &retrievedHandlers, &retrieved) == S_OK)
     {
-        IAssocHandler *handlers = 0;
-        nextResult = assocHandlers->Next(1, &handlers, &retrieved);
-        if (!SUCCEEDED(nextResult) || retrieved < 1)
-        {
-            qDebug() << "win32 failed point 2";
-            break;
-        }
+        IAssocHandler &assocHandler = retrievedHandlers[0];
+
+        // Get UI name
         WCHAR *uiName = 0;
-        result = handlers[0].GetUIName(&uiName);
-        if (!SUCCEEDED(result))
-        {
-            qDebug() << "win32 failed point 3";
+        if (!SUCCEEDED(assocHandler.GetUIName(&uiName)))
             continue;
-        }
 
+        // Get "name" (this is exec)
         WCHAR *name = 0;
-        result = handlers[0].GetName(&name);
-        if (!SUCCEEDED(result))
-        {
-            qDebug() << "win32 failed point 4";
+        if (!SUCCEEDED(assocHandler.GetName(&name)))
             continue;
-        }
 
+        // Get icon path and index (index is not used in this program)
         WCHAR *icon = 0;
         int iconIndex = 0;
-        result = handlers[0].GetIconLocation(&icon, &iconIndex);
-        if (!SUCCEEDED(result))
-        {
-            qDebug() << "win32 failed point 5";
+        if (!SUCCEEDED(assocHandler.GetIconLocation(&icon, &iconIndex)))
             continue;
-        }
 
+        // Set OpenWithItem fields
         OpenWith::OpenWithItem openWithItem;
         openWithItem.name = QString::fromWCharArray(uiName);
         openWithItem.exec = QString::fromWCharArray(name);
-        openWithItem.winAssocHandler = handlers;
+        openWithItem.isDefault = openWithItem.name == defaultProgramName;
+        openWithItem.winAssocHandler = &assocHandler;
+
+
         QString iconLocation = QString::fromWCharArray(icon);
-        if (openWithItem.name == openWithItem.exec) // If it's either invalid or a windows store app
-        {
-            if (iconLocation.contains("ms-resource")) // If it's a windows store app
-            {
-                // Set a working icon path
-                WCHAR realIconPath[MAX_PATH];
-                SHLoadIndirectString(icon, realIconPath, MAX_PATH, NULL);
-                openWithItem.icon = QIcon(QString::fromWCharArray(realIconPath));
-
-            }
-            else // If invalid
-            {
-                qDebug() << "Skipping" << openWithItem.name;
-                continue;
-            }
-        }
-        else
-        {
-            // Remove items that have a path that does not exist
-            QFile file(openWithItem.exec);
-            QFile iconFile(iconLocation);
-            if (!file.exists() || !iconFile.exists())
-            {
-                qDebug() << openWithItem.name << "openwith item file does not exist";
-                continue;
-            }
-
-            QFileIconProvider iconProvider;
-            openWithItem.icon = iconProvider.icon(QFileInfo(iconLocation));
-        }
+        bool isAppx = iconLocation.contains("ms-resource");
 
         // Don't include qView in open with menu
         if (openWithItem.name == "qView")
             continue;
 
+        // Validity check
+        if (!QFile(openWithItem.exec).exists() && !isAppx)
+        {
+            qDebug() << openWithItem.name << "is an invalid openwith entry";
+            continue;
+        }
+
         // Replace ampersands with escaped ampersands for menu items
         openWithItem.name.replace("&", "&&");
 
-        qDebug() << openWithItem.name << openWithItem.exec << iconLocation;
-
-        if (openWithItem.name == defaultProgramName)
+        // Set an icon
+        if (isAppx)
         {
-            openWithItem.isDefault = true;
-            defaultOpenWithItem = openWithItem;
+            WCHAR realIconPath[MAX_PATH];
+            SHLoadIndirectString(icon, realIconPath, MAX_PATH, NULL);
+            openWithItem.icon = QIcon(QString::fromWCharArray(realIconPath));
         }
         else
         {
-            listOfOpenWithItems.append(openWithItem);
+            QFileIconProvider iconProvider;
+            openWithItem.icon = iconProvider.icon(QFileInfo(iconLocation));
         }
+
+        listOfOpenWithItems.append(openWithItem);
     }
-
-    // Natural/alphabetic sort
-    QCollator collator;
-    collator.setNumericMode(true);
-    std::sort(listOfOpenWithItems.begin(),
-              listOfOpenWithItems.end(),
-              [&collator](const OpenWith::OpenWithItem &item0, const OpenWith::OpenWithItem &item1)
-    {
-            return collator.compare(item0.name, item1.name) < 0;
-    });
-
-    // add default program to the beginning after sorting
-    if (!defaultOpenWithItem.name.isEmpty())
-        listOfOpenWithItems.prepend(defaultOpenWithItem);
 
     return listOfOpenWithItems;
 }
@@ -153,16 +109,25 @@ QList<OpenWith::OpenWithItem> QVWin32Functions::getOpenWithItems(const QString &
 void QVWin32Functions::openWithInvokeAssocHandler(const QString &filePath, void *winAssocHandler)
 {
     const QString &nativeFilePath = QDir::toNativeSeparators(filePath);
+
+    // Create IShellItem
     IShellItem *shellItem = 0;
     HRESULT result = SHCreateItemFromParsingName(qUtf16Printable(nativeFilePath), NULL, IID_IShellItem, (void**)&shellItem);
     if (!SUCCEEDED(result))
-        qDebug() << "win32 openwith failed point 1";
+    {
+        qDebug() << "Failed to create IShellItem for " << filePath;
+        return;
+    }
 
+    // Get IDataObject from that
     IDataObject *dataObject = 0;
-    result = shellItem->BindToHandler(NULL, BHID_DataObject, IID_IDataObject, (void**)&dataObject);
-    if (!SUCCEEDED(result))
-        qDebug() << "win32 openwith failed point 2";
+    if (!SUCCEEDED(shellItem->BindToHandler(NULL, BHID_DataObject, IID_IDataObject, (void**)&dataObject)))
+    {
+        qDebug() << "Failed to get IDataObject from IShellItem";
+        return;
+    }
 
+    // Cast passed IAssocHandler and invoke
     IAssocHandler *assocHandler = static_cast<IAssocHandler*>(winAssocHandler);
     assocHandler->Invoke(dataObject);
 }
@@ -175,8 +140,8 @@ void QVWin32Functions::showOpenWithDialog(const QString &filePath, const QWindow
         0,
         OAIF_EXEC
     };
+
     HWND winId = reinterpret_cast<HWND>(parent->winId());
-    HRESULT result = SHOpenWithDialog(winId, &info);
-    if (!SUCCEEDED(result))
-        qDebug() << "win32 openwithdialog failed point 1";
+    if (!SUCCEEDED(SHOpenWithDialog(winId, &info)))
+        qDebug() << "Failed launching open with dialog";
 }

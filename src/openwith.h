@@ -29,6 +29,8 @@ public:
     static void openWithExecutable(const QString &executablePath, const QStringList &args, const QString &filePath);
 
     static void openWith(const QString &filePath, const OpenWithItem &openWithItem);
+protected:
+    static QList<OpenWithItem> getOpenWithItemsFromDesktopFiles(const QString &filePath);
 };
 Q_DECLARE_METATYPE(OpenWith::OpenWithItem);
 

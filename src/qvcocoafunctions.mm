@@ -170,7 +170,6 @@ QList<OpenWith::OpenWithItem> QVCocoaFunctions::getOpenWithItems(const QString &
     NSArray *supportedApplications = [(NSArray *)LSCopyAllRoleHandlersForContentType((CFStringRef)utiType, kLSRolesAll) autorelease];
     NSString *defaultApplication = [(NSString *)LSCopyDefaultRoleHandlerForContentType((CFStringRef)utiType, kLSRolesAll) autorelease];
 
-    OpenWith::OpenWithItem defaultOpenWithItem;
     QList<OpenWith::OpenWithItem> listOfOpenWithItems;
     for (NSString *appId in supportedApplications)
     {
@@ -193,27 +192,10 @@ QList<OpenWith::OpenWithItem> QVCocoaFunctions::getOpenWithItems(const QString &
         if ([appId isEqualToString:defaultApplication])
         {
             openWithItem.isDefault = true;
-            defaultOpenWithItem = openWithItem;
+            defaultOpenWithItem.name += QT_TR_NOOP(" (default)");
         }
-        else
-            listOfOpenWithItems.append(openWithItem);
-    }
 
-    QCollator collator;
-    collator.setNumericMode(true);
-    std::sort(listOfOpenWithItems.begin(),
-              listOfOpenWithItems.end(),
-              [&collator](const OpenWith::OpenWithItem &item0, const OpenWith::OpenWithItem &item1)
-    {
-            return collator.compare(item0.name, item1.name) < 0;
-    });
-
-    // add default program to the beginning after sorting
-    if (!defaultOpenWithItem.name.isEmpty())
-    {
-        //= On mac, this goes in the open with menu after the name of the default app
-        defaultOpenWithItem.name += QT_TR_NOOP(" (default)");
-        listOfOpenWithItems.prepend(defaultOpenWithItem);
+        listOfOpenWithItems.append(openWithItem);
     }
 
     return listOfOpenWithItems;

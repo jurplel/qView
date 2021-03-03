@@ -461,10 +461,16 @@ QMenu *ActionManager::buildOpenWithMenu(QWidget *parent)
         {
             connect(action, &QAction::changed, action, [action, openWithMenu]{
                 // If this menu item is default
-                if (action->data().toList().at(1).value<OpenWith::OpenWithItem>().isDefault && !openWithMenu->actions().at(1)->isSeparator())
-                    openWithMenu->insertSeparator(openWithMenu->actions().at(1));
-                else if (openWithMenu->actions().at(1)->isSeparator())
-                    openWithMenu->removeAction(openWithMenu->actions().at(1));
+                if (action->data().toList().at(1).value<OpenWith::OpenWithItem>().isDefault)
+                {
+                    if (!openWithMenu->actions().at(1)->isSeparator())
+                        openWithMenu->insertSeparator(openWithMenu->actions().at(1));
+                }
+                else
+                {
+                    if (openWithMenu->actions().at(1)->isSeparator())
+                        openWithMenu->removeAction(openWithMenu->actions().at(1));
+                }
             });
         }
     }
