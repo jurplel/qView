@@ -192,7 +192,7 @@ QList<OpenWith::OpenWithItem> QVCocoaFunctions::getOpenWithItems(const QString &
         if ([appId isEqualToString:defaultApplication])
         {
             openWithItem.isDefault = true;
-            defaultOpenWithItem.name += QT_TR_NOOP(" (default)");
+            openWithItem.name += QT_TR_NOOP(" (default)");
         }
 
         listOfOpenWithItems.append(openWithItem);
