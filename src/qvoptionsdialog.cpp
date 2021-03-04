@@ -59,12 +59,17 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
 
 QVOptionsDialog::~QVOptionsDialog()
 {
+    delete ui;
+}
+
+void QVOptionsDialog::done(int r)
+{
     // Save window geometry
     QSettings settings;
     settings.setValue("optionsgeometry", saveGeometry());
     settings.setValue("optionstab", ui->tabWidget->currentIndex());
 
-    delete ui;
+    QDialog::done(r);
 }
 
 void QVOptionsDialog::modifySetting(QString key, QVariant value)

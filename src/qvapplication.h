@@ -90,9 +90,9 @@ private:
     ActionManager actionManager;
     ShortcutManager shortcutManager;
 
-    QVOptionsDialog *optionsDialog;
-    QVWelcomeDialog *welcomeDialog;
-    QVAboutDialog *aboutDialog;
+    QPointer<QVOptionsDialog> optionsDialog;
+    QPointer<QVWelcomeDialog> welcomeDialog;
+    QPointer<QVAboutDialog> aboutDialog;
 
     UpdateChecker updateChecker;
 };

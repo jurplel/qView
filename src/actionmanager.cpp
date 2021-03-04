@@ -9,7 +9,6 @@
 
 ActionManager::ActionManager(QObject *parent) : QObject(parent)
 {
-    isSaveRecentsEnabled = true;
     recentsListMaxLength = 10;
     openWithMaxLength = 10;
 
@@ -33,6 +32,7 @@ ActionManager::ActionManager(QObject *parent) : QObject(parent)
 
 void ActionManager::settingsUpdated()
 {
+    isSaveRecentsEnabled = qvApp->getSettingsManager().getBoolean("saverecents");
 
     auto const recentsMenus = menuCloneLibrary.values("recents");
     for (const auto &recentsMenu : recentsMenus)
@@ -538,12 +538,12 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
 #endif
         active->close();
     } else if (key == "closeallwindows") {
-        const auto topLevelWidgets = QApplication::topLevelWidgets();
-        for (auto *widget : topLevelWidgets) {
+        const auto topLevelWindows = QApplication::topLevelWindows();
+        for (auto *window : topLevelWindows) {
 #ifdef COCOA_LOADED
-            QVCocoaFunctions::closeWindow(widget->windowHandle());
+            QVCocoaFunctions::closeWindow(window);
 #endif
-            widget->close();
+            window->close();
         }
     } else if (key == "options") {
         qvApp->openOptionsDialog(relevantWindow);

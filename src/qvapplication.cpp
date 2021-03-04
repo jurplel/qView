@@ -14,11 +14,6 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     connect(&actionManager, &ActionManager::recentsMenuUpdated, this, &QVApplication::recentsMenuUpdated);
     connect(&updateChecker, &UpdateChecker::checkedUpdates, this, &QVApplication::checkedUpdates);
 
-    // Initialize variables
-    optionsDialog = nullptr;
-    welcomeDialog = nullptr;
-    aboutDialog = nullptr;
-
     // Add fallback fromTheme icon search on linux with qt >5.11
 #if defined Q_OS_UNIX && !defined Q_OS_MACOS && QT_VERSION >= QT_VERSION_CHECK(5, 11, 0)
     QIcon::setFallbackSearchPaths(QIcon::fallbackSearchPaths() << "/usr/share/pixmaps");
@@ -282,24 +277,30 @@ void QVApplication::deleteFromLastActiveWindows(MainWindow *window)
 
 void QVApplication::openOptionsDialog(QWidget *parent)
 {
+#ifdef Q_OS_MACOS
     // On macOS, the dialog should not be dependent on any window
+    parent = nullptr;
+#endif
+
+
     if (optionsDialog)
     {
         optionsDialog->raise();
         optionsDialog->activateWindow();
         return;
-
     }
 
     optionsDialog = new QVOptionsDialog(parent);
-    connect(optionsDialog, &QDialog::finished, this, [this]{
-        optionsDialog = nullptr;
-    });
     optionsDialog->show();
 }
 
 void QVApplication::openWelcomeDialog(QWidget *parent)
 {
+#ifdef Q_OS_MACOS
+    // On macOS, the dialog should not be dependent on any window
+    parent = nullptr;
+#endif
+
     if (welcomeDialog)
     {
         welcomeDialog->raise();
@@ -308,14 +309,16 @@ void QVApplication::openWelcomeDialog(QWidget *parent)
     }
 
     welcomeDialog = new QVWelcomeDialog(parent);
-    connect(welcomeDialog, &QDialog::finished, this, [this]{
-        welcomeDialog = nullptr;
-    });
     welcomeDialog->show();
 }
 
 void QVApplication::openAboutDialog(QWidget *parent)
 {
+#ifdef Q_OS_MACOS
+    // On macOS, the dialog should not be dependent on any window
+    parent = nullptr;
+#endif
+
     if (aboutDialog)
     {
         aboutDialog->raise();
@@ -324,8 +327,5 @@ void QVApplication::openAboutDialog(QWidget *parent)
     }
 
     aboutDialog = new QVAboutDialog(updateChecker.getLatestVersionNum(), parent);
-    connect(aboutDialog, &QDialog::finished, this, [this]{
-        aboutDialog = nullptr;
-    });
     aboutDialog->show();
 }
