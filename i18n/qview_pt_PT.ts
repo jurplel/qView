@@ -852,7 +852,7 @@
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="292"/>
         <source>&amp;Scaling above window size</source>
-        <translation type="unfinished"></translation>
+        <translation>Aju&amp;star acima do tamanho da janela</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="490"/>
@@ -878,7 +878,7 @@
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="645"/>
         <source>Language:</source>
-        <translation type="unfinished"></translation>
+        <translation>Idioma:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="656"/>
@@ -894,17 +894,17 @@
     <message>
         <location filename="../src/qvoptionsdialog.cpp" line="443"/>
         <source>System Language</source>
-        <translation type="unfinished"></translation>
+        <translation>Idioma do sistema</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.cpp" line="467"/>
         <source>Restart Required</source>
-        <translation type="unfinished"></translation>
+        <translation>Tem que reiniciar</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.cpp" line="467"/>
         <source>You must restart qView to change the language.</source>
-        <translation type="unfinished"></translation>
+        <translation>Tem que reiniciar a aplicação para aplicar as alterações.</translation>
     </message>
 </context>
 <context>

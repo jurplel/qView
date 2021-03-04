@@ -227,6 +227,8 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
         previousFile();
     else if (event->button() == Qt::MouseButton::ForwardButton)
         nextFile();
+    else if (event->button() == Qt::MouseButton::MiddleButton)
+        resetZoom();
 
     QMainWindow::mousePressEvent(event);
 }
