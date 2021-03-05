@@ -57,11 +57,11 @@ macx {
     # Special info.plist for qt 5.9 on mac
     equals(QT_MAJOR_VERSION, 5):lessThan(QT_MINOR_VERSION, 10) {
         QMAKE_INFO_PLIST = "dist/mac/Info_legacy.plist"
+        ICON = "dist/mac/qView_legacy.icns"
     } else {
         QMAKE_INFO_PLIST = "dist/mac/Info.plist"
+        ICON = "dist/mac/qView.icns"
     }
-
-    ICON = "dist/mac/qView.icns"
 }
 
 # Stuff for make install
