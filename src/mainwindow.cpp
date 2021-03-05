@@ -165,6 +165,9 @@ void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 
     // Show native menu on macOS with cocoa framework loaded
 #ifdef COCOA_LOADED
+    // On regular context menu, recents submenu updates right before it is shown.
+    // The native cocoa menu does not update elements until the entire menu is reopened, so we update first
+    qvApp->getActionManager().loadRecentsList();
     QVCocoaFunctions::showMenu(contextMenu, event->pos(), windowHandle());
 #else
     contextMenu->popup(event->globalPos());
