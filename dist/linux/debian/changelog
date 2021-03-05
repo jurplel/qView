@@ -1,5 +1,5 @@
-qview (3.0-2) bionic; urgency=low
+qview (4.0-2) bionic; urgency=low
 
-  * Removed xdg-util dependency
+  * Fixed packaging error in control file
 
- -- jurplel <jurplel@interversehq.com>  Sun, 12 Jan 2020 18:58:16 -0500
+ -- jurplel <jurplel@interversehq.com>  Fri, 30 Oct 2020 16:08:59 -0400

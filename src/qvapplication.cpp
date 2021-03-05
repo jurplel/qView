@@ -1,9 +1,6 @@
 #include "qvapplication.h"
 #include "qvoptionsdialog.h"
 #include "qvcocoafunctions.h"
-#include "qvoptionsdialog.h"
-#include "qvaboutdialog.h"
-#include "qvwelcomedialog.h"
 #include "updatechecker.h"
 
 #include <QFileOpenEvent>
@@ -14,28 +11,18 @@
 QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
 {
     // Connections
-    connect(&actionManager, &ActionManager::recentsMenuUpdated, this, &QVApplication::updateDockRecents);
-
-    // Initialize variables
-    optionsDialog = nullptr;
-    welcomeDialog = nullptr;
-    aboutDialog = nullptr;
-
-    // Show welcome dialog on first launch
-    QSettings settings;
-
-    if (!settings.value("firstlaunch", false).toBool())
-    {
-        settings.setValue("firstlaunch", true);
-        settings.setValue("configversion", VERSION);
-        openWelcomeDialog();
-    }
+    connect(&actionManager, &ActionManager::recentsMenuUpdated, this, &QVApplication::recentsMenuUpdated);
+    connect(&updateChecker, &UpdateChecker::checkedUpdates, this, &QVApplication::checkedUpdates);
 
     // Initialize list of supported files and filters
     const auto byteArrayList = QImageReader::supportedImageFormats();
     for (const auto &byteArray : byteArrayList)
     {
         auto fileExtString = QString::fromUtf8(byteArray);
+        // Qt 5.15 seems to have added pdf support for QImageReader but it is super broken in qView at the moment
+        if (fileExtString == "pdf")
+            continue;
+
         filterList << "*." + fileExtString;
     }
 
@@ -50,37 +37,41 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     nameFilterList << filterString;
     nameFilterList << tr("All Files") + " (*)";
 
+    // Check for updates
+    // TODO: move this to after first window show event
+    if (getSettingsManager().getBoolean("updatenotifications"))
+        checkUpdates();
 
     // Setup macOS dock menu
     dockMenu = new QMenu();
-    connect(dockMenu, &QMenu::triggered, [](QAction *triggeredAction){
+    connect(dockMenu, &QMenu::triggered, this, [](QAction *triggeredAction){
        ActionManager::actionTriggered(triggeredAction);
     });
 
-    dockMenuSuffix.append(actionManager.cloneAction("newwindow"));
-    dockMenuSuffix.append(actionManager.cloneAction("open"));
-
-    dockMenuRecentsLibrary = nullptr;
-    dockMenuRecentsLibrary = actionManager.buildRecentsMenu(false);
-    actionManager.updateRecentsMenu();
+    actionManager.loadRecentsList();
 
 #ifdef Q_OS_MACOS
+    dockMenu->addAction(actionManager.cloneAction("newwindow"));
+    dockMenu->addAction(actionManager.cloneAction("open"));
     dockMenu->setAsDockMenu();
-    setQuitOnLastWindowClosed(false);
 #endif
 
     // Build menu bar
     menuBar = actionManager.buildMenuBar();
-    connect(menuBar, &QMenuBar::triggered, [](QAction *triggeredAction){
+    connect(menuBar, &QMenuBar::triggered, this, [](QAction *triggeredAction){
         ActionManager::actionTriggered(triggeredAction);
     });
 
     // Set mac-specific application settings
-#ifdef Q_OS_MACOS
+#ifdef COCOA_LOADED
     QVCocoaFunctions::setUserDefaults();
 #endif
+#ifdef Q_OS_MACOS
+    setQuitOnLastWindowClosed(false);
+#endif
 
-    // Don't even try to show menu icons on mac or windows
+    // Block any erroneous icons from showing up on mac and windows
+    // (this is overridden in some cases)
 #if defined Q_OS_MACOS || defined Q_OS_WIN
     setAttribute(Qt::AA_DontShowIconsInMenus);
 #endif
@@ -95,17 +86,18 @@ QVApplication::~QVApplication() {
 
 bool QVApplication::event(QEvent *event)
 {
-    if (event->type() == QEvent::FileOpen) {
-        auto *openEvent = dynamic_cast<QFileOpenEvent *>(event);
+    if (event->type() == QEvent::FileOpen)
+    {
+        auto *openEvent = static_cast<QFileOpenEvent *>(event);
         openFile(getMainWindow(true), openEvent->file());
     }
+    else if (event->type() == QEvent::ApplicationStateChange)
+    {
+        auto *stateEvent = static_cast<QApplicationStateChangeEvent*>(event);
+        if (stateEvent->applicationState() == Qt::ApplicationActive)
+            settingsManager.loadSettings();
+    }
     return QApplication::event(event);
-}
-
-void QVApplication::afterWindow()
-{
-    auto *checker = new UpdateChecker();
-    checker->check();
 }
 
 void QVApplication::openFile(MainWindow *window, const QString &file, bool resize)
@@ -133,7 +125,7 @@ void QVApplication::pickFile(MainWindow *parent)
     if (parent)
         fileDialog->setWindowModality(Qt::WindowModal);
 
-    connect(fileDialog, &QFileDialog::filesSelected, [parent](const QStringList &selected){
+    connect(fileDialog, &QFileDialog::filesSelected, fileDialog, [parent](const QStringList &selected){
         bool isFirstLoop = true;
         for (const auto &file : selected)
         {
@@ -158,6 +150,7 @@ MainWindow *QVApplication::newWindow()
 {
     auto *w = new MainWindow();
     w->show();
+    w->raise();
 
     return w;
 }
@@ -209,26 +202,34 @@ MainWindow *QVApplication::getMainWindow(bool shouldBeEmpty)
     return window;
 }
 
-void QVApplication::updateDockRecents()
+void QVApplication::checkUpdates()
 {
-    // This entire function is only necessary because invisible actions do not
-    // disappear in mac's dock menu
-    if (!dockMenuRecentsLibrary)
-        return;
+    updateChecker.check();
+}
 
-    dockMenu->clear();
-
-    const auto dockMenuActions = dockMenuRecentsLibrary->actions();
-    for (const auto &action : dockMenuActions)
+void QVApplication::checkedUpdates()
+{
+    if (aboutDialog)
     {
-        if (action->isVisible())
-            dockMenu->addAction(action);
+        aboutDialog->setLatestVersionNum(updateChecker.getLatestVersionNum());
     }
+    else if (updateChecker.getLatestVersionNum() > VERSION &&
+             getSettingsManager().getBoolean("updatenotifications"))
+    {
+        updateChecker.openDialog();
+    }
+}
 
-    if (!dockMenu->isEmpty())
-        dockMenu->addSeparator();
-
-    dockMenu->addActions(dockMenuSuffix);
+void QVApplication::recentsMenuUpdated()
+{
+#ifdef COCOA_LOADED
+    QStringList recentsPathList;
+    for(const auto &recent : actionManager.getRecentsList())
+    {
+        recentsPathList << recent.filePath;
+    }
+    QVCocoaFunctions::setDockRecents(recentsPathList);
+#endif
 }
 
 qint64 QVApplication::getPreviouslyRecordedFileSize(const QString &fileName)
@@ -271,27 +272,30 @@ void QVApplication::deleteFromLastActiveWindows(MainWindow *window)
 
 void QVApplication::openOptionsDialog(QWidget *parent)
 {
-    // On macOS, the dialog should not be dependent on any window
 #ifdef Q_OS_MACOS
+    // On macOS, the dialog should not be dependent on any window
     parent = nullptr;
 #endif
+
+
     if (optionsDialog)
     {
         optionsDialog->raise();
         optionsDialog->activateWindow();
         return;
-
     }
 
     optionsDialog = new QVOptionsDialog(parent);
-    connect(optionsDialog, &QDialog::finished, [this]{
-        optionsDialog = nullptr;
-    });
     optionsDialog->show();
 }
 
-void QVApplication::openWelcomeDialog()
+void QVApplication::openWelcomeDialog(QWidget *parent)
 {
+#ifdef Q_OS_MACOS
+    // On macOS, the dialog should not be dependent on any window
+    parent = nullptr;
+#endif
+
     if (welcomeDialog)
     {
         welcomeDialog->raise();
@@ -299,15 +303,17 @@ void QVApplication::openWelcomeDialog()
         return;
     }
 
-    welcomeDialog = new QVWelcomeDialog();
-    connect(welcomeDialog, &QDialog::finished, [this]{
-        welcomeDialog = nullptr;
-    });
+    welcomeDialog = new QVWelcomeDialog(parent);
     welcomeDialog->show();
 }
 
-void QVApplication::openAboutDialog()
+void QVApplication::openAboutDialog(QWidget *parent)
 {
+#ifdef Q_OS_MACOS
+    // On macOS, the dialog should not be dependent on any window
+    parent = nullptr;
+#endif
+
     if (aboutDialog)
     {
         aboutDialog->raise();
@@ -315,9 +321,6 @@ void QVApplication::openAboutDialog()
         return;
     }
 
-    aboutDialog = new QVAboutDialog();
-    connect(aboutDialog, &QDialog::finished, [this]{
-        aboutDialog = nullptr;
-    });
+    aboutDialog = new QVAboutDialog(updateChecker.getLatestVersionNum(), parent);
     aboutDialog->show();
 }

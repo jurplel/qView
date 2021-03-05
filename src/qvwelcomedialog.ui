@@ -418,6 +418,61 @@
      </property>
     </widget>
    </item>
+   <item>
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="updateCheckBox">
+     <property name="styleSheet">
+      <string notr="true">QCheckBox {
+	color: white;
+	font-family: Lato;
+	spacing: 5px;
+}
+
+QCheckBox::indicator {
+    width: 12px;
+    height: 12px;
+	border: 2px solid #FFFFFF;
+	border-radius: 4px;
+	background: none;
+}
+
+QCheckBox::indicator:unchecked:hover {
+	background: rgba(255, 255, 255, 90);
+}
+
+QCheckBox::indicator:unchecked:pressed {
+	background: rgba(255, 255, 255, 127);
+}
+
+QCheckBox::indicator:checked {	
+	image: url(:/images/checkmark.png);
+}
+
+QCheckBox::indicator:checked:hover {	
+	background: rgba(255, 255, 255, 90);
+}
+
+QCheckBox::indicator:checked:pressed {	
+	background: rgba(255, 255, 255, 127);
+}</string>
+     </property>
+     <property name="text">
+      <string>&amp;Enable update notifications on startup</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <resources/>

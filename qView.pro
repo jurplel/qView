@@ -1,9 +1,8 @@
-QT += core gui network
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
 TARGET = qView
-VERSION = 3.0 # major.minor
+VERSION = 4.0
+
+QT += core gui network widgets
+
 TEMPLATE = app
 
 # allows use of version variable elsewhere
@@ -11,51 +10,97 @@ DEFINES += "VERSION=$$VERSION"
 
 # build folder organization
 DESTDIR = bin
-OBJECTS_DIR = intermediate
-MOC_DIR = intermediate
-UI_DIR = intermediate
-RCC_DIR = intermediate
+OBJECTS_DIR = build
+MOC_DIR = build
+UI_DIR = build
+RCC_DIR = build
+
 CONFIG -= debug_and_release debug_and_release_target
 
 # enable c++11
 CONFIG += c++11
 
+# Print if this is a debug or release build
+CONFIG(debug, debug|release) {
+    message("This is a debug build")
+} else {
+    message("This is a release build")
+}
+
+# Check nightly variable
+# to use: qmake NIGHTLY=VERSION
+!isEmpty(NIGHTLY) {
+    message("This is nightly $$NIGHTLY")
+    DEFINES += "NIGHTLY=$$NIGHTLY"
+}
+
 # Windows specific stuff
-win32:QT += svg # needed for including svg support in static build
-win32:CONFIG += static
-RC_ICONS = "dist/win/qView.ico"
-QMAKE_TARGET_COPYRIGHT = "Copyright ï¿½ 2020 jurplel and qView contributors"
-QMAKE_TARGET_DESCRIPTION = "qView"
+win32 {
+    QT += svg # needed for including svg support in static build
+    RC_ICONS = "dist/win/qView.ico"
+    QMAKE_TARGET_COPYRIGHT = "Copyright © 2020 jurplel and qView contributors"
+    QMAKE_TARGET_DESCRIPTION = "qView"
+}
 
 # macOS specific stuff
-macx:QT += svg # needed for macdeployqt added qsvg plugin automatically
-macx:LIBS += -framework Cocoa
-QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.12
-QMAKE_TARGET_BUNDLE_PREFIX = "com.qview"
-QMAKE_INFO_PLIST = "dist/mac/Info.plist"
-ICON = "dist/mac/qView.icns"
+macx {
+    QT += svg # needed for macdeployqt added qsvg plugin automatically
 
-# Linux specific stuff
-binary.path = /usr/bin
+    # To build without cocoa: qmake CONFIG+=NO_COCOA
+    !CONFIG(NO_COCOA) {
+        LIBS += -framework Cocoa
+        DEFINES += COCOA_LOADED
+        message("Linked to cocoa framework")
+    }
+    QMAKE_TARGET_BUNDLE_PREFIX = "com.interversehq"
+
+    # Special info.plist for qt 5.9 on mac
+    equals(QT_MAJOR_VERSION, 5):lessThan(QT_MINOR_VERSION, 10) {
+        QMAKE_INFO_PLIST = "dist/mac/Info_legacy.plist"
+        ICON = "dist/mac/qView_legacy.icns"
+    } else {
+        QMAKE_INFO_PLIST = "dist/mac/Info.plist"
+        ICON = "dist/mac/qView.icns"
+    }
+}
+
+# Stuff for make install
+# To use a custom prefix: qmake PREFIX=/usr
+# An environment variable will also work: PREFIX=/usr qmake
+# You can also use at install time: make install INSTALL_ROOT=/usr but this will not override the prefix, just set where it begins
+isEmpty(PREFIX) {
+    PREFIX = $$(PREFIX)
+}
+isEmpty(PREFIX) {
+    PREFIX = /usr/local
+}
+
+message("Installation prefix is $$PREFIX")
+
+binary.path = $$PREFIX/bin
 binary.files = bin/qview
-desktop.path = /usr/share/applications
-desktop.files = dist/linux/qView.desktop
-icon16.path = /usr/share/icons/hicolor/16x16/apps/
-icon16.files = dist/linux/hicolor/16x16/apps/qview.png
-icon32.path = /usr/share/icons/hicolor/32x32/apps/
-icon32.files = dist/linux/hicolor/32x32/apps/qview.png
-icon64.path = /usr/share/icons/hicolor/64x64/apps/
-icon64.files = dist/linux/hicolor/64x64/apps/qview.png
-icon128.path = /usr/share/icons/hicolor/128x128/apps/
-icon128.files = dist/linux/hicolor/128x128/apps/qview.png
-icon256.path = /usr/share/icons/hicolor/256x256/apps/
-icon256.files = dist/linux/hicolor/256x256/apps/qview.png
-iconsvg.path = /usr/share/icons/hicolor/scalable/apps/
-iconsvg.files = dist/linux/hicolor/scalable/apps/qview.svg
-license.path = /usr/share/licenses/qview/
+desktop.path = $$PREFIX/share/applications
+desktop.files = dist/linux/com.interversehq.qView.desktop
+icon16.path = $$PREFIX/share/icons/hicolor/16x16/apps/
+icon16.files = dist/linux/hicolor/16x16/apps/com.interversehq.qView.png
+icon32.path = $$PREFIX/share/icons/hicolor/32x32/apps/
+icon32.files = dist/linux/hicolor/32x32/apps/com.interversehq.qView.png
+icon64.path = $$PREFIX/share/icons/hicolor/64x64/apps/
+icon64.files = dist/linux/hicolor/64x64/apps/com.interversehq.qView.png
+icon128.path = $$PREFIX/share/icons/hicolor/128x128/apps/
+icon128.files = dist/linux/hicolor/128x128/apps/com.interversehq.qView.png
+icon256.path = $$PREFIX/share/icons/hicolor/256x256/apps/
+icon256.files = dist/linux/hicolor/256x256/apps/com.interversehq.qView.png
+iconsvg.path = $$PREFIX/share/icons/hicolor/scalable/apps/
+iconsvg.files = dist/linux/hicolor/scalable/apps/com.interversehq.qView.svg
+iconsym.path = $$PREFIX/share/icons/hicolor/symbolic/apps/
+iconsym.files = dist/linux/hicolor/symbolic/apps/com.interversehq.qView-symbolic.svg
+license.path = $$PREFIX/share/licenses/qview/
 license.files = LICENSE
+appstream.path = $$PREFIX/share/metainfo/
+appstream.files = dist/linux/com.interversehq.qView.appdata.xml
 
-unix:!macx:INSTALLS += binary desktop icon16 icon32 icon64 icon128 icon256 iconsvg license
+unix:INSTALLS += binary desktop icon16 icon32 icon64 icon128 icon256 iconsvg iconsym license appstream
 unix:!macx:TARGET = qview
 
 # The following define makes your compiler emit warnings if you use
@@ -72,48 +117,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # Ban usage of Qt's built in foreach utility for better code style
 DEFINES += QT_NO_FOREACH
 
-SOURCES += \
-    src/main.cpp \
-    src/mainwindow.cpp \
-    src/qvgraphicsview.cpp \
-    src/qvoptionsdialog.cpp \
-    src/qvapplication.cpp \
-    src/qvaboutdialog.cpp \
-    src/qvwelcomedialog.cpp \
-    src/qvinfodialog.cpp \
-    src/qvimagecore.cpp \
-    src/qvshortcutdialog.cpp \
-    src/actionmanager.cpp \
-    src/settingsmanager.cpp \
-    src/shortcutmanager.cpp \
-    src/updatechecker.cpp
+include(src/src.pri)
 
-macx:SOURCES += src/qvcocoafunctions.mm
 
-HEADERS += \
-    src/mainwindow.h \
-    src/qvgraphicsview.h \
-    src/qvoptionsdialog.h \
-    src/qvapplication.h \
-    src/qvaboutdialog.h \
-    src/qvwelcomedialog.h \
-    src/qvinfodialog.h \
-    src/qvimagecore.h \
-    src/qvshortcutdialog.h \
-    src/actionmanager.h \
-    src/settingsmanager.h \
-    src/shortcutmanager.h \
-    src/updatechecker.h
+CONFIG += lrelease embed_translations
+TRANSLATIONS += $$files(i18n/qview_*.ts)
 
-macx:HEADERS += src/qvcocoafunctions.h
-
-FORMS += \
-        src/mainwindow.ui \
-    src/qvoptionsdialog.ui \
-    src/qvaboutdialog.ui \
-    src/qvwelcomedialog.ui \
-    src/qvinfodialog.ui \
-    src/qvshortcutdialog.ui
+lupdate_only {
+    TRANSLATIONS += i18n/template.ts
+}
 
 RESOURCES += \
-    resources.qrc
+    resources/resources.qrc
+

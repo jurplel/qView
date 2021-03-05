@@ -1,5 +1,6 @@
 #include "qvimagecore.h"
 #include "qvapplication.h"
+#include <random>
 #include <QMessageBox>
 #include <QDir>
 #include <QUrl>
@@ -22,7 +23,9 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     isLoopFoldersEnabled = true;
     preloadingMode = 1;
     sortMode = 0;
-    sortAscending = true;
+    sortDescending = false;
+
+    randomSortSeed = 0;
 
     currentFileDetails.fileInfo = QFileInfo();
     currentFileDetails.folderFileInfoList = QFileInfoList();
@@ -43,8 +46,6 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     lastFileDetails.loadedPixmapSize = QSize();
 
     currentRotation = 0;
-
-    devicePixelRatio = 0;
 
     QPixmapCache::setCacheLimit(51200);
 
@@ -144,12 +145,16 @@ QVImageCore::QVImageAndFileInfo QVImageCore::readFile(const QString &fileName)
     QImage readImage;
     if (newImageReader.format() == "svg" || newImageReader.format() == "svgz")
     {
+        // Render vectors into a high resolution
         QIcon icon;
         icon.addFile(fileName);
         readImage = icon.pixmap(largestDimension).toImage();
-
+        // If this fails, try reading the normal way so that a proper error message is given
+        if (readImage.isNull())
+            readImage = newImageReader.read();
     }
-    else {
+    else
+    {
         readImage = newImageReader.read();
     }
 
@@ -157,7 +162,7 @@ QVImageCore::QVImageAndFileInfo QVImageCore::readFile(const QString &fileName)
     // Only error out when not loading for cache
     if (readImage.isNull() && fileName == currentFileDetails.fileInfo.absoluteFilePath())
     {
-        emit readError(QString::number(newImageReader.error()) + ": " + newImageReader.errorString(), fileName);
+        emit readError(newImageReader.error(), newImageReader.errorString(), combinedInfo.readFileInfo.fileName());
         currentFileDetails = lastFileDetails;
     }
 
@@ -177,19 +182,17 @@ void QVImageCore::postRead(const QVImageAndFileInfo &readImageAndFileInfo)
 
 void QVImageCore::postLoad()
 {
-    loadedPixmap.setDevicePixelRatio(devicePixelRatio);
-
     fileChangeRateTimer->start();
 
     currentFileDetails.isPixmapLoaded = true;
     loadedMovie.stop();
-    loadedMovie.setFileName("");
 
     //animation detection
-    imageReader.setFileName(currentFileDetails.fileInfo.absoluteFilePath());
-    if (imageReader.supportsAnimation() && imageReader.imageCount() != 1)
+    loadedMovie.setFileName(currentFileDetails.fileInfo.absoluteFilePath());
+    if (imageReader.format() == "png")
+        loadedMovie.setFormat("apng");
+    if (loadedMovie.isValid() && loadedMovie.frameCount() != 1)
     {
-        loadedMovie.setFileName(currentFileDetails.fileInfo.absoluteFilePath());
         loadedMovie.start();
         currentFileDetails.isMovieLoaded = true;
     }
@@ -200,16 +203,26 @@ void QVImageCore::postLoad()
 
     currentFileDetails.baseImageSize = imageReader.size();
     currentFileDetails.loadedPixmapSize = loadedPixmap.size();
+    if (currentFileDetails.baseImageSize == QSize(-1, -1))
+    {
+        qInfo() << "QImageReader::size gave an invalid size for " + currentFileDetails.fileInfo.fileName() + ", using size from loaded pixmap";
+        currentFileDetails.baseImageSize = loadedPixmap.size();
+    }
 
     emit fileLoaded();
 }
 
 void QVImageCore::updateFolderInfo()
 {
-    QCollator collator;
-    collator.setNumericMode(true);
+    // If the current folder changed since the last image, assign a new seed for random sorting
+    if (currentFileDetails.fileInfo.dir() != lastFileDetails.fileInfo.dir())
+    {
+        randomSortSeed = std::chrono::system_clock::now().time_since_epoch().count();
+    }
+
     QDir::SortFlags sortFlags = QDir::NoSort;
 
+    // Deal with sort flags
     switch (sortMode) {
     case 1: {
         sortFlags = QDir::Time;
@@ -225,23 +238,32 @@ void QVImageCore::updateFolderInfo()
     }
     }
 
-    if (!sortAscending)
+    if (sortDescending)
         sortFlags.setFlag(QDir::Reversed, true);
 
-    currentFileDetails.folderFileInfoList = QDir(currentFileDetails.fileInfo.absolutePath()).entryInfoList(qvApp->getFilterList(), QDir::Files, sortFlags);
+    currentFileDetails.folderFileInfoList = currentFileDetails.fileInfo.dir().entryInfoList(qvApp->getFilterList(), QDir::Files, sortFlags);
 
-    // Natural sorting
-    if (sortMode == 0) {
+    // For more special types of sorting
+    if (sortMode == 0) // Natural sorting
+    {
+        QCollator collator;
+        collator.setNumericMode(true);
         std::sort(currentFileDetails.folderFileInfoList.begin(),
                   currentFileDetails.folderFileInfoList.end(),
-                  [&collator, this](const QFileInfo &file1, const QFileInfo &file2) {
-            if (sortAscending)
-                return collator.compare(file1.fileName(), file2.fileName()) < 0;
-            else
+                  [&collator, this](const QFileInfo &file1, const QFileInfo &file2)
+        {
+            if (sortDescending)
                 return collator.compare(file1.fileName(), file2.fileName()) > 0;
+            else
+                return collator.compare(file1.fileName(), file2.fileName()) < 0;
         });
     }
+    else if (sortMode == 4) // Random sorting
+    {
+        std::shuffle(currentFileDetails.folderFileInfoList.begin(), currentFileDetails.folderFileInfoList.end(), std::default_random_engine(randomSortSeed));
+    }
 
+    // Set current file index variable
     currentFileDetails.loadedIndexInFolder = currentFileDetails.folderFileInfoList.indexOf(currentFileDetails.fileInfo);
 }
 
@@ -262,6 +284,11 @@ void QVImageCore::requestCaching()
     for (int i = currentFileDetails.loadedIndexInFolder-preloadingDistance; i <= currentFileDetails.loadedIndexInFolder+preloadingDistance; i++)
     {
         int index = i;
+
+        // Don't try to cache the currently loaded image
+        if (index == currentFileDetails.loadedIndexInFolder)
+            continue;
+
         //keep within index range
         if (isLoopFoldersEnabled)
         {
@@ -273,7 +300,7 @@ void QVImageCore::requestCaching()
 
         //if still out of range after looping, just cancel the cache for this index
         if (index > currentFileDetails.folderFileInfoList.length()-1 || index < 0 || currentFileDetails.folderFileInfoList.isEmpty())
-            return;
+            continue;
 
         QString filePath = currentFileDetails.folderFileInfoList[index].absoluteFilePath();
         filesToPreload.append(filePath);
@@ -291,10 +318,10 @@ void QVImageCore::requestCachingFile(const QString &filePath)
         return;
 
     //check if too big for caching
-    imageReader.setFileName(filePath);
+    QImageReader newImageReader(filePath);
     QTransform transform;
     transform.rotate(currentRotation);
-    if (((imageReader.size().width()*imageReader.size().height()*32)/8)/1000 > QPixmapCache::cacheLimit()/2)
+    if (((newImageReader.size().width()*newImageReader.size().height()*32)/8)/1000 > QPixmapCache::cacheLimit()/2)
         return;
 
     auto *cacheFutureWatcher = new QFutureWatcher<QVImageAndFileInfo>();
@@ -450,13 +477,8 @@ void QVImageCore::settingsUpdated()
     sortMode = settingsManager.getInteger("sortmode");
 
     //sort ascending
-    sortAscending = settingsManager.getBoolean("sortascending");
+    sortDescending = settingsManager.getBoolean("sortdescending");
 
     //update folder info to re-sort
     updateFolderInfo();
-}
-
-void QVImageCore::setDevicePixelRatio(qreal scaleFactor)
-{
-    devicePixelRatio = scaleFactor;
 }

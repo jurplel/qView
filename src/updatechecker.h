@@ -13,7 +13,10 @@ public:
 
     void openDialog();
 
+    double getLatestVersionNum() const { return latestVersionNum; }
+
 signals:
+    void checkedUpdates();
 
 protected:
     void sendRequest(const QUrl &url);
@@ -24,12 +27,15 @@ protected:
 
 private:
     const QString UPDATE_URL = "https://api.github.com/repos/jurplel/qview/releases";
+    const QString DOWNLOAD_URL = "https://interversehq.com/qview/download/";
 
     double latestVersionNum;
 
     QString changelog;
 
     QDateTime releaseDate;
+
+    QNetworkAccessManager netAccessManager;
 };
 
 #endif // UPDATECHECKER_H

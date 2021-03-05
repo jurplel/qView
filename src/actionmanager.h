@@ -39,7 +39,7 @@ public:
     {
         QList<QAction*> allActionsOfType;
 
-        auto allNestedActions = getAllNestedActions(givenActionList);
+        const auto allNestedActions = getAllNestedActions(givenActionList);
         for (const auto &action : allNestedActions)
         {
             if (action->data() == type)
@@ -81,6 +81,10 @@ public:
 
     QList<QAction*> getAllInstancesOfAction(const QString &key) const;
 
+    QList<QAction*> getAllClonesOfAction(const QString &key) const;
+
+    QList<QAction*> getAllClonesOfAction(const QString &key, QWidget *parent) const;
+
     void untrackClonedActions(const QList<QAction*> &actions);
 
     void untrackClonedActions(const QMenu *menu);
@@ -116,6 +120,8 @@ public:
     const QList<SRecent> &getRecentsList() const { return recentsList; }
 
     const QHash<QString, QAction*> &getActionLibrary() const { return actionLibrary; }
+
+    int getRecentsListMaxLength() const { return recentsListMaxLength; };
 
 signals:
     void recentsMenuUpdated();

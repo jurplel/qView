@@ -1,6 +1,10 @@
 #include "qvwelcomedialog.h"
 #include "ui_qvwelcomedialog.h"
+
+#include "qvapplication.h"
+
 #include <QFontDatabase>
+#include <QSettings>
 
 QVWelcomeDialog::QVWelcomeDialog(QWidget *parent) :
     QDialog(parent),
@@ -9,12 +13,18 @@ QVWelcomeDialog::QVWelcomeDialog(QWidget *parent) :
     ui->setupUi(this);
 
     setAttribute(Qt::WA_DeleteOnClose);
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint | Qt::CustomizeWindowHint);
+    setWindowFlags(windowFlags() & (~Qt::WindowContextHelpButtonHint | Qt::CustomizeWindowHint));
+
+    // Application modal on mac, window modal everywhere else
+#ifdef Q_OS_MACOS
     setWindowModality(Qt::ApplicationModal);
+#else
+    setWindowModality(Qt::WindowModal);
+#endif
 
     // add fonts
-    QFontDatabase::addApplicationFont(":/fonts/resources/Lato-Light.ttf");
-    QFontDatabase::addApplicationFont(":/fonts/resources/Lato-Regular.ttf");
+    QFontDatabase::addApplicationFont(":/fonts/Lato-Light.ttf");
+    QFontDatabase::addApplicationFont(":/fonts/Lato-Regular.ttf");
 
     int modifier = 0;
     //set main title font
@@ -42,6 +52,14 @@ QVWelcomeDialog::QVWelcomeDialog(QWidget *parent) :
 
     ui->infoLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
     ui->infoLabel->setOpenExternalLinks(true);
+
+    ui->updateCheckBox->setChecked(qvApp->getSettingsManager().getBoolean("updatenotifications"));
+    connect(ui->updateCheckBox, &QCheckBox::stateChanged, qvApp, [](int state){
+        QSettings settings;
+        settings.beginGroup("options");
+        settings.setValue("updatenotifications", state > 0);
+        qvApp->getSettingsManager().loadSettings();
+    });
 }
 
 QVWelcomeDialog::~QVWelcomeDialog()

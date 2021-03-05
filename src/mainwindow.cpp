@@ -27,7 +27,6 @@
 #include <QtConcurrent/QtConcurrentRun>
 #include <QMenu>
 #include <QWindow>
-#include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QTemporaryFile>
@@ -41,10 +40,14 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Initialize variables
     justLaunchedWithImage = false;
+    storedWindowState = Qt::WindowNoState;
 
     // Initialize graphicsview
     graphicsView = new QVGraphicsView(this);
     centralWidget()->layout()->addWidget(graphicsView);
+
+    // Hide fullscreen label by default
+    ui->fullscreenLabel->hide();
 
     // Connect graphicsview signals
     connect(graphicsView, &QVGraphicsView::fileLoaded, this, &MainWindow::fileLoaded);
@@ -67,10 +70,6 @@ MainWindow::MainWindow(QWidget *parent) :
     // Timer for slideshow
     slideshowTimer = new QTimer(this);
     connect(slideshowTimer, &QTimer::timeout, this, &MainWindow::slideshowAction);
-
-    // Load window geometry
-    QSettings settings;
-    restoreGeometry(settings.value("geometry").toByteArray());
 
     // Context menu
     auto &actionManager = qvApp->getActionManager();
@@ -96,22 +95,32 @@ MainWindow::MainWindow(QWidget *parent) :
     contextMenu->addMenu(actionManager.buildToolsMenu(true, contextMenu));
     contextMenu->addMenu(actionManager.buildHelpMenu(true, contextMenu));
 
-    connect(contextMenu, &QMenu::triggered, [this](QAction *triggeredAction){
+    connect(contextMenu, &QMenu::triggered, this, [this](QAction *triggeredAction){
         ActionManager::actionTriggered(triggeredAction, this);
     });
 
     // Initialize menubar
     setMenuBar(actionManager.buildMenuBar(this));
-    connect(menuBar(), &QMenuBar::triggered, [this](QAction *triggeredAction){
+    // Stop actions conflicting with the window's actions
+    const auto menubarActions = ActionManager::getAllNestedActions(menuBar()->actions());
+    for (auto action : menubarActions)
+    {
+        action->setShortcutContext(Qt::WidgetShortcut);
+    }
+    connect(menuBar(), &QMenuBar::triggered, this, [this](QAction *triggeredAction){
         ActionManager::actionTriggered(triggeredAction, this);
     });
 
     // Add all actions to this window so keyboard shortcuts are always triggered
     // using virtual menu to hold them so i can connect to the triggered signal
     virtualMenu = new QMenu(this);
-    virtualMenu->addActions(actionManager.getActionLibrary().values());
+    const auto &actionKeys = actionManager.getActionLibrary().keys();
+    for (const QString &key : actionKeys)
+    {
+        virtualMenu->addAction(actionManager.cloneAction(key));
+    }
     addActions(virtualMenu->actions());
-    connect(virtualMenu, &QMenu::triggered, [this](QAction *triggeredAction){
+    connect(virtualMenu, &QMenu::triggered, this, [this](QAction *triggeredAction){
        ActionManager::actionTriggered(triggeredAction, this);
     });
 
@@ -120,6 +129,22 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&qvApp->getSettingsManager(), &SettingsManager::settingsUpdated, this, &MainWindow::settingsUpdated);
     settingsUpdated();
     shortcutsUpdated();
+
+#ifdef COCOA_LOADED
+    QVCocoaFunctions::setFullSizeContentView(windowHandle());
+#endif
+
+    // Load window geometry
+    QSettings settings;
+    restoreGeometry(settings.value("geometry").toByteArray());
+
+    // Show welcome dialog on first launch
+    if (!settings.value("firstlaunch", false).toBool())
+    {
+        settings.setValue("firstlaunch", true);
+        settings.setValue("configversion", VERSION);
+        qvApp->openWelcomeDialog(this);
+    }
 }
 
 MainWindow::~MainWindow()
@@ -140,8 +165,11 @@ void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 {
     QMainWindow::contextMenuEvent(event);
 
-    // Show native menu on macOS
-#ifdef Q_OS_MACOS
+    // Show native menu on macOS with cocoa framework loaded
+#ifdef COCOA_LOADED
+    // On regular context menu, recents submenu updates right before it is shown.
+    // The native cocoa menu does not update elements until the entire menu is reopened, so we update first
+    qvApp->getActionManager().loadRecentsList();
     QVCocoaFunctions::showMenu(contextMenu, event->pos(), windowHandle());
 #else
     contextMenu->popup(event->globalPos());
@@ -150,6 +178,12 @@ void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 
 void MainWindow::showEvent(QShowEvent *event)
 {
+    if (!menuBar()->sizeHint().isEmpty())
+    {
+        ui->fullscreenLabel->setMargin(0);
+        ui->fullscreenLabel->setMinimumHeight(menuBar()->sizeHint().height());
+    }
+
     QMainWindow::showEvent(event);
 }
 
@@ -161,6 +195,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     qvApp->deleteFromLastActiveWindows(this);
     qvApp->getActionManager().untrackClonedActions(contextMenu);
     qvApp->getActionManager().untrackClonedActions(menuBar());
+    qvApp->getActionManager().untrackClonedActions(virtualMenu);
 
     QMainWindow::closeEvent(event);
 }
@@ -169,23 +204,23 @@ void MainWindow::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::WindowStateChange)
     {
-        const auto fullscreenActions = qvApp->getActionManager().getAllInstancesOfAction("fullscreen");
+        const auto fullscreenActions = qvApp->getActionManager().getAllClonesOfAction("fullscreen", this);
         for (const auto &fullscreenAction : fullscreenActions)
         {
-                if (windowState() == Qt::WindowFullScreen)
-                {
-                    fullscreenAction->setText(tr("Exit Full Screen"));
-                    fullscreenAction->setIcon(QIcon::fromTheme("view-restore"));
-                }
-                else
-                {
-                    fullscreenAction->setText(tr("Enter Full Screen"));
-                    fullscreenAction->setIcon(QIcon::fromTheme("view-fullscreen"));
-                }
-            QTimer::singleShot(3000, this, [fullscreenAction]{
-                fullscreenAction->setVisible(true);
-             });
+            if (windowState() == Qt::WindowFullScreen)
+            {
+                fullscreenAction->setText(tr("Exit F&ull Screen"));
+                fullscreenAction->setIcon(QIcon::fromTheme("view-restore"));
+            }
+            else
+            {
+                fullscreenAction->setText(tr("Enter F&ull Screen"));
+                fullscreenAction->setIcon(QIcon::fromTheme("view-fullscreen"));
+            }
         }
+
+        if (qvApp->getSettingsManager().getBoolean("fullscreendetails"))
+            ui->fullscreenLabel->setVisible(windowState() == Qt::WindowFullScreen);
     }
 }
 
@@ -195,6 +230,8 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
         previousFile();
     else if (event->button() == Qt::MouseButton::ForwardButton)
         nextFile();
+    else if (event->button() == Qt::MouseButton::MiddleButton)
+        resetZoom();
 
     QMainWindow::mousePressEvent(event);
 }
@@ -208,7 +245,6 @@ void MainWindow::mouseDoubleClickEvent(QMouseEvent *event)
 
 void MainWindow::openFile(const QString &fileName)
 {
-    QUrl url(fileName);
     graphicsView->loadFile(fileName);
     cancelSlideshow();
 }
@@ -226,20 +262,17 @@ void MainWindow::settingsUpdated()
     menuBarEnabled = true;
 #endif
     menuBar()->setVisible(menuBarEnabled);
-    const auto actionList = actions();
-    for (const auto &action : actionList)
-    {
-        action->setVisible(!menuBarEnabled);
-    }
 
     // titlebaralwaysdark
-#ifdef Q_OS_MACOS
+#ifdef COCOA_LOADED
     QVCocoaFunctions::setVibrancy(settingsManager.getBoolean("titlebaralwaysdark"), windowHandle());
 #endif
 
     //slideshow timer
     slideshowTimer->setInterval(static_cast<int>(settingsManager.getDouble("slideshowtimer")*1000));
 
+
+    ui->fullscreenLabel->setVisible(qvApp->getSettingsManager().getBoolean("fullscreendetails") && (windowState() == Qt::WindowFullScreen));
 }
 
 void MainWindow::shortcutsUpdated()
@@ -267,20 +300,28 @@ void MainWindow::openRecent(int i)
 
 void MainWindow::fileLoaded()
 {
-    //activate items after item is loaded for the first time
-//    if (getCurrentFileDetails().isPixmapLoaded && !ui->actionOpen_Containing_Folder->isEnabled())
-//    {
-//        foreach(QAction* action, ui->menuView->actions())
-//            action->setEnabled(true);
-//        foreach(QAction* action, contextMenu->actions())
-//            action->setEnabled(true);
-//        foreach(QAction* action, actions())
-//            action->setEnabled(true);
-//        ui->actionSlideshow->setEnabled(true);
-//        ui->actionCopy->setEnabled(true);
-//    }
-    //disable gif controls if there is no gif loaded
-//    ui->menuTools->actions().constFirst()->setEnabled(getCurrentFileDetails().isMovieLoaded);
+    const auto &actionLibrary = qvApp->getActionManager().getActionLibrary();
+    for (const auto &action : actionLibrary)
+    {
+        const auto &data = action->data().toStringList();
+        const auto &clonesOfAction = qvApp->getActionManager().getAllClonesOfAction(data.first(), this);
+
+        if (data.last().contains("disable"))
+        {
+            for (const auto &clone : clonesOfAction)
+            {
+                const auto &cloneData = clone->data().toStringList();
+                if (cloneData.last() == "disable")
+                {
+                    clone->setEnabled(getCurrentFileDetails().isPixmapLoaded);
+                }
+                else if (cloneData.last() == "gifdisable")
+                {
+                    clone->setEnabled(getCurrentFileDetails().isMovieLoaded);
+                }
+            }
+        }
+    }
 
     refreshProperties();
     buildWindowTitle();
@@ -334,6 +375,10 @@ void MainWindow::buildWindowTitle()
     }
 
     setWindowTitle(newString);
+
+    // Update fullscreen label to titlebar text as well
+    ui->fullscreenLabel->setText(newString);
+
     windowHandle()->setFilePath(getCurrentFileDetails().fileInfo.absoluteFilePath());
 }
 
@@ -355,9 +400,9 @@ void MainWindow::setWindowSize()
 
     QSize imageSize = getCurrentFileDetails().loadedPixmapSize;
     imageSize -= QSize(4, 4);
-    imageSize /= devicePixelRatioF();
 
-    QSize currentScreenSize = screenAt(geometry().center())->size();
+    QScreen *currentScreen = screenAt(geometry().center());
+    QSize currentScreenSize = currentScreen->size();
 
     QSize minWindowSize = currentScreenSize * minWindowResizedPercentage;
     QSize maxWindowSize = currentScreenSize * maxWindowResizedPercentage;
@@ -379,35 +424,41 @@ void MainWindow::setWindowSize()
 #endif
 
     // Adjust image size for fullsizecontentview on mac
-#ifdef Q_OS_MACOS
+#ifdef COCOA_LOADED
     int obscuredHeight = QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
     imageSize.setHeight(imageSize.height() + obscuredHeight);
 #endif
 
+    if (menuBar()->isVisible())
+        imageSize.setHeight(imageSize.height() + menuBar()->height());
+
     // Match center after new geometry
-    QRect oldRect = geometry();
-    resize(imageSize);
-    QRect newRect = geometry();
-    newRect.moveCenter(oldRect.center());
+    QRect rect = geometry();
+    QPoint prevCenter = rect.center();
+    rect.setSize(imageSize);
+    rect.moveCenter(prevCenter);
 
     // Ensure titlebar is not above the top of the screen
     const int titlebarHeight = QApplication::style()->pixelMetric(QStyle::PM_TitleBarHeight);
-    if (newRect.y() < titlebarHeight)
-        newRect.setY(titlebarHeight);
+    const int topOfScreen = currentScreen->availableGeometry().y();
 
+    if (rect.y() < (topOfScreen + titlebarHeight))
+        rect.setY(topOfScreen + titlebarHeight);
 
-    setGeometry(newRect);
+    setGeometry(rect);
 }
 
-//literally just copy pasted from Qt source code to maintain compatibility with 5.9
+//literally just copy pasted from Qt source code to maintain compatibility with 5.9 (although i've edited it now)
 QScreen *MainWindow::screenAt(const QPoint &point)
 {
     QVarLengthArray<const QScreen *, 8> visitedScreens;
-    for (const QScreen *screen : QGuiApplication::screens()) {
+    const auto screens = QGuiApplication::screens();
+    for (const QScreen *screen : screens) {
         if (visitedScreens.contains(screen))
             continue;
         // The virtual siblings include the screen itself, so iterate directly
-        for (QScreen *sibling : screen->virtualSiblings()) {
+        const auto siblings = screen->virtualSiblings();
+        for (QScreen *sibling : siblings) {
             if (sibling->geometry().contains(point))
                 return sibling;
             visitedScreens.append(sibling);
@@ -428,38 +479,36 @@ void MainWindow::setJustLaunchedWithImage(bool value)
 
 void MainWindow::openUrl(const QUrl &url)
 {
-    auto *networkManager = new QNetworkAccessManager(this);
-
     if (!url.isValid()) {
         QMessageBox::critical(this, tr("Error"), tr("Error: URL is invalid"));
         return;
     }
 
     auto request = QNetworkRequest(url);
-    auto *reply = networkManager->get(request);
+    auto *reply = networkAccessManager.get(request);
     auto *progressDialog = new QProgressDialog(tr("Downloading image..."), tr("Cancel"), 0, 100);
+    progressDialog->setWindowFlag(Qt::WindowContextHelpButtonHint, false);
     progressDialog->setAutoClose(false);
     progressDialog->setAutoReset(false);
     progressDialog->setWindowTitle(tr("Open URL..."));
     progressDialog->open();
 
-    connect(progressDialog, &QProgressDialog::canceled, [reply]{
+    connect(progressDialog, &QProgressDialog::canceled, reply, [reply]{
         reply->abort();
     });
 
-    connect(reply, &QNetworkReply::downloadProgress, [progressDialog](qreal bytesReceived, qreal bytesTotal){
+    connect(reply, &QNetworkReply::downloadProgress, progressDialog, [progressDialog](qreal bytesReceived, qreal bytesTotal){
         auto percent = (bytesReceived/bytesTotal)*100;
         progressDialog->setValue(qRound(percent));
     });
 
 
-    connect(reply, &QNetworkReply::finished, [networkManager, progressDialog, reply, this]{
+    connect(reply, &QNetworkReply::finished, progressDialog, [progressDialog, reply, this]{
         if (reply->error())
         {
             progressDialog->close();
             QMessageBox::critical(this, tr("Error"), tr("Error ") + QString::number(reply->error()) + ": " + reply->errorString());
 
-            networkManager->deleteLater();
             progressDialog->deleteLater();
             return;
         }
@@ -467,9 +516,10 @@ void MainWindow::openUrl(const QUrl &url)
         progressDialog->setMaximum(0);
 
         auto *tempFile = new QTemporaryFile(this);
+        tempFile->setFileTemplate(qvApp->applicationName() + ".XXXXXX.png");
 
         auto *saveFutureWatcher = new QFutureWatcher<bool>();
-        connect(saveFutureWatcher, &QFutureWatcher<bool>::finished, this, [networkManager, progressDialog, tempFile, saveFutureWatcher, this](){
+        connect(saveFutureWatcher, &QFutureWatcher<bool>::finished, this, [progressDialog, tempFile, saveFutureWatcher, this](){
             progressDialog->close();
             if (saveFutureWatcher->result())
             {
@@ -484,7 +534,6 @@ void MainWindow::openUrl(const QUrl &url)
                  tempFile->deleteLater();
             }
             progressDialog->deleteLater();
-            networkManager->deleteLater();
             saveFutureWatcher->deleteLater();
         });
 
@@ -500,7 +549,8 @@ void MainWindow::pickUrl()
     inputDialog->setWindowTitle(tr("Open URL..."));
     inputDialog->setLabelText(tr("URL of a supported image file:"));
     inputDialog->resize(350, inputDialog->height());
-    connect(inputDialog, &QInputDialog::finished, [inputDialog, this](int result) {
+    inputDialog->setWindowFlag(Qt::WindowContextHelpButtonHint, false);
+    connect(inputDialog, &QInputDialog::finished, this, [inputDialog, this](int result) {
         if (result)
         {
             const auto url = QUrl(inputDialog->textValue());
@@ -523,7 +573,7 @@ void MainWindow::openContainingFolder()
 #elif defined Q_OS_MACOS
     QProcess::execute("open", QStringList() << "-R" << selectedFileInfo.absoluteFilePath());
 #else
-    QDesktopServices::openUrl(selectedFileInfo.absolutePath());
+    QDesktopServices::openUrl(QUrl::fromLocalFile(selectedFileInfo.absolutePath()));
 #endif
 }
 
@@ -531,6 +581,7 @@ void MainWindow::showFileInfo()
 {
     refreshProperties();
     info->show();
+    info->raise();
 }
 
 void MainWindow::deleteFile()
@@ -606,7 +657,8 @@ void MainWindow::rename()
     renameDialog->setLabelText(tr("File name:"));
     renameDialog->setTextValue(currentFileInfo.fileName());
     renameDialog->resize(350, renameDialog->height());
-    connect(renameDialog, &QInputDialog::finished, [currentFileInfo, renameDialog, this](int result) {
+    renameDialog->setWindowFlag(Qt::WindowContextHelpButtonHint, false);
+    connect(renameDialog, &QInputDialog::finished, this, [currentFileInfo, renameDialog, this](int result) {
         if (result)
         {
             const auto newFileName = renameDialog->textValue();
@@ -727,14 +779,14 @@ void MainWindow::pause()
     if (!getCurrentFileDetails().isMovieLoaded)
         return;
 
-    const auto pauseActions = qvApp->getActionManager().getAllInstancesOfAction("pause");
+    const auto pauseActions = qvApp->getActionManager().getAllClonesOfAction("pause", this);
 
     if (graphicsView->getLoadedMovie().state() == QMovie::Running)
     {
         graphicsView->setPaused(true);
         for (const auto &pauseAction : pauseActions)
         {
-            pauseAction->setText(tr("Resume"));
+            pauseAction->setText(tr("Res&ume"));
             pauseAction->setIcon(QIcon::fromTheme("media-playback-start"));
         }
     }
@@ -759,14 +811,14 @@ void MainWindow::nextFrame()
 
 void MainWindow::toggleSlideshow()
 {
-    const auto slideshowActions = qvApp->getActionManager().getAllInstancesOfAction("slideshow");
+    const auto slideshowActions = qvApp->getActionManager().getAllClonesOfAction("slideshow", this);
 
     if (slideshowTimer->isActive())
     {
         slideshowTimer->stop();
         for (const auto &slideshowAction : slideshowActions)
         {
-            slideshowAction->setText(tr("Start Slideshow"));
+            slideshowAction->setText(tr("Start S&lideshow"));
             slideshowAction->setIcon(QIcon::fromTheme("media-playback-start"));
         }
     }
@@ -775,7 +827,7 @@ void MainWindow::toggleSlideshow()
         slideshowTimer->start();
         for (const auto &slideshowAction : slideshowActions)
         {
-            slideshowAction->setText(tr("Stop Slideshow"));
+            slideshowAction->setText(tr("Stop S&lideshow"));
             slideshowAction->setIcon(QIcon::fromTheme("media-playback-stop"));
         }
     }
@@ -823,10 +875,11 @@ void MainWindow::toggleFullScreen()
 {
     if (windowState() == Qt::WindowFullScreen)
     {
-        showNormal();
+        setWindowState(storedWindowState);
     }
     else
     {
+        storedWindowState = windowState();
         showFullScreen();
     }
 }

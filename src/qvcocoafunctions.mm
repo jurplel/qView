@@ -1,26 +1,33 @@
 #include "qvcocoafunctions.h"
 
+#include <QUrl>
 #include <QDebug>
 
 #import <Cocoa/Cocoa.h>
 
 
-static void setNestedSubmenusUnclickable(NSMenu *menu)
+static void fixNativeMenuEccentricities(QMenu *menu, NSMenu *nativeMenu)
 {
     // Stop menu items with no actions being disabled automatically
-    [menu setAutoenablesItems:false];
-    for (NSMenuItem *item in menu.itemArray)
+    [nativeMenu setAutoenablesItems:false];
+    int i = 0;
+    for (NSMenuItem *item in nativeMenu.itemArray)
     {
+        // Set menu items as disabled again (setAutoenablesItems resets them all to enabled)
+        [item setEnabled:menu->actions().value(i)->isEnabled()];
         // Update each item so the submenus actually show up
-        [menu.delegate menu:menu updateItem:item atIndex:0 shouldCancel:false];
+        [nativeMenu.delegate menu:nativeMenu updateItem:item atIndex:0 shouldCancel:false];
         // Hide shortcuts from menu as is typical for context menus
         [item setKeyEquivalent:@""];
         if (item.hasSubmenu)
         {
             // Stop items with submenus from being clickable
-            setNestedSubmenusUnclickable(item.submenu);
             [item setAction:nil];
+
+            // Do all this stuff for all items within submenu
+            fixNativeMenuEccentricities(menu->actions().value(i)->menu(), item.submenu);
         }
+        i++;
     }
 }
 
@@ -29,7 +36,7 @@ void QVCocoaFunctions::showMenu(QMenu *menu, const QPoint &point, QWindow *windo
     auto *view = reinterpret_cast<NSView*>(window->winId());
 
     NSMenu *nativeMenu = menu->toNSMenu();
-    setNestedSubmenusUnclickable(nativeMenu);
+    fixNativeMenuEccentricities(menu, nativeMenu);
 
     NSPoint transposedPoint = QPoint(point.x(), static_cast<int>(view.frame.size.height)-point.y()).toCGPoint();
     NSGraphicsContext *graphicsContext = [NSGraphicsContext currentContext];
@@ -54,21 +61,41 @@ void QVCocoaFunctions::setUserDefaults()
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"NSFullScreenMenuItemEverywhere"];
 }
 
+// This function should only be called once because it sets observers
+void QVCocoaFunctions::setFullSizeContentView(QWindow *window)
+{
+    auto *view = reinterpret_cast<NSView*>(window->winId());
+
+    // If this Qt and macOS version combination is already using layer-backed view, then enable full size content view
+    if (view.wantsLayer)
+    {
+        view.window.styleMask |= NSWindowStyleMaskFullSizeContentView;
+
+        // workaround for QTBUG-69975
+        [[NSNotificationCenter defaultCenter] addObserverForName:NSWindowDidExitFullScreenNotification object:view.window queue:nil usingBlock:^(NSNotification *notification){
+            auto *window = reinterpret_cast<NSWindow*>(notification.object);
+            window.styleMask |= NSWindowStyleMaskFullSizeContentView;
+        }];
+
+        [[NSNotificationCenter defaultCenter] addObserverForName:NSWindowDidEnterFullScreenNotification object:view.window queue:nil usingBlock:^(NSNotification *notification){
+            auto *window = reinterpret_cast<NSWindow*>(notification.object);
+            window.styleMask |= NSWindowStyleMaskFullSizeContentView;
+        }];
+    }
+}
+
 void QVCocoaFunctions::setVibrancy(bool alwaysDark, QWindow *window)
 {
     auto *view = reinterpret_cast<NSView*>(window->winId());
 
-    NSWindow *nativeWin = view.window;
-
     if (alwaysDark)
     {
-        [nativeWin setStyleMask:nativeWin.styleMask | NSWindowStyleMaskFullSizeContentView];
-        [nativeWin setAppearance: nil];
+
+        [view.window setAppearance: [NSAppearance appearanceNamed:NSAppearanceNameVibrantDark]];
     }
     else
     {
-        [nativeWin setStyleMask:nativeWin.styleMask | NSWindowStyleMaskFullSizeContentView];
-        [nativeWin setAppearance: [NSAppearance appearanceNamed:NSAppearanceNameVibrantDark]];
+        [view.window setAppearance: nil];
     }
 }
 
@@ -108,4 +135,16 @@ void QVCocoaFunctions::setAlternates(QMenu *menu, int index0, int index1)
     NSMenu *nativeMenu = menu->toNSMenu();
     [[nativeMenu.itemArray objectAtIndex:index0] setAlternate:true];
     [[nativeMenu.itemArray objectAtIndex:index1] setAlternate:true];
+}
+
+void QVCocoaFunctions::setDockRecents(const QStringList &recentPathsList)
+{
+    NSDocumentController *documentController = [NSDocumentController sharedDocumentController];
+    [documentController clearRecentDocuments:documentController];
+    for (int i = recentPathsList.size()-1; i >= 0; i--)
+    {
+        const auto &path = recentPathsList[i];
+        auto url = QUrl::fromLocalFile(path);
+        [documentController noteNewRecentDocumentURL:url.toNSURL()];
+    }
 }

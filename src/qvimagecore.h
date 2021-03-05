@@ -71,8 +71,6 @@ public:
     const QVFileDetails& getCurrentFileDetails() const {return currentFileDetails; }
     int getCurrentRotation() const {return currentRotation; }
 
-    void setDevicePixelRatio(qreal scaleFactor);
-
 signals:
     void animatedFrameChanged(QRect rect);
 
@@ -80,7 +78,7 @@ signals:
 
     void fileLoaded();
 
-    void readError(const QString &errorString, const QString fileName);
+    void readError(int errorNum, const QString &errorString, const QString &fileName);
 
 private:
     QPixmap loadedPixmap;
@@ -91,8 +89,6 @@ private:
     QVFileDetails lastFileDetails;
     int currentRotation;
 
-    qreal devicePixelRatio;
-
     QFutureWatcher<QVImageAndFileInfo> loadFutureWatcher;
 
     bool justLoadedFromCache;
@@ -100,7 +96,9 @@ private:
     bool isLoopFoldersEnabled;
     int preloadingMode;
     int sortMode;
-    bool sortAscending;
+    bool sortDescending;
+
+    unsigned randomSortSeed;
 
     QStringList lastFilesPreloaded;
 

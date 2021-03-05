@@ -157,7 +157,7 @@
         </font>
        </property>
        <property name="text">
-        <string>qView</string>
+        <string notr="true">qView</string>
        </property>
        <property name="scaledContents">
         <bool>false</bool>
@@ -511,7 +511,7 @@
      <property name="sizeHint" stdset="0">
       <size>
        <width>281</width>
-       <height>20</height>
+       <height>17</height>
       </size>
      </property>
     </spacer>

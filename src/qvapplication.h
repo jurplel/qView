@@ -5,6 +5,10 @@
 #include "settingsmanager.h"
 #include "shortcutmanager.h"
 #include "actionmanager.h"
+#include "updatechecker.h"
+#include "qvoptionsdialog.h"
+#include "qvaboutdialog.h"
+#include "qvwelcomedialog.h"
 
 #include <QApplication>
 
@@ -24,8 +28,6 @@ public:
 
     bool event(QEvent *event) override;
 
-    void afterWindow();
-
     static void openFile(MainWindow *window, const QString &file, bool resize = true);
 
     static void openFile(const QString &file, bool resize = true);
@@ -38,7 +40,11 @@ public:
 
     MainWindow *getMainWindow(bool shouldBeEmpty);
 
-    void updateDockRecents();
+    void checkUpdates();
+
+    void checkedUpdates();
+
+    void recentsMenuUpdated();
 
     qint64 getPreviouslyRecordedFileSize(const QString &fileName);
 
@@ -50,9 +56,9 @@ public:
 
     void openOptionsDialog(QWidget *parent = nullptr);
 
-    void openWelcomeDialog();
+    void openWelcomeDialog(QWidget *parent = nullptr);
 
-    void openAboutDialog();
+    void openAboutDialog(QWidget *parent = nullptr);
 
     QMenuBar *getMenuBar() const {  return menuBar; }
 
@@ -72,10 +78,6 @@ private:
 
     QMenu *dockMenu;
 
-    QList<QAction*> dockMenuSuffix;
-
-    QMenu *dockMenuRecentsLibrary;
-
     QMenuBar *menuBar;
 
     QCache<QString, qint64> previouslyRecordedFileSizes;
@@ -83,14 +85,16 @@ private:
     QStringList filterList;
     QStringList nameFilterList;
 
-    // This order is important
+    // This order is very important
     SettingsManager settingsManager; 
     ActionManager actionManager;
     ShortcutManager shortcutManager;
 
-    QDialog *optionsDialog;
-    QDialog *welcomeDialog;
-    QDialog *aboutDialog;
+    QPointer<QVOptionsDialog> optionsDialog;
+    QPointer<QVWelcomeDialog> welcomeDialog;
+    QPointer<QVAboutDialog> aboutDialog;
+
+    UpdateChecker updateChecker;
 };
 
 #endif // QVAPPLICATION_H

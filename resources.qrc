@@ -1,6 +1,0 @@
-<RCC>
-    <qresource prefix="/fonts">
-        <file>resources/Lato-Light.ttf</file>
-        <file>resources/Lato-Regular.ttf</file>
-    </qresource>
-</RCC>

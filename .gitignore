@@ -43,3 +43,6 @@ CMakeLists.txt.user*
 # Custom
 *.exe
 .vscode
+
+bin/*
+build/*
