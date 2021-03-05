@@ -123,10 +123,10 @@ bool QVGraphicsView::event(QEvent *event)
     //this is for touchpad pinch gestures
     if (event->type() == QEvent::Gesture)
     {
-        auto *gestureEvent = dynamic_cast<QGestureEvent*>(event);
+        auto *gestureEvent = static_cast<QGestureEvent*>(event);
         if (QGesture *pinch = gestureEvent->gesture(Qt::PinchGesture))
         {
-            auto *pinchGesture = dynamic_cast<QPinchGesture *>(pinch);
+            auto *pinchGesture = static_cast<QPinchGesture *>(pinch);
             QPinchGesture::ChangeFlags changeFlags = pinchGesture->changeFlags();
             if (changeFlags & QPinchGesture::RotationAngleChanged) {
 //                qDebug() << "Rotation angle: " << pinchGesture->rotationAngle() << " Last: " << pinchGesture->lastRotationAngle();
