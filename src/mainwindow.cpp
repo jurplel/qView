@@ -586,33 +586,50 @@ void MainWindow::showFileInfo()
 
 void MainWindow::deleteFile()
 {
-    const QString filepath = getCurrentFileDetails().fileInfo.absoluteFilePath();
+    const QFileInfo &fileInfo = getCurrentFileDetails().fileInfo;
+
+    if (!fileInfo.isWritable())
+    {
+        QMessageBox::critical(this, tr("Error"), tr("Can't delete %1: No write permission.").arg(fileInfo.fileName()));
+        return;
+    }
+
+    QString trashPath;
+    bool success = QFile::moveToTrash(fileInfo.absoluteFilePath(), &trashPath);
+    if (!success)
+    {
+        QMessageBox::critical(this, tr("Error"), tr("Can't delete %1.").arg(fileInfo.fileName()));
+        return;
+    }
+
 
     nextFile();
 
-#ifdef Q_OS_WIN
-    /// todo Delete file to trash on Windows
 
-    QFile::remove(filepath);
-#elif defined Q_OS_MACOS
-    QString param = "tell app \"Finder\" to delete POSIX file ";
-    param += "\"" + filepath + "\"";
 
-    const QStringList arguments = { "-e", param };
+//#ifdef Q_OS_WIN
+//    /// todo Delete file to trash on Windows
 
-    QProcess::execute("osascript", arguments);
-#elif defined Q_OS_LINUX
-    /// todo Test delete file to trash on Linux
+//    QFile::remove(filepath);
+//#elif defined Q_OS_MACOS
+//    QString param = "tell app \"Finder\" to delete POSIX file ";
+//    param += "\"" + filepath + "\"";
 
-    QString param = "\"file:";
-    param += filepath;
-    param += "\"";
+//    const QStringList arguments = { "-e", param };
 
-    const QStringList arguments = { "trash", param };
+//    QProcess::startDetached("osascript", arguments);
+//#elif defined Q_OS_LINUX
+//    /// todo Test delete file to trash on Linux
 
-    QProcess::execute("gio", arguments);
-#else
-#endif
+//    QString param = "\"file:";
+//    param += filepath;
+//    param += "\"";
+
+//    const QStringList arguments = { "trash", param };
+
+//    QProcess::startDetached("gio", arguments);
+//#else
+//#endif
 }
 
 void MainWindow::copy()
