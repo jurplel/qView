@@ -10,7 +10,7 @@ parameters:
 
 variables:
   defines: 'NIGHTLY=$(Build.BuildNumber)'
-  qtVersion: '5.12.9'
+  qtVersion: '5.15.2'
 
 name: '$(Date:yyyy-MM-dd).$(Rev:r)'
 jobs:
@@ -24,7 +24,7 @@ jobs:
         imageName: 'macOS-10.15'
       macosx:
         imageName: 'macOS-10.15'
-        qtVersion: '5.15.2'
+        qtVersion: '5.9.9'
         skipHardPlugins: 'true'
       win64:
         imageName: 'windows-2019'
