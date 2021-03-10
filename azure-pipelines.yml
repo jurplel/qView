@@ -24,7 +24,7 @@ jobs:
         imageName: 'macOS-10.15'
       macosx:
         imageName: 'macOS-10.15'
-        qtVersion: '5.9.9'
+        qtVersion: '5.15.2'
         skipHardPlugins: 'true'
       win64:
         imageName: 'windows-2019'
