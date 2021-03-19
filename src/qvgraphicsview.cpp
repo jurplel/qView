@@ -170,9 +170,17 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
     if (mode)
     {
         if (event->angleDelta().y() == 0)
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+            zoom(event->angleDelta().x(), event->position().toPoint());
+#else
             zoom(event->angleDelta().x(), event->pos());
+#endif
         else
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+            zoom(event->angleDelta().y(), event->position().toPoint());
+#else
             zoom(event->angleDelta().y(), event->pos());
+#endif
     }
     else
     {
