@@ -637,6 +637,7 @@ void MainWindow::showFileInfo()
 void MainWindow::deleteFile()
 {
     const QFileInfo &fileInfo = getCurrentFileDetails().fileInfo;
+    QString filePath = fileInfo.absoluteFilePath();
 
     if (!fileInfo.isWritable())
     {
@@ -644,17 +645,16 @@ void MainWindow::deleteFile()
         return;
     }
 
-    QString trashPath;
-    bool success = QFile::moveToTrash(fileInfo.absoluteFilePath(), &trashPath);
+    graphicsView->closeImage();
+
+    QFile file(filePath);
+    bool success = file.moveToTrash();
     if (!success)
     {
+        graphicsView->loadFile("filePath");
         QMessageBox::critical(this, tr("Error"), tr("Can't delete %1.").arg(fileInfo.fileName()));
         return;
     }
-
-
-    nextFile();
-
 
 
 //#ifdef Q_OS_WIN

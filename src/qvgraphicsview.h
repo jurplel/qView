@@ -47,6 +47,7 @@ public:
 
     void settingsUpdated();
 
+    void closeImage();
     void jumpToNextFrame();
     void setPaused(const bool &desiredState);
     void setSpeed(const int &desiredSpeed);

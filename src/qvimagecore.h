@@ -27,30 +27,32 @@ public:
     {
         QFileInfo fileInfo;
         QFileInfoList folderFileInfoList;
-        bool isLoadRequested;
-        bool isPixmapLoaded;
-        bool isMovieLoaded;
-        int loadedIndexInFolder;
+        bool isLoadRequested = false;
+        bool isPixmapLoaded = false;
+        bool isMovieLoaded = false;
+        int loadedIndexInFolder = -1;
         QSize baseImageSize;
         QSize loadedPixmapSize;
     };
 
-    struct QVImageAndFileInfo
+    struct QVReadImageInfo
     {
         QImage readImage;
         QFileInfo readFileInfo;
+        QSize size;
     };
 
     explicit QVImageCore(QObject *parent = nullptr);
 
     void loadFile(const QString &fileName);
-    QVImageAndFileInfo readFile(const QString &fileName);
-    void postRead(const QVImageAndFileInfo &readImageAndFileInfo);
+    QVReadImageInfo readFile(const QString &fileName, bool forCache = false);
+    void postRead(const QVReadImageInfo &readImageAndFileInfo);
     void postLoad();
+    void closeImage();
     void updateFolderInfo();
     void requestCaching();
     void requestCachingFile(const QString &filePath);
-    void addToCache(const QVImageAndFileInfo &readImageAndFileInfo);
+    void addToCache(const QVReadImageInfo &readImageAndFileInfo);
 
     void settingsUpdated();
 
@@ -83,13 +85,11 @@ signals:
 private:
     QPixmap loadedPixmap;
     QMovie loadedMovie;
-    QImageReader imageReader;
 
     QVFileDetails currentFileDetails;
-    QVFileDetails lastFileDetails;
     int currentRotation;
 
-    QFutureWatcher<QVImageAndFileInfo> loadFutureWatcher;
+    QFutureWatcher<QVReadImageInfo> loadFutureWatcher;
 
     bool justLoadedFromCache;
 
@@ -98,6 +98,7 @@ private:
     int sortMode;
     bool sortDescending;
 
+    QPair<QString, uint> lastDirInfo;
     unsigned randomSortSeed;
 
     QStringList lastFilesPreloaded;

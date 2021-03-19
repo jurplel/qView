@@ -740,6 +740,11 @@ void QVGraphicsView::settingsUpdated()
     }
 }
 
+void QVGraphicsView::closeImage()
+{
+    imageCore.closeImage();
+}
+
 void QVGraphicsView::jumpToNextFrame()
 {
     imageCore.jumpToNextFrame();
