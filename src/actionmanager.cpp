@@ -1,6 +1,7 @@
 #include "actionmanager.h"
 #include "qvapplication.h"
 #include "qvcocoafunctions.h"
+#include "openwith.h"
 
 #include <QSettings>
 #include <QMimeDatabase>
@@ -9,6 +10,7 @@
 ActionManager::ActionManager(QObject *parent) : QObject(parent)
 {
     recentsListMaxLength = 10;
+    openWithMaxLength = 10;
 
     initializeActionLibrary();
 
@@ -84,7 +86,7 @@ QList<QAction*> ActionManager::getAllClonesOfAction(const QString &key) const
 
 QList<QAction*> ActionManager::getAllClonesOfAction(const QString &key, QWidget *parent) const
 {
-    QList<QAction*> listOfDistantChildActions;
+    QList<QAction*> listOfChildActions;
     const auto &actions = getAllClonesOfAction(key);
     for (const auto &action : actions)
     {
@@ -96,10 +98,35 @@ QList<QAction*> ActionManager::getAllClonesOfAction(const QString &key, QWidget 
 
         if (parentWidget == parent || (parentWidget && parentWidget->parent() == parent))
         {
-            listOfDistantChildActions.append(action);
+            listOfChildActions.append(action);
         }
     };
-    return listOfDistantChildActions;
+    return listOfChildActions;
+}
+
+QList<QMenu*> ActionManager::getAllClonesOfMenu(const QString &key) const
+{
+    return menuCloneLibrary.values(key);
+}
+
+QList<QMenu*> ActionManager::getAllClonesOfMenu(const QString &key, QWidget *parent) const
+{
+    QList<QMenu*> listOfChildMenus;
+    const auto &menus = getAllClonesOfMenu(key);
+    for (const auto &menu : menus)
+    {
+        auto action = menu->menuAction();
+        if (action->associatedWidgets().isEmpty())
+            continue;
+
+        auto *parentWidget = action->associatedWidgets().first()->parentWidget();
+
+        if (parentWidget == parent || (parentWidget && parentWidget->parent() == parent))
+        {
+            listOfChildMenus.append(menu);
+        }
+    };
+    return listOfChildMenus;
 }
 
 void ActionManager::untrackClonedActions(const QList<QAction*> &actions)
@@ -153,6 +180,7 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     QVCocoaFunctions::setAlternates(fileMenu, fileMenu->actions().length()-1, fileMenu->actions().length()-2);
 #endif
     fileMenu->addSeparator();
+    fileMenu->addMenu(buildOpenWithMenu(menuBar));
     fileMenu->addAction(cloneAction("opencontainingfolder"));
     fileMenu->addAction(cloneAction("showfileinfo"));
     fileMenu->addSeparator();
@@ -277,10 +305,11 @@ QMenu *ActionManager::buildRecentsMenu(bool includeClearAction, QWidget *parent)
     {
         auto action = new QAction(tr("Empty"), this);
         action->setVisible(false);
+        action->setIconVisibleInMenu(true);
         action->setData("recent" + QString::number(i));
 
         recentsMenu->addAction(action);
-        actionCloneLibrary.insert(action->data().toString(), action);
+        actionCloneLibrary.insert(action->data().toStringList().first(), action);
     }
 
     if (includeClearAction)
@@ -383,16 +412,15 @@ void ActionManager::updateRecentsMenu()
         const auto values = actionCloneLibrary.values("recent" + QString::number(i));
         for (const auto &action : values)
         {
-            auto recent = recentsList.value(i);
-
             // If we are within the bounds of the recent list
             if (i < recentsList.length())
             {
+                auto recent = recentsList.value(i);
+
                 action->setVisible(true);
                 action->setText(recent.fileName);
 
-                action->setIconVisibleInMenu(true);
-#if defined Q_OS_UNIX & !defined Q_OS_MACOS
+#if defined Q_OS_UNIX && !defined Q_OS_MACOS
                 // set icons for linux users
                 QMimeDatabase mimedb;
                 QMimeType type = mimedb.mimeTypeForFile(recent.filePath);
@@ -411,6 +439,49 @@ void ActionManager::updateRecentsMenu()
         }
     }
     emit recentsMenuUpdated();
+}
+
+QMenu *ActionManager::buildOpenWithMenu(QWidget *parent)
+{
+    auto *openWithMenu = new QMenu(tr("Open With"), parent);
+    openWithMenu->menuAction()->setData("openwith");
+    openWithMenu->setIcon(QIcon::fromTheme("system-run"));
+    openWithMenu->setDisabled(true);
+
+    for (int i = 0; i < openWithMaxLength; i++)
+    {
+
+        auto action = new QAction(tr("Empty"), this);
+        action->setVisible(false);
+        action->setIconVisibleInMenu(true);
+        action->setData(QVariantList({"openwith" + QString::number(i), ""}));
+
+        openWithMenu->addAction(action);
+        actionCloneLibrary.insert(action->data().toStringList().first(), action);
+        // Some madness that will show or hide separator if an item marked as default is in the first position
+        if (i == 0)
+        {
+            connect(action, &QAction::changed, action, [action, openWithMenu]{
+                // If this menu item is default
+                if (action->data().toList().at(1).value<OpenWith::OpenWithItem>().isDefault)
+                {
+                    if (!openWithMenu->actions().at(1)->isSeparator())
+                        openWithMenu->insertSeparator(openWithMenu->actions().at(1));
+                }
+                else
+                {
+                    if (openWithMenu->actions().at(1)->isSeparator())
+                        openWithMenu->removeAction(openWithMenu->actions().at(1));
+                }
+            });
+        }
+    }
+
+    openWithMenu->addSeparator();
+    openWithMenu->addAction(cloneAction("openwithother"));
+
+    menuCloneLibrary.insert(openWithMenu->menuAction()->data().toString(), openWithMenu);
+    return openWithMenu;
 }
 
 void ActionManager::actionTriggered(QAction *triggeredAction)
@@ -445,6 +516,7 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
 {
     // Conditions that will work with a nullptr window passed
     auto key = triggeredAction->data().toStringList().first();
+
     if (key == "quit") {
         if (relevantWindow) // if a window was passed
             relevantWindow->close(); // close it so geometry is saved
@@ -493,6 +565,11 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
     if (key.startsWith("recent")) {
         QChar finalChar = key.at(key.length()-1);
         relevantWindow->openRecent(finalChar.digitValue());
+    } else if (key == "openwithother") {
+        OpenWith::showOpenWithDialog(relevantWindow);
+    } else if (key.startsWith("openwith")) {
+        const auto &openWithItem = triggeredAction->data().toList().at(1).value<OpenWith::OpenWithItem>();
+        relevantWindow->openWith(openWithItem);
     } else if (key == "openurl") {
         relevantWindow->pickUrl();
     } else if (key == "opencontainingfolder") {
@@ -577,8 +654,10 @@ void ActionManager::initializeActionLibrary()
 
     auto *openContainingFolderAction = new QAction(QIcon::fromTheme("document-open"), tr("Open Containing &Folder"));
 #ifdef Q_OS_WIN
+    //: Open containing folder on windows
     openContainingFolderAction->setText(tr("Show in E&xplorer"));
 #elif defined Q_OS_MACOS
+    //: Open containing folder on macOS
     openContainingFolderAction->setText(tr("Show in &Finder"));
 #endif
     openContainingFolderAction->setData({"disable"});
@@ -704,11 +783,22 @@ void ActionManager::initializeActionLibrary()
     auto *welcomeAction = new QAction(QIcon::fromTheme("help-faq", QIcon::fromTheme("help-about")), tr("&Welcome"));
     actionLibrary.insert("welcome", welcomeAction);
 
-    // This one is kinda different so here's a separator comment
     //: This is for clearing the recents menu
     auto *clearRecentsAction = new QAction(QIcon::fromTheme("edit-delete"), tr("Clear &Menu"));
     actionLibrary.insert("clearrecents", clearRecentsAction);
 
+    //: Open with other program for unix non-mac
+    auto *openWithOtherAction = new QAction(tr("Other Application..."));
+#ifdef Q_OS_WIN
+    //: Open with other program for windows
+    openWithOtherAction->setText(tr("Choose another app"));
+#elif defined Q_OS_MACOS
+    //: Open with other program for macos
+    openWithOtherAction->setText(tr("Other..."));
+#endif
+    actionLibrary.insert("openwithother", openWithOtherAction);
+
+    // Set data values and disable actions
     const auto keys = actionLibrary.keys();
     for (const auto &key : keys)
     {

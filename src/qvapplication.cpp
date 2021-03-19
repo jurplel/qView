@@ -14,6 +14,11 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     connect(&actionManager, &ActionManager::recentsMenuUpdated, this, &QVApplication::recentsMenuUpdated);
     connect(&updateChecker, &UpdateChecker::checkedUpdates, this, &QVApplication::checkedUpdates);
 
+    // Add fallback fromTheme icon search on linux with qt >5.11
+#if defined Q_OS_UNIX && !defined Q_OS_MACOS && QT_VERSION >= QT_VERSION_CHECK(5, 11, 0)
+    QIcon::setFallbackSearchPaths(QIcon::fallbackSearchPaths() << "/usr/share/pixmaps");
+#endif
+
     // Initialize list of supported files and filters
     const auto byteArrayList = QImageReader::supportedImageFormats();
     for (const auto &byteArray : byteArrayList)
@@ -26,7 +31,7 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
         filterList << "*." + fileExtString;
     }
 
-    auto filterString = tr("Supported Files") + " (";
+    auto filterString = tr("Supported Images") + " (";
     for (const auto &filter : qAsConst(filterList))
     {
         filterString += filter + " ";

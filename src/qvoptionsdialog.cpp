@@ -39,6 +39,7 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     restoreGeometry(settings.value("optionsgeometry").toByteArray());
 #endif
 
+
 #ifdef Q_OS_UNIX
     setWindowTitle("Preferences");
 #endif
@@ -238,6 +239,7 @@ void QVOptionsDialog::syncComboBoxData(QComboBox *comboBox, const QString &key, 
     if (makeConnection)
     {
         connect(comboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [this, key, comboBox](int index) {
+            Q_UNUSED(index)
             modifySetting(key, comboBox->currentData());
         });
     }
