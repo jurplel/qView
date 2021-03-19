@@ -60,7 +60,7 @@ public:
 signals:
     void cancelSlideshow();
 
-    void fileLoaded();
+    void fileChanged();
 
     void updatedLoadedPixmapItem();
 

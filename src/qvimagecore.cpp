@@ -181,12 +181,16 @@ void QVImageCore::postLoad()
     if (currentFileDetails.isMovieLoaded)
         loadedMovie.start();
 
-    emit fileLoaded();
+    emit fileChanged();
 }
 
 void QVImageCore::closeImage()
 {
-
+    loadedPixmap = QPixmap();
+    loadedMovie.stop();
+    loadedMovie.setFileName("");
+    currentFileDetails = QVFileDetails();
+    emit fileChanged();
 }
 
 void QVImageCore::updateFolderInfo()

@@ -51,7 +51,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->fullscreenLabel->hide();
 
     // Connect graphicsview signals
-    connect(graphicsView, &QVGraphicsView::fileLoaded, this, &MainWindow::fileLoaded);
+    connect(graphicsView, &QVGraphicsView::fileChanged, this, &MainWindow::fileLoaded);
     connect(graphicsView, &QVGraphicsView::updatedLoadedPixmapItem, this, &MainWindow::setWindowSize);
     connect(graphicsView, &QVGraphicsView::cancelSlideshow, this, &MainWindow::cancelSlideshow);
 
@@ -338,7 +338,7 @@ void MainWindow::disableActions()
     const auto &openWithMenus = qvApp->getActionManager().getAllClonesOfMenu("openwith");
     for (const auto &menu : openWithMenus)
     {
-        menu->setEnabled(true);
+        menu->setEnabled(getCurrentFileDetails().isPixmapLoaded);
     }
 }
 

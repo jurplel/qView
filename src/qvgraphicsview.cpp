@@ -50,7 +50,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     isOriginalSize = false;
 
     connect(&imageCore, &QVImageCore::animatedFrameChanged, this, &QVGraphicsView::animatedFrameChanged);
-    connect(&imageCore, &QVImageCore::fileLoaded, this, &QVGraphicsView::postLoad);
+    connect(&imageCore, &QVImageCore::fileChanged, this, &QVGraphicsView::postLoad);
     connect(&imageCore, &QVImageCore::updateLoadedPixmapItem, this, &QVGraphicsView::updateLoadedPixmapItem);
     connect(&imageCore, &QVImageCore::readError, this, &QVGraphicsView::error);
 
@@ -390,7 +390,7 @@ void QVGraphicsView::postLoad()
     updateLoadedPixmapItem();
     qvApp->getActionManager().addFileToRecentsList(getCurrentFileDetails().fileInfo);
 
-    emit fileLoaded();
+    emit fileChanged();
 }
 
 void QVGraphicsView::updateLoadedPixmapItem()

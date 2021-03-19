@@ -667,7 +667,7 @@ void ActionManager::initializeActionLibrary()
     showFileInfoAction->setData({"disable"});
     actionLibrary.insert("showfileinfo", showFileInfoAction);
 
-    auto *deleteFileAction = new QAction(QIcon::fromTheme("edit-delete"), tr("&Delete File"));
+    auto *deleteFileAction = new QAction(QIcon::fromTheme("edit-delete"), tr("&Delete"));
     deleteFileAction->setData({"disable"});
     actionLibrary.insert("deletefile", deleteFileAction);
 
