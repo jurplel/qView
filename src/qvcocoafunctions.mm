@@ -2,6 +2,8 @@
 
 #include <QUrl>
 #include <QDebug>
+#include <QFileIconProvider>
+#include <QCollator>
 
 #import <Cocoa/Cocoa.h>
 
@@ -147,4 +149,54 @@ void QVCocoaFunctions::setDockRecents(const QStringList &recentPathsList)
         auto url = QUrl::fromLocalFile(path);
         [documentController noteNewRecentDocumentURL:url.toNSURL()];
     }
+}
+
+QList<OpenWith::OpenWithItem> QVCocoaFunctions::getOpenWithItems(const QString &filePath)
+{
+    auto fileUrl = QUrl(filePath);
+    fileUrl.setScheme("file");
+
+    NSString *utiType = nil;
+    NSError *error = nil;
+    BOOL success = [fileUrl.toNSURL() getResourceValue:&utiType forKey:NSURLTypeIdentifierKey error:&error];
+
+    if (!success)
+    {
+        NSLog(@"getResourceValue:forKey:error: returned error == %@", error);
+        return QList<OpenWith::OpenWithItem>();
+    }
+
+
+    NSArray *supportedApplications = [(NSArray *)LSCopyAllRoleHandlersForContentType((CFStringRef)utiType, kLSRolesAll) autorelease];
+    NSString *defaultApplication = [(NSString *)LSCopyDefaultRoleHandlerForContentType((CFStringRef)utiType, kLSRolesAll) autorelease];
+
+    QList<OpenWith::OpenWithItem> listOfOpenWithItems;
+    for (NSString *appId in supportedApplications)
+    {
+        if ([appId isEqualToString:@"com.qview.qView"] || [appId isEqualToString:@"com.interversehq.qView"])
+            continue;
+
+        OpenWith::OpenWithItem openWithItem;
+        openWithItem.exec = "open";
+        openWithItem.args.append({"-b", QString::fromNSString(appId)});
+
+        NSString *absolutePath = [[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:appId];
+
+        NSString *appName = [[NSFileManager defaultManager] displayNameAtPath:absolutePath];
+        openWithItem.name = QString::fromNSString(appName);
+
+        QFileIconProvider fiProvider;
+        openWithItem.icon = fiProvider.icon(QFileInfo(QString::fromNSString(absolutePath)));
+
+        // If the program is the default program, save it to add to the beginning after sorting
+        if ([appId isEqualToString:defaultApplication])
+        {
+            openWithItem.isDefault = true;
+            openWithItem.name += QT_TR_NOOP(" (default)");
+        }
+
+        listOfOpenWithItems.append(openWithItem);
+    }
+
+    return listOfOpenWithItems;
 }

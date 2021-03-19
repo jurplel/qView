@@ -23,7 +23,6 @@ public:
     explicit QVOptionsDialog(QWidget *parent = nullptr);
     ~QVOptionsDialog() override;
 
-
 protected:
     void done(int r) override;
 

@@ -4,6 +4,7 @@
 #include "qvinfodialog.h"
 #include "qvimagecore.h"
 #include "qvgraphicsview.h"
+#include "openwith.h"
 
 #include <QMainWindow>
 #include <QShortcut>
@@ -40,6 +41,8 @@ public:
     void pickUrl();
 
     void openContainingFolder();
+
+    void openWith(const OpenWith::OpenWithItem &exec);
 
     void showFileInfo();
 
@@ -99,6 +102,10 @@ public slots:
     void cancelSlideshow();
 
     void fileLoaded();
+
+    void disableActions();
+
+    void populateOpenWithMenu();
 
 protected:
     bool event(QEvent *event) override;

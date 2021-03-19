@@ -39,6 +39,7 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     restoreGeometry(settings.value("optionsgeometry").toByteArray());
 #endif
 
+
 #ifdef Q_OS_UNIX
     setWindowTitle("Preferences");
 #endif
