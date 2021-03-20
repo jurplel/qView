@@ -84,11 +84,8 @@ MainWindow::MainWindow(QWidget *parent) :
     contextMenu->addAction(actionManager.cloneAction("opencontainingfolder"));
     contextMenu->addAction(actionManager.cloneAction("showfileinfo"));
     contextMenu->addSeparator();
-    contextMenu->addAction(actionManager.cloneAction("deletefile"));
-    contextMenu->addSeparator();
-    contextMenu->addAction(actionManager.cloneAction("copy"));
-    contextMenu->addAction(actionManager.cloneAction("paste"));
     contextMenu->addAction(actionManager.cloneAction("rename"));
+    contextMenu->addAction(actionManager.cloneAction("delete"));
     contextMenu->addSeparator();
     contextMenu->addAction(actionManager.cloneAction("nextfile"));
     contextMenu->addAction(actionManager.cloneAction("previousfile"));
@@ -330,6 +327,10 @@ void MainWindow::disableActions()
                 else if (cloneData.last() == "gifdisable")
                 {
                     clone->setEnabled(getCurrentFileDetails().isMovieLoaded);
+                }
+                else if (cloneData.last() == "undodisable")
+                {
+                    clone->setEnabled(!lastDeletedFile.pathInTrash.isEmpty());
                 }
             }
         }
@@ -637,11 +638,13 @@ void MainWindow::showFileInfo()
 void MainWindow::deleteFile()
 {
     const QFileInfo &fileInfo = getCurrentFileDetails().fileInfo;
-    QString filePath = fileInfo.absoluteFilePath();
+    const QString filePath = fileInfo.absoluteFilePath();
+    const QString fileName = fileInfo.fileName();
+
 
     if (!fileInfo.isWritable())
     {
-        QMessageBox::critical(this, tr("Error"), tr("Can't delete %1: No write permission.").arg(fileInfo.fileName()));
+        QMessageBox::critical(this, tr("Error"), tr("Can't delete %1:\nNo write permission or file is read-only.").arg(fileName));
         return;
     }
 
@@ -649,12 +652,15 @@ void MainWindow::deleteFile()
 
     QFile file(filePath);
     bool success = file.moveToTrash();
-    if (!success)
+    if (!success || QFile::exists(filePath))
     {
-        graphicsView->loadFile("filePath");
-        QMessageBox::critical(this, tr("Error"), tr("Can't delete %1.").arg(fileInfo.fileName()));
+        openFile(filePath);
+        QMessageBox::critical(this, tr("Error"), tr("Can't delete %1.").arg(fileName));
         return;
     }
+
+    lastDeletedFile = {file.fileName(), filePath};
+    disableActions();
 
 
 //#ifdef Q_OS_WIN
@@ -680,6 +686,30 @@ void MainWindow::deleteFile()
 //    QProcess::startDetached("gio", arguments);
 //#else
 //#endif
+}
+
+void MainWindow::undoDelete()
+{
+    if (lastDeletedFile.pathInTrash.isEmpty() || lastDeletedFile.previousPath.isEmpty())
+        return;
+
+    const QFileInfo fileInfo(lastDeletedFile.pathInTrash);
+    if (!fileInfo.isWritable())
+    {
+        QMessageBox::critical(this, tr("Error"), tr("Can't undo deletion of %1:\n"
+                                                    "No write permission or file is read-only.").arg(fileInfo.fileName()));
+        return;
+    }
+
+    bool success = QFile::rename(lastDeletedFile.pathInTrash, lastDeletedFile.previousPath);
+    if (!success)
+    {
+        QMessageBox::critical(this, tr("Error"), tr("Failed undoing deletion of %1.").arg(fileInfo.fileName()));
+    }
+
+    openFile(lastDeletedFile.previousPath);
+    lastDeletedFile = QVDeletedPaths();
+    disableActions();
 }
 
 void MainWindow::copy()

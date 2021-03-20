@@ -170,7 +170,6 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     fileMenu->addAction(cloneAction("openurl"));
     fileMenu->addMenu(buildRecentsMenu(true, menuBar));
     fileMenu->addSeparator();
-    fileMenu->addAction(cloneAction("deletefile"));
 #ifdef Q_OS_MACOS
     fileMenu->addSeparator();
     fileMenu->addAction(cloneAction("closewindow"));
@@ -192,9 +191,13 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     // Beginning of edit menu
     auto *editMenu = new QMenu(tr("&Edit"), menuBar);
 
+    editMenu->addAction(cloneAction("undo"));
+    editMenu->addSeparator();
     editMenu->addAction(cloneAction("copy"));
     editMenu->addAction(cloneAction("paste"));
     editMenu->addAction(cloneAction("rename"));
+    editMenu->addSeparator();
+    editMenu->addAction(cloneAction("delete"));
 
     menuBar->addMenu(editMenu);
     // End of edit menu
@@ -576,8 +579,10 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
         relevantWindow->openContainingFolder();
     } else if (key == "showfileinfo") {
         relevantWindow->showFileInfo();
-    } else if (key == "deletefile") {
+    } else if (key == "delete") {
         relevantWindow->deleteFile();
+    } else if (key == "undo") {
+        relevantWindow->undoDelete();
     } else if (key == "copy") {
         relevantWindow->copy();
     } else if (key == "paste") {
@@ -667,9 +672,19 @@ void ActionManager::initializeActionLibrary()
     showFileInfoAction->setData({"disable"});
     actionLibrary.insert("showfileinfo", showFileInfoAction);
 
-    auto *deleteFileAction = new QAction(QIcon::fromTheme("edit-delete"), tr("&Delete"));
-    deleteFileAction->setData({"disable"});
-    actionLibrary.insert("deletefile", deleteFileAction);
+    auto *deleteAction = new QAction(QIcon::fromTheme("edit-delete"), tr("&Move to Trash"));
+#ifdef Q_OS_WIN
+    deleteAction->setText(tr("&Delete"));
+#endif
+    deleteAction->setData({"disable"});
+    actionLibrary.insert("delete", deleteAction);
+
+    auto *undoAction = new QAction(QIcon::fromTheme("edit-undo"), tr("&Restore from Trash"));
+#ifdef Q_OS_WIN
+    undoAction->setText(tr("&Undo Delete"));
+#endif
+    undoAction->setData({"undodisable"});
+    actionLibrary.insert("undo", undoAction);
 
     auto *copyAction = new QAction(QIcon::fromTheme("edit-copy"), tr("&Copy"));
     copyAction->setData({"disable"});

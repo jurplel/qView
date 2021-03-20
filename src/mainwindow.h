@@ -19,6 +19,12 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    struct QVDeletedPaths
+    {
+        QString pathInTrash;
+        QString previousPath;
+    };
+
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override;
 
@@ -47,6 +53,8 @@ public:
     void showFileInfo();
 
     void deleteFile();
+
+    void undoDelete();
 
     void copy();
 
@@ -146,6 +154,8 @@ private:
     Qt::WindowStates storedWindowState;
 
     QNetworkAccessManager networkAccessManager;
+
+    QVDeletedPaths lastDeletedFile;
 };
 
 #endif // MAINWINDOW_H
