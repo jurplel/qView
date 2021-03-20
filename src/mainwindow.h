@@ -111,7 +111,7 @@ public slots:
 
     void cancelSlideshow();
 
-    void fileLoaded();
+    void fileChanged();
 
     void disableActions();
 

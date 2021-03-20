@@ -503,6 +503,7 @@ void QVGraphicsView::originalSize(bool setVariables)
 
 void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
 {
+    imageCore.updateFolderInfo();
     if (getCurrentFileDetails().folderFileInfoList.isEmpty())
         return;
 

@@ -51,7 +51,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->fullscreenLabel->hide();
 
     // Connect graphicsview signals
-    connect(graphicsView, &QVGraphicsView::fileChanged, this, &MainWindow::fileLoaded);
+    connect(graphicsView, &QVGraphicsView::fileChanged, this, &MainWindow::fileChanged);
     connect(graphicsView, &QVGraphicsView::updatedLoadedPixmapItem, this, &MainWindow::setWindowSize);
     connect(graphicsView, &QVGraphicsView::cancelSlideshow, this, &MainWindow::cancelSlideshow);
 
@@ -297,7 +297,7 @@ void MainWindow::openRecent(int i)
     cancelSlideshow();
 }
 
-void MainWindow::fileLoaded()
+void MainWindow::fileChanged()
 {
     disableActions();
     populateOpenWithMenu();
@@ -385,39 +385,34 @@ void MainWindow::refreshProperties()
 
 void MainWindow::buildWindowTitle()
 {
-    if (!getCurrentFileDetails().isPixmapLoaded)
-        return;
-
-    QString newString;
-    switch (qvApp->getSettingsManager().getInteger("titlebarmode")) {
-    case 0:
+    QString newString = "qView";
+    if (getCurrentFileDetails().isPixmapLoaded)
     {
-        newString = "qView";
-        break;
-    }
-    case 1:
-    {
-        newString = getCurrentFileDetails().fileInfo.fileName();
-        break;
-    }
-    case 2:
-    {
-        newString += QString::number(getCurrentFileDetails().loadedIndexInFolder+1);
-        newString += "/" + QString::number(getCurrentFileDetails().folderFileInfoList.count());
-        newString += " - " + getCurrentFileDetails().fileInfo.fileName();
-        break;
-    }
-    case 3:
-    {
-        newString += QString::number(getCurrentFileDetails().loadedIndexInFolder+1);
-        newString += "/" + QString::number(getCurrentFileDetails().folderFileInfoList.count());
-        newString += " - " + getCurrentFileDetails().fileInfo.fileName();
-        newString += " - "  + QString::number(getCurrentFileDetails().baseImageSize.width());
-        newString += "x" + QString::number(getCurrentFileDetails().baseImageSize.height());
-        newString += " - " + QVInfoDialog::formatBytes(getCurrentFileDetails().fileInfo.size());
-        newString += " - qView";
-        break;
-    }
+        switch (qvApp->getSettingsManager().getInteger("titlebarmode")) {
+        case 1:
+        {
+            newString = getCurrentFileDetails().fileInfo.fileName();
+            break;
+        }
+        case 2:
+        {
+            newString = QString::number(getCurrentFileDetails().loadedIndexInFolder+1);
+            newString += "/" + QString::number(getCurrentFileDetails().folderFileInfoList.count());
+            newString += " - " + getCurrentFileDetails().fileInfo.fileName();
+            break;
+        }
+        case 3:
+        {
+            newString = QString::number(getCurrentFileDetails().loadedIndexInFolder+1);
+            newString += "/" + QString::number(getCurrentFileDetails().folderFileInfoList.count());
+            newString += " - " + getCurrentFileDetails().fileInfo.fileName();
+            newString += " - "  + QString::number(getCurrentFileDetails().baseImageSize.width());
+            newString += "x" + QString::number(getCurrentFileDetails().baseImageSize.height());
+            newString += " - " + QVInfoDialog::formatBytes(getCurrentFileDetails().fileInfo.size());
+            newString += " - qView";
+            break;
+        }
+        }
     }
 
     setWindowTitle(newString);
@@ -425,7 +420,10 @@ void MainWindow::buildWindowTitle()
     // Update fullscreen label to titlebar text as well
     ui->fullscreenLabel->setText(newString);
 
-    windowHandle()->setFilePath(getCurrentFileDetails().fileInfo.absoluteFilePath());
+    if (getCurrentFileDetails().isPixmapLoaded)
+        windowHandle()->setFilePath(getCurrentFileDetails().fileInfo.absoluteFilePath());
+//    else
+//        windowHandle()->setFilePath("");
 }
 
 void MainWindow::setWindowSize()
