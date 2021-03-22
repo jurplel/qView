@@ -27,10 +27,10 @@ public:
     {
         QFileInfo fileInfo;
         QFileInfoList folderFileInfoList;
+        int loadedIndexInFolder = -1;
         bool isLoadRequested = false;
         bool isPixmapLoaded = false;
         bool isMovieLoaded = false;
-        int loadedIndexInFolder = -1;
         QSize baseImageSize;
         QSize loadedPixmapSize;
     };

@@ -332,6 +332,10 @@ void MainWindow::disableActions()
                 {
                     clone->setEnabled(!lastDeletedFile.pathInTrash.isEmpty());
                 }
+                else if (cloneData.last() == "folderdisable")
+                {
+                    clone->setEnabled(!getCurrentFileDetails().folderFileInfoList.isEmpty());
+                }
             }
         }
     }

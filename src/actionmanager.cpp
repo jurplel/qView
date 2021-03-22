@@ -734,19 +734,19 @@ void ActionManager::initializeActionLibrary()
     actionLibrary.insert("fullscreen", fullScreenAction);
 
     auto *firstFileAction = new QAction(QIcon::fromTheme("go-first"), tr("&First File"));
-    firstFileAction->setData({"disable"});
+    firstFileAction->setData({"folderdisable"});
     actionLibrary.insert("firstfile", firstFileAction);
 
     auto *previousFileAction = new QAction(QIcon::fromTheme("go-previous"), tr("Previous Fi&le"));
-    previousFileAction->setData({"disable"});
+    previousFileAction->setData({"folderdisable"});
     actionLibrary.insert("previousfile", previousFileAction);
 
     auto *nextFileAction = new QAction(QIcon::fromTheme("go-next"), tr("&Next File"));
-    nextFileAction->setData({"disable"});
+    nextFileAction->setData({"folderdisable"});
     actionLibrary.insert("nextfile", nextFileAction);
 
     auto *lastFileAction = new QAction(QIcon::fromTheme("go-last"), tr("Las&t File"));
-    lastFileAction->setData({"disable"});
+    lastFileAction->setData({"folderdisable"});
     actionLibrary.insert("lastfile", lastFileAction);
 
     auto *saveFrameAsAction = new QAction(QIcon::fromTheme("document-save-as"), tr("Save Frame &As..."));

@@ -189,12 +189,25 @@ void QVImageCore::closeImage()
     loadedPixmap = QPixmap();
     loadedMovie.stop();
     loadedMovie.setFileName("");
-    currentFileDetails = QVFileDetails();
+    currentFileDetails = {
+        QFileInfo(),
+        currentFileDetails.folderFileInfoList,
+        currentFileDetails.loadedIndexInFolder,
+        false,
+        false,
+        false,
+        QSize(),
+        QSize()
+    };
+
     emit fileChanged();
 }
 
 void QVImageCore::updateFolderInfo()
 {
+    if (!currentFileDetails.fileInfo.isFile())
+        return;
+
     QPair<QString, uint> dirInfo = {currentFileDetails.fileInfo.absoluteDir().path(),
                                     currentFileDetails.fileInfo.dir().count()};
     // If the current folder changed since the last image, assign a new seed for random sorting
