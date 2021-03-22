@@ -390,7 +390,7 @@ void MainWindow::refreshProperties()
 void MainWindow::buildWindowTitle()
 {
     QString newString = "qView";
-    if (getCurrentFileDetails().isPixmapLoaded)
+    if (getCurrentFileDetails().fileInfo.isFile())
     {
         switch (qvApp->getSettingsManager().getInteger("titlebarmode")) {
         case 1:

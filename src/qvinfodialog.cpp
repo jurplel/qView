@@ -50,7 +50,8 @@ void QVInfoDialog::updateInfo()
     ui->modifiedLabel->setText(selectedFileInfo.lastModified().toString(locale.dateTimeFormat()));
     ui->dimensionsLabel->setText(tr("%1 x %2 (%3 MP)").arg(QString::number(width), QString::number(height), QString::number(megapixels)));
     int gcd = getGcd(width,height);
-    ui->ratioLabel->setText(QString::number(width/gcd) + ":" + QString::number(height/gcd));
+    if (gcd != 0)
+        ui->ratioLabel->setText(QString::number(width/gcd) + ":" + QString::number(height/gcd));
     if (frameCount != 0)
     {
         ui->framesLabel2->show();

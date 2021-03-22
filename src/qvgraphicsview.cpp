@@ -672,11 +672,12 @@ void QVGraphicsView::centerOn(const QGraphicsItem *item)
 
 void QVGraphicsView::error(int errorNum, const QString &errorString, const QString &fileName)
 {
-        if (!errorString.isEmpty())
-        {
-            QMessageBox::critical(this, tr("Error"), tr("Error occurred opening \"%3\":\n%2 (Error %1)").arg(QString::number(errorNum), errorString, fileName));
-            return;
-        }
+    if (!errorString.isEmpty())
+    {
+        closeImage();
+        QMessageBox::critical(this, tr("Error"), tr("Error occurred opening \"%3\":\n%2 (Error %1)").arg(QString::number(errorNum), errorString, fileName));
+        return;
+    }
 }
 
 void QVGraphicsView::settingsUpdated()

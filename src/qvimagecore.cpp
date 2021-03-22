@@ -141,13 +141,15 @@ QVImageCore::QVReadImageInfo QVImageCore::readFile(const QString &fileName, bool
 
 void QVImageCore::postRead(const QVReadImageInfo &readInfo)
 {
+    currentFileDetails.fileInfo = readInfo.readFileInfo;
+    updateFolderInfo();
+
     if (readInfo.readImage.isNull() || justLoadedFromCache)
         return;
 
     loadedPixmap = QPixmap::fromImage(matchCurrentRotation(readInfo.readImage));
 
     // Set file details
-    currentFileDetails.fileInfo = readInfo.readFileInfo;
     currentFileDetails.baseImageSize = readInfo.size;
     currentFileDetails.loadedPixmapSize = loadedPixmap.size();
     if (currentFileDetails.baseImageSize == QSize(-1, -1))
@@ -155,8 +157,6 @@ void QVImageCore::postRead(const QVReadImageInfo &readInfo)
         qInfo() << "QImageReader::size gave an invalid size for " + currentFileDetails.fileInfo.fileName() + ", using size from loaded pixmap";
         currentFileDetails.baseImageSize = currentFileDetails.loadedPixmapSize;
     }
-
-    updateFolderInfo();
 
     addToCache(readInfo);
     postLoad();
