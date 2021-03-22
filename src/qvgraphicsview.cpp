@@ -129,31 +129,29 @@ bool QVGraphicsView::event(QEvent *event)
             auto *pinchGesture = static_cast<QPinchGesture *>(pinch);
             QPinchGesture::ChangeFlags changeFlags = pinchGesture->changeFlags();
             if (changeFlags & QPinchGesture::RotationAngleChanged) {
-//                qDebug() << "Rotation angle: " << pinchGesture->rotationAngle() << " Last: " << pinchGesture->lastRotationAngle();
-                rotateImage(qFloor(pinchGesture->rotationAngle()/90)*90);
+                if (pinchGesture->totalRotationAngle() > 90)
+                {
+                    rotateImage(90);
+                    pinchGesture->setTotalRotationAngle(0);
+                }
+                else if (pinchGesture->totalRotationAngle() < -90)
+                {
+                    rotateImage(-90);
+                    pinchGesture->setTotalRotationAngle(0);
+                }
+
             }
             if (changeFlags & QPinchGesture::ScaleFactorChanged) {
-//                qDebug() << "Scale factor: " << pinchGesture->scaleFactor() << " Total: " << pinchGesture->totalScaleFactor();
-                qreal scaleAmount = (pinchGesture->scaleFactor()-1.0)/(scaleFactor-1);
-                if (qFuzzyCompare(scaleAmount, qFabs(scaleAmount)))
+                if (pinchGesture->totalScaleFactor() > 1+(scaleFactor-1)/2)
                 {
-                    for (qreal i = scaleAmount; i > 0; --i)
-                    {
-//                        qDebug() << "zoom #" << i;
-                        zoom(120, mapFromGlobal(pinchGesture->hotSpot().toPoint()));
-                    }
+                    zoom(120, mapFromGlobal(pinchGesture->hotSpot().toPoint()));
+                    pinchGesture->setTotalScaleFactor(1.0);
                 }
-                else
+                else if (pinchGesture->totalScaleFactor() < 1-(scaleFactor-1)/2)
                 {
-                    for (qreal i = scaleAmount; i < 0; ++i)
-                    {
-//                        qDebug() << "zoom #" << i;
-                        zoom(-120, mapFromGlobal(pinchGesture->hotSpot().toPoint()));
-                    }
+                    zoom(-120, mapFromGlobal(pinchGesture->hotSpot().toPoint()));
+                    pinchGesture->setTotalScaleFactor(1.0);
                 }
-            }
-            if (changeFlags & QPinchGesture::CenterPointChanged) {
-                translate(pinchGesture->lastCenterPoint().x()-pinchGesture->centerPoint().x(), pinchGesture->lastCenterPoint().y()-pinchGesture->centerPoint().y());
             }
         }
     }
