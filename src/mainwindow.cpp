@@ -330,7 +330,7 @@ void MainWindow::disableActions()
                 }
                 else if (cloneData.last() == "undodisable")
                 {
-                    clone->setEnabled(!lastDeletedFile.pathInTrash.isEmpty());
+                    clone->setEnabled(!lastDeletedFiles.isEmpty() && !lastDeletedFiles.top().pathInTrash.isEmpty());
                 }
                 else if (cloneData.last() == "folderdisable")
                 {
@@ -661,7 +661,7 @@ void MainWindow::deleteFile()
         return;
     }
 
-    lastDeletedFile = {file.fileName(), filePath};
+    lastDeletedFiles.push({file.fileName(), filePath});
     disableActions();
 
 
@@ -692,6 +692,10 @@ void MainWindow::deleteFile()
 
 void MainWindow::undoDelete()
 {
+    if (lastDeletedFiles.isEmpty())
+        return;
+
+    const DeletedPaths lastDeletedFile = lastDeletedFiles.pop();
     if (lastDeletedFile.pathInTrash.isEmpty() || lastDeletedFile.previousPath.isEmpty())
         return;
 
@@ -710,7 +714,6 @@ void MainWindow::undoDelete()
     }
 
     openFile(lastDeletedFile.previousPath);
-    lastDeletedFile = QVDeletedPaths();
     disableActions();
 }
 

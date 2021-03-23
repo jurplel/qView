@@ -9,6 +9,7 @@
 #include <QMainWindow>
 #include <QShortcut>
 #include <QNetworkAccessManager>
+#include <QStack>
 
 namespace Ui {
 class MainWindow;
@@ -19,7 +20,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    struct QVDeletedPaths
+    struct DeletedPaths
     {
         QString pathInTrash;
         QString previousPath;
@@ -155,7 +156,7 @@ private:
 
     QNetworkAccessManager networkAccessManager;
 
-    QVDeletedPaths lastDeletedFile;
+    QStack<DeletedPaths> lastDeletedFiles;
 };
 
 #endif // MAINWINDOW_H

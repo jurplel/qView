@@ -340,7 +340,7 @@ void QVImageCore::addToCache(const ReadData &readData)
     if (readData.pixmap.isNull())
         return;
 
-    bool success = QPixmapCache::insert(readData.fileInfo.absoluteFilePath(), readData.pixmap);
+    QPixmapCache::insert(readData.fileInfo.absoluteFilePath(), readData.pixmap);
 
     auto *size = new qint64(readData.fileInfo.size());
     qvApp->setPreviouslyRecordedFileSize(readData.fileInfo.absoluteFilePath(), size);
