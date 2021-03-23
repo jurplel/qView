@@ -129,6 +129,11 @@ MainWindow::MainWindow(QWidget *parent) :
     settingsUpdated();
     shortcutsUpdated();
 
+    // Connection for open with menu population futurewatcher
+    connect(&openWithFutureWatcher, &QFutureWatcher<QList<OpenWith::OpenWithItem>>::finished, this, [this](){
+        populateOpenWithMenu(openWithFutureWatcher.result());
+    });
+
 #ifdef COCOA_LOADED
     QVCocoaFunctions::setFullSizeContentView(windowHandle());
 #endif
@@ -299,8 +304,8 @@ void MainWindow::openRecent(int i)
 
 void MainWindow::fileChanged()
 {
+    requestPopulateOpenWithMenu();
     disableActions();
-    populateOpenWithMenu();
 
     refreshProperties();
     buildWindowTitle();
@@ -347,10 +352,16 @@ void MainWindow::disableActions()
     }
 }
 
-void MainWindow::populateOpenWithMenu()
+void MainWindow::requestPopulateOpenWithMenu()
 {
-    QList<OpenWith::OpenWithItem> openWithItems = OpenWith::getOpenWithItems(getCurrentFileDetails().fileInfo.absoluteFilePath());
+    openWithFutureWatcher.setFuture(QtConcurrent::run([&]{
+        const auto &curFilePath = getCurrentFileDetails().fileInfo.absoluteFilePath();
+        return OpenWith::getOpenWithItems(curFilePath);
+    }));
+}
 
+void MainWindow::populateOpenWithMenu(const QList<OpenWith::OpenWithItem> openWithItems)
+{
     for (int i = 0; i < qvApp->getActionManager().getOpenWithMaxLength(); i++)
     {
         const auto clonedActions = qvApp->getActionManager().getAllClonesOfAction("openwith" + QString::number(i), this);

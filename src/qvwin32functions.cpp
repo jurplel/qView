@@ -16,8 +16,6 @@
 
 #include <QDebug>
 
-// All this win32 code if I recall correctly is meant to be called on another thread.
-
 QList<OpenWith::OpenWithItem> QVWin32Functions::getOpenWithItems(const QString &filePath)
 {
     QList<OpenWith::OpenWithItem> listOfOpenWithItems;

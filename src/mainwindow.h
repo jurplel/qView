@@ -29,6 +29,10 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override;
 
+    void requestPopulateOpenWithMenu();
+
+    void populateOpenWithMenu(const QList<OpenWith::OpenWithItem> openWithItems);
+
     void refreshProperties();
 
     void buildWindowTitle();
@@ -116,8 +120,6 @@ public slots:
 
     void disableActions();
 
-    void populateOpenWithMenu();
-
 protected:
     bool event(QEvent *event) override;
 
@@ -157,6 +159,8 @@ private:
     QNetworkAccessManager networkAccessManager;
 
     QStack<DeletedPaths> lastDeletedFiles;
+
+    QFutureWatcher<QList<OpenWith::OpenWithItem>> openWithFutureWatcher;
 };
 
 #endif // MAINWINDOW_H
