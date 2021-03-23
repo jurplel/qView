@@ -253,6 +253,22 @@ void QVApplication::setPreviouslyRecordedFileSize(const QString &fileName, long 
     previouslyRecordedFileSizes.insert(fileName, fileSize);
 }
 
+QSize QVApplication::getPreviouslyRecordedImageSize(const QString &fileName)
+{
+    auto previouslyRecordedImageSizePtr = previouslyRecordedImageSizes.object(fileName);
+    QSize previouslyRecordedImageSize = QSize();
+
+    if (previouslyRecordedImageSizePtr)
+        previouslyRecordedImageSize = *previouslyRecordedImageSizePtr;
+
+    return previouslyRecordedImageSize;
+}
+
+void QVApplication::setPreviouslyRecordedImageSize(const QString &fileName, QSize *imageSize)
+{
+    previouslyRecordedImageSizes.insert(fileName, imageSize);
+}
+
 void QVApplication::addToLastActiveWindows(MainWindow *window)
 {
     if (!window)

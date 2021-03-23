@@ -100,7 +100,7 @@ public:
 
     void toggleFullScreen();
 
-    const QVImageCore::QVFileDetails& getCurrentFileDetails() const { return graphicsView->getCurrentFileDetails(); }
+    const QVImageCore::FileDetails& getCurrentFileDetails() const { return graphicsView->getCurrentFileDetails(); }
 
 public slots:
     void openFile(const QString &fileName);

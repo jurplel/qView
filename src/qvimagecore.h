@@ -23,7 +23,7 @@ public:
     };
     Q_ENUM(ScaleMode)
 
-    struct QVFileDetails
+    struct FileDetails
     {
         QFileInfo fileInfo;
         QFileInfoList folderFileInfoList;
@@ -35,24 +35,23 @@ public:
         QSize loadedPixmapSize;
     };
 
-    struct QVReadImageInfo
+    struct ReadData
     {
-        QImage readImage;
-        QFileInfo readFileInfo;
+        QPixmap pixmap;
+        QFileInfo fileInfo;
         QSize size;
     };
 
     explicit QVImageCore(QObject *parent = nullptr);
 
     void loadFile(const QString &fileName);
-    QVReadImageInfo readFile(const QString &fileName, bool forCache = false);
-    void postRead(const QVReadImageInfo &readImageAndFileInfo);
-    void postLoad();
+    ReadData readFile(const QString &fileName, bool forCache);
+    void loadPixmap(const ReadData &readData, bool fromCache);
     void closeImage();
     void updateFolderInfo();
     void requestCaching();
     void requestCachingFile(const QString &filePath);
-    void addToCache(const QVReadImageInfo &readImageAndFileInfo);
+    void addToCache(const ReadData &readImageAndFileInfo);
 
     void settingsUpdated();
 
@@ -70,7 +69,7 @@ public:
     //returned const reference is read-only
     const QPixmap& getLoadedPixmap() const {return loadedPixmap; }
     const QMovie& getLoadedMovie() const {return loadedMovie; }
-    const QVFileDetails& getCurrentFileDetails() const {return currentFileDetails; }
+    const FileDetails& getCurrentFileDetails() const {return currentFileDetails; }
     int getCurrentRotation() const {return currentRotation; }
 
 signals:
@@ -86,12 +85,10 @@ private:
     QPixmap loadedPixmap;
     QMovie loadedMovie;
 
-    QVFileDetails currentFileDetails;
+    FileDetails currentFileDetails;
     int currentRotation;
 
-    QFutureWatcher<QVReadImageInfo> loadFutureWatcher;
-
-    bool justLoadedFromCache;
+    QFutureWatcher<ReadData> loadFutureWatcher;
 
     bool isLoopFoldersEnabled;
     int preloadingMode;
