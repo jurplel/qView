@@ -1,7 +1,7 @@
 steps:
 - pwsh: |
     $ProgressPreference = 'SilentlyContinue'
-    Invoke-WebRequest https://mirror.firedaemon.com/OpenSSL/openssl-1.1.1i-dev.zip -O openssl.zip
+    Invoke-WebRequest https://mirror.firedaemon.com/OpenSSL/openssl-1.1.1l-dev.zip -O openssl.zip
 
     7z x -y .\openssl.zip
     If ($env:arch.substring(3, 2) -eq '32') {
