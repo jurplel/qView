@@ -6,17 +6,17 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="24"/>
         <source>Window</source>
-        <translation type="unfinished"></translation>
+        <translation>窗口</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="137"/>
         <source>&amp;File</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;文件</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="163"/>
         <source>&amp;Edit</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;编辑</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="177"/>
@@ -26,206 +26,206 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="206"/>
         <source>&amp;View</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;查看</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="230"/>
         <source>&amp;Tools</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;工具</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="252"/>
         <source>&amp;Help</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;帮助</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="266"/>
         <source>Open &amp;Recent</source>
-        <translation type="unfinished"></translation>
+        <translation>最近打开</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="276"/>
         <location filename="../src/actionmanager.cpp" line="407"/>
         <source>Empty</source>
-        <translation type="unfinished"></translation>
+        <translation>空</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="551"/>
         <source>&amp;Quit</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;退出</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="555"/>
         <source>Exit</source>
         <extracomment>The quit action is called &quot;Exit&quot; on windows</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>退出</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="558"/>
         <source>New Window</source>
-        <translation type="unfinished"></translation>
+        <translation>新窗口</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="561"/>
         <source>&amp;Open...</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;打开...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="564"/>
         <source>Open &amp;URL...</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="567"/>
         <source>Close Window</source>
-        <translation type="unfinished"></translation>
+        <translation>关闭窗口</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="571"/>
         <source>Close All</source>
         <extracomment>Close all windows, that is</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>关闭所有</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="574"/>
         <source>Open Containing &amp;Folder</source>
-        <translation type="unfinished"></translation>
+        <translation>打开文件夹</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="576"/>
         <source>Show in E&amp;xplorer</source>
-        <translation type="unfinished"></translation>
+        <translation>在资源管理器中查看</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="578"/>
         <source>Show in &amp;Finder</source>
-        <translation type="unfinished"></translation>
+        <translation>在文件夹中查看</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="583"/>
         <source>Show File &amp;Info</source>
-        <translation type="unfinished"></translation>
+        <translation>查看文件信息</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="587"/>
         <source>&amp;Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;复制</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="591"/>
         <source>&amp;Paste</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;粘贴</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="594"/>
         <source>R&amp;ename...</source>
-        <translation type="unfinished"></translation>
+        <translation>重命名...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="598"/>
         <source>Zoom &amp;In</source>
-        <translation type="unfinished"></translation>
+        <translation>放大</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="602"/>
         <source>Zoom &amp;Out</source>
-        <translation type="unfinished"></translation>
+        <translation>缩小</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="606"/>
         <source>Reset &amp;Zoom</source>
-        <translation type="unfinished"></translation>
+        <translation>重置缩放</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="610"/>
         <source>Ori&amp;ginal Size</source>
-        <translation type="unfinished"></translation>
+        <translation>原始大小</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="614"/>
         <source>Rotate &amp;Right</source>
-        <translation type="unfinished"></translation>
+        <translation>顺时针旋转</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="618"/>
         <source>Rotate &amp;Left</source>
-        <translation type="unfinished"></translation>
+        <translation>逆时针旋转</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="622"/>
         <source>&amp;Mirror</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;镜像</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="626"/>
         <source>&amp;Flip</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;翻转</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="630"/>
         <source>Enter F&amp;ull Screen</source>
-        <translation type="unfinished"></translation>
+        <translation>全屏</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="634"/>
         <source>&amp;First File</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;首文件</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="638"/>
         <source>Previous Fi&amp;le</source>
-        <translation type="unfinished"></translation>
+        <translation>上一张</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="642"/>
         <source>&amp;Next File</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;下一张图片</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="646"/>
         <source>Las&amp;t File</source>
-        <translation type="unfinished"></translation>
+        <translation>末文件</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="650"/>
         <source>Save Frame &amp;As...</source>
-        <translation type="unfinished"></translation>
+        <translation>保存帧为...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="654"/>
         <source>Pa&amp;use</source>
-        <translation type="unfinished"></translation>
+        <translation>暂停</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="658"/>
         <source>&amp;Next Frame</source>
-        <translation type="unfinished"></translation>
+        <translation>下一帧</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="662"/>
         <source>&amp;Decrease Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;减速</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="666"/>
         <source>&amp;Reset Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;重置速度</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="670"/>
         <source>&amp;Increase Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;加速</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="674"/>
         <source>Start S&amp;lideshow</source>
-        <translation type="unfinished"></translation>
+        <translation>播放幻灯片</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="679"/>
         <source>Option&amp;s</source>
         <extracomment>This is for the options dialog on windows</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>选项</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="682"/>
@@ -242,24 +242,24 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="689"/>
         <source>&amp;About</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;关于</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="692"/>
         <source>&amp;About qView</source>
         <extracomment>This is for the about dialog on mac</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>&amp;关于qView</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="696"/>
         <source>&amp;Welcome</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;欢迎</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="701"/>
         <source>Clear &amp;Menu</source>
         <extracomment>This is for clearing the recents menu</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>&amp;清除菜单</translation>
     </message>
 </context>
 <context>
@@ -267,12 +267,12 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="207"/>
         <source>Exit F&amp;ull Screen</source>
-        <translation type="unfinished"></translation>
+        <translation>退出全屏</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="212"/>
         <source>Enter F&amp;ull Screen</source>
-        <translation type="unfinished"></translation>
+        <translation>进入全屏</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="476"/>
@@ -280,69 +280,70 @@
         <location filename="../src/mainwindow.cpp" line="526"/>
         <location filename="../src/mainwindow.cpp" line="637"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>错误</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="476"/>
         <source>Error: URL is invalid</source>
-        <translation type="unfinished"></translation>
+        <translation>错误：URL无效</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="482"/>
         <source>Downloading image...</source>
-        <translation type="unfinished"></translation>
+        <translation>下载图像...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="482"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>取消</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="486"/>
         <location filename="../src/mainwindow.cpp" line="542"/>
         <source>Open URL...</source>
-        <translation type="unfinished"></translation>
+        <translation>打开URL...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="503"/>
         <source>Error </source>
-        <translation type="unfinished"></translation>
+        <translation>错误 </translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="526"/>
         <source>Error: Invalid image</source>
-        <translation type="unfinished"></translation>
+        <translation>错误:无效的文件</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="543"/>
         <source>URL of a supported image file:</source>
-        <translation type="unfinished"></translation>
+        <translation>受支持的图像文件URL:</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="618"/>
         <source>Rename...</source>
-        <translation type="unfinished"></translation>
+        <translation>重命名...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="619"/>
         <source>File name:</source>
-        <translation type="unfinished"></translation>
+        <translation>文件名称:</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="637"/>
         <source>Error: Could not rename file
 (Check that you have write access)</source>
-        <translation type="unfinished"></translation>
+        <translation>错误: 无法重命名文件
+(检查你是否有写权限)</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="722"/>
         <source>Save Frame As...</source>
-        <translation type="unfinished"></translation>
+        <translation>保存帧为...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="751"/>
         <source>Res&amp;ume</source>
-        <translation type="unfinished"></translation>
+        <translation>播放</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="760"/>
@@ -432,7 +433,7 @@
     <message>
         <location filename="../src/qvapplication.cpp" line="126"/>
         <source>Open...</source>
-        <translation type="unfinished"></translation>
+        <translation>打开...</translation>
     </message>
 </context>
 <context>
@@ -454,12 +455,12 @@
     <message>
         <location filename="../src/qvinfodialog.ui" line="20"/>
         <source>File Info</source>
-        <translation type="unfinished"></translation>
+        <translation>文件信息</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="26"/>
         <source>Name:</source>
-        <translation type="unfinished"></translation>
+        <translation>名称:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="36"/>
@@ -471,37 +472,37 @@
         <location filename="../src/qvinfodialog.ui" line="183"/>
         <location filename="../src/qvinfodialog.ui" line="203"/>
         <source>error</source>
-        <translation type="unfinished"></translation>
+        <translation>错误</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="52"/>
         <source>Type:</source>
-        <translation type="unfinished"></translation>
+        <translation>类型:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="75"/>
         <source>Location:</source>
-        <translation type="unfinished"></translation>
+        <translation>路径:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="101"/>
         <source>Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>文件大小:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="130"/>
         <source>Modified:</source>
-        <translation type="unfinished"></translation>
+        <translation>修改日期:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="153"/>
         <source>Dimensions:</source>
-        <translation type="unfinished"></translation>
+        <translation>尺寸:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="173"/>
         <source>Aspect Ratio:</source>
-        <translation type="unfinished"></translation>
+        <translation>纵横比:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="193"/>
@@ -511,7 +512,7 @@
     <message>
         <location filename="../src/qvinfodialog.ui" line="213"/>
         <source>Refresh</source>
-        <translation type="unfinished"></translation>
+        <translation>刷新</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.cpp" line="49"/>
@@ -967,7 +968,7 @@
     <message>
         <location filename="../src/shortcutmanager.cpp" line="47"/>
         <source>Show in Explorer</source>
-        <translation type="unfinished"></translation>
+        <translation>在资源管理器中查看</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="49"/>
@@ -977,127 +978,127 @@
     <message>
         <location filename="../src/shortcutmanager.cpp" line="51"/>
         <source>Show File Info</source>
-        <translation type="unfinished"></translation>
+        <translation>查看文件信息</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="52"/>
         <source>Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>复制</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="53"/>
         <source>Paste</source>
-        <translation type="unfinished"></translation>
+        <translation>粘贴</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="54"/>
         <source>Rename</source>
-        <translation type="unfinished"></translation>
+        <translation>重命名</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="55"/>
         <source>First File</source>
-        <translation type="unfinished"></translation>
+        <translation>首张图片</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="56"/>
         <source>Previous File</source>
-        <translation type="unfinished"></translation>
+        <translation>上一张图片</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="57"/>
         <source>Next File</source>
-        <translation type="unfinished"></translation>
+        <translation>下一张图片</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="58"/>
         <source>Last File</source>
-        <translation type="unfinished"></translation>
+        <translation>末尾图片</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="59"/>
         <source>Zoom In</source>
-        <translation type="unfinished"></translation>
+        <translation>放大</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="64"/>
         <source>Zoom Out</source>
-        <translation type="unfinished"></translation>
+        <translation>缩小</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="65"/>
         <source>Reset Zoom</source>
-        <translation type="unfinished"></translation>
+        <translation>重置缩放</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="66"/>
         <source>Original Size</source>
-        <translation type="unfinished"></translation>
+        <translation>原始大小</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="67"/>
         <source>Rotate Right</source>
-        <translation type="unfinished"></translation>
+        <translation>向右旋转</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="68"/>
         <source>Rotate Left</source>
-        <translation type="unfinished"></translation>
+        <translation>向左旋转</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="69"/>
         <source>Mirror</source>
-        <translation type="unfinished"></translation>
+        <translation>镜像</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="70"/>
         <source>Flip</source>
-        <translation type="unfinished"></translation>
+        <translation>垂直翻转</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="71"/>
         <source>Full Screen</source>
-        <translation type="unfinished"></translation>
+        <translation>全屏</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="83"/>
         <source>Save Frame As</source>
-        <translation type="unfinished"></translation>
+        <translation>保存帧为</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="84"/>
         <source>Pause</source>
-        <translation type="unfinished"></translation>
+        <translation>暂停</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="85"/>
         <source>Next Frame</source>
-        <translation type="unfinished"></translation>
+        <translation>下一帧</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="86"/>
         <source>Decrease Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>减速</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="87"/>
         <source>Reset Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>重置速度</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="88"/>
         <source>Increase Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>加速</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="89"/>
         <source>Toggle Slideshow</source>
-        <translation type="unfinished"></translation>
+        <translation>切换幻灯片放映</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="90"/>
         <source>Options</source>
-        <translation type="unfinished"></translation>
+        <translation>选项</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="92"/>
@@ -1107,27 +1108,27 @@
     <message>
         <location filename="../src/shortcutmanager.cpp" line="96"/>
         <source>New Window</source>
-        <translation type="unfinished"></translation>
+        <translation>新窗口</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="97"/>
         <source>Close Window</source>
-        <translation type="unfinished"></translation>
+        <translation>关闭窗口</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="98"/>
         <source>Close All</source>
-        <translation type="unfinished"></translation>
+        <translation>关闭所有</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="100"/>
         <source>Quit</source>
-        <translation type="unfinished"></translation>
+        <translation>退出</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="105"/>
         <source>Exit</source>
-        <translation type="unfinished"></translation>
+        <translation>退出</translation>
     </message>
 </context>
 <context>
@@ -1135,12 +1136,12 @@
     <message>
         <location filename="../src/updatechecker.cpp" line="69"/>
         <source>Download</source>
-        <translation type="unfinished"></translation>
+        <translation>下载</translation>
     </message>
     <message>
         <location filename="../src/updatechecker.cpp" line="72"/>
         <source>qView Update Available</source>
-        <translation type="unfinished"></translation>
+        <translation>qView更新可用</translation>
     </message>
     <message>
         <location filename="../src/updatechecker.cpp" line="73"/>
@@ -1150,18 +1151,19 @@
     <message>
         <location filename="../src/updatechecker.cpp" line="77"/>
         <source>&amp;Disable Update Checking</source>
-        <translation type="unfinished"></translation>
+        <translation>关闭更新检查</translation>
     </message>
     <message>
         <location filename="../src/updatechecker.cpp" line="87"/>
         <source>qView Update Checking Disabled</source>
-        <translation type="unfinished"></translation>
+        <translation>qView更新检查失败</translation>
     </message>
     <message>
         <location filename="../src/updatechecker.cpp" line="87"/>
         <source>Update notifications on startup have been disabled.
 You can reenable them in the options dialog.</source>
-        <translation type="unfinished"></translation>
+        <translation>已禁用更新通知.
+你可以在选项中重新启用它们.</translation>
     </message>
 </context>
 </TS>
