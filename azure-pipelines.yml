@@ -10,7 +10,7 @@ parameters:
 
 variables:
   defines: 'NIGHTLY=$(Build.BuildNumber)'
-  qtVersion: '5.12.9'
+  qtVersion: '5.15.2'
 
 name: '$(Date:yyyy-MM-dd).$(Rev:r)'
 jobs:
@@ -28,10 +28,10 @@ jobs:
         skipHardPlugins: 'true'
       win64:
         imageName: 'windows-2019'
-        qtArch: 'win64_msvc2017_64'
+        qtArch: 'win64_msvc2019_64'
       win32:
         imageName: 'windows-2019'
-        qtArch: 'win32_msvc2017'
+        qtArch: 'win32_msvc2019'
 
   pool:
     vmImage: $(imageName)
