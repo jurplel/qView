@@ -1,7 +1,7 @@
 steps:
 - pwsh: |
     $ProgressPreference = 'SilentlyContinue'
-    Invoke-WebRequest https://mirror.firedaemon.com/OpenSSL/openssl-1.1.1i-dev.zip -O openssl.zip
+    Invoke-WebRequest https://mirror.firedaemon.com/OpenSSL/openssl-1.1.1l-dev.zip -O openssl.zip
 
     7z x -y .\openssl.zip
     If ($env:arch.substring(3, 2) -eq '32') {
@@ -68,11 +68,14 @@ steps:
 
 - script: |
     if [ $(nightlyString) == -nightly ]; then
-          VERSION=$(Build.BuildNumber)
+          VERSION=$(nightlyString)
     else
           VERSION=$(sed -n 's/[^0-9.]*//g;2p' qView.pro)
     fi
     echo VERSION was set to $VERSION
+    if [[ "$(extra_plugins_maybe)" == *"-extra-plugins"* ]]; then
+          PLUGINS=$(extra_plugins_maybe)
+    fi
 
     wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
     chmod a+x linuxdeployqt-continuous-x86_64.AppImage
@@ -82,7 +85,7 @@ steps:
     cd bin
     rm qview
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
-    ../linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/qView.desktop -appimage -updateinformation="gh-releases-zsync|jurplel|qView|latest|qView-*x86_64.AppImage.zsync" $(extra_plugins_maybe)
+    ../linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/qView.desktop -appimage -updateinformation="gh-releases-zsync|jurplel|qView|latest|qView-*x86_64.AppImage.zsync" $PLUGINS
     mv *.AppImage qView$(nightlyString)$(buildNumString)-x86_64.AppImage
     rm -r appdir
   condition: and(succeeded(), ne( variables['skipDeploy'], 'true' ), eq( variables['Agent.OS'], 'Linux' ))
