@@ -351,7 +351,8 @@ void QVApplication::openAboutDialog(QWidget *parent)
 void QVApplication::hideIncompatibleActions()
 {
     // Check for gio on linux as a backup
-#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0)) && defined Q_OS_UNIX && !defined Q_OS_MACOS
+#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
+#if defined Q_OS_UNIX && !defined Q_OS_MACOS
     QProcess *testGio = new QProcess(this);
     testGio->start("gio", QStringList());
     connect(testGio, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), [testGio, this](){
@@ -372,5 +373,16 @@ void QVApplication::hideIncompatibleActions()
             qInfo() << "Using backup gio trash backend";
         }
     });
+#elif Q_OS_WIN
+    qInfo() << "Qt version too old for trash feature";
+    auto actions = getActionManager().getAllInstancesOfAction("delete");
+    actions.append(getActionManager().getAllInstancesOfAction("undo"));
+    for (auto &action : actions)
+    {
+        action->setVisible(false);
+    }
+
+    getShortcutManager().setShortcutsHidden({"delete", "undo"});
+#endif
 #endif
 }
