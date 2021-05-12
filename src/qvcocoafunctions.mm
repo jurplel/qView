@@ -200,3 +200,20 @@ QList<OpenWith::OpenWithItem> QVCocoaFunctions::getOpenWithItems(const QString &
 
     return listOfOpenWithItems;
 }
+
+QString QVCocoaFunctions::deleteFile(const QString &filePath)
+{
+    auto fileUrl = QUrl(filePath);
+    fileUrl.setScheme("file");
+
+    NSURL *resultUrl = nil;
+    NSError *error = nil;
+    BOOL success = [[NSFileManager defaultManager] trashItemAtURL:fileUrl.toNSURL() resultingItemURL:&resultUrl error:&error];
+    if (!success)
+    {
+        NSLog(@"trashItemAtUrl:resultingItemUrl:error: returned error == %@", error);
+        return "";
+    }
+
+    return QString::fromNSString(resultUrl.absoluteString);
+}

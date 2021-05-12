@@ -54,6 +54,7 @@ QAction *ActionManager::cloneAction(const QString &key)
         newAction->setMenuRole(action->menuRole());
         newAction->setEnabled(action->isEnabled());
         newAction->setShortcuts(action->shortcuts());
+        newAction->setVisible(action->isVisible());
         actionCloneLibrary.insert(key, newAction);
         return newAction;
     }
@@ -153,6 +154,15 @@ void ActionManager::untrackClonedActions(const QMenu *menu)
 void ActionManager::untrackClonedActions(const QMenuBar *menuBar)
 {
     untrackClonedActions(getAllNestedActions(menuBar->actions()));
+}
+
+void ActionManager::hideAllInstancesOfAction(const QString &key)
+{
+    auto actions = getAllInstancesOfAction(key);
+    for (auto &action : actions)
+    {
+        action->setVisible(false);
+    }
 }
 
 QMenuBar *ActionManager::buildMenuBar(QWidget *parent)

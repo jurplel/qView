@@ -95,6 +95,8 @@ public:
 
     void untrackClonedActions(const QMenuBar *menuBar);
 
+    void hideAllInstancesOfAction(const QString &key);
+
     QMenuBar *buildMenuBar(QWidget *parent = nullptr);
 
     QMenu *buildViewMenu(bool addIcon = true, QWidget *parent = nullptr);

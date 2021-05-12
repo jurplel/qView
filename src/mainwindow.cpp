@@ -653,7 +653,7 @@ void MainWindow::deleteFile()
     const QFileInfo &fileInfo = getCurrentFileDetails().fileInfo;
     const QString filePath = fileInfo.absoluteFilePath();
     const QString fileName = fileInfo.fileName();
-    QString trashFileName = "";
+    QString trashFilePath = "";
 
 
     if (!fileInfo.isWritable())
@@ -663,6 +663,7 @@ void MainWindow::deleteFile()
     }
 
     graphicsView->closeImage();
+
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
 
@@ -675,18 +676,12 @@ void MainWindow::deleteFile()
         return;
     }
 
-    trashFileName = file.fileName();
-
-
-#elif defined Q_OS_MACOS
-    QString param = "tell app \"Finder\" to delete POSIX file ";
-    param += "\"" + filepath + "\"";
-
-    const QStringList arguments = { "-e", param };
-
-    QProcess::startDetached("osascript", arguments);
+    trashFilePath = file.fileName();
+#elif defined Q_OS_MACOS && COCOA_LOADED
+    QString trashedFile = QVCocoaFunctions::deleteFile(filePath);
+    trashFilePath = QUrl(trashedFile).toLocalFile(); // remove file:// protocol
 #elif defined Q_OS_UNIX && !defined Q_OS_MACOS
-    trashFileName = deleteFileLinuxFallback(filePath, false);
+    trashFilePath = deleteFileLinuxFallback(filePath, false);
 #else
     QMessageBox::critical(this, tr("Not Supported"), tr("This program was compiled with an old version of Qt and this feature is not available.\n"
                                                         "If you see this message, please report a bug!"));
@@ -694,7 +689,7 @@ void MainWindow::deleteFile()
     return;
 #endif
 
-    lastDeletedFiles.push({trashFileName, filePath});
+    lastDeletedFiles.push({trashFilePath, filePath});
     disableActions();
 }
 
@@ -735,7 +730,7 @@ void MainWindow::undoDelete()
     if (lastDeletedFile.pathInTrash.isEmpty() || lastDeletedFile.previousPath.isEmpty())
         return;
 
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)) || (defined Q_OS_MACOS && COCOA_LOADED)
     const QFileInfo fileInfo(lastDeletedFile.pathInTrash);
     if (!fileInfo.isWritable())
     {
@@ -749,7 +744,6 @@ void MainWindow::undoDelete()
     {
         QMessageBox::critical(this, tr("Error"), tr("Failed undoing deletion of %1.").arg(fileInfo.fileName()));
     }
-#elif defined Q_OS_MACOS
 #elif defined Q_OS_UNIX && !defined Q_OS_MACOS
     deleteFileLinuxFallback(lastDeletedFile.pathInTrash, true);
 #else

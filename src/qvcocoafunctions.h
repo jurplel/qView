@@ -28,6 +28,8 @@ public:
     static void setDockRecents(const QStringList &recentPathsList);
 
     static QList<OpenWith::OpenWithItem> getOpenWithItems(const QString &filePath);
+
+    static QString deleteFile(const QString &filePath);
 };
 
 #endif // QVCOCOAFUNCTIONS_H
