@@ -357,12 +357,15 @@ void QVApplication::hideIncompatibleActions()
     connect(testGio, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), [testGio, this](){
         if (testGio->error() == QProcess::FailedToStart)
         {
+            qInfo() << "No backup gio trash backend found";
             auto actions = getActionManager().getAllInstancesOfAction("delete");
             actions.append(getActionManager().getAllInstancesOfAction("undo"));
             for (auto &action : actions)
             {
                 action->setVisible(false);
             }
+
+            getShortcutManager().setShortcutsHidden({"delete", "undo"});
         }
         else
         {

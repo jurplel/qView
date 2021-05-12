@@ -698,9 +698,8 @@ void MainWindow::deleteFile()
     disableActions();
 }
 
-QString MainWindow::deleteFileLinuxFallback(const QString path, bool putBack)
+QString MainWindow::deleteFileLinuxFallback(const QString &path, bool putBack)
 {
-    // Try gio first
     QStringList gioArgs = {"trash", path};
     if (putBack)
         gioArgs.insert(1, "--restore");
@@ -722,6 +721,8 @@ QString MainWindow::deleteFileLinuxFallback(const QString path, bool putBack)
         }
     }
 
+
+    qWarning("Failed to use linux fallback delete");
     return "";
 }
 

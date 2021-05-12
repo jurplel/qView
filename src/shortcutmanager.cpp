@@ -8,6 +8,7 @@ ShortcutManager::ShortcutManager(QObject *parent) : QObject(parent)
 {
     initializeShortcutsList();
     updateShortcuts();
+    hideShortcuts();
 }
 
 void ShortcutManager::updateShortcuts()
@@ -33,6 +34,8 @@ void ShortcutManager::updateShortcuts()
                 action->setShortcuts(stringListToKeySequenceList(shortcut.shortcuts));
         }
     }
+
+    hideShortcuts();
 
     emit shortcutsUpdated();
 }
@@ -112,4 +115,28 @@ void ShortcutManager::initializeShortcutsList()
 #ifdef Q_OS_WIN
     shortcutsList.last().readableName = tr("Exit");
 #endif
+}
+
+void ShortcutManager::hideShortcuts()
+{
+    QMutableListIterator<SShortcut> i(shortcutsList);
+    while (i.hasNext())
+    {
+        if (hiddenShortcuts.contains(i.next().name))
+        {
+            i.remove();
+        }
+    }
+}
+
+void ShortcutManager::setShortcutHidden(const QString &shortcut)
+{
+    hiddenShortcuts.append(shortcut);
+    hideShortcuts();
+}
+
+void ShortcutManager::setShortcutsHidden(const QStringList &shortcuts)
+{
+    hiddenShortcuts.append(shortcuts);
+    hideShortcuts();
 }

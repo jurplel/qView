@@ -59,7 +59,7 @@ public:
 
     void deleteFile();
 
-    QString deleteFileLinuxFallback(const QString path, bool putBack);
+    QString deleteFileLinuxFallback(const QString &path, bool putBack);
 
     void undoDelete();
 
