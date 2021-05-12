@@ -653,6 +653,7 @@ void MainWindow::deleteFile()
     const QFileInfo &fileInfo = getCurrentFileDetails().fileInfo;
     const QString filePath = fileInfo.absoluteFilePath();
     const QString fileName = fileInfo.fileName();
+    QString trashFileName = "";
 
 
     if (!fileInfo.isWritable())
@@ -663,6 +664,8 @@ void MainWindow::deleteFile()
 
     graphicsView->closeImage();
 
+#if !(QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+
     QFile file(filePath);
     bool success = file.moveToTrash();
     if (!success || QFile::exists(filePath))
@@ -672,33 +675,54 @@ void MainWindow::deleteFile()
         return;
     }
 
-    lastDeletedFiles.push({file.fileName(), filePath});
+    trashFileName = file.fileName();
+
+
+#elif defined Q_OS_MACOS
+    QString param = "tell app \"Finder\" to delete POSIX file ";
+    param += "\"" + filepath + "\"";
+
+    const QStringList arguments = { "-e", param };
+
+    QProcess::startDetached("osascript", arguments);
+#elif defined Q_OS_LINUX
+    trashFileName = deleteFileLinuxFallback(filePath, false);
+#else
+    QMessageBox::critical(this, tr("Not Supported"), tr("This program was compiled with an old version of Qt and this feature is not available.\n"
+                                                        "If you see this message, please report a bug!"));
+
+    return;
+#endif
+
+    lastDeletedFiles.push({trashFileName, filePath});
     disableActions();
+}
 
+QString MainWindow::deleteFileLinuxFallback(const QString path, bool putBack)
+{
+    // Try gio first
+    QStringList gioArgs = {"trash", path};
+    if (putBack)
+        gioArgs.insert(1, "--restore");
 
-//#ifdef Q_OS_WIN
-//    /// todo Delete file to trash on Windows
+    QProcess process;
+    process.start("gio", gioArgs);
+    process.waitForFinished();
 
-//    QFile::remove(filepath);
-//#elif defined Q_OS_MACOS
-//    QString param = "tell app \"Finder\" to delete POSIX file ";
-//    param += "\"" + filepath + "\"";
+    if (process.error() != QProcess::FailedToStart && !putBack)
+    {
+        process.start("gio", {"trash", "--list"});
+        process.waitForFinished();
 
-//    const QStringList arguments = { "-e", param };
+        const auto &output = QString(process.readAllStandardOutput()).split("\n");
+        for (const auto &line : output)
+        {
+            if (line.contains(path))
+                return line.split("\t").at(0);
+        }
+    }
 
-//    QProcess::startDetached("osascript", arguments);
-//#elif defined Q_OS_LINUX
-//    /// todo Test delete file to trash on Linux
-
-//    QString param = "\"file:";
-//    param += filepath;
-//    param += "\"";
-
-//    const QStringList arguments = { "trash", param };
-
-//    QProcess::startDetached("gio", arguments);
-//#else
-//#endif
+    return "";
 }
 
 void MainWindow::undoDelete()
@@ -710,6 +734,7 @@ void MainWindow::undoDelete()
     if (lastDeletedFile.pathInTrash.isEmpty() || lastDeletedFile.previousPath.isEmpty())
         return;
 
+#if !(QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
     const QFileInfo fileInfo(lastDeletedFile.pathInTrash);
     if (!fileInfo.isWritable())
     {
@@ -723,6 +748,15 @@ void MainWindow::undoDelete()
     {
         QMessageBox::critical(this, tr("Error"), tr("Failed undoing deletion of %1.").arg(fileInfo.fileName()));
     }
+#elif defined Q_OS_MACOS
+#elif defined Q_OS_LINUX
+    deleteFileLinuxFallback(lastDeletedFile.pathInTrash, true);
+#else
+    QMessageBox::critical(this, tr("Not Supported"), tr("This program was compiled with an old version of Qt and this feature is not available.\n"
+                                                        "If you see this message, please report a bug!"));
+
+    return;
+#endif
 
     openFile(lastDeletedFile.previousPath);
     disableActions();
