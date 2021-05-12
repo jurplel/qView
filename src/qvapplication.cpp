@@ -83,6 +83,8 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     // Adwaita Qt styles should hide icons for a more consistent look
     if (style()->objectName() == "adwaita-dark" || style()->objectName() == "adwaita")
         setAttribute(Qt::AA_DontShowIconsInMenus);
+
+    hideIncompatibleActions();
 }
 
 QVApplication::~QVApplication() {
@@ -344,4 +346,28 @@ void QVApplication::openAboutDialog(QWidget *parent)
 
     aboutDialog = new QVAboutDialog(updateChecker.getLatestVersionNum(), parent);
     aboutDialog->show();
+}
+
+void QVApplication::hideIncompatibleActions()
+{
+    // Check for gio on linux as a backup
+#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0)) && defined Q_OS_UNIX && !defined Q_OS_MACOS
+    QProcess *testGio = new QProcess(this);
+    testGio->start("gio", QStringList());
+    connect(testGio, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), [testGio, this](){
+        if (testGio->error() == QProcess::FailedToStart)
+        {
+            auto actions = getActionManager().getAllInstancesOfAction("delete");
+            actions.append(getActionManager().getAllInstancesOfAction("undo"));
+            for (auto &action : actions)
+            {
+                action->setVisible(false);
+            }
+        }
+        else
+        {
+            qInfo() << "Using backup gio trash backend";
+        }
+    });
+#endif
 }
