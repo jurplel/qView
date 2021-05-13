@@ -6,7 +6,6 @@
 #include <QScreen>
 #include <QMessageBox>
 #include <QSettings>
-#include <QCloseEvent>
 
 #include <QDebug>
 

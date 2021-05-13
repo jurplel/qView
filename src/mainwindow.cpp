@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "qvapplication.h"
 #include "qvcocoafunctions.h"
+#include "qvrenamedialog.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -792,35 +793,10 @@ void MainWindow::rename()
     if (!getCurrentFileDetails().isPixmapLoaded)
         return;
 
-    auto currentFileInfo = getCurrentFileDetails().fileInfo;
+    auto *renameDialog = new QVRenameDialog(this, getCurrentFileDetails().fileInfo);
+    connect(renameDialog, &QVRenameDialog::newFileToOpen, this, &MainWindow::openFile);
 
-    auto *renameDialog = new QInputDialog(this);
-    renameDialog->setWindowTitle(tr("Rename..."));
-    renameDialog->setLabelText(tr("File name:"));
-    renameDialog->setTextValue(currentFileInfo.fileName());
-    renameDialog->resize(350, renameDialog->height());
-    renameDialog->setWindowFlag(Qt::WindowContextHelpButtonHint, false);
-    connect(renameDialog, &QInputDialog::finished, this, [currentFileInfo, renameDialog, this](int result) {
-        if (result)
-        {
-            const auto newFileName = renameDialog->textValue();
-            const auto newFilePath = QDir::cleanPath(currentFileInfo.absolutePath() + QDir::separator() + newFileName);
 
-            if (currentFileInfo.absoluteFilePath() != newFilePath)
-            {
-                if (QFile::rename(currentFileInfo.absoluteFilePath(), newFilePath))
-                {
-                    openFile(newFilePath);
-                }
-                else
-                {
-                    QMessageBox::critical(this, tr("Error"), tr("Error: Could not rename file\n(Check that you have write access)"));
-                }
-            }
-        }
-
-        renameDialog->deleteLater();
-    });
     renameDialog->open();
 }
 
