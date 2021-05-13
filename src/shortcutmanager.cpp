@@ -59,8 +59,11 @@ void ShortcutManager::initializeShortcutsList()
     shortcutsList.append({tr("Copy"), "copy", keyBindingsToStringList(QKeySequence::Copy), {}});
     shortcutsList.append({tr("Paste"), "paste", keyBindingsToStringList(QKeySequence::Paste), {}});
     shortcutsList.append({tr("Rename"), "rename", QStringList({QKeySequence(Qt::Key_F2).toString(), QKeySequence(Qt::CTRL + Qt::Key_R).toString()}), {}});
+    // cmd+enter for renaming, mac-style
+    shortcutsList.last().defaultShortcuts.append(QKeySequence(Qt::CTRL + Qt::Key_Return).toString());
+
     shortcutsList.append({tr("Move to Trash"), "delete", keyBindingsToStringList(QKeySequence::Delete), {}});
-    // cmd+backspace for mac
+    // cmd+backspace for renaming, mac-style
     shortcutsList.last().defaultShortcuts.append(QKeySequence(Qt::CTRL + Qt::Key_Backspace).toString());
 #ifdef Q_OS_WIN
     shortcutsList.last().readableName = tr("Delete");
