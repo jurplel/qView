@@ -649,19 +649,49 @@ void MainWindow::showFileInfo()
     info->raise();
 }
 
-void MainWindow::deleteFile()
-{
-    const QFileInfo &fileInfo = getCurrentFileDetails().fileInfo;
-    const QString filePath = fileInfo.absoluteFilePath();
-    const QString fileName = fileInfo.fileName();
-    QString trashFilePath = "";
+void MainWindow::askDeleteFile()
+{    
+    if (!qvApp->getSettingsManager().getBoolean("askdelete"))
+    {
+        deleteFile();
+        return;
+    }
 
+    const QFileInfo &fileInfo = getCurrentFileDetails().fileInfo;
+    const QString fileName = getCurrentFileDetails().fileInfo.fileName();
 
     if (!fileInfo.isWritable())
     {
         QMessageBox::critical(this, tr("Error"), tr("Can't delete %1:\nNo write permission or file is read-only.").arg(fileName));
         return;
     }
+
+    auto trashString = tr("Are you sure you want to move %1 to the Trash?").arg(fileName);
+#ifdef Q_OS_WIN
+    trashString = tr("Are you sure you want to move %1 to the Recycle Bin?").arg(fileName);
+#endif
+
+    auto *msgBox = new QMessageBox(QMessageBox::Question, tr("Delete"), trashString,
+                       QMessageBox::Yes | QMessageBox::No, this);
+    msgBox->setCheckBox(new QCheckBox(tr("Do not ask again")));
+
+    connect(msgBox, &QMessageBox::accepted, this, [msgBox, this]{
+        QSettings settings;
+        settings.beginGroup("options");
+        settings.setValue("askdelete", !msgBox->checkBox()->isChecked());
+        qvApp->getSettingsManager().loadSettings();
+        this->deleteFile();
+    });
+
+    msgBox->open();
+}
+
+void MainWindow::deleteFile()
+{
+    const QFileInfo &fileInfo = getCurrentFileDetails().fileInfo;
+    const QString filePath = fileInfo.absoluteFilePath();
+    const QString fileName = fileInfo.fileName();
+    QString trashFilePath = "";
 
     graphicsView->closeImage();
 

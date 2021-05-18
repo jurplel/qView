@@ -57,6 +57,8 @@ public:
 
     void showFileInfo();
 
+    void askDeleteFile();
+
     void deleteFile();
 
     QString deleteFileLinuxFallback(const QString &path, bool putBack);

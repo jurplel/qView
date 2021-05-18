@@ -590,7 +590,7 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
     } else if (key == "showfileinfo") {
         relevantWindow->showFileInfo();
     } else if (key == "delete") {
-        relevantWindow->deleteFile();
+        relevantWindow->askDeleteFile();
     } else if (key == "undo") {
         relevantWindow->undoDelete();
     } else if (key == "copy") {
