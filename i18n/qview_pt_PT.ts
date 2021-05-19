@@ -332,7 +332,7 @@
         <location filename="../src/mainwindow.cpp" line="637"/>
         <source>Error: Could not rename file
 (Check that you have write access)</source>
-        <translation>Erro: Não foi possível renomear o ficheiro
+        <translation>Erro: não foi possível renomear o ficheiro
 (Verifique se tem acesso de escrita)</translation>
     </message>
     <message>
@@ -715,13 +715,13 @@
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="363"/>
         <source>Image resizes &amp;past actual size</source>
-        <translation type="unfinished"></translation>
+        <translation>A imagem redimensiona e ultra&amp;passa o tamanho real</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="379"/>
         <location filename="../src/qvoptionsdialog.ui" line="401"/>
         <source>Ignores select sides of an image when fitting to window (some sides will extend beyond the window boundaries)</source>
-        <translation type="unfinished"></translation>
+        <translation>Ignora os lados selecionados de uma imagem ao ajustar à janela (alguns lados estendem-se para além dos limites da janela)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="383"/>
@@ -746,12 +746,12 @@
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="424"/>
         <source>Choose whether or not zooming in and out above 100% zoom will zoom towards the cursor</source>
-        <translation type="unfinished"></translation>
+        <translation>Escolha se o zoom acima de 100% irá ampliar em direção ao cursor</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="427"/>
         <source>Zoom &amp;towards cursor</source>
-        <translation type="unfinished"></translation>
+        <translation>Zoom em &amp;direção ao cursor</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="438"/>
@@ -941,7 +941,7 @@
     <message>
         <location filename="../src/qvwelcomedialog.cpp" line="42"/>
         <source>Thank you for downloading qView.&lt;br&gt;Here&apos;s a few tips to get you started:</source>
-        <translation>Obrigado por utilizar qView.&lt;br&gt;Aqui estão algumas dicas sobre a aplicação:</translation>
+        <translation>Obrigado por utilizar o qView.&lt;br&gt;Aqui estão algumas dicas sobre a aplicação:</translation>
     </message>
     <message>
         <location filename="../src/qvwelcomedialog.cpp" line="49"/>
