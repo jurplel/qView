@@ -1,34 +1,19 @@
 steps:
 - pwsh: |
     ci\windeployqt.ps1
-    
-    try {
-      copy ..\QtApng\plugins\imageformats\qapng.dll imageformats\
+    ci\copyplugins.ps1
 
-      copy ..\libde265\libde265\libde265.dll .\
-      copy ..\libde265\libheif\libheif\heif.dll .\
-      copy ..\libde265\libheif\qt-heif-image-plugin\bin\imageformats\qheif.dll imageformats\
-      
-      copy ..\qt-avif-image-plugin\plugins\imageformats\qavif.dll imageformats\
+    mv bin\qView.exe "bin\qView$(nightlyString)$(buildNumString).exe"
 
-      Write-Host "Successfully copied plugins"
-    } catch {
-        Write-Host "Failed to copy plugins"
-        echo $Error[0]
-    }
-
-    mv qView.exe "qView$(nightlyString)$(buildNumString).exe"
-
-    If ($env:nightlyString -ne '-nightly') {
-      mkdir ..\dist\win\qView-$(MatrixName)
-      copy -R * ..\dist\win\qView-$(MatrixName)
-      iscc ..\dist\win\qView$($env:arch.substring(3, 2)).iss
-      copy ..\dist\win\Output\* .\
+    if ($env:nightlyString -ne '-nightly') {
+          .\innomake.ps1
     }
   condition: and(succeeded(), ne( variables['skipDeploy'], 'true' ), eq( variables['Agent.OS'], 'Windows_NT' ))
   displayName: 'Run windeployqt'
 
 - script: |
+    ci/copyplugins.ps1
+
     if [ $(nightlyString) == -nightly ]; then
           VERSION=$(Build.BuildNumber)
     else
@@ -36,9 +21,6 @@ steps:
     fi
     
     cd bin
-
-    cp $(Qt5_DIR)/plugins/imageformats/libqapng.dylib qView.app/Contents/PlugIns/imageformats/
-    cp $(Qt5_DIR)/plugins/imageformats/libqavif.dylib qView.app/Contents/PlugIns/imageformats/
     
     macdeployqt qView.app
     if [ $(nightlyString) == -nightly ]; then
