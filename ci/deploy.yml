@@ -22,7 +22,7 @@ steps:
     
     cd bin
     
-    macdeployqt qView.app
+    macdeployqt bin/qView.app
     if [ $(nightlyString) == -nightly ]; then
         mv qView.app 'qView$(nightlyString)$(buildNumString).app'
         macdeployqt *.app -dmg

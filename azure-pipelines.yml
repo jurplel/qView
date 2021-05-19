@@ -2,11 +2,11 @@ parameters:
 - name: buildPlugins
   displayName: Build Plugins
   type: boolean
-  default: false
+  default: true
 - name: useNightly
   displayName: Use Nightly version number
   type: boolean
-  default: true
+  default: false
 
 variables:
   defines: 'NIGHTLY=$(Build.BuildNumber)'
