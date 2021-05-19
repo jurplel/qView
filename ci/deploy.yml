@@ -85,7 +85,7 @@ steps:
     cd bin
     rm qview
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
-    ../linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/qView.desktop -appimage -updateinformation="gh-releases-zsync|jurplel|qView|latest|qView-*x86_64.AppImage.zsync" $PLUGINS
+    ../linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/com.interversehq.qView.desktop -appimage -updateinformation="gh-releases-zsync|jurplel|qView|latest|qView-*x86_64.AppImage.zsync" $PLUGINS
     mv *.AppImage qView$(nightlyString)$(buildNumString)-x86_64.AppImage
     rm -r appdir
   condition: and(succeeded(), ne( variables['skipDeploy'], 'true' ), eq( variables['Agent.OS'], 'Linux' ))
