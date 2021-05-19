@@ -9,11 +9,9 @@ try {
         copy ..\libde265\libheif\qt-heif-image-plugin\bin\imageformats\qheif.dll bin\imageformats\
         
         copy ..\qt-avif-image-plugin\plugins\imageformats\qavif.dll bin\imageformats\
-    } else if ($IsMacOS) {
-        cp $env:Qt5_DIR/plugins/imageformats/libqapng.dylib qView.app/Contents/PlugIns/imageformats/
-        cp $env:Qt5_DIR/plugins/imageformats/libqavif.dylib qView.app/Contents/PlugIns/imageformats/
-    } else {
-
+    } elseif ($IsMacOS) {
+        cp $env:Qt5_DIR/plugins/imageformats/libqapng.dylib bin/qView.app/Contents/PlugIns/imageformats/
+        cp $env:Qt5_DIR/plugins/imageformats/libqavif.dylib bin/qView.app/Contents/PlugIns/imageformats/
     }
 
     Write-Host "Successfully copied plugins"
