@@ -6,7 +6,7 @@ parameters:
 steps:
 - script: |
     sudo apt-get update
-    sudo apt-get install libgl1-mesa-dev libxkbcommon-x11-0 libgtk2.0-dev nasm -y
+    sudo apt-get install libgl1-mesa-dev libfontconfig1-dev libfreetype6-dev libx11-dev libx11-xcb-dev libxext-dev libxfixes-dev libxi-dev libxrender-dev libxcb1-dev libxcb-glx0-dev libxcb-keysyms1-dev libxcb-xinerama0-dev libxcb-image0-dev libxcb-shm0-dev libxcb-icccm4-dev libxcb-sync0-dev libxcb-xfixes0-dev libxcb-shape0-dev libxcb-randr0-dev libxcb-render-util0-dev libxkbcommon-dev libxkbcommon-x11-dev libgtk2.0-dev nasm -y
   condition: and(succeeded(), eq( variables['Agent.OS'], 'Linux' ))
   displayName: 'Install Ubuntu packages for Qt'
 
