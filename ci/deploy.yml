@@ -1,20 +1,7 @@
 steps:
 - pwsh: |
-    $ProgressPreference = 'SilentlyContinue'
-    Invoke-WebRequest https://mirror.firedaemon.com/OpenSSL/openssl-1.1.1l-dev.zip -O openssl.zip
-
-    7z x -y .\openssl.zip
-    If ($env:arch.substring(3, 2) -eq '32') {
-        copy openssl-1.1\x86\bin\libssl-1_1.dll bin\
-        copy openssl-1.1\x86\bin\libcrypto-1_1.dll bin\
-    }  Else {
-        copy openssl-1.1\x64\bin\libssl-1_1-x64.dll bin\
-        copy openssl-1.1\x64\bin\libcrypto-1_1-x64.dll bin\
-    } 
-
-    cd bin
-    windeployqt qView.exe --no-compiler-runtime
-
+    ci\windeployqt.ps1
+    
     try {
       copy ..\QtApng\plugins\imageformats\qapng.dll imageformats\
 
