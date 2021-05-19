@@ -438,6 +438,16 @@
        <string>Miscellaneous</string>
       </attribute>
       <layout class="QFormLayout" name="formLayout_3">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_9">
+         <property name="text">
+          <string>Language:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QComboBox" name="langComboBox"/>
+       </item>
        <item row="1" column="0">
         <widget class="QLabel" name="label_8">
          <property name="text">
@@ -625,36 +635,68 @@
          </property>
         </spacer>
        </item>
-       <item row="12" column="1">
+       <item row="14" column="1">
         <widget class="QCheckBox" name="saveRecentsCheckbox">
          <property name="text">
           <string>Save &amp;recent files</string>
          </property>
         </widget>
        </item>
-       <item row="13" column="1">
+       <item row="15" column="1">
         <widget class="QCheckBox" name="updateCheckbox">
          <property name="text">
           <string extracomment="The notifications are for new qView releases">&amp;Update notifications on startup</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_9">
+       <item row="11" column="1">
+        <widget class="QComboBox" name="afterDeletionComboBox">
+         <property name="currentIndex">
+          <number>1</number>
+         </property>
+         <item>
+          <property name="text">
+           <string>Move Back</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Do Nothing</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Move Forward</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="11" column="0">
+        <widget class="QLabel" name="label_10">
          <property name="text">
-          <string>Language:</string>
+          <string>After deletion:</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
-        <widget class="QComboBox" name="langComboBox"/>
-       </item>
-       <item row="11" column="1">
+       <item row="12" column="1">
         <widget class="QCheckBox" name="askDeleteCheckbox">
          <property name="text">
           <string>&amp;Ask before deleting files</string>
          </property>
         </widget>
+       </item>
+       <item row="13" column="1">
+        <spacer name="horizontalSpacer_8">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>5</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>

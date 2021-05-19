@@ -695,7 +695,6 @@ void MainWindow::deleteFile()
 
     graphicsView->closeImage();
 
-
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
 
     QFile file(filePath);
@@ -719,6 +718,12 @@ void MainWindow::deleteFile()
 
     return;
 #endif
+
+    auto afterDelete = qvApp->getSettingsManager().getInteger("afterdelete");
+    if (afterDelete > 1)
+        nextFile();
+    else if (afterDelete < 1)
+        previousFile();
 
     lastDeletedFiles.push({trashFilePath, filePath});
     disableActions();

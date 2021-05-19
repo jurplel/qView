@@ -178,6 +178,8 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
     syncComboBox(ui->slideshowDirectionComboBox, "slideshowreversed", defaults, makeConnections);
     // slideshowtimer
     syncDoubleSpinBox(ui->slideshowTimerSpinBox, "slideshowtimer", defaults, makeConnections);
+    // afterdelete
+    syncComboBox(ui->afterDeletionComboBox, "afterdelete", defaults, makeConnections);
     // askdelete
     syncCheckbox(ui->askDeleteCheckbox, "askdelete", defaults, makeConnections);
     // saverecents
