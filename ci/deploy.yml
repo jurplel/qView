@@ -1,18 +1,18 @@
 steps:
 - pwsh: |
-    ci\windeployqt.ps1
-    ci\copyplugins.ps1
+    ci/pwsh/windeployqt.ps1
+    ci/pwsh/copyplugins.ps1
 
     mv bin\qView.exe "bin\qView$(nightlyString)$(buildNumString).exe"
 
     if ($env:nightlyString -ne '-nightly') {
-          ci\innomake.ps1
+          ci/pwsh/innomake.ps1
     }
   condition: and(succeeded(), ne( variables['skipDeploy'], 'true' ), eq( variables['Agent.OS'], 'Windows_NT' ))
   displayName: 'Run windeployqt'
 
 - script: |
-    ci/copyplugins.ps1
+    ci/pwsh/copyplugins.ps1
 
     if [ $(nightlyString) == -nightly ]; then
           VERSION=$(Build.BuildNumber)

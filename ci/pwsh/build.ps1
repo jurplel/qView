@@ -5,7 +5,10 @@ param
     $Prefix = "/usr"
 )
 
-ci\pwsh\vcvars.ps1
+if ($IsWindows) {
+    ci/pwsh/vcvars.ps1
+}
+
 qmake $args[0] PREFIX=$Prefix
 
 if ($IsWindows) {
