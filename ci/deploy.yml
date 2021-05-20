@@ -6,7 +6,7 @@ steps:
     mv bin\qView.exe "bin\qView$(nightlyString)$(buildNumString).exe"
 
     if ($env:nightlyString -ne '-nightly') {
-          .\innomake.ps1
+          ci\innomake.ps1
     }
   condition: and(succeeded(), ne( variables['skipDeploy'], 'true' ), eq( variables['Agent.OS'], 'Windows_NT' ))
   displayName: 'Run windeployqt'
