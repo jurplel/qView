@@ -58,7 +58,8 @@ jobs:
     parameters:
       version: $(qtVersion)
 
-  - template: ci/build.yml
+  - pwsh: ci/pwsh/build.ps1
+    displayName: 'Build qView'
 
   - ${{ if eq(parameters.buildPlugins, true) }}:
     - template: ci/plugins.yml
