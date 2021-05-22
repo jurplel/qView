@@ -50,7 +50,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     isOriginalSize = false;
 
     connect(&imageCore, &QVImageCore::animatedFrameChanged, this, &QVGraphicsView::animatedFrameChanged);
-    connect(&imageCore, &QVImageCore::fileLoaded, this, &QVGraphicsView::postLoad);
+    connect(&imageCore, &QVImageCore::fileChanged, this, &QVGraphicsView::postLoad);
     connect(&imageCore, &QVImageCore::updateLoadedPixmapItem, this, &QVGraphicsView::updateLoadedPixmapItem);
     connect(&imageCore, &QVImageCore::readError, this, &QVGraphicsView::error);
 
@@ -129,31 +129,29 @@ bool QVGraphicsView::event(QEvent *event)
             auto *pinchGesture = static_cast<QPinchGesture *>(pinch);
             QPinchGesture::ChangeFlags changeFlags = pinchGesture->changeFlags();
             if (changeFlags & QPinchGesture::RotationAngleChanged) {
-//                qDebug() << "Rotation angle: " << pinchGesture->rotationAngle() << " Last: " << pinchGesture->lastRotationAngle();
-                rotateImage(qFloor(pinchGesture->rotationAngle()/90)*90);
+                if (pinchGesture->totalRotationAngle() > 90)
+                {
+                    rotateImage(90);
+                    pinchGesture->setTotalRotationAngle(0);
+                }
+                else if (pinchGesture->totalRotationAngle() < -90)
+                {
+                    rotateImage(-90);
+                    pinchGesture->setTotalRotationAngle(0);
+                }
+
             }
             if (changeFlags & QPinchGesture::ScaleFactorChanged) {
-//                qDebug() << "Scale factor: " << pinchGesture->scaleFactor() << " Total: " << pinchGesture->totalScaleFactor();
-                qreal scaleAmount = (pinchGesture->scaleFactor()-1.0)/(scaleFactor-1);
-                if (qFuzzyCompare(scaleAmount, qFabs(scaleAmount)))
+                if (pinchGesture->totalScaleFactor() > 1+(scaleFactor-1)/2)
                 {
-                    for (qreal i = scaleAmount; i > 0; --i)
-                    {
-//                        qDebug() << "zoom #" << i;
-                        zoom(120, mapFromGlobal(pinchGesture->hotSpot().toPoint()));
-                    }
+                    zoom(120, mapFromGlobal(pinchGesture->hotSpot().toPoint()));
+                    pinchGesture->setTotalScaleFactor(1.0);
                 }
-                else
+                else if (pinchGesture->totalScaleFactor() < 1-(scaleFactor-1)/2)
                 {
-                    for (qreal i = scaleAmount; i < 0; ++i)
-                    {
-//                        qDebug() << "zoom #" << i;
-                        zoom(-120, mapFromGlobal(pinchGesture->hotSpot().toPoint()));
-                    }
+                    zoom(-120, mapFromGlobal(pinchGesture->hotSpot().toPoint()));
+                    pinchGesture->setTotalScaleFactor(1.0);
                 }
-            }
-            if (changeFlags & QPinchGesture::CenterPointChanged) {
-                translate(pinchGesture->lastCenterPoint().x()-pinchGesture->centerPoint().x(), pinchGesture->lastCenterPoint().y()-pinchGesture->centerPoint().y());
             }
         }
     }
@@ -390,7 +388,7 @@ void QVGraphicsView::postLoad()
     updateLoadedPixmapItem();
     qvApp->getActionManager().addFileToRecentsList(getCurrentFileDetails().fileInfo);
 
-    emit fileLoaded();
+    emit fileChanged();
 }
 
 void QVGraphicsView::updateLoadedPixmapItem()
@@ -503,6 +501,7 @@ void QVGraphicsView::originalSize(bool setVariables)
 
 void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
 {
+    imageCore.updateFolderInfo();
     if (getCurrentFileDetails().folderFileInfoList.isEmpty())
         return;
 
@@ -673,11 +672,12 @@ void QVGraphicsView::centerOn(const QGraphicsItem *item)
 
 void QVGraphicsView::error(int errorNum, const QString &errorString, const QString &fileName)
 {
-        if (!errorString.isEmpty())
-        {
-            QMessageBox::critical(this, tr("Error"), tr("Error occurred opening \"%3\":\n%2 (Error %1)").arg(QString::number(errorNum), errorString, fileName));
-            return;
-        }
+    if (!errorString.isEmpty())
+    {
+        closeImage();
+        QMessageBox::critical(this, tr("Error"), tr("Error occurred opening \"%3\":\n%2 (Error %1)").arg(QString::number(errorNum), errorString, fileName));
+        return;
+    }
 }
 
 void QVGraphicsView::settingsUpdated()
@@ -738,6 +738,11 @@ void QVGraphicsView::settingsUpdated()
         if (getCurrentFileDetails().isMovieLoaded && getLoadedMovie().state() == QMovie::Running)
             movieCenterNeedsUpdating = true;
     }
+}
+
+void QVGraphicsView::closeImage()
+{
+    imageCore.closeImage();
 }
 
 void QVGraphicsView::jumpToNextFrame()

@@ -54,6 +54,7 @@ QAction *ActionManager::cloneAction(const QString &key)
         newAction->setMenuRole(action->menuRole());
         newAction->setEnabled(action->isEnabled());
         newAction->setShortcuts(action->shortcuts());
+        newAction->setVisible(action->isVisible());
         actionCloneLibrary.insert(key, newAction);
         return newAction;
     }
@@ -155,6 +156,15 @@ void ActionManager::untrackClonedActions(const QMenuBar *menuBar)
     untrackClonedActions(getAllNestedActions(menuBar->actions()));
 }
 
+void ActionManager::hideAllInstancesOfAction(const QString &key)
+{
+    auto actions = getAllInstancesOfAction(key);
+    for (auto &action : actions)
+    {
+        action->setVisible(false);
+    }
+}
+
 QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
 {
     // Global menubar
@@ -169,6 +179,7 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     fileMenu->addAction(cloneAction("open"));
     fileMenu->addAction(cloneAction("openurl"));
     fileMenu->addMenu(buildRecentsMenu(true, menuBar));
+    fileMenu->addSeparator();
 #ifdef Q_OS_MACOS
     fileMenu->addSeparator();
     fileMenu->addAction(cloneAction("closewindow"));
@@ -190,9 +201,13 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     // Beginning of edit menu
     auto *editMenu = new QMenu(tr("&Edit"), menuBar);
 
+    editMenu->addAction(cloneAction("undo"));
+    editMenu->addSeparator();
     editMenu->addAction(cloneAction("copy"));
     editMenu->addAction(cloneAction("paste"));
     editMenu->addAction(cloneAction("rename"));
+    editMenu->addSeparator();
+    editMenu->addAction(cloneAction("delete"));
 
     menuBar->addMenu(editMenu);
     // End of edit menu
@@ -574,6 +589,10 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
         relevantWindow->openContainingFolder();
     } else if (key == "showfileinfo") {
         relevantWindow->showFileInfo();
+    } else if (key == "delete") {
+        relevantWindow->askDeleteFile();
+    } else if (key == "undo") {
+        relevantWindow->undoDelete();
     } else if (key == "copy") {
         relevantWindow->copy();
     } else if (key == "paste") {
@@ -663,6 +682,20 @@ void ActionManager::initializeActionLibrary()
     showFileInfoAction->setData({"disable"});
     actionLibrary.insert("showfileinfo", showFileInfoAction);
 
+    auto *deleteAction = new QAction(QIcon::fromTheme("edit-delete"), tr("&Move to Trash"));
+#ifdef Q_OS_WIN
+    deleteAction->setText(tr("&Delete"));
+#endif
+    deleteAction->setData({"disable"});
+    actionLibrary.insert("delete", deleteAction);
+
+    auto *undoAction = new QAction(QIcon::fromTheme("edit-undo"), tr("&Restore from Trash"));
+#ifdef Q_OS_WIN
+    undoAction->setText(tr("&Undo Delete"));
+#endif
+    undoAction->setData({"undodisable"});
+    actionLibrary.insert("undo", undoAction);
+
     auto *copyAction = new QAction(QIcon::fromTheme("edit-copy"), tr("&Copy"));
     copyAction->setData({"disable"});
     actionLibrary.insert("copy", copyAction);
@@ -711,19 +744,19 @@ void ActionManager::initializeActionLibrary()
     actionLibrary.insert("fullscreen", fullScreenAction);
 
     auto *firstFileAction = new QAction(QIcon::fromTheme("go-first"), tr("&First File"));
-    firstFileAction->setData({"disable"});
+    firstFileAction->setData({"folderdisable"});
     actionLibrary.insert("firstfile", firstFileAction);
 
     auto *previousFileAction = new QAction(QIcon::fromTheme("go-previous"), tr("Previous Fi&le"));
-    previousFileAction->setData({"disable"});
+    previousFileAction->setData({"folderdisable"});
     actionLibrary.insert("previousfile", previousFileAction);
 
     auto *nextFileAction = new QAction(QIcon::fromTheme("go-next"), tr("&Next File"));
-    nextFileAction->setData({"disable"});
+    nextFileAction->setData({"folderdisable"});
     actionLibrary.insert("nextfile", nextFileAction);
 
     auto *lastFileAction = new QAction(QIcon::fromTheme("go-last"), tr("Las&t File"));
-    lastFileAction->setData({"disable"});
+    lastFileAction->setData({"folderdisable"});
     actionLibrary.insert("lastfile", lastFileAction);
 
     auto *saveFrameAsAction = new QAction(QIcon::fromTheme("document-save-as"), tr("Save Frame &As..."));

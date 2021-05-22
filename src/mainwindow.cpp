@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "qvapplication.h"
 #include "qvcocoafunctions.h"
+#include "qvrenamedialog.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -51,7 +52,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->fullscreenLabel->hide();
 
     // Connect graphicsview signals
-    connect(graphicsView, &QVGraphicsView::fileLoaded, this, &MainWindow::fileLoaded);
+    connect(graphicsView, &QVGraphicsView::fileChanged, this, &MainWindow::fileChanged);
     connect(graphicsView, &QVGraphicsView::updatedLoadedPixmapItem, this, &MainWindow::setWindowSize);
     connect(graphicsView, &QVGraphicsView::cancelSlideshow, this, &MainWindow::cancelSlideshow);
 
@@ -84,9 +85,8 @@ MainWindow::MainWindow(QWidget *parent) :
     contextMenu->addAction(actionManager.cloneAction("opencontainingfolder"));
     contextMenu->addAction(actionManager.cloneAction("showfileinfo"));
     contextMenu->addSeparator();
-    contextMenu->addAction(actionManager.cloneAction("copy"));
-    contextMenu->addAction(actionManager.cloneAction("paste"));
     contextMenu->addAction(actionManager.cloneAction("rename"));
+    contextMenu->addAction(actionManager.cloneAction("delete"));
     contextMenu->addSeparator();
     contextMenu->addAction(actionManager.cloneAction("nextfile"));
     contextMenu->addAction(actionManager.cloneAction("previousfile"));
@@ -129,6 +129,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&qvApp->getSettingsManager(), &SettingsManager::settingsUpdated, this, &MainWindow::settingsUpdated);
     settingsUpdated();
     shortcutsUpdated();
+
+    // Connection for open with menu population futurewatcher
+    connect(&openWithFutureWatcher, &QFutureWatcher<QList<OpenWith::OpenWithItem>>::finished, this, [this](){
+        populateOpenWithMenu(openWithFutureWatcher.result());
+    });
 
 #ifdef COCOA_LOADED
     QVCocoaFunctions::setFullSizeContentView(windowHandle());
@@ -298,10 +303,10 @@ void MainWindow::openRecent(int i)
     cancelSlideshow();
 }
 
-void MainWindow::fileLoaded()
+void MainWindow::fileChanged()
 {
+    requestPopulateOpenWithMenu();
     disableActions();
-    populateOpenWithMenu();
 
     refreshProperties();
     buildWindowTitle();
@@ -329,6 +334,14 @@ void MainWindow::disableActions()
                 {
                     clone->setEnabled(getCurrentFileDetails().isMovieLoaded);
                 }
+                else if (cloneData.last() == "undodisable")
+                {
+                    clone->setEnabled(!lastDeletedFiles.isEmpty() && !lastDeletedFiles.top().pathInTrash.isEmpty());
+                }
+                else if (cloneData.last() == "folderdisable")
+                {
+                    clone->setEnabled(!getCurrentFileDetails().folderFileInfoList.isEmpty());
+                }
             }
         }
     }
@@ -336,14 +349,20 @@ void MainWindow::disableActions()
     const auto &openWithMenus = qvApp->getActionManager().getAllClonesOfMenu("openwith");
     for (const auto &menu : openWithMenus)
     {
-        menu->setEnabled(true);
+        menu->setEnabled(getCurrentFileDetails().isPixmapLoaded);
     }
 }
 
-void MainWindow::populateOpenWithMenu()
+void MainWindow::requestPopulateOpenWithMenu()
 {
-    QList<OpenWith::OpenWithItem> openWithItems = OpenWith::getOpenWithItems(getCurrentFileDetails().fileInfo.absoluteFilePath());
+    openWithFutureWatcher.setFuture(QtConcurrent::run([&]{
+        const auto &curFilePath = getCurrentFileDetails().fileInfo.absoluteFilePath();
+        return OpenWith::getOpenWithItems(curFilePath);
+    }));
+}
 
+void MainWindow::populateOpenWithMenu(const QList<OpenWith::OpenWithItem> openWithItems)
+{
     for (int i = 0; i < qvApp->getActionManager().getOpenWithMaxLength(); i++)
     {
         const auto clonedActions = qvApp->getActionManager().getAllClonesOfAction("openwith" + QString::number(i), this);
@@ -382,39 +401,34 @@ void MainWindow::refreshProperties()
 
 void MainWindow::buildWindowTitle()
 {
-    if (!getCurrentFileDetails().isPixmapLoaded)
-        return;
-
-    QString newString;
-    switch (qvApp->getSettingsManager().getInteger("titlebarmode")) {
-    case 0:
+    QString newString = "qView";
+    if (getCurrentFileDetails().fileInfo.isFile())
     {
-        newString = "qView";
-        break;
-    }
-    case 1:
-    {
-        newString = getCurrentFileDetails().fileInfo.fileName();
-        break;
-    }
-    case 2:
-    {
-        newString += QString::number(getCurrentFileDetails().loadedIndexInFolder+1);
-        newString += "/" + QString::number(getCurrentFileDetails().folderFileInfoList.count());
-        newString += " - " + getCurrentFileDetails().fileInfo.fileName();
-        break;
-    }
-    case 3:
-    {
-        newString += QString::number(getCurrentFileDetails().loadedIndexInFolder+1);
-        newString += "/" + QString::number(getCurrentFileDetails().folderFileInfoList.count());
-        newString += " - " + getCurrentFileDetails().fileInfo.fileName();
-        newString += " - "  + QString::number(getCurrentFileDetails().baseImageSize.width());
-        newString += "x" + QString::number(getCurrentFileDetails().baseImageSize.height());
-        newString += " - " + QVInfoDialog::formatBytes(getCurrentFileDetails().fileInfo.size());
-        newString += " - qView";
-        break;
-    }
+        switch (qvApp->getSettingsManager().getInteger("titlebarmode")) {
+        case 1:
+        {
+            newString = getCurrentFileDetails().fileInfo.fileName();
+            break;
+        }
+        case 2:
+        {
+            newString = QString::number(getCurrentFileDetails().loadedIndexInFolder+1);
+            newString += "/" + QString::number(getCurrentFileDetails().folderFileInfoList.count());
+            newString += " - " + getCurrentFileDetails().fileInfo.fileName();
+            break;
+        }
+        case 3:
+        {
+            newString = QString::number(getCurrentFileDetails().loadedIndexInFolder+1);
+            newString += "/" + QString::number(getCurrentFileDetails().folderFileInfoList.count());
+            newString += " - " + getCurrentFileDetails().fileInfo.fileName();
+            newString += " - "  + QString::number(getCurrentFileDetails().baseImageSize.width());
+            newString += "x" + QString::number(getCurrentFileDetails().baseImageSize.height());
+            newString += " - " + QVInfoDialog::formatBytes(getCurrentFileDetails().fileInfo.size());
+            newString += " - qView";
+            break;
+        }
+        }
     }
 
     setWindowTitle(newString);
@@ -422,7 +436,10 @@ void MainWindow::buildWindowTitle()
     // Update fullscreen label to titlebar text as well
     ui->fullscreenLabel->setText(newString);
 
-    windowHandle()->setFilePath(getCurrentFileDetails().fileInfo.absoluteFilePath());
+    if (getCurrentFileDetails().isPixmapLoaded)
+        windowHandle()->setFilePath(getCurrentFileDetails().fileInfo.absoluteFilePath());
+//    else
+//        windowHandle()->setFilePath("");
 }
 
 void MainWindow::setWindowSize()
@@ -632,6 +649,150 @@ void MainWindow::showFileInfo()
     info->raise();
 }
 
+void MainWindow::askDeleteFile()
+{    
+    if (!qvApp->getSettingsManager().getBoolean("askdelete"))
+    {
+        deleteFile();
+        return;
+    }
+
+    const QFileInfo &fileInfo = getCurrentFileDetails().fileInfo;
+    const QString fileName = getCurrentFileDetails().fileInfo.fileName();
+
+    if (!fileInfo.isWritable())
+    {
+        QMessageBox::critical(this, tr("Error"), tr("Can't delete %1:\nNo write permission or file is read-only.").arg(fileName));
+        return;
+    }
+
+    auto trashString = tr("Are you sure you want to move %1 to the Trash?").arg(fileName);
+#ifdef Q_OS_WIN
+    trashString = tr("Are you sure you want to move %1 to the Recycle Bin?").arg(fileName);
+#endif
+
+    auto *msgBox = new QMessageBox(QMessageBox::Question, tr("Delete"), trashString,
+                       QMessageBox::Yes | QMessageBox::No, this);
+    msgBox->setCheckBox(new QCheckBox(tr("Do not ask again")));
+
+    connect(msgBox, &QMessageBox::accepted, this, [msgBox, this]{
+        QSettings settings;
+        settings.beginGroup("options");
+        settings.setValue("askdelete", !msgBox->checkBox()->isChecked());
+        qvApp->getSettingsManager().loadSettings();
+        this->deleteFile();
+    });
+
+    msgBox->open();
+}
+
+void MainWindow::deleteFile()
+{
+    const QFileInfo &fileInfo = getCurrentFileDetails().fileInfo;
+    const QString filePath = fileInfo.absoluteFilePath();
+    const QString fileName = fileInfo.fileName();
+    QString trashFilePath = "";
+
+    graphicsView->closeImage();
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+
+    QFile file(filePath);
+    bool success = file.moveToTrash();
+    if (!success || QFile::exists(filePath))
+    {
+        openFile(filePath);
+        QMessageBox::critical(this, tr("Error"), tr("Can't delete %1.").arg(fileName));
+        return;
+    }
+
+    trashFilePath = file.fileName();
+#elif defined Q_OS_MACOS && COCOA_LOADED
+    QString trashedFile = QVCocoaFunctions::deleteFile(filePath);
+    trashFilePath = QUrl(trashedFile).toLocalFile(); // remove file:// protocol
+#elif defined Q_OS_UNIX && !defined Q_OS_MACOS
+    trashFilePath = deleteFileLinuxFallback(filePath, false);
+#else
+    QMessageBox::critical(this, tr("Not Supported"), tr("This program was compiled with an old version of Qt and this feature is not available.\n"
+                                                        "If you see this message, please report a bug!"));
+
+    return;
+#endif
+
+    auto afterDelete = qvApp->getSettingsManager().getInteger("afterdelete");
+    if (afterDelete > 1)
+        nextFile();
+    else if (afterDelete < 1)
+        previousFile();
+
+    lastDeletedFiles.push({trashFilePath, filePath});
+    disableActions();
+}
+
+QString MainWindow::deleteFileLinuxFallback(const QString &path, bool putBack)
+{
+    QStringList gioArgs = {"trash", path};
+    if (putBack)
+        gioArgs.insert(1, "--restore");
+
+    QProcess process;
+    process.start("gio", gioArgs);
+    process.waitForFinished();
+
+    if (process.error() != QProcess::FailedToStart && !putBack)
+    {
+        process.start("gio", {"trash", "--list"});
+        process.waitForFinished();
+
+        const auto &output = QString(process.readAllStandardOutput()).split("\n");
+        for (const auto &line : output)
+        {
+            if (line.contains(path))
+                return line.split("\t").at(0);
+        }
+    }
+
+
+    qWarning("Failed to use linux fallback delete");
+    return "";
+}
+
+void MainWindow::undoDelete()
+{
+    if (lastDeletedFiles.isEmpty())
+        return;
+
+    const DeletedPaths lastDeletedFile = lastDeletedFiles.pop();
+    if (lastDeletedFile.pathInTrash.isEmpty() || lastDeletedFile.previousPath.isEmpty())
+        return;
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)) || (defined Q_OS_MACOS && COCOA_LOADED)
+    const QFileInfo fileInfo(lastDeletedFile.pathInTrash);
+    if (!fileInfo.isWritable())
+    {
+        QMessageBox::critical(this, tr("Error"), tr("Can't undo deletion of %1:\n"
+                                                    "No write permission or file is read-only.").arg(fileInfo.fileName()));
+        return;
+    }
+
+    bool success = QFile::rename(lastDeletedFile.pathInTrash, lastDeletedFile.previousPath);
+    if (!success)
+    {
+        QMessageBox::critical(this, tr("Error"), tr("Failed undoing deletion of %1.").arg(fileInfo.fileName()));
+    }
+#elif defined Q_OS_UNIX && !defined Q_OS_MACOS
+    deleteFileLinuxFallback(lastDeletedFile.pathInTrash, true);
+#else
+    QMessageBox::critical(this, tr("Not Supported"), tr("This program was compiled with an old version of Qt and this feature is not available.\n"
+                                                        "If you see this message, please report a bug!"));
+
+    return;
+#endif
+
+    openFile(lastDeletedFile.previousPath);
+    disableActions();
+}
+
 void MainWindow::copy()
 {
     auto *mimeData = graphicsView->getMimeData();
@@ -667,35 +828,10 @@ void MainWindow::rename()
     if (!getCurrentFileDetails().isPixmapLoaded)
         return;
 
-    auto currentFileInfo = getCurrentFileDetails().fileInfo;
+    auto *renameDialog = new QVRenameDialog(this, getCurrentFileDetails().fileInfo);
+    connect(renameDialog, &QVRenameDialog::newFileToOpen, this, &MainWindow::openFile);
 
-    auto *renameDialog = new QInputDialog(this);
-    renameDialog->setWindowTitle(tr("Rename..."));
-    renameDialog->setLabelText(tr("File name:"));
-    renameDialog->setTextValue(currentFileInfo.fileName());
-    renameDialog->resize(350, renameDialog->height());
-    renameDialog->setWindowFlag(Qt::WindowContextHelpButtonHint, false);
-    connect(renameDialog, &QInputDialog::finished, this, [currentFileInfo, renameDialog, this](int result) {
-        if (result)
-        {
-            const auto newFileName = renameDialog->textValue();
-            const auto newFilePath = QDir::cleanPath(currentFileInfo.absolutePath() + QDir::separator() + newFileName);
 
-            if (currentFileInfo.absoluteFilePath() != newFilePath)
-            {
-                if (QFile::rename(currentFileInfo.absoluteFilePath(), newFilePath))
-                {
-                    openFile(newFilePath);
-                }
-                else
-                {
-                    QMessageBox::critical(this, tr("Error"), tr("Error: Could not rename file\n(Check that you have write access)"));
-                }
-            }
-        }
-
-        renameDialog->deleteLater();
-    });
     renameDialog->open();
 }
 

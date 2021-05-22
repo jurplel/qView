@@ -14,12 +14,6 @@
 
 QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
 {  
-    loadedPixmap = QPixmap();
-    imageReader.setDecideFormatFromContent(true);
-    imageReader.setAutoTransform(true);
-
-    justLoadedFromCache = false;
-
     isLoopFoldersEnabled = true;
     preloadingMode = 1;
     sortMode = 0;
@@ -27,32 +21,14 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
 
     randomSortSeed = 0;
 
-    currentFileDetails.fileInfo = QFileInfo();
-    currentFileDetails.folderFileInfoList = QFileInfoList();
-    currentFileDetails.isLoadRequested = false;
-    currentFileDetails.isPixmapLoaded = false;
-    currentFileDetails.isMovieLoaded = false;
-    currentFileDetails.loadedIndexInFolder = -1;
-    currentFileDetails.baseImageSize = QSize();
-    currentFileDetails.loadedPixmapSize = QSize();
-
-    lastFileDetails.fileInfo = QFileInfo();
-    lastFileDetails.folderFileInfoList = QFileInfoList();
-    lastFileDetails.isLoadRequested = false;
-    lastFileDetails.isPixmapLoaded = false;
-    lastFileDetails.isMovieLoaded = false;
-    lastFileDetails.loadedIndexInFolder = -1;
-    lastFileDetails.baseImageSize = QSize();
-    lastFileDetails.loadedPixmapSize = QSize();
-
     currentRotation = 0;
 
     QPixmapCache::setCacheLimit(51200);
 
     connect(&loadedMovie, &QMovie::updated, this, &QVImageCore::animatedFrameChanged);
 
-    connect(&loadFutureWatcher, &QFutureWatcher<QVImageAndFileInfo>::finished, this, [this](){
-        postRead(loadFutureWatcher.result());
+    connect(&loadFutureWatcher, &QFutureWatcher<ReadData>::finished, this, [this](){
+        loadPixmap(loadFutureWatcher.result(), false);
     });
 
     fileChangeRateTimer = new QTimer(this);
@@ -89,136 +65,162 @@ void QVImageCore::loadFile(const QString &fileName)
     if (loadFutureWatcher.isRunning() || fileChangeRateTimer->isActive())
         return;
 
-    //save old file details in event of a read error
-    lastFileDetails = currentFileDetails;
-
-    QString sanitaryString = fileName;
+    QString sanitaryFileName = fileName;
 
     //sanitize file name if necessary
     QUrl sanitaryUrl = QUrl(fileName);
     if (sanitaryUrl.isLocalFile())
-        sanitaryString = sanitaryUrl.toLocalFile();
+        sanitaryFileName = sanitaryUrl.toLocalFile();
 
-    //define info variables
-    currentFileDetails.fileInfo = QFileInfo(sanitaryString);
-    currentFileDetails.isLoadRequested = true;
+    QFileInfo fileInfo(sanitaryFileName);
+    sanitaryFileName = fileInfo.absoluteFilePath();
+
+    // Pause playing movie because it feels better that way
     setPaused(true);
-    updateFolderInfo();
 
-    imageReader.setFileName(currentFileDetails.fileInfo.absoluteFilePath());
-    currentFileDetails.baseImageSize = imageReader.size();
+    currentFileDetails.isLoadRequested = true;
 
-    auto previouslyRecordedFileSize = qvApp->getPreviouslyRecordedFileSize(currentFileDetails.fileInfo.absoluteFilePath());
-
-    auto *cachedPixmap = new QPixmap();
 
     //check if cached already before loading the long way
-    if (QPixmapCache::find(currentFileDetails.fileInfo.absoluteFilePath(), cachedPixmap) &&
+    auto previouslyRecordedFileSize = qvApp->getPreviouslyRecordedFileSize(sanitaryFileName);
+    auto *cachedPixmap = new QPixmap();
+    if (QPixmapCache::find(sanitaryFileName, cachedPixmap) &&
         !cachedPixmap->isNull() &&
-        cachedPixmap->size() == currentFileDetails.baseImageSize &&
-        previouslyRecordedFileSize == currentFileDetails.fileInfo.size())
+        previouslyRecordedFileSize == fileInfo.size())
     {
-        loadedPixmap = matchCurrentRotation(*cachedPixmap);
-        justLoadedFromCache = true;
-        postLoad();
+        QSize previouslyRecordedImageSize = qvApp->getPreviouslyRecordedImageSize(sanitaryFileName);
+        ReadData readData = {
+            matchCurrentRotation(*cachedPixmap),
+            fileInfo,
+            previouslyRecordedImageSize
+        };
+        loadPixmap(readData, true);
     }
     else
     {
-        justLoadedFromCache = false;
-        loadFutureWatcher.setFuture(QtConcurrent::run(this, &QVImageCore::readFile, currentFileDetails.fileInfo.absoluteFilePath()));
+        loadFutureWatcher.setFuture(QtConcurrent::run(this, &QVImageCore::readFile, sanitaryFileName, false));
     }
     delete cachedPixmap;
-
-    requestCaching();
 }
 
-QVImageCore::QVImageAndFileInfo QVImageCore::readFile(const QString &fileName)
+QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, bool forCache)
 {
-    QVImageAndFileInfo combinedInfo;
+    QImageReader imageReader;
+    imageReader.setDecideFormatFromContent(true);
+    imageReader.setAutoTransform(true);
 
-    QImageReader newImageReader;
-    newImageReader.setDecideFormatFromContent(true);
-    newImageReader.setAutoTransform(true);
+    imageReader.setFileName(fileName);
 
-    newImageReader.setFileName(fileName);
-
-    QImage readImage;
-    if (newImageReader.format() == "svg" || newImageReader.format() == "svgz")
+    QPixmap readPixmap;
+    if (imageReader.format() == "svg" || imageReader.format() == "svgz")
     {
         // Render vectors into a high resolution
         QIcon icon;
         icon.addFile(fileName);
-        readImage = icon.pixmap(largestDimension).toImage();
+        readPixmap = icon.pixmap(largestDimension);
         // If this fails, try reading the normal way so that a proper error message is given
-        if (readImage.isNull())
-            readImage = newImageReader.read();
+        if (readPixmap.isNull())
+            readPixmap = QPixmap::fromImageReader(&imageReader);
     }
     else
     {
-        readImage = newImageReader.read();
+        readPixmap = QPixmap::fromImageReader(&imageReader);
     }
 
-    combinedInfo.readFileInfo = QFileInfo(fileName);
+    ReadData readData = {
+        readPixmap,
+        QFileInfo(fileName),
+        imageReader.size(),
+    };
     // Only error out when not loading for cache
-    if (readImage.isNull() && fileName == currentFileDetails.fileInfo.absoluteFilePath())
+    if (readPixmap.isNull() && !forCache)
     {
-        emit readError(newImageReader.error(), newImageReader.errorString(), combinedInfo.readFileInfo.fileName());
-        currentFileDetails = lastFileDetails;
+        emit readError(imageReader.error(), imageReader.errorString(), readData.fileInfo.fileName());
     }
 
-    combinedInfo.readImage = readImage;
-    return combinedInfo;
+
+
+    return readData;
 }
 
-void QVImageCore::postRead(const QVImageAndFileInfo &readImageAndFileInfo)
+void QVImageCore::loadPixmap(const ReadData &readData, bool fromCache)
 {
-    if (readImageAndFileInfo.readImage.isNull() || justLoadedFromCache)
-        return;
+    // Do this first so we can keep folder info even when loading errored files
+    currentFileDetails.fileInfo = readData.fileInfo;
+    updateFolderInfo();
 
-    addToCache(readImageAndFileInfo);
-    loadedPixmap = QPixmap::fromImage(matchCurrentRotation(readImageAndFileInfo.readImage));
-    postLoad();
-}
-
-void QVImageCore::postLoad()
-{
+    // Reset file change rate timer
     fileChangeRateTimer->start();
 
+    if (readData.pixmap.isNull())
+        return;
+
+    loadedPixmap = matchCurrentRotation(readData.pixmap);
+
+    // Set file details
     currentFileDetails.isPixmapLoaded = true;
-    loadedMovie.stop();
-
-    //animation detection
-    loadedMovie.setFileName(currentFileDetails.fileInfo.absoluteFilePath());
-    if (imageReader.format() == "png")
-        loadedMovie.setFormat("apng");
-    if (loadedMovie.isValid() && loadedMovie.frameCount() != 1)
-    {
-        loadedMovie.start();
-        currentFileDetails.isMovieLoaded = true;
-    }
-    else
-    {
-        currentFileDetails.isMovieLoaded = false;
-    }
-
-    currentFileDetails.baseImageSize = imageReader.size();
+    currentFileDetails.baseImageSize = readData.size;
     currentFileDetails.loadedPixmapSize = loadedPixmap.size();
     if (currentFileDetails.baseImageSize == QSize(-1, -1))
     {
         qInfo() << "QImageReader::size gave an invalid size for " + currentFileDetails.fileInfo.fileName() + ", using size from loaded pixmap";
-        currentFileDetails.baseImageSize = loadedPixmap.size();
+        currentFileDetails.baseImageSize = currentFileDetails.loadedPixmapSize;
     }
 
-    emit fileLoaded();
+    // If this image isnt originally from the cache, add it to the cache
+    if (!fromCache)
+        addToCache(readData);
+
+    // Animation detection
+    loadedMovie.stop();
+    loadedMovie.setFileName(currentFileDetails.fileInfo.absoluteFilePath());
+
+    // APNG workaround
+    if (loadedMovie.format() == "png")
+        loadedMovie.setFormat("apng");
+
+    currentFileDetails.isMovieLoaded = loadedMovie.isValid() && loadedMovie.frameCount() != 1;
+
+    if (currentFileDetails.isMovieLoaded)
+        loadedMovie.start();
+
+    emit fileChanged();
+
+    requestCaching();
+}
+
+void QVImageCore::closeImage()
+{
+    loadedPixmap = QPixmap();
+    loadedMovie.stop();
+    loadedMovie.setFileName("");
+    currentFileDetails = {
+        QFileInfo(),
+        currentFileDetails.folderFileInfoList,
+        currentFileDetails.loadedIndexInFolder,
+        false,
+        false,
+        false,
+        QSize(),
+        QSize()
+    };
+
+    emit fileChanged();
 }
 
 void QVImageCore::updateFolderInfo()
 {
+    if (!currentFileDetails.fileInfo.isFile())
+        return;
+
+    QPair<QString, uint> dirInfo = {currentFileDetails.fileInfo.absoluteDir().path(),
+                                    currentFileDetails.fileInfo.dir().count()};
     // If the current folder changed since the last image, assign a new seed for random sorting
-    if (currentFileDetails.fileInfo.dir() != lastFileDetails.fileInfo.dir())
+    if (lastDirInfo != dirInfo)
     {
         randomSortSeed = std::chrono::system_clock::now().time_since_epoch().count();
     }
+    lastDirInfo = dirInfo;
 
     QDir::SortFlags sortFlags = QDir::NoSort;
 
@@ -318,29 +320,31 @@ void QVImageCore::requestCachingFile(const QString &filePath)
         return;
 
     //check if too big for caching
+    //This size check is probably inefficient and could be replaced
     QImageReader newImageReader(filePath);
     QTransform transform;
     transform.rotate(currentRotation);
     if (((newImageReader.size().width()*newImageReader.size().height()*32)/8)/1000 > QPixmapCache::cacheLimit()/2)
         return;
 
-    auto *cacheFutureWatcher = new QFutureWatcher<QVImageAndFileInfo>();
-    connect(cacheFutureWatcher, &QFutureWatcher<QVImageAndFileInfo>::finished, this, [cacheFutureWatcher, this](){
+    auto *cacheFutureWatcher = new QFutureWatcher<ReadData>();
+    connect(cacheFutureWatcher, &QFutureWatcher<ReadData>::finished, this, [cacheFutureWatcher, this](){
         addToCache(cacheFutureWatcher->result());
         cacheFutureWatcher->deleteLater();
     });
-    cacheFutureWatcher->setFuture(QtConcurrent::run(this, &QVImageCore::readFile, filePath));
+    cacheFutureWatcher->setFuture(QtConcurrent::run(this, &QVImageCore::readFile, filePath, true));
 }
 
-void QVImageCore::addToCache(const QVImageAndFileInfo &readImageAndFileInfo)
+void QVImageCore::addToCache(const ReadData &readData)
 {
-    if (readImageAndFileInfo.readImage.isNull())
+    if (readData.pixmap.isNull())
         return;
 
-    QPixmapCache::insert(readImageAndFileInfo.readFileInfo.absoluteFilePath(), QPixmap::fromImage(readImageAndFileInfo.readImage));
+    QPixmapCache::insert(readData.fileInfo.absoluteFilePath(), readData.pixmap);
 
-    auto *size = new qint64(readImageAndFileInfo.readFileInfo.size());
-    qvApp->setPreviouslyRecordedFileSize(readImageAndFileInfo.readFileInfo.absoluteFilePath(), size);
+    auto *size = new qint64(readData.fileInfo.size());
+    qvApp->setPreviouslyRecordedFileSize(readData.fileInfo.absoluteFilePath(), size);
+    qvApp->setPreviouslyRecordedImageSize(readData.fileInfo.absoluteFilePath(), new QSize(readData.size));
 }
 
 void QVImageCore::jumpToNextFrame()

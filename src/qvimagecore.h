@@ -23,34 +23,35 @@ public:
     };
     Q_ENUM(ScaleMode)
 
-    struct QVFileDetails
+    struct FileDetails
     {
         QFileInfo fileInfo;
         QFileInfoList folderFileInfoList;
-        bool isLoadRequested;
-        bool isPixmapLoaded;
-        bool isMovieLoaded;
-        int loadedIndexInFolder;
+        int loadedIndexInFolder = -1;
+        bool isLoadRequested = false;
+        bool isPixmapLoaded = false;
+        bool isMovieLoaded = false;
         QSize baseImageSize;
         QSize loadedPixmapSize;
     };
 
-    struct QVImageAndFileInfo
+    struct ReadData
     {
-        QImage readImage;
-        QFileInfo readFileInfo;
+        QPixmap pixmap;
+        QFileInfo fileInfo;
+        QSize size;
     };
 
     explicit QVImageCore(QObject *parent = nullptr);
 
     void loadFile(const QString &fileName);
-    QVImageAndFileInfo readFile(const QString &fileName);
-    void postRead(const QVImageAndFileInfo &readImageAndFileInfo);
-    void postLoad();
+    ReadData readFile(const QString &fileName, bool forCache);
+    void loadPixmap(const ReadData &readData, bool fromCache);
+    void closeImage();
     void updateFolderInfo();
     void requestCaching();
     void requestCachingFile(const QString &filePath);
-    void addToCache(const QVImageAndFileInfo &readImageAndFileInfo);
+    void addToCache(const ReadData &readImageAndFileInfo);
 
     void settingsUpdated();
 
@@ -68,7 +69,7 @@ public:
     //returned const reference is read-only
     const QPixmap& getLoadedPixmap() const {return loadedPixmap; }
     const QMovie& getLoadedMovie() const {return loadedMovie; }
-    const QVFileDetails& getCurrentFileDetails() const {return currentFileDetails; }
+    const FileDetails& getCurrentFileDetails() const {return currentFileDetails; }
     int getCurrentRotation() const {return currentRotation; }
 
 signals:
@@ -76,28 +77,25 @@ signals:
 
     void updateLoadedPixmapItem();
 
-    void fileLoaded();
+    void fileChanged();
 
     void readError(int errorNum, const QString &errorString, const QString &fileName);
 
 private:
     QPixmap loadedPixmap;
     QMovie loadedMovie;
-    QImageReader imageReader;
 
-    QVFileDetails currentFileDetails;
-    QVFileDetails lastFileDetails;
+    FileDetails currentFileDetails;
     int currentRotation;
 
-    QFutureWatcher<QVImageAndFileInfo> loadFutureWatcher;
-
-    bool justLoadedFromCache;
+    QFutureWatcher<ReadData> loadFutureWatcher;
 
     bool isLoopFoldersEnabled;
     int preloadingMode;
     int sortMode;
     bool sortDescending;
 
+    QPair<QString, uint> lastDirInfo;
     unsigned randomSortSeed;
 
     QStringList lastFilesPreloaded;

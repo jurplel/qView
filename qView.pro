@@ -1,3 +1,5 @@
+# this file is windows-1251 encoded!
+
 TARGET = qView
 VERSION = 4.0
 
@@ -17,8 +19,8 @@ RCC_DIR = build
 
 CONFIG -= debug_and_release debug_and_release_target
 
-# enable c++11
-CONFIG += c++11
+# enable c++14
+CONFIG += c++14
 
 # Print if this is a debug or release build
 CONFIG(debug, debug|release) {

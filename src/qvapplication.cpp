@@ -83,6 +83,8 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     // Adwaita Qt styles should hide icons for a more consistent look
     if (style()->objectName() == "adwaita-dark" || style()->objectName() == "adwaita")
         setAttribute(Qt::AA_DontShowIconsInMenus);
+
+    hideIncompatibleActions();
 }
 
 QVApplication::~QVApplication() {
@@ -253,6 +255,22 @@ void QVApplication::setPreviouslyRecordedFileSize(const QString &fileName, long 
     previouslyRecordedFileSizes.insert(fileName, fileSize);
 }
 
+QSize QVApplication::getPreviouslyRecordedImageSize(const QString &fileName)
+{
+    auto previouslyRecordedImageSizePtr = previouslyRecordedImageSizes.object(fileName);
+    QSize previouslyRecordedImageSize = QSize();
+
+    if (previouslyRecordedImageSizePtr)
+        previouslyRecordedImageSize = *previouslyRecordedImageSizePtr;
+
+    return previouslyRecordedImageSize;
+}
+
+void QVApplication::setPreviouslyRecordedImageSize(const QString &fileName, QSize *imageSize)
+{
+    previouslyRecordedImageSizes.insert(fileName, imageSize);
+}
+
 void QVApplication::addToLastActiveWindows(MainWindow *window)
 {
     if (!window)
@@ -328,4 +346,35 @@ void QVApplication::openAboutDialog(QWidget *parent)
 
     aboutDialog = new QVAboutDialog(updateChecker.getLatestVersionNum(), parent);
     aboutDialog->show();
+}
+
+void QVApplication::hideIncompatibleActions()
+{    
+    // Deletion actions
+#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
+    auto hideDeleteActions = [this]{
+        getActionManager().hideAllInstancesOfAction("delete");
+        getActionManager().hideAllInstancesOfAction("undo");
+
+        getShortcutManager().setShortcutsHidden({"delete", "undo"});
+    };
+#if defined Q_OS_UNIX && !defined Q_OS_MACOS
+    QProcess *testGio = new QProcess(this);
+    testGio->start("gio", QStringList());
+    connect(testGio, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), [testGio, this](){
+        if (testGio->error() == QProcess::FailedToStart)
+        {
+            qInfo() << "No backup gio trash backend found";
+            hideDeleteActions();
+        }
+        else
+        {
+            qInfo() << "Using backup gio trash backend";
+        }
+    });
+#elif defined Q_OS_WIN || (defined Q_OS_MACOS && !COCOA_LOADED)
+    qInfo() << "Qt version too old for trash feature";
+    hideDeleteActions();
+#endif
+#endif
 }

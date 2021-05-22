@@ -170,6 +170,8 @@ void SettingsManager::initializeSettingsLibrary()
     settingsLibrary.insert("loopfoldersenabled", {true, {}});
     settingsLibrary.insert("slideshowreversed", {false, {}});
     settingsLibrary.insert("slideshowtimer", {5, {}});
+    settingsLibrary.insert("afterdelete", {2, {}});
+    settingsLibrary.insert("askdelete", {true, {}});
     settingsLibrary.insert("saverecents", {true, {}});
     settingsLibrary.insert("updatenotifications", {false, {}});
 }

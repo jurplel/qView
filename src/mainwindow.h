@@ -9,6 +9,7 @@
 #include <QMainWindow>
 #include <QShortcut>
 #include <QNetworkAccessManager>
+#include <QStack>
 
 namespace Ui {
 class MainWindow;
@@ -19,8 +20,18 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    struct DeletedPaths
+    {
+        QString pathInTrash;
+        QString previousPath;
+    };
+
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override;
+
+    void requestPopulateOpenWithMenu();
+
+    void populateOpenWithMenu(const QList<OpenWith::OpenWithItem> openWithItems);
 
     void refreshProperties();
 
@@ -45,6 +56,14 @@ public:
     void openWith(const OpenWith::OpenWithItem &exec);
 
     void showFileInfo();
+
+    void askDeleteFile();
+
+    void deleteFile();
+
+    QString deleteFileLinuxFallback(const QString &path, bool putBack);
+
+    void undoDelete();
 
     void copy();
 
@@ -90,7 +109,7 @@ public:
 
     void toggleFullScreen();
 
-    const QVImageCore::QVFileDetails& getCurrentFileDetails() const { return graphicsView->getCurrentFileDetails(); }
+    const QVImageCore::FileDetails& getCurrentFileDetails() const { return graphicsView->getCurrentFileDetails(); }
 
 public slots:
     void openFile(const QString &fileName);
@@ -101,11 +120,9 @@ public slots:
 
     void cancelSlideshow();
 
-    void fileLoaded();
+    void fileChanged();
 
     void disableActions();
-
-    void populateOpenWithMenu();
 
 protected:
     bool event(QEvent *event) override;
@@ -144,6 +161,10 @@ private:
     Qt::WindowStates storedWindowState;
 
     QNetworkAccessManager networkAccessManager;
+
+    QStack<DeletedPaths> lastDeletedFiles;
+
+    QFutureWatcher<QList<OpenWith::OpenWithItem>> openWithFutureWatcher;
 };
 
 #endif // MAINWINDOW_H

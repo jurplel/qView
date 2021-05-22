@@ -6,6 +6,7 @@ SOURCES += \
     $$PWD/qvoptionsdialog.cpp \
     $$PWD/qvapplication.cpp \
     $$PWD/qvaboutdialog.cpp \
+    $$PWD/qvrenamedialog.cpp \
     $$PWD/qvwelcomedialog.cpp \
     $$PWD/qvinfodialog.cpp \
     $$PWD/qvimagecore.cpp \
@@ -25,6 +26,7 @@ HEADERS += \
     $$PWD/qvoptionsdialog.h \
     $$PWD/qvapplication.h \
     $$PWD/qvaboutdialog.h \
+    $$PWD/qvrenamedialog.h \
     $$PWD/qvwelcomedialog.h \
     $$PWD/qvinfodialog.h \
     $$PWD/qvimagecore.h \

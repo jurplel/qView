@@ -8,6 +8,7 @@ ShortcutManager::ShortcutManager(QObject *parent) : QObject(parent)
 {
     initializeShortcutsList();
     updateShortcuts();
+    hideShortcuts();
 }
 
 void ShortcutManager::updateShortcuts()
@@ -34,6 +35,8 @@ void ShortcutManager::updateShortcuts()
         }
     }
 
+    hideShortcuts();
+
     emit shortcutsUpdated();
 }
 
@@ -49,9 +52,22 @@ void ShortcutManager::initializeShortcutsList()
     shortcutsList.last().readableName  = tr("Show in Finder");
 #endif
     shortcutsList.append({tr("Show File Info"), "showfileinfo", QStringList(QKeySequence(Qt::Key_I).toString()), {}});
+    shortcutsList.append({tr("Restore from Trash"), "undo", keyBindingsToStringList(QKeySequence::Undo), {}});
+#ifdef Q_OS_WIN
+    shortcutsList.last().readableName = tr("Undo Delete");
+#endif
     shortcutsList.append({tr("Copy"), "copy", keyBindingsToStringList(QKeySequence::Copy), {}});
     shortcutsList.append({tr("Paste"), "paste", keyBindingsToStringList(QKeySequence::Paste), {}});
     shortcutsList.append({tr("Rename"), "rename", QStringList({QKeySequence(Qt::Key_F2).toString(), QKeySequence(Qt::CTRL + Qt::Key_R).toString()}), {}});
+    // cmd+enter for renaming, mac-style
+    shortcutsList.last().defaultShortcuts.append(QKeySequence(Qt::CTRL + Qt::Key_Return).toString());
+
+    shortcutsList.append({tr("Move to Trash"), "delete", keyBindingsToStringList(QKeySequence::Delete), {}});
+    // cmd+backspace for renaming, mac-style
+    shortcutsList.last().defaultShortcuts.append(QKeySequence(Qt::CTRL + Qt::Key_Backspace).toString());
+#ifdef Q_OS_WIN
+    shortcutsList.last().readableName = tr("Delete");
+#endif
     shortcutsList.append({tr("First File"), "firstfile", QStringList(QKeySequence(Qt::Key_Home).toString()), {}});
     shortcutsList.append({tr("Previous File"), "previousfile", QStringList(QKeySequence(Qt::Key_Left).toString()), {}});
     shortcutsList.append({tr("Next File"), "nextfile", QStringList(QKeySequence(Qt::Key_Right).toString()), {}});
@@ -104,4 +120,28 @@ void ShortcutManager::initializeShortcutsList()
 #ifdef Q_OS_WIN
     shortcutsList.last().readableName = tr("Exit");
 #endif
+}
+
+void ShortcutManager::hideShortcuts()
+{
+    QMutableListIterator<SShortcut> i(shortcutsList);
+    while (i.hasNext())
+    {
+        if (hiddenShortcuts.contains(i.next().name))
+        {
+            i.remove();
+        }
+    }
+}
+
+void ShortcutManager::setShortcutHidden(const QString &shortcut)
+{
+    hiddenShortcuts.append(shortcut);
+    hideShortcuts();
+}
+
+void ShortcutManager::setShortcutsHidden(const QStringList &shortcuts)
+{
+    hiddenShortcuts.append(shortcuts);
+    hideShortcuts();
 }

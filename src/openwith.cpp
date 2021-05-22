@@ -16,7 +16,11 @@
 
 const QList<OpenWith::OpenWithItem> OpenWith::getOpenWithItems(const QString &filePath)
 {
+
     QList<OpenWithItem> listOfOpenWithItems;
+    if (!QFileInfo::exists(filePath))
+        return listOfOpenWithItems;
+
 
 #ifdef Q_OS_MACOS
     listOfOpenWithItems = QVCocoaFunctions::getOpenWithItems(filePath);
