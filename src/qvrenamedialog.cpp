@@ -32,6 +32,8 @@ void QVRenameDialog::onFinished(int result)
         const auto newFileName = textValue();
         const auto newFilePath = QDir::cleanPath(fileInfo.absolutePath() + QDir::separator() + newFileName);
 
+        emit readyToRenameFile();
+
         if (fileInfo.absoluteFilePath() != newFilePath)
         {
             if (QFile::rename(fileInfo.absoluteFilePath(), newFilePath))

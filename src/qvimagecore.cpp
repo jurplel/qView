@@ -183,6 +183,8 @@ void QVImageCore::loadPixmap(const ReadData &readData, bool fromCache)
 
     if (currentFileDetails.isMovieLoaded)
         loadedMovie.start();
+    else if (auto device = loadedMovie.device())
+        device->close();
 
     emit fileChanged();
 

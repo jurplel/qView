@@ -14,6 +14,7 @@ public:
 
 signals:
     void newFileToOpen(const QString &filePath);
+    void readyToRenameFile();
 
 protected:
     void showEvent(QShowEvent *event) override;
