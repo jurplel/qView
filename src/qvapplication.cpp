@@ -361,7 +361,7 @@ void QVApplication::hideIncompatibleActions()
 #if defined Q_OS_UNIX && !defined Q_OS_MACOS
     QProcess *testGio = new QProcess(this);
     testGio->start("gio", QStringList());
-    connect(testGio, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), [testGio, this](){
+    connect(testGio, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), [hideDeleteActions, testGio, this](){
         if (testGio->error() == QProcess::FailedToStart)
         {
             qInfo() << "No backup gio trash backend found";
