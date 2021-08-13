@@ -30,6 +30,13 @@ ActionManager::ActionManager(QObject *parent) : QObject(parent)
     connect(&qvApp->getSettingsManager(), &SettingsManager::settingsUpdated, this, &ActionManager::settingsUpdated);
 }
 
+ActionManager::~ActionManager()
+{
+    qDeleteAll(actionLibrary);
+    qDeleteAll(actionCloneLibrary.values());
+    qDeleteAll(menuCloneLibrary.values());
+}
+
 void ActionManager::settingsUpdated()
 {
     isSaveRecentsEnabled = qvApp->getSettingsManager().getBoolean("saverecents");
@@ -137,11 +144,13 @@ void ActionManager::untrackClonedActions(const QList<QAction*> &actions)
         QString key = action->data().toString();
         if (auto menu = action->menu())
         {
-            menuCloneLibrary.remove(key, menu);
+            if (menuCloneLibrary.remove(key, menu))
+                delete menu;
         }
         else
         {
-            actionCloneLibrary.remove(key, action);
+            if (actionCloneLibrary.remove(key, action))
+                delete action;
         }
     }
 }

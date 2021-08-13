@@ -89,6 +89,7 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
 
 QVApplication::~QVApplication() {
     dockMenu->deleteLater();
+    menuBar->deleteLater();
 }
 
 bool QVApplication::event(QEvent *event)
