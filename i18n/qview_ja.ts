@@ -6,7 +6,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="24"/>
         <source>Window</source>
-        <translation type="unfinished"></translation>
+        <translation>ウィンドウ</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="137"/>
@@ -365,7 +365,7 @@
     <message>
         <location filename="../src/main.cpp" line="17"/>
         <source>file</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイル</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="17"/>
