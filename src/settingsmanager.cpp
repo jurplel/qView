@@ -17,14 +17,17 @@ SettingsManager::SettingsManager(QObject *parent) : QObject(parent)
 
 QString SettingsManager::getSystemLanguage() const
 {
-    const auto entries = QDir(":/i18n/").entryList();
+    auto entries = QDir(":/i18n/").entryList();
+    entries.prepend("qview_en.ts");
+    const auto centries = entries;
+
     const auto languages = QLocale::system().uiLanguages();
     for (auto language : languages)
     {
         language.replace('-', '_');
-        const auto lang_countryless = language.left(2);
+        const auto countryless = language.left(2);
 
-        for (auto entry : entries)
+        for (auto entry : centries)
         {
             entry.remove(0, 6);
             entry.remove(entry.length()-3, 3);
@@ -32,8 +35,8 @@ QString SettingsManager::getSystemLanguage() const
             if (entry == language)
                 return language;
 
-            if (entry == lang_countryless)
-                return lang_countryless;
+            if (entry == countryless)
+                return countryless;
         }
     }
     return "en";
