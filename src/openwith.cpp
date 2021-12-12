@@ -116,9 +116,8 @@ QList<OpenWith::OpenWithItem> OpenWith::getOpenWithItemsFromDesktopFiles(const Q
                 else if (line.startsWith("Exec=", Qt::CaseInsensitive) && openWithItem.exec.isEmpty())
                 {
                     line.remove("Exec=", Qt::CaseInsensitive);
-                    QRegExp regExp;
-                    regExp.setPatternSyntax(QRegExp::Wildcard);
-                    regExp.setPattern("%?");
+                    QRegularExpression regExp;
+                    regExp.setPattern("%.*");
                     line.remove(regExp);
                     openWithItem.exec = line;
                 }
