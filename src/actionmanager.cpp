@@ -547,12 +547,6 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
         qvApp->newWindow();
     } else if (key == "open") {
         qvApp->pickFile(relevantWindow);
-    } else if (key == "quit") {
-        if (relevantWindow) // if a window was passed
-            relevantWindow->close(); // close it so geometry is saved
-        QCoreApplication::quit();
-    } else if (key == "newwindow") {
-        qvApp->newWindow();
     } else if (key == "open") {
         qvApp->pickFile(relevantWindow);
     } else if (key == "closewindow") {
