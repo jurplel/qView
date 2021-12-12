@@ -29,6 +29,10 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
             continue;
 
         filterList << "*." + fileExtString;
+
+        // If we support jpg, we actually support the jfif, jfi, and jpe file extensions too almost certainly.
+        if (fileExtString == "jpg")
+            filterList << "*.jpe" << "*.jfi" << "*.jfif";
     }
 
     auto filterString = tr("Supported Images") + " (";
