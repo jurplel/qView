@@ -22,7 +22,7 @@ const QList<OpenWith::OpenWithItem> OpenWith::getOpenWithItems(const QString &fi
         return listOfOpenWithItems;
 
 
-#ifdef Q_OS_MACOS
+#if defined Q_OS_MACOS && defined COCOA_LOADED
     listOfOpenWithItems = QVCocoaFunctions::getOpenWithItems(filePath);
 #elif defined Q_OS_WIN
 #ifdef WIN32_LOADED
