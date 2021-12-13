@@ -106,7 +106,11 @@ void QVGraphicsView::dragLeaveEvent(QDragLeaveEvent *event)
     event->accept();
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 void QVGraphicsView::enterEvent(QEvent *event)
+#else
+void QVGraphicsView::enterEvent(QEnterEvent *event)
+#endif
 {
     QGraphicsView::enterEvent(event);
     viewport()->setCursor(Qt::ArrowCursor);

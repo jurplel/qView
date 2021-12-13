@@ -43,7 +43,7 @@ void ShortcutManager::updateShortcuts()
 void ShortcutManager::initializeShortcutsList()
 {
     shortcutsList.append({tr("Open"), "open", keyBindingsToStringList(QKeySequence::Open), {}});
-    shortcutsList.append({tr("Open URL"), "openurl", QStringList(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_O).toString()), {}});
+    shortcutsList.append({tr("Open URL"), "openurl", QStringList(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_O).toString()), {}});
     shortcutsList.append({tr("Open Containing Folder"), "opencontainingfolder", {}, {}});
     //Sets open containing folder action name to platform-appropriate alternative
 #ifdef Q_OS_WIN
@@ -58,13 +58,13 @@ void ShortcutManager::initializeShortcutsList()
 #endif
     shortcutsList.append({tr("Copy"), "copy", keyBindingsToStringList(QKeySequence::Copy), {}});
     shortcutsList.append({tr("Paste"), "paste", keyBindingsToStringList(QKeySequence::Paste), {}});
-    shortcutsList.append({tr("Rename"), "rename", QStringList({QKeySequence(Qt::Key_F2).toString(), QKeySequence(Qt::CTRL + Qt::Key_R).toString()}), {}});
+    shortcutsList.append({tr("Rename"), "rename", QStringList({QKeySequence(Qt::Key_F2).toString(), QKeySequence(Qt::CTRL | Qt::Key_R).toString()}), {}});
     // cmd+enter for renaming, mac-style
-    shortcutsList.last().defaultShortcuts.prepend(QKeySequence(Qt::CTRL + Qt::Key_Return).toString());
+    shortcutsList.last().defaultShortcuts.prepend(QKeySequence(Qt::CTRL | Qt::Key_Return).toString());
 
     shortcutsList.append({tr("Move to Trash"), "delete", keyBindingsToStringList(QKeySequence::Delete), {}});
     // cmd+backspace for deleting, mac-style
-    shortcutsList.last().defaultShortcuts.prepend(QKeySequence(Qt::CTRL + Qt::Key_Backspace).toString());
+    shortcutsList.last().defaultShortcuts.prepend(QKeySequence(Qt::CTRL | Qt::Key_Backspace).toString());
 #ifdef Q_OS_WIN
     shortcutsList.last().readableName = tr("Delete");
 #endif
@@ -74,23 +74,23 @@ void ShortcutManager::initializeShortcutsList()
     shortcutsList.append({tr("Last File"), "lastfile", QStringList(QKeySequence(Qt::Key_End).toString()), {}});
     shortcutsList.append({tr("Zoom In"), "zoomin", keyBindingsToStringList(QKeySequence::ZoomIn), {}});
     // Allow zooming with Ctrl + plus like a regular person (without holding shift)
-    if (!shortcutsList.last().defaultShortcuts.contains(QKeySequence(Qt::CTRL + Qt::Key_Equal).toString()))
-        shortcutsList.last().defaultShortcuts << QKeySequence(Qt::CTRL + Qt::Key_Equal).toString();
+    if (!shortcutsList.last().defaultShortcuts.contains(QKeySequence(Qt::CTRL | Qt::Key_Equal).toString()))
+        shortcutsList.last().defaultShortcuts << QKeySequence(Qt::CTRL | Qt::Key_Equal).toString();
 
     shortcutsList.append({tr("Zoom Out"), "zoomout", keyBindingsToStringList(QKeySequence::ZoomOut), {}});
-    shortcutsList.append({tr("Reset Zoom"), "resetzoom", QStringList(QKeySequence(Qt::CTRL + Qt::Key_0).toString()), {}});
+    shortcutsList.append({tr("Reset Zoom"), "resetzoom", QStringList(QKeySequence(Qt::CTRL | Qt::Key_0).toString()), {}});
     shortcutsList.append({tr("Original Size"), "originalsize", QStringList(QKeySequence(Qt::Key_O).toString()), {}});
     shortcutsList.append({tr("Rotate Right"), "rotateright", QStringList(QKeySequence(Qt::Key_Up).toString()), {}});
     shortcutsList.append({tr("Rotate Left"), "rotateleft", QStringList(QKeySequence(Qt::Key_Down).toString()), {}});
     shortcutsList.append({tr("Mirror"), "mirror", QStringList(QKeySequence(Qt::Key_F).toString()), {}});
-    shortcutsList.append({tr("Flip"), "flip", QStringList(QKeySequence(Qt::CTRL + Qt::Key_F).toString()), {}});
+    shortcutsList.append({tr("Flip"), "flip", QStringList(QKeySequence(Qt::CTRL | Qt::Key_F).toString()), {}});
     shortcutsList.append({tr("Full Screen"), "fullscreen", keyBindingsToStringList(QKeySequence::FullScreen), {}});
     //Fixes alt+enter only working with numpad enter when using qt's standard keybinds
 #ifdef Q_OS_WIN
-    shortcutsList.last().defaultShortcuts << QKeySequence(Qt::ALT + Qt::Key_Return).toString();
+    shortcutsList.last().defaultShortcuts << QKeySequence(Qt::ALT | Qt::Key_Return).toString();
 #elif defined Q_OS_UNIX & !defined Q_OS_MACOS
     // F11 is for some reason not there by default in GNOME
-    if (shortcutsList.last().defaultShortcuts.contains(QKeySequence(Qt::CTRL + Qt::Key_F11).toString()) &&
+    if (shortcutsList.last().defaultShortcuts.contains(QKeySequence(Qt::CTRL | Qt::Key_F11).toString()) &&
         !shortcutsList.last().defaultShortcuts.contains(QKeySequence(Qt::Key_F11).toString()))
     {
         shortcutsList.last().defaultShortcuts << QKeySequence(Qt::Key_F11).toString();
@@ -110,12 +110,12 @@ void ShortcutManager::initializeShortcutsList()
     // mac exclusive shortcuts
 #ifdef Q_OS_MACOS
     shortcutsList.append({tr("New Window"), "newwindow", keyBindingsToStringList(QKeySequence::New), {}});
-    shortcutsList.append({tr("Close Window"), "closewindow", QStringList(QKeySequence(Qt::CTRL + Qt::Key_W).toString()), {}});
-    shortcutsList.append({tr("Close All"), "closeallwindows", QStringList(QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_W).toString()), {}});
+    shortcutsList.append({tr("Close Window"), "closewindow", QStringList(QKeySequence(Qt::CTRL | Qt::Key_W).toString()), {}});
+    shortcutsList.append({tr("Close All"), "closeallwindows", QStringList(QKeySequence(Qt::CTRL | Qt::ALT | Qt::Key_W).toString()), {}});
 #endif
     shortcutsList.append({tr("Quit"), "quit", keyBindingsToStringList(QKeySequence::Quit), {}});
 #ifndef Q_OS_MACOS
-    shortcutsList.last().defaultShortcuts << QKeySequence(Qt::CTRL + Qt::Key_W).toString();
+    shortcutsList.last().defaultShortcuts << QKeySequence(Qt::CTRL | Qt::Key_W).toString();
 #endif
 #ifdef Q_OS_WIN
     shortcutsList.last().readableName = tr("Exit");
