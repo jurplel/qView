@@ -438,8 +438,8 @@ void MainWindow::buildWindowTitle()
 
     if (getCurrentFileDetails().isPixmapLoaded)
         windowHandle()->setFilePath(getCurrentFileDetails().fileInfo.absoluteFilePath());
-//    else
-//        windowHandle()->setFilePath("");
+    else
+        windowHandle()->setFilePath("");
 }
 
 void MainWindow::setWindowSize()
