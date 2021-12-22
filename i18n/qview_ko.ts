@@ -393,8 +393,8 @@
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="62"/>
-        <source>Built with Qt %1 (%2)&lt;br&gt;Source code available under GPLv3 on &lt;a style=&quot;color: #03A9F4; text-decoration:none;&quot; href=&quot;https://github.com/jurplel/qView&quot;&gt;Github&lt;/a&gt;&lt;br&gt;Icon glyph created by Guilhem from the Noun Project&lt;br&gt;Copyright © %3 jurplel and qView contributors</source>
-        <translation>Qt %1 (%2)로 빌드됨&lt;br&gt;소스 코드는 &lt;a style=&quot;color: #03A9F4; text-decoration:none;&quot; href=&quot;https://github.com/jurplel/qView&quot;&gt;깃허브(Github)&lt;/a&gt;에서 GPLv3 라이선스 하에 사용 가능&lt;br&gt;나운 프로젝트(Noun Project)의 기엠(Guilhem)이 만든 아이콘 글리프를 사용함&lt;br&gt;© %3 jurplel과 qView 기여자들</translation>
+        <source>Built with Qt %1 (%2)&lt;br&gt;Source code available under GPLv3 on &lt;a style=&quot;color: #03A9F4; text-decoration:none;&quot; href=&quot;https://github.com/jurplel/qView&quot;&gt;GitHub&lt;/a&gt;&lt;br&gt;Icon glyph created by Guilhem from the Noun Project&lt;br&gt;Copyright © %3 jurplel and qView contributors</source>
+        <translation>Qt %1 (%2)로 빌드됨&lt;br&gt;소스 코드는 &lt;a style=&quot;color: #03A9F4; text-decoration:none;&quot; href=&quot;https://github.com/jurplel/qView&quot;&gt;깃허브(GitHub)&lt;/a&gt;에서 GPLv3 라이선스 하에 사용 가능&lt;br&gt;나운 프로젝트(Noun Project)의 기엠(Guilhem)이 만든 아이콘 글리프를 사용함&lt;br&gt;© %3 jurplel과 qView 기여자들</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="90"/>

@@ -60,7 +60,7 @@ QVAboutDialog::QVAboutDialog(double givenLatestVersionNum, QWidget *parent) :
     QFont font4 = QFont("Lato", 8 + modifier);
     font4.setStyleName("Regular");
     const QString labelText2 = tr("Built with Qt %1 (%2)<br>"
-                                  R"(Source code available under GPLv3 on <a style="color: #03A9F4; text-decoration:none;" href="https://github.com/jurplel/qView">Github</a><br>)"
+                                  R"(Source code available under GPLv3 on <a style="color: #03A9F4; text-decoration:none;" href="https://github.com/jurplel/qView">GitHub</a><br>)"
                                   "Icon glyph created by Guilhem from the Noun Project<br>"
                                   "Copyright © %3 jurplel and qView contributors")
                                   .arg(QT_VERSION_STR, QSysInfo::buildCpuArchitecture(), "2018-2020");

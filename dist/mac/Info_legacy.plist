@@ -35,6 +35,8 @@
 				<string>jp2</string>
 				<string>jpeg</string>
 				<string>jpg</string>
+				<string>jfif</string>
+				<string>jfi</string>
 				<string>mng</string>
 				<string>pbm</string>
 				<string>pgm</string>

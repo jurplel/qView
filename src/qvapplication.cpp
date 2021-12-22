@@ -29,6 +29,10 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
             continue;
 
         filterList << "*." + fileExtString;
+
+        // If we support jpg, we actually support the jfif, jfi, and jpe file extensions too almost certainly.
+        if (fileExtString == "jpg")
+            filterList << "*.jpe" << "*.jfi" << "*.jfif";
     }
 
     auto filterString = tr("Supported Images") + " (";
@@ -89,6 +93,7 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
 
 QVApplication::~QVApplication() {
     dockMenu->deleteLater();
+    menuBar->deleteLater();
 }
 
 bool QVApplication::event(QEvent *event)
@@ -361,7 +366,7 @@ void QVApplication::hideIncompatibleActions()
 #if defined Q_OS_UNIX && !defined Q_OS_MACOS
     QProcess *testGio = new QProcess(this);
     testGio->start("gio", QStringList());
-    connect(testGio, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), [testGio, this](){
+    connect(testGio, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), [hideDeleteActions, testGio, this](){
         if (testGio->error() == QProcess::FailedToStart)
         {
             qInfo() << "No backup gio trash backend found";

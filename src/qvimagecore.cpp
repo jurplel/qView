@@ -98,7 +98,11 @@ void QVImageCore::loadFile(const QString &fileName)
     }
     else
     {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         loadFutureWatcher.setFuture(QtConcurrent::run(this, &QVImageCore::readFile, sanitaryFileName, false));
+#else
+        loadFutureWatcher.setFuture(QtConcurrent::run(&QVImageCore::readFile, this, sanitaryFileName, false));
+#endif
     }
     delete cachedPixmap;
 }
@@ -183,6 +187,8 @@ void QVImageCore::loadPixmap(const ReadData &readData, bool fromCache)
 
     if (currentFileDetails.isMovieLoaded)
         loadedMovie.start();
+    else if (auto device = loadedMovie.device())
+        device->close();
 
     emit fileChanged();
 
@@ -332,7 +338,11 @@ void QVImageCore::requestCachingFile(const QString &filePath)
         addToCache(cacheFutureWatcher->result());
         cacheFutureWatcher->deleteLater();
     });
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     cacheFutureWatcher->setFuture(QtConcurrent::run(this, &QVImageCore::readFile, filePath, true));
+#else
+    cacheFutureWatcher->setFuture(QtConcurrent::run(&QVImageCore::readFile, this, filePath, true));
+#endif
 }
 
 void QVImageCore::addToCache(const ReadData &readData)

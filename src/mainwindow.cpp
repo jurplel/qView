@@ -438,8 +438,8 @@ void MainWindow::buildWindowTitle()
 
     if (getCurrentFileDetails().isPixmapLoaded)
         windowHandle()->setFilePath(getCurrentFileDetails().fileInfo.absoluteFilePath());
-//    else
-//        windowHandle()->setFilePath("");
+    else
+        windowHandle()->setFilePath("");
 }
 
 void MainWindow::setWindowSize()
@@ -830,7 +830,11 @@ void MainWindow::rename()
 
     auto *renameDialog = new QVRenameDialog(this, getCurrentFileDetails().fileInfo);
     connect(renameDialog, &QVRenameDialog::newFileToOpen, this, &MainWindow::openFile);
-
+    connect(renameDialog, &QVRenameDialog::readyToRenameFile, this, [this] () {
+        if (auto device = graphicsView->getLoadedMovie().device()) {
+            device->close();
+        }
+    });
 
     renameDialog->open();
 }
