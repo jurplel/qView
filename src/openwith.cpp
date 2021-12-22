@@ -273,17 +273,14 @@ void QVOpenWithDialog::populateTreeView()
 
 void QVOpenWithDialog::triggeredOpen()
 {
-    if (auto *window = qobject_cast<MainWindow*>(parent()))
-    {
-        auto selectedIndexes = ui->treeView->selectionModel()->selectedIndexes();
-        if (selectedIndexes.isEmpty())
-            return;
+    auto selectedIndexes = ui->treeView->selectionModel()->selectedIndexes();
+    if (selectedIndexes.isEmpty())
+        return;
 
-        QString exec = selectedIndexes.first().data(Qt::UserRole).toString();
-        QStringList args = exec.split(" ");
-        exec = args.takeFirst();
-        emit selected(exec, args);
-    }
+    QString exec = selectedIndexes.first().data(Qt::UserRole).toString();
+    QStringList args = exec.split(" ");
+    exec = args.takeFirst();
+    emit selected(exec, args);
 }
 
 QVOpenWithDialog::~QVOpenWithDialog()
