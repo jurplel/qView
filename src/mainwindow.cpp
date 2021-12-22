@@ -370,7 +370,7 @@ void MainWindow::populateOpenWithMenu(const QList<OpenWith::OpenWithItem> openWi
         {
             // If we are within the bounds of the open with list
             if (i < openWithItems.length())
-            {        
+            {
                 auto openWithItem = openWithItems.value(i);
 
                 action->setVisible(true);
@@ -496,19 +496,20 @@ void MainWindow::setWindowSize()
         imageSize.setHeight(imageSize.height() + menuBar()->height());
 
     // Match center after new geometry
-    QRect rect = geometry();
-    QPoint prevCenter = rect.center();
-    rect.setSize(imageSize);
-    rect.moveCenter(prevCenter);
+    // This is smoother than a single geometry set for some reason
+    QRect oldRect = geometry();
+    resize(imageSize);
+    QRect newRect = geometry();
+    newRect.moveCenter(oldRect.center());
 
     // Ensure titlebar is not above the top of the screen
     const int titlebarHeight = QApplication::style()->pixelMetric(QStyle::PM_TitleBarHeight);
     const int topOfScreen = currentScreen->availableGeometry().y();
 
-    if (rect.y() < (topOfScreen + titlebarHeight))
-        rect.setY(topOfScreen + titlebarHeight);
+    if (newRect.y() < (topOfScreen + titlebarHeight))
+        newRect.setY(topOfScreen + titlebarHeight);
 
-    setGeometry(rect);
+    setGeometry(newRect);
 }
 
 //literally just copy pasted from Qt source code to maintain compatibility with 5.9 (although i've edited it now)
@@ -653,7 +654,7 @@ void MainWindow::showFileInfo()
 }
 
 void MainWindow::askDeleteFile()
-{    
+{
     if (!qvApp->getSettingsManager().getBoolean("askdelete"))
     {
         deleteFile();
@@ -1036,6 +1037,7 @@ void MainWindow::toggleFullScreen()
     if (windowState() == Qt::WindowFullScreen)
     {
         setWindowState(storedWindowState);
+        setWindowSize();
     }
     else
     {

@@ -403,6 +403,7 @@ void QVGraphicsView::updateLoadedPixmapItem()
     scaledSize = loadedPixmapItem->boundingRect().size().toSize();
 
     resetScale();
+
     emit updatedLoadedPixmapItem();
 }
 
