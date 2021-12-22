@@ -278,6 +278,8 @@ void MainWindow::settingsUpdated()
 
 
     ui->fullscreenLabel->setVisible(qvApp->getSettingsManager().getBoolean("fullscreendetails") && (windowState() == Qt::WindowFullScreen));
+
+    setWindowSize();
 }
 
 void MainWindow::shortcutsUpdated()
@@ -447,6 +449,9 @@ void MainWindow::buildWindowTitle()
 
 void MainWindow::setWindowSize()
 {
+    if (!getCurrentFileDetails().isPixmapLoaded)
+        return;
+
     int windowResizeMode = qvApp->getSettingsManager().getInteger("windowresizemode");
     qreal minWindowResizedPercentage = qvApp->getSettingsManager().getInteger("minwindowresizedpercentage")/100.0;
     qreal maxWindowResizedPercentage = qvApp->getSettingsManager().getInteger("maxwindowresizedpercentage")/100.0;
