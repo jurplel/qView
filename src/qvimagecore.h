@@ -48,6 +48,7 @@ public:
     ReadData readFile(const QString &fileName, bool forCache);
     void loadPixmap(const ReadData &readData, bool fromCache);
     void closeImage();
+    QFileInfoList getCompatibleFiles();
     void updateFolderInfo();
     void requestCaching();
     void requestCachingFile(const QString &filePath);

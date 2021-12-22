@@ -214,6 +214,30 @@ void QVImageCore::closeImage()
     emit fileChanged();
 }
 
+// All file logic, sorting, etc should be moved to a different class or file
+QFileInfoList QVImageCore::getCompatibleFiles()
+{
+    QFileInfoList fileInfoList = currentFileDetails.fileInfo.dir().entryInfoList(qvApp->getFilterList(), QDir::Files);
+
+    QMimeDatabase mimeDb;
+    QList<QByteArray> supportedMimeTypes = QImageReader::supportedMimeTypes();
+
+    const QFileInfoList currentFolder = currentFileDetails.fileInfo.dir().entryInfoList();
+    for (const QFileInfo &fileInfo : currentFolder)
+    {
+        QMimeType mimeType = mimeDb.mimeTypeForFile(fileInfo);
+        if (supportedMimeTypes.contains(mimeType.name().toUtf8()))
+        {
+            if (!fileInfoList.contains(fileInfo)) {
+                fileInfoList.append(fileInfo);
+            }
+        }
+    }
+
+
+    return fileInfoList;
+}
+
 void QVImageCore::updateFolderInfo()
 {
     if (!currentFileDetails.fileInfo.isFile())
@@ -228,30 +252,11 @@ void QVImageCore::updateFolderInfo()
     }
     lastDirInfo = dirInfo;
 
-    QDir::SortFlags sortFlags = QDir::NoSort;
 
-    // Deal with sort flags
-    switch (sortMode) {
-    case 1: {
-        sortFlags = QDir::Time;
-        break;
-    }
-    case 2: {
-        sortFlags = QDir::Size;
-        break;
-    }
-    case 3: {
-        sortFlags = QDir::Type;
-        break;
-    }
-    }
+    currentFileDetails.folderFileInfoList = getCompatibleFiles();
 
-    if (sortDescending)
-        sortFlags.setFlag(QDir::Reversed, true);
+    // Sorting
 
-    currentFileDetails.folderFileInfoList = currentFileDetails.fileInfo.dir().entryInfoList(qvApp->getFilterList(), QDir::Files, sortFlags);
-
-    // For more special types of sorting
     if (sortMode == 0) // Natural sorting
     {
         QCollator collator;
@@ -266,7 +271,49 @@ void QVImageCore::updateFolderInfo()
                 return collator.compare(file1.fileName(), file2.fileName()) < 0;
         });
     }
-    else if (sortMode == 4) // Random sorting
+    else if (sortMode == 1) // last modified
+    {
+        std::sort(currentFileDetails.folderFileInfoList.begin(),
+                  currentFileDetails.folderFileInfoList.end(),
+                  [this](const QFileInfo &file1, const QFileInfo &file2)
+        {
+            if (sortDescending)
+                return file1.lastModified() < file2.lastModified();
+            else
+                return file1.lastModified() > file2.lastModified();
+        });
+    }
+    else if (sortMode == 2) // size
+    {
+        std::sort(currentFileDetails.folderFileInfoList.begin(),
+                  currentFileDetails.folderFileInfoList.end(),
+                  [this](const QFileInfo &file1, const QFileInfo &file2)
+        {
+            if (sortDescending)
+                return file1.size() < file2.size();
+            else
+                return file1.size() > file2.size();
+        });
+    }
+    else if (sortMode == 3) // type
+    {
+        QMimeDatabase mimeDb;
+
+        QCollator collator;
+        std::sort(currentFileDetails.folderFileInfoList.begin(),
+                  currentFileDetails.folderFileInfoList.end(),
+                  [&mimeDb, &collator, this](const QFileInfo &file1, const QFileInfo &file2)
+        {
+            QMimeType mime1 = mimeDb.mimeTypeForFile(file1);
+            QMimeType mime2 = mimeDb.mimeTypeForFile(file2);
+
+            if (sortDescending)
+                return collator.compare(mime1.name(), mime2.name()) > 0;
+            else
+                return collator.compare(mime1.name(), mime2.name()) < 0;
+        });
+    }
+    else if (sortMode == 4) // Random
     {
         std::shuffle(currentFileDetails.folderFileInfoList.begin(), currentFileDetails.folderFileInfoList.end(), std::default_random_engine(randomSortSeed));
     }
