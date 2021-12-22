@@ -1,6 +1,6 @@
 # Download and extract openssl
 $ProgressPreference = 'SilentlyContinue'
-Invoke-WebRequest https://www.firedaemon.com/download-firedaemon-openssl-x64 -O openssl.zip
+Invoke-WebRequest https://mirror.firedaemon.com/OpenSSL/openssl-1.1.1l.zip -O openssl.zip
 7z x -y .\openssl.zip
 
 # Check if "arch" environment variable is win32
