@@ -436,10 +436,13 @@ void MainWindow::buildWindowTitle()
     // Update fullscreen label to titlebar text as well
     ui->fullscreenLabel->setText(newString);
 
-    if (getCurrentFileDetails().isPixmapLoaded)
-        windowHandle()->setFilePath(getCurrentFileDetails().fileInfo.absoluteFilePath());
-    else
-        windowHandle()->setFilePath("");
+    if (windowHandle() != nullptr)
+    {
+        if (getCurrentFileDetails().isPixmapLoaded)
+            windowHandle()->setFilePath(getCurrentFileDetails().fileInfo.absoluteFilePath());
+        else
+            windowHandle()->setFilePath("");
+    }
 }
 
 void MainWindow::setWindowSize()
