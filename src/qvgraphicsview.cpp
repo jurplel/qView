@@ -325,6 +325,9 @@ QMimeData *QVGraphicsView::getMimeData() const
 
 void QVGraphicsView::loadMimeData(const QMimeData *mimeData)
 {
+    if (mimeData == nullptr)
+        return;
+
     if (!mimeData->hasUrls())
         return;
 
