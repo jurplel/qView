@@ -817,6 +817,9 @@ void MainWindow::copy()
 void MainWindow::paste()
 {
     const QMimeData *mimeData = QApplication::clipboard()->mimeData();
+    if (mimeData == nullptr) {
+        return;
+    }
 
     if (mimeData->hasText())
     {
