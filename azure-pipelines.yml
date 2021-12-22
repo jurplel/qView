@@ -19,7 +19,7 @@ jobs:
   strategy:
     matrix:
       linux:
-        imageName: 'ubuntu-16.04'
+        imageName: 'ubuntu-18.04'
       macos:
         imageName: 'macOS-10.15'
       macosx:
