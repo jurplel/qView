@@ -51,6 +51,7 @@ steps:
 
     mkdir -p bin/appdir/usr
     make install INSTALL_ROOT=bin/appdir
+    cp dist/linux/hicolor/scalable/apps/com.interversehq.qView.svg bin/appdir/
     cd bin
     rm qview
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
