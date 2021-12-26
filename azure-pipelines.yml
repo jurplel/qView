@@ -2,11 +2,11 @@ parameters:
 - name: buildPlugins
   displayName: Build Plugins
   type: boolean
-  default: false
+  default: true
 - name: useNightly
   displayName: Use Nightly version number
   type: boolean
-  default: true
+  default: false
 
 variables:
   defines: 'NIGHTLY=$(Build.BuildNumber)'
@@ -19,7 +19,7 @@ jobs:
   strategy:
     matrix:
       linux:
-        imageName: 'ubuntu-16.04'
+        imageName: 'ubuntu-18.04'
       macos:
         imageName: 'macOS-10.15'
       macosx:
@@ -58,7 +58,8 @@ jobs:
     parameters:
       version: $(qtVersion)
 
-  - template: ci/build.yml
+  - pwsh: ci/pwsh/build.ps1
+    displayName: 'Build qView'
 
   - ${{ if eq(parameters.buildPlugins, true) }}:
     - template: ci/plugins.yml

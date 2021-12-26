@@ -1,27 +1,8 @@
 steps:
   # APNG
 
-- bash: |
-    git clone https://github.com/Skycoder42/QtApng
-    cd QtApng
-    git checkout $(git tag | tail -1)
-  displayName: Clone APNG plugin
-  
-- bash: |
-    cd QtApng
-    qmake "CONFIG += libpng_static"
-    make
-    sudo make install
-  condition: ne( variables['Agent.OS'], 'Windows_NT' )
-  displayName: Build APNG plugin (Unix)
-
-- script: |
-    cd QtApng
-    call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars%arch:~3,2%.bat"
-    qmake "CONFIG += libpng_static"
-    nmake
-  condition: eq( variables['Agent.OS'], 'Windows_NT' )
-  displayName: Build APNG plugin (Windows)
+- pwsh: ci/pwsh/buildapng.ps1
+  displayName: Build APNG plugin
 
   # HEIF
   # Skip HEIF on mac because Qt supports HEIF on mac for some reason
@@ -130,17 +111,12 @@ steps:
 
   # gtk2 and qt5ct style plugins for linux appimages
 - bash: |
-    git clone https://code.qt.io/qt/qtstyleplugins.git
-    cd qtstyleplugins
-    qmake
-    sudo make install
-
     wget 'https://sourceforge.net/projects/qt5ct/files/latest/download'
     tar xf download
     cd qt5ct*
     qmake
     sudo make install
     
-    echo "##vso[task.setvariable variable=extra_plugins_maybe]'-extra-plugins=styles/libqt5ct-style.so,platformthemes/libqt5ct.so,iconengines,platformthemes/libqgtk3.so,imageformats/libqapng.so,imageformats/libqavif.so,imageformats/libqheif.so'"
+    echo "##vso[task.setvariable variable=extra_plugins_maybe]'-extra-plugins=styles/libqt5ct-style.so,platformthemes/libqt5ct.so,imageformats/libqapng.so,imageformats/libqavif.so,imageformats/libqheif.so'"
   condition: eq( variables['Agent.OS'], 'Linux' )
   displayName: Get extra styles (Linux)

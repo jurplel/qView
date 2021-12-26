@@ -1,47 +1,19 @@
 steps:
 - pwsh: |
-    $ProgressPreference = 'SilentlyContinue'
-    Invoke-WebRequest https://mirror.firedaemon.com/OpenSSL/openssl-1.1.1l-dev.zip -O openssl.zip
+    ci/pwsh/windeployqt.ps1
+    ci/pwsh/copyplugins.ps1
 
-    7z x -y .\openssl.zip
-    If ($env:arch.substring(3, 2) -eq '32') {
-        copy openssl-1.1\x86\bin\libssl-1_1.dll bin\
-        copy openssl-1.1\x86\bin\libcrypto-1_1.dll bin\
-    }  Else {
-        copy openssl-1.1\x64\bin\libssl-1_1-x64.dll bin\
-        copy openssl-1.1\x64\bin\libcrypto-1_1-x64.dll bin\
-    } 
+    mv bin\qView.exe "bin\qView$(nightlyString)$(buildNumString).exe"
 
-    cd bin
-    windeployqt qView.exe --no-compiler-runtime
-
-    try {
-      copy ..\QtApng\plugins\imageformats\qapng.dll imageformats\
-
-      copy ..\libde265\libde265\libde265.dll .\
-      copy ..\libde265\libheif\libheif\heif.dll .\
-      copy ..\libde265\libheif\qt-heif-image-plugin\bin\imageformats\qheif.dll imageformats\
-      
-      copy ..\qt-avif-image-plugin\plugins\imageformats\qavif.dll imageformats\
-
-      Write-Host "Successfully copied plugins"
-    } catch {
-        Write-Host "Failed to copy plugins"
-        echo $Error[0]
-    }
-
-    mv qView.exe "qView$(nightlyString)$(buildNumString).exe"
-
-    If ($env:nightlyString -ne '-nightly') {
-      mkdir ..\dist\win\qView-$(MatrixName)
-      copy -R * ..\dist\win\qView-$(MatrixName)
-      iscc ..\dist\win\qView$($env:arch.substring(3, 2)).iss
-      copy ..\dist\win\Output\* .\
+    if ($env:nightlyString -ne '-nightly') {
+          ci/pwsh/innomake.ps1
     }
   condition: and(succeeded(), ne( variables['skipDeploy'], 'true' ), eq( variables['Agent.OS'], 'Windows_NT' ))
   displayName: 'Run windeployqt'
 
 - script: |
+    ci/pwsh/copyplugins.ps1
+
     if [ $(nightlyString) == -nightly ]; then
           VERSION=$(Build.BuildNumber)
     else
@@ -49,11 +21,8 @@ steps:
     fi
     
     cd bin
-
-    cp $(Qt5_DIR)/plugins/imageformats/libqapng.dylib qView.app/Contents/PlugIns/imageformats/
-    cp $(Qt5_DIR)/plugins/imageformats/libqavif.dylib qView.app/Contents/PlugIns/imageformats/
     
-    macdeployqt qView.app
+    macdeployqt bin/qView.app
     if [ $(nightlyString) == -nightly ]; then
         mv qView.app 'qView$(nightlyString)$(buildNumString).app'
         macdeployqt *.app -dmg
@@ -82,6 +51,7 @@ steps:
 
     mkdir -p bin/appdir/usr
     make install INSTALL_ROOT=bin/appdir
+    cp dist/linux/hicolor/scalable/apps/com.interversehq.qView.svg bin/appdir/
     cd bin
     rm qview
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
