@@ -93,7 +93,8 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     hideIncompatibleActions();
 }
 
-QVApplication::~QVApplication() {
+QVApplication::~QVApplication()
+{
     dockMenu->deleteLater();
     menuBar->deleteLater();
 }

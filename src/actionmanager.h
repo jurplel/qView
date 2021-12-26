@@ -72,7 +72,7 @@ public:
     }
 
     explicit ActionManager(QObject *parent = nullptr);
-    ~ActionManager();
+    ~ActionManager() override;
 
     void settingsUpdated();
 

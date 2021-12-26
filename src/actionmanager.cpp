@@ -33,8 +33,8 @@ ActionManager::ActionManager(QObject *parent) : QObject(parent)
 ActionManager::~ActionManager()
 {
     qDeleteAll(actionLibrary);
-    qDeleteAll(actionCloneLibrary.values());
-    qDeleteAll(menuCloneLibrary.values());
+    qDeleteAll(actionCloneLibrary);
+    qDeleteAll(menuCloneLibrary);
 }
 
 void ActionManager::settingsUpdated()
@@ -127,7 +127,7 @@ QList<QMenu*> ActionManager::getAllClonesOfMenu(const QString &key, QWidget *par
         if (action->associatedWidgets().isEmpty())
             continue;
 
-        auto *parentWidget = action->associatedWidgets().first()->parentWidget();
+        auto *parentWidget = action->associatedWidgets().at(0)->parentWidget();
 
         if (parentWidget == parent || (parentWidget && parentWidget->parent() == parent))
         {
@@ -145,12 +145,12 @@ void ActionManager::untrackClonedActions(const QList<QAction*> &actions)
         if (auto menu = action->menu())
         {
             if (menuCloneLibrary.remove(key, menu))
-                delete menu;
+                menu->deleteLater();
         }
         else
         {
             if (actionCloneLibrary.remove(key, action))
-                delete action;
+                action->deleteLater();
         }
     }
 }
