@@ -204,17 +204,17 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="662"/>
         <source>&amp;Decrease Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Reducir velocidad</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="666"/>
         <source>&amp;Reset Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Reiniciar Velocidad</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="670"/>
         <source>&amp;Increase Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Aumentar velocidad</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="674"/>
@@ -242,13 +242,13 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="689"/>
         <source>&amp;About</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Acerca</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="692"/>
         <source>&amp;About qView</source>
         <extracomment>This is for the about dialog on mac</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Acerca qView</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="696"/>
@@ -259,7 +259,7 @@
         <location filename="../src/actionmanager.cpp" line="701"/>
         <source>Clear &amp;Menu</source>
         <extracomment>This is for clearing the recents menu</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Limpiar &amp;Menu</translation>
     </message>
 </context>
 <context>
@@ -267,12 +267,12 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="207"/>
         <source>Exit F&amp;ull Screen</source>
-        <translation type="unfinished"></translation>
+        <translation>Salir P&amp;antalla Completa</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="212"/>
         <source>Enter F&amp;ull Screen</source>
-        <translation type="unfinished"></translation>
+        <translation>Entrar P&amp;antalla Completa</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="476"/>
@@ -316,7 +316,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="543"/>
         <source>URL of a supported image file:</source>
-        <translation type="unfinished"></translation>
+        <translation>URL de archivo de imagen compatible:</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="618"/>
@@ -326,7 +326,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="619"/>
         <source>File name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Nombre archivo:</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="637"/>

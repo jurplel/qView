@@ -68,12 +68,12 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="561"/>
         <source>&amp;Open...</source>
-        <translation>&amp;Öffnen …</translation>
+        <translation>&amp;Öffnen&#xa0;…</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="564"/>
         <source>Open &amp;URL...</source>
-        <translation>&amp;URL öffnen …</translation>
+        <translation>&amp;URL öffnen&#xa0;…</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="567"/>
@@ -119,7 +119,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="594"/>
         <source>R&amp;ename...</source>
-        <translation>&amp;Umbenennen …</translation>
+        <translation>&amp;Umbenennen&#xa0;…</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="598"/>
@@ -189,7 +189,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="650"/>
         <source>Save Frame &amp;As...</source>
-        <translation>Frame speichern als …</translation>
+        <translation>Frame speichern als&#xa0;…</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="654"/>
@@ -237,7 +237,7 @@
         <location filename="../src/actionmanager.cpp" line="685"/>
         <source>Preference&amp;s...</source>
         <extracomment>This is for the options dialog on mac</extracomment>
-        <translation>&amp;Einstellungen …</translation>
+        <translation>&amp;Einstellungen&#xa0;…</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="689"/>
@@ -290,7 +290,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="482"/>
         <source>Downloading image...</source>
-        <translation>Bild herunterladen …</translation>
+        <translation>Bild herunterladen&#xa0;…</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="482"/>
@@ -301,7 +301,7 @@
         <location filename="../src/mainwindow.cpp" line="486"/>
         <location filename="../src/mainwindow.cpp" line="542"/>
         <source>Open URL...</source>
-        <translation>URL öffnen …</translation>
+        <translation>URL öffnen&#xa0;…</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="503"/>
@@ -321,7 +321,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="618"/>
         <source>Rename...</source>
-        <translation>Umbenennen …</translation>
+        <translation>Umbenennen&#xa0;…</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="619"/>
@@ -338,7 +338,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="722"/>
         <source>Save Frame As...</source>
-        <translation>Frame speichern als …</translation>
+        <translation>Frame speichern als&#xa0;…</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="751"/>
@@ -399,7 +399,7 @@
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="90"/>
         <source>Checking for updates...</source>
-        <translation>Überprüfe auf Aktualisierungen …</translation>
+        <translation>Überprüfe auf Aktualisierungen&#xa0;…</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="94"/>
@@ -433,7 +433,7 @@
     <message>
         <location filename="../src/qvapplication.cpp" line="126"/>
         <source>Open...</source>
-        <translation>Öffnen …</translation>
+        <translation>Öffnen&#xa0;…</translation>
     </message>
 </context>
 <context>
@@ -715,7 +715,7 @@
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="360"/>
         <source>Stop the image from going past its actual size when resizing the window - you can still zoom past it though</source>
-        <translation>Verhindert, dass beim Ändern der Fenstergröße das Bild seine tatsächliche Größe überschreitet – du kannst dennoch weiterhin zoomen</translation>
+        <translation>Verhindert, dass beim Ändern der Fenstergröße das Bild seine tatsächliche Größe überschreitet&#xa0;–&#xa0;du kannst dennoch weiterhin zoomen</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="363"/>
@@ -726,12 +726,12 @@
         <location filename="../src/qvoptionsdialog.ui" line="379"/>
         <location filename="../src/qvoptionsdialog.ui" line="401"/>
         <source>Ignores select sides of an image when fitting to window (some sides will extend beyond the window boundaries)</source>
-        <translation type="unfinished">Ignoriert ausgewählte Ränder beim Anpassen an die Fenstergröße (manche Ränder dehnen sich dann über den Rahmen des Programmfensters hinaus)</translation>
+        <translation>Ignoriert ausgewählte Ränder beim Anpassen an die Fenstergröße (manche Ränder dehnen sich dann über den Rahmen des Programmfensters hinaus)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="383"/>
         <source>Fit whole image</source>
-        <translation type="unfinished">Bild einpassen</translation>
+        <translation>Bild einpassen</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="388"/>
@@ -751,7 +751,7 @@
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="424"/>
         <source>Choose whether or not zooming in and out above 100% zoom will zoom towards the cursor</source>
-        <translation>Legt fest, ob beim Zoomen über 100 % in Richtung Mauszeiger gezoomt wird</translation>
+        <translation>Legt fest, ob beim Zoomen über 100&#xa0;% in Richtung Mauszeiger gezoomt wird</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="427"/>
@@ -1094,7 +1094,7 @@
     <message>
         <location filename="../src/shortcutmanager.cpp" line="89"/>
         <source>Toggle Slideshow</source>
-        <translation type="unfinished">Diashow</translation>
+        <translation>Diashow ein- und ausschalten</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="90"/>
