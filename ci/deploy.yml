@@ -12,7 +12,8 @@ steps:
   displayName: 'Run windeployqt'
 
 - script: |
-    ci/pwsh/copyplugins.ps1
+    
+    pwsh ci/pwsh/copyplugins.ps1
 
     if [ $(nightlyString) == -nightly ]; then
           VERSION=$(Build.BuildNumber)
