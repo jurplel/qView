@@ -131,6 +131,7 @@ QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, bool forCac
         readPixmap = QPixmap::fromImageReader(&imageReader);
     }
 
+
     ReadData readData = {
         readPixmap,
         QFileInfo(fileName),
@@ -372,12 +373,8 @@ void QVImageCore::requestCachingFile(const QString &filePath)
     if (QPixmapCache::find(filePath, nullptr) || lastFilesPreloaded.contains(filePath))
         return;
 
-    //check if too big for caching
-    //This size check is probably inefficient and could be replaced
-    QImageReader newImageReader(filePath);
-    QTransform transform;
-    transform.rotate(currentRotation);
-    if (((newImageReader.size().width()*newImageReader.size().height()*32)/8)/1000 > QPixmapCache::cacheLimit()/2)
+    QFile imgFile(filePath);
+    if (imgFile.size() > QPixmapCache::cacheLimit()/2)
         return;
 
     auto *cacheFutureWatcher = new QFutureWatcher<ReadData>();
