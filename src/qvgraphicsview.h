@@ -33,15 +33,18 @@ public:
     };
     Q_ENUM(GoToFileMode)
 
+
+    QMimeData* getMimeData() const;
+    void loadMimeData(const QMimeData *mimeData);
+    void loadFile(const QString &fileName);
+
     void zoomIn(const QPoint &pos = QPoint(-1, -1));
 
     void zoomOut(const QPoint &pos = QPoint(-1, -1));
 
     void zoom(qreal scaleFactor, const QPoint &pos = QPoint(-1, -1));
 
-    QMimeData* getMimeData() const;
-    void loadMimeData(const QMimeData *mimeData);
-    void loadFile(const QString &fileName);
+    void scaleExpensivelyNew();
 
     void resetScale();
     void scaleExpensively(ScaleMode mode);

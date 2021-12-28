@@ -191,151 +191,6 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
 
 // Functions
 
-void QVGraphicsView::zoomIn(const QPoint &pos)
-{
-    zoom(scaleFactor, pos);
-}
-
-void QVGraphicsView::zoomOut(const QPoint &pos)
-{
-    zoom(qPow(scaleFactor, -1), pos);
-}
-
-void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
-{
-    const QPointF p0scene = mapToScene(pos);
-
-    currentScale *= scaleFactor;
-    scale(scaleFactor, scaleFactor);
-
-    // If we are zooming in, we have a point to zoom towards, the mouse is on top of the viewport, and cursor zooming is enabled
-    if (currentScale > 1.00001 && pos != QPoint(-1, -1) && underMouse() && isCursorZoomEnabled)
-    {
-        const QPointF p1mouse = mapFromScene(p0scene);
-        const QPointF move = p1mouse - pos;
-        horizontalScrollBar()->setValue(move.x() + horizontalScrollBar()->value());
-        verticalScrollBar()->setValue(move.y() + verticalScrollBar()->value());
-    }
-    else
-    {
-        centerOn(loadedPixmapItem->boundingRect().center());
-    }
-}
-
-//void QVGraphicsView::zoom(int DeltaY, const QPoint &pos, qreal targetScaleFactor)
-//{
-//    //if targetScaleFactor is 0 (default) - use scaleFactor variable
-//    if (qFuzzyCompare(targetScaleFactor, 0))
-//        targetScaleFactor = scaleFactor;
-
-//    //define variables for later
-//    QPointF originalMappedPos = mapToScene(pos);
-//    QPointF result;
-
-//    if (!getCurrentFileDetails().isPixmapLoaded)
-//        return;
-
-//    //if original size set, cancel zoom and reset scale
-//    if (isOriginalSize)
-//    {
-//        originalSize();
-//        return;
-//    }
-
-//    //don't zoom too far out, dude
-//    if (DeltaY > 0)
-//    {
-//        if (currentScale >= 500)
-//            return;
-//        currentScale *= targetScaleFactor;
-//    }
-//    else
-//    {
-//        if (currentScale <= 0.01)
-//            return;
-//        currentScale /= targetScaleFactor;
-//    }
-
-//    bool shouldUseScaling = isScalingEnabled;
-//    bool shouldUseScaling2 = isScalingTwoEnabled;
-//    //Disallow scaling2 if movie is loaded
-//    if (getCurrentFileDetails().isMovieLoaded)
-//        shouldUseScaling2 = false;
-
-
-//    //Use scaling up to scale factor 1.0 if we should
-//    if ((currentScale < 0.99999 || (currentScale < 1.00001 && DeltaY > 0)) && shouldUseScaling)
-//    {
-//        //zoom expensively
-//        scaleExpensively(ScaleMode::zoom);
-//        cheapScaledLast = false;
-//    }
-//    //Use scaling up to the maximum scalingtwo value if we should
-//    else if (currentScale < maxScalingTwoSize && shouldUseScaling2)
-//    {
-//        //to scale the mouse position with the image, the mouse position is mapped to the graphicsitem,
-//        //it's scaled with a transform matrix (setScale), and then mapped back to scene. expensive scaling is done as expected.
-//        QPointF doubleMapped = loadedPixmapItem->mapFromScene(originalMappedPos);
-//        loadedPixmapItem->setTransformOriginPoint(loadedPixmapItem->boundingRect().topLeft());
-
-//        scaleExpensively(ScaleMode::zoom);
-//        if (DeltaY > 0)
-//            loadedPixmapItem->setScale(targetScaleFactor);
-//        else
-//            loadedPixmapItem->setScale(qPow(targetScaleFactor, -1));
-
-//        QPointF tripleMapped = loadedPixmapItem->mapToScene(doubleMapped);
-//        loadedPixmapItem->setScale(1.0);
-
-//        //when you are zooming out from high zoom levels and hit the "ScalingTwo" level again,
-//        //this does one more matrix zoom and cancels the expensive zoom (needed for smoothness)
-//        if (cheapScaledLast && DeltaY < 0)
-//            scale(qPow(targetScaleFactor, -1), qPow(targetScaleFactor, -1));
-//        else
-//            originalMappedPos = tripleMapped;
-
-//        cheapScaledLast = false;
-//    }
-//    //do regular matrix-based cheap scaling as a last resort
-//    else
-//    {
-//        //Sets the pixmap to full resolution when zooming in without scaling2
-//        if (loadedPixmapItem->pixmap().hxeight() != getLoadedPixmap().height() && !isScalingTwoEnabled)
-//        {
-//            loadedPixmapItem->setPixmap(getLoadedPixmap());
-//            fitInViewMarginless(false);
-//            originalMappedPos = mapToScene(pos);
-//        }
-
-//        //zoom using cheap matrix method
-//        if (DeltaY > 0)
-//        {
-//            scale(targetScaleFactor, targetScaleFactor);
-//        }
-//        else
-//        {
-//            scale(qPow(targetScaleFactor, -1), qPow(targetScaleFactor, -1));
-//            //when the pixmap is set to full resolution, reset the scale back to the fittedheight when going back to expensive scaling town
-//            if (!qFuzzyCompare(loadedPixmapItem->boundingRect().height(), scaledSize.height()) && qFuzzyCompare(currentScale, 1.0) && !shouldUseScaling2 && shouldUseScaling)
-//                resetScale();
-//        }
-//        cheapScaledLast = true;
-//    }
-
-//    //if you are zooming in and the mouse is in play, zoom towards the mouse
-//    //otherwise, just center the image
-//    if (currentScale > 1.00001 && underMouse() && isCursorZoomEnabled)
-//    {
-//        QPointF transformationDiff = mapToScene(viewport()->rect().center()) - mapToScene(pos);
-//        result = originalMappedPos + transformationDiff;
-//    }
-//    else
-//    {
-//        result = loadedPixmapItem->boundingRect().center();
-//    }
-//    centerOn(result);
-//}
-
 QMimeData *QVGraphicsView::getMimeData() const
 {
     auto *mimeData = new QMimeData();
@@ -371,6 +226,78 @@ void QVGraphicsView::loadMimeData(const QMimeData *mimeData)
     }
 }
 
+void QVGraphicsView::loadFile(const QString &fileName)
+{
+    imageCore.loadFile(fileName);
+}
+
+void QVGraphicsView::postLoad()
+{
+    if (getCurrentFileDetails().isMovieLoaded)
+        movieCenterNeedsUpdating = true;
+    else
+        movieCenterNeedsUpdating = false;
+
+    updateLoadedPixmapItem();
+    qvApp->getActionManager().addFileToRecentsList(getCurrentFileDetails().fileInfo);
+
+    emit fileChanged();
+}
+
+void QVGraphicsView::zoomIn(const QPoint &pos)
+{
+    zoom(scaleFactor, pos);
+}
+
+void QVGraphicsView::zoomOut(const QPoint &pos)
+{
+    zoom(qPow(scaleFactor, -1), pos);
+}
+
+void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
+{
+    const QPointF p0scene = mapToScene(pos);
+
+    currentScale *= scaleFactor;
+    scale(scaleFactor, scaleFactor);
+
+    // If we are zooming in, we have a point to zoom towards, the mouse is on top of the viewport, and cursor zooming is enabled
+    if (currentScale > 1.00001 && pos != QPoint(-1, -1) && underMouse() && isCursorZoomEnabled)
+    {
+        const QPointF p1mouse = mapFromScene(p0scene);
+        const QPointF move = p1mouse - pos;
+        horizontalScrollBar()->setValue(move.x() + horizontalScrollBar()->value());
+        verticalScrollBar()->setValue(move.y() + verticalScrollBar()->value());
+    }
+    else
+    {
+        centerOn(loadedPixmapItem);
+    }
+
+    if (isScalingEnabled)
+        scaleExpensivelyNew();
+}
+
+void QVGraphicsView::scaleExpensivelyNew()
+{
+    // Get scaled image of correct size
+    const QSizeF mappedPixmapSize = transform().mapRect(loadedPixmapItem->boundingRect()).size();
+    if (mappedPixmapSize.width() > getCurrentFileDetails().baseImageSize.width() ||
+        mappedPixmapSize.height() > getCurrentFileDetails().baseImageSize.height())
+    {
+        // Should return to original size?
+        return;
+    }
+
+
+    loadedPixmapItem->setPixmap(imageCore.scaleExpensively(mappedPixmapSize.toSize()));
+
+    qreal inverseScale = qPow(transform().m11(), -1);
+    scale(inverseScale, inverseScale);
+
+    centerOn(loadedPixmapItem); // needs to center on center of viewport w/ obscured height into acct
+}
+
 void QVGraphicsView::animatedFrameChanged(QRect rect)
 {
     Q_UNUSED(rect)
@@ -402,24 +329,6 @@ void QVGraphicsView::animatedFrameChanged(QRect rect)
             fitInViewMarginless();
         }
     }
-}
-
-void QVGraphicsView::loadFile(const QString &fileName)
-{
-    imageCore.loadFile(fileName);
-}
-
-void QVGraphicsView::postLoad()
-{
-    if (getCurrentFileDetails().isMovieLoaded)
-        movieCenterNeedsUpdating = true;
-    else
-        movieCenterNeedsUpdating = false;
-
-    updateLoadedPixmapItem();
-    qvApp->getActionManager().addFileToRecentsList(getCurrentFileDetails().fileInfo);
-
-    emit fileChanged();
 }
 
 void QVGraphicsView::updateLoadedPixmapItem()
