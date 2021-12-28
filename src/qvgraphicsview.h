@@ -33,7 +33,7 @@ public:
     };
     Q_ENUM(GoToFileMode)
 
-    void zoom(int DeltaY, const QPoint &pos, qreal targetScaleFactor = 0);
+    void zoom(qreal scaleFactor, const QPoint &pos);
 
     QMimeData* getMimeData() const;
     void loadMimeData(const QMimeData *mimeData);

@@ -132,31 +132,19 @@ bool QVGraphicsView::event(QEvent *event)
         {
             auto *pinchGesture = static_cast<QPinchGesture *>(pinch);
             QPinchGesture::ChangeFlags changeFlags = pinchGesture->changeFlags();
-            if (changeFlags & QPinchGesture::RotationAngleChanged) {
-                if (pinchGesture->totalRotationAngle() > 90)
-                {
-                    rotateImage(90);
-                    pinchGesture->setTotalRotationAngle(0);
-                }
-                else if (pinchGesture->totalRotationAngle() < -90)
-                {
-                    rotateImage(-90);
-                    pinchGesture->setTotalRotationAngle(0);
-                }
 
-            }
             if (changeFlags & QPinchGesture::ScaleFactorChanged) {
-                if (pinchGesture->totalScaleFactor() > 1+(scaleFactor-1)/2)
-                {
-                    zoom(120, mapFromGlobal(pinchGesture->hotSpot().toPoint()));
-                    pinchGesture->setTotalScaleFactor(1.0);
-                }
-                else if (pinchGesture->totalScaleFactor() < 1-(scaleFactor-1)/2)
-                {
-                    zoom(-120, mapFromGlobal(pinchGesture->hotSpot().toPoint()));
-                    pinchGesture->setTotalScaleFactor(1.0);
-                }
+                const QPoint hotPoint = mapFromGlobal(pinchGesture->hotSpot().toPoint());
+                zoom(pinchGesture->scaleFactor(), hotPoint);
             }
+
+            // Fun rotation stuff maybe later
+//            if (changeFlags & QPinchGesture::RotationAngleChanged) {
+//                qreal rotationDelta = pinchGesture->rotationAngle() - pinchGesture->lastRotationAngle();
+//                rotate(rotationDelta);
+//                centerOn(loadedPixmapItem->boundingRect().center());
+//            }
+            return true;
         }
     }
     return QGraphicsView::event(event);
@@ -198,119 +186,141 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
 
 // Functions
 
-void QVGraphicsView::zoom(int DeltaY, const QPoint &pos, qreal targetScaleFactor)
+void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
 {
-    //if targetScaleFactor is 0 (default) - use scaleFactor variable
-    if (qFuzzyCompare(targetScaleFactor, 0))
-        targetScaleFactor = scaleFactor;
+    const QPointF p0scene = mapToScene(pos);
 
-    //define variables for later
-    QPointF originalMappedPos = mapToScene(pos);
-    QPointF result;
+    currentScale *= scaleFactor;
+    scale(scaleFactor, scaleFactor);
 
-    if (!getCurrentFileDetails().isPixmapLoaded)
-        return;
-
-    //if original size set, cancel zoom and reset scale
-    if (isOriginalSize)
+    // if you are zooming in and the mouse is in play, zoom towards the mouse
+    // otherwise, just center the image
+    if (currentScale > 1.0 && underMouse() && isCursorZoomEnabled)
     {
-        originalSize();
-        return;
-    }
-
-    //don't zoom too far out, dude
-    if (DeltaY > 0)
-    {
-        if (currentScale >= 500)
-            return;
-        currentScale *= targetScaleFactor;
+        const QPointF p1mouse = mapFromScene(p0scene);
+        const QPointF move = p1mouse - pos;
+        horizontalScrollBar()->setValue(move.x() + horizontalScrollBar()->value());
+        verticalScrollBar()->setValue(move.y() + verticalScrollBar()->value());
     }
     else
     {
-        if (currentScale <= 0.01)
-            return;
-        currentScale /= targetScaleFactor;
+        centerOn(loadedPixmapItem->boundingRect().center());
     }
-
-    bool shouldUseScaling = isScalingEnabled;
-    bool shouldUseScaling2 = isScalingTwoEnabled;
-    //Disallow scaling2 if movie is loaded
-    if (getCurrentFileDetails().isMovieLoaded)
-        shouldUseScaling2 = false;
-
-
-    //Use scaling up to scale factor 1.0 if we should
-    if ((currentScale < 0.99999 || (currentScale < 1.00001 && DeltaY > 0)) && shouldUseScaling)
-    {
-        //zoom expensively
-        scaleExpensively(ScaleMode::zoom);
-        cheapScaledLast = false;
-    }
-    //Use scaling up to the maximum scalingtwo value if we should
-    else if (currentScale < maxScalingTwoSize && shouldUseScaling2)
-    {
-        //to scale the mouse position with the image, the mouse position is mapped to the graphicsitem,
-        //it's scaled with a transform matrix (setScale), and then mapped back to scene. expensive scaling is done as expected.
-        QPointF doubleMapped = loadedPixmapItem->mapFromScene(originalMappedPos);
-        loadedPixmapItem->setTransformOriginPoint(loadedPixmapItem->boundingRect().topLeft());
-
-        scaleExpensively(ScaleMode::zoom);
-        if (DeltaY > 0)
-            loadedPixmapItem->setScale(targetScaleFactor);
-        else
-            loadedPixmapItem->setScale(qPow(targetScaleFactor, -1));
-
-        QPointF tripleMapped = loadedPixmapItem->mapToScene(doubleMapped);
-        loadedPixmapItem->setScale(1.0);
-
-        //when you are zooming out from high zoom levels and hit the "ScalingTwo" level again,
-        //this does one more matrix zoom and cancels the expensive zoom (needed for smoothness)
-        if (cheapScaledLast && DeltaY < 0)
-            scale(qPow(targetScaleFactor, -1), qPow(targetScaleFactor, -1));
-        else
-            originalMappedPos = tripleMapped;
-
-        cheapScaledLast = false;
-    }
-    //do regular matrix-based cheap scaling as a last resort
-    else
-    {
-        //Sets the pixmap to full resolution when zooming in without scaling2
-        if (loadedPixmapItem->pixmap().height() != getLoadedPixmap().height() && !isScalingTwoEnabled)
-        {
-            loadedPixmapItem->setPixmap(getLoadedPixmap());
-            fitInViewMarginless(false);
-            originalMappedPos = mapToScene(pos);
-        }
-
-        //zoom using cheap matrix method
-        if (DeltaY > 0)
-        {
-            scale(targetScaleFactor, targetScaleFactor);
-        }
-        else
-        {
-            scale(qPow(targetScaleFactor, -1), qPow(targetScaleFactor, -1));
-            //when the pixmap is set to full resolution, reset the scale back to the fittedheight when going back to expensive scaling town
-            if (!qFuzzyCompare(loadedPixmapItem->boundingRect().height(), scaledSize.height()) && qFuzzyCompare(currentScale, 1.0) && !shouldUseScaling2 && shouldUseScaling)
-                resetScale();
-        }
-        cheapScaledLast = true;
-    }
-
-    //if you are zooming in and the mouse is in play, zoom towards the mouse
-    //otherwise, just center the image
-    if (currentScale > 1.00001 && underMouse() && isCursorZoomEnabled)
-    {
-        QPointF transformationDiff = mapToScene(viewport()->rect().center()) - mapToScene(pos);
-        result = originalMappedPos + transformationDiff;
-    }
-    else
-    {
-        result = loadedPixmapItem->boundingRect().center();
-    }
-    centerOn(result);
 }
+
+//void QVGraphicsView::zoom(int DeltaY, const QPoint &pos, qreal targetScaleFactor)
+//{
+//    //if targetScaleFactor is 0 (default) - use scaleFactor variable
+//    if (qFuzzyCompare(targetScaleFactor, 0))
+//        targetScaleFactor = scaleFactor;
+
+//    //define variables for later
+//    QPointF originalMappedPos = mapToScene(pos);
+//    QPointF result;
+
+//    if (!getCurrentFileDetails().isPixmapLoaded)
+//        return;
+
+//    //if original size set, cancel zoom and reset scale
+//    if (isOriginalSize)
+//    {
+//        originalSize();
+//        return;
+//    }
+
+//    //don't zoom too far out, dude
+//    if (DeltaY > 0)
+//    {
+//        if (currentScale >= 500)
+//            return;
+//        currentScale *= targetScaleFactor;
+//    }
+//    else
+//    {
+//        if (currentScale <= 0.01)
+//            return;
+//        currentScale /= targetScaleFactor;
+//    }
+
+//    bool shouldUseScaling = isScalingEnabled;
+//    bool shouldUseScaling2 = isScalingTwoEnabled;
+//    //Disallow scaling2 if movie is loaded
+//    if (getCurrentFileDetails().isMovieLoaded)
+//        shouldUseScaling2 = false;
+
+
+//    //Use scaling up to scale factor 1.0 if we should
+//    if ((currentScale < 0.99999 || (currentScale < 1.00001 && DeltaY > 0)) && shouldUseScaling)
+//    {
+//        //zoom expensively
+//        scaleExpensively(ScaleMode::zoom);
+//        cheapScaledLast = false;
+//    }
+//    //Use scaling up to the maximum scalingtwo value if we should
+//    else if (currentScale < maxScalingTwoSize && shouldUseScaling2)
+//    {
+//        //to scale the mouse position with the image, the mouse position is mapped to the graphicsitem,
+//        //it's scaled with a transform matrix (setScale), and then mapped back to scene. expensive scaling is done as expected.
+//        QPointF doubleMapped = loadedPixmapItem->mapFromScene(originalMappedPos);
+//        loadedPixmapItem->setTransformOriginPoint(loadedPixmapItem->boundingRect().topLeft());
+
+//        scaleExpensively(ScaleMode::zoom);
+//        if (DeltaY > 0)
+//            loadedPixmapItem->setScale(targetScaleFactor);
+//        else
+//            loadedPixmapItem->setScale(qPow(targetScaleFactor, -1));
+
+//        QPointF tripleMapped = loadedPixmapItem->mapToScene(doubleMapped);
+//        loadedPixmapItem->setScale(1.0);
+
+//        //when you are zooming out from high zoom levels and hit the "ScalingTwo" level again,
+//        //this does one more matrix zoom and cancels the expensive zoom (needed for smoothness)
+//        if (cheapScaledLast && DeltaY < 0)
+//            scale(qPow(targetScaleFactor, -1), qPow(targetScaleFactor, -1));
+//        else
+//            originalMappedPos = tripleMapped;
+
+//        cheapScaledLast = false;
+//    }
+//    //do regular matrix-based cheap scaling as a last resort
+//    else
+//    {
+//        //Sets the pixmap to full resolution when zooming in without scaling2
+//        if (loadedPixmapItem->pixmap().hxeight() != getLoadedPixmap().height() && !isScalingTwoEnabled)
+//        {
+//            loadedPixmapItem->setPixmap(getLoadedPixmap());
+//            fitInViewMarginless(false);
+//            originalMappedPos = mapToScene(pos);
+//        }
+
+//        //zoom using cheap matrix method
+//        if (DeltaY > 0)
+//        {
+//            scale(targetScaleFactor, targetScaleFactor);
+//        }
+//        else
+//        {
+//            scale(qPow(targetScaleFactor, -1), qPow(targetScaleFactor, -1));
+//            //when the pixmap is set to full resolution, reset the scale back to the fittedheight when going back to expensive scaling town
+//            if (!qFuzzyCompare(loadedPixmapItem->boundingRect().height(), scaledSize.height()) && qFuzzyCompare(currentScale, 1.0) && !shouldUseScaling2 && shouldUseScaling)
+//                resetScale();
+//        }
+//        cheapScaledLast = true;
+//    }
+
+//    //if you are zooming in and the mouse is in play, zoom towards the mouse
+//    //otherwise, just center the image
+//    if (currentScale > 1.00001 && underMouse() && isCursorZoomEnabled)
+//    {
+//        QPointF transformationDiff = mapToScene(viewport()->rect().center()) - mapToScene(pos);
+//        result = originalMappedPos + transformationDiff;
+//    }
+//    else
+//    {
+//        result = loadedPixmapItem->boundingRect().center();
+//    }
+//    centerOn(result);
+//}
 
 QMimeData *QVGraphicsView::getMimeData() const
 {
