@@ -852,12 +852,12 @@ void MainWindow::rename()
 
 void MainWindow::zoomIn()
 {
-    graphicsView->zoom(120, graphicsView->mapFromGlobal(QCursor::pos()));
+    graphicsView->zoomIn();
 }
 
 void MainWindow::zoomOut()
 {
-    graphicsView->zoom(-120, graphicsView->mapFromGlobal(QCursor::pos()));
+    graphicsView->zoomOut();
 }
 
 void MainWindow::resetZoom()

@@ -152,27 +152,18 @@ bool QVGraphicsView::event(QEvent *event)
 
 void QVGraphicsView::wheelEvent(QWheelEvent *event)
 {
-    //Basically, if you are holding ctrl then it scrolls instead of zooms (the shift bit is for horizontal scrolling)
-    bool mode = isScrollZoomsEnabled;
-    if (event->modifiers() == Qt::ControlModifier || event->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier))
-        mode = !mode;
+    #if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+    const QPoint eventPos = event->position().toPoint();
+    #else
+    const QPoint eventPos = event->pos();
+    #endif
 
-    if (mode)
-    {
-        if (event->angleDelta().y() == 0)
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
-            zoom(event->angleDelta().x(), event->position().toPoint());
-#else
-            zoom(event->angleDelta().x(), event->pos());
-#endif
-        else
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
-            zoom(event->angleDelta().y(), event->position().toPoint());
-#else
-            zoom(event->angleDelta().y(), event->pos());
-#endif
-    }
-    else
+    //Basically, if you are holding ctrl then it scrolls instead of zooms (the shift bit is for horizontal scrolling)
+    bool willZoom = isScrollZoomsEnabled;
+    if (event->modifiers() == Qt::ControlModifier || event->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier))
+        willZoom = !willZoom;
+
+    if (!willZoom)
     {
         //macos automatically scrolls horizontally while holding shift
 #ifndef Q_OS_MACOS
@@ -181,10 +172,34 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
         else
 #endif
             translate(event->angleDelta().x()/2.0, event->angleDelta().y()/2.0);
+
+        return;
     }
+
+    int angleDelta;
+
+    if (event->angleDelta().y() == 0)
+        angleDelta = event->angleDelta().x();
+    else
+        angleDelta = event->angleDelta().y();
+
+    if (angleDelta > 0)
+        zoomIn(eventPos);
+    else
+        zoomOut(eventPos);
 }
 
 // Functions
+
+void QVGraphicsView::zoomIn(const QPoint &pos)
+{
+    zoom(scaleFactor, pos);
+}
+
+void QVGraphicsView::zoomOut(const QPoint &pos)
+{
+    zoom(qPow(scaleFactor, -1), pos);
+}
 
 void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
 {
@@ -193,9 +208,8 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
     currentScale *= scaleFactor;
     scale(scaleFactor, scaleFactor);
 
-    // if you are zooming in and the mouse is in play, zoom towards the mouse
-    // otherwise, just center the image
-    if (currentScale > 1.0 && underMouse() && isCursorZoomEnabled)
+    // If we are zooming in, we have a point to zoom towards, the mouse is on top of the viewport, and cursor zooming is enabled
+    if (currentScale > 1.00001 && pos != QPoint(-1, -1) && underMouse() && isCursorZoomEnabled)
     {
         const QPointF p1mouse = mapFromScene(p0scene);
         const QPointF move = p1mouse - pos;
