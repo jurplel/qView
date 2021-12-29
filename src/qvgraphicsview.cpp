@@ -293,17 +293,20 @@ void QVGraphicsView::scaleExpensivelyNew()
     // High DPI scaling needed
 
     // Get scaled image of correct size
-    const QSizeF mappedPixmapSize = transform().mapRect(loadedPixmapItem->boundingRect()).size();
-//    if (qFuzzyCompare(mappedPixmapSize.width(), getCurrentFileDetails().loadedPixmapSize.width()) &&
-//        qFuzzyCompare(mappedPixmapSize.height(), getCurrentFileDetails().loadedPixmapSize.height()))
-//    {
-//        // Should return to original size?
-//        return;
-//    }
+    const QSizeF mappedPixmapSize = transform().mapRect(loadedPixmapItem->boundingRect()).size() * devicePixelRatioF();
+    qDebug() << mappedPixmapSize.height() << getCurrentFileDetails().loadedPixmapSize.height();
+    if (abs(mappedPixmapSize.width() - getCurrentFileDetails().loadedPixmapSize.width()) < 1 &&
+        abs(mappedPixmapSize.height() - getCurrentFileDetails().loadedPixmapSize.height()) < 1)
+    {
+        qDebug() << "og size";
+        loadedPixmapItem->setPixmap(getLoadedPixmap());
+    }
+    else
+    {
+        loadedPixmapItem->setPixmap(imageCore.scaleExpensively(mappedPixmapSize.toSize()));
+    }
 
-    loadedPixmapItem->setPixmap(imageCore.scaleExpensively(mappedPixmapSize.toSize()));
-
-    resetTransform();
+    setTransform(QTransform::fromScale(qPow(devicePixelRatioF(), -1), qPow(devicePixelRatioF(), -1)));
     zoomBasis = transform();
     zoomBasisScaleFactor = 1.0;
 
@@ -368,6 +371,8 @@ void QVGraphicsView::resetScale()
     expensiveScaleTimer->start();
 }
 
+// TODO: simplify this
+// Something wrong with height? e.g. item height seems to clamp on 663 even though orig size of image is 691.
 void QVGraphicsView::scaleExpensively(ScaleMode mode)
 {
     if (!getCurrentFileDetails().isPixmapLoaded || !isScalingEnabled)
