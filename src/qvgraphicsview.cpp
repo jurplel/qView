@@ -64,7 +64,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     // Should replace the other timer eventually
     expensiveScaleTimerNew = new QTimer(this);
     expensiveScaleTimerNew->setSingleShot(true);
-    expensiveScaleTimerNew->setInterval(1000);
+    expensiveScaleTimerNew->setInterval(50);
     connect(expensiveScaleTimerNew, &QTimer::timeout, this, [this]{scaleExpensivelyNew();});
 
 
@@ -294,7 +294,7 @@ void QVGraphicsView::scaleExpensivelyNew()
 
     // Get scaled image of correct size
     const QSizeF mappedPixmapSize = transform().mapRect(loadedPixmapItem->boundingRect()).size() * devicePixelRatioF();
-    qDebug() << mappedPixmapSize.height() << getCurrentFileDetails().loadedPixmapSize.height();
+    qDebug() << "Doing a scale";
     if (abs(mappedPixmapSize.width() - getCurrentFileDetails().loadedPixmapSize.width()) < 1 &&
         abs(mappedPixmapSize.height() - getCurrentFileDetails().loadedPixmapSize.height()) < 1)
     {
@@ -365,8 +365,8 @@ void QVGraphicsView::resetScale()
 
     fitInViewMarginless();
 
-//    if (!isScalingEnabled)
-//        return;
+    if (isScalingEnabled)
+        expensiveScaleTimerNew->start();
 
 //    expensiveScaleTimer->start();
 }
@@ -573,8 +573,6 @@ void QVGraphicsView::fitInViewMarginless(bool setVariables)
 
     qreal xratio = viewRect.width() / sceneRect.width();
     qreal yratio = viewRect.height() / sceneRect.height();
-
-    qDebug() << viewRect.width() << adjustedImageSize.width() << adjustedBoundingRect.width();
 
     xratio = yratio = qMin(xratio, yratio);
 
