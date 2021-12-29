@@ -286,16 +286,16 @@ void QVGraphicsView::scaleExpensively()
     // Get scaled image of correct size
     const QSizeF mappedPixmapSize = transform().mapRect(loadedPixmapItem->boundingRect()).size() * devicePixelRatioF();
     qDebug() << "Doing a scale";
-    if (abs(mappedPixmapSize.width() - getCurrentFileDetails().loadedPixmapSize.width()) < 1 &&
-        abs(mappedPixmapSize.height() - getCurrentFileDetails().loadedPixmapSize.height()) < 1)
-    {
-        qDebug() << "og size";
-        loadedPixmapItem->setPixmap(getLoadedPixmap());
-    }
-    else
-    {
+//    if (abs(mappedPixmapSize.width() - getCurrentFileDetails().loadedPixmapSize.width()) < 1 &&
+//        abs(mappedPixmapSize.height() - getCurrentFileDetails().loadedPixmapSize.height()) < 1)
+//    {
+//        qDebug() << "og size";
+//        loadedPixmapItem->setPixmap(getLoadedPixmap());
+//    }
+//    else
+//    {
         loadedPixmapItem->setPixmap(imageCore.scaleExpensively(mappedPixmapSize.toSize()));
-    }
+//    }
 
     setTransform(QTransform::fromScale(qPow(devicePixelRatioF(), -1), qPow(devicePixelRatioF(), -1)));
     zoomBasis = transform();
@@ -309,7 +309,14 @@ void QVGraphicsView::animatedFrameChanged(QRect rect)
 {
     Q_UNUSED(rect)
 
-    loadedPixmapItem->setPixmap(getLoadedMovie().currentPixmap().transformed(transform().inverted()));
+    if (isScalingEnabled)
+    {
+        scaleExpensively();
+    }
+    else
+    {
+        loadedPixmapItem->setPixmap(getLoadedMovie().currentPixmap());
+    }
 
 //    if (isScalingEnabled)
 //    {
