@@ -249,11 +249,21 @@ void QVGraphicsView::zoomOut(const QPoint &pos)
     zoom(qPow(scaleFactor, -1), pos);
 }
 
+// TODO: zooming all the way in then back to 100% doesn't have the result one would expect.
+// too relative?
 void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
 {
+
+    //don't zoom too far out, dude
+    currentScale *= scaleFactor;
+    if (currentScale >= 500 || currentScale <= 0.01)
+    {
+        currentScale *= qPow(scaleFactor, -1);
+        return;
+    }
+
     const QPointF scenePos = mapToScene(pos);
 
-    currentScale *= scaleFactor;
     zoomBasisScaleFactor *= scaleFactor;
     setTransform(QTransform(zoomBasis).scale(zoomBasisScaleFactor, zoomBasisScaleFactor));
 
@@ -284,6 +294,7 @@ void QVGraphicsView::scaleExpensively()
     setTransform(QTransform::fromScale(qPow(devicePixelRatioF(), -1), qPow(devicePixelRatioF(), -1)));
     zoomBasis = transform();
     zoomBasisScaleFactor = 1.0;
+
 
     centerOn(loadedPixmapItem); // needs to center on center of viewport w/ obscured height into acct
 }
