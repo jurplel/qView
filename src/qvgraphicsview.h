@@ -121,6 +121,8 @@ private:
 
     QTransform fittedTransform;
     QTransform scaledTransform;
+    QTransform zoomBasis;
+    qreal zoomBasisScaleFactor;
 
     bool isFilteringEnabled;
     bool isScalingEnabled;
@@ -142,5 +144,6 @@ private:
     QVImageCore imageCore;
 
     QTimer *expensiveScaleTimer;
+    QTimer *expensiveScaleTimerNew;
 };
 #endif // QVGRAPHICSVIEW_H

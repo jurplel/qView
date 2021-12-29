@@ -49,6 +49,8 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     movieCenterNeedsUpdating = false;
     isOriginalSize = false;
 
+    zoomBasisScaleFactor = 1.0;
+
     connect(&imageCore, &QVImageCore::animatedFrameChanged, this, &QVGraphicsView::animatedFrameChanged);
     connect(&imageCore, &QVImageCore::fileChanged, this, &QVGraphicsView::postLoad);
     connect(&imageCore, &QVImageCore::updateLoadedPixmapItem, this, &QVGraphicsView::updateLoadedPixmapItem);
@@ -58,6 +60,13 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     expensiveScaleTimer->setSingleShot(true);
     expensiveScaleTimer->setInterval(50);
     connect(expensiveScaleTimer, &QTimer::timeout, this, [this]{scaleExpensively(ScaleMode::resetScale);});
+
+    // Should replace the other timer eventually
+    expensiveScaleTimerNew = new QTimer(this);
+    expensiveScaleTimerNew->setSingleShot(true);
+    expensiveScaleTimerNew->setInterval(1000);
+    connect(expensiveScaleTimerNew, &QTimer::timeout, this, [this]{scaleExpensivelyNew();});
+
 
     loadedPixmapItem = new QGraphicsPixmapItem();
     scene->addItem(loadedPixmapItem);
@@ -259,7 +268,8 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
     const QPointF p0scene = mapToScene(pos);
 
     currentScale *= scaleFactor;
-    scale(scaleFactor, scaleFactor);
+    zoomBasisScaleFactor *= scaleFactor;
+    setTransform(QTransform(zoomBasis).scale(zoomBasisScaleFactor, zoomBasisScaleFactor));
 
     // If we are zooming in, we have a point to zoom towards, the mouse is on top of the viewport, and cursor zooming is enabled
     if (currentScale > 1.00001 && pos != QPoint(-1, -1) && underMouse() && isCursorZoomEnabled)
@@ -275,25 +285,27 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
     }
 
     if (isScalingEnabled)
-        scaleExpensivelyNew();
+        expensiveScaleTimerNew->start();
 }
 
 void QVGraphicsView::scaleExpensivelyNew()
 {
+    // High DPI scaling needed
+
     // Get scaled image of correct size
     const QSizeF mappedPixmapSize = transform().mapRect(loadedPixmapItem->boundingRect()).size();
-    if (mappedPixmapSize.width() > getCurrentFileDetails().baseImageSize.width() ||
-        mappedPixmapSize.height() > getCurrentFileDetails().baseImageSize.height())
-    {
-        // Should return to original size?
-        return;
-    }
-
+//    if (qFuzzyCompare(mappedPixmapSize.width(), getCurrentFileDetails().loadedPixmapSize.width()) &&
+//        qFuzzyCompare(mappedPixmapSize.height(), getCurrentFileDetails().loadedPixmapSize.height()))
+//    {
+//        // Should return to original size?
+//        return;
+//    }
 
     loadedPixmapItem->setPixmap(imageCore.scaleExpensively(mappedPixmapSize.toSize()));
 
-    qreal inverseScale = qPow(transform().m11(), -1);
-    scale(inverseScale, inverseScale);
+    resetTransform();
+    zoomBasis = transform();
+    zoomBasisScaleFactor = 1.0;
 
     centerOn(loadedPixmapItem); // needs to center on center of viewport w/ obscured height into acct
 }
@@ -565,6 +577,7 @@ void QVGraphicsView::fitInViewMarginless(bool setVariables)
     centerOn(adjustedBoundingRect.center());
 
     fittedTransform = transform();
+    zoomBasis = transform();
     isOriginalSize = false;
     cheapScaledLast = false;
     if (setVariables)
