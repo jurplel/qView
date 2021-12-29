@@ -40,8 +40,6 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     scaleFactor = 1.25;
 
     // Initialize other variables
-    adjustedBoundingRect = QRectF();
-    adjustedImageSize = QSize();
     currentScale = 1.0;
     scaledSize = QSize();
     maxScalingTwoSize = 3;
@@ -56,16 +54,11 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     connect(&imageCore, &QVImageCore::updateLoadedPixmapItem, this, &QVGraphicsView::updateLoadedPixmapItem);
     connect(&imageCore, &QVImageCore::readError, this, &QVGraphicsView::error);
 
-    expensiveScaleTimer = new QTimer(this);
-    expensiveScaleTimer->setSingleShot(true);
-    expensiveScaleTimer->setInterval(50);
-    connect(expensiveScaleTimer, &QTimer::timeout, this, [this]{scaleExpensively(ScaleMode::resetScale);});
-
     // Should replace the other timer eventually
     expensiveScaleTimerNew = new QTimer(this);
     expensiveScaleTimerNew->setSingleShot(true);
     expensiveScaleTimerNew->setInterval(50);
-    connect(expensiveScaleTimerNew, &QTimer::timeout, this, [this]{scaleExpensivelyNew();});
+    connect(expensiveScaleTimerNew, &QTimer::timeout, this, [this]{scaleExpensively();});
 
 
     loadedPixmapItem = new QGraphicsPixmapItem();
@@ -288,10 +281,8 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
         expensiveScaleTimerNew->start();
 }
 
-void QVGraphicsView::scaleExpensivelyNew()
+void QVGraphicsView::scaleExpensively()
 {
-    // High DPI scaling needed
-
     // Get scaled image of correct size
     const QSizeF mappedPixmapSize = transform().mapRect(loadedPixmapItem->boundingRect()).size() * devicePixelRatioF();
     qDebug() << "Doing a scale";
@@ -367,68 +358,6 @@ void QVGraphicsView::resetScale()
 
     if (isScalingEnabled)
         expensiveScaleTimerNew->start();
-
-//    expensiveScaleTimer->start();
-}
-
-// TODO: simplify/elliminate? this
-void QVGraphicsView::scaleExpensively(ScaleMode mode)
-{
-    if (!getCurrentFileDetails().isPixmapLoaded || !isScalingEnabled)
-        return;
-
-    switch (mode) {
-    case ScaleMode::resetScale:
-    {
-        QVImageCore::ScaleMode coreMode = QVImageCore::ScaleMode::normal;
-        switch (cropMode) {
-        case 0:
-        {
-            // figure out if we should resize to width or height depending on the gap between the window chrome and the image itself
-            // 4 is added to these numbers to take into account the -2 margin from fitInViewMarginless (kind of a misnomer, eh?)
-            QSize windowSize = QSize(static_cast<int>(width()*devicePixelRatioF()), static_cast<int>(height()*devicePixelRatioF()));
-            qreal marginWidth = (windowSize.width()-adjustedBoundingRect.width()*transform().m11())+4;
-            qreal marginHeight = (windowSize.height()-adjustedBoundingRect.height()*transform().m22())+4;
-            if (marginWidth < marginHeight)
-                coreMode = QVImageCore::ScaleMode::width;
-            else
-                coreMode = QVImageCore::ScaleMode::height;
-            break;
-        }
-        case 1:
-        {
-            coreMode = QVImageCore::ScaleMode::height;
-            break;
-        }
-        case 2:
-        {
-            coreMode = QVImageCore::ScaleMode::width;
-            break;
-        }
-        }
-
-        QSize windowSize = QSize(static_cast<int>(width()*devicePixelRatioF()), static_cast<int>(height()*devicePixelRatioF()));
-
-        //scale only to actual size if scaling past actual size is disabled
-        if (!isPastActualSizeEnabled && adjustedImageSize.width() < windowSize.width() && adjustedImageSize.height() < windowSize.height())
-            loadedPixmapItem->setPixmap(imageCore.scaleExpensively(adjustedImageSize.width(), adjustedImageSize.height(), coreMode));
-        else
-            loadedPixmapItem->setPixmap(imageCore.scaleExpensively(windowSize.width()+4, windowSize.height()+4, coreMode));
-
-        fitInViewMarginless();
-        scaledSize = loadedPixmapItem->boundingRect().size().toSize();
-        break;
-    }
-    case ScaleMode::zoom:
-    {
-        QSize newSize = scaledSize * currentScale;
-
-        loadedPixmapItem->setPixmap(imageCore.scaleExpensively(newSize));
-        break;
-    }
-    }
-    if (getCurrentFileDetails().isMovieLoaded)
-        movieCenterNeedsUpdating = true;
 }
 
 void QVGraphicsView::originalSize(bool setVariables)
@@ -515,10 +444,17 @@ void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
     loadFile(nextImage.absoluteFilePath());
 }
 
-void QVGraphicsView::fitInViewMarginless(bool setVariables)
+void QVGraphicsView::fitInViewMarginless()
 {
-    adjustedImageSize = getCurrentFileDetails().loadedPixmapSize;
-    adjustedBoundingRect = loadedPixmapItem->boundingRect();
+#ifdef COCOA_LOADED
+    int obscuredHeight = QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
+#else
+    int obscuredHeight = 0;
+#endif
+
+    // Set adjusted image size / bounding rect based on
+    QSize adjustedImageSize = getCurrentFileDetails().loadedPixmapSize;
+    QRectF adjustedBoundingRect = loadedPixmapItem->boundingRect();
 
     switch (cropMode) {
     case 1:
@@ -546,22 +482,23 @@ void QVGraphicsView::fitInViewMarginless(bool setVariables)
     scale(1 / unity.width(), 1 / unity.height());
 
     //resize to window size unless you are meant to stop at the actual size
-    QRectF viewRect;
-    if (isPastActualSizeEnabled || (adjustedImageSize.width() >= width() || adjustedImageSize.height() >= height()))
-    {
-        int margin = -2;
-        viewRect = viewport()->rect().adjusted(margin, margin, -margin, -margin);
+    const int adjWidth = width() - MARGIN;
+    const int adjHeight = height() - MARGIN - obscuredHeight;
 
-#ifdef COCOA_LOADED
-        int obscuredHeight = QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
-        viewRect.setHeight(viewRect.height()-obscuredHeight);
-#endif
+    QRectF viewRect;
+    if (isPastActualSizeEnabled || (adjustedImageSize.width() >= adjWidth || adjustedImageSize.height() >= adjHeight))
+    {
+        viewRect = viewport()->rect().adjusted(MARGIN, MARGIN, -MARGIN, -MARGIN);
+        viewRect.setHeight(viewRect.height() - obscuredHeight);
     }
     else
     {
         viewRect = QRect(QPoint(), getCurrentFileDetails().loadedPixmapSize);
-        viewRect.moveCenter(rect().center());
+        QPoint center = rect().center();
+        center.setY(center.y() - obscuredHeight);
+        viewRect.moveCenter(center);
     }
+
 
     if (viewRect.isEmpty())
         return;
@@ -580,14 +517,11 @@ void QVGraphicsView::fitInViewMarginless(bool setVariables)
     scale(xratio, yratio);
     centerOn(adjustedBoundingRect.center());
 
-    fittedTransform = transform();
     zoomBasis = transform();
     isOriginalSize = false;
     cheapScaledLast = false;
-    if (setVariables)
-    {
-        currentScale = 1.0;
-    }
+
+    currentScale = 1.0;
 }
 
 void QVGraphicsView::centerOn(const QPointF &pos)

@@ -44,10 +44,9 @@ public:
 
     void zoom(qreal scaleFactor, const QPoint &pos = QPoint(-1, -1));
 
-    void scaleExpensivelyNew();
+    void scaleExpensively();
 
     void resetScale();
-    void scaleExpensively(ScaleMode mode);
     void originalSize(bool setVariables = true);
 
     void goToFile(const GoToFileMode &mode, int index = 0);
@@ -94,7 +93,7 @@ protected:
 
     bool event(QEvent *event) override;
 
-    void fitInViewMarginless(bool setVariables = true);
+    void fitInViewMarginless();
 
     void centerOn(const QPointF &pos);
 
@@ -116,13 +115,6 @@ private:
 
 
     QGraphicsPixmapItem *loadedPixmapItem;
-    QRectF adjustedBoundingRect;
-    QSize adjustedImageSize;
-
-    QTransform fittedTransform;
-    QTransform scaledTransform;
-    QTransform zoomBasis;
-    qreal zoomBasisScaleFactor;
 
     bool isFilteringEnabled;
     bool isScalingEnabled;
@@ -134,6 +126,8 @@ private:
     int cropMode;
     qreal scaleFactor;
 
+    const int MARGIN = -2;
+
     qreal currentScale;
     QSize scaledSize;
     bool isOriginalSize;
@@ -141,9 +135,11 @@ private:
     bool cheapScaledLast;
     bool movieCenterNeedsUpdating;
 
+    QTransform zoomBasis;
+    qreal zoomBasisScaleFactor;
+
     QVImageCore imageCore;
 
-    QTimer *expensiveScaleTimer;
     QTimer *expensiveScaleTimerNew;
 };
 #endif // QVGRAPHICSVIEW_H
