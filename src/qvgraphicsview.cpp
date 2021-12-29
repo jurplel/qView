@@ -365,14 +365,13 @@ void QVGraphicsView::resetScale()
 
     fitInViewMarginless();
 
-    if (!isScalingEnabled)
-        return;
+//    if (!isScalingEnabled)
+//        return;
 
-    expensiveScaleTimer->start();
+//    expensiveScaleTimer->start();
 }
 
-// TODO: simplify this
-// Something wrong with height? e.g. item height seems to clamp on 663 even though orig size of image is 691.
+// TODO: simplify/elliminate? this
 void QVGraphicsView::scaleExpensively(ScaleMode mode)
 {
     if (!getCurrentFileDetails().isPixmapLoaded || !isScalingEnabled)
@@ -552,17 +551,17 @@ void QVGraphicsView::fitInViewMarginless(bool setVariables)
     {
         int margin = -2;
         viewRect = viewport()->rect().adjusted(margin, margin, -margin, -margin);
+
+#ifdef COCOA_LOADED
+        int obscuredHeight = QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
+        viewRect.setHeight(viewRect.height()-obscuredHeight);
+#endif
     }
     else
     {
         viewRect = QRect(QPoint(), getCurrentFileDetails().loadedPixmapSize);
         viewRect.moveCenter(rect().center());
     }
-
-#ifdef COCOA_LOADED
-    int obscuredHeight = QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
-    viewRect.setHeight(viewRect.height()-obscuredHeight);
-#endif
 
     if (viewRect.isEmpty())
         return;
@@ -574,6 +573,8 @@ void QVGraphicsView::fitInViewMarginless(bool setVariables)
 
     qreal xratio = viewRect.width() / sceneRect.width();
     qreal yratio = viewRect.height() / sceneRect.height();
+
+    qDebug() << viewRect.width() << adjustedImageSize.width() << adjustedBoundingRect.width();
 
     xratio = yratio = qMin(xratio, yratio);
 
