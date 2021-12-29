@@ -463,19 +463,20 @@ QPixmap QVImageCore::matchCurrentRotation(const QPixmap &pixmapToRotate)
     return QPixmap::fromImage(matchCurrentRotation(pixmapToRotate.toImage()));
 }
 
-QPixmap QVImageCore::scaleExpensively(const int desiredWidth, const int desiredHeight, const ScaleMode mode)
+QPixmap QVImageCore::scaleExpensively(const int desiredWidth, const int desiredHeight)
 {
-    return scaleExpensively(QSize(desiredWidth, desiredHeight), mode);
+    return scaleExpensively(QSizeF(desiredWidth, desiredHeight));
 }
 
-QPixmap QVImageCore::scaleExpensively(const QSize desiredSize, const ScaleMode mode)
+QPixmap QVImageCore::scaleExpensively(const QSizeF desiredSize)
 {
     if (!currentFileDetails.isPixmapLoaded)
         return QPixmap();
 
     QSize size = QSize(loadedPixmap.width(), loadedPixmap.height());
-    size.scale(desiredSize, Qt::KeepAspectRatio);
+    size.scale(desiredSize.toSize(), Qt::KeepAspectRatio);
 
+    // Get the current frame of the animation if this is an animation
     QPixmap relevantPixmap;
     if (!currentFileDetails.isMovieLoaded)
     {
@@ -487,25 +488,14 @@ QPixmap QVImageCore::scaleExpensively(const QSize desiredSize, const ScaleMode m
         relevantPixmap = matchCurrentRotation(relevantPixmap);
     }
 
-    switch (mode) {
-    case ScaleMode::normal:
+    // If we are really close to the original size, just return the original
+    if (abs(desiredSize.width() - relevantPixmap.width()) < 1 &&
+        abs(desiredSize.height() - relevantPixmap.height()) < 1)
     {
-        relevantPixmap = relevantPixmap.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-        break;
-    }
-    case ScaleMode::width:
-    {
-        relevantPixmap = relevantPixmap.scaledToWidth(desiredSize.width(), Qt::SmoothTransformation);
-        break;
-    }
-    case ScaleMode::height:
-    {
-        relevantPixmap = relevantPixmap.scaledToHeight(desiredSize.height(), Qt::SmoothTransformation);
-        break;
-    }
+        return relevantPixmap;
     }
 
-    return relevantPixmap;
+    return relevantPixmap.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);;
 }
 
 

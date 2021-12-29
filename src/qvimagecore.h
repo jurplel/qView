@@ -15,14 +15,6 @@ class QVImageCore : public QObject
     Q_OBJECT
 
 public:
-    enum class ScaleMode
-    {
-       normal,
-       width,
-       height
-    };
-    Q_ENUM(ScaleMode)
-
     struct FileDetails
     {
         QFileInfo fileInfo;
@@ -64,8 +56,8 @@ public:
     QImage matchCurrentRotation(const QImage &imageToRotate);
     QPixmap matchCurrentRotation(const QPixmap &pixmapToRotate);
 
-    QPixmap scaleExpensively(const int desiredWidth, const int desiredHeight, const ScaleMode mode = ScaleMode::normal);
-    QPixmap scaleExpensively(const QSize desiredSize, const ScaleMode mode = ScaleMode::normal);
+    QPixmap scaleExpensively(const int desiredWidth, const int desiredHeight);
+    QPixmap scaleExpensively(const QSizeF desiredSize);
 
     //returned const reference is read-only
     const QPixmap& getLoadedPixmap() const {return loadedPixmap; }

@@ -47,7 +47,7 @@ public:
     void scaleExpensively();
 
     void resetScale();
-    void originalSize(bool setVariables = true);
+    void originalSize();
 
     void goToFile(const GoToFileMode &mode, int index = 0);
 
@@ -132,8 +132,6 @@ private:
     QSize scaledSize;
     bool isOriginalSize;
     qreal maxScalingTwoSize;
-    bool cheapScaledLast;
-    bool movieCenterNeedsUpdating;
 
     QTransform zoomBasis;
     qreal zoomBasisScaleFactor;

@@ -43,8 +43,6 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     currentScale = 1.0;
     scaledSize = QSize();
     maxScalingTwoSize = 3;
-    cheapScaledLast = false;
-    movieCenterNeedsUpdating = false;
     isOriginalSize = false;
 
     zoomBasisScaleFactor = 1.0;
@@ -144,7 +142,7 @@ bool QVGraphicsView::event(QEvent *event)
 //            if (changeFlags & QPinchGesture::RotationAngleChanged) {
 //                qreal rotationDelta = pinchGesture->rotationAngle() - pinchGesture->lastRotationAngle();
 //                rotate(rotationDelta);
-//                centerOn(loadedPixmapItem->boundingRect().center());
+//                centerOn(loadedPixmapItem);
 //            }
             return true;
         }
@@ -235,11 +233,6 @@ void QVGraphicsView::loadFile(const QString &fileName)
 
 void QVGraphicsView::postLoad()
 {
-    if (getCurrentFileDetails().isMovieLoaded)
-        movieCenterNeedsUpdating = true;
-    else
-        movieCenterNeedsUpdating = false;
-
     updateLoadedPixmapItem();
     qvApp->getActionManager().addFileToRecentsList(getCurrentFileDetails().fileInfo);
 
@@ -258,7 +251,7 @@ void QVGraphicsView::zoomOut(const QPoint &pos)
 
 void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
 {
-    const QPointF p0scene = mapToScene(pos);
+    const QPointF scenePos = mapToScene(pos);
 
     currentScale *= scaleFactor;
     zoomBasisScaleFactor *= scaleFactor;
@@ -267,7 +260,7 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
     // If we are zooming in, we have a point to zoom towards, the mouse is on top of the viewport, and cursor zooming is enabled
     if (currentScale > 1.00001 && pos != QPoint(-1, -1) && underMouse() && isCursorZoomEnabled)
     {
-        const QPointF p1mouse = mapFromScene(p0scene);
+        const QPointF p1mouse = mapFromScene(scenePos);
         const QPointF move = p1mouse - pos;
         horizontalScrollBar()->setValue(move.x() + horizontalScrollBar()->value());
         verticalScrollBar()->setValue(move.y() + verticalScrollBar()->value());
@@ -285,17 +278,8 @@ void QVGraphicsView::scaleExpensively()
 {
     // Get scaled image of correct size
     const QSizeF mappedPixmapSize = transform().mapRect(loadedPixmapItem->boundingRect()).size() * devicePixelRatioF();
-    qDebug() << "Doing a scale";
-//    if (abs(mappedPixmapSize.width() - getCurrentFileDetails().loadedPixmapSize.width()) < 1 &&
-//        abs(mappedPixmapSize.height() - getCurrentFileDetails().loadedPixmapSize.height()) < 1)
-//    {
-//        qDebug() << "og size";
-//        loadedPixmapItem->setPixmap(getLoadedPixmap());
-//    }
-//    else
-//    {
-        loadedPixmapItem->setPixmap(imageCore.scaleExpensively(mappedPixmapSize.toSize()));
-//    }
+
+    loadedPixmapItem->setPixmap(imageCore.scaleExpensively(mappedPixmapSize));
 
     setTransform(QTransform::fromScale(qPow(devicePixelRatioF(), -1), qPow(devicePixelRatioF(), -1)));
     zoomBasis = transform();
@@ -370,13 +354,14 @@ void QVGraphicsView::resetScale()
         expensiveScaleTimerNew->start();
 }
 
-void QVGraphicsView::originalSize(bool setVariables)
+void QVGraphicsView::originalSize()
 {
     if (isOriginalSize)
     {
         resetScale();
         return;
     }
+
     if (getCurrentFileDetails().isMovieLoaded)
         loadedPixmapItem->setPixmap(getLoadedMovie().currentPixmap());
     else
@@ -387,11 +372,7 @@ void QVGraphicsView::originalSize(bool setVariables)
 
     scaledSize = getLoadedPixmap().size();
 
-    if (setVariables)
-    {
-        movieCenterNeedsUpdating = true;
-        isOriginalSize = true;
-    }
+    isOriginalSize = true;
 }
 
 
@@ -529,7 +510,6 @@ void QVGraphicsView::fitInViewMarginless()
 
     zoomBasis = transform();
     isOriginalSize = false;
-    cheapScaledLast = false;
 
     currentScale = 1.0;
 }
@@ -637,8 +617,6 @@ void QVGraphicsView::settingsUpdated()
     if (getCurrentFileDetails().isPixmapLoaded)
     {
         resetScale();
-        if (getCurrentFileDetails().isMovieLoaded && getLoadedMovie().state() == QMovie::Running)
-            movieCenterNeedsUpdating = true;
     }
 }
 
