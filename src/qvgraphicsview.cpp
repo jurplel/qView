@@ -304,37 +304,40 @@ void QVGraphicsView::scaleExpensively()
     centerOn(loadedPixmapItem); // needs to center on center of viewport w/ obscured height into acct
 }
 
+// TODO: Fix weird delay after loading image?
 void QVGraphicsView::animatedFrameChanged(QRect rect)
 {
     Q_UNUSED(rect)
 
-    if (isScalingEnabled)
-    {
-        QSize newSize = scaledSize;
-        if (currentScale <= 1.0 && !isOriginalSize)
-            newSize *= currentScale;
+    loadedPixmapItem->setPixmap(getLoadedMovie().currentPixmap().transformed(transform().inverted()));
 
-         loadedPixmapItem->setPixmap(imageCore.scaleExpensively(newSize));
-    }
-    else
-    {
-        QTransform transform;
-        transform.rotate(imageCore.getCurrentRotation());
+//    if (isScalingEnabled)
+//    {
+//        QSize newSize = scaledSize;
+//        if (currentScale <= 1.0 && !isOriginalSize)
+//            newSize *= currentScale;
 
-        QImage transformedImage = getLoadedMovie().currentImage().transformed(transform);
+//         loadedPixmapItem->setPixmap(imageCore.scaleExpensively(newSize));
+//    }
+//    else
+//    {
+//        QTransform transform;
+//        transform.rotate(imageCore.getCurrentRotation());
 
-        loadedPixmapItem->setPixmap(QPixmap::fromImage(transformedImage));
-    }
+//        QImage transformedImage = getLoadedMovie().currentImage().transformed(transform);
 
-    if (movieCenterNeedsUpdating)
-    {
-        movieCenterNeedsUpdating = false;
-        centerOn(loadedPixmapItem);
-        if (qFuzzyCompare(currentScale, 1.0) && !isOriginalSize)
-        {
-            fitInViewMarginless();
-        }
-    }
+//        loadedPixmapItem->setPixmap(QPixmap::fromImage(transformedImage));
+//    }
+
+//    if (movieCenterNeedsUpdating)
+//    {
+//        movieCenterNeedsUpdating = false;
+//        centerOn(loadedPixmapItem);
+//        if (qFuzzyCompare(currentScale, 1.0) && !isOriginalSize)
+//        {
+//            fitInViewMarginless();
+//        }
+//    }
 }
 
 void QVGraphicsView::updateLoadedPixmapItem()
