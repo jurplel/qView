@@ -25,7 +25,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     grabGesture(Qt::PinchGesture);
 
     // Scene setup
-    auto *scene = new QGraphicsScene(0.0, 0.0, 100000.0, 100000.0, this);
+    auto *scene = new QGraphicsScene(0.0, 0.0, 1000000.0, 1000000.0, this);
     setScene(scene);
 
     // Initialize configurable variables
@@ -60,6 +60,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 
 
     loadedPixmapItem = new QGraphicsPixmapItem();
+    loadedPixmapItem->setPos(sceneRect().width()/10, sceneRect().height()/10);
     scene->addItem(loadedPixmapItem);
 
     // Connect to settings signal
@@ -165,12 +166,9 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
 
     if (!willZoom)
     {
-        //macos automatically scrolls horizontally while holding shift
-#ifndef Q_OS_MACOS
         if (event->modifiers() == (Qt::ControlModifier|Qt::ShiftModifier) || event->modifiers() == Qt::ShiftModifier)
             translate(event->angleDelta().y()/2.0, event->angleDelta().x()/2.0);
         else
-#endif
             translate(event->angleDelta().x()/2.0, event->angleDelta().y()/2.0);
 
         return;
@@ -286,17 +284,20 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
 
 void QVGraphicsView::scaleExpensively()
 {
-    // Get scaled image of correct size
-    const QSizeF mappedPixmapSize = transform().mapRect(loadedPixmapItem->boundingRect()).size() * devicePixelRatioF();
+    const QRectF mappedRect = transform().mapRect(loadedPixmapItem->sceneBoundingRect());
+    const QSizeF mappedPixmapSize = mappedRect.size() * devicePixelRatioF();
 
+    // Set image to scaled version
     loadedPixmapItem->setPixmap(imageCore.scaleExpensively(mappedPixmapSize));
 
+    // Reset transformation
     setTransform(QTransform::fromScale(qPow(devicePixelRatioF(), -1), qPow(devicePixelRatioF(), -1)));
     zoomBasis = transform();
     zoomBasisScaleFactor = 1.0;
 
-
-    centerOn(loadedPixmapItem); // needs to center on center of viewport w/ obscured height into acct
+    // Use magic to find out how much we should move the viewport by
+    const QPointF move = mappedRect.topLeft() - loadedPixmapItem->sceneBoundingRect().topLeft();
+    translate(move.x(), move.y());
 }
 
 // TODO: Fix weird delay after loading image?
@@ -346,7 +347,6 @@ void QVGraphicsView::updateLoadedPixmapItem()
 {
     //set pixmap and offset
     loadedPixmapItem->setPixmap(getLoadedPixmap());
-    loadedPixmapItem->setOffset((scene()->width()/2 - getLoadedPixmap().width()/2.0), (scene()->height()/2 - getLoadedPixmap().height()/2.0));
     scaledSize = loadedPixmapItem->boundingRect().size().toSize();
 
     resetScale();
@@ -359,7 +359,7 @@ void QVGraphicsView::resetScale()
     if (!getCurrentFileDetails().isPixmapLoaded)
         return;
 
-    fitInViewMarginless();
+    fitInViewMarginless(loadedPixmapItem);
 
     if (isScalingEnabled)
         expensiveScaleTimerNew->start();
@@ -446,7 +446,7 @@ void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
     loadFile(nextImage.absoluteFilePath());
 }
 
-void QVGraphicsView::fitInViewMarginless()
+void QVGraphicsView::fitInViewMarginless(const QRectF &rect)
 {
 #ifdef COCOA_LOADED
     int obscuredHeight = QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
@@ -456,23 +456,23 @@ void QVGraphicsView::fitInViewMarginless()
 
     // Set adjusted image size / bounding rect based on
     QSize adjustedImageSize = getCurrentFileDetails().loadedPixmapSize;
-    QRectF adjustedBoundingRect = loadedPixmapItem->boundingRect();
+    QRectF adjustedBoundingRect = rect;
 
-    switch (cropMode) {
-    case 1:
+    switch (cropMode) { // should be enum tbh
+    case 1: // only take into account height
     {
         adjustedImageSize.setWidth(1);
         adjustedBoundingRect.setWidth(1);
         break;
     }
-    case 2:
+    case 2: // only take into account width
     {
         adjustedImageSize.setHeight(1);
         adjustedBoundingRect.setHeight(1);
         break;
     }
     }
-    adjustedBoundingRect.moveCenter(loadedPixmapItem->boundingRect().center());
+    adjustedBoundingRect.moveCenter(rect.center());
 
     if (!scene() || adjustedBoundingRect.isNull())
         return;
@@ -496,7 +496,7 @@ void QVGraphicsView::fitInViewMarginless()
     else
     {
         viewRect = QRect(QPoint(), getCurrentFileDetails().loadedPixmapSize);
-        QPoint center = rect().center();
+        QPoint center = this->rect().center();
         center.setY(center.y() - obscuredHeight);
         viewRect.moveCenter(center);
     }
@@ -523,6 +523,11 @@ void QVGraphicsView::fitInViewMarginless()
     isOriginalSize = false;
 
     currentScale = 1.0;
+}
+
+void QVGraphicsView::fitInViewMarginless(const QGraphicsItem *item)
+{
+    return fitInViewMarginless(item->sceneBoundingRect());
 }
 
 void QVGraphicsView::centerOn(const QPointF &pos)
@@ -560,7 +565,7 @@ void QVGraphicsView::centerOn(qreal x, qreal y)
 
 void QVGraphicsView::centerOn(const QGraphicsItem *item)
 {
-    centerOn(item->boundingRect().center());
+    centerOn(item->sceneBoundingRect().center());
 }
 
 void QVGraphicsView::error(int errorNum, const QString &errorString, const QString &fileName)
@@ -573,6 +578,7 @@ void QVGraphicsView::error(int errorNum, const QString &errorString, const QStri
     }
 }
 
+// turning off scaling should reset image to loadedpixmap
 void QVGraphicsView::settingsUpdated()
 {
     auto &settingsManager = qvApp->getSettingsManager();

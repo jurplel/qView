@@ -93,7 +93,8 @@ protected:
 
     bool event(QEvent *event) override;
 
-    void fitInViewMarginless();
+    void fitInViewMarginless(const QRectF &rect);
+    void fitInViewMarginless(const QGraphicsItem *item);
 
     void centerOn(const QPointF &pos);
 
@@ -139,5 +140,6 @@ private:
     QVImageCore imageCore;
 
     QTimer *expensiveScaleTimerNew;
+    QPointF centerPoint;
 };
 #endif // QVGRAPHICSVIEW_H
