@@ -284,6 +284,11 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
 
 void QVGraphicsView::scaleExpensively()
 {
+    if (currentScale >= maxScalingTwoSize)
+    {
+        return;
+    }
+
     const QRectF mappedRect = transform().mapRect(loadedPixmapItem->sceneBoundingRect());
     const QSizeF mappedPixmapSize = mappedRect.size() * devicePixelRatioF();
 
