@@ -25,7 +25,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     grabGesture(Qt::PinchGesture);
 
     // Scene setup
-    auto *scene = new QGraphicsScene(0.0, 0.0, 1000000.0, 1000000.0, this);
+    auto *scene = new QGraphicsScene(0.0, 0.0, 100000000.0, 100000000.0, this);
     setScene(scene);
 
     // Initialize configurable variables
@@ -60,7 +60,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 
 
     loadedPixmapItem = new QGraphicsPixmapItem();
-    loadedPixmapItem->setPos(sceneRect().width()/10, sceneRect().height()/10);
+    loadedPixmapItem->setPos(sceneRect().width()/1000, sceneRect().height()/1000);
     scene->addItem(loadedPixmapItem);
 
     // Connect to settings signal
@@ -296,8 +296,9 @@ void QVGraphicsView::scaleExpensively()
     zoomBasisScaleFactor = 1.0;
 
     // Use magic to find out how much we should move the viewport by
-    const QPointF move = mappedRect.topLeft() - loadedPixmapItem->sceneBoundingRect().topLeft();
-    translate(move.x(), move.y());
+    const QPointF move = mapFromScene(loadedPixmapItem->sceneBoundingRect().topLeft()) - mapFromScene(mappedRect.topLeft());
+    horizontalScrollBar()->setValue(move.x() + horizontalScrollBar()->value());
+    verticalScrollBar()->setValue(move.y() + verticalScrollBar()->value());
 }
 
 // TODO: Fix weird delay after loading image?
