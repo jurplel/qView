@@ -306,7 +306,7 @@ void QVGraphicsView::scaleExpensively()
     zoomBasisScaleFactor = 1.0;
 
     // Use magic to find out how much we should move the viewport by
-    const QPointF move = mapFromScene(loadedPixmapItem->sceneBoundingRect().topLeft()) - mapFromScene(mappedRect.topLeft());
+    const QPointF move = mapFromScene(loadedPixmapItem->sceneBoundingRect().topLeft()) - mapFromScene(mappedRect.topLeft()*devicePixelRatioF());
     horizontalScrollBar()->setValue(move.x() + horizontalScrollBar()->value());
     verticalScrollBar()->setValue(move.y() + verticalScrollBar()->value());
 }
