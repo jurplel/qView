@@ -284,7 +284,12 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
 
 void QVGraphicsView::scaleExpensively()
 {
+    // This doesn't work with gifs yet!
     if (currentScale >= maxScalingTwoSize)
+    {
+        return;
+    }
+    else if (!isScalingTwoEnabled && currentScale > 1.00001)
     {
         return;
     }
@@ -319,34 +324,6 @@ void QVGraphicsView::animatedFrameChanged(QRect rect)
     {
         loadedPixmapItem->setPixmap(getLoadedMovie().currentPixmap());
     }
-
-//    if (isScalingEnabled)
-//    {
-//        QSize newSize = scaledSize;
-//        if (currentScale <= 1.0 && !isOriginalSize)
-//            newSize *= currentScale;
-
-//         loadedPixmapItem->setPixmap(imageCore.scaleExpensively(newSize));
-//    }
-//    else
-//    {
-//        QTransform transform;
-//        transform.rotate(imageCore.getCurrentRotation());
-
-//        QImage transformedImage = getLoadedMovie().currentImage().transformed(transform);
-
-//        loadedPixmapItem->setPixmap(QPixmap::fromImage(transformedImage));
-//    }
-
-//    if (movieCenterNeedsUpdating)
-//    {
-//        movieCenterNeedsUpdating = false;
-//        centerOn(loadedPixmapItem);
-//        if (qFuzzyCompare(currentScale, 1.0) && !isOriginalSize)
-//        {
-//            fitInViewMarginless();
-//        }
-//    }
 }
 
 void QVGraphicsView::updateLoadedPixmapItem()
