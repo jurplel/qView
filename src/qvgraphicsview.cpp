@@ -295,16 +295,16 @@ void QVGraphicsView::scaleExpensively()
         return;
     }
 
-    // Map size of the original pixmap to the scale acquired in fitting times scale modification from zooming
-    QSizeF effectiveSize = getCurrentFileDetails().loadedPixmapSize;
-    QTransform &transformToMapTo = absoluteTransform;
-
-    const QRectF mappedRect = transformToMapTo.mapRect(QRectF(loadedPixmapItem->scenePos(), effectiveSize));
+    // Map size of the original pixmap to the scale acquired in fitting with modification from zooming percentage
+    const QRectF mappedRect = absoluteTransform.mapRect(QRectF(loadedPixmapItem->scenePos(), getCurrentFileDetails().loadedPixmapSize));
     const QSizeF mappedPixmapSize = mappedRect.size() * devicePixelRatioF();
 
 
     // Set image to scaled version
     loadedPixmapItem->setPixmap(imageCore.scaleExpensively(mappedPixmapSize));
+
+    // Store original mapped position of item
+    const QPointF mappedPoint = transform().map(loadedPixmapItem->scenePos());
 
     // Reset transformation
     setTransform(QTransform::fromScale(qPow(devicePixelRatioF(), -1), qPow(devicePixelRatioF(), -1)));
@@ -312,8 +312,8 @@ void QVGraphicsView::scaleExpensively()
     zoomBasisScaleFactor = 1.0;
 
 
-    // Use magic to find out how much we should move the viewport by
-    const QPointF move = mapFromScene(loadedPixmapItem->sceneBoundingRect().topLeft()) - mapFromScene(mappedRect.topLeft()*devicePixelRatioF());
+    // Find difference of old pixmap position and new pixmap position to find relative amount to move viewport
+    const QPointF move = mapFromScene(loadedPixmapItem->scenePos()) - mapFromScene(mappedPoint*devicePixelRatioF());
     horizontalScrollBar()->setValue(move.x() + horizontalScrollBar()->value());
     verticalScrollBar()->setValue(move.y() + verticalScrollBar()->value());
 }
