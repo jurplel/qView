@@ -166,7 +166,7 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
 
     if (!willZoom)
     {
-        if (event->modifiers() == (Qt::ControlModifier|Qt::ShiftModifier) || event->modifiers() == Qt::ShiftModifier)
+        if (event->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier) || event->modifiers() == Qt::ShiftModifier)
             translate(event->angleDelta().y()/2.0, event->angleDelta().x()/2.0);
         else
             translate(event->angleDelta().x()/2.0, event->angleDelta().y()/2.0);
@@ -264,6 +264,7 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
 
     zoomBasisScaleFactor *= scaleFactor;
     setTransform(QTransform(zoomBasis).scale(zoomBasisScaleFactor, zoomBasisScaleFactor));
+    absoluteTransform.scale(scaleFactor, scaleFactor);
 
     // If we are zooming in, we have a point to zoom towards, the mouse is on top of the viewport, and cursor zooming is enabled
     if (currentScale > 1.00001 && pos != QPoint(-1, -1) && underMouse() && isCursorZoomEnabled)
@@ -294,8 +295,13 @@ void QVGraphicsView::scaleExpensively()
         return;
     }
 
-    const QRectF mappedRect = transform().mapRect(loadedPixmapItem->sceneBoundingRect());
+    // Map size of the original pixmap to the scale acquired in fitting times scale modification from zooming
+    QSizeF effectiveSize = getCurrentFileDetails().loadedPixmapSize;
+    QTransform &transformToMapTo = absoluteTransform;
+
+    const QRectF mappedRect = transformToMapTo.mapRect(QRectF(loadedPixmapItem->scenePos(), effectiveSize));
     const QSizeF mappedPixmapSize = mappedRect.size() * devicePixelRatioF();
+
 
     // Set image to scaled version
     loadedPixmapItem->setPixmap(imageCore.scaleExpensively(mappedPixmapSize));
@@ -304,6 +310,7 @@ void QVGraphicsView::scaleExpensively()
     setTransform(QTransform::fromScale(qPow(devicePixelRatioF(), -1), qPow(devicePixelRatioF(), -1)));
     zoomBasis = transform();
     zoomBasisScaleFactor = 1.0;
+
 
     // Use magic to find out how much we should move the viewport by
     const QPointF move = mapFromScene(loadedPixmapItem->sceneBoundingRect().topLeft()) - mapFromScene(mappedRect.topLeft()*devicePixelRatioF());
@@ -466,11 +473,12 @@ void QVGraphicsView::fitInViewMarginless(const QRectF &rect)
         return;
     scale(1 / unity.width(), 1 / unity.height());
 
-    //resize to window size unless you are meant to stop at the actual size
+    // Determine what we are resizing to
     const int adjWidth = width() - MARGIN;
     const int adjHeight = height() - MARGIN - obscuredHeight;
 
     QRectF viewRect;
+    // Resize to window size unless you are meant to stop at the actual size, basically
     if (isPastActualSizeEnabled || (adjustedImageSize.width() >= adjWidth || adjustedImageSize.height() >= adjHeight))
     {
         viewRect = viewport()->rect().adjusted(MARGIN, MARGIN, -MARGIN, -MARGIN);
@@ -478,6 +486,7 @@ void QVGraphicsView::fitInViewMarginless(const QRectF &rect)
     }
     else
     {
+        // stop at actual size
         viewRect = QRect(QPoint(), getCurrentFileDetails().loadedPixmapSize);
         QPoint center = this->rect().center();
         center.setY(center.y() - obscuredHeight);
@@ -498,13 +507,22 @@ void QVGraphicsView::fitInViewMarginless(const QRectF &rect)
 
     xratio = yratio = qMin(xratio, yratio);
 
+    // Find and set the transform required to fit the original image
+    // Compact version of above code
+    QRectF sceneRect2 = transform().mapRect(QRectF({}, adjustedImageSize));
+    qreal absoluteRatio = qMin(viewRect.width() / sceneRect2.width(),
+                               viewRect.height() / sceneRect2.height());
+
+    absoluteTransform = QTransform::fromScale(absoluteRatio, absoluteRatio);
+
     // Scale and center on the center of \a rect.
     scale(xratio, yratio);
     centerOn(adjustedBoundingRect.center());
 
+    // variables
     zoomBasis = transform();
-    isOriginalSize = false;
 
+    isOriginalSize = false;
     currentScale = 1.0;
 }
 

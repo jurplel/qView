@@ -134,6 +134,7 @@ private:
     bool isOriginalSize;
     qreal maxScalingTwoSize;
 
+    QTransform absoluteTransform;
     QTransform zoomBasis;
     qreal zoomBasisScaleFactor;
 
