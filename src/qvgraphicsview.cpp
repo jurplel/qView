@@ -25,7 +25,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     grabGesture(Qt::PinchGesture);
 
     // Scene setup
-    auto *scene = new QGraphicsScene(0.0, 0.0, 100000000.0, 100000000.0, this);
+    auto *scene = new QGraphicsScene(-1000000.0, -1000000.0, 2000000.0, 2000000.0, this);
     setScene(scene);
 
     // Initialize configurable variables
@@ -60,7 +60,6 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 
 
     loadedPixmapItem = new QGraphicsPixmapItem();
-    loadedPixmapItem->setPos(sceneRect().width()/1000, sceneRect().height()/1000);
     scene->addItem(loadedPixmapItem);
 
     // Connect to settings signal
@@ -247,8 +246,6 @@ void QVGraphicsView::zoomOut(const QPoint &pos)
     zoom(qPow(scaleFactor, -1), pos);
 }
 
-// TODO: zooming all the way in then back to 100% doesn't have the result one would expect.
-// too relative?
 void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
 {
 
@@ -285,40 +282,42 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
 
 void QVGraphicsView::scaleExpensively()
 {
-    // This doesn't work with gifs yet!
-    if (currentScale >= maxScalingTwoSize)
+    // If we are above maximum scaling size
+    if ((currentScale >= maxScalingTwoSize) ||
+        (!isScalingTwoEnabled && currentScale > 1.00001))
     {
-        return;
-    }
-    else if (!isScalingTwoEnabled && currentScale > 1.00001)
-    {
+        // Return to original size
+        makeUnscaled();
         return;
     }
 
     // Map size of the original pixmap to the scale acquired in fitting with modification from zooming percentage
-    const QRectF mappedRect = absoluteTransform.mapRect(QRectF(loadedPixmapItem->scenePos(), getCurrentFileDetails().loadedPixmapSize));
+    const QRectF mappedRect = absoluteTransform.mapRect(QRectF({}, getCurrentFileDetails().loadedPixmapSize));
     const QSizeF mappedPixmapSize = mappedRect.size() * devicePixelRatioF();
-
 
     // Set image to scaled version
     loadedPixmapItem->setPixmap(imageCore.scaleExpensively(mappedPixmapSize));
-
-    // Store original mapped position of item
-    const QPointF mappedPoint = transform().map(loadedPixmapItem->scenePos());
 
     // Reset transformation
     setTransform(QTransform::fromScale(qPow(devicePixelRatioF(), -1), qPow(devicePixelRatioF(), -1)));
     zoomBasis = transform();
     zoomBasisScaleFactor = 1.0;
-
-
-    // Find difference of old pixmap position and new pixmap position to find relative amount to move viewport
-    const QPointF move = mapFromScene(loadedPixmapItem->scenePos()) - mapFromScene(mappedPoint*devicePixelRatioF());
-    horizontalScrollBar()->setValue(move.x() + horizontalScrollBar()->value());
-    verticalScrollBar()->setValue(move.y() + verticalScrollBar()->value());
 }
 
-// TODO: Fix weird delay after loading image?
+void QVGraphicsView::makeUnscaled()
+{
+    // Return to original size
+    if (getCurrentFileDetails().isMovieLoaded)
+        loadedPixmapItem->setPixmap(getLoadedMovie().currentPixmap());
+    else
+        loadedPixmapItem->setPixmap(getLoadedPixmap());
+
+    setTransform(absoluteTransform);
+    // Reset transformation
+    zoomBasis = transform();
+    zoomBasisScaleFactor = 1.0;
+}
+
 void QVGraphicsView::animatedFrameChanged(QRect rect)
 {
     Q_UNUSED(rect)
@@ -579,7 +578,6 @@ void QVGraphicsView::error(int errorNum, const QString &errorString, const QStri
     }
 }
 
-// turning off scaling should reset image to loadedpixmap
 void QVGraphicsView::settingsUpdated()
 {
     auto &settingsManager = qvApp->getSettingsManager();
@@ -607,6 +605,8 @@ void QVGraphicsView::settingsUpdated()
 
     //scaling
     isScalingEnabled = settingsManager.getBoolean("scalingenabled");
+    if (!isScalingEnabled)
+        makeUnscaled();
 
     //scaling2
     if (!isScalingEnabled)
@@ -633,9 +633,7 @@ void QVGraphicsView::settingsUpdated()
     isLoopFoldersEnabled = settingsManager.getBoolean("loopfoldersenabled");
 
     if (getCurrentFileDetails().isPixmapLoaded)
-    {
         resetScale();
-    }
 }
 
 void QVGraphicsView::closeImage()

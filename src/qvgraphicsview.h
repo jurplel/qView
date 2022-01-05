@@ -45,6 +45,7 @@ public:
     void zoom(qreal scaleFactor, const QPoint &pos = QPoint(-1, -1));
 
     void scaleExpensively();
+    void makeUnscaled();
 
     void resetScale();
     void originalSize();
