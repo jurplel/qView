@@ -222,6 +222,8 @@ QFileInfoList QVImageCore::getCompatibleFiles()
 
     QMimeDatabase mimeDb;
     QList<QByteArray> supportedMimeTypes = QImageReader::supportedMimeTypes();
+    // Qt 5.15 seems to have added pdf support for QImageReader but it is super broken in qView at the moment
+    supportedMimeTypes.removeAll("application/pdf");
 
     const QFileInfoList currentFolder = currentFileDetails.fileInfo.dir().entryInfoList();
     for (const QFileInfo &fileInfo : currentFolder)
