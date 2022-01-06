@@ -33,15 +33,22 @@ public:
     };
     Q_ENUM(GoToFileMode)
 
-    void zoom(int DeltaY, const QPoint &pos, qreal targetScaleFactor = 0);
 
     QMimeData* getMimeData() const;
     void loadMimeData(const QMimeData *mimeData);
     void loadFile(const QString &fileName);
 
+    void zoomIn(const QPoint &pos = QPoint(-1, -1));
+
+    void zoomOut(const QPoint &pos = QPoint(-1, -1));
+
+    void zoom(qreal scaleFactor, const QPoint &pos = QPoint(-1, -1));
+
+    void scaleExpensively();
+    void makeUnscaled();
+
     void resetScale();
-    void scaleExpensively(ScaleMode mode);
-    void originalSize(bool setVariables = true);
+    void originalSize();
 
     void goToFile(const GoToFileMode &mode, int index = 0);
 
@@ -87,7 +94,8 @@ protected:
 
     bool event(QEvent *event) override;
 
-    void fitInViewMarginless(bool setVariables = true);
+    void fitInViewMarginless(const QRectF &rect);
+    void fitInViewMarginless(const QGraphicsItem *item);
 
     void centerOn(const QPointF &pos);
 
@@ -109,11 +117,6 @@ private:
 
 
     QGraphicsPixmapItem *loadedPixmapItem;
-    QRectF adjustedBoundingRect;
-    QSize adjustedImageSize;
-
-    QTransform fittedTransform;
-    QTransform scaledTransform;
 
     bool isFilteringEnabled;
     bool isScalingEnabled;
@@ -125,15 +128,20 @@ private:
     int cropMode;
     qreal scaleFactor;
 
+    const int MARGIN = -2;
+
     qreal currentScale;
     QSize scaledSize;
     bool isOriginalSize;
     qreal maxScalingTwoSize;
-    bool cheapScaledLast;
-    bool movieCenterNeedsUpdating;
+
+    QTransform absoluteTransform;
+    QTransform zoomBasis;
+    qreal zoomBasisScaleFactor;
 
     QVImageCore imageCore;
 
-    QTimer *expensiveScaleTimer;
+    QTimer *expensiveScaleTimerNew;
+    QPointF centerPoint;
 };
 #endif // QVGRAPHICSVIEW_H

@@ -25,7 +25,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     grabGesture(Qt::PinchGesture);
 
     // Scene setup
-    auto *scene = new QGraphicsScene(0.0, 0.0, 100000.0, 100000.0, this);
+    auto *scene = new QGraphicsScene(-1000000.0, -1000000.0, 2000000.0, 2000000.0, this);
     setScene(scene);
 
     // Initialize configurable variables
@@ -40,24 +40,24 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     scaleFactor = 1.25;
 
     // Initialize other variables
-    adjustedBoundingRect = QRectF();
-    adjustedImageSize = QSize();
     currentScale = 1.0;
     scaledSize = QSize();
     maxScalingTwoSize = 3;
-    cheapScaledLast = false;
-    movieCenterNeedsUpdating = false;
     isOriginalSize = false;
+
+    zoomBasisScaleFactor = 1.0;
 
     connect(&imageCore, &QVImageCore::animatedFrameChanged, this, &QVGraphicsView::animatedFrameChanged);
     connect(&imageCore, &QVImageCore::fileChanged, this, &QVGraphicsView::postLoad);
     connect(&imageCore, &QVImageCore::updateLoadedPixmapItem, this, &QVGraphicsView::updateLoadedPixmapItem);
     connect(&imageCore, &QVImageCore::readError, this, &QVGraphicsView::error);
 
-    expensiveScaleTimer = new QTimer(this);
-    expensiveScaleTimer->setSingleShot(true);
-    expensiveScaleTimer->setInterval(50);
-    connect(expensiveScaleTimer, &QTimer::timeout, this, [this]{scaleExpensively(ScaleMode::resetScale);});
+    // Should replace the other timer eventually
+    expensiveScaleTimerNew = new QTimer(this);
+    expensiveScaleTimerNew->setSingleShot(true);
+    expensiveScaleTimerNew->setInterval(50);
+    connect(expensiveScaleTimerNew, &QTimer::timeout, this, [this]{scaleExpensively();});
+
 
     loadedPixmapItem = new QGraphicsPixmapItem();
     scene->addItem(loadedPixmapItem);
@@ -132,31 +132,19 @@ bool QVGraphicsView::event(QEvent *event)
         {
             auto *pinchGesture = static_cast<QPinchGesture *>(pinch);
             QPinchGesture::ChangeFlags changeFlags = pinchGesture->changeFlags();
-            if (changeFlags & QPinchGesture::RotationAngleChanged) {
-                if (pinchGesture->totalRotationAngle() > 90)
-                {
-                    rotateImage(90);
-                    pinchGesture->setTotalRotationAngle(0);
-                }
-                else if (pinchGesture->totalRotationAngle() < -90)
-                {
-                    rotateImage(-90);
-                    pinchGesture->setTotalRotationAngle(0);
-                }
 
-            }
             if (changeFlags & QPinchGesture::ScaleFactorChanged) {
-                if (pinchGesture->totalScaleFactor() > 1+(scaleFactor-1)/2)
-                {
-                    zoom(120, mapFromGlobal(pinchGesture->hotSpot().toPoint()));
-                    pinchGesture->setTotalScaleFactor(1.0);
-                }
-                else if (pinchGesture->totalScaleFactor() < 1-(scaleFactor-1)/2)
-                {
-                    zoom(-120, mapFromGlobal(pinchGesture->hotSpot().toPoint()));
-                    pinchGesture->setTotalScaleFactor(1.0);
-                }
+                const QPoint hotPoint = mapFromGlobal(pinchGesture->hotSpot().toPoint());
+                zoom(pinchGesture->scaleFactor(), hotPoint);
             }
+
+            // Fun rotation stuff maybe later
+//            if (changeFlags & QPinchGesture::RotationAngleChanged) {
+//                qreal rotationDelta = pinchGesture->rotationAngle() - pinchGesture->lastRotationAngle();
+//                rotate(rotationDelta);
+//                centerOn(loadedPixmapItem);
+//            }
+            return true;
         }
     }
     return QGraphicsView::event(event);
@@ -164,153 +152,41 @@ bool QVGraphicsView::event(QEvent *event)
 
 void QVGraphicsView::wheelEvent(QWheelEvent *event)
 {
-    //Basically, if you are holding ctrl then it scrolls instead of zooms (the shift bit is for horizontal scrolling)
-    bool mode = isScrollZoomsEnabled;
-    if (event->modifiers() == Qt::ControlModifier || event->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier))
-        mode = !mode;
+    #if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+    const QPoint eventPos = event->position().toPoint();
+    #else
+    const QPoint eventPos = event->pos();
+    #endif
 
-    if (mode)
+    //Basically, if you are holding ctrl then it scrolls instead of zooms (the shift bit is for horizontal scrolling)
+    bool willZoom = isScrollZoomsEnabled;
+    if (event->modifiers() == Qt::ControlModifier || event->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier))
+        willZoom = !willZoom;
+
+    if (!willZoom)
     {
-        if (event->angleDelta().y() == 0)
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
-            zoom(event->angleDelta().x(), event->position().toPoint());
-#else
-            zoom(event->angleDelta().x(), event->pos());
-#endif
-        else
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
-            zoom(event->angleDelta().y(), event->position().toPoint());
-#else
-            zoom(event->angleDelta().y(), event->pos());
-#endif
-    }
-    else
-    {
-        //macos automatically scrolls horizontally while holding shift
-#ifndef Q_OS_MACOS
-        if (event->modifiers() == (Qt::ControlModifier|Qt::ShiftModifier) || event->modifiers() == Qt::ShiftModifier)
+        if (event->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier) || event->modifiers() == Qt::ShiftModifier)
             translate(event->angleDelta().y()/2.0, event->angleDelta().x()/2.0);
         else
-#endif
             translate(event->angleDelta().x()/2.0, event->angleDelta().y()/2.0);
+
+        return;
     }
+
+    int angleDelta;
+
+    if (event->angleDelta().y() == 0)
+        angleDelta = event->angleDelta().x();
+    else
+        angleDelta = event->angleDelta().y();
+
+    if (angleDelta > 0)
+        zoomIn(eventPos);
+    else
+        zoomOut(eventPos);
 }
 
 // Functions
-
-void QVGraphicsView::zoom(int DeltaY, const QPoint &pos, qreal targetScaleFactor)
-{
-    //if targetScaleFactor is 0 (default) - use scaleFactor variable
-    if (qFuzzyCompare(targetScaleFactor, 0))
-        targetScaleFactor = scaleFactor;
-
-    //define variables for later
-    QPointF originalMappedPos = mapToScene(pos);
-    QPointF result;
-
-    if (!getCurrentFileDetails().isPixmapLoaded)
-        return;
-
-    //if original size set, cancel zoom and reset scale
-    if (isOriginalSize)
-    {
-        originalSize();
-        return;
-    }
-
-    //don't zoom too far out, dude
-    if (DeltaY > 0)
-    {
-        if (currentScale >= 500)
-            return;
-        currentScale *= targetScaleFactor;
-    }
-    else
-    {
-        if (currentScale <= 0.01)
-            return;
-        currentScale /= targetScaleFactor;
-    }
-
-    bool shouldUseScaling = isScalingEnabled;
-    bool shouldUseScaling2 = isScalingTwoEnabled;
-    //Disallow scaling2 if movie is loaded
-    if (getCurrentFileDetails().isMovieLoaded)
-        shouldUseScaling2 = false;
-
-
-    //Use scaling up to scale factor 1.0 if we should
-    if ((currentScale < 0.99999 || (currentScale < 1.00001 && DeltaY > 0)) && shouldUseScaling)
-    {
-        //zoom expensively
-        scaleExpensively(ScaleMode::zoom);
-        cheapScaledLast = false;
-    }
-    //Use scaling up to the maximum scalingtwo value if we should
-    else if (currentScale < maxScalingTwoSize && shouldUseScaling2)
-    {
-        //to scale the mouse position with the image, the mouse position is mapped to the graphicsitem,
-        //it's scaled with a transform matrix (setScale), and then mapped back to scene. expensive scaling is done as expected.
-        QPointF doubleMapped = loadedPixmapItem->mapFromScene(originalMappedPos);
-        loadedPixmapItem->setTransformOriginPoint(loadedPixmapItem->boundingRect().topLeft());
-
-        scaleExpensively(ScaleMode::zoom);
-        if (DeltaY > 0)
-            loadedPixmapItem->setScale(targetScaleFactor);
-        else
-            loadedPixmapItem->setScale(qPow(targetScaleFactor, -1));
-
-        QPointF tripleMapped = loadedPixmapItem->mapToScene(doubleMapped);
-        loadedPixmapItem->setScale(1.0);
-
-        //when you are zooming out from high zoom levels and hit the "ScalingTwo" level again,
-        //this does one more matrix zoom and cancels the expensive zoom (needed for smoothness)
-        if (cheapScaledLast && DeltaY < 0)
-            scale(qPow(targetScaleFactor, -1), qPow(targetScaleFactor, -1));
-        else
-            originalMappedPos = tripleMapped;
-
-        cheapScaledLast = false;
-    }
-    //do regular matrix-based cheap scaling as a last resort
-    else
-    {
-        //Sets the pixmap to full resolution when zooming in without scaling2
-        if (loadedPixmapItem->pixmap().height() != getLoadedPixmap().height() && !isScalingTwoEnabled)
-        {
-            loadedPixmapItem->setPixmap(getLoadedPixmap());
-            fitInViewMarginless(false);
-            originalMappedPos = mapToScene(pos);
-        }
-
-        //zoom using cheap matrix method
-        if (DeltaY > 0)
-        {
-            scale(targetScaleFactor, targetScaleFactor);
-        }
-        else
-        {
-            scale(qPow(targetScaleFactor, -1), qPow(targetScaleFactor, -1));
-            //when the pixmap is set to full resolution, reset the scale back to the fittedheight when going back to expensive scaling town
-            if (!qFuzzyCompare(loadedPixmapItem->boundingRect().height(), scaledSize.height()) && qFuzzyCompare(currentScale, 1.0) && !shouldUseScaling2 && shouldUseScaling)
-                resetScale();
-        }
-        cheapScaledLast = true;
-    }
-
-    //if you are zooming in and the mouse is in play, zoom towards the mouse
-    //otherwise, just center the image
-    if (currentScale > 1.00001 && underMouse() && isCursorZoomEnabled)
-    {
-        QPointF transformationDiff = mapToScene(viewport()->rect().center()) - mapToScene(pos);
-        result = originalMappedPos + transformationDiff;
-    }
-    else
-    {
-        result = loadedPixmapItem->boundingRect().center();
-    }
-    centerOn(result);
-}
 
 QMimeData *QVGraphicsView::getMimeData() const
 {
@@ -347,39 +223,6 @@ void QVGraphicsView::loadMimeData(const QMimeData *mimeData)
     }
 }
 
-void QVGraphicsView::animatedFrameChanged(QRect rect)
-{
-    Q_UNUSED(rect)
-
-    if (isScalingEnabled)
-    {
-        QSize newSize = scaledSize;
-        if (currentScale <= 1.0 && !isOriginalSize)
-            newSize *= currentScale;
-
-         loadedPixmapItem->setPixmap(imageCore.scaleExpensively(newSize));
-    }
-    else
-    {
-        QTransform transform;
-        transform.rotate(imageCore.getCurrentRotation());
-
-        QImage transformedImage = getLoadedMovie().currentImage().transformed(transform);
-
-        loadedPixmapItem->setPixmap(QPixmap::fromImage(transformedImage));
-    }
-
-    if (movieCenterNeedsUpdating)
-    {
-        movieCenterNeedsUpdating = false;
-        centerOn(loadedPixmapItem);
-        if (qFuzzyCompare(currentScale, 1.0) && !isOriginalSize)
-        {
-            fitInViewMarginless();
-        }
-    }
-}
-
 void QVGraphicsView::loadFile(const QString &fileName)
 {
     imageCore.loadFile(fileName);
@@ -387,22 +230,114 @@ void QVGraphicsView::loadFile(const QString &fileName)
 
 void QVGraphicsView::postLoad()
 {
-    if (getCurrentFileDetails().isMovieLoaded)
-        movieCenterNeedsUpdating = true;
-    else
-        movieCenterNeedsUpdating = false;
-
     updateLoadedPixmapItem();
     qvApp->getActionManager().addFileToRecentsList(getCurrentFileDetails().fileInfo);
 
     emit fileChanged();
 }
 
+void QVGraphicsView::zoomIn(const QPoint &pos)
+{
+    zoom(scaleFactor, pos);
+}
+
+void QVGraphicsView::zoomOut(const QPoint &pos)
+{
+    zoom(qPow(scaleFactor, -1), pos);
+}
+
+void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
+{
+
+    //don't zoom too far out, dude
+    currentScale *= scaleFactor;
+    if (currentScale >= 500 || currentScale <= 0.01)
+    {
+        currentScale *= qPow(scaleFactor, -1);
+        return;
+    }
+
+    const QPointF scenePos = mapToScene(pos);
+
+    zoomBasisScaleFactor *= scaleFactor;
+    setTransform(QTransform(zoomBasis).scale(zoomBasisScaleFactor, zoomBasisScaleFactor));
+    absoluteTransform.scale(scaleFactor, scaleFactor);
+
+    // If we are zooming in, we have a point to zoom towards, the mouse is on top of the viewport, and cursor zooming is enabled
+    if (currentScale > 1.00001 && pos != QPoint(-1, -1) && underMouse() && isCursorZoomEnabled)
+    {
+        const QPointF p1mouse = mapFromScene(scenePos);
+        const QPointF move = p1mouse - pos;
+        horizontalScrollBar()->setValue(move.x() + horizontalScrollBar()->value());
+        verticalScrollBar()->setValue(move.y() + verticalScrollBar()->value());
+    }
+    else
+    {
+        centerOn(loadedPixmapItem);
+    }
+
+    if (isScalingEnabled && !isOriginalSize)
+    {
+        expensiveScaleTimerNew->start();
+    }
+}
+
+void QVGraphicsView::scaleExpensively()
+{
+    // If we are above maximum scaling size
+    if ((currentScale >= maxScalingTwoSize) ||
+        (!isScalingTwoEnabled && currentScale > 1.00001))
+    {
+        // Return to original size
+        makeUnscaled();
+        return;
+    }
+
+    // Map size of the original pixmap to the scale acquired in fitting with modification from zooming percentage
+    const QRectF mappedRect = absoluteTransform.mapRect(QRectF({}, getCurrentFileDetails().loadedPixmapSize));
+    const QSizeF mappedPixmapSize = mappedRect.size() * devicePixelRatioF();
+
+    // Set image to scaled version
+    loadedPixmapItem->setPixmap(imageCore.scaleExpensively(mappedPixmapSize));
+
+    // Reset transformation
+    setTransform(QTransform::fromScale(qPow(devicePixelRatioF(), -1), qPow(devicePixelRatioF(), -1)));
+    zoomBasis = transform();
+    zoomBasisScaleFactor = 1.0;
+}
+
+void QVGraphicsView::makeUnscaled()
+{
+    // Return to original size
+    if (getCurrentFileDetails().isMovieLoaded)
+        loadedPixmapItem->setPixmap(getLoadedMovie().currentPixmap());
+    else
+        loadedPixmapItem->setPixmap(getLoadedPixmap());
+
+    setTransform(absoluteTransform);
+    // Reset transformation
+    zoomBasis = transform();
+    zoomBasisScaleFactor = 1.0;
+}
+
+void QVGraphicsView::animatedFrameChanged(QRect rect)
+{
+    Q_UNUSED(rect)
+
+    if (isScalingEnabled)
+    {
+        scaleExpensively();
+    }
+    else
+    {
+        loadedPixmapItem->setPixmap(getLoadedMovie().currentPixmap());
+    }
+}
+
 void QVGraphicsView::updateLoadedPixmapItem()
 {
     //set pixmap and offset
     loadedPixmapItem->setPixmap(getLoadedPixmap());
-    loadedPixmapItem->setOffset((scene()->width()/2 - getLoadedPixmap().width()/2.0), (scene()->height()/2 - getLoadedPixmap().height()/2.0));
     scaledSize = loadedPixmapItem->boundingRect().size().toSize();
 
     resetScale();
@@ -415,95 +350,32 @@ void QVGraphicsView::resetScale()
     if (!getCurrentFileDetails().isPixmapLoaded)
         return;
 
-    fitInViewMarginless();
+    fitInViewMarginless(loadedPixmapItem);
 
-    if (!isScalingEnabled)
-        return;
-
-    expensiveScaleTimer->start();
+    if (isScalingEnabled)
+        expensiveScaleTimerNew->start();
 }
 
-void QVGraphicsView::scaleExpensively(ScaleMode mode)
-{
-    if (!getCurrentFileDetails().isPixmapLoaded || !isScalingEnabled)
-        return;
-
-    switch (mode) {
-    case ScaleMode::resetScale:
-    {
-        QVImageCore::ScaleMode coreMode = QVImageCore::ScaleMode::normal;
-        switch (cropMode) {
-        case 0:
-        {
-            // figure out if we should resize to width or height depending on the gap between the window chrome and the image itself
-            // 4 is added to these numbers to take into account the -2 margin from fitInViewMarginless (kind of a misnomer, eh?)
-            QSize windowSize = QSize(static_cast<int>(width()*devicePixelRatioF()), static_cast<int>(height()*devicePixelRatioF()));
-            qreal marginWidth = (windowSize.width()-adjustedBoundingRect.width()*transform().m11())+4;
-            qreal marginHeight = (windowSize.height()-adjustedBoundingRect.height()*transform().m22())+4;
-            if (marginWidth < marginHeight)
-                coreMode = QVImageCore::ScaleMode::width;
-            else
-                coreMode = QVImageCore::ScaleMode::height;
-            break;
-        }
-        case 1:
-        {
-            coreMode = QVImageCore::ScaleMode::height;
-            break;
-        }
-        case 2:
-        {
-            coreMode = QVImageCore::ScaleMode::width;
-            break;
-        }
-        }
-
-        QSize windowSize = QSize(static_cast<int>(width()*devicePixelRatioF()), static_cast<int>(height()*devicePixelRatioF()));
-
-        //scale only to actual size if scaling past actual size is disabled
-        if (!isPastActualSizeEnabled && adjustedImageSize.width() < windowSize.width() && adjustedImageSize.height() < windowSize.height())
-            loadedPixmapItem->setPixmap(imageCore.scaleExpensively(adjustedImageSize.width(), adjustedImageSize.height(), coreMode));
-        else
-            loadedPixmapItem->setPixmap(imageCore.scaleExpensively(windowSize.width()+4, windowSize.height()+4, coreMode));
-
-        fitInViewMarginless();
-        scaledSize = loadedPixmapItem->boundingRect().size().toSize();
-        break;
-    }
-    case ScaleMode::zoom:
-    {
-        QSize newSize = scaledSize * currentScale;
-
-        loadedPixmapItem->setPixmap(imageCore.scaleExpensively(newSize));
-        break;
-    }
-    }
-    if (getCurrentFileDetails().isMovieLoaded)
-        movieCenterNeedsUpdating = true;
-}
-
-void QVGraphicsView::originalSize(bool setVariables)
+void QVGraphicsView::originalSize()
 {
     if (isOriginalSize)
     {
-        resetScale();
-        return;
+        // If we are at the actual original size
+        if (transform() == QTransform())
+        {
+            resetScale(); // back to normal mode
+            return;
+        }
     }
-    if (getCurrentFileDetails().isMovieLoaded)
-        loadedPixmapItem->setPixmap(getLoadedMovie().currentPixmap());
-    else
-        loadedPixmapItem->setPixmap(getLoadedPixmap());
+    makeUnscaled();
 
     resetTransform();
     centerOn(loadedPixmapItem);
 
-    scaledSize = getLoadedPixmap().size();
+    zoomBasis = transform();
+    zoomBasisScaleFactor = 1.0;
 
-    if (setVariables)
-    {
-        movieCenterNeedsUpdating = true;
-        isOriginalSize = true;
-    }
+    isOriginalSize = true;
 }
 
 
@@ -566,26 +438,33 @@ void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
     loadFile(nextImage.absoluteFilePath());
 }
 
-void QVGraphicsView::fitInViewMarginless(bool setVariables)
+void QVGraphicsView::fitInViewMarginless(const QRectF &rect)
 {
-    adjustedImageSize = getCurrentFileDetails().loadedPixmapSize;
-    adjustedBoundingRect = loadedPixmapItem->boundingRect();
+#ifdef COCOA_LOADED
+    int obscuredHeight = QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
+#else
+    int obscuredHeight = 0;
+#endif
 
-    switch (cropMode) {
-    case 1:
+    // Set adjusted image size / bounding rect based on
+    QSize adjustedImageSize = getCurrentFileDetails().loadedPixmapSize;
+    QRectF adjustedBoundingRect = rect;
+
+    switch (cropMode) { // should be enum tbh
+    case 1: // only take into account height
     {
         adjustedImageSize.setWidth(1);
         adjustedBoundingRect.setWidth(1);
         break;
     }
-    case 2:
+    case 2: // only take into account width
     {
         adjustedImageSize.setHeight(1);
         adjustedBoundingRect.setHeight(1);
         break;
     }
     }
-    adjustedBoundingRect.moveCenter(loadedPixmapItem->boundingRect().center());
+    adjustedBoundingRect.moveCenter(rect.center());
 
     if (!scene() || adjustedBoundingRect.isNull())
         return;
@@ -596,23 +475,26 @@ void QVGraphicsView::fitInViewMarginless(bool setVariables)
         return;
     scale(1 / unity.width(), 1 / unity.height());
 
-    //resize to window size unless you are meant to stop at the actual size
+    // Determine what we are resizing to
+    const int adjWidth = width() - MARGIN;
+    const int adjHeight = height() - MARGIN - obscuredHeight;
+
     QRectF viewRect;
-    if (isPastActualSizeEnabled || (adjustedImageSize.width() >= width() || adjustedImageSize.height() >= height()))
+    // Resize to window size unless you are meant to stop at the actual size, basically
+    if (isPastActualSizeEnabled || (adjustedImageSize.width() >= adjWidth || adjustedImageSize.height() >= adjHeight))
     {
-        int margin = -2;
-        viewRect = viewport()->rect().adjusted(margin, margin, -margin, -margin);
+        viewRect = viewport()->rect().adjusted(MARGIN, MARGIN, -MARGIN, -MARGIN);
+        viewRect.setHeight(viewRect.height() - obscuredHeight);
     }
     else
     {
+        // stop at actual size
         viewRect = QRect(QPoint(), getCurrentFileDetails().loadedPixmapSize);
-        viewRect.moveCenter(rect().center());
+        QPoint center = this->rect().center();
+        center.setY(center.y() - obscuredHeight);
+        viewRect.moveCenter(center);
     }
 
-#ifdef COCOA_LOADED
-    int obscuredHeight = QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
-    viewRect.setHeight(viewRect.height()-obscuredHeight);
-#endif
 
     if (viewRect.isEmpty())
         return;
@@ -627,17 +509,28 @@ void QVGraphicsView::fitInViewMarginless(bool setVariables)
 
     xratio = yratio = qMin(xratio, yratio);
 
+    // Find and set the transform required to fit the original image
+    // Compact version of above code
+    QRectF sceneRect2 = transform().mapRect(QRectF({}, adjustedImageSize));
+    qreal absoluteRatio = qMin(viewRect.width() / sceneRect2.width(),
+                               viewRect.height() / sceneRect2.height());
+
+    absoluteTransform = QTransform::fromScale(absoluteRatio, absoluteRatio);
+
     // Scale and center on the center of \a rect.
     scale(xratio, yratio);
     centerOn(adjustedBoundingRect.center());
 
-    fittedTransform = transform();
+    // variables
+    zoomBasis = transform();
+
     isOriginalSize = false;
-    cheapScaledLast = false;
-    if (setVariables)
-    {
-        currentScale = 1.0;
-    }
+    currentScale = 1.0;
+}
+
+void QVGraphicsView::fitInViewMarginless(const QGraphicsItem *item)
+{
+    return fitInViewMarginless(item->sceneBoundingRect());
 }
 
 void QVGraphicsView::centerOn(const QPointF &pos)
@@ -675,7 +568,7 @@ void QVGraphicsView::centerOn(qreal x, qreal y)
 
 void QVGraphicsView::centerOn(const QGraphicsItem *item)
 {
-    centerOn(item->boundingRect().center());
+    centerOn(item->sceneBoundingRect().center());
 }
 
 void QVGraphicsView::error(int errorNum, const QString &errorString, const QString &fileName)
@@ -715,6 +608,8 @@ void QVGraphicsView::settingsUpdated()
 
     //scaling
     isScalingEnabled = settingsManager.getBoolean("scalingenabled");
+    if (!isScalingEnabled)
+        makeUnscaled();
 
     //scaling2
     if (!isScalingEnabled)
@@ -741,11 +636,7 @@ void QVGraphicsView::settingsUpdated()
     isLoopFoldersEnabled = settingsManager.getBoolean("loopfoldersenabled");
 
     if (getCurrentFileDetails().isPixmapLoaded)
-    {
         resetScale();
-        if (getCurrentFileDetails().isMovieLoaded && getLoadedMovie().state() == QMovie::Running)
-            movieCenterNeedsUpdating = true;
-    }
 }
 
 void QVGraphicsView::closeImage()
