@@ -276,8 +276,10 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
         centerOn(loadedPixmapItem);
     }
 
-    if (isScalingEnabled)
+    if (isScalingEnabled && !isOriginalSize)
+    {
         expensiveScaleTimerNew->start();
+    }
 }
 
 void QVGraphicsView::scaleExpensively()
@@ -358,19 +360,20 @@ void QVGraphicsView::originalSize()
 {
     if (isOriginalSize)
     {
-        resetScale();
-        return;
+        // If we are at the actual original size
+        if (transform() == QTransform())
+        {
+            resetScale(); // back to normal mode
+            return;
+        }
     }
-
-    if (getCurrentFileDetails().isMovieLoaded)
-        loadedPixmapItem->setPixmap(getLoadedMovie().currentPixmap());
-    else
-        loadedPixmapItem->setPixmap(getLoadedPixmap());
+    makeUnscaled();
 
     resetTransform();
     centerOn(loadedPixmapItem);
 
-    scaledSize = getLoadedPixmap().size();
+    zoomBasis = transform();
+    zoomBasisScaleFactor = 1.0;
 
     isOriginalSize = true;
 }
