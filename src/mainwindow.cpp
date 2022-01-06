@@ -469,11 +469,20 @@ void MainWindow::setWindowSize()
     QSize imageSize = getCurrentFileDetails().loadedPixmapSize;
     imageSize -= QSize(4, 4);
 
-    QScreen *currentScreen = screenAt(geometry().center());
-    QSize currentScreenSize = currentScreen->size();
 
-    QSize minWindowSize = currentScreenSize * minWindowResizedPercentage;
-    QSize maxWindowSize = currentScreenSize * maxWindowResizedPercentage;
+    // Try to grab the current screen
+    QScreen *currentScreen = screenAt(geometry().center());
+
+    // makeshift validity check
+    bool screenValid = QGuiApplication::screens().contains(currentScreen);
+    // Use first screen as fallback
+    if (!screenValid)
+        currentScreen = QGuiApplication::screens().at(0);
+
+    const QSize screenSize = currentScreen->size();
+
+    const QSize minWindowSize = screenSize * minWindowResizedPercentage;
+    const QSize maxWindowSize = screenSize * maxWindowResizedPercentage;
 
     if (imageSize.width() < minWindowSize.width() || imageSize.height() < minWindowSize.height())
     {
@@ -517,7 +526,7 @@ void MainWindow::setWindowSize()
     setGeometry(newRect);
 }
 
-//literally just copy pasted from Qt source code to maintain compatibility with 5.9 (although i've edited it now)
+// literally just copy pasted from Qt source code to maintain compatibility with 5.9 (although i've edited it now)
 QScreen *MainWindow::screenAt(const QPoint &point)
 {
     QVarLengthArray<const QScreen *, 8> visitedScreens;
