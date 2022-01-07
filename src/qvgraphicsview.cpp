@@ -248,7 +248,6 @@ void QVGraphicsView::zoomOut(const QPoint &pos)
 
 void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
 {
-
     //don't zoom too far out, dude
     currentScale *= scaleFactor;
     if (currentScale >= 500 || currentScale <= 0.01)
@@ -284,6 +283,15 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
 
 void QVGraphicsView::scaleExpensively()
 {
+    // Determine if mirrored or flipped
+    bool mirrored = false;
+    if (transform().m11() < 0)
+        mirrored = true;
+
+    bool flipped = false;
+    if (transform().m22() < 0)
+        flipped = true;
+
     // If we are above maximum scaling size
     if ((currentScale >= maxScalingTwoSize) ||
         (!isScalingTwoEnabled && currentScale > 1.00001))
@@ -297,17 +305,42 @@ void QVGraphicsView::scaleExpensively()
     const QRectF mappedRect = absoluteTransform.mapRect(QRectF({}, getCurrentFileDetails().loadedPixmapSize));
     const QSizeF mappedPixmapSize = mappedRect.size() * devicePixelRatioF();
 
+    // Undo mirror/flip before new transform
+    if (mirrored)
+        scale(-1, 1);
+
+    if (flipped)
+        scale(1, -1);
+
     // Set image to scaled version
     loadedPixmapItem->setPixmap(imageCore.scaleExpensively(mappedPixmapSize));
 
     // Reset transformation
     setTransform(QTransform::fromScale(qPow(devicePixelRatioF(), -1), qPow(devicePixelRatioF(), -1)));
+
+    // Redo mirror/flip after new transform
+    if (mirrored)
+        scale(-1, 1);
+
+    if (flipped)
+        scale(1, -1);
+
+    // Set zoombasis
     zoomBasis = transform();
     zoomBasisScaleFactor = 1.0;
 }
 
 void QVGraphicsView::makeUnscaled()
 {
+    // Determine if mirrored or flipped
+    bool mirrored = false;
+    if (transform().m11() < 0)
+        mirrored = true;
+
+    bool flipped = false;
+    if (transform().m22() < 0)
+        flipped = true;
+
     // Return to original size
     if (getCurrentFileDetails().isMovieLoaded)
         loadedPixmapItem->setPixmap(getLoadedMovie().currentPixmap());
@@ -315,6 +348,14 @@ void QVGraphicsView::makeUnscaled()
         loadedPixmapItem->setPixmap(getLoadedPixmap());
 
     setTransform(absoluteTransform);
+
+    // Redo mirror/flip after new transform
+    if (mirrored)
+        scale(-1, 1);
+
+    if (flipped)
+        scale(1, -1);
+
     // Reset transformation
     zoomBasis = transform();
     zoomBasisScaleFactor = 1.0;
