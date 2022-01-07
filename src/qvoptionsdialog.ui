@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>432</width>
-    <height>438</height>
+    <height>485</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,7 +23,7 @@
       <enum>Qt::NoFocus</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="window">
       <property name="layoutDirection">
@@ -213,7 +213,7 @@
          </property>
         </spacer>
        </item>
-       <item row="11" column="1">
+       <item row="13" column="1">
         <widget class="QCheckBox" name="darkTitlebarCheckbox">
          <property name="toolTip">
           <string>Choose whether or not the titlebar should always be dark regardless of your chosen macOS appearance</string>
@@ -226,20 +226,27 @@
          </property>
         </widget>
        </item>
-       <item row="12" column="1">
+       <item row="11" column="1">
         <widget class="QCheckBox" name="menubarCheckbox">
          <property name="text">
           <string>Show menubar</string>
          </property>
         </widget>
        </item>
-       <item row="13" column="1">
+       <item row="12" column="1">
         <widget class="QCheckBox" name="detailsInFullscreen">
          <property name="toolTip">
           <string>Choose whether or not to display the titlebar text while in fullscreen</string>
          </property>
          <property name="text">
           <string>Show titlebar text in fullscreen</string>
+         </property>
+        </widget>
+       </item>
+       <item row="14" column="1">
+        <widget class="QCheckBox" name="quitOnLastWindowCheckbox">
+         <property name="text">
+          <string>&amp;Quit on last window closed</string>
          </property>
         </widget>
        </item>

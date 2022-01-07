@@ -268,9 +268,11 @@ void MainWindow::settingsUpdated()
 #endif
     menuBar()->setVisible(menuBarEnabled);
 
-    // titlebaralwaysdark
 #ifdef COCOA_LOADED
+    // titlebaralwaysdark
     QVCocoaFunctions::setVibrancy(settingsManager.getBoolean("titlebaralwaysdark"), windowHandle());
+    // quitonlastwindow
+    qvApp->setQuitOnLastWindowClosed(settingsManager.getBoolean("quitonlastwindow"));
 #endif
 
     //slideshow timer

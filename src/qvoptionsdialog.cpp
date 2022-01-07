@@ -48,6 +48,7 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     ui->menubarCheckbox->hide();
 #else
     ui->darkTitlebarCheckbox->hide();
+    ui->quitOnLastWindowCheckbox->hide();
 #endif
 
     syncSettings(false, true);
@@ -140,6 +141,8 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
     syncSpinBox(ui->maxWindowResizeSpinBox, "maxwindowresizedpercentage", defaults, makeConnections);
     // titlebaralwaysdark
     syncCheckbox(ui->darkTitlebarCheckbox, "titlebaralwaysdark", defaults, makeConnections);
+    // quitonlastwindow
+    syncCheckbox(ui->quitOnLastWindowCheckbox, "quitonlastwindow", defaults, makeConnections);
     // menubarenabled
     syncCheckbox(ui->menubarCheckbox, "menubarenabled", defaults, makeConnections);
     // fullscreendetails

@@ -78,7 +78,7 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     QVCocoaFunctions::setUserDefaults();
 #endif
 #ifdef Q_OS_MACOS
-    setQuitOnLastWindowClosed(false);
+    setQuitOnLastWindowClosed(getSettingsManager().getBoolean("quitonlastwindow"));
 #endif
 
     // Block any erroneous icons from showing up on mac and windows
