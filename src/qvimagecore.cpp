@@ -417,6 +417,12 @@ void QVImageCore::setPaused(bool desiredState)
 
 void QVImageCore::setSpeed(int desiredSpeed)
 {
+    if (desiredSpeed < 0)
+        desiredSpeed = 0;
+
+    if (desiredSpeed > 1000)
+        desiredSpeed = 1000;
+
     if (currentFileDetails.isMovieLoaded)
         loadedMovie.setSpeed(desiredSpeed);
 }
