@@ -22,7 +22,7 @@ steps:
 - script: |
     qtvers=${{ parameters.version }}
 
-    if [ ${qtvers:0:1} != 6 ]; then
+    if [ ${qtvers:0:1} == 6 ]; then
       python -m aqt install-qt windows desktop ${{ parameters.version }} -m qtimageformats %arch%
     else
       python -m aqt install-qt windows desktop ${{ parameters.version }} %arch%
@@ -35,7 +35,7 @@ steps:
     
     brew install yasm
 
-    if [ ${qtvers:0:1} != 6 ]; then
+    if [ ${qtvers:0:1} == 6 ]; then
       python -m aqt install-qt mac desktop ${{ parameters.version }} -m qtimageformats
     else
       python -m aqt install-qt mac desktop ${{ parameters.version }}
@@ -46,7 +46,7 @@ steps:
 - script: |
     qtvers=${{ parameters.version }}
 
-    if [ ${qtvers:0:1} != 6 ]; then
+    if [ ${qtvers:0:1} == 6 ]; then
       python -m aqt install-qt linux desktop ${{ parameters.version }} -m qtimageformats
     else
       python -m aqt install-qt linux desktop ${{ parameters.version }}
