@@ -19,7 +19,7 @@ steps:
   displayName: 'Install aqtinstall'
 
 # I hate splitting this into three but I can't figure out how to do it any better
-- script: |
+- bash: |
     qtvers=${{ parameters.version }}
 
     if [ ${qtvers:0:1} == 6 ]; then
@@ -30,7 +30,7 @@ steps:
   condition: and(succeeded(), eq( variables['Agent.OS'], 'Windows_NT' ))
   displayName: 'Install Qt (Windows)'
 
-- script: |
+- bash: |
     qtvers=${{ parameters.version }}
     
     brew install yasm
@@ -43,7 +43,7 @@ steps:
   condition: and(succeeded(), eq( variables['Agent.OS'], 'Darwin' ))
   displayName: 'Install Qt (macOS)'
 
-- script: |
+- bash: |
     qtvers=${{ parameters.version }}
 
     if [ ${qtvers:0:1} == 6 ]; then
