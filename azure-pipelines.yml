@@ -69,7 +69,7 @@ jobs:
       qmake
       sudo make install
       
-      echo "##vso[task.setvariable variable=extra_plugins_maybe]'-extra-plugins=styles/libqt5ct-style.so,platformthemes/libqt5ct.so,imageformats/libqapng.so,imageformats/libqavif.so,imageformats/libqheif.so'"
+      echo "##vso[task.setvariable variable=extra_plugins_maybe]'-extra-plugins=styles/libqt5ct-style.so,platformthemes/libqt5ct.so'"
     condition: eq( variables['Agent.OS'], 'Linux' )
     displayName: Get qt5ct style (Linux only)
 

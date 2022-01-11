@@ -23,9 +23,9 @@ steps:
     qtvers=${{ parameters.version }}
 
     if [ ${qtvers:0:1} == 6 ]; then
-      python -m aqt install-qt windows desktop ${{ parameters.version }} -m qtimageformats $arch
+      python -m aqt install-qt windows desktop $qtvers $(qtArch) -m qtimageformats
     else
-      python -m aqt install-qt windows desktop ${{ parameters.version }} $arch
+      python -m aqt install-qt windows desktop $qtvers $(qtArch)
     fi
   condition: and(succeeded(), eq( variables['Agent.OS'], 'Windows_NT' ))
   displayName: 'Install Qt (Windows)'
@@ -36,9 +36,9 @@ steps:
     brew install yasm
 
     if [ ${qtvers:0:1} == 6 ]; then
-      python -m aqt install-qt mac desktop ${{ parameters.version }} -m qtimageformats
+      python -m aqt install-qt mac desktop $qtvers -m qtimageformats
     else
-      python -m aqt install-qt mac desktop ${{ parameters.version }}
+      python -m aqt install-qt mac desktop $qtvers
     fi    
   condition: and(succeeded(), eq( variables['Agent.OS'], 'Darwin' ))
   displayName: 'Install Qt (macOS)'
@@ -47,9 +47,9 @@ steps:
     qtvers=${{ parameters.version }}
 
     if [ ${qtvers:0:1} == 6 ]; then
-      python -m aqt install-qt linux desktop ${{ parameters.version }} -m qtimageformats
+      python -m aqt install-qt linux desktop $qtvers -m qtimageformats
     else
-      python -m aqt install-qt linux desktop ${{ parameters.version }}
+      python -m aqt install-qt linux desktop $qtvers
     fi
   condition: and(succeeded(), eq( variables['Agent.OS'], 'Linux' ))
   displayName: 'Install Qt (Linux)'
