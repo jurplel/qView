@@ -58,7 +58,7 @@ jobs:
     parameters:
       version: $(qtVersion)
 
-  - pwsh: ci/pwsh/build.ps1
+  - pwsh: ci/scripts/build.ps1
     displayName: 'Build qView'
 
   - pwsh: |
