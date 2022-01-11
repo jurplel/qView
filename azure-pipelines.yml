@@ -64,11 +64,11 @@ jobs:
 
   - pwsh: |
       if ($IsWindows) {
-        & "ci/scripts/windeployqt.ps1 $(buildNumString)"
+        Invoke-Expression "& 'ci/scripts/windeployqt.ps1' $(buildNumString)"
       } elseif ($IsMacOS) {
         bash ci/scripts/macdeploy.sh $(buildNumString)
       } else {
-        bash ci/scripts/linuxdeploy.sh $(buildNumString)
+        bash ci/scripts/linuxdeployqt.sh $(buildNumString) $(extra_plugins_maybe)
       }
     displayName: 'Run deployment script'
 

@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-if [ $0 != "" ]; then
+if [ $1 != "" ]; then
         VERSION=$0
 else
         VERSION=$(LC_ALL=C sed -n -e '/^VERSION/p' qView.pro)
@@ -9,9 +9,9 @@ fi
 
 cd bin
 
-macdeployqt bin/qView.app
-if [ $0 != "" ]; then
-    mv qView.app qView-nightly-$0\.app
+macdeployqt qView.app
+if [ $1 != "" ]; then
+    mv qView.app qView-nightly-$1\.app
     macdeployqt *.app -dmg
 else
     brew install create-dmg
