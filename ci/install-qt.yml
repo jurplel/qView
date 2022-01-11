@@ -20,18 +20,18 @@ steps:
 
 # I hate splitting this into three but I can't figure out how to do it any better
 - script: |
-    python -m aqt install ${{ parameters.version }} windows desktop %arch%
+    python -m aqt install ${{ parameters.version }} windows desktop %arch% -m qtimageformats
   condition: and(succeeded(), eq( variables['Agent.OS'], 'Windows_NT' ))
   displayName: 'Install Qt (Windows)'
 
 - script: |
     brew install yasm
-    python -m aqt install ${{ parameters.version }} mac desktop
+    python -m aqt install ${{ parameters.version }} mac desktop -m qtimageformats
   condition: and(succeeded(), eq( variables['Agent.OS'], 'Darwin' ))
   displayName: 'Install Qt (macOS)'
 
 - script: |
-    python -m aqt install ${{ parameters.version }} linux desktop
+    python -m aqt install ${{ parameters.version }} linux desktop -m qtimageformats
   condition: and(succeeded(), eq( variables['Agent.OS'], 'Linux' ))
   displayName: 'Install Qt (Linux)'
 
