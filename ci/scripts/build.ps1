@@ -9,7 +9,7 @@ if ($IsWindows) {
     ci/scripts/vcvars.ps1
 }
 
-qmake $args[0] PREFIX=$Prefix
+qmake QMAKE_APPLE_DEVICE_ARCHS="x86_64 arm64" $args[0] PREFIX=$Prefix
 
 if ($IsWindows) {
     nmake
