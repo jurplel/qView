@@ -22,6 +22,7 @@ jobs:
         imageName: 'ubuntu-18.04'
       macos:
         imageName: 'macOS-10.15'
+        qtVersion: '6.2.2'
       macosx:
         imageName: 'macOS-10.15'
         qtVersion: '5.9.9'
@@ -39,7 +40,6 @@ jobs:
   steps:
   - bash: |
       echo '##vso[task.setvariable variable=MatrixName]'$(echo $(Agent.JobName) | cut -d' ' -f2)
-      echo "##vso[task.setvariable variable=arch]$(qtArch)"
       if [ ${{ parameters.useNightly }} = True ]; then
         echo "##vso[task.setvariable variable=nightlyDefines]$(defines)"
         echo "##vso[task.setvariable variable=nightlyString]-nightly"
@@ -61,10 +61,15 @@ jobs:
   - pwsh: ci/pwsh/build.ps1
     displayName: 'Build qView'
 
-  - ${{ if eq(parameters.buildPlugins, true) }}:
-    - template: ci/plugins.yml
-
-  - template: ci/deploy.yml
+  - pwsh: |
+      if ($IsWindows) {
+        & "ci/scripts/windeployqt.ps1 $(buildNumString)"
+      } else if ($IsMacOS) {
+        bash ci/scripts/macdeploy.sh $(buildNumString)
+      } else {
+        bash ci/scripts/linuxdeploy.sh $(buildNumString)
+      }
+    displayName: 'Run deployment script'
 
   - task: PublishBuildArtifacts@1
     inputs:

@@ -15,3 +15,11 @@ if ($env:arch.substring(3, 2) -eq '32') {
 
 # Run windeployqt which should be in path
 windeployqt bin/qView.exe --no-compiler-runtime
+
+# Do renaming-y stuff
+mv bin\qView.exe "bin\qView-nightly-$($Args[0]).exe"
+
+# Call innomake if we are not building a nightly version (no version passed)
+if ($Args[0] -ne '') {
+    & "ci/pwsh/innomake.ps1"
+}
