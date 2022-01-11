@@ -65,7 +65,7 @@ jobs:
   - pwsh: |
       if ($IsWindows) {
         & "ci/scripts/windeployqt.ps1 $(buildNumString)"
-      } else if ($IsMacOS) {
+      } elseif ($IsMacOS) {
         bash ci/scripts/macdeploy.sh $(buildNumString)
       } else {
         bash ci/scripts/linuxdeploy.sh $(buildNumString)
