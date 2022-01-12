@@ -177,12 +177,16 @@ void QVImageCore::loadPixmap(const ReadData &readData, bool fromCache)
         addToCache(readData);
 
     // Animation detection
+    loadedMovie.setFormat("");
     loadedMovie.stop();
     loadedMovie.setFileName(currentFileDetails.fileInfo.absoluteFilePath());
 
     // APNG workaround
-    if (loadedMovie.format() == "png")
-        loadedMovie.setFormat("apng");
+//    if (loadedMovie.format() == "png")
+//    {
+//        loadedMovie.setFormat("apng");
+//        loadedMovie.setFileName(currentFileDetails.fileInfo.absoluteFilePath());
+//    }
 
     currentFileDetails.isMovieLoaded = loadedMovie.isValid() && loadedMovie.frameCount() != 1;
 
