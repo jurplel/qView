@@ -19,19 +19,38 @@ steps:
   displayName: 'Install aqtinstall'
 
 # I hate splitting this into three but I can't figure out how to do it any better
-- script: |
-    python -m aqt install ${{ parameters.version }} windows desktop %arch%
+- bash: |
+    qtvers=${{ parameters.version }}
+
+    if [ ${qtvers:0:1} == 6 ]; then
+      python -m aqt install-qt windows desktop $qtvers $(qtArch) -m qtimageformats
+    else
+      python -m aqt install-qt windows desktop $qtvers $(qtArch)
+    fi
   condition: and(succeeded(), eq( variables['Agent.OS'], 'Windows_NT' ))
   displayName: 'Install Qt (Windows)'
 
-- script: |
+- bash: |
+    qtvers=${{ parameters.version }}
+    
     brew install yasm
-    python -m aqt install ${{ parameters.version }} mac desktop
+
+    if [ ${qtvers:0:1} == 6 ]; then
+      python -m aqt install-qt mac desktop $qtvers -m qtimageformats
+    else
+      python -m aqt install-qt mac desktop $qtvers
+    fi    
   condition: and(succeeded(), eq( variables['Agent.OS'], 'Darwin' ))
   displayName: 'Install Qt (macOS)'
 
-- script: |
-    python -m aqt install ${{ parameters.version }} linux desktop
+- bash: |
+    qtvers=${{ parameters.version }}
+
+    if [ ${qtvers:0:1} == 6 ]; then
+      python -m aqt install-qt linux desktop $qtvers -m qtimageformats
+    else
+      python -m aqt install-qt linux desktop $qtvers
+    fi
   condition: and(succeeded(), eq( variables['Agent.OS'], 'Linux' ))
   displayName: 'Install Qt (Linux)'
 
