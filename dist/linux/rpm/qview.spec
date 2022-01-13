@@ -31,6 +31,7 @@ mkdir -p %{buildroot}/usr/share/icons/GPLv3
 cp -r dist/linux/hicolor %{buildroot}/usr/share/icons/
 mkdir -p %{buildroot}/usr/share/applications
 cp dist/linux/com.interversehq.qView.desktop %{buildroot}/usr/share/applications/
+mkdir -p %{buildroot}/usr/share/metainfo/
 cp dist/linux/com.interversehq.qView.appdata.xml %{buildroot}/usr/share/metainfo/
 
 %files
