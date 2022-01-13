@@ -566,11 +566,11 @@ void MainWindow::openUrl(const QUrl &url)
 
     auto request = QNetworkRequest(url);
     auto *reply = networkAccessManager.get(request);
-    auto *progressDialog = new QProgressDialog(tr("Downloading image..."), tr("Cancel"), 0, 100);
+    auto *progressDialog = new QProgressDialog(tr("Downloading image…"), tr("Cancel"), 0, 100);
     progressDialog->setWindowFlag(Qt::WindowContextHelpButtonHint, false);
     progressDialog->setAutoClose(false);
     progressDialog->setAutoReset(false);
-    progressDialog->setWindowTitle(tr("Open URL..."));
+    progressDialog->setWindowTitle(tr("Open URL…"));
     progressDialog->open();
 
     connect(progressDialog, &QProgressDialog::canceled, reply, [reply]{
@@ -626,7 +626,7 @@ void MainWindow::openUrl(const QUrl &url)
 void MainWindow::pickUrl()
 {
     auto inputDialog = new QInputDialog(this);
-    inputDialog->setWindowTitle(tr("Open URL..."));
+    inputDialog->setWindowTitle(tr("Open URL…"));
     inputDialog->setLabelText(tr("URL of a supported image file:"));
     inputDialog->resize(350, inputDialog->height());
     inputDialog->setWindowFlag(Qt::WindowContextHelpButtonHint, false);
@@ -682,13 +682,13 @@ void MainWindow::askDeleteFile()
 
     if (!fileInfo.isWritable())
     {
-        QMessageBox::critical(this, tr("Error"), tr("Can't delete %1:\nNo write permission or file is read-only.").arg(fileName));
+        QMessageBox::critical(this, tr("Error"), tr("Could not delete %1:\nGrant write permission or ensure the file is not read-only.").arg(fileName));
         return;
     }
 
-    auto trashString = tr("Are you sure you want to move %1 to the Trash?").arg(fileName);
+    auto trashString = tr("Move %1 to trash?").arg(fileName);
 #ifdef Q_OS_WIN
-    trashString = tr("Are you sure you want to move %1 to the Recycle Bin?").arg(fileName);
+    trashString = tr("Move %1 to the recycle bin?").arg(fileName);
 #endif
 
     auto *msgBox = new QMessageBox(QMessageBox::Question, tr("Delete"), trashString,
@@ -722,7 +722,7 @@ void MainWindow::deleteFile()
     if (!success || QFile::exists(filePath))
     {
         openFile(filePath);
-        QMessageBox::critical(this, tr("Error"), tr("Can't delete %1.").arg(fileName));
+        QMessageBox::critical(this, tr("Error"), tr("Could not delete %1.").arg(fileName));
         return;
     }
 
@@ -790,21 +790,21 @@ void MainWindow::undoDelete()
     const QFileInfo fileInfo(lastDeletedFile.pathInTrash);
     if (!fileInfo.isWritable())
     {
-        QMessageBox::critical(this, tr("Error"), tr("Can't undo deletion of %1:\n"
-                                                    "No write permission or file is read-only.").arg(fileInfo.fileName()));
+        QMessageBox::critical(this, tr("Error"), tr("Could not undo deletion of %1:\n"
+                                                    "Grant write permission or ensure the file is not read-only.").arg(fileInfo.fileName()));
         return;
     }
 
     bool success = QFile::rename(lastDeletedFile.pathInTrash, lastDeletedFile.previousPath);
     if (!success)
     {
-        QMessageBox::critical(this, tr("Error"), tr("Failed undoing deletion of %1.").arg(fileInfo.fileName()));
+        QMessageBox::critical(this, tr("Error"), tr("Could not undo deletion of %1.").arg(fileInfo.fileName()));
     }
 #elif defined Q_OS_UNIX && !defined Q_OS_MACOS
     deleteFileLinuxFallback(lastDeletedFile.pathInTrash, true);
 #else
-    QMessageBox::critical(this, tr("Not Supported"), tr("This program was compiled with an old version of Qt and this feature is not available.\n"
-                                                        "If you see this message, please report a bug!"));
+    QMessageBox::critical(this, tr("Not Supported"), tr("This program was compiled with an old version of Qt, so this feature is unavailable.\n"
+                                                        "If you see this message, please report it as a bug!"));
 
     return;
 #endif
@@ -936,7 +936,7 @@ void MainWindow::saveFrameAs()
     {
         pause();
     }
-    QFileDialog *saveDialog = new QFileDialog(this, tr("Save Frame As..."));
+    QFileDialog *saveDialog = new QFileDialog(this, tr("Save frame as…"));
     saveDialog->setDirectory(settings.value("lastFileDialogDir", QDir::homePath()).toString());
     saveDialog->setNameFilters(qvApp->getNameFilterList());
     saveDialog->selectFile(getCurrentFileDetails().fileInfo.baseName() + "-" + QString::number(graphicsView->getLoadedMovie().currentFrameNumber()) + ".png");
