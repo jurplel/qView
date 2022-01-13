@@ -13,7 +13,12 @@
 #include <QScreen>
 
 QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
-{  
+{
+// Set allocation limit to 8 GiB on Qt6
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    QImageReader::setAllocationLimit(8192);
+#endif
+
     isLoopFoldersEnabled = true;
     preloadingMode = 1;
     sortMode = 0;
@@ -30,10 +35,6 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     connect(&loadFutureWatcher, &QFutureWatcher<ReadData>::finished, this, [this](){
         loadPixmap(loadFutureWatcher.result(), false);
     });
-
-    fileChangeRateTimer = new QTimer(this);
-    fileChangeRateTimer->setSingleShot(true);
-    fileChangeRateTimer->setInterval(60);
 
     largestDimension = 0;
     const auto screenList = QGuiApplication::screens();
@@ -55,6 +56,8 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
         }
     }
 
+    waitingOnLoad = false;
+
     // Connect to settings signal
     connect(&qvApp->getSettingsManager(), &SettingsManager::settingsUpdated, this, &QVImageCore::settingsUpdated);
     settingsUpdated();
@@ -62,8 +65,10 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
 
 void QVImageCore::loadFile(const QString &fileName)
 {
-    if (loadFutureWatcher.isRunning() || fileChangeRateTimer->isActive())
+    if (waitingOnLoad)
+    {
         return;
+    }
 
     QString sanitaryFileName = fileName;
 
@@ -79,6 +84,7 @@ void QVImageCore::loadFile(const QString &fileName)
     setPaused(true);
 
     currentFileDetails.isLoadRequested = true;
+    waitingOnLoad = true;
 
 
     //check if cached already before loading the long way
@@ -143,8 +149,6 @@ QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, bool forCac
         emit readError(imageReader.error(), imageReader.errorString(), readData.fileInfo.fileName());
     }
 
-
-
     return readData;
 }
 
@@ -154,8 +158,8 @@ void QVImageCore::loadPixmap(const ReadData &readData, bool fromCache)
     currentFileDetails.fileInfo = readData.fileInfo;
     updateFolderInfo();
 
-    // Reset file change rate timer
-    fileChangeRateTimer->start();
+    // Reset mechanism to avoid stalling while loading
+    waitingOnLoad = false;
 
     if (readData.pixmap.isNull())
         return;

@@ -93,9 +93,9 @@ private:
 
     QStringList lastFilesPreloaded;
 
-    QTimer *fileChangeRateTimer;
-
     int largestDimension;
+
+    bool waitingOnLoad;
 };
 
 #endif // QVIMAGECORE_H
