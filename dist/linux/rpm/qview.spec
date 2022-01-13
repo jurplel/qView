@@ -38,6 +38,7 @@ cp dist/linux/com.interversehq.qView.appdata.xml %{buildroot}/usr/share/metainfo
 /usr/bin/*
 /usr/share/icons/*
 /usr/share/applications/*
+/usr/share/metainfo/*
 %license LICENSE
 %doc README.md
 
