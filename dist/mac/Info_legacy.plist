@@ -32,12 +32,11 @@
 				<string>gif</string>
 				<string>icns</string>
 				<string>ico</string>
-				<string>jp2</string>
 				<string>jpeg</string>
 				<string>jpg</string>
-				<string>jfif</string>
+				<string>jpe</string>
 				<string>jfi</string>
-				<string>mng</string>
+				<string>jfif</string>
 				<string>pbm</string>
 				<string>pgm</string>
 				<string>png</string>
