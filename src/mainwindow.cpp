@@ -695,7 +695,10 @@ void MainWindow::askDeleteFile()
                        QMessageBox::Yes | QMessageBox::No, this);
     msgBox->setCheckBox(new QCheckBox(tr("Do not ask again")));
 
-    connect(msgBox, &QMessageBox::accepted, this, [msgBox, this]{
+    connect(msgBox, &QMessageBox::finished, this, [this, msgBox](int result){
+        if (result != 16384)
+            return;
+
         QSettings settings;
         settings.beginGroup("options");
         settings.setValue("askdelete", !msgBox->checkBox()->isChecked());
