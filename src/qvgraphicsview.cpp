@@ -415,6 +415,7 @@ void QVGraphicsView::originalSize()
 
     zoomBasis = transform();
     zoomBasisScaleFactor = 1.0;
+    absoluteTransform = transform();
 
     isOriginalSize = true;
 }

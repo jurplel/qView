@@ -22,6 +22,7 @@ jobs:
         imageName: 'ubuntu-18.04'
       macos:
         imageName: 'macOS-10.15'
+        qtVersion: '6.2.2'
       macosx:
         imageName: 'macOS-10.15'
         qtVersion: '5.9.9'
@@ -38,12 +39,12 @@ jobs:
 
   steps:
   - bash: |
-      echo '##vso[task.setvariable variable=MatrixName]'$(echo $(Agent.JobName) | cut -d' ' -f2)
+      echo '##vso[task.setvariable variable=MatrixName]'$(echo $(Agent.JobName) | cut -d' ' -f2)-
       echo "##vso[task.setvariable variable=arch]$(qtArch)"
       if [ ${{ parameters.useNightly }} = True ]; then
         echo "##vso[task.setvariable variable=nightlyDefines]$(defines)"
         echo "##vso[task.setvariable variable=nightlyString]-nightly"
-        echo "##vso[task.setvariable variable=buildNumString].$(Build.BuildNumber)"
+        echo "##vso[task.setvariable variable=buildNumString]$(Build.BuildNumber)"
       else
         echo "##vso[task.setvariable variable=nightlyDefines]"
         echo "##vso[task.setvariable variable=nightlyString]"
@@ -58,13 +59,29 @@ jobs:
     parameters:
       version: $(qtVersion)
 
-  - pwsh: ci/pwsh/build.ps1
+  - pwsh: ci/scripts/build.ps1
     displayName: 'Build qView'
 
-  - ${{ if eq(parameters.buildPlugins, true) }}:
-    - template: ci/plugins.yml
+  - bash: |
+      wget 'https://sourceforge.net/projects/qt5ct/files/latest/download'
+      tar xf download
+      cd qt5ct*
+      qmake
+      sudo make install
+      
+      echo "##vso[task.setvariable variable=extra_plugins_maybe]'-extra-plugins=styles/libqt5ct-style.so,platformthemes/libqt5ct.so'"
+    condition: eq( variables['Agent.OS'], 'Linux' )
+    displayName: Get qt5ct style (Linux only)
 
-  - template: ci/deploy.yml
+  - pwsh: |
+      if ($IsWindows) {
+        Invoke-Expression "& 'ci/scripts/windeployqt.ps1' $(buildNumString)"
+      } elseif ($IsMacOS) {
+        bash ci/scripts/macdeploy.sh $(buildNumString)
+      } else {
+        bash ci/scripts/linuxdeployqt.sh $(buildNumString) $(extra_plugins_maybe)
+      }
+    displayName: 'Run deployment script'
 
   - task: PublishBuildArtifacts@1
     inputs:

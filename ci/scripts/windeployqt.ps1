@@ -1,3 +1,8 @@
+param
+(
+    $NightlyVersion = ""
+)
+
 # Download and extract openssl
 $ProgressPreference = 'SilentlyContinue'
 Invoke-WebRequest https://mirror.firedaemon.com/OpenSSL/openssl-1.1.1l.zip -O openssl.zip
@@ -15,3 +20,11 @@ if ($env:arch.substring(3, 2) -eq '32') {
 
 # Run windeployqt which should be in path
 windeployqt bin/qView.exe --no-compiler-runtime
+
+# Do renaming-y stuff
+mv bin\qView.exe "bin\qView-nightly-$NightlyVersion.exe"
+
+# Call innomake if we are not building a nightly version (no version passed)
+if ($NightlyVersion -ne '') {
+    & "ci/scripts/innomake.ps1"
+}

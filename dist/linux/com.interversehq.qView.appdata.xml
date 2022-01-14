@@ -28,6 +28,7 @@
 	</provides>
 	<content_rating type="oars-1.0" />
 	<releases>
+		<release version="5.0" date="2022-01-12" />
 		<release version="4.0" date="2020-10-30" />
 	</releases>
 </component>

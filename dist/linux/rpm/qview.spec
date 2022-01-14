@@ -1,5 +1,5 @@
 Name:		qview
-Version:	4.0
+Version:	5.0
 Release:	1
 Summary:	Practical and minimal image viewer
 
@@ -30,12 +30,15 @@ cp bin/qview %{buildroot}/usr/bin/
 mkdir -p %{buildroot}/usr/share/icons/GPLv3
 cp -r dist/linux/hicolor %{buildroot}/usr/share/icons/
 mkdir -p %{buildroot}/usr/share/applications
-cp dist/linux/qView.desktop %{buildroot}/usr/share/applications/
+cp dist/linux/com.interversehq.qView.desktop %{buildroot}/usr/share/applications/
+mkdir -p %{buildroot}/usr/share/metainfo/
+cp dist/linux/com.interversehq.qView.appdata.xml %{buildroot}/usr/share/metainfo/
 
 %files
 /usr/bin/*
 /usr/share/icons/*
 /usr/share/applications/*
+/usr/share/metainfo/*
 %license LICENSE
 %doc README.md
 

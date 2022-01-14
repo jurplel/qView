@@ -30,12 +30,11 @@
 				<string>gif</string>
 				<string>icns</string>
 				<string>ico</string>
-				<string>jp2</string>
 				<string>jpeg</string>
 				<string>jpg</string>
-				<string>jfif</string>
+				<string>jpe</string>
 				<string>jfi</string>
-				<string>mng</string>
+				<string>jfif</string>
 				<string>pbm</string>
 				<string>pgm</string>
 				<string>png</string>
@@ -48,11 +47,27 @@
 				<string>webp</string>
 				<string>xbm</string>
 				<string>xpm</string>
+				<string>ani</string>
 				<string>apng</string>
 				<string>avif</string>
 				<string>avifs</string>
+				<string>bw</string>
+				<string>exr</string>
+				<string>hdr</string>
 				<string>heic</string>
 				<string>heif</string>
+				<string>jxl</string>
+				<string>kra</string>
+				<string>ora</string>
+				<string>pcx</string>
+				<string>pic</string>
+				<string>psd</string>
+				<string>ras</string>
+				<string>rgb</string>
+				<string>rgba</string>
+				<string>sgi</string>
+				<string>tga</string>
+				<string>xcf</string>
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
