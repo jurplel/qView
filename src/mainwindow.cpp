@@ -713,12 +713,12 @@ void MainWindow::deleteFile()
 {
     const QFileInfo &fileInfo = getCurrentFileDetails().fileInfo;
     const QString filePath = fileInfo.absoluteFilePath();
-    const QString fileName = fileInfo.fileName();
     QString trashFilePath = "";
 
     graphicsView->closeImage();
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+    const QString fileName = fileInfo.fileName();
 
     QFile file(filePath);
     bool success = file.moveToTrash();

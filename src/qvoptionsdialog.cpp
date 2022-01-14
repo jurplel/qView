@@ -51,6 +51,12 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     ui->quitOnLastWindowCheckbox->hide();
 #endif
 
+// Hide language selection below 5.12, as 5.12 does not support embedding the translations :(
+#if (QT_VERSION < QT_VERSION_CHECK(5, 12, 0))
+    ui->langComboBox->hide();
+    ui->langComboLabel->hide();
+#endif
+
     syncSettings(false, true);
     connect(ui->langComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &QVOptionsDialog::languageComboBoxCurrentIndexChanged);
     syncShortcuts();

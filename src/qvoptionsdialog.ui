@@ -446,7 +446,7 @@
       </attribute>
       <layout class="QFormLayout" name="formLayout_3">
        <item row="0" column="0">
-        <widget class="QLabel" name="label_9">
+        <widget class="QLabel" name="langComboLabel">
          <property name="text">
           <string>Language:</string>
          </property>
