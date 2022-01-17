@@ -11,6 +11,7 @@
 #include "qvwelcomedialog.h"
 
 #include <QApplication>
+#include <QRegularExpression>
 
 #if defined(qvApp)
 #undef qvApp
@@ -66,11 +67,17 @@ public:
 
     void hideIncompatibleActions();
 
+    void defineFilterLists();
+
     QMenuBar *getMenuBar() const {  return menuBar; }
 
     const QStringList &getFilterList() const { return filterList; }
 
     const QStringList &getNameFilterList() const { return nameFilterList; }
+
+    const QList<QRegularExpression> &getFilterRegExpList() const { return filterRegExpList; }
+
+    const QStringList &getMimeTypeNameList() const { return mimeTypeNameList; }
 
     SettingsManager &getSettingsManager() { return settingsManager; }
 
@@ -91,6 +98,8 @@ private:
 
     QStringList filterList;
     QStringList nameFilterList;
+    QList<QRegularExpression> filterRegExpList;
+    QStringList mimeTypeNameList;
 
     // This order is very important
     SettingsManager settingsManager; 

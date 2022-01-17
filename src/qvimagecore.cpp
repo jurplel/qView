@@ -201,7 +201,7 @@ void QVImageCore::loadPixmap(const ReadData &readData, bool fromCache)
 
     emit fileChanged();
 
-    requestCaching();
+    QtConcurrent::run(&QVImageCore::requestCaching, this);
 }
 
 void QVImageCore::closeImage()
@@ -226,25 +226,29 @@ void QVImageCore::closeImage()
 // All file logic, sorting, etc should be moved to a different class or file
 QFileInfoList QVImageCore::getCompatibleFiles()
 {
-    QFileInfoList fileInfoList = currentFileDetails.fileInfo.dir().entryInfoList(qvApp->getFilterList(), QDir::Files);
+    QFileInfoList fileInfoList;
 
     QMimeDatabase mimeDb;
-    QList<QByteArray> supportedMimeTypes = QImageReader::supportedMimeTypes();
-    // Qt 5.15 seems to have added pdf support for QImageReader but it is super broken in qView at the moment
-    supportedMimeTypes.removeAll("application/pdf");
+    const auto &regs = qvApp->getFilterRegExpList();
+    const auto &mimeTypes = qvApp->getMimeTypeNameList();
 
     const QFileInfoList currentFolder = currentFileDetails.fileInfo.dir().entryInfoList();
     for (const QFileInfo &fileInfo : currentFolder)
     {
-        QMimeType mimeType = mimeDb.mimeTypeForFile(fileInfo);
-        if (supportedMimeTypes.contains(mimeType.name().toUtf8()))
+        bool matched = false;
+        const QString name = fileInfo.fileName();
+        for (const QRegularExpression &reg : regs)
         {
-            if (!fileInfoList.contains(fileInfo)) {
-                fileInfoList.append(fileInfo);
+            if (reg.match(name).hasMatch()) {
+                matched = true;
+                break;
             }
         }
+        if (matched || mimeTypes.contains(mimeDb.mimeTypeForFile(fileInfo).name().toUtf8()))
+        {
+            fileInfoList.append(fileInfo);
+        }
     }
-
 
     return fileInfoList;
 }

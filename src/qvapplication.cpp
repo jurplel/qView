@@ -21,32 +21,7 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     QIcon::setFallbackSearchPaths(QIcon::fallbackSearchPaths() << "/usr/share/pixmaps");
 #endif
 
-    // Initialize list of supported files and filters
-    const auto byteArrayList = QImageReader::supportedImageFormats();
-    for (const auto &byteArray : byteArrayList)
-    {
-        auto fileExtString = QString::fromUtf8(byteArray);
-        // Qt 5.15 seems to have added pdf support for QImageReader but it is super broken in qView at the moment
-        if (fileExtString == "pdf")
-            continue;
-
-        filterList << "*." + fileExtString;
-
-        // If we support jpg, we actually support the jfif, jfi, and jpe file extensions too almost certainly.
-        if (fileExtString == "jpg")
-            filterList << "*.jpe" << "*.jfi" << "*.jfif";
-    }
-
-    auto filterString = tr("Supported Images") + " (";
-    for (const auto &filter : qAsConst(filterList))
-    {
-        filterString += filter + " ";
-    }
-    filterString.chop(1);
-    filterString += ")";
-
-    nameFilterList << filterString;
-    nameFilterList << tr("All Files") + " (*)";
+    defineFilterLists();
 
     // Check for updates
     // TODO: move this to after first window show event
@@ -385,4 +360,58 @@ void QVApplication::hideIncompatibleActions()
     hideDeleteActions();
 #endif
 #endif
+}
+
+void QVApplication::defineFilterLists()
+{
+    const auto &byteArrayFormats = QImageReader::supportedImageFormats();
+
+    auto filterString = tr("Supported Images") + " (";
+    filterList.reserve(byteArrayFormats.size()-1);
+    filterRegExpList.reserve(byteArrayFormats.size()-1);
+
+    // Build the filterlist, filterstring, and filterregexplist in one loop
+    for (const auto &byteArray : byteArrayFormats)
+    {
+        const auto fileExtString = "*." + QString::fromUtf8(byteArray);
+        // Qt 5.15 seems to have added pdf support for QImageReader but it is super broken in qView
+        if (fileExtString == "*.pdf")
+            continue;
+
+        filterList << fileExtString;
+        filterString += fileExtString + " ";
+
+        QString re = QRegularExpression::wildcardToRegularExpression(fileExtString);
+        filterRegExpList << QRegularExpression(re, QRegularExpression::CaseInsensitiveOption);
+
+        // If we support jpg, we actually support the jfif, jfi, and jpe file extensions too almost certainly.
+        if (fileExtString == "*.jpg")
+        {
+            filterList << "*.jpe" << "*.jfi" << "*.jfif";
+            filterString += "*.jpe *.jfi *.jfif";
+            filterRegExpList << QRegularExpression(QRegularExpression::wildcardToRegularExpression("*.jpe"), QRegularExpression::CaseInsensitiveOption)
+                             << QRegularExpression(QRegularExpression::wildcardToRegularExpression("*.jfi"), QRegularExpression::CaseInsensitiveOption)
+                             << QRegularExpression(QRegularExpression::wildcardToRegularExpression("*.jfif"), QRegularExpression::CaseInsensitiveOption);
+        }
+    }
+    filterString.chop(1);
+    filterString += ")";
+
+
+    // Build mime type list
+    const auto &byteArrayMimeTypes = QImageReader::supportedMimeTypes();
+    mimeTypeNameList.reserve(byteArrayMimeTypes.size()-1);
+    for (const auto &byteArray : byteArrayMimeTypes)
+    {
+        // Qt 5.15 seems to have added pdf support for QImageReader but it is super broken in qView
+        const QString mime = QString::fromUtf8(byteArray);
+        if (mime == "application/pdf")
+            continue;
+
+        mimeTypeNameList << mime;
+    }
+
+    // Build name filter list for file dialogs
+    nameFilterList << filterString;
+    nameFilterList << tr("All Files") + " (*)";
 }
