@@ -21,7 +21,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="229"/>
         <source>&amp;Go</source>
-        <translation type="unfinished"></translation>
+        <translation>移動</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="258"/>
@@ -64,12 +64,12 @@
         <location filename="../src/actionmanager.cpp" line="654"/>
         <source>Exit</source>
         <extracomment>The quit action is called &quot;Exit&quot; on windows</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>終了</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="657"/>
         <source>New Window</source>
-        <translation type="unfinished"></translation>
+        <translation>新しいウィンドウ</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="660"/>
