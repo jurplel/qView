@@ -443,7 +443,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/mainwindow.cpp" line="977"/>
         <source>Pause</source>
-        <translation type="unfinished"></translation>
+        <translation>休止</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="1000"/>
