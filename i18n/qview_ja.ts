@@ -334,17 +334,17 @@
         <location filename="../src/mainwindow.cpp" line="793"/>
         <location filename="../src/mainwindow.cpp" line="801"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>エラー</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="563"/>
         <source>Error: URL is invalid</source>
-        <translation>Error: URLが無効です</translation>
+        <translation>エラー: URLが無効です</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="569"/>
         <source>Downloading image...</source>
-        <translation type="unfinished"></translation>
+        <translation>画像をダウンロードしています...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="569"/>
@@ -360,17 +360,17 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="590"/>
         <source>Error </source>
-        <translation type="unfinished"></translation>
+        <translation>エラー </translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="613"/>
         <source>Error: Invalid image</source>
-        <translation>Error: 不正な画像ファイル</translation>
+        <translation>エラー: 不正な画像ファイル</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="630"/>
         <source>URL of a supported image file:</source>
-        <translation type="unfinished"></translation>
+        <translation>対応する画像ファイルのURL:</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="685"/>
@@ -387,7 +387,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/mainwindow.cpp" line="691"/>
         <source>Are you sure you want to move %1 to the Recycle Bin?</source>
-        <translation type="unfinished"></translation>
+        <translation>本当に %1 をごみ箱に移動しますか？</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="694"/>
@@ -546,7 +546,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvapplication.cpp" line="136"/>
         <source>Open...</source>
-        <translation>開く...</translation>
+        <translation>ファイルを開く...</translation>
     </message>
 </context>
 <context>
@@ -562,7 +562,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvgraphicsview.cpp" line="621"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>エラー</translation>
     </message>
     <message>
         <location filename="../src/qvgraphicsview.cpp" line="621"/>
@@ -576,7 +576,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvinfodialog.ui" line="20"/>
         <source>File Info</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイル情報</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="26"/>
@@ -593,7 +593,7 @@ No write permission or file is read-only.</source>
         <location filename="../src/qvinfodialog.ui" line="183"/>
         <location filename="../src/qvinfodialog.ui" line="203"/>
         <source>error</source>
-        <translation type="unfinished"></translation>
+        <translation>エラー</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="52"/>
@@ -638,12 +638,12 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvinfodialog.cpp" line="49"/>
         <source>%1 (%2 bytes)</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 (%2 バイト)</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.cpp" line="51"/>
         <source>%1 x %2 (%3 MP)</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 x %2 (%3 MP)</translation>
     </message>
 </context>
 <context>
@@ -729,7 +729,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="39"/>
         <source>Back&amp;ground color:</source>
-        <translation type="unfinished"></translation>
+        <translation>背景色:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="56"/>
@@ -739,7 +739,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="59"/>
         <source>Titlebar text:</source>
-        <translation type="unfinished"></translation>
+        <translation>タイトルバーのテキスト:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="66"/>
@@ -847,7 +847,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="257"/>
         <source>Image</source>
-        <translation type="unfinished"></translation>
+        <translation>画像</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="263"/>
@@ -882,7 +882,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="299"/>
         <source>&amp;Scaling above window size</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;ウィンドウサイズ以上に拡大する</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="309"/>
@@ -898,7 +898,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="341"/>
         <source>Choose whether scrolling zooms or moves the image (alternative can be accessed at any time by holding ctrl/cmd)</source>
-        <translation type="unfinished"></translation>
+        <translation>スクロールで画像を拡大するか移動するかを選択する（ctrl/cmdを押しながら切り替えることができます）</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="344"/>
@@ -1141,7 +1141,7 @@ No write permission or file is read-only.</source>
         <location filename="../src/qvrenamedialog.cpp" line="26"/>
         <location filename="../src/qvrenamedialog.cpp" line="45"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>エラー</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="26"/>
