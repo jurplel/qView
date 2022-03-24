@@ -237,7 +237,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="781"/>
         <source>&amp;Reset Speed</source>
-        <translation>&amp;Reiniciar Velocidad</translation>
+        <translation>&amp;Restablecer Velocidad</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="785"/>
@@ -276,7 +276,7 @@
         <location filename="../src/actionmanager.cpp" line="807"/>
         <source>&amp;About qView</source>
         <extracomment>This is for the about dialog on mac</extracomment>
-        <translation>&amp;Acerca qView</translation>
+        <translation>&amp;Acerca de qView</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="811"/>
