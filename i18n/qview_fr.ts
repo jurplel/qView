@@ -53,7 +53,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="468"/>
         <source>Open With</source>
-        <translation type="unfinished"></translation>
+        <translation>Ouvrir avec</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="650"/>
@@ -117,22 +117,22 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="688"/>
         <source>&amp;Move to Trash</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Envoyer à la corbeille</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="690"/>
         <source>&amp;Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Supprimer</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="695"/>
         <source>&amp;Restore from Trash</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Restaurer</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="697"/>
         <source>&amp;Undo Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Annuler la suppression</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="702"/>
@@ -293,19 +293,19 @@
         <location filename="../src/actionmanager.cpp" line="819"/>
         <source>Other Application...</source>
         <extracomment>Open with other program for unix non-mac</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Autres applications</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="822"/>
         <source>Choose another app</source>
         <extracomment>Open with other program for windows</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Choisir une autre appli.</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="825"/>
         <source>Other...</source>
         <extracomment>Open with other program for macos</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Autre...</translation>
     </message>
 </context>
 <context>
@@ -376,7 +376,8 @@
         <location filename="../src/mainwindow.cpp" line="685"/>
         <source>Can&apos;t delete %1:
 No write permission or file is read-only.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Impossible de supprimer %1:
+Le fichier est en lecture seule ou la permission en écriture est absente.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="689"/>
