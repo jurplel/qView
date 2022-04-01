@@ -323,7 +323,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="390"/>
         <source>Empty</source>
-        <translation type="unfinished">Vacío</translation>
+        <translation>Vacío</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="563"/>
@@ -376,7 +376,8 @@
         <location filename="../src/mainwindow.cpp" line="685"/>
         <source>Can&apos;t delete %1:
 No write permission or file is read-only.</source>
-        <translation type="unfinished"></translation>
+        <translation>No se puede eliminar %1:
+No se tiene permiso de escritura o el archivo es de solo lectura.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="689"/>
@@ -386,7 +387,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/mainwindow.cpp" line="691"/>
         <source>Are you sure you want to move %1 to the Recycle Bin?</source>
-        <translation type="unfinished"></translation>
+        <translation>¿Seguro que quiere mover %1 a la Papelera de Reciclaje?</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="694"/>
@@ -407,25 +408,27 @@ No write permission or file is read-only.</source>
         <location filename="../src/mainwindow.cpp" line="736"/>
         <location filename="../src/mainwindow.cpp" line="806"/>
         <source>Not Supported</source>
-        <translation type="unfinished"></translation>
+        <translation>No Compatible</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="736"/>
         <location filename="../src/mainwindow.cpp" line="806"/>
         <source>This program was compiled with an old version of Qt and this feature is not available.
 If you see this message, please report a bug!</source>
-        <translation type="unfinished"></translation>
+        <translation>Este programa fue compilado con una versión antigua de Qt y esta característica no esta disponible.
+Si usted ve este mensaje, por favor reporte el error!</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="793"/>
         <source>Can&apos;t undo deletion of %1:
 No write permission or file is read-only.</source>
-        <translation type="unfinished"></translation>
+        <translation>No se puede restablecer la eliminación de %1:
+No se tienen permisos de escritura o el archivo es de solo lectura.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="801"/>
         <source>Failed undoing deletion of %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Fallo al restablecer eliminación de %1.</translation>
     </message>
     <message>
         <source>Rename...</source>
@@ -438,7 +441,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/mainwindow.cpp" line="939"/>
         <source>Save Frame As...</source>
-        <translation type="unfinished"></translation>
+        <translation>Guardar Fotograma Como...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="968"/>
@@ -512,7 +515,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="62"/>
         <source>Built with Qt %1 (%2)&lt;br&gt;Source code available under GPLv3 on &lt;a style=&quot;color: #03A9F4; text-decoration:none;&quot; href=&quot;https://github.com/jurplel/qView&quot;&gt;GitHub&lt;/a&gt;&lt;br&gt;Icon glyph created by Guilhem from the Noun Project&lt;br&gt;Copyright © %3 jurplel and qView contributors</source>
-        <translation type="unfinished"></translation>
+        <translation>Creado con Qt %1 (%2)&lt;br&gt;Código fuente disponible bajo GPLv3 en &lt;a style=&quot;color: #03A9F4; text-decoration:none;&quot; href=&quot;https://github.com/jurplel/qView&quot;&gt;GitHub&lt;/a&gt;&lt;br&gt;Icono creado por Guilhem del proyecto Noun Project&lt;br&gt;Copyright © %3 contribuidores jurplel y qView</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="90"/>
@@ -545,7 +548,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvapplication.cpp" line="40"/>
         <source>Supported Images</source>
-        <translation type="unfinished"></translation>
+        <translation>Imágenes Compatibles</translation>
     </message>
     <message>
         <location filename="../src/qvapplication.cpp" line="49"/>
@@ -563,7 +566,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvcocoafunctions.mm" line="195"/>
         <source> (default)</source>
-        <translation type="unfinished"></translation>
+        <translation> (predeterminado)</translation>
     </message>
 </context>
 <context>
@@ -706,7 +709,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/openwith.h" line="74"/>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajustes</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="75"/>
@@ -721,7 +724,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/openwith.h" line="77"/>
         <source>Other</source>
-        <translation type="unfinished"></translation>
+        <translation>Otro</translation>
     </message>
 </context>
 <context>
@@ -805,7 +808,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="152"/>
         <source>Control the minimum size that the window should reach when matching the image&apos;s actual size</source>
-        <translation type="unfinished"></translation>
+        <translation>Controla el tamaño mínimo que la ventana debe alcanzar cuando se alcanza el tamaño de imagen real</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="155"/>
@@ -817,7 +820,7 @@ No write permission or file is read-only.</source>
         <location filename="../src/qvoptionsdialog.ui" line="174"/>
         <location filename="../src/qvoptionsdialog.ui" line="184"/>
         <source>Control the maximum size that the window should reach when matching the image&apos;s actual size</source>
-        <translation type="unfinished"></translation>
+        <translation>Controla el tamaño máximo que la ventana debe alcanzar cuando se alcanza el tamaño de imagen real</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="177"/>
@@ -827,12 +830,12 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="219"/>
         <source>Choose whether or not the titlebar should always be dark regardless of your chosen macOS appearance</source>
-        <translation type="unfinished"></translation>
+        <translation>Elige si la barra de titulo deberá o no ser siempre obscura sin importar la apariencia elegida en los ajustes de macOS</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="222"/>
         <source>&amp;Titlebar always dark</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Barra de título siempre obscura</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="232"/>
@@ -842,7 +845,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="239"/>
         <source>Choose whether or not to display the titlebar text while in fullscreen</source>
-        <translation type="unfinished"></translation>
+        <translation>Elegir si la barra de título se despliegue o no en pantalla completa</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="242"/>
@@ -862,12 +865,12 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="263"/>
         <source>Scaling:</source>
-        <translation type="unfinished"></translation>
+        <translation>Escala:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="270"/>
         <source>Turn this off to see individual pixels</source>
-        <translation type="unfinished"></translation>
+        <translation>Apaga esto para ver pixeles individuales</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="273"/>
@@ -877,33 +880,33 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="283"/>
         <source>Images appear aliased (having jagged edges) without this, but it is faster</source>
-        <translation type="unfinished"></translation>
+        <translation>Las imágenes aparecen pixeladas (bordes escalonados) sin esto, pero es mas rápido</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="286"/>
         <source>&amp;Image scaling</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Escala de imagen</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="296"/>
         <source>Choose whether or not the image continues to be scaled when zooming above the window size (can be laggier with large images)</source>
-        <translation type="unfinished"></translation>
+        <translation>Controla si la imagen continua escalándose o no cuando el acercamiento sobrepasa el tamaño de la ventana (puede actuar lento con imágenes grandes)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="299"/>
         <source>&amp;Scaling above window size</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Escalar sobre el tamaño de ventana</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="309"/>
         <location filename="../src/qvoptionsdialog.ui" line="319"/>
         <source>The amount to zoom every scroll wheel click</source>
-        <translation type="unfinished"></translation>
+        <translation>La cantidad de acercamiento que da cada paso de desplazamiento</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="312"/>
         <source>Zoom amount:</source>
-        <translation type="unfinished"></translation>
+        <translation>Cantidad de acercamiento:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="341"/>
@@ -1343,7 +1346,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="99"/>
         <source>Save Frame As</source>
-        <translation type="unfinished"></translation>
+        <translation>Guardar Fotograma Como</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="100"/>
@@ -1373,7 +1376,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="105"/>
         <source>Toggle Slideshow</source>
-        <translation type="unfinished"></translation>
+        <translation>Activar/Desactivar Presentacion</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="106"/>
@@ -1442,7 +1445,8 @@ No write permission or file is read-only.</source>
         <location filename="../src/updatechecker.cpp" line="87"/>
         <source>Update notifications on startup have been disabled.
 You can reenable them in the options dialog.</source>
-        <translation type="unfinished"></translation>
+        <translation>Notificaciones de actualizaciones al inicio han sido desactivadas.
+Es posible reactivarlas en el dialogo de opciones.</translation>
     </message>
 </context>
 </TS>
