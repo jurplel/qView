@@ -6,91 +6,91 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="25"/>
         <source>Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Janela</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="183"/>
         <source>&amp;File</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Arquivo</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="211"/>
         <source>&amp;Edit</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Editar</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="229"/>
         <source>&amp;Go</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Ir</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="258"/>
         <source>&amp;View</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Ver</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="282"/>
         <source>&amp;Tools</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Ferramentas</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="304"/>
         <source>&amp;Help</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Ajuda</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="318"/>
         <source>Open &amp;Recent</source>
-        <translation type="unfinished"></translation>
+        <translation>Abrir &amp;recente</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="328"/>
         <location filename="../src/actionmanager.cpp" line="459"/>
         <location filename="../src/actionmanager.cpp" line="476"/>
         <source>Empty</source>
-        <translation type="unfinished"></translation>
+        <translation>Vazio</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="468"/>
         <source>Open With</source>
-        <translation type="unfinished"></translation>
+        <translation>Abrir com</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="650"/>
         <source>&amp;Quit</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Sair</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="654"/>
         <source>Exit</source>
         <extracomment>The quit action is called &quot;Exit&quot; on windows</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Sair</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="657"/>
         <source>New Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Nova janela</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="660"/>
         <source>&amp;Open...</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Abrir...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="663"/>
         <source>Open &amp;URL...</source>
-        <translation type="unfinished"></translation>
+        <translation>Abrir &amp;URL...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="666"/>
         <source>Close Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Fechar janela</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="670"/>
         <source>Close All</source>
         <extracomment>Close all windows, that is</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Fechar tudo</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="673"/>
@@ -117,12 +117,12 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="688"/>
         <source>&amp;Move to Trash</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Mover para a lixeira</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="690"/>
         <source>&amp;Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Excluir</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="695"/>
@@ -137,17 +137,17 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="702"/>
         <source>&amp;Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Copiar</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="706"/>
         <source>&amp;Paste</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Colar</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="709"/>
         <source>R&amp;ename...</source>
-        <translation type="unfinished"></translation>
+        <translation>R&amp;enomear...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="713"/>
@@ -167,7 +167,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="725"/>
         <source>Ori&amp;ginal Size</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Tamanho original</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="729"/>
@@ -197,37 +197,37 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="749"/>
         <source>&amp;First File</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Primeiro arquivo</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="753"/>
         <source>Previous Fi&amp;le</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Arquivo anterior</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="757"/>
         <source>&amp;Next File</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Próximo arquivo</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="761"/>
         <source>Las&amp;t File</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Último arquivo</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="765"/>
         <source>Save Frame &amp;As...</source>
-        <translation type="unfinished"></translation>
+        <translation>Salvar quadro &amp;como...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="769"/>
         <source>Pa&amp;use</source>
-        <translation type="unfinished"></translation>
+        <translation>Pa&amp;usar</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="773"/>
         <source>&amp;Next Frame</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Próximo quadro</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="777"/>
@@ -253,41 +253,41 @@
         <location filename="../src/actionmanager.cpp" line="794"/>
         <source>Option&amp;s</source>
         <extracomment>This is for the options dialog on windows</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Opçõe&amp;s</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="797"/>
         <source>Preference&amp;s</source>
         <extracomment>This is for the options dialog on non-mac unix platforms</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Preferência&amp;s</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="800"/>
         <source>Preference&amp;s...</source>
         <extracomment>This is for the options dialog on mac</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Preferência&amp;s...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="804"/>
         <source>&amp;About</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Sobre</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="807"/>
         <source>&amp;About qView</source>
         <extracomment>This is for the about dialog on mac</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Sobre o qView</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="811"/>
         <source>&amp;Welcome</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Boas-vindas</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="815"/>
         <source>Clear &amp;Menu</source>
         <extracomment>This is for clearing the recents menu</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Limpar &amp;menu</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="819"/>
@@ -334,80 +334,81 @@
         <location filename="../src/mainwindow.cpp" line="793"/>
         <location filename="../src/mainwindow.cpp" line="801"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Erro</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="563"/>
         <source>Error: URL is invalid</source>
-        <translation type="unfinished"></translation>
+        <translation>Erro: o URL é inválido</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="569"/>
         <source>Downloading image...</source>
-        <translation type="unfinished"></translation>
+        <translation>Baixando imagem...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="569"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Cancelar</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="573"/>
         <location filename="../src/mainwindow.cpp" line="629"/>
         <source>Open URL...</source>
-        <translation type="unfinished"></translation>
+        <translation>Abrir URL...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="590"/>
         <source>Error </source>
-        <translation type="unfinished"></translation>
+        <translation>Erro </translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="613"/>
         <source>Error: Invalid image</source>
-        <translation type="unfinished"></translation>
+        <translation>Erro: imagem inválida</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="630"/>
         <source>URL of a supported image file:</source>
-        <translation type="unfinished"></translation>
+        <translation>URL de um arquivo de imagem suportado:</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="685"/>
         <source>Can&apos;t delete %1:
 No write permission or file is read-only.</source>
-        <translation type="unfinished"></translation>
+        <translation>Não foi possível excluir %1:
+Sem permissão de gravação ou arquivo é de somente leitura.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="689"/>
         <source>Are you sure you want to move %1 to the Trash?</source>
-        <translation type="unfinished"></translation>
+        <translation>Tem certeza de que deseja mover %1 para a lixeira?</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="691"/>
         <source>Are you sure you want to move %1 to the Recycle Bin?</source>
-        <translation type="unfinished"></translation>
+        <translation>Tem certeza de que deseja mover %1 para a lixeira?</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="694"/>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Excluir</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="696"/>
         <source>Do not ask again</source>
-        <translation type="unfinished"></translation>
+        <translation>Não pergunte novamente</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="725"/>
         <source>Can&apos;t delete %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Não foi possível excluir %1.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="736"/>
         <location filename="../src/mainwindow.cpp" line="806"/>
         <source>Not Supported</source>
-        <translation type="unfinished"></translation>
+        <translation>Não suportado</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="736"/>
@@ -463,12 +464,12 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/openwith.cpp" line="177"/>
         <source>Programs (*.exe *.pif *.com *.bat *.cmd)</source>
-        <translation type="unfinished"></translation>
+        <translation>Programas (*.exe *.pif *.com *.bat *.cmd)</translation>
     </message>
     <message>
         <location filename="../src/openwith.cpp" line="177"/>
         <source>All Files (*)</source>
-        <translation type="unfinished"></translation>
+        <translation>Todos os arquivos (*)</translation>
     </message>
 </context>
 <context>
@@ -476,12 +477,12 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/main.cpp" line="17"/>
         <source>file</source>
-        <translation type="unfinished"></translation>
+        <translation>arquivo</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="17"/>
         <source>The file to open.</source>
-        <translation type="unfinished"></translation>
+        <translation>O arquivo a ser aberto.</translation>
     </message>
 </context>
 <context>
@@ -489,17 +490,17 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvaboutdialog.ui" line="20"/>
         <source>About qView</source>
-        <translation type="unfinished"></translation>
+        <translation>Sobre o qView</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="44"/>
         <source>version %1</source>
-        <translation type="unfinished"></translation>
+        <translation>versão %1</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="47"/>
         <source>Nightly %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Nightly %1</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="62"/>
@@ -509,23 +510,23 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="90"/>
         <source>Checking for updates...</source>
-        <translation type="unfinished"></translation>
+        <translation>Procurando por atualizações...</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="94"/>
         <source>%1 update available</source>
         <extracomment>%1 is a version number e.g. &quot;4.0 update available&quot;</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>%1 atualização disponível</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="98"/>
         <source>No updates available</source>
-        <translation type="unfinished"></translation>
+        <translation>Nenhuma atualização disponível</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="102"/>
         <source>Error checking for updates</source>
-        <translation type="unfinished"></translation>
+        <translation>Erro ao verificar atualizações</translation>
     </message>
 </context>
 <context>
@@ -533,17 +534,17 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvapplication.cpp" line="40"/>
         <source>Supported Images</source>
-        <translation type="unfinished"></translation>
+        <translation>Imagens suportadas</translation>
     </message>
     <message>
         <location filename="../src/qvapplication.cpp" line="49"/>
         <source>All Files</source>
-        <translation type="unfinished"></translation>
+        <translation>Todos os arquivos</translation>
     </message>
     <message>
         <location filename="../src/qvapplication.cpp" line="136"/>
         <source>Open...</source>
-        <translation type="unfinished"></translation>
+        <translation>Abrir...</translation>
     </message>
 </context>
 <context>
@@ -551,7 +552,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvcocoafunctions.mm" line="195"/>
         <source> (default)</source>
-        <translation type="unfinished"></translation>
+        <translation> (padrão)</translation>
     </message>
 </context>
 <context>
@@ -559,13 +560,14 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvgraphicsview.cpp" line="621"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Erro</translation>
     </message>
     <message>
         <location filename="../src/qvgraphicsview.cpp" line="621"/>
         <source>Error occurred opening &quot;%3&quot;:
 %2 (Error %1)</source>
-        <translation type="unfinished"></translation>
+        <translation>Ocorreu um erro ao abrir &quot;%3&quot;:
+%2 (erro %1)</translation>
     </message>
 </context>
 <context>
@@ -573,12 +575,12 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvinfodialog.ui" line="20"/>
         <source>File Info</source>
-        <translation type="unfinished"></translation>
+        <translation>Informações do arquivo</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="26"/>
         <source>Name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Nome:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="36"/>
@@ -590,32 +592,32 @@ No write permission or file is read-only.</source>
         <location filename="../src/qvinfodialog.ui" line="183"/>
         <location filename="../src/qvinfodialog.ui" line="203"/>
         <source>error</source>
-        <translation type="unfinished"></translation>
+        <translation>erro</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="52"/>
         <source>Type:</source>
-        <translation type="unfinished"></translation>
+        <translation>Tipo:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="75"/>
         <source>Location:</source>
-        <translation type="unfinished"></translation>
+        <translation>Localização:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="101"/>
         <source>Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Tamanho:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="130"/>
         <source>Modified:</source>
-        <translation type="unfinished"></translation>
+        <translation>Modificado:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="153"/>
         <source>Dimensions:</source>
-        <translation type="unfinished"></translation>
+        <translation>Dimensões:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="173"/>
@@ -625,17 +627,17 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvinfodialog.ui" line="193"/>
         <source>Frames:</source>
-        <translation type="unfinished"></translation>
+        <translation>Quadros:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="213"/>
         <source>Refresh</source>
-        <translation type="unfinished"></translation>
+        <translation>Atualizar</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.cpp" line="49"/>
         <source>%1 (%2 bytes)</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 (%2 bytes)</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.cpp" line="51"/>
@@ -653,62 +655,62 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/openwith.h" line="66"/>
         <source>Development</source>
-        <translation type="unfinished"></translation>
+        <translation>Desenvolvimento</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="67"/>
         <source>Education</source>
-        <translation type="unfinished"></translation>
+        <translation>Educação</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="68"/>
         <source>Games</source>
-        <translation type="unfinished"></translation>
+        <translation>Jogos</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="69"/>
         <source>Graphics</source>
-        <translation type="unfinished"></translation>
+        <translation>Gráficos</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="70"/>
         <source>Internet</source>
-        <translation type="unfinished"></translation>
+        <translation>Internet</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="71"/>
         <source>Multimedia</source>
-        <translation type="unfinished"></translation>
+        <translation>Multimídia</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="72"/>
         <source>Office</source>
-        <translation type="unfinished"></translation>
+        <translation>Escritório</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="73"/>
         <source>Science</source>
-        <translation type="unfinished"></translation>
+        <translation>Ciência</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="74"/>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Configurações</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="75"/>
         <source>System</source>
-        <translation type="unfinished"></translation>
+        <translation>Sistema</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="76"/>
         <source>Utilities</source>
-        <translation type="unfinished"></translation>
+        <translation>Utilitários</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="77"/>
         <source>Other</source>
-        <translation type="unfinished"></translation>
+        <translation>Outros</translation>
     </message>
 </context>
 <context>
@@ -716,47 +718,47 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="17"/>
         <source>Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Opções</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="33"/>
         <source>Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Janela</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="39"/>
         <source>Back&amp;ground color:</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Cor de fundo:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="56"/>
         <source>Changes the amount of information displayed in the titlebar</source>
-        <translation type="unfinished"></translation>
+        <translation>Altera a quantidade de informações exibidas na barra de título</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="59"/>
         <source>Titlebar text:</source>
-        <translation type="unfinished"></translation>
+        <translation>Texto da barra de título:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="66"/>
         <source>&amp;Basic</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Básico</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="73"/>
         <source>&amp;Minimal</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Mínimo</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="83"/>
         <source>&amp;Practical</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Prático</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="90"/>
         <source>&amp;Verbose</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Detalhado</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="110"/>
@@ -772,44 +774,44 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="127"/>
         <source>Never</source>
-        <translation type="unfinished"></translation>
+        <translation>Nunca</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="132"/>
         <source>When launching</source>
-        <translation type="unfinished"></translation>
+        <translation>Ao iniciar</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="137"/>
         <source>When opening images</source>
-        <translation type="unfinished"></translation>
+        <translation>Ao abrir imagens</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="145"/>
         <source>Minimum size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Tamanho mínimo:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="152"/>
         <source>Control the minimum size that the window should reach when matching the image&apos;s actual size</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Controla o tamanho mínimo que a janela deve atingir ao corresponder ao tamanho real da imagem</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="155"/>
         <location filename="../src/qvoptionsdialog.ui" line="187"/>
         <source>% of screen size</source>
-        <translation type="unfinished"></translation>
+        <translation>% do tamanho da tela</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="174"/>
         <location filename="../src/qvoptionsdialog.ui" line="184"/>
         <source>Control the maximum size that the window should reach when matching the image&apos;s actual size</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Controla o tamanho máximo que a janela deve atingir ao corresponder ao tamanho real da imagem</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="177"/>
         <source>Maximum size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Tamanho máximo:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="219"/>
@@ -961,27 +963,27 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="469"/>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Nome</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="474"/>
         <source>Last Modified</source>
-        <translation type="unfinished"></translation>
+        <translation>Última modificação</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="479"/>
         <source>Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Tamanho</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="484"/>
         <source>Type</source>
-        <translation type="unfinished"></translation>
+        <translation>Tipo</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="489"/>
         <source>Random</source>
-        <translation type="unfinished"></translation>
+        <translation>Aleatório</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="497"/>
@@ -1127,18 +1129,18 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="14"/>
         <source>Rename...</source>
-        <translation type="unfinished"></translation>
+        <translation>Renomear...</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="15"/>
         <source>File name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Nome do arquivo:</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="26"/>
         <location filename="../src/qvrenamedialog.cpp" line="45"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Erro</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="26"/>
@@ -1177,7 +1179,7 @@ No write permission or file is read-only.</source>
         <location filename="../src/qvwelcomedialog.ui" line="14"/>
         <location filename="../src/qvwelcomedialog.ui" line="155"/>
         <source>Welcome</source>
-        <translation type="unfinished"></translation>
+        <translation>Boas-vindas</translation>
     </message>
     <message>
         <location filename="../src/qvwelcomedialog.ui" line="472"/>
@@ -1200,12 +1202,12 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="45"/>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation>Abrir</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="46"/>
         <source>Open URL</source>
-        <translation type="unfinished"></translation>
+        <translation>Abrir URL</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="47"/>
@@ -1240,47 +1242,47 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="59"/>
         <source>Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>Copiar</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="60"/>
         <source>Paste</source>
-        <translation type="unfinished"></translation>
+        <translation>Colar</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="61"/>
         <source>Rename</source>
-        <translation type="unfinished"></translation>
+        <translation>Renomear</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="65"/>
         <source>Move to Trash</source>
-        <translation type="unfinished"></translation>
+        <translation>Mover para a lixeira</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="69"/>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Excluir</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="71"/>
         <source>First File</source>
-        <translation type="unfinished"></translation>
+        <translation>Primeiro arquivo</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="72"/>
         <source>Previous File</source>
-        <translation type="unfinished"></translation>
+        <translation>Arquivo anterior</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="73"/>
         <source>Next File</source>
-        <translation type="unfinished"></translation>
+        <translation>Próximo arquivo</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="74"/>
         <source>Last File</source>
-        <translation type="unfinished"></translation>
+        <translation>Último arquivo</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="75"/>
@@ -1330,17 +1332,17 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="99"/>
         <source>Save Frame As</source>
-        <translation type="unfinished"></translation>
+        <translation>Salvar quadro como</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="100"/>
         <source>Pause</source>
-        <translation type="unfinished"></translation>
+        <translation>Pausar</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="101"/>
         <source>Next Frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Próximo quadro</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="102"/>
@@ -1365,37 +1367,37 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="106"/>
         <source>Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Opções</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="108"/>
         <source>Preferences</source>
-        <translation type="unfinished"></translation>
+        <translation>Preferências</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="112"/>
         <source>New Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Nova janela</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="113"/>
         <source>Close Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Fechar janela</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="114"/>
         <source>Close All</source>
-        <translation type="unfinished"></translation>
+        <translation>Fechar tudo</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="116"/>
         <source>Quit</source>
-        <translation type="unfinished"></translation>
+        <translation>Sair</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="121"/>
         <source>Exit</source>
-        <translation type="unfinished"></translation>
+        <translation>Sair</translation>
     </message>
 </context>
 <context>
@@ -1403,27 +1405,27 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/updatechecker.cpp" line="69"/>
         <source>Download</source>
-        <translation type="unfinished"></translation>
+        <translation>Baixar</translation>
     </message>
     <message>
         <location filename="../src/updatechecker.cpp" line="72"/>
         <source>qView Update Available</source>
-        <translation type="unfinished"></translation>
+        <translation>Atualização disponível para o qView</translation>
     </message>
     <message>
         <location filename="../src/updatechecker.cpp" line="73"/>
         <source>qView %1 is available to download.</source>
-        <translation type="unfinished"></translation>
+        <translation>qView %1 está disponível para baixar.</translation>
     </message>
     <message>
         <location filename="../src/updatechecker.cpp" line="77"/>
         <source>&amp;Disable Update Checking</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Desabilitar verificação de atualizações</translation>
     </message>
     <message>
         <location filename="../src/updatechecker.cpp" line="87"/>
         <source>qView Update Checking Disabled</source>
-        <translation type="unfinished"></translation>
+        <translation>Verificação de atualização do qView desabilitada</translation>
     </message>
     <message>
         <location filename="../src/updatechecker.cpp" line="87"/>
