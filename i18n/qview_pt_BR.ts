@@ -127,12 +127,12 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="695"/>
         <source>&amp;Restore from Trash</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Restaurar da lixeira</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="697"/>
         <source>&amp;Undo Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Desfazer exclusão</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="702"/>
@@ -172,17 +172,17 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="729"/>
         <source>Rotate &amp;Right</source>
-        <translation type="unfinished"></translation>
+        <translation>Girar para &amp;direita</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="733"/>
         <source>Rotate &amp;Left</source>
-        <translation type="unfinished"></translation>
+        <translation>Girar para &amp;esquerda</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="737"/>
         <source>&amp;Mirror</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Espelhar</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="741"/>
@@ -293,19 +293,19 @@
         <location filename="../src/actionmanager.cpp" line="819"/>
         <source>Other Application...</source>
         <extracomment>Open with other program for unix non-mac</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Outra aplicação...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="822"/>
         <source>Choose another app</source>
         <extracomment>Open with other program for windows</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Escolher outro aplicativo</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="825"/>
         <source>Other...</source>
         <extracomment>Open with other program for macos</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Outro...</translation>
     </message>
 </context>
 <context>
@@ -313,12 +313,12 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="217"/>
         <source>Exit F&amp;ull Screen</source>
-        <translation type="unfinished"></translation>
+        <translation>Sair da &amp;tela cheia</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="222"/>
         <source>Enter F&amp;ull Screen</source>
-        <translation type="unfinished"></translation>
+        <translation>Entrar em &amp;tela cheia</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="390"/>
@@ -415,33 +415,35 @@ Sem permissão de gravação ou arquivo é de somente leitura.</translation>
         <location filename="../src/mainwindow.cpp" line="806"/>
         <source>This program was compiled with an old version of Qt and this feature is not available.
 If you see this message, please report a bug!</source>
-        <translation type="unfinished"></translation>
+        <translation>Este programa foi compilado com uma versão antiga do Qt e esse recurso não está disponível.
+Se vir esta mensagem, por favor reporte um bug!</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="793"/>
         <source>Can&apos;t undo deletion of %1:
 No write permission or file is read-only.</source>
-        <translation type="unfinished"></translation>
+        <translation>Não é possível desfazer a exclusão de %1:
+Sem permissão de gravação ou o arquivo é de somente leitura.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="801"/>
         <source>Failed undoing deletion of %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Falha ao desfazer a exclusão de %1.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="939"/>
         <source>Save Frame As...</source>
-        <translation type="unfinished"></translation>
+        <translation>Salvar quadro como...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="968"/>
         <source>Res&amp;ume</source>
-        <translation type="unfinished"></translation>
+        <translation>C&amp;ontinuar</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="977"/>
         <source>Pause</source>
-        <translation type="unfinished"></translation>
+        <translation>Pausar</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="1000"/>
@@ -459,7 +461,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/openwith.cpp" line="165"/>
         <source>All Applications (*.app)</source>
-        <translation type="unfinished"></translation>
+        <translation>Todas as aplicações (*.app)</translation>
     </message>
     <message>
         <location filename="../src/openwith.cpp" line="177"/>
@@ -505,7 +507,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="62"/>
         <source>Built with Qt %1 (%2)&lt;br&gt;Source code available under GPLv3 on &lt;a style=&quot;color: #03A9F4; text-decoration:none;&quot; href=&quot;https://github.com/jurplel/qView&quot;&gt;GitHub&lt;/a&gt;&lt;br&gt;Icon glyph created by Guilhem from the Noun Project&lt;br&gt;Copyright © %3 jurplel and qView contributors</source>
-        <translation type="unfinished"></translation>
+        <translation>Construído com Qt %1 (%2)&lt;br&gt;Código fonte disponível sob GPLv3 em &lt;a style=&quot;color: #03A9F4; text-decoration:none;&quot; href=&quot;https://github.com/jurplel/qView&quot;&gt;GitHub&lt;/a&gt;&lt;br&gt;Glifo de ícone criado por Guilhem do Noun Project&lt;br&gt;Copyright © %3 jurplel e contribuidores do qView</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="90"/>
@@ -642,7 +644,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvinfodialog.cpp" line="51"/>
         <source>%1 x %2 (%3 MP)</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 x %2 (%3 MP)</translation>
     </message>
 </context>
 <context>
@@ -650,7 +652,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvopenwithdialog.ui" line="14"/>
         <source>Choose Application</source>
-        <translation type="unfinished"></translation>
+        <translation>Escolher aplicação</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="66"/>
@@ -1009,7 +1011,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="544"/>
         <source>Disabled</source>
-        <translation type="unfinished"></translation>
+        <translation>Desabilitado</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="549"/>
@@ -1059,7 +1061,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="648"/>
         <source>Save &amp;recent files</source>
-        <translation type="unfinished"></translation>
+        <translation>Salvar arquivos &amp;recentes</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="655"/>
@@ -1070,7 +1072,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="451"/>
         <source>Language:</source>
-        <translation type="unfinished"></translation>
+        <translation>Idioma:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="666"/>
@@ -1095,33 +1097,33 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="691"/>
         <source>&amp;Ask before deleting files</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Perguntar antes de excluir arquivos</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="712"/>
         <location filename="../src/qvoptionsdialog.ui" line="760"/>
         <source>Shortcuts</source>
-        <translation type="unfinished"></translation>
+        <translation>Atalhos</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="755"/>
         <source>Action</source>
-        <translation type="unfinished"></translation>
+        <translation>Ação</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.cpp" line="452"/>
         <source>System Language</source>
-        <translation type="unfinished"></translation>
+        <translation>Idioma do sistema</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.cpp" line="476"/>
         <source>Restart Required</source>
-        <translation type="unfinished"></translation>
+        <translation>É necessário reiniciar</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.cpp" line="476"/>
         <source>You must restart qView to change the language.</source>
-        <translation type="unfinished"></translation>
+        <translation>Você deve reiniciar o qView para alterar o idioma.</translation>
     </message>
 </context>
 <context>
@@ -1146,13 +1148,15 @@ No write permission or file is read-only.</source>
         <location filename="../src/qvrenamedialog.cpp" line="26"/>
         <source>Could not rename %1:
 No write permission or file is read-only.</source>
-        <translation type="unfinished"></translation>
+        <translation>Não foi possível renomear %1:
+Sem permissão de gravação ou arquivo é de somente leitura.</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="45"/>
         <source>Could not rename %1:
 (Check that all characters are valid)</source>
-        <translation type="unfinished"></translation>
+        <translation>Não foi possível renomear %1:
+(verifique se todos os caracteres são válidos)</translation>
     </message>
 </context>
 <context>
@@ -1160,17 +1164,17 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvshortcutdialog.ui" line="14"/>
         <source>Modify Shortcuts</source>
-        <translation type="unfinished"></translation>
+        <translation>Modificar atalhos</translation>
     </message>
     <message>
         <location filename="../src/qvshortcutdialog.cpp" line="53"/>
         <source>Shortcut Already Used</source>
-        <translation type="unfinished"></translation>
+        <translation>Atalho já em uso</translation>
     </message>
     <message>
         <location filename="../src/qvshortcutdialog.cpp" line="53"/>
         <source>&quot;%1&quot; is already bound to &quot;%2&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>&quot;%1&quot; já está vinculado a &quot;%2&quot;</translation>
     </message>
 </context>
 <context>
@@ -1189,7 +1193,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvwelcomedialog.cpp" line="42"/>
         <source>Thank you for downloading qView.&lt;br&gt;Here&apos;s a few tips to get you started:</source>
-        <translation type="unfinished"></translation>
+        <translation>Obrigado por baixar o qView.&lt;br&gt;Aqui estão algumas dicas para você começar:</translation>
     </message>
     <message>
         <location filename="../src/qvwelcomedialog.cpp" line="49"/>
@@ -1232,12 +1236,12 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="55"/>
         <source>Restore from Trash</source>
-        <translation type="unfinished"></translation>
+        <translation>Restaurar da lixeira</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="57"/>
         <source>Undo Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Desfazer exclusão</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="59"/>
@@ -1307,17 +1311,17 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="83"/>
         <source>Rotate Right</source>
-        <translation type="unfinished"></translation>
+        <translation>Girar para direita</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="84"/>
         <source>Rotate Left</source>
-        <translation type="unfinished"></translation>
+        <translation>Girar para esquerda</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="85"/>
         <source>Mirror</source>
-        <translation type="unfinished"></translation>
+        <translation>Espelhar</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="86"/>
@@ -1327,7 +1331,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="87"/>
         <source>Full Screen</source>
-        <translation type="unfinished"></translation>
+        <translation>Tela cheia</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="99"/>
@@ -1431,7 +1435,8 @@ No write permission or file is read-only.</source>
         <location filename="../src/updatechecker.cpp" line="87"/>
         <source>Update notifications on startup have been disabled.
 You can reenable them in the options dialog.</source>
-        <translation type="unfinished"></translation>
+        <translation>As notificações de atualização na inicialização foram desativadas.
+Você pode reativá-las na caixa de diálogo de opções.</translation>
     </message>
 </context>
 </TS>
