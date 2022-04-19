@@ -11,6 +11,7 @@
 #include <QtMath>
 #include <QGestureEvent>
 #include <QScrollBar>
+#include "qvgraphicspixmapitem.h"
 
 QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 {
@@ -59,7 +60,8 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     connect(expensiveScaleTimerNew, &QTimer::timeout, this, [this]{scaleExpensively();});
 
 
-    loadedPixmapItem = new QGraphicsPixmapItem();
+//    loadedPixmapItem = new QGraphicsPixmapItem();
+    loadedPixmapItem = new QVGraphicsPixmapItem();
     scene->addItem(loadedPixmapItem);
 
     // Connect to settings signal
