@@ -125,6 +125,9 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
     transientSettings.insert("bgcolor", ui->bgColorButton->text());
     updateBgColorButton();
     connect(ui->bgColorButton, &QPushButton::clicked, this, &QVOptionsDialog::bgColorButtonClicked);
+
+    syncCheckbox(ui->checkerboardBackgroundCheckbox, "checkerboardBackground", defaults, makeConnections);
+
     // titlebarmode
     syncRadioButtons({ui->titlebarRadioButton0, ui->titlebarRadioButton1,
                      ui->titlebarRadioButton2, ui->titlebarRadioButton3}, "titlebarmode", defaults, makeConnections);

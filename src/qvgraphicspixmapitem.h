@@ -12,8 +12,12 @@ public:
     explicit QVGraphicsPixmapItem(const QPixmap &pixmap, QGraphicsItem *parent = nullptr)
         : QGraphicsPixmapItem(pixmap, parent) {}
 
+    void setDrawCheckerBoardBackground(bool en) {
+        drawCheckerBoardBackground = en;
+    }
 private:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+    bool drawCheckerBoardBackground{true};
 };
 
 #endif // QVGRAPHICSPIXMAPITEM_H
