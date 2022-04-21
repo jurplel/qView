@@ -50,7 +50,7 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
+       <item row="2" column="0">
         <widget class="QLabel" name="label">
          <property name="toolTip">
           <string>Changes the amount of information displayed in the titlebar</string>
@@ -60,14 +60,14 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
+       <item row="2" column="1">
         <widget class="QRadioButton" name="titlebarRadioButton0">
          <property name="text">
           <string>&amp;Basic</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="1">
+       <item row="3" column="1">
         <widget class="QRadioButton" name="titlebarRadioButton1">
          <property name="text">
           <string>&amp;Minimal</string>
@@ -77,21 +77,21 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="1">
+       <item row="4" column="1">
         <widget class="QRadioButton" name="titlebarRadioButton2">
          <property name="text">
           <string>&amp;Practical</string>
          </property>
         </widget>
        </item>
-       <item row="4" column="1">
+       <item row="5" column="1">
         <widget class="QRadioButton" name="titlebarRadioButton3">
          <property name="text">
           <string>&amp;Verbose</string>
          </property>
         </widget>
        </item>
-       <item row="6" column="1">
+       <item row="7" column="1">
         <spacer name="horizontalSpacer_4">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -104,7 +104,7 @@
          </property>
         </spacer>
        </item>
-       <item row="7" column="0">
+       <item row="8" column="0">
         <widget class="QLabel" name="label_6">
          <property name="toolTip">
           <string>Control when the window should resize to fit the image's actual size</string>
@@ -114,7 +114,7 @@
          </property>
         </widget>
        </item>
-       <item row="7" column="1">
+       <item row="8" column="1">
         <widget class="QComboBox" name="windowResizeComboBox">
          <property name="toolTip">
           <string>Control when the window should resize to fit the image's actual size</string>
@@ -139,14 +139,14 @@
          </item>
         </widget>
        </item>
-       <item row="8" column="0">
+       <item row="9" column="0">
         <widget class="QLabel" name="minWindowResizeLabel">
          <property name="text">
           <string>Minimum size:</string>
          </property>
         </widget>
        </item>
-       <item row="8" column="1">
+       <item row="9" column="1">
         <widget class="QSpinBox" name="minWindowResizeSpinBox">
          <property name="toolTip">
           <string>Control the minimum size that the window should reach when matching the image's actual size</string>
@@ -168,7 +168,7 @@
          </property>
         </widget>
        </item>
-       <item row="9" column="0">
+       <item row="10" column="0">
         <widget class="QLabel" name="maxWindowResizeLabel">
          <property name="toolTip">
           <string>Control the maximum size that the window should reach when matching the image's actual size</string>
@@ -178,7 +178,7 @@
          </property>
         </widget>
        </item>
-       <item row="9" column="1">
+       <item row="10" column="1">
         <widget class="QSpinBox" name="maxWindowResizeSpinBox">
          <property name="toolTip">
           <string>Control the maximum size that the window should reach when matching the image's actual size</string>
@@ -200,7 +200,7 @@
          </property>
         </widget>
        </item>
-       <item row="10" column="1">
+       <item row="11" column="1">
         <spacer name="horizontalSpacer_3">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -213,7 +213,7 @@
          </property>
         </spacer>
        </item>
-       <item row="13" column="1">
+       <item row="14" column="1">
         <widget class="QCheckBox" name="darkTitlebarCheckbox">
          <property name="toolTip">
           <string>Choose whether or not the titlebar should always be dark regardless of your chosen macOS appearance</string>
@@ -226,14 +226,14 @@
          </property>
         </widget>
        </item>
-       <item row="11" column="1">
+       <item row="12" column="1">
         <widget class="QCheckBox" name="menubarCheckbox">
          <property name="text">
           <string>Show menubar</string>
          </property>
         </widget>
        </item>
-       <item row="12" column="1">
+       <item row="13" column="1">
         <widget class="QCheckBox" name="detailsInFullscreen">
          <property name="toolTip">
           <string>Choose whether or not to display the titlebar text while in fullscreen</string>
@@ -243,10 +243,17 @@
          </property>
         </widget>
        </item>
-       <item row="14" column="1">
+       <item row="15" column="1">
         <widget class="QCheckBox" name="quitOnLastWindowCheckbox">
          <property name="text">
           <string>&amp;Quit on last window closed</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="2">
+        <widget class="QCheckBox" name="checkerboardBackgroundCheckbox">
+         <property name="text">
+          <string>Checkerboard for transparent background </string>
          </property>
         </widget>
        </item>

@@ -9,6 +9,8 @@
 #include <QTimer>
 #include <QFileInfo>
 
+class QVGraphicsPixmapItem;
+
 class QVGraphicsView : public QGraphicsView
 {
     Q_OBJECT
@@ -116,7 +118,7 @@ private slots:
 private:
 
 
-    QGraphicsPixmapItem *loadedPixmapItem;
+    QVGraphicsPixmapItem *loadedPixmapItem;
 
     bool isFilteringEnabled;
     bool isScalingEnabled;

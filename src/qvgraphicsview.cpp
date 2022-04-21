@@ -11,6 +11,7 @@
 #include <QtMath>
 #include <QGestureEvent>
 #include <QScrollBar>
+#include "qvgraphicspixmapitem.h"
 
 QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 {
@@ -58,8 +59,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     expensiveScaleTimerNew->setInterval(50);
     connect(expensiveScaleTimerNew, &QTimer::timeout, this, [this]{scaleExpensively();});
 
-
-    loadedPixmapItem = new QGraphicsPixmapItem();
+    loadedPixmapItem = new QVGraphicsPixmapItem();
     scene->addItem(loadedPixmapItem);
 
     // Connect to settings signal
@@ -641,6 +641,8 @@ void QVGraphicsView::settingsUpdated()
         newBrush.setColor(newColor);
     }
     setBackgroundBrush(newBrush);
+
+    loadedPixmapItem->setDrawCheckerBoardBackground(settingsManager.getBoolean("checkerboardBackground"));
 
     //filtering
     if (settingsManager.getBoolean("filteringenabled"))
