@@ -95,24 +95,24 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="673"/>
         <source>Open Containing &amp;Folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Abrir contendo &amp;Pasta</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="676"/>
         <source>Show in E&amp;xplorer</source>
         <extracomment>Open containing folder on windows</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar no &amp;Explorer</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="679"/>
         <source>Show in &amp;Finder</source>
         <extracomment>Open containing folder on macOS</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar no &amp;Localizador</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="684"/>
         <source>Show File &amp;Info</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar arquivo &amp;Informações</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="688"/>
@@ -152,17 +152,17 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="713"/>
         <source>Zoom &amp;In</source>
-        <translation type="unfinished"></translation>
+        <translation>Zoom &amp;Dentro</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="717"/>
         <source>Zoom &amp;Out</source>
-        <translation type="unfinished"></translation>
+        <translation>Zoom &amp;Fora</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="721"/>
         <source>Reset &amp;Zoom</source>
-        <translation type="unfinished"></translation>
+        <translation>Redefenir &amp;Zoom</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="725"/>
@@ -187,12 +187,12 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="741"/>
         <source>&amp;Flip</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Giro</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="745"/>
         <source>Enter F&amp;ull Screen</source>
-        <translation type="unfinished"></translation>
+        <translation>Entrar em &amp;Tela cheia</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="749"/>
@@ -232,22 +232,22 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="777"/>
         <source>&amp;Decrease Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Diminuir Velocidade</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="781"/>
         <source>&amp;Reset Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Redefinir Velocidade</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="785"/>
         <source>&amp;Increase Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Aumente a Velocidade</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="789"/>
         <source>Start S&amp;lideshow</source>
-        <translation type="unfinished"></translation>
+        <translation>Começar &amp;Apresentação de slides</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="794"/>
@@ -323,7 +323,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="390"/>
         <source>Empty</source>
-        <translation type="unfinished"></translation>
+        <translation>Vazio</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="563"/>
@@ -448,12 +448,12 @@ Sem permissão de gravação ou o arquivo é de somente leitura.</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="1000"/>
         <source>Start S&amp;lideshow</source>
-        <translation type="unfinished"></translation>
+        <translation>Começar &amp;Apresentação de slides</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="1009"/>
         <source>Stop S&amp;lideshow</source>
-        <translation type="unfinished"></translation>
+        <translation>Parar &amp;Apresentação de slides</translation>
     </message>
 </context>
 <context>
@@ -502,7 +502,7 @@ Sem permissão de gravação ou o arquivo é de somente leitura.</translation>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="47"/>
         <source>Nightly %1</source>
-        <translation>Nightly %1</translation>
+        <translation>Noturno %1</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="62"/>
@@ -624,7 +624,7 @@ Sem permissão de gravação ou o arquivo é de somente leitura.</translation>
     <message>
         <location filename="../src/qvinfodialog.ui" line="173"/>
         <source>Aspect Ratio:</source>
-        <translation type="unfinished"></translation>
+        <translation>Proporção da tela:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="193"/>
@@ -766,12 +766,12 @@ Sem permissão de gravação ou o arquivo é de somente leitura.</translation>
         <location filename="../src/qvoptionsdialog.ui" line="110"/>
         <location filename="../src/qvoptionsdialog.ui" line="120"/>
         <source>Control when the window should resize to fit the image&apos;s actual size</source>
-        <translation type="unfinished"></translation>
+        <translation>Controlar quando a janela deve ser redimensionada para caber no tamanho real da imagem</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="113"/>
         <source>Window matches image size:</source>
-        <translation type="unfinished"></translation>
+        <translation>A janela corresponde ao tamanho da imagem:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="127"/>
@@ -796,7 +796,7 @@ Sem permissão de gravação ou o arquivo é de somente leitura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="152"/>
         <source>Control the minimum size that the window should reach when matching the image&apos;s actual size</source>
-        <translation type="unfinished">Controla o tamanho mínimo que a janela deve atingir ao corresponder ao tamanho real da imagem</translation>
+        <translation>Controla o tamanho mínimo que a janela deve atingir ao corresponder ao tamanho real da imagem</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="155"/>
@@ -808,7 +808,7 @@ Sem permissão de gravação ou o arquivo é de somente leitura.</translation>
         <location filename="../src/qvoptionsdialog.ui" line="174"/>
         <location filename="../src/qvoptionsdialog.ui" line="184"/>
         <source>Control the maximum size that the window should reach when matching the image&apos;s actual size</source>
-        <translation type="unfinished">Controla o tamanho máximo que a janela deve atingir ao corresponder ao tamanho real da imagem</translation>
+        <translation>Controla o tamanho máximo que a janela deve atingir ao corresponder ao tamanho real da imagem</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="177"/>
@@ -818,149 +818,149 @@ Sem permissão de gravação ou o arquivo é de somente leitura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="219"/>
         <source>Choose whether or not the titlebar should always be dark regardless of your chosen macOS appearance</source>
-        <translation type="unfinished"></translation>
+        <translation>Escolha se a barra de título deve ou não estar sempre escura, independentemente da aparência do macOS escolhida</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="222"/>
         <source>&amp;Titlebar always dark</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Barra de título sempre escura</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="232"/>
         <source>Show menubar</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar barra de menu</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="239"/>
         <source>Choose whether or not to display the titlebar text while in fullscreen</source>
-        <translation type="unfinished"></translation>
+        <translation>Escolha se deseja ou não exibir o texto da barra de título em tela cheia</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="242"/>
         <source>Show titlebar text in fullscreen</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar texto da barra de título em tela cheia</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="249"/>
         <source>&amp;Quit on last window closed</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Sair na última janela fechada</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="257"/>
         <source>Image</source>
-        <translation type="unfinished"></translation>
+        <translation>Imagem</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="263"/>
         <source>Scaling:</source>
-        <translation type="unfinished"></translation>
+        <translation>Escala:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="270"/>
         <source>Turn this off to see individual pixels</source>
-        <translation type="unfinished"></translation>
+        <translation>Desative isso para ver pixels individuais</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="273"/>
         <source>&amp;Bilinear filtering</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Filtragem bilinear</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="283"/>
         <source>Images appear aliased (having jagged edges) without this, but it is faster</source>
-        <translation type="unfinished"></translation>
+        <translation>As imagens aparecem com alias (com bordas irregulares) sem isso, mas é mais rápido</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="286"/>
         <source>&amp;Image scaling</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Escala de imagem</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="296"/>
         <source>Choose whether or not the image continues to be scaled when zooming above the window size (can be laggier with large images)</source>
-        <translation type="unfinished"></translation>
+        <translation>Escolha se a imagem continua ou não a ser dimensionada ao ampliar acima do tamanho da janela (pode ser mais lenta com imagens grandes)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="299"/>
         <source>&amp;Scaling above window size</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Escala acima do tamanho da janela</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="309"/>
         <location filename="../src/qvoptionsdialog.ui" line="319"/>
         <source>The amount to zoom every scroll wheel click</source>
-        <translation type="unfinished"></translation>
+        <translation>A quantidade de zoom a cada clique na roda de rolagem</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="312"/>
         <source>Zoom amount:</source>
-        <translation type="unfinished"></translation>
+        <translation>Quantidade de zoom:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="341"/>
         <source>Choose whether scrolling zooms or moves the image (alternative can be accessed at any time by holding ctrl/cmd)</source>
-        <translation type="unfinished"></translation>
+        <translation>Escolha se a rolagem amplia ou move a imagem (alternativa pode ser acessada a qualquer momento segurando ctrl/cmd)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="344"/>
         <source>Scrolling &amp;zooms</source>
-        <translation type="unfinished"></translation>
+        <translation>Rolagem &amp;Zoom</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="367"/>
         <source>Stop the image from going past its actual size when resizing the window - you can still zoom past it though</source>
-        <translation type="unfinished"></translation>
+        <translation>Impedir que a imagem ultrapasse seu tamanho real ao redimensionar a janela - você ainda pode aumentar o zoom</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="370"/>
         <source>Image resizes &amp;past actual size</source>
-        <translation type="unfinished"></translation>
+        <translation>Redimensionamento da imagem além do tamanho real</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="386"/>
         <location filename="../src/qvoptionsdialog.ui" line="408"/>
         <source>Ignores select sides of an image when fitting to window (some sides will extend beyond the window boundaries)</source>
-        <translation type="unfinished"></translation>
+        <translation>Ignora lados selecionados de uma imagem ao ajustar à janela (alguns lados se estenderão além dos limites da janela)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="390"/>
         <source>Fit whole image</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajustar imagem inteira</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="395"/>
         <source>Fit height</source>
-        <translation type="unfinished"></translation>
+        <translation>Altura de ajuste</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="400"/>
         <source>Fit width</source>
-        <translation type="unfinished"></translation>
+        <translation>Largura de ajuste</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="411"/>
         <source>On window resize:</source>
-        <translation type="unfinished"></translation>
+        <translation>No redimensionamento da janela:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="431"/>
         <source>Choose whether or not zooming in and out above 100% zoom will zoom towards the cursor</source>
-        <translation type="unfinished"></translation>
+        <translation>Escolha se aumentar ou diminuir o zoom acima de 100% de zoom aumentará o zoom em direção ao cursor</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="434"/>
         <source>Zoom &amp;towards cursor</source>
-        <translation type="unfinished"></translation>
+        <translation>Zoom &amp;na direção do cursor</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="445"/>
         <source>Miscellaneous</source>
-        <translation type="unfinished"></translation>
+        <translation>Diversos</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="461"/>
         <source>Sort files by:</source>
-        <translation type="unfinished"></translation>
+        <translation>Classificar arquivos por:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="469"/>
@@ -990,23 +990,23 @@ Sem permissão de gravação ou o arquivo é de somente leitura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="497"/>
         <source>A&amp;scending</source>
-        <translation type="unfinished"></translation>
+        <translation>A&amp;scendente</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="507"/>
         <source>D&amp;escending</source>
-        <translation type="unfinished"></translation>
+        <translation>D&amp;escendente</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="527"/>
         <location filename="../src/qvoptionsdialog.ui" line="537"/>
         <source>Controls the amount of images preloaded</source>
-        <translation type="unfinished"></translation>
+        <translation>Controla a quantidade de imagens pré-carregadas</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="530"/>
         <source>Preloading:</source>
-        <translation type="unfinished"></translation>
+        <translation>Pré-carregamento:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="544"/>
@@ -1016,47 +1016,47 @@ Sem permissão de gravação ou o arquivo é de somente leitura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="549"/>
         <source>Adjacent</source>
-        <translation type="unfinished"></translation>
+        <translation>Adjacente</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="554"/>
         <source>Extended</source>
-        <translation type="unfinished"></translation>
+        <translation>Estendido</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="562"/>
         <source>Controls whether or not qView should go back to the first item after reaching the end of a folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Controla se o qView deve ou não voltar ao primeiro item após chegar ao final de uma pasta</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="565"/>
         <source>&amp;Loop through folders</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Percorrer as pastas</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="588"/>
         <source>Slideshow direction:</source>
-        <translation type="unfinished"></translation>
+        <translation>Direção da apresentação de slides:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="596"/>
         <source>Forward</source>
-        <translation type="unfinished"></translation>
+        <translation>Avançar</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="601"/>
         <source>Backward</source>
-        <translation type="unfinished"></translation>
+        <translation>Para trás</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="609"/>
         <source>Slideshow timer:</source>
-        <translation type="unfinished"></translation>
+        <translation>Temporizador de apresentação de slides:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="616"/>
         <source> sec</source>
-        <translation type="unfinished"></translation>
+        <translation> segundo</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="648"/>
@@ -1067,7 +1067,7 @@ Sem permissão de gravação ou o arquivo é de somente leitura.</translation>
         <location filename="../src/qvoptionsdialog.ui" line="655"/>
         <source>&amp;Update notifications on startup</source>
         <extracomment>The notifications are for new qView releases</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Atualizar notificações na inicialização</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="451"/>
@@ -1077,22 +1077,22 @@ Sem permissão de gravação ou o arquivo é de somente leitura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="666"/>
         <source>Move Back</source>
-        <translation type="unfinished"></translation>
+        <translation>Voltar</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="671"/>
         <source>Do Nothing</source>
-        <translation type="unfinished"></translation>
+        <translation>Fazer nada</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="676"/>
         <source>Move Forward</source>
-        <translation type="unfinished"></translation>
+        <translation>Siga em frente</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="684"/>
         <source>After deletion:</source>
-        <translation type="unfinished"></translation>
+        <translation>Após a exclusão:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="691"/>
@@ -1188,7 +1188,7 @@ Sem permissão de gravação ou arquivo é de somente leitura.</translation>
     <message>
         <location filename="../src/qvwelcomedialog.ui" line="472"/>
         <source>&amp;Enable update notifications on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Ativar notificações de atualização na inicialização</translation>
     </message>
     <message>
         <location filename="../src/qvwelcomedialog.cpp" line="42"/>
@@ -1198,7 +1198,7 @@ Sem permissão de gravação ou arquivo é de somente leitura.</translation>
     <message>
         <location filename="../src/qvwelcomedialog.cpp" line="49"/>
         <source>&lt;ul&gt;&lt;li&gt;Right click to access the main menu&lt;/li&gt;&lt;li&gt;Drag the image to reposition it&lt;/li&gt;&lt;li&gt;Scroll to zoom in and out&lt;/li&gt;&lt;li&gt;Use arrow keys to switch files&lt;/li&gt;&lt;/ul&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;ul&gt;&lt;li&gt;Clique com o botão direito para acessar o menu principal&lt;/li&gt;&lt;li&gt;Arraste a imagem para reposicioná-la&lt;/li&gt;&lt;li&gt;Role para aumentar e diminuir o zoom&lt;/li&gt;&lt;li&gt;Use as teclas de seta para alternar arquivos&lt;/li&gt;&lt;/ul&gt;</translation>
     </message>
 </context>
 <context>
@@ -1216,22 +1216,22 @@ Sem permissão de gravação ou arquivo é de somente leitura.</translation>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="47"/>
         <source>Open Containing Folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Abrir pasta de contenção</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="50"/>
         <source>Show in Explorer</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar no Explorer</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="52"/>
         <source>Show in Finder</source>
-        <translation type="unfinished"></translation>
+        <translation>Nostrar no Localizador</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="54"/>
         <source>Show File Info</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar informações do arquivo</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="55"/>
@@ -1291,22 +1291,22 @@ Sem permissão de gravação ou arquivo é de somente leitura.</translation>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="75"/>
         <source>Zoom In</source>
-        <translation type="unfinished"></translation>
+        <translation>Mais Zoom</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="80"/>
         <source>Zoom Out</source>
-        <translation type="unfinished"></translation>
+        <translation>Reduzir o Zoom</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="81"/>
         <source>Reset Zoom</source>
-        <translation type="unfinished"></translation>
+        <translation>Redefinir Zoom</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="82"/>
         <source>Original Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Tamanho Original</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="83"/>
@@ -1326,7 +1326,7 @@ Sem permissão de gravação ou arquivo é de somente leitura.</translation>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="86"/>
         <source>Flip</source>
-        <translation type="unfinished"></translation>
+        <translation>Giro</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="87"/>
@@ -1351,22 +1351,22 @@ Sem permissão de gravação ou arquivo é de somente leitura.</translation>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="102"/>
         <source>Decrease Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>Diminuir Velocidade</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="103"/>
         <source>Reset Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>Redefinir Velocidade</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="104"/>
         <source>Increase Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>Aumente a Velocidade</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="105"/>
         <source>Toggle Slideshow</source>
-        <translation type="unfinished"></translation>
+        <translation>Alternar Apresentação de slides</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="106"/>
