@@ -6,306 +6,306 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="25"/>
         <source>Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Finestra</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="183"/>
         <source>&amp;File</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;File</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="211"/>
         <source>&amp;Edit</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Modifica</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="229"/>
         <source>&amp;Go</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Vai</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="258"/>
         <source>&amp;View</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Vedi</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="282"/>
         <source>&amp;Tools</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Strumenti</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="304"/>
         <source>&amp;Help</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Aiuto</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="318"/>
         <source>Open &amp;Recent</source>
-        <translation type="unfinished"></translation>
+        <translation>Apri &amp;Recenti</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="328"/>
         <location filename="../src/actionmanager.cpp" line="459"/>
         <location filename="../src/actionmanager.cpp" line="476"/>
         <source>Empty</source>
-        <translation type="unfinished"></translation>
+        <translation>Vuoto</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="468"/>
         <source>Open With</source>
-        <translation type="unfinished"></translation>
+        <translation>Apri con</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="650"/>
         <source>&amp;Quit</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Chiudi</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="654"/>
         <source>Exit</source>
         <extracomment>The quit action is called &quot;Exit&quot; on windows</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Esci</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="657"/>
         <source>New Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Nuova finestra</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="660"/>
         <source>&amp;Open...</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Apri...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="663"/>
         <source>Open &amp;URL...</source>
-        <translation type="unfinished"></translation>
+        <translation>Apri &amp;Link...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="666"/>
         <source>Close Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Chiudi finestra</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="670"/>
         <source>Close All</source>
         <extracomment>Close all windows, that is</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Chiudi tutto</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="673"/>
         <source>Open Containing &amp;Folder</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Apri &amp;cartella contenente</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="676"/>
         <source>Show in E&amp;xplorer</source>
         <extracomment>Open containing folder on windows</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Mostra su E&amp;xplorer</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="679"/>
         <source>Show in &amp;Finder</source>
         <extracomment>Open containing folder on macOS</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Mostra su &amp;Finder</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="684"/>
         <source>Show File &amp;Info</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra &amp;info file</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="688"/>
         <source>&amp;Move to Trash</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Sposta sul cestino</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="690"/>
         <source>&amp;Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Elimina</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="695"/>
         <source>&amp;Restore from Trash</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Recupera dal cestino</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="697"/>
         <source>&amp;Undo Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Annulla eliminazione</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="702"/>
         <source>&amp;Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Copia</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="706"/>
         <source>&amp;Paste</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Incolla</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="709"/>
         <source>R&amp;ename...</source>
-        <translation type="unfinished"></translation>
+        <translation>R&amp;inomina...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="713"/>
         <source>Zoom &amp;In</source>
-        <translation type="unfinished"></translation>
+        <translation>Ingrandisci</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="717"/>
         <source>Zoom &amp;Out</source>
-        <translation type="unfinished"></translation>
+        <translation>Rimpicciolisci</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="721"/>
         <source>Reset &amp;Zoom</source>
-        <translation type="unfinished"></translation>
+        <translation>Resetta zoom</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="725"/>
         <source>Ori&amp;ginal Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Grandezza originale</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="729"/>
         <source>Rotate &amp;Right</source>
-        <translation type="unfinished"></translation>
+        <translation>Ruota a destra</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="733"/>
         <source>Rotate &amp;Left</source>
-        <translation type="unfinished"></translation>
+        <translation>Ruota a sinistra</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="737"/>
         <source>&amp;Mirror</source>
-        <translation type="unfinished"></translation>
+        <translation>Specchia</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="741"/>
         <source>&amp;Flip</source>
-        <translation type="unfinished"></translation>
+        <translation>Rovescia</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="745"/>
         <source>Enter F&amp;ull Screen</source>
-        <translation type="unfinished"></translation>
+        <translation>Entra in modalità schermo intero</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="749"/>
         <source>&amp;First File</source>
-        <translation type="unfinished"></translation>
+        <translation>Primo file</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="753"/>
         <source>Previous Fi&amp;le</source>
-        <translation type="unfinished"></translation>
+        <translation>File precedente</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="757"/>
         <source>&amp;Next File</source>
-        <translation type="unfinished"></translation>
+        <translation>File successivo</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="761"/>
         <source>Las&amp;t File</source>
-        <translation type="unfinished"></translation>
+        <translation>Ultimo file</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="765"/>
         <source>Save Frame &amp;As...</source>
-        <translation type="unfinished"></translation>
+        <translation>Salva frame come...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="769"/>
         <source>Pa&amp;use</source>
-        <translation type="unfinished"></translation>
+        <translation>Pausa</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="773"/>
         <source>&amp;Next Frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Frame successivo</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="777"/>
         <source>&amp;Decrease Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>Diminuisci velocità</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="781"/>
         <source>&amp;Reset Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>Resetta velocità</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="785"/>
         <source>&amp;Increase Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>Aumenta velocità</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="789"/>
         <source>Start S&amp;lideshow</source>
-        <translation type="unfinished"></translation>
+        <translation>Inizia presentazione</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="794"/>
         <source>Option&amp;s</source>
         <extracomment>This is for the options dialog on windows</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Opzioni</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="797"/>
         <source>Preference&amp;s</source>
         <extracomment>This is for the options dialog on non-mac unix platforms</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Impostazioni</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="800"/>
         <source>Preference&amp;s...</source>
         <extracomment>This is for the options dialog on mac</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Impostazioni</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="804"/>
         <source>&amp;About</source>
-        <translation type="unfinished"></translation>
+        <translation>Informazioni</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="807"/>
         <source>&amp;About qView</source>
         <extracomment>This is for the about dialog on mac</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Informazioni</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="811"/>
         <source>&amp;Welcome</source>
-        <translation type="unfinished"></translation>
+        <translation>Benvenuto</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="815"/>
         <source>Clear &amp;Menu</source>
         <extracomment>This is for clearing the recents menu</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Svuota menu</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="819"/>
         <source>Other Application...</source>
         <extracomment>Open with other program for unix non-mac</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Altra applicazione...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="822"/>
         <source>Choose another app</source>
         <extracomment>Open with other program for windows</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Scegli un&apos;altra app</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="825"/>
         <source>Other...</source>
         <extracomment>Open with other program for macos</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Altro...</translation>
     </message>
 </context>
 <context>
@@ -313,17 +313,17 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="217"/>
         <source>Exit F&amp;ull Screen</source>
-        <translation type="unfinished"></translation>
+        <translation>Esci dalla modalità schermo intero</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="222"/>
         <source>Enter F&amp;ull Screen</source>
-        <translation type="unfinished"></translation>
+        <translation>Entra nella modalità schermo intero</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="390"/>
         <source>Empty</source>
-        <translation type="unfinished"></translation>
+        <translation>Vuoto</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="563"/>
@@ -334,49 +334,50 @@
         <location filename="../src/mainwindow.cpp" line="793"/>
         <location filename="../src/mainwindow.cpp" line="801"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Errore</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="563"/>
         <source>Error: URL is invalid</source>
-        <translation type="unfinished"></translation>
+        <translation>Errore: Link non valido</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="569"/>
         <source>Downloading image...</source>
-        <translation type="unfinished"></translation>
+        <translation>Sto scaricando l&apos;immagine...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="569"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Cancella</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="573"/>
         <location filename="../src/mainwindow.cpp" line="629"/>
         <source>Open URL...</source>
-        <translation type="unfinished"></translation>
+        <translation>Apri link...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="590"/>
         <source>Error </source>
-        <translation type="unfinished"></translation>
+        <translation>Errore </translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="613"/>
         <source>Error: Invalid image</source>
-        <translation type="unfinished"></translation>
+        <translation>Errore: immagine non valida</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="630"/>
         <source>URL of a supported image file:</source>
-        <translation type="unfinished"></translation>
+        <translation>Link di un&apos;immagine supportata:</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="685"/>
         <source>Can&apos;t delete %1:
 No write permission or file is read-only.</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile eliminare %1:
+Mancanza di permessi di scrittura oppure file a sola lettura</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="689"/>
