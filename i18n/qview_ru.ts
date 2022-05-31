@@ -117,22 +117,22 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="688"/>
         <source>&amp;Move to Trash</source>
-        <translation>Переместить в корзину</translation>
+        <translation>&amp;Переместить в корзину</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="690"/>
         <source>&amp;Delete</source>
-        <translation>Удалить</translation>
+        <translation>&amp;Удалить</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="695"/>
         <source>&amp;Restore from Trash</source>
-        <translation>Восстановить из корзины</translation>
+        <translation>&amp;Восстановить из корзины</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="697"/>
         <source>&amp;Undo Delete</source>
-        <translation>Восстановить</translation>
+        <translation>&amp;Восстановить</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="702"/>
@@ -217,7 +217,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="765"/>
         <source>Save Frame &amp;As...</source>
-        <translation>Сохранить фрейм &amp;как...</translation>
+        <translation type="unfinished">Сохранить фрейм &amp;как...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="769"/>
@@ -227,7 +227,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="773"/>
         <source>&amp;Next Frame</source>
-        <translation>&amp;Следующий фрейм</translation>
+        <translation type="unfinished">&amp;Следующий фрейм</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="777"/>
@@ -247,7 +247,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="789"/>
         <source>Start S&amp;lideshow</source>
-        <translation>&amp;Запустить слайдшоу</translation>
+        <translation>&amp;Запустить слайд-шоу</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="794"/>
@@ -287,7 +287,7 @@
         <location filename="../src/actionmanager.cpp" line="815"/>
         <source>Clear &amp;Menu</source>
         <extracomment>This is for clearing the recents menu</extracomment>
-        <translation>Очистить &amp;Меню</translation>
+        <translation>Очистить &amp;меню</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="819"/>
@@ -339,7 +339,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="563"/>
         <source>Error: URL is invalid</source>
-        <translation>Ошибка: не верный URL</translation>
+        <translation>Ошибка: неверный URL</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="569"/>
@@ -397,38 +397,38 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/mainwindow.cpp" line="696"/>
         <source>Do not ask again</source>
-        <translation type="unfinished">Не спрашивай снова</translation>
+        <translation>Не спрашивать снова</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="725"/>
         <source>Can&apos;t delete %1.</source>
-        <translation type="unfinished">Невозможно удалить %1.</translation>
+        <translation>Невозможно удалить %1.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="736"/>
         <location filename="../src/mainwindow.cpp" line="806"/>
         <source>Not Supported</source>
-        <translation type="unfinished">Не поддерживается</translation>
+        <translation>Не поддерживается</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="736"/>
         <location filename="../src/mainwindow.cpp" line="806"/>
         <source>This program was compiled with an old version of Qt and this feature is not available.
 If you see this message, please report a bug!</source>
-        <translation type="unfinished">Эта программа была скомпилирована со старой версией Qt, и эта функция недоступна.
+        <translation>Программа была скомпилирована со старой версией Qt, и эта функция недоступна.
 Если вы видите это сообщение, пожалуйста, сообщите об ошибке!</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="793"/>
         <source>Can&apos;t undo deletion of %1:
 No write permission or file is read-only.</source>
-        <translation type="unfinished">Невозможно отменить удаление %1:
+        <translation>Невозможно отменить удаление %1:
 Нет разрешения на запись или файл доступен только для чтения.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="801"/>
         <source>Failed undoing deletion of %1.</source>
-        <translation type="unfinished">Не удалось отменить удаление %1.</translation>
+        <translation>Не удалось отменить удаление %1.</translation>
     </message>
     <message>
         <source>Rename...</source>
@@ -447,12 +447,12 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/mainwindow.cpp" line="939"/>
         <source>Save Frame As...</source>
-        <translation>Сохранить фрэйм как...</translation>
+        <translation type="unfinished">Сохранить фрэйм как...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="968"/>
         <source>Res&amp;ume</source>
-        <translation>&amp;Закончить</translation>
+        <translation type="unfinished">&amp;Закончить</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="977"/>
@@ -462,7 +462,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/mainwindow.cpp" line="1000"/>
         <source>Start S&amp;lideshow</source>
-        <translation>Запустить &amp;слайдшоу</translation>
+        <translation>Запустить &amp;слайд-шоу</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="1009"/>
@@ -475,17 +475,17 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/openwith.cpp" line="165"/>
         <source>All Applications (*.app)</source>
-        <translation type="unfinished">Все приложения (*.app)</translation>
+        <translation>Все приложения (*.app)</translation>
     </message>
     <message>
         <location filename="../src/openwith.cpp" line="177"/>
         <source>Programs (*.exe *.pif *.com *.bat *.cmd)</source>
-        <translation type="unfinished">Программы (*.exe *.pif *.com *.bat *.cmd)</translation>
+        <translation>Программы (*.exe *.pif *.com *.bat *.cmd)</translation>
     </message>
     <message>
         <location filename="../src/openwith.cpp" line="177"/>
         <source>All Files (*)</source>
-        <translation type="unfinished">Все файлы (*)</translation>
+        <translation>Все файлы (*)</translation>
     </message>
 </context>
 <context>
@@ -542,7 +542,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="102"/>
         <source>Error checking for updates</source>
-        <translation>Ошибка проверки обновлений</translation>
+        <translation>Ошибка при проверке обновлений</translation>
     </message>
 </context>
 <context>
@@ -554,7 +554,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvapplication.cpp" line="40"/>
         <source>Supported Images</source>
-        <translation type="unfinished">Поддерживаемые изображения</translation>
+        <translation>Поддерживаемые изображения</translation>
     </message>
     <message>
         <location filename="../src/qvapplication.cpp" line="49"/>
@@ -572,7 +572,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvcocoafunctions.mm" line="195"/>
         <source> (default)</source>
-        <translation type="unfinished"> (по умолчанию)</translation>
+        <translation> (по умолчанию)</translation>
     </message>
 </context>
 <context>
@@ -600,7 +600,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvinfodialog.ui" line="26"/>
         <source>Name:</source>
-        <translation>Имя:</translation>
+        <translation type="unfinished">Имя:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="36"/>
@@ -647,7 +647,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvinfodialog.ui" line="193"/>
         <source>Frames:</source>
-        <translation>Фреймов:</translation>
+        <translation type="unfinished">Фреймов:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="213"/>
@@ -670,7 +670,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvopenwithdialog.ui" line="14"/>
         <source>Choose Application</source>
-        <translation type="unfinished">Выберите приложение</translation>
+        <translation>Выберите приложение</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="66"/>
@@ -700,12 +700,12 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/openwith.h" line="71"/>
         <source>Multimedia</source>
-        <translation>Мультмедиа</translation>
+        <translation>Мультимедиа</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="72"/>
         <source>Office</source>
-        <translation type="unfinished">Офис</translation>
+        <translation>Офис</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="73"/>
@@ -753,7 +753,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="56"/>
         <source>Changes the amount of information displayed in the titlebar</source>
-        <translation>Изменяет объем информации, отображаемой в строке заголовка</translation>
+        <translation type="unfinished">Изменяет объем информации, отображаемой в строке заголовка</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="59"/>
@@ -983,7 +983,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="469"/>
         <source>Name</source>
-        <translation>Имя</translation>
+        <translation type="unfinished">Имя</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="474"/>
@@ -1054,7 +1054,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="588"/>
         <source>Slideshow direction:</source>
-        <translation>Направление слайдшоу:</translation>
+        <translation>Направление слайд-шоу:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="596"/>
@@ -1069,7 +1069,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="609"/>
         <source>Slideshow timer:</source>
-        <translation>Таймер слайдшоу:</translation>
+        <translation>Таймер слайд-шоу:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="616"/>
@@ -1105,7 +1105,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="676"/>
         <source>Move Forward</source>
-        <translation>Двигаться вперед</translation>
+        <translation>Вперед</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="684"/>
@@ -1154,7 +1154,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="15"/>
         <source>File name:</source>
-        <translation>Имя файла:</translation>
+        <translation type="unfinished">Имя файла:</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="26"/>
@@ -1216,7 +1216,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvwelcomedialog.cpp" line="49"/>
         <source>&lt;ul&gt;&lt;li&gt;Right click to access the main menu&lt;/li&gt;&lt;li&gt;Drag the image to reposition it&lt;/li&gt;&lt;li&gt;Scroll to zoom in and out&lt;/li&gt;&lt;li&gt;Use arrow keys to switch files&lt;/li&gt;&lt;/ul&gt;</source>
-        <translation>&lt;ul&gt;&lt;li&gt;Щелкните правой кнопкой мыши чтобы открыть главное меню&lt;/li&gt;&lt;li&gt;Перетащите изображение чтобы изменить его положение&lt;/li&gt;&lt;li&gt;Прокрутите чтобы увеличить и уменьшить масштаб&lt;/li&gt;&lt;li&gt;Используйте клавиши со стрелками для переключения файлов&lt;/li&gt;&lt;/ul&gt;</translation>
+        <translation>&lt;ul&gt;&lt;li&gt;Щелкните правой кнопкой мыши, чтобы открыть главное меню&lt;/li&gt;&lt;li&gt;Перетащите изображение, чтобы изменить его положение&lt;/li&gt;&lt;li&gt;Прокрутите, чтобы увеличить и уменьшить масштаб&lt;/li&gt;&lt;li&gt;Используйте клавиши со стрелками для переключения файлов&lt;/li&gt;&lt;/ul&gt;</translation>
     </message>
 </context>
 <context>
@@ -1234,7 +1234,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="47"/>
         <source>Open Containing Folder</source>
-        <translation>Открыть содержащую файл папку</translation>
+        <translation>Открыть папку, содержащую файл</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="50"/>
@@ -1354,7 +1354,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="99"/>
         <source>Save Frame As</source>
-        <translation>Сохранить фрейм как</translation>
+        <translation type="unfinished">Сохранить фрейм как</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="100"/>
@@ -1364,7 +1364,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="101"/>
         <source>Next Frame</source>
-        <translation>Следующий фрейм</translation>
+        <translation type="unfinished">Следующий фрейм</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="102"/>
@@ -1384,7 +1384,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="105"/>
         <source>Toggle Slideshow</source>
-        <translation>Запустить слайдшоу</translation>
+        <translation>Запустить слайд-шоу</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="106"/>
