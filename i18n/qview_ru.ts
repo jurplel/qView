@@ -217,7 +217,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="765"/>
         <source>Save Frame &amp;As...</source>
-        <translation type="unfinished">Сохранить фрейм &amp;как...</translation>
+        <translation>Сохранить кадр &amp;как...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="769"/>
@@ -227,7 +227,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="773"/>
         <source>&amp;Next Frame</source>
-        <translation type="unfinished">&amp;Следующий фрейм</translation>
+        <translation>&amp;Следующий кадр</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="777"/>
@@ -387,7 +387,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/mainwindow.cpp" line="691"/>
         <source>Are you sure you want to move %1 to the Recycle Bin?</source>
-        <translation type="unfinished">Вы уверены, что хотите переместить %1 в корзину?</translation>
+        <translation>Вы уверены, что хотите переместить %1 в корзину?</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="694"/>
@@ -447,12 +447,12 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/mainwindow.cpp" line="939"/>
         <source>Save Frame As...</source>
-        <translation type="unfinished">Сохранить фрэйм как...</translation>
+        <translation>Сохранить кадр как...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="968"/>
         <source>Res&amp;ume</source>
-        <translation type="unfinished">&amp;Закончить</translation>
+        <translation>&amp;Продолжить</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="977"/>
@@ -600,7 +600,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvinfodialog.ui" line="26"/>
         <source>Name:</source>
-        <translation type="unfinished">Имя:</translation>
+        <translation>Имя:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="36"/>
@@ -647,7 +647,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvinfodialog.ui" line="193"/>
         <source>Frames:</source>
-        <translation type="unfinished">Фреймов:</translation>
+        <translation>Кадры:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="213"/>
@@ -753,7 +753,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="56"/>
         <source>Changes the amount of information displayed in the titlebar</source>
-        <translation type="unfinished">Изменяет объем информации, отображаемой в строке заголовка</translation>
+        <translation>Изменяется объём информации, отображаемой в строке заголовка</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="59"/>
@@ -983,7 +983,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="469"/>
         <source>Name</source>
-        <translation type="unfinished">Имя</translation>
+        <translation>Имя</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="474"/>
@@ -1154,7 +1154,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="15"/>
         <source>File name:</source>
-        <translation type="unfinished">Имя файла:</translation>
+        <translation>Имя файла:</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="26"/>
@@ -1354,7 +1354,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="99"/>
         <source>Save Frame As</source>
-        <translation type="unfinished">Сохранить фрейм как</translation>
+        <translation>Сохранить кадр как</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="100"/>
@@ -1364,7 +1364,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="101"/>
         <source>Next Frame</source>
-        <translation type="unfinished">Следующий фрейм</translation>
+        <translation>Следующий кадр</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="102"/>
