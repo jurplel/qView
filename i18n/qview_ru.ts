@@ -376,7 +376,7 @@
         <location filename="../src/mainwindow.cpp" line="685"/>
         <source>Can&apos;t delete %1:
 No write permission or file is read-only.</source>
-        <translation type="unfinished">Невозможно удалить %1:
+        <translation>Невозможно удалить %1:
 Нет разрешения на запись или файл доступен только для чтения.</translation>
     </message>
     <message>
