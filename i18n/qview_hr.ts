@@ -53,7 +53,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="468"/>
         <source>Open With</source>
-        <translation type="unfinished"></translation>
+        <translation>Ovori pomoću</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="650"/>
