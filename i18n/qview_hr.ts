@@ -53,7 +53,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="468"/>
         <source>Open With</source>
-        <translation>Ovori pomoću</translation>
+        <translation>Ovori koristeći</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="650"/>
@@ -64,7 +64,7 @@
         <location filename="../src/actionmanager.cpp" line="654"/>
         <source>Exit</source>
         <extracomment>The quit action is called &quot;Exit&quot; on windows</extracomment>
-        <translation>Izlaz</translation>
+        <translation>Izađi</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="657"/>
@@ -117,22 +117,22 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="688"/>
         <source>&amp;Move to Trash</source>
-        <translation type="unfinished"></translation>
+        <translation>Premjesti u &amp;smeće</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="690"/>
         <source>&amp;Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Iz&amp;briši</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="695"/>
         <source>&amp;Restore from Trash</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Vrati iz smeća</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="697"/>
         <source>&amp;Undo Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Po&amp;ništi brisanje</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="702"/>
@@ -172,12 +172,12 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="729"/>
         <source>Rotate &amp;Right</source>
-        <translation>Okreni &amp;desno</translation>
+        <translation>Okreni na&amp;desno</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="733"/>
         <source>Rotate &amp;Left</source>
-        <translation>Okreni &amp;lijevo</translation>
+        <translation>Okreni na&amp;lijevo</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="737"/>
@@ -287,25 +287,25 @@
         <location filename="../src/actionmanager.cpp" line="815"/>
         <source>Clear &amp;Menu</source>
         <extracomment>This is for clearing the recents menu</extracomment>
-        <translation>Očisti &amp;izbornik</translation>
+        <translation>Isprazni &amp;izbornik</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="819"/>
         <source>Other Application...</source>
         <extracomment>Open with other program for unix non-mac</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Druga aplikacija …</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="822"/>
         <source>Choose another app</source>
         <extracomment>Open with other program for windows</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Odaberi jednu drugu aplikaciju</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="825"/>
         <source>Other...</source>
         <extracomment>Open with other program for macos</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Druga …</translation>
     </message>
 </context>
 <context>
@@ -313,7 +313,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="217"/>
         <source>Exit F&amp;ull Screen</source>
-        <translation>&amp;Napusti cjeloekranski prikaz</translation>
+        <translation>&amp;Izađi iz cjeloekranskog prikaza</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="222"/>
@@ -323,7 +323,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="390"/>
         <source>Empty</source>
-        <translation type="unfinished">Prazno</translation>
+        <translation>Prazno</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="563"/>
@@ -376,56 +376,59 @@
         <location filename="../src/mainwindow.cpp" line="685"/>
         <source>Can&apos;t delete %1:
 No write permission or file is read-only.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nije moguće izbrisati %1:
+Nedostaje dozvola za pisanje ili je datoteka samo-za-čitanje.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="689"/>
         <source>Are you sure you want to move %1 to the Trash?</source>
-        <translation type="unfinished"></translation>
+        <translation>Stvarno želiš premjestiti %1 u smeće?</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="691"/>
         <source>Are you sure you want to move %1 to the Recycle Bin?</source>
-        <translation type="unfinished"></translation>
+        <translation>Stvarno želiš premjestiti %1 u smeće?</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="694"/>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Izbriži</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="696"/>
         <source>Do not ask again</source>
-        <translation type="unfinished"></translation>
+        <translation>Ne pitaj ponovo</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="725"/>
         <source>Can&apos;t delete %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nije moguće izbrisati %1.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="736"/>
         <location filename="../src/mainwindow.cpp" line="806"/>
         <source>Not Supported</source>
-        <translation type="unfinished"></translation>
+        <translation>Nije podržano</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="736"/>
         <location filename="../src/mainwindow.cpp" line="806"/>
         <source>This program was compiled with an old version of Qt and this feature is not available.
 If you see this message, please report a bug!</source>
-        <translation type="unfinished"></translation>
+        <translation>Ovaj je program sastavljen sa starom verzijom QT-a i ova funkcija nije dostupna.
+Ako vidiš ovu poruku, prijavi grešku!</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="793"/>
         <source>Can&apos;t undo deletion of %1:
 No write permission or file is read-only.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nije moguće poništiti brisanje %1:
+Nedostaje dozvola za pisanje ili je datoteka samo-za-čitanje.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="801"/>
         <source>Failed undoing deletion of %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Neuspjelo poništavanje brisanja datoteke %1.</translation>
     </message>
     <message>
         <source>Rename...</source>
@@ -472,17 +475,17 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/openwith.cpp" line="165"/>
         <source>All Applications (*.app)</source>
-        <translation type="unfinished"></translation>
+        <translation>Sve aplikacije (*.app)</translation>
     </message>
     <message>
         <location filename="../src/openwith.cpp" line="177"/>
         <source>Programs (*.exe *.pif *.com *.bat *.cmd)</source>
-        <translation type="unfinished"></translation>
+        <translation>Programi (*.exe *.pif *.com *.bat *.cmd)</translation>
     </message>
     <message>
         <location filename="../src/openwith.cpp" line="177"/>
         <source>All Files (*)</source>
-        <translation type="unfinished"></translation>
+        <translation>Sve datoteke (*)</translation>
     </message>
 </context>
 <context>
@@ -551,7 +554,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvapplication.cpp" line="40"/>
         <source>Supported Images</source>
-        <translation type="unfinished"></translation>
+        <translation>Podržane slike</translation>
     </message>
     <message>
         <location filename="../src/qvapplication.cpp" line="49"/>
@@ -569,7 +572,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvcocoafunctions.mm" line="195"/>
         <source> (default)</source>
-        <translation type="unfinished"></translation>
+        <translation> (standardno)</translation>
     </message>
 </context>
 <context>
@@ -667,67 +670,67 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvopenwithdialog.ui" line="14"/>
         <source>Choose Application</source>
-        <translation type="unfinished"></translation>
+        <translation>Odaberi aplikaciju</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="66"/>
         <source>Development</source>
-        <translation type="unfinished"></translation>
+        <translation>Razvoj</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="67"/>
         <source>Education</source>
-        <translation type="unfinished"></translation>
+        <translation>Obrazovanje</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="68"/>
         <source>Games</source>
-        <translation type="unfinished"></translation>
+        <translation>Igre</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="69"/>
         <source>Graphics</source>
-        <translation type="unfinished"></translation>
+        <translation>Slike</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="70"/>
         <source>Internet</source>
-        <translation type="unfinished"></translation>
+        <translation>Internet</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="71"/>
         <source>Multimedia</source>
-        <translation type="unfinished"></translation>
+        <translation>Multimedija</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="72"/>
         <source>Office</source>
-        <translation type="unfinished"></translation>
+        <translation>Ured</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="73"/>
         <source>Science</source>
-        <translation type="unfinished"></translation>
+        <translation>Znanost</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="74"/>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Postavke</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="75"/>
         <source>System</source>
-        <translation type="unfinished"></translation>
+        <translation>Sustav</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="76"/>
         <source>Utilities</source>
-        <translation type="unfinished"></translation>
+        <translation>Uslužni programi</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="77"/>
         <source>Other</source>
-        <translation type="unfinished"></translation>
+        <translation>Drugo</translation>
     </message>
 </context>
 <context>
@@ -858,7 +861,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="249"/>
         <source>&amp;Quit on last window closed</source>
-        <translation type="unfinished"></translation>
+        <translation>Zatvori aplikaciju kad se zatvori zadnji prozor</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="257"/>
@@ -883,7 +886,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="283"/>
         <source>Images appear aliased (having jagged edges) without this, but it is faster</source>
-        <translation>Slike izgledaju pikselasto, ali je prikaz brži</translation>
+        <translation>Slike izgledaju pikselasto bez ovoga, ali je prikaz brži</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="286"/>
@@ -898,7 +901,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="299"/>
         <source>&amp;Scaling above window size</source>
-        <translation>&amp;Povečavanje veće od veličine prozora</translation>
+        <translation>&amp;Povečanje veće od veličine prozora</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="309"/>
@@ -914,7 +917,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="341"/>
         <source>Choose whether scrolling zooms or moves the image (alternative can be accessed at any time by holding ctrl/cmd)</source>
-        <translation>Odaberi hoće li slika pomicati ili uvećati (za određivanje radnje koristi tipke ctrl/cmd)</translation>
+        <translation>Odaberi hoće li klizanje uvećati ili pomicati sliku (alternativno se može pristupiti u bilo kojem trenutku držanjem tipki ctrl/cmd pritisnutima)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="344"/>
@@ -935,7 +938,7 @@ No write permission or file is read-only.</source>
         <location filename="../src/qvoptionsdialog.ui" line="386"/>
         <location filename="../src/qvoptionsdialog.ui" line="408"/>
         <source>Ignores select sides of an image when fitting to window (some sides will extend beyond the window boundaries)</source>
-        <translation>Zanemaruje odabrane strane slike pri postavljanju u prozor (neke strane će se protezati izvan granica prozora)</translation>
+        <translation>Zanemaruje odabrane strane slike kad se prilagođava veličini prozora (neke strane će se protezati izvan granica prozora)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="390"/>
@@ -965,7 +968,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="434"/>
         <source>Zoom &amp;towards cursor</source>
-        <translation>Uvećanje prema &amp;kursoru</translation>
+        <translation>Uvećaj prema &amp;kursoru</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="445"/>
@@ -1041,7 +1044,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="562"/>
         <source>Controls whether or not qView should go back to the first item after reaching the end of a folder</source>
-        <translation>Kontrolira vraćanje qViewa na početak nakon što dođe do kraja mape</translation>
+        <translation>Kontrolira hoće se li se qView vratiti na prvi element nakon što dođe do kraja mape ili ne</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="565"/>
@@ -1092,27 +1095,27 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="666"/>
         <source>Move Back</source>
-        <translation type="unfinished"></translation>
+        <translation>Pomakni natrag</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="671"/>
         <source>Do Nothing</source>
-        <translation type="unfinished"></translation>
+        <translation>Ne čini ništa</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="676"/>
         <source>Move Forward</source>
-        <translation type="unfinished"></translation>
+        <translation>Pomakni naprijed</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="684"/>
         <source>After deletion:</source>
-        <translation type="unfinished"></translation>
+        <translation>Nakon brisanja:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="691"/>
         <source>&amp;Ask before deleting files</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Pitaj prije brisanja zadataka</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="712"/>
@@ -1146,30 +1149,32 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="14"/>
         <source>Rename...</source>
-        <translation type="unfinished">Preimenuj …</translation>
+        <translation>Preimenuj …</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="15"/>
         <source>File name:</source>
-        <translation type="unfinished">Ime datoteke:</translation>
+        <translation>Ime datoteke:</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="26"/>
         <location filename="../src/qvrenamedialog.cpp" line="45"/>
         <source>Error</source>
-        <translation type="unfinished">Greška</translation>
+        <translation>Greška</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="26"/>
         <source>Could not rename %1:
 No write permission or file is read-only.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nije bilo moguće preimenovati %1:
+Nedostaje dozvola za pisanje ili je datoteka samo-za-čitanje.</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="45"/>
         <source>Could not rename %1:
 (Check that all characters are valid)</source>
-        <translation type="unfinished"></translation>
+        <translation>Nije bilo moguće preimenovati %1:
+(Provjeri ispravnost svih znakova)</translation>
     </message>
 </context>
 <context>
@@ -1249,12 +1254,12 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="55"/>
         <source>Restore from Trash</source>
-        <translation type="unfinished"></translation>
+        <translation>Vrati iz smeća</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="57"/>
         <source>Undo Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Poništi brisanje</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="59"/>
@@ -1274,12 +1279,12 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="65"/>
         <source>Move to Trash</source>
-        <translation type="unfinished"></translation>
+        <translation>Premjesti u smeće</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="69"/>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Izbriži</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="71"/>
@@ -1324,12 +1329,12 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="83"/>
         <source>Rotate Right</source>
-        <translation>Okreni desno</translation>
+        <translation>Okreni nadesno</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="84"/>
         <source>Rotate Left</source>
-        <translation>Okreni lijevo</translation>
+        <translation>Okreni nalijevo</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="85"/>
@@ -1414,7 +1419,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="121"/>
         <source>Exit</source>
-        <translation>Izlaz</translation>
+        <translation>Izađi</translation>
     </message>
 </context>
 <context>
@@ -1422,12 +1427,12 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/updatechecker.cpp" line="69"/>
         <source>Download</source>
-        <translation>Preuzimanje</translation>
+        <translation>Preuzmi</translation>
     </message>
     <message>
         <location filename="../src/updatechecker.cpp" line="72"/>
         <source>qView Update Available</source>
-        <translation>Dostupna je nova verzija qViewa</translation>
+        <translation>Dostupna je nova qView verzija</translation>
     </message>
     <message>
         <location filename="../src/updatechecker.cpp" line="73"/>
@@ -1449,7 +1454,7 @@ No write permission or file is read-only.</source>
         <source>Update notifications on startup have been disabled.
 You can reenable them in the options dialog.</source>
         <translation>Obavijesti o novim verzijama pri pokretanju su deaktivirane.
-Mogu se ponovo postaviti u dijaloškom okviru opcija.</translation>
+Mogu se ponovo aktivirati u dijaloškom okviru opcija.</translation>
     </message>
 </context>
 </TS>
