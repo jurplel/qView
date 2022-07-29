@@ -886,7 +886,7 @@ Engin skrifheimild eða skrá er skrifvarinn.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="283"/>
         <source>Images appear aliased (having jagged edges) without this, but it is faster</source>
-        <translation type="unfinished"></translation>
+        <translation>Myndir hafa beittar brúnir en er hraðara</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="286"/>
@@ -896,7 +896,7 @@ Engin skrifheimild eða skrá er skrifvarinn.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="296"/>
         <source>Choose whether or not the image continues to be scaled when zooming above the window size (can be laggier with large images)</source>
-        <translation type="unfinished"></translation>
+        <translation>Veldu hvort myndin heldur áfram að stækka þegar stækkað er yfir gluggastærðina (getur verið hægt með stórum myndum)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="299"/>
@@ -917,7 +917,7 @@ Engin skrifheimild eða skrá er skrifvarinn.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="341"/>
         <source>Choose whether scrolling zooms or moves the image (alternative can be accessed at any time by holding ctrl/cmd)</source>
-        <translation type="unfinished"></translation>
+        <translation>Veldu hvort skrunun breytir aðdrætti eða færir myndina (Hinn valkosturinn virkar með ctrl/cmd)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="344"/>
@@ -927,7 +927,7 @@ Engin skrifheimild eða skrá er skrifvarinn.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="367"/>
         <source>Stop the image from going past its actual size when resizing the window - you can still zoom past it though</source>
-        <translation type="unfinished"></translation>
+        <translation>Koma í veg fyrir að myndin fari framhjá raunverulegri stærð þegar stærð gluggans er breytt, en þú getur samt farið framhjá því</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="370"/>
@@ -938,7 +938,7 @@ Engin skrifheimild eða skrá er skrifvarinn.</translation>
         <location filename="../src/qvoptionsdialog.ui" line="386"/>
         <location filename="../src/qvoptionsdialog.ui" line="408"/>
         <source>Ignores select sides of an image when fitting to window (some sides will extend beyond the window boundaries)</source>
-        <translation type="unfinished"></translation>
+        <translation>Hunsa sumar hliðar myndar þegar mynd er sett í glugga (sumar hliðar ná út fyrir gluggamörkin)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="390"/>
@@ -963,7 +963,7 @@ Engin skrifheimild eða skrá er skrifvarinn.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="431"/>
         <source>Choose whether or not zooming in and out above 100% zoom will zoom towards the cursor</source>
-        <translation type="unfinished"></translation>
+        <translation>Hvort aðdráttur yfir 100% mun fara að bendlinum eða ekki</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="434"/>
@@ -1044,7 +1044,7 @@ Engin skrifheimild eða skrá er skrifvarinn.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="562"/>
         <source>Controls whether or not qView should go back to the first item after reaching the end of a folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Hvort qView eigi að fara aftur á fyrstu mynd þegar komið er í lok möppu</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="565"/>
@@ -1173,7 +1173,8 @@ Engin skrifheimild eða skrá er skrifvarinn.</translation>
         <location filename="../src/qvrenamedialog.cpp" line="45"/>
         <source>Could not rename %1:
 (Check that all characters are valid)</source>
-        <translation type="unfinished"></translation>
+        <translation>Gat ekki endurnefnt %1:
+(Vertu viss um að allir stafir séu gildir)</translation>
     </message>
 </context>
 <context>
