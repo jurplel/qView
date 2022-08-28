@@ -6,7 +6,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="25"/>
         <source>Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Pencere</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="183"/>
