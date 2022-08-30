@@ -377,7 +377,7 @@
         <source>Can&apos;t delete %1:
 No write permission or file is read-only.</source>
         <translation>Impossibile eliminare %1:
-Mancanza di permessi di scrittura oppure file a sola lettura</translation>
+Mancanza di permessi di scrittura oppure file a sola lettura.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="689"/>
@@ -544,7 +544,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvapplication.cpp" line="136"/>
         <source>Open...</source>
-        <translation type="unfinished"></translation>
+        <translation>Apri...</translation>
     </message>
 </context>
 <context>
@@ -560,7 +560,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvgraphicsview.cpp" line="621"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Errore</translation>
     </message>
     <message>
         <location filename="../src/qvgraphicsview.cpp" line="621"/>
