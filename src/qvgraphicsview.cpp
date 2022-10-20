@@ -173,17 +173,20 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
         return;
     }
 
-    int angleDelta;
+    const int yDelta = event->angleDelta().y();
+    const qreal yScale = 120.0;
 
-    if (event->angleDelta().y() == 0)
-        angleDelta = event->angleDelta().x();
-    else
-        angleDelta = event->angleDelta().y();
+    if (yDelta == 0)
+        return;
 
-    if (angleDelta > 0)
-        zoomIn(eventPos);
-    else
-        zoomOut(eventPos);
+    const qreal fractionalWheelClicks = qFabs(yDelta) / yScale;
+    const qreal zoomAmountPerWheelClick = scaleFactor - 1.0;
+    qreal zoomFactor = 1.0 + (fractionalWheelClicks * zoomAmountPerWheelClick);
+
+    if (yDelta < 0)
+        zoomFactor = qPow(zoomFactor, -1);
+
+    zoom(zoomFactor, eventPos);
 }
 
 // Functions
@@ -568,6 +571,7 @@ void QVGraphicsView::fitInViewMarginless(const QRectF &rect)
 
     isOriginalSize = false;
     currentScale = 1.0;
+    zoomBasisScaleFactor = 1.0;
 }
 
 void QVGraphicsView::fitInViewMarginless(const QGraphicsItem *item)
