@@ -156,7 +156,9 @@ void QVImageCore::loadPixmap(const ReadData &readData, bool fromCache)
 {
     // Do this first so we can keep folder info even when loading errored files
     currentFileDetails.fileInfo = readData.fileInfo;
-    updateFolderInfo();
+    currentFileDetails.loadedIndexInFolder = currentFileDetails.folderFileInfoList.indexOf(currentFileDetails.fileInfo);
+    if (currentFileDetails.loadedIndexInFolder == -1)
+        updateFolderInfo();
 
     // Reset mechanism to avoid stalling while loading
     waitingOnLoad = false;
@@ -239,10 +241,11 @@ QFileInfoList QVImageCore::getCompatibleFiles()
     const auto &regs = qvApp->getFilterRegExpList();
     const auto &mimeTypes = qvApp->getMimeTypeNameList();
 
-    const QFileInfoList currentFolder = currentFileDetails.fileInfo.dir().entryInfoList();
-    for (const QFileInfo &fileInfo : currentFolder)
+    QDirIterator it(currentFileDetails.fileInfo.absoluteDir().path(), QDir::Filter::Files);
+    while (!it.next().isEmpty())
     {
         bool matched = false;
+        const QFileInfo fileInfo = it.fileInfo();
         const QString name = fileInfo.fileName();
         for (const QRegularExpression &reg : regs)
         {
@@ -265,17 +268,16 @@ void QVImageCore::updateFolderInfo()
     if (!currentFileDetails.fileInfo.isFile())
         return;
 
+    currentFileDetails.folderFileInfoList = getCompatibleFiles();
+
     QPair<QString, uint> dirInfo = {currentFileDetails.fileInfo.absoluteDir().path(),
-                                    currentFileDetails.fileInfo.dir().count()};
+                                    currentFileDetails.folderFileInfoList.count()};
     // If the current folder changed since the last image, assign a new seed for random sorting
     if (lastDirInfo != dirInfo)
     {
         randomSortSeed = std::chrono::system_clock::now().time_since_epoch().count();
     }
     lastDirInfo = dirInfo;
-
-
-    currentFileDetails.folderFileInfoList = getCompatibleFiles();
 
     // Sorting
 
