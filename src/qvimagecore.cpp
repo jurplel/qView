@@ -156,7 +156,7 @@ void QVImageCore::loadPixmap(const ReadData &readData, bool fromCache)
 {
     // Do this first so we can keep folder info even when loading errored files
     currentFileDetails.fileInfo = readData.fileInfo;
-    currentFileDetails.loadedIndexInFolder = currentFileDetails.folderFileInfoList.indexOf(currentFileDetails.fileInfo);
+    currentFileDetails.updateLoadedIndexInFolder();
     if (currentFileDetails.loadedIndexInFolder == -1)
         updateFolderInfo();
 
@@ -241,11 +241,10 @@ QFileInfoList QVImageCore::getCompatibleFiles()
     const auto &regs = qvApp->getFilterRegExpList();
     const auto &mimeTypes = qvApp->getMimeTypeNameList();
 
-    QDirIterator it(currentFileDetails.fileInfo.absoluteDir().path(), QDir::Filter::Files);
-    while (!it.next().isEmpty())
+    const QFileInfoList currentFolder = currentFileDetails.fileInfo.dir().entryInfoList(QDir::Filter::Files, QDir::SortFlag::Unsorted);
+    for (const QFileInfo &fileInfo : currentFolder)
     {
         bool matched = false;
-        const QFileInfo fileInfo = it.fileInfo();
         const QString name = fileInfo.fileName();
         for (const QRegularExpression &reg : regs)
         {
@@ -343,7 +342,7 @@ void QVImageCore::updateFolderInfo()
     }
 
     // Set current file index variable
-    currentFileDetails.loadedIndexInFolder = currentFileDetails.folderFileInfoList.indexOf(currentFileDetails.fileInfo);
+    currentFileDetails.updateLoadedIndexInFolder();
 }
 
 void QVImageCore::requestCaching()
@@ -558,4 +557,21 @@ void QVImageCore::settingsUpdated()
 
     //update folder info to re-sort
     updateFolderInfo();
+}
+
+void QVImageCore::FileDetails::updateLoadedIndexInFolder()
+{
+    const QString targetPath = fileInfo.absoluteFilePath();
+    for (int i = 0; i < folderFileInfoList.length(); i++)
+    {
+        // Compare absoluteFilePath first because it's way faster, but double-check with
+        // QFileInfo::operator== because it respects file system case sensitivity rules
+        if (folderFileInfoList[i].absoluteFilePath().compare(targetPath, Qt::CaseInsensitive) == 0 &&
+            folderFileInfoList[i] == fileInfo)
+        {
+            loadedIndexInFolder = i;
+            return;
+        }
+    }
+    loadedIndexInFolder = -1;
 }

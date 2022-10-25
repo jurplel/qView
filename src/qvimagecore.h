@@ -27,6 +27,8 @@ public:
         QSize baseImageSize;
         QSize loadedPixmapSize;
         QElapsedTimer timeSinceLoaded;
+
+        void updateLoadedIndexInFolder();
     };
 
     struct ReadData
