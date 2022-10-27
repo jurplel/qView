@@ -176,6 +176,8 @@ void SettingsManager::initializeSettingsLibrary()
     settingsLibrary.insert("slideshowtimer", {5, {}});
     settingsLibrary.insert("afterdelete", {2, {}});
     settingsLibrary.insert("askdelete", {true, {}});
+    settingsLibrary.insert("showhiddenfiles", {false, {}});
+    settingsLibrary.insert("allowmimecontentdetection", {true, {}});
     settingsLibrary.insert("saverecents", {true, {}});
     settingsLibrary.insert("updatenotifications", {false, {}});
 }

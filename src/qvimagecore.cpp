@@ -23,6 +23,8 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     preloadingMode = 1;
     sortMode = 0;
     sortDescending = false;
+    showHiddenFiles = false;
+    allowMimeContentDetection = true;
 
     randomSortSeed = 0;
 
@@ -241,14 +243,21 @@ QList<QVImageCore::CompatibleFile> QVImageCore::getCompatibleFiles()
     const auto &extensions = qvApp->getFileExtensionList();
     const auto &mimeTypes = qvApp->getMimeTypeNameList();
 
-    const QFileInfoList currentFolder = currentFileDetails.fileInfo.dir().entryInfoList(QDir::Filter::Files, QDir::SortFlag::Unsorted);
+    QMimeDatabase::MatchMode mimeMatchMode = allowMimeContentDetection ? QMimeDatabase::MatchDefault : QMimeDatabase::MatchExtension;
+
+    QDir::Filters dirFilters = QDir::Files;
+    if (showHiddenFiles)
+        dirFilters |= QDir::Hidden;
+
+    const QFileInfoList currentFolder = currentFileDetails.fileInfo.dir().entryInfoList(dirFilters, QDir::Unsorted);
     for (const QFileInfo &fileInfo : currentFolder)
     {
         bool matched = false;
-        const QString name = fileInfo.fileName();
+        const QString absoluteFilePath = fileInfo.absoluteFilePath();
+        const QString fileName = fileInfo.fileName();
         for (const QString &extension : extensions)
         {
-            if (name.endsWith(extension, Qt::CaseInsensitive))
+            if (fileName.endsWith(extension, Qt::CaseInsensitive))
             {
                 matched = true;
                 break;
@@ -257,13 +266,14 @@ QList<QVImageCore::CompatibleFile> QVImageCore::getCompatibleFiles()
         QString mimeType;
         if (!matched || sortMode == 3)
         {
-            mimeType = mimeDb.mimeTypeForFile(fileInfo).name();
+            mimeType = mimeDb.mimeTypeForFile(absoluteFilePath, mimeMatchMode).name();
+            matched |= mimeTypes.contains(mimeType);
         }
-        if (matched || mimeTypes.contains(mimeType))
+        if (matched)
         {
             fileList.append({
-                fileInfo.absoluteFilePath(),
-                name,
+                absoluteFilePath,
+                fileName,
                 sortMode == 1 ? fileInfo.lastModified().toMSecsSinceEpoch() : 0,
                 sortMode == 2 ? fileInfo.size() : 0,
                 sortMode == 3 ? mimeType : QString()
@@ -562,7 +572,13 @@ void QVImageCore::settingsUpdated()
     //sort ascending
     sortDescending = settingsManager.getBoolean("sortdescending");
 
-    //update folder info to re-sort
+    //show hidden files
+    showHiddenFiles = settingsManager.getBoolean("showhiddenfiles");
+
+    //allow mime content detection
+    allowMimeContentDetection = settingsManager.getBoolean("allowmimecontentdetection");
+
+    //update folder info to reflect new settings (e.g. sort order)
     updateFolderInfo();
 }
 
