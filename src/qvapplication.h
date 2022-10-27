@@ -75,7 +75,7 @@ public:
 
     const QStringList &getNameFilterList() const { return nameFilterList; }
 
-    const QList<QRegularExpression> &getFilterRegExpList() const { return filterRegExpList; }
+    const QStringList &getFileExtensionList() const { return fileExtensionList; }
 
     const QStringList &getMimeTypeNameList() const { return mimeTypeNameList; }
 
@@ -98,7 +98,7 @@ private:
 
     QStringList filterList;
     QStringList nameFilterList;
-    QList<QRegularExpression> filterRegExpList;
+    QStringList fileExtensionList;
     QStringList mimeTypeNameList;
 
     // This order is very important

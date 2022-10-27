@@ -238,7 +238,7 @@ QFileInfoList QVImageCore::getCompatibleFiles()
     QFileInfoList fileInfoList;
 
     QMimeDatabase mimeDb;
-    const auto &regs = qvApp->getFilterRegExpList();
+    const auto &extensions = qvApp->getFileExtensionList();
     const auto &mimeTypes = qvApp->getMimeTypeNameList();
 
     const QFileInfoList currentFolder = currentFileDetails.fileInfo.dir().entryInfoList(QDir::Filter::Files, QDir::SortFlag::Unsorted);
@@ -246,9 +246,10 @@ QFileInfoList QVImageCore::getCompatibleFiles()
     {
         bool matched = false;
         const QString name = fileInfo.fileName();
-        for (const QRegularExpression &reg : regs)
+        for (const QString &extension : extensions)
         {
-            if (reg.match(name).hasMatch()) {
+            if (name.endsWith(extension, Qt::CaseInsensitive))
+            {
                 matched = true;
                 break;
             }
