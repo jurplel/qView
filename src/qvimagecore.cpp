@@ -24,7 +24,7 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     sortMode = 0;
     sortDescending = false;
     showHiddenFiles = false;
-    allowMimeContentDetection = true;
+    allowMimeContentDetection = false;
 
     randomSortSeed = 0;
 
