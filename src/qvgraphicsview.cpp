@@ -38,6 +38,8 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     isCursorZoomEnabled = true;
     cropMode = 0;
     scaleFactor = 1.25;
+    lastZoomEventPos = QPoint(-1, -1);
+    lastZoomRoundingError = QPointF();
 
     // Initialize other variables
     currentScale = 1.0;
@@ -259,7 +261,12 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
         return;
     }
 
-    const QPointF scenePos = mapToScene(pos);
+    if (pos != lastZoomEventPos)
+    {
+        lastZoomEventPos = pos;
+        lastZoomRoundingError = QPointF();
+    }
+    const QPointF scenePos = mapToScene(pos) - lastZoomRoundingError;
 
     zoomBasisScaleFactor *= scaleFactor;
     setTransform(QTransform(zoomBasis).scale(zoomBasisScaleFactor, zoomBasisScaleFactor));
@@ -272,6 +279,7 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
         const QPointF move = p1mouse - pos;
         horizontalScrollBar()->setValue(move.x() + horizontalScrollBar()->value());
         verticalScrollBar()->setValue(move.y() + verticalScrollBar()->value());
+        lastZoomRoundingError = mapToScene(pos) - scenePos;
     }
     else
     {
