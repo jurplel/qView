@@ -38,14 +38,14 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     isCursorZoomEnabled = true;
     cropMode = 0;
     scaleFactor = 1.25;
-    lastZoomEventPos = QPoint(-1, -1);
-    lastZoomRoundingError = QPointF();
 
     // Initialize other variables
     currentScale = 1.0;
     scaledSize = QSize();
     maxScalingTwoSize = 3;
     isOriginalSize = false;
+    lastZoomEventPos = QPoint(-1, -1);
+    lastZoomRoundingError = QPointF();
 
     zoomBasisScaleFactor = 1.0;
 
