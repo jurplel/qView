@@ -38,6 +38,8 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     isCursorZoomEnabled = true;
     cropMode = 0;
     scaleFactor = 1.25;
+    lastZoomEventPos = QPoint(-1, -1);
+    lastZoomRoundingError = QPointF();
 
     // Initialize other variables
     currentScale = 1.0;
@@ -173,17 +175,20 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
         return;
     }
 
-    int angleDelta;
+    const int yDelta = event->angleDelta().y();
+    const qreal yScale = 120.0;
 
-    if (event->angleDelta().y() == 0)
-        angleDelta = event->angleDelta().x();
-    else
-        angleDelta = event->angleDelta().y();
+    if (yDelta == 0)
+        return;
 
-    if (angleDelta > 0)
-        zoomIn(eventPos);
-    else
-        zoomOut(eventPos);
+    const qreal fractionalWheelClicks = qFabs(yDelta) / yScale;
+    const qreal zoomAmountPerWheelClick = scaleFactor - 1.0;
+    qreal zoomFactor = 1.0 + (fractionalWheelClicks * zoomAmountPerWheelClick);
+
+    if (yDelta < 0)
+        zoomFactor = qPow(zoomFactor, -1);
+
+    zoom(zoomFactor, eventPos);
 }
 
 // Functions
@@ -256,7 +261,12 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
         return;
     }
 
-    const QPointF scenePos = mapToScene(pos);
+    if (pos != lastZoomEventPos)
+    {
+        lastZoomEventPos = pos;
+        lastZoomRoundingError = QPointF();
+    }
+    const QPointF scenePos = mapToScene(pos) - lastZoomRoundingError;
 
     zoomBasisScaleFactor *= scaleFactor;
     setTransform(QTransform(zoomBasis).scale(zoomBasisScaleFactor, zoomBasisScaleFactor));
@@ -269,6 +279,7 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
         const QPointF move = p1mouse - pos;
         horizontalScrollBar()->setValue(move.x() + horizontalScrollBar()->value());
         verticalScrollBar()->setValue(move.y() + verticalScrollBar()->value());
+        lastZoomRoundingError = mapToScene(pos) - scenePos;
     }
     else
     {
@@ -568,6 +579,7 @@ void QVGraphicsView::fitInViewMarginless(const QRectF &rect)
 
     isOriginalSize = false;
     currentScale = 1.0;
+    zoomBasisScaleFactor = 1.0;
 }
 
 void QVGraphicsView::fitInViewMarginless(const QGraphicsItem *item)

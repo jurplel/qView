@@ -134,6 +134,8 @@ private:
     QSize scaledSize;
     bool isOriginalSize;
     qreal maxScalingTwoSize;
+    QPoint lastZoomEventPos;
+    QPointF lastZoomRoundingError;
 
     QTransform absoluteTransform;
     QTransform zoomBasis;
