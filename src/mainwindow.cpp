@@ -376,11 +376,18 @@ void MainWindow::populateOpenWithMenu(const QList<OpenWith::OpenWithItem> openWi
             if (i < openWithItems.length())
             {
                 auto openWithItem = openWithItems.value(i);
+                auto data = action->data().toList();
 
                 action->setVisible(true);
+
+#ifdef Q_OS_MACOS
+                const auto &existingOpenWithItem = data.at(1).value<OpenWith::OpenWithItem>();
+                if (openWithItem.exec == existingOpenWithItem.exec && openWithItem.args == existingOpenWithItem.args)
+                    continue;
+#endif
+
                 action->setText(openWithItem.name);
                 action->setIcon(openWithItem.icon);
-                auto data = action->data().toList();
                 data.replace(1, QVariant::fromValue(openWithItem));
                 action->setData(data);
             }
