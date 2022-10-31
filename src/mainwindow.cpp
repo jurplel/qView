@@ -381,15 +381,19 @@ void MainWindow::populateOpenWithMenu(const QList<OpenWith::OpenWithItem> openWi
                 action->setVisible(true);
 
 #ifdef Q_OS_MACOS
+                // On macOS, it's relatively expensive to call setIcon() with a non-empty icon, or setData() if the
+                // action has a non-empty icon. So we'll avoid updating this action if possible. If we do need to update
+                // it, clear out the icon and call setData() first to at least avoid half of the performance hit.
                 const auto &existingOpenWithItem = data.at(1).value<OpenWith::OpenWithItem>();
                 if (openWithItem.exec == existingOpenWithItem.exec && openWithItem.args == existingOpenWithItem.args)
                     continue;
+                action->setIcon(QIcon());
 #endif
 
-                action->setText(openWithItem.name);
-                action->setIcon(openWithItem.icon);
                 data.replace(1, QVariant::fromValue(openWithItem));
                 action->setData(data);
+                action->setText(openWithItem.name);
+                action->setIcon(openWithItem.icon);
             }
             else
             {
