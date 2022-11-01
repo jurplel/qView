@@ -430,6 +430,51 @@
          </property>
         </widget>
        </item>
+       <item row="10" column="1">
+        <spacer name="horizontalSpacer_9">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>5</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="11" column="0">
+        <widget class="QLabel" name="colorSpaceConversionLabel">
+         <property name="text">
+          <string>Color space conversion:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="11" column="1">
+        <widget class="QComboBox" name="colorSpaceConversionComboBox">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <item>
+          <property name="text">
+           <string>Disabled</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>sRGB</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Display P3</string>
+          </property>
+         </item>
+        </widget>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="misc">

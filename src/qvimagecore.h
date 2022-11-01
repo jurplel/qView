@@ -5,6 +5,9 @@
 #include <QImageReader>
 #include <QPixmap>
 #include <QMovie>
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+#include <QColorSpace>
+#endif
 #include <QFileInfo>
 #include <QFutureWatcher>
 #include <QTimer>
@@ -103,6 +106,7 @@ private:
     int sortMode;
     bool sortDescending;
     bool allowMimeContentDetection;
+    int colorSpaceConversion;
 
     static QCache<QString, QPixmap> pixmapCache;
 
