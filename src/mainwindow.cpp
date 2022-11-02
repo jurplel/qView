@@ -459,6 +459,8 @@ void MainWindow::setWindowSize()
     if (!(windowResizeMode == 2 || (windowResizeMode == 1 && justLaunchedWithImage)))
         return;
 
+    justLaunchedWithImage = false;
+
     //check if window is maximized or fullscreened
     if (windowState() == Qt::WindowMaximized || windowState() == Qt::WindowFullScreen)
         return;
@@ -467,8 +469,6 @@ void MainWindow::setWindowSize()
     qreal minWindowResizedPercentage = qvApp->getSettingsManager().getInteger("minwindowresizedpercentage")/100.0;
     qreal maxWindowResizedPercentage = qvApp->getSettingsManager().getInteger("maxwindowresizedpercentage")/100.0;
 
-
-    justLaunchedWithImage = false;
 
     QSize imageSize = getCurrentFileDetails().loadedPixmapSize;
     imageSize -= QSize(4, 4);
