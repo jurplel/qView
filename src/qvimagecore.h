@@ -5,6 +5,9 @@
 #include <QImageReader>
 #include <QPixmap>
 #include <QMovie>
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+#include <QColorSpace>
+#endif
 #include <QFileInfo>
 #include <QFutureWatcher>
 #include <QTimer>
@@ -102,6 +105,7 @@ private:
     bool sortDescending;
     bool showHiddenFiles;
     bool allowMimeContentDetection;
+    int colorSpaceConversion;
 
     QPair<QString, uint> lastDirInfo;
     unsigned randomSortSeed;
