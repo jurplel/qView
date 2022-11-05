@@ -99,7 +99,7 @@ void QVImageCore::loadFile(const QString &fileName)
     {
         QSize previouslyRecordedImageSize = qvApp->getPreviouslyRecordedImageSize(sanitaryFileName);
         ReadData readData = {
-            matchCurrentRotation(*cachedPixmap),
+            *cachedPixmap,
             fileInfo,
             previouslyRecordedImageSize
         };
