@@ -12,6 +12,7 @@
 #include <QFutureWatcher>
 #include <QTimer>
 #include <QCache>
+#include <QElapsedTimer>
 
 class QVImageCore : public QObject
 {
@@ -39,6 +40,7 @@ public:
         bool isMovieLoaded = false;
         QSize baseImageSize;
         QSize loadedPixmapSize;
+        QElapsedTimer timeSinceLoaded;
 
         void updateLoadedIndexInFolder();
     };

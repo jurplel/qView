@@ -219,6 +219,8 @@ void QVImageCore::loadPixmap(const ReadData &readData, bool fromCache)
     else if (auto device = loadedMovie.device())
         device->close();
 
+    currentFileDetails.timeSinceLoaded.start();
+
     emit fileChanged();
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -241,7 +243,8 @@ void QVImageCore::closeImage()
         false,
         false,
         QSize(),
-        QSize()
+        QSize(),
+        QElapsedTimer()
     };
 
     emit fileChanged();
