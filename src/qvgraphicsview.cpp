@@ -423,7 +423,8 @@ void QVGraphicsView::originalSize()
 
 void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
 {
-    imageCore.updateFolderInfo();
+    if (!getCurrentFileDetails().timeSinceLoaded.isValid() || getCurrentFileDetails().timeSinceLoaded.hasExpired(3000))
+        imageCore.updateFolderInfo();
     if (getCurrentFileDetails().folderFileInfoList.isEmpty())
         return;
 
