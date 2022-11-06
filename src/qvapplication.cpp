@@ -37,8 +37,8 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     actionManager.loadRecentsList();
 
 #ifdef Q_OS_MACOS
-    dockMenu->addAction(actionManager.cloneAction("newwindow"));
-    dockMenu->addAction(actionManager.cloneAction("open"));
+    actionManager.addCloneOfAction(dockMenu, "newwindow");
+    actionManager.addCloneOfAction(dockMenu, "open");
     dockMenu->setAsDockMenu();
 #endif
 
