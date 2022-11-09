@@ -166,6 +166,8 @@ void SettingsManager::initializeSettingsLibrary()
     settingsLibrary.insert("cursorzoom", {true, {}});
     settingsLibrary.insert("cropmode", {0, {}});
     settingsLibrary.insert("pastactualsizeenabled", {true, {}});
+    settingsLibrary.insert("constrainimageposition", {true, {}});
+    settingsLibrary.insert("constraincentersmallimage", {true, {}});
     // Miscellaneous
     settingsLibrary.insert("language", {"system", {}});
     settingsLibrary.insert("sortmode", {0, {}});

@@ -5,6 +5,14 @@
   <property name="windowModality">
    <enum>Qt::NonModal</enum>
   </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>495</width>
+    <height>603</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Settings</string>
   </property>
@@ -295,6 +303,19 @@
          </property>
         </widget>
        </item>
+       <item row="3" column="1">
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>5</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
        <item row="4" column="0">
         <widget class="QLabel" name="label_3">
          <property name="toolTip">
@@ -340,6 +361,19 @@
          </property>
         </widget>
        </item>
+       <item row="6" column="1">
+        <widget class="QCheckBox" name="cursorZoomCheckbox">
+         <property name="toolTip">
+          <string>Choose whether or not zooming in and out above 100% zoom will zoom towards the cursor</string>
+         </property>
+         <property name="text">
+          <string>Zoom &amp;towards cursor</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
        <item row="7" column="1">
         <spacer name="horizontalSpacer">
          <property name="orientation">
@@ -353,16 +387,13 @@
          </property>
         </spacer>
        </item>
-       <item row="9" column="1">
-        <widget class="QCheckBox" name="pastActualSizeCheckbox">
+       <item row="8" column="0">
+        <widget class="QLabel" name="cropModeLabel">
          <property name="toolTip">
-          <string>Stop the image from going past its actual size when resizing the window - you can still zoom past it though</string>
+          <string>Ignores select sides of an image when fitting to window (some sides will extend beyond the window boundaries)</string>
          </property>
          <property name="text">
-          <string>Image resizes &amp;past actual size</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
+          <string>On window resize:</string>
          </property>
         </widget>
        </item>
@@ -394,18 +425,21 @@
          </item>
         </widget>
        </item>
-       <item row="8" column="0">
-        <widget class="QLabel" name="cropModeLabel">
+       <item row="9" column="1">
+        <widget class="QCheckBox" name="pastActualSizeCheckbox">
          <property name="toolTip">
-          <string>Ignores select sides of an image when fitting to window (some sides will extend beyond the window boundaries)</string>
+          <string>Stop the image from going past its actual size when resizing the window - you can still zoom past it though</string>
          </property>
          <property name="text">
-          <string>On window resize:</string>
+          <string>Image resizes &amp;past actual size</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
-       <item row="3" column="1">
-        <spacer name="horizontalSpacer_2">
+       <item row="10" column="1">
+        <spacer name="horizontalSpacer_9">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
@@ -417,13 +451,20 @@
          </property>
         </spacer>
        </item>
-       <item row="6" column="1">
-        <widget class="QCheckBox" name="cursorZoomCheckbox">
-         <property name="toolTip">
-          <string>Choose whether or not zooming in and out above 100% zoom will zoom towards the cursor</string>
-         </property>
+       <item row="11" column="1">
+        <widget class="QCheckBox" name="constrainImagePositionCheckbox">
          <property name="text">
-          <string>Zoom &amp;towards cursor</string>
+          <string>&amp;Constrain image position</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="1">
+        <widget class="QCheckBox" name="constrainCentersSmallImageCheckbox">
+         <property name="text">
+          <string>Keep ce&amp;ntered if smaller</string>
          </property>
          <property name="checked">
           <bool>true</bool>

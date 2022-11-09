@@ -17,7 +17,6 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     // GraphicsView setup
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setDragMode(QGraphicsView::ScrollHandDrag);
     setFrameShape(QFrame::NoFrame);
     setTransformationAnchor(QGraphicsView::NoAnchor);
 
@@ -36,6 +35,8 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     isScrollZoomsEnabled = true;
     isLoopFoldersEnabled = true;
     isCursorZoomEnabled = true;
+    isConstrainedPositioningEnabled = true;
+    isConstrainedSmallCenteringEnabled = true;
     cropMode = 0;
     scaleFactor = 1.25;
 
@@ -50,6 +51,15 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 
     zoomBasisScaleFactor = 1.0;
 
+    scrollHelper = new ScrollHelper(this,
+        [this](QSize &scaledContentSize, QRect &usableViewportRect, bool &shouldConstrain, bool &shouldCenter)
+        {
+            scaledContentSize = getScaledContentSize().toSize();
+            usableViewportRect = getUsableViewportRect();
+            shouldConstrain = isConstrainedPositioningEnabled;
+            shouldCenter = isConstrainedSmallCenteringEnabled;
+        });
+
     connect(&imageCore, &QVImageCore::animatedFrameChanged, this, &QVGraphicsView::animatedFrameChanged);
     connect(&imageCore, &QVImageCore::fileChanged, this, &QVGraphicsView::postLoad);
     connect(&imageCore, &QVImageCore::updateLoadedPixmapItem, this, &QVGraphicsView::updateLoadedPixmapItem);
@@ -61,6 +71,10 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     expensiveScaleTimerNew->setInterval(50);
     connect(expensiveScaleTimerNew, &QTimer::timeout, this, [this]{scaleExpensively();});
 
+    constrainBoundsTimer = new QTimer(this);
+    constrainBoundsTimer->setSingleShot(true);
+    constrainBoundsTimer->setInterval(500);
+    connect(constrainBoundsTimer, &QTimer::timeout, this, [this]{scrollHelper->constrain();});
 
     loadedPixmapItem = new QGraphicsPixmapItem();
     scene->addItem(loadedPixmapItem);
@@ -109,20 +123,43 @@ void QVGraphicsView::dragLeaveEvent(QDragLeaveEvent *event)
     event->accept();
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-void QVGraphicsView::enterEvent(QEvent *event)
-#else
-void QVGraphicsView::enterEvent(QEnterEvent *event)
-#endif
+void QVGraphicsView::mousePressEvent(QMouseEvent *event)
 {
-    QGraphicsView::enterEvent(event);
-    viewport()->setCursor(Qt::ArrowCursor);
+    if (event->button() == Qt::LeftButton)
+    {
+        pressedMouseButton = Qt::LeftButton;
+        viewport()->setCursor(Qt::ClosedHandCursor);
+        lastMousePos = event->pos();
+        return;
+    }
+
+    QGraphicsView::mousePressEvent(event);
 }
 
 void QVGraphicsView::mouseReleaseEvent(QMouseEvent *event)
 {
+    if (pressedMouseButton == Qt::LeftButton)
+    {
+        pressedMouseButton = Qt::NoButton;
+        viewport()->setCursor(Qt::ArrowCursor);
+        scrollHelper->constrain();
+        return;
+    }
+
     QGraphicsView::mouseReleaseEvent(event);
-    viewport()->setCursor(Qt::ArrowCursor);
+}
+
+void QVGraphicsView::mouseMoveEvent(QMouseEvent *event)
+{
+    if (pressedMouseButton == Qt::LeftButton)
+    {
+        QPoint mouseDelta = event->pos() - lastMousePos;
+        scrollHelper->move(-mouseDelta);
+        lastMousePos = event->pos();
+        return;
+    }
+
+    QGraphicsView::mouseMoveEvent(event);
 }
 
 bool QVGraphicsView::event(QEvent *event)
@@ -168,20 +205,14 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
 
     if (!willZoom)
     {
-        const qreal scrollDivisor = 2.0; // To make scrolling less sensitive
-        qreal scrollX = event->angleDelta().x() * (isRightToLeft() ? 1 : -1) / scrollDivisor;
-        qreal scrollY = event->angleDelta().y() * -1 / scrollDivisor;
+        qreal xDelta = -event->angleDelta().x() / 2.0;
+        qreal yDelta = -event->angleDelta().y() / 2.0;
 
         if (event->modifiers() & Qt::ShiftModifier)
-            std::swap(scrollX, scrollY);
+            std::swap(xDelta, yDelta);
 
-        QPointF targetScrollDelta = QPointF(scrollX, scrollY) - lastScrollRoundingError;
-        QPoint roundedScrollDelta = targetScrollDelta.toPoint();
-
-        horizontalScrollBar()->setValue(horizontalScrollBar()->value() + roundedScrollDelta.x());
-        verticalScrollBar()->setValue(verticalScrollBar()->value() + roundedScrollDelta.y());
-
-        lastScrollRoundingError = roundedScrollDelta - targetScrollDelta;
+        scrollHelper->move(QPointF(xDelta, yDelta));
+        constrainBoundsTimer->start();
 
         return;
     }
@@ -241,6 +272,7 @@ void QVGraphicsView::loadMimeData(const QMimeData *mimeData)
 
 void QVGraphicsView::loadFile(const QString &fileName)
 {
+    scrollHelper->cancelAnimation();
     imageCore.loadFile(fileName);
 }
 
@@ -282,15 +314,17 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
     zoomBasisScaleFactor *= scaleFactor;
     setTransform(QTransform(zoomBasis).scale(zoomBasisScaleFactor, zoomBasisScaleFactor));
     absoluteTransform.scale(scaleFactor, scaleFactor);
+    scrollHelper->cancelAnimation();
 
-    // If we are zooming in, we have a point to zoom towards, the mouse is on top of the viewport, and cursor zooming is enabled
-    if (currentScale > 1.00001 && pos != QPoint(-1, -1) && underMouse() && isCursorZoomEnabled)
+    // If we have a point to zoom towards, the mouse is on top of the viewport, and cursor zooming is enabled
+    if (pos != QPoint(-1, -1) && underMouse() && isCursorZoomEnabled)
     {
         const QPointF p1mouse = mapFromScene(scenePos);
         const QPointF move = p1mouse - pos;
         horizontalScrollBar()->setValue(horizontalScrollBar()->value() + (move.x() * (isRightToLeft() ? -1 : 1)));
         verticalScrollBar()->setValue(verticalScrollBar()->value() + move.y());
         lastZoomRoundingError = mapToScene(pos) - scenePos;
+        constrainBoundsTimer->start();
     }
     else
     {
@@ -324,8 +358,7 @@ void QVGraphicsView::scaleExpensively()
     }
 
     // Map size of the original pixmap to the scale acquired in fitting with modification from zooming percentage
-    const QRectF mappedRect = absoluteTransform.mapRect(QRectF({}, getCurrentFileDetails().loadedPixmapSize));
-    const QSizeF mappedPixmapSize = mappedRect.size() * devicePixelRatioF();
+    const QSizeF mappedPixmapSize = getScaledContentSize() * devicePixelRatioF();
 
     // Undo mirror/flip before new transform
     if (mirrored)
@@ -370,6 +403,7 @@ void QVGraphicsView::makeUnscaled()
         loadedPixmapItem->setPixmap(getLoadedPixmap());
 
     setTransform(absoluteTransform);
+    scrollHelper->cancelAnimation();
 
     // Redo mirror/flip after new transform
     if (mirrored)
@@ -621,6 +655,7 @@ void QVGraphicsView::fitInViewMarginless(const QRectF &rect)
     // Scale and center on the center of \a rect.
     scale(xratio, yratio);
     centerOn(adjustedBoundingRect.center());
+    scrollHelper->cancelAnimation();
 
     // variables
     zoomBasis = transform();
@@ -661,6 +696,8 @@ void QVGraphicsView::centerOn(const QPointF &pos)
     }
 
     verticalScrollBar()->setValue(int(viewPoint.y() - obscuredHeight - (height / 2.0)));
+
+    scrollHelper->cancelAnimation();
 }
 
 void QVGraphicsView::centerOn(qreal x, qreal y)
@@ -671,6 +708,23 @@ void QVGraphicsView::centerOn(qreal x, qreal y)
 void QVGraphicsView::centerOn(const QGraphicsItem *item)
 {
     centerOn(item->sceneBoundingRect().center());
+}
+
+QSizeF QVGraphicsView::getScaledContentSize() const
+{
+    return absoluteTransform.mapRect(QRectF({}, getCurrentFileDetails().loadedPixmapSize)).size();
+}
+
+QRect QVGraphicsView::getUsableViewportRect() const
+{
+#ifdef COCOA_LOADED
+    int obscuredHeight = QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
+#else
+    int obscuredHeight = 0;
+#endif
+    QRect rect = viewport()->rect();
+    rect.setTop(obscuredHeight);
+    return rect;
 }
 
 void QVGraphicsView::error(int errorNum, const QString &errorString, const QString &fileName)
@@ -733,6 +787,12 @@ void QVGraphicsView::settingsUpdated()
 
     //cursor zoom
     isCursorZoomEnabled = settingsManager.getBoolean("cursorzoom");
+
+    //constrained positioning
+    isConstrainedPositioningEnabled = settingsManager.getBoolean("constrainimageposition");
+
+    //constrained small centering
+    isConstrainedSmallCenteringEnabled = settingsManager.getBoolean("constraincentersmallimage");
 
     //loop folders
     isLoopFoldersEnabled = settingsManager.getBoolean("loopfoldersenabled");

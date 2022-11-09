@@ -53,6 +53,8 @@ private slots:
 
     void windowResizeComboBoxCurrentIndexChanged(int index);
 
+    void constrainImagePositionCheckboxStateChanged(int arg1);
+
     void languageComboBoxCurrentIndexChanged(int index);
 
 private:
