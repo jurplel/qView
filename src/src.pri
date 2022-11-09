@@ -12,6 +12,7 @@ SOURCES += \
     $$PWD/qvimagecore.cpp \
     $$PWD/qvshortcutdialog.cpp \
     $$PWD/actionmanager.cpp \
+    $$PWD/scrollhelper.cpp \
     $$PWD/settingsmanager.cpp \
     $$PWD/shortcutmanager.cpp \
     $$PWD/updatechecker.cpp
@@ -32,6 +33,7 @@ HEADERS += \
     $$PWD/qvimagecore.h \
     $$PWD/qvshortcutdialog.h \
     $$PWD/actionmanager.h \
+    $$PWD/scrollhelper.h \
     $$PWD/settingsmanager.h \
     $$PWD/shortcutmanager.h \
     $$PWD/updatechecker.h

@@ -2,6 +2,7 @@
 #define QVGRAPHICSVIEW_H
 
 #include "qvimagecore.h"
+#include "scrollhelper.h"
 #include <QGraphicsView>
 #include <QImageReader>
 #include <QMimeData>
@@ -84,13 +85,11 @@ protected:
 
     void dragLeaveEvent(QDragLeaveEvent *event) override;
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    void enterEvent(QEvent *event) override;
-#else
-    void enterEvent(QEnterEvent *event) override;
-#endif
+    void mousePressEvent(QMouseEvent *event) override;
 
     void mouseReleaseEvent(QMouseEvent *event) override;
+
+    void mouseMoveEvent(QMouseEvent *event) override;
 
     bool event(QEvent *event) override;
 
@@ -103,6 +102,9 @@ protected:
 
     void centerOn(const QGraphicsItem *item);
 
+    QSizeF getScaledContentSize() const;
+
+    QRect getUsableViewportRect() const;
 
 private slots:
     void animatedFrameChanged(QRect rect);
@@ -125,6 +127,8 @@ private:
     bool isScrollZoomsEnabled;
     bool isLoopFoldersEnabled;
     bool isCursorZoomEnabled;
+    bool isConstrainedPositioningEnabled;
+    bool isConstrainedSmallCenteringEnabled;
     int cropMode;
     qreal scaleFactor;
 
@@ -144,6 +148,11 @@ private:
     QVImageCore imageCore;
 
     QTimer *expensiveScaleTimerNew;
+    QTimer *constrainBoundsTimer;
     QPointF centerPoint;
+
+    ScrollHelper *scrollHelper;
+    Qt::MouseButton pressedMouseButton;
+    QPoint lastMousePos;
 };
 #endif // QVGRAPHICSVIEW_H
