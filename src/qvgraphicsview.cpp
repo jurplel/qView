@@ -434,12 +434,26 @@ void QVGraphicsView::originalSize()
 
 void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
 {
+    bool shouldRetryFolderInfoUpdate = false;
+
+    // Update folder info only after a little idle time as an optimization for when
+    // the user is rapidly navigating through files.
     if (!getCurrentFileDetails().timeSinceLoaded.isValid() || getCurrentFileDetails().timeSinceLoaded.hasExpired(3000))
-        imageCore.updateFolderInfo();
+    {
+        // Make sure the file still exists because if it disappears from the file listing we'll lose
+        // lose track of our index within the folder. Use the static 'exists' method to avoid caching.
+        // If we skip updating now, flag it for retry later once we locate a new file.
+        if (QFile::exists(getCurrentFileDetails().fileInfo.absoluteFilePath()))
+            imageCore.updateFolderInfo();
+        else
+            shouldRetryFolderInfoUpdate = true;
+    }
+
     if (getCurrentFileDetails().folderFileInfoList.isEmpty())
         return;
 
     int newIndex = getCurrentFileDetails().loadedIndexInFolder;
+    int searchDirection = 0;
 
     switch (mode) {
     case GoToFileMode::constant:
@@ -450,6 +464,7 @@ void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
     case GoToFileMode::first:
     {
         newIndex = 0;
+        searchDirection = 1;
         break;
     }
     case GoToFileMode::previous:
@@ -463,6 +478,7 @@ void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
         }
         else
             newIndex--;
+        searchDirection = -1;
         break;
     }
     case GoToFileMode::next:
@@ -476,20 +492,35 @@ void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
         }
         else
             newIndex++;
+        searchDirection = 1;
         break;
     }
     case GoToFileMode::last:
     {
         newIndex = getCurrentFileDetails().folderFileInfoList.size()-1;
+        searchDirection = -1;
         break;
     }
     }
 
-    const QVImageCore::CompatibleFile nextImage = getCurrentFileDetails().folderFileInfoList.value(newIndex);
-    if (!QFileInfo(nextImage.absoluteFilePath).isFile())
+    if (searchDirection != 0)
+    {
+        const auto &fileList = getCurrentFileDetails().folderFileInfoList;
+        while (searchDirection == 1 && newIndex < fileList.size()-1 && !QFileInfo::exists(fileList.value(newIndex).absoluteFilePath))
+            newIndex++;
+        while (searchDirection == -1 && newIndex > 0 && !QFileInfo::exists(fileList.value(newIndex).absoluteFilePath))
+            newIndex--;
+    }
+
+    const QString nextImageFilePath = getCurrentFileDetails().folderFileInfoList.value(newIndex).absoluteFilePath;
+
+    if (!QFile::exists(nextImageFilePath) || nextImageFilePath == getCurrentFileDetails().fileInfo.absoluteFilePath())
         return;
 
-    loadFile(nextImage.absoluteFilePath);
+    if (shouldRetryFolderInfoUpdate)
+        imageCore.updateFolderInfo(nextImageFilePath);
+
+    loadFile(nextImageFilePath);
 }
 
 void QVGraphicsView::fitInViewMarginless(const QRectF &rect)
