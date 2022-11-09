@@ -25,7 +25,7 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     sortDescending = false;
     allowMimeContentDetection = false;
 
-    randomSortSeed = 0;
+    baseRandomSortSeed = std::chrono::system_clock::now().time_since_epoch().count();
 
     currentRotation = 0;
 
@@ -80,6 +80,17 @@ void QVImageCore::loadFile(const QString &fileName)
 
     QFileInfo fileInfo(sanitaryFileName);
     sanitaryFileName = fileInfo.absoluteFilePath();
+
+    if (fileInfo.isDir())
+    {
+        QString dummyFilePath = QDir::cleanPath(sanitaryFileName + QDir::separator() + "dummy.jpg");
+        updateFolderInfo(dummyFilePath);
+        if (currentFileDetails.folderFileInfoList.isEmpty())
+            closeImage();
+        else
+            loadFile(currentFileDetails.folderFileInfoList.at(0).absoluteFilePath);
+        return;
+    }
 
     // Pause playing movie because it feels better that way
     setPaused(true);
@@ -234,7 +245,7 @@ void QVImageCore::closeImage()
 }
 
 // All file logic, sorting, etc should be moved to a different class or file
-QList<QVImageCore::CompatibleFile> QVImageCore::getCompatibleFiles()
+QList<QVImageCore::CompatibleFile> QVImageCore::getCompatibleFiles(const QString &dirPath)
 {
     QList<CompatibleFile> fileList;
 
@@ -244,7 +255,7 @@ QList<QVImageCore::CompatibleFile> QVImageCore::getCompatibleFiles()
 
     QMimeDatabase::MatchMode mimeMatchMode = allowMimeContentDetection ? QMimeDatabase::MatchDefault : QMimeDatabase::MatchExtension;
 
-    const QFileInfoList currentFolder = currentFileDetails.fileInfo.dir().entryInfoList(QDir::Files | QDir::Hidden, QDir::Unsorted);
+    const QFileInfoList currentFolder = QDir(dirPath).entryInfoList(QDir::Files | QDir::Hidden, QDir::Unsorted);
     for (const QFileInfo &fileInfo : currentFolder)
     {
         bool matched = false;
@@ -279,30 +290,14 @@ QList<QVImageCore::CompatibleFile> QVImageCore::getCompatibleFiles()
     return fileList;
 }
 
-void QVImageCore::updateFolderInfo()
+void QVImageCore::sortCompatibleFiles(QList<CompatibleFile> &fileList)
 {
-    if (!currentFileDetails.fileInfo.isFile())
-        return;
-
-    currentFileDetails.folderFileInfoList = getCompatibleFiles();
-
-    QPair<QString, qsizetype> dirInfo = {currentFileDetails.fileInfo.absoluteDir().path(),
-                                         currentFileDetails.folderFileInfoList.count()};
-    // If the current folder changed since the last image, assign a new seed for random sorting
-    if (lastDirInfo != dirInfo)
-    {
-        randomSortSeed = std::chrono::system_clock::now().time_since_epoch().count();
-    }
-    lastDirInfo = dirInfo;
-
-    // Sorting
-
     if (sortMode == 0) // Natural sorting
     {
         QCollator collator;
         collator.setNumericMode(true);
-        std::sort(currentFileDetails.folderFileInfoList.begin(),
-                  currentFileDetails.folderFileInfoList.end(),
+        std::sort(fileList.begin(),
+                  fileList.end(),
                   [&collator, this](const CompatibleFile &file1, const CompatibleFile &file2)
         {
             if (sortDescending)
@@ -313,8 +308,8 @@ void QVImageCore::updateFolderInfo()
     }
     else if (sortMode == 1) // last modified
     {
-        std::sort(currentFileDetails.folderFileInfoList.begin(),
-                  currentFileDetails.folderFileInfoList.end(),
+        std::sort(fileList.begin(),
+                  fileList.end(),
                   [this](const CompatibleFile &file1, const CompatibleFile &file2)
         {
             if (sortDescending)
@@ -325,8 +320,8 @@ void QVImageCore::updateFolderInfo()
     }
     else if (sortMode == 2) // size
     {
-        std::sort(currentFileDetails.folderFileInfoList.begin(),
-                  currentFileDetails.folderFileInfoList.end(),
+        std::sort(fileList.begin(),
+                  fileList.end(),
                   [this](const CompatibleFile &file1, const CompatibleFile &file2)
         {
             if (sortDescending)
@@ -338,8 +333,8 @@ void QVImageCore::updateFolderInfo()
     else if (sortMode == 3) // type
     {
         QCollator collator;
-        std::sort(currentFileDetails.folderFileInfoList.begin(),
-                  currentFileDetails.folderFileInfoList.end(),
+        std::sort(fileList.begin(),
+                  fileList.end(),
                   [&collator, this](const CompatibleFile &file1, const CompatibleFile &file2)
         {
             if (sortDescending)
@@ -350,8 +345,34 @@ void QVImageCore::updateFolderInfo()
     }
     else if (sortMode == 4) // Random
     {
-        std::shuffle(currentFileDetails.folderFileInfoList.begin(), currentFileDetails.folderFileInfoList.end(), std::default_random_engine(randomSortSeed));
+        unsigned randomSortSeed = getRandomSortSeed(QFileInfo(fileList.value(0).absoluteFilePath).path(), fileList.count());
+        std::shuffle(fileList.begin(), fileList.end(), std::default_random_engine(randomSortSeed));
     }
+}
+
+unsigned QVImageCore::getRandomSortSeed(const QString &dirPath, const int fileCount)
+{
+    QString seed = QString::number(baseRandomSortSeed, 16) + dirPath + QString::number(fileCount, 16);
+    QByteArray hash = QCryptographicHash::hash(seed.toUtf8(), QCryptographicHash::Md5);
+    return hash.toHex().left(8).toUInt(nullptr, 16);
+}
+
+void QVImageCore::updateFolderInfo(QString targetFilePath)
+{
+    if (targetFilePath.isEmpty())
+    {
+        targetFilePath = currentFileDetails.fileInfo.absoluteFilePath();
+
+        // No path specified and a file is not already loaded
+        if (targetFilePath.isEmpty())
+            return;
+    }
+
+    // Get file listing
+    currentFileDetails.folderFileInfoList = getCompatibleFiles(QFileInfo(targetFilePath).path());
+
+    // Sorting
+    sortCompatibleFiles(currentFileDetails.folderFileInfoList);
 
     // Set current file index variable
     currentFileDetails.updateLoadedIndexInFolder();
