@@ -484,11 +484,11 @@ void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
     }
     }
 
-    const QFileInfo nextImage = getCurrentFileDetails().folderFileInfoList.value(newIndex);
-    if (!nextImage.isFile())
+    const QVImageCore::CompatibleFile nextImage = getCurrentFileDetails().folderFileInfoList.value(newIndex);
+    if (!QFileInfo(nextImage.absoluteFilePath).isFile())
         return;
 
-    loadFile(nextImage.absoluteFilePath());
+    loadFile(nextImage.absoluteFilePath);
 }
 
 void QVGraphicsView::fitInViewMarginless(const QRectF &rect)

@@ -368,30 +368,26 @@ void QVApplication::defineFilterLists()
 
     auto filterString = tr("Supported Images") + " (";
     filterList.reserve(byteArrayFormats.size()-1);
-    filterRegExpList.reserve(byteArrayFormats.size()-1);
+    fileExtensionList.reserve(byteArrayFormats.size()-1);
 
     // Build the filterlist, filterstring, and filterregexplist in one loop
     for (const auto &byteArray : byteArrayFormats)
     {
-        const auto fileExtString = "*." + QString::fromUtf8(byteArray);
+        const auto fileExtension = "." + QString::fromUtf8(byteArray);
         // Qt 5.15 seems to have added pdf support for QImageReader but it is super broken in qView
-        if (fileExtString == "*.pdf")
+        if (fileExtension == ".pdf")
             continue;
 
-        filterList << fileExtString;
-        filterString += fileExtString + " ";
-
-        QString re = QRegularExpression::wildcardToRegularExpression(fileExtString);
-        filterRegExpList << QRegularExpression(re, QRegularExpression::CaseInsensitiveOption);
+        filterList << "*" + fileExtension;
+        filterString += "*" + fileExtension + " ";
+        fileExtensionList << fileExtension;
 
         // If we support jpg, we actually support the jfif, jfi, and jpe file extensions too almost certainly.
-        if (fileExtString == "*.jpg")
+        if (fileExtension == ".jpg")
         {
             filterList << "*.jpe" << "*.jfi" << "*.jfif";
             filterString += "*.jpe *.jfi *.jfif";
-            filterRegExpList << QRegularExpression(QRegularExpression::wildcardToRegularExpression("*.jpe"), QRegularExpression::CaseInsensitiveOption)
-                             << QRegularExpression(QRegularExpression::wildcardToRegularExpression("*.jfi"), QRegularExpression::CaseInsensitiveOption)
-                             << QRegularExpression(QRegularExpression::wildcardToRegularExpression("*.jfif"), QRegularExpression::CaseInsensitiveOption);
+            fileExtensionList << ".jpe" << ".jfi" << ".jfif";
         }
     }
     filterString.chop(1);

@@ -23,6 +23,8 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     preloadingMode = 1;
     sortMode = 0;
     sortDescending = false;
+    showHiddenFiles = false;
+    allowMimeContentDetection = false;
 
     randomSortSeed = 0;
 
@@ -156,7 +158,9 @@ void QVImageCore::loadPixmap(const ReadData &readData, bool fromCache)
 {
     // Do this first so we can keep folder info even when loading errored files
     currentFileDetails.fileInfo = readData.fileInfo;
-    updateFolderInfo();
+    currentFileDetails.updateLoadedIndexInFolder();
+    if (currentFileDetails.loadedIndexInFolder == -1)
+        updateFolderInfo();
 
     // Reset mechanism to avoid stalling while loading
     waitingOnLoad = false;
@@ -224,33 +228,53 @@ void QVImageCore::closeImage()
 }
 
 // All file logic, sorting, etc should be moved to a different class or file
-QFileInfoList QVImageCore::getCompatibleFiles()
+QList<QVImageCore::CompatibleFile> QVImageCore::getCompatibleFiles()
 {
-    QFileInfoList fileInfoList;
+    QList<CompatibleFile> fileList;
 
     QMimeDatabase mimeDb;
-    const auto &regs = qvApp->getFilterRegExpList();
+    const auto &extensions = qvApp->getFileExtensionList();
     const auto &mimeTypes = qvApp->getMimeTypeNameList();
 
-    const QFileInfoList currentFolder = currentFileDetails.fileInfo.dir().entryInfoList();
+    QMimeDatabase::MatchMode mimeMatchMode = allowMimeContentDetection ? QMimeDatabase::MatchDefault : QMimeDatabase::MatchExtension;
+
+    QDir::Filters dirFilters = QDir::Files;
+    if (showHiddenFiles)
+        dirFilters |= QDir::Hidden;
+
+    const QFileInfoList currentFolder = currentFileDetails.fileInfo.dir().entryInfoList(dirFilters, QDir::Unsorted);
     for (const QFileInfo &fileInfo : currentFolder)
     {
         bool matched = false;
-        const QString name = fileInfo.fileName();
-        for (const QRegularExpression &reg : regs)
+        const QString absoluteFilePath = fileInfo.absoluteFilePath();
+        const QString fileName = fileInfo.fileName();
+        for (const QString &extension : extensions)
         {
-            if (reg.match(name).hasMatch()) {
+            if (fileName.endsWith(extension, Qt::CaseInsensitive))
+            {
                 matched = true;
                 break;
             }
         }
-        if (matched || mimeTypes.contains(mimeDb.mimeTypeForFile(fileInfo).name().toUtf8()))
+        QString mimeType;
+        if (!matched || sortMode == 3)
         {
-            fileInfoList.append(fileInfo);
+            mimeType = mimeDb.mimeTypeForFile(absoluteFilePath, mimeMatchMode).name();
+            matched |= mimeTypes.contains(mimeType);
+        }
+        if (matched)
+        {
+            fileList.append({
+                absoluteFilePath,
+                fileName,
+                sortMode == 1 ? fileInfo.lastModified().toMSecsSinceEpoch() : 0,
+                sortMode == 2 ? fileInfo.size() : 0,
+                sortMode == 3 ? mimeType : QString()
+            });
         }
     }
 
-    return fileInfoList;
+    return fileList;
 }
 
 void QVImageCore::updateFolderInfo()
@@ -258,17 +282,16 @@ void QVImageCore::updateFolderInfo()
     if (!currentFileDetails.fileInfo.isFile())
         return;
 
+    currentFileDetails.folderFileInfoList = getCompatibleFiles();
+
     QPair<QString, uint> dirInfo = {currentFileDetails.fileInfo.absoluteDir().path(),
-                                    currentFileDetails.fileInfo.dir().count()};
+                                    static_cast<uint>(currentFileDetails.folderFileInfoList.count())};
     // If the current folder changed since the last image, assign a new seed for random sorting
     if (lastDirInfo != dirInfo)
     {
         randomSortSeed = std::chrono::system_clock::now().time_since_epoch().count();
     }
     lastDirInfo = dirInfo;
-
-
-    currentFileDetails.folderFileInfoList = getCompatibleFiles();
 
     // Sorting
 
@@ -278,54 +301,49 @@ void QVImageCore::updateFolderInfo()
         collator.setNumericMode(true);
         std::sort(currentFileDetails.folderFileInfoList.begin(),
                   currentFileDetails.folderFileInfoList.end(),
-                  [&collator, this](const QFileInfo &file1, const QFileInfo &file2)
+                  [&collator, this](const CompatibleFile &file1, const CompatibleFile &file2)
         {
             if (sortDescending)
-                return collator.compare(file1.fileName(), file2.fileName()) > 0;
+                return collator.compare(file1.fileName, file2.fileName) > 0;
             else
-                return collator.compare(file1.fileName(), file2.fileName()) < 0;
+                return collator.compare(file1.fileName, file2.fileName) < 0;
         });
     }
     else if (sortMode == 1) // last modified
     {
         std::sort(currentFileDetails.folderFileInfoList.begin(),
                   currentFileDetails.folderFileInfoList.end(),
-                  [this](const QFileInfo &file1, const QFileInfo &file2)
+                  [this](const CompatibleFile &file1, const CompatibleFile &file2)
         {
             if (sortDescending)
-                return file1.lastModified() < file2.lastModified();
+                return file1.lastModified < file2.lastModified;
             else
-                return file1.lastModified() > file2.lastModified();
+                return file1.lastModified > file2.lastModified;
         });
     }
     else if (sortMode == 2) // size
     {
         std::sort(currentFileDetails.folderFileInfoList.begin(),
                   currentFileDetails.folderFileInfoList.end(),
-                  [this](const QFileInfo &file1, const QFileInfo &file2)
+                  [this](const CompatibleFile &file1, const CompatibleFile &file2)
         {
             if (sortDescending)
-                return file1.size() < file2.size();
+                return file1.size < file2.size;
             else
-                return file1.size() > file2.size();
+                return file1.size > file2.size;
         });
     }
     else if (sortMode == 3) // type
     {
-        QMimeDatabase mimeDb;
-
         QCollator collator;
         std::sort(currentFileDetails.folderFileInfoList.begin(),
                   currentFileDetails.folderFileInfoList.end(),
-                  [&mimeDb, &collator, this](const QFileInfo &file1, const QFileInfo &file2)
+                  [&collator, this](const CompatibleFile &file1, const CompatibleFile &file2)
         {
-            QMimeType mime1 = mimeDb.mimeTypeForFile(file1);
-            QMimeType mime2 = mimeDb.mimeTypeForFile(file2);
-
             if (sortDescending)
-                return collator.compare(mime1.name(), mime2.name()) > 0;
+                return collator.compare(file1.mimeType, file2.mimeType) > 0;
             else
-                return collator.compare(mime1.name(), mime2.name()) < 0;
+                return collator.compare(file1.mimeType, file2.mimeType) < 0;
         });
     }
     else if (sortMode == 4) // Random
@@ -334,7 +352,7 @@ void QVImageCore::updateFolderInfo()
     }
 
     // Set current file index variable
-    currentFileDetails.loadedIndexInFolder = currentFileDetails.folderFileInfoList.indexOf(currentFileDetails.fileInfo);
+    currentFileDetails.updateLoadedIndexInFolder();
 }
 
 void QVImageCore::requestCaching()
@@ -372,7 +390,7 @@ void QVImageCore::requestCaching()
         if (index > currentFileDetails.folderFileInfoList.length()-1 || index < 0 || currentFileDetails.folderFileInfoList.isEmpty())
             continue;
 
-        QString filePath = currentFileDetails.folderFileInfoList[index].absoluteFilePath();
+        QString filePath = currentFileDetails.folderFileInfoList[index].absoluteFilePath;
         filesToPreload.append(filePath);
 
         requestCachingFile(filePath);
@@ -547,6 +565,29 @@ void QVImageCore::settingsUpdated()
     //sort ascending
     sortDescending = settingsManager.getBoolean("sortdescending");
 
-    //update folder info to re-sort
+    //show hidden files
+    showHiddenFiles = settingsManager.getBoolean("showhiddenfiles");
+
+    //allow mime content detection
+    allowMimeContentDetection = settingsManager.getBoolean("allowmimecontentdetection");
+
+    //update folder info to reflect new settings (e.g. sort order)
     updateFolderInfo();
+}
+
+void QVImageCore::FileDetails::updateLoadedIndexInFolder()
+{
+    const QString targetPath = fileInfo.absoluteFilePath();
+    for (int i = 0; i < folderFileInfoList.length(); i++)
+    {
+        // Compare absoluteFilePath first because it's way faster, but double-check with
+        // QFileInfo::operator== because it respects file system case sensitivity rules
+        if (folderFileInfoList[i].absoluteFilePath.compare(targetPath, Qt::CaseInsensitive) == 0 &&
+            QFileInfo(folderFileInfoList[i].absoluteFilePath) == fileInfo)
+        {
+            loadedIndexInFolder = i;
+            return;
+        }
+    }
+    loadedIndexInFolder = -1;
 }
