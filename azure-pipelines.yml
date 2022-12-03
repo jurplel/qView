@@ -12,7 +12,7 @@ variables:
   defines: 'NIGHTLY=$(Build.BuildNumber)'
   qtVersion: '5.15.2'
 
-name: '$(Date:yyyy-MM-dd).$(Rev:r)'
+name: 'JDP.$(Date:yyyy-MM-dd).$(Rev:r)'
 jobs:
 - job: Build
 
