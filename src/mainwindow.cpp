@@ -78,18 +78,18 @@ MainWindow::MainWindow(QWidget *parent) :
 
     contextMenu = new QMenu(this);
 
-    contextMenu->addAction(actionManager.cloneAction("open"));
-    contextMenu->addAction(actionManager.cloneAction("openurl"));
+    actionManager.addCloneOfAction(contextMenu, "open");
+    actionManager.addCloneOfAction(contextMenu, "openurl");
     contextMenu->addMenu(actionManager.buildRecentsMenu(true, contextMenu));
     contextMenu->addMenu(actionManager.buildOpenWithMenu(contextMenu));
-    contextMenu->addAction(actionManager.cloneAction("opencontainingfolder"));
-    contextMenu->addAction(actionManager.cloneAction("showfileinfo"));
+    actionManager.addCloneOfAction(contextMenu, "opencontainingfolder");
+    actionManager.addCloneOfAction(contextMenu, "showfileinfo");
     contextMenu->addSeparator();
-    contextMenu->addAction(actionManager.cloneAction("rename"));
-    contextMenu->addAction(actionManager.cloneAction("delete"));
+    actionManager.addCloneOfAction(contextMenu, "rename");
+    actionManager.addCloneOfAction(contextMenu, "delete");
     contextMenu->addSeparator();
-    contextMenu->addAction(actionManager.cloneAction("nextfile"));
-    contextMenu->addAction(actionManager.cloneAction("previousfile"));
+    actionManager.addCloneOfAction(contextMenu, "nextfile");
+    actionManager.addCloneOfAction(contextMenu, "previousfile");
     contextMenu->addSeparator();
     contextMenu->addMenu(actionManager.buildViewMenu(true, contextMenu));
     contextMenu->addMenu(actionManager.buildToolsMenu(true, contextMenu));
@@ -117,7 +117,7 @@ MainWindow::MainWindow(QWidget *parent) :
     const auto &actionKeys = actionManager.getActionLibrary().keys();
     for (const QString &key : actionKeys)
     {
-        virtualMenu->addAction(actionManager.cloneAction(key));
+        actionManager.addCloneOfAction(virtualMenu, key);
     }
     addActions(virtualMenu->actions());
     connect(virtualMenu, &QMenu::triggered, this, [this](QAction *triggeredAction){
