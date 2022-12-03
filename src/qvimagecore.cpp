@@ -203,6 +203,8 @@ void QVImageCore::loadPixmap(const ReadData &readData, bool fromCache)
     else if (auto device = loadedMovie.device())
         device->close();
 
+    currentFileDetails.timeSinceLoaded.start();
+
     emit fileChanged();
 
     requestCaching();
@@ -221,7 +223,8 @@ void QVImageCore::closeImage()
         false,
         false,
         QSize(),
-        QSize()
+        QSize(),
+        QElapsedTimer()
     };
 
     emit fileChanged();
