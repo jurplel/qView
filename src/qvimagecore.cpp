@@ -25,6 +25,7 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     sortDescending = false;
     showHiddenFiles = false;
     allowMimeContentDetection = false;
+    colorSpaceConversion = 0;
 
     randomSortSeed = 0;
 
@@ -123,22 +124,37 @@ QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, bool forCac
 
     imageReader.setFileName(fileName);
 
-    QPixmap readPixmap;
+    QImage readImage;
     if (imageReader.format() == "svg" || imageReader.format() == "svgz")
     {
         // Render vectors into a high resolution
         QIcon icon;
         icon.addFile(fileName);
-        readPixmap = icon.pixmap(largestDimension);
+        readImage = icon.pixmap(largestDimension).toImage();
         // If this fails, try reading the normal way so that a proper error message is given
-        if (readPixmap.isNull())
-            readPixmap = QPixmap::fromImageReader(&imageReader);
+        if (readImage.isNull())
+            readImage = imageReader.read();
     }
     else
     {
-        readPixmap = QPixmap::fromImageReader(&imageReader);
+        readImage = imageReader.read();
     }
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+    const QColorSpace defaultImageColorSpace = QColorSpace::SRgb;
+    if (!readImage.colorSpace().isValid())
+        readImage.setColorSpace(defaultImageColorSpace);
+
+    const QColorSpace targetColorSpace =
+        colorSpaceConversion == 1 ? QColorSpace::SRgb :
+        colorSpaceConversion == 2 ? QColorSpace::DisplayP3 :
+        QColorSpace();
+
+    if (targetColorSpace.isValid() && readImage.colorSpace() != targetColorSpace)
+        readImage.convertToColorSpace(targetColorSpace);
+#endif
+
+    QPixmap readPixmap = QPixmap::fromImage(readImage);
 
     ReadData readData = {
         readPixmap,
@@ -576,6 +592,23 @@ void QVImageCore::settingsUpdated()
 
     //update folder info to reflect new settings (e.g. sort order)
     updateFolderInfo();
+
+    bool changedImagePreprocessing = false;
+
+    //colorspaceconversion
+    if (colorSpaceConversion != settingsManager.getInteger("colorspaceconversion"))
+    {
+        colorSpaceConversion = settingsManager.getInteger("colorspaceconversion");
+        changedImagePreprocessing = true;
+    }
+
+    if (changedImagePreprocessing)
+    {
+        QPixmapCache::clear();
+
+        if (currentFileDetails.isPixmapLoaded)
+            loadFile(currentFileDetails.fileInfo.absoluteFilePath());
+    }
 }
 
 void QVImageCore::FileDetails::updateLoadedIndexInFolder()
