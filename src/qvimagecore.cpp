@@ -201,7 +201,7 @@ void QVImageCore::loadPixmap(const ReadData &readData, bool fromCache)
 
     emit fileChanged();
 
-    QtConcurrent::run(&QVImageCore::requestCaching, this);
+    requestCaching();
 }
 
 void QVImageCore::closeImage()
