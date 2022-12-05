@@ -2,7 +2,7 @@
 #include <QDebug>
 #include <QtMath>
 
-ScrollHelper::ScrollHelper(QAbstractScrollArea *parent, GetScrollParametersCallback getParametersCallback) : QObject(parent)
+ScrollHelper::ScrollHelper(QAbstractScrollArea *parent, GetParametersCallback getParametersCallback) : QObject(parent)
 {
     hScrollBar = parent->horizontalScrollBar();
     vScrollBar = parent->verticalScrollBar();
@@ -17,18 +17,15 @@ ScrollHelper::ScrollHelper(QAbstractScrollArea *parent, GetScrollParametersCallb
 
 void ScrollHelper::move(QPointF delta)
 {
-    QSize scaledContentSize;
-    QRect usableViewportRect;
-    bool shouldConstrain;
-    bool shouldCenter;
-    getParametersCallback(scaledContentSize, usableViewportRect, shouldConstrain, shouldCenter);
+    Parameters p;
+    getParametersCallback(p);
     int hMin, hMax, vMin, vMax;
-    calculateScrollRange(scaledContentSize.width(), usableViewportRect.width(), -usableViewportRect.left(), shouldCenter, hMin, hMax);
-    calculateScrollRange(scaledContentSize.height(), usableViewportRect.height(), -usableViewportRect.top(), shouldCenter, vMin, vMax);
+    calculateScrollRange(p.ScaledContentSize.width(), p.UsableViewportRect.width(), -p.UsableViewportRect.left() + (p.IsMirrored ? -p.ScaledContentSize.width() : 0), p.ShouldCenter, hMin, hMax);
+    calculateScrollRange(p.ScaledContentSize.height(), p.UsableViewportRect.height(), -p.UsableViewportRect.top() + (p.IsFlipped ? -p.ScaledContentSize.height() : 0), p.ShouldCenter, vMin, vMax);
     QPointF scrollLocation = QPointF(hScrollBar->value(), vScrollBar->value()) + lastMoveRoundingError;
     qreal scrollDeltaX = hScrollBar->isRightToLeft() ? -delta.x() : delta.x();
     qreal scrollDeltaY = delta.y();
-    if (shouldConstrain)
+    if (p.ShouldConstrain)
     {
         scrollDeltaX = calculateScrollDelta(scrollLocation.x(), hMin, hMax, scrollDeltaX);
         scrollDeltaY = calculateScrollDelta(scrollLocation.y(), vMin, vMax, scrollDeltaY);
@@ -38,12 +35,12 @@ void ScrollHelper::move(QPointF delta)
     int scrollValueY = qRound(scrollLocation.y());
     lastMoveRoundingError = QPointF(scrollLocation.x() - scrollValueX, scrollLocation.y() - scrollValueY);
     int overscrollDistanceX =
-        shouldConstrain && scrollValueX < hMin ? scrollValueX - hMin :
-        shouldConstrain && scrollValueX > hMax ? scrollValueX - hMax :
+        p.ShouldConstrain && scrollValueX < hMin ? scrollValueX - hMin :
+        p.ShouldConstrain && scrollValueX > hMax ? scrollValueX - hMax :
         0;
     int overscrollDistanceY =
-        shouldConstrain && scrollValueY < vMin ? scrollValueY - vMin :
-        shouldConstrain && scrollValueY > vMax ? scrollValueY - vMax :
+        p.ShouldConstrain && scrollValueY < vMin ? scrollValueY - vMin :
+        p.ShouldConstrain && scrollValueY > vMax ? scrollValueY - vMax :
         0;
     overscrollDistance = QPoint(overscrollDistanceX, overscrollDistanceY);
     hScrollBar->setValue(scrollValueX);
