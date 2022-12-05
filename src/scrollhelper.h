@@ -6,13 +6,23 @@
 #include <QScrollBar>
 #include <QTimer>
 
-typedef std::function<void(QSize &, QRect &, bool &, bool &)> GetScrollParametersCallback;
-
 class ScrollHelper : public QObject
 {
     Q_OBJECT
 public:
-    explicit ScrollHelper(QAbstractScrollArea *parent, GetScrollParametersCallback getParametersCallback);
+    struct Parameters
+    {
+        QSize ScaledContentSize;
+        QRect UsableViewportRect;
+        bool IsMirrored;
+        bool IsFlipped;
+        bool ShouldConstrain;
+        bool ShouldCenter;
+    };
+
+    typedef std::function<void(Parameters &)> GetParametersCallback;
+
+    explicit ScrollHelper(QAbstractScrollArea *parent, GetParametersCallback getParametersCallback);
 
     void move(QPointF delta);
 
@@ -31,7 +41,7 @@ private:
 
     QScrollBar *hScrollBar;
     QScrollBar *vScrollBar;
-    GetScrollParametersCallback getParametersCallback;
+    GetParametersCallback getParametersCallback;
     QPointF lastMoveRoundingError {};
     QPoint overscrollDistance {};
 

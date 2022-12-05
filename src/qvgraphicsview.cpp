@@ -52,12 +52,14 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     zoomBasisScaleFactor = 1.0;
 
     scrollHelper = new ScrollHelper(this,
-        [this](QSize &scaledContentSize, QRect &usableViewportRect, bool &shouldConstrain, bool &shouldCenter)
+        [this](ScrollHelper::Parameters &p)
         {
-            scaledContentSize = getScaledContentSize().toSize();
-            usableViewportRect = getUsableViewportRect();
-            shouldConstrain = isConstrainedPositioningEnabled;
-            shouldCenter = isConstrainedSmallCenteringEnabled;
+            p.ScaledContentSize = getScaledContentSize().toSize();
+            p.UsableViewportRect = getUsableViewportRect();
+            p.IsMirrored = transform().m11() < 0;
+            p.IsFlipped = transform().m22() < 0;
+            p.ShouldConstrain = isConstrainedPositioningEnabled;
+            p.ShouldCenter = isConstrainedSmallCenteringEnabled;
         });
 
     connect(&imageCore, &QVImageCore::animatedFrameChanged, this, &QVGraphicsView::animatedFrameChanged);
