@@ -20,8 +20,8 @@ void ScrollHelper::move(QPointF delta)
     Parameters p;
     getParametersCallback(p);
     int hMin, hMax, vMin, vMax;
-    calculateScrollRange(p.ScaledContentSize.width(), p.UsableViewportRect.width(), -p.UsableViewportRect.left() + (p.IsMirrored ? -p.ScaledContentSize.width() : 0), p.ShouldCenter, hMin, hMax);
-    calculateScrollRange(p.ScaledContentSize.height(), p.UsableViewportRect.height(), -p.UsableViewportRect.top() + (p.IsFlipped ? -p.ScaledContentSize.height() : 0), p.ShouldCenter, vMin, vMax);
+    calculateScrollRange(p.ContentRect.width(), p.UsableViewportRect.width(), p.ContentRect.left() - p.UsableViewportRect.left(), p.ShouldCenter, hMin, hMax);
+    calculateScrollRange(p.ContentRect.height(), p.UsableViewportRect.height(), p.ContentRect.top() - p.UsableViewportRect.top(), p.ShouldCenter, vMin, vMax);
     QPointF scrollLocation = QPointF(hScrollBar->value(), vScrollBar->value()) + lastMoveRoundingError;
     qreal scrollDeltaX = hScrollBar->isRightToLeft() ? -delta.x() : delta.x();
     qreal scrollDeltaY = delta.y();

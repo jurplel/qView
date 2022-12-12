@@ -45,6 +45,8 @@ public:
 
     void zoom(qreal scaleFactor, const QPoint &pos = QPoint(-1, -1));
 
+    void setZoomLevel(qreal absoluteScaleFactor);
+
     void scaleExpensively();
     void makeUnscaled();
 
@@ -70,8 +72,6 @@ signals:
 
     void fileChanged();
 
-    void updatedLoadedPixmapItem();
-
 protected:
     void wheelEvent(QWheelEvent *event) override;
 
@@ -93,25 +93,20 @@ protected:
 
     bool event(QEvent *event) override;
 
-    void fitInViewMarginless(const QRectF &rect);
-    void fitInViewMarginless(const QGraphicsItem *item);
-
     void centerOn(const QPointF &pos);
 
     void centerOn(qreal x, qreal y);
 
     void centerOn(const QGraphicsItem *item);
 
-    QSizeF getScaledContentSize() const;
-
     QRect getUsableViewportRect() const;
+
+    QTransform getTransformWithNoScaling();
 
 private slots:
     void animatedFrameChanged(QRect rect);
 
     void postLoad();
-
-    void updateLoadedPixmapItem();
 
     void error(int errorNum, const QString &errorString, const QString &fileName);
 
@@ -135,19 +130,13 @@ private:
     const int MARGIN = -2;
 
     qreal currentScale;
-    QSize scaledSize;
-    bool isOriginalSize;
     qreal maxScalingTwoSize;
     QPoint lastZoomEventPos;
     QPointF lastZoomRoundingError;
 
-    QTransform absoluteTransform;
-    QTransform zoomBasis;
-    qreal zoomBasisScaleFactor;
-
     QVImageCore imageCore;
 
-    QTimer *expensiveScaleTimerNew;
+    QTimer *expensiveScaleTimer;
     QTimer *constrainBoundsTimer;
     QPointF centerPoint;
 

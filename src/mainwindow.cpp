@@ -53,7 +53,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Connect graphicsview signals
     connect(graphicsView, &QVGraphicsView::fileChanged, this, &MainWindow::fileChanged);
-    connect(graphicsView, &QVGraphicsView::updatedLoadedPixmapItem, this, &MainWindow::setWindowSize);
     connect(graphicsView, &QVGraphicsView::cancelSlideshow, this, &MainWindow::cancelSlideshow);
 
     // Initialize escape shortcut
@@ -314,6 +313,7 @@ void MainWindow::fileChanged()
 
     refreshProperties();
     buildWindowTitle();
+    setWindowSize();
 }
 
 void MainWindow::disableActions()
