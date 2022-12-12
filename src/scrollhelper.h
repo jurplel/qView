@@ -12,10 +12,8 @@ class ScrollHelper : public QObject
 public:
     struct Parameters
     {
-        QSize ScaledContentSize;
+        QRect ContentRect;
         QRect UsableViewportRect;
-        bool IsMirrored;
-        bool IsFlipped;
         bool ShouldConstrain;
         bool ShouldCenter;
     };

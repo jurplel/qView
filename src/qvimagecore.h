@@ -67,10 +67,6 @@ public:
     void setPaused(bool desiredState);
     void setSpeed(int desiredSpeed);
 
-    void rotateImage(int rotation);
-    QImage matchCurrentRotation(const QImage &imageToRotate);
-    QPixmap matchCurrentRotation(const QPixmap &pixmapToRotate);
-
     QPixmap scaleExpensively(const int desiredWidth, const int desiredHeight);
     QPixmap scaleExpensively(const QSizeF desiredSize);
 
@@ -78,12 +74,9 @@ public:
     const QPixmap& getLoadedPixmap() const {return loadedPixmap; }
     const QMovie& getLoadedMovie() const {return loadedMovie; }
     const FileDetails& getCurrentFileDetails() const {return currentFileDetails; }
-    int getCurrentRotation() const {return currentRotation; }
 
 signals:
     void animatedFrameChanged(QRect rect);
-
-    void updateLoadedPixmapItem();
 
     void fileChanged();
 
@@ -94,7 +87,6 @@ private:
     QMovie loadedMovie;
 
     FileDetails currentFileDetails;
-    int currentRotation;
 
     QFutureWatcher<ReadData> loadFutureWatcher;
 
