@@ -312,8 +312,8 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
     scale(scaleFactor, scaleFactor);
     scrollHelper->cancelAnimation();
 
-    // If we have a point to zoom towards, the mouse is on top of the viewport, and cursor zooming is enabled
-    if (pos != QPoint(-1, -1) && underMouse() && isCursorZoomEnabled)
+    // If we have a point to zoom towards and cursor zooming is enabled
+    if (pos != QPoint(-1, -1) && isCursorZoomEnabled)
     {
         const QPointF p1mouse = mapFromScene(scenePos);
         const QPointF move = p1mouse - pos;
