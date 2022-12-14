@@ -201,7 +201,11 @@ void QVImageCore::loadPixmap(const ReadData &readData, bool fromCache)
 
     emit fileChanged();
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    QtConcurrent::run(this, &QVImageCore::requestCaching);
+#else
     QtConcurrent::run(&QVImageCore::requestCaching, this);
+#endif
 }
 
 void QVImageCore::closeImage()
