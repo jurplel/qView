@@ -70,6 +70,11 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     constrainBoundsTimer->setInterval(500);
     connect(constrainBoundsTimer, &QTimer::timeout, this, [this]{scrollHelper->constrain();});
 
+    emitZoomLevelChangedTimer = new QTimer(this);
+    emitZoomLevelChangedTimer->setSingleShot(true);
+    emitZoomLevelChangedTimer->setInterval(50);
+    connect(emitZoomLevelChangedTimer, &QTimer::timeout, this, [this]{emit zoomLevelChanged();});
+
     loadedPixmapItem = new QGraphicsPixmapItem();
     scene->addItem(loadedPixmapItem);
 
@@ -326,6 +331,8 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
     {
         expensiveScaleTimer->start();
     }
+
+    emitZoomLevelChangedTimer->start();
 }
 
 void QVGraphicsView::setZoomLevel(qreal absoluteScaleFactor)

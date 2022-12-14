@@ -66,11 +66,14 @@ public:
     const QVImageCore::FileDetails& getCurrentFileDetails() const { return imageCore.getCurrentFileDetails(); }
     const QPixmap& getLoadedPixmap() const { return imageCore.getLoadedPixmap(); }
     const QMovie& getLoadedMovie() const { return imageCore.getLoadedMovie(); }
+    qreal getCurrentScale() const { return currentScale; }
 
 signals:
     void cancelSlideshow();
 
     void fileChanged();
+
+    void zoomLevelChanged();
 
 protected:
     void wheelEvent(QWheelEvent *event) override;
@@ -139,6 +142,7 @@ private:
 
     QTimer *expensiveScaleTimer;
     QTimer *constrainBoundsTimer;
+    QTimer *emitZoomLevelChangedTimer;
     QPointF centerPoint;
 
     ScrollHelper *scrollHelper;
