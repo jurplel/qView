@@ -2,7 +2,7 @@ name: Build qView
 on:
   push:
     branches: [master]
-  pull-request:
+  pull_request:
   workflow_dispatch:
     inputs:
       isNightly:
