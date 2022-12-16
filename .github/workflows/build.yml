@@ -6,71 +6,66 @@ on:
   workflow_dispatch:
     inputs:
       isNightly:
-        description: 'Is this a nightly build?'
-        required: true
-        default: true
         type: boolean
+        description: 'Is this a nightly build?'
+        required: false
+        default: true
 jobs:
   build:
     strategy:
       matrix:
         include:
-          linux:
-            runner: 'ubuntu-18.04'
+          - runner: 'ubuntu-18.04'
             qtVersion: '6.2.2'
-          macos:
-            runner: 'macOS-11'
+          - runner: 'macOS-11'
             qtVersion: '6.2.2'
-          macosx:
-            runner: 'macOS-10.15'
+          - runner: 'macOS-10.15'
             qtVersion: '5.12.12'
             skipHardPlugins: 'true'
-          win64:
-            runner: 'windows-2019'
+          - runner: 'windows-2019'
             qtVersion: '6.2.2'
             qtArch: 'win64_msvc2019_64'
-          win32:
-            runner: 'windows-2019'
+          - runner: 'windows-2019'
             qtVersion: '6.2.2'
             qtArch: 'win32_msvc2019'
     runs-on: ${{ matrix.runner }}
-  steps:
-    - name: Set environment variables
-      shell: bash
-      run: |
-        echo "arch=${{ matrix.qtArch }}" >> $GITHUB_ENV
-        if [ ${{ parameters.useNightly }} = True ]; then
-          buildNum=$(date --iso-8601).${{ GITHUB_RUN_ATTEMPT }}
-          echo "nightlyDefines='NIGHTLY=$buildNum'" >> $GITHUB_ENV
-          echo "nightlyString=-nightly" >> $GITHUB_ENV
-          echo "buildNumString=$buildNum" >> $GITHUB_ENV
-        fi
+    steps:
+      - name: Set environment variables
+        shell: bash
+        run: |
+          echo "arch=${{ matrix.qtArch }}" >> $GITHUB_ENV
+          if [ ${{ inputs.isNightly }} = true ]; then
+            buildNum=$(date --iso-8601).${{ GITHUB_RUN_ATTEMPT }}
+            echo "nightlyDefines='NIGHTLY=$buildNum'" >> $GITHUB_ENV
+            echo "nightlyString=-nightly" >> $GITHUB_ENV
+            echo "buildNumString=$buildNum" >> $GITHUB_ENV
+          fi
 
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Install Qt
-      uses: jurplel/install-qt-action@v2
-      with:
-        version: ${{ matrix.qtVersion }}
-        arch: ${{ matrix.qtArch }}
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2
+        with:
+          version: ${{ matrix.qtVersion }}
+          arch: ${{ matrix.qtArch }}
 
-    - name: Build qView
-      shell: pwsh
-      run: ci/scripts/build.ps1
+      - name: Build qView
+        shell: pwsh
+        run: ci/scripts/build.ps1
 
-    - name: Deploy qView
-      shell: pwsh
-      run: |
-        if ($IsWindows) {
-          Invoke-Expression "& 'ci/scripts/windeployqt.ps1' ${{ env.buildNumString }}"
-        } elseif ($IsMacOS) {
-          bash ci/scripts/macdeploy.sh ${{ env.buildNumString }}
-        } else {
-          bash ci/scripts/linuxdeployqt.sh ${{ env.buildNumString }}
-        }
+      - name: Deploy qView
+        shell: pwsh
+        run: |
+          if ($IsWindows) {
+            Invoke-Expression "& 'ci/scripts/windeployqt.ps1' ${{ env.buildNumString }}"
+          } elseif ($IsMacOS) {
+            bash ci/scripts/macdeploy.sh ${{ env.buildNumString }}
+          } else {
+            bash ci/scripts/linuxdeployqt.sh ${{ env.buildNumString }}
+          }
 
-    - name: 'Upload Artifact'
-      uses: actions/upload-artifact@v2
-      with:
-        name: qView${{ env.nightlyString }}-${{ runner.os }}${{ env.buildNumString }}
-        path: bin
+      - name: 'Upload Artifact'
+        uses: actions/upload-artifact@v2
+        with:
+          name: qView${{ env.nightlyString }}-${{ runner.os }}${{ env.buildNumString }}
+          path: bin
