@@ -1,0 +1,71 @@
+name: Build qView
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      isRelease:
+        type: boolean
+        description: 'Is this a release build?'
+        required: false
+        default: false
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - runner: 'ubuntu-18.04'
+            qtVersion: '5.15.2'
+          - runner: 'macOS-11'
+            qtVersion: '6.2.2'
+          - runner: 'macOS-10.15'
+            qtVersion: '5.12.12'
+            skipHardPlugins: 'true'
+          - runner: 'windows-2019'
+            qtVersion: '6.2.2'
+            qtArch: 'win64_msvc2019_64'
+          - runner: 'windows-2019'
+            qtVersion: '5.15.2'
+            qtArch: 'win32_msvc2019'
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: Set environment variables
+        shell: bash
+        run: |
+          echo "arch=${{ matrix.qtArch }}" >> $GITHUB_ENV
+          if [ "${{ inputs.isRelease }}" != "true" ]; then
+            buildNum=$(date '+%Y-%m-%d').$GITHUB_RUN_ATTEMPT
+            echo "nightlyDefines=NIGHTLY=$buildNum" >> $GITHUB_ENV
+            echo "nightlyString=-nightly" >> $GITHUB_ENV
+            echo "buildNumString=$buildNum" >> $GITHUB_ENV
+          fi
+
+      - uses: actions/checkout@v3
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: ${{ matrix.qtVersion }}
+          arch: ${{ matrix.qtArch }}
+          cache: true
+
+      - name: Build qView
+        shell: pwsh
+        run: ci/scripts/build.ps1
+
+      - name: Deploy qView
+        shell: pwsh
+        run: |
+          if ($IsWindows) {
+            Invoke-Expression "& 'ci/scripts/windeployqt.ps1' ${{ env.buildNumString }}"
+          } elseif ($IsMacOS) {
+            bash ci/scripts/macdeploy.sh ${{ env.buildNumString }}
+          } else {
+            bash ci/scripts/linuxdeployqt.sh ${{ env.buildNumString }}
+          }
+
+      - name: 'Upload Artifact'
+        uses: actions/upload-artifact@v3
+        with:
+          name: qView${{ env.nightlyString }}-${{ runner.os }}-${{ env.buildNumString }}
+          path: bin
