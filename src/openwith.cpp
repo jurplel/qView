@@ -71,8 +71,6 @@ QList<OpenWith::OpenWithItem> OpenWith::getOpenWithItemsFromDesktopFiles(const Q
     process.waitForFinished();
     QString defaultApplication = process.readAllStandardOutput().trimmed();
 
-    QList<QMap<QString, QString>> programList;
-
     const QStringList &applicationLocations = QStandardPaths::standardLocations(QStandardPaths::ApplicationsLocation);
     for (const auto &location : applicationLocations)
     {
@@ -250,6 +248,7 @@ QVOpenWithDialog::QVOpenWithDialog(QWidget *parent) :
 void QVOpenWithDialog::populateTreeView()
 {
     auto listOfAllApps = OpenWith::getOpenWithItems("");
+
 
     for (const auto &category : categories)
     {
