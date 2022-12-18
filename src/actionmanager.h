@@ -76,7 +76,7 @@ public:
 
     void settingsUpdated();
 
-    QAction *cloneAction(const QString &key);
+    QAction *addCloneOfAction(QWidget *parent, const QString &key);
 
     QAction *getAction(const QString &key) const;
 

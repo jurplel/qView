@@ -33,8 +33,6 @@ ActionManager::ActionManager(QObject *parent) : QObject(parent)
 ActionManager::~ActionManager()
 {
     qDeleteAll(actionLibrary);
-    qDeleteAll(actionCloneLibrary);
-    qDeleteAll(menuCloneLibrary);
 }
 
 void ActionManager::settingsUpdated()
@@ -50,11 +48,11 @@ void ActionManager::settingsUpdated()
         clearRecentsList();
 }
 
-QAction *ActionManager::cloneAction(const QString &key)
+QAction *ActionManager::addCloneOfAction(QWidget *parent, const QString &key)
 {
     if (auto action = getAction(key))
     {
-        auto newAction = new QAction();
+        auto newAction = new QAction(parent);
         newAction->setIcon(action->icon());
         newAction->setData(action->data());
         newAction->setText(action->text());
@@ -63,6 +61,7 @@ QAction *ActionManager::cloneAction(const QString &key)
         newAction->setShortcuts(action->shortcuts());
         newAction->setVisible(action->isVisible());
         actionCloneLibrary.insert(key, newAction);
+        parent->addAction(newAction);
         return newAction;
     }
 
@@ -141,16 +140,16 @@ void ActionManager::untrackClonedActions(const QList<QAction*> &actions)
 {
     for (const auto &action : actions)
     {
-        QString key = action->data().toString();
         if (auto menu = action->menu())
         {
-            if (menuCloneLibrary.remove(key, menu))
-                menu->deleteLater();
+            QString key = action->data().toString();
+            if (key.length() != 0)
+                menuCloneLibrary.remove(key, menu);
         }
         else
         {
-            if (actionCloneLibrary.remove(key, action))
-                action->deleteLater();
+            QString key = action->data().toStringList().first();
+            actionCloneLibrary.remove(key, action);
         }
     }
 }
@@ -183,26 +182,26 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     auto *fileMenu = new QMenu(tr("&File"), menuBar);
 
 #ifdef Q_OS_MACOS
-    fileMenu->addAction(cloneAction("newwindow"));
+    addCloneOfAction(fileMenu, "newwindow");
 #endif
-    fileMenu->addAction(cloneAction("open"));
-    fileMenu->addAction(cloneAction("openurl"));
-    fileMenu->addMenu(buildRecentsMenu(true, menuBar));
+    addCloneOfAction(fileMenu, "open");
+    addCloneOfAction(fileMenu, "openurl");
+    fileMenu->addMenu(buildRecentsMenu(true, fileMenu));
     fileMenu->addSeparator();
 #ifdef Q_OS_MACOS
     fileMenu->addSeparator();
-    fileMenu->addAction(cloneAction("closewindow"));
-    fileMenu->addAction(cloneAction("closeallwindows"));
+    addCloneOfAction(fileMenu, "closewindow");
+    addCloneOfAction(fileMenu, "closeallwindows");
 #endif
 #ifdef COCOA_LOADED
     QVCocoaFunctions::setAlternates(fileMenu, fileMenu->actions().length()-1, fileMenu->actions().length()-2);
 #endif
     fileMenu->addSeparator();
-    fileMenu->addMenu(buildOpenWithMenu(menuBar));
-    fileMenu->addAction(cloneAction("opencontainingfolder"));
-    fileMenu->addAction(cloneAction("showfileinfo"));
+    fileMenu->addMenu(buildOpenWithMenu(fileMenu));
+    addCloneOfAction(fileMenu, "opencontainingfolder");
+    addCloneOfAction(fileMenu, "showfileinfo");
     fileMenu->addSeparator();
-    fileMenu->addAction(cloneAction("quit"));
+    addCloneOfAction(fileMenu, "quit");
 
     menuBar->addMenu(fileMenu);
     // End of file menu
@@ -210,13 +209,13 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     // Beginning of edit menu
     auto *editMenu = new QMenu(tr("&Edit"), menuBar);
 
-    editMenu->addAction(cloneAction("undo"));
+    addCloneOfAction(editMenu, "undo");
     editMenu->addSeparator();
-    editMenu->addAction(cloneAction("copy"));
-    editMenu->addAction(cloneAction("paste"));
-    editMenu->addAction(cloneAction("rename"));
+    addCloneOfAction(editMenu, "copy");
+    addCloneOfAction(editMenu, "paste");
+    addCloneOfAction(editMenu, "rename");
     editMenu->addSeparator();
-    editMenu->addAction(cloneAction("delete"));
+    addCloneOfAction(editMenu, "delete");
 
     menuBar->addMenu(editMenu);
     // End of edit menu
@@ -228,10 +227,10 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     // Beginning of go menu
     auto *goMenu = new QMenu(tr("&Go"), menuBar);
 
-    goMenu->addAction(cloneAction("firstfile"));
-    goMenu->addAction(cloneAction("previousfile"));
-    goMenu->addAction(cloneAction("nextfile"));
-    goMenu->addAction(cloneAction("lastfile"));
+    addCloneOfAction(goMenu, "firstfile");
+    addCloneOfAction(goMenu, "previousfile");
+    addCloneOfAction(goMenu, "nextfile");
+    addCloneOfAction(goMenu, "lastfile");
 
     menuBar->addMenu(goMenu);
     // End of go menu
@@ -260,18 +259,18 @@ QMenu *ActionManager::buildViewMenu(bool addIcon, QWidget *parent)
     if (addIcon)
         viewMenu->setIcon(QIcon::fromTheme("zoom-fit-best"));
 
-    viewMenu->addAction(cloneAction("zoomin"));
-    viewMenu->addAction(cloneAction("zoomout"));
-    viewMenu->addAction(cloneAction("resetzoom"));
-    viewMenu->addAction(cloneAction("originalsize"));
+    addCloneOfAction(viewMenu, "zoomin");
+    addCloneOfAction(viewMenu, "zoomout");
+    addCloneOfAction(viewMenu, "resetzoom");
+    addCloneOfAction(viewMenu, "originalsize");
     viewMenu->addSeparator();
-    viewMenu->addAction(cloneAction("rotateright"));
-    viewMenu->addAction(cloneAction("rotateleft"));
+    addCloneOfAction(viewMenu, "rotateright");
+    addCloneOfAction(viewMenu, "rotateleft");
     viewMenu->addSeparator();
-    viewMenu->addAction(cloneAction("mirror"));
-    viewMenu->addAction(cloneAction("flip"));
+    addCloneOfAction(viewMenu, "mirror");
+    addCloneOfAction(viewMenu, "flip");
     viewMenu->addSeparator();
-    viewMenu->addAction(cloneAction("fullscreen"));
+    addCloneOfAction(viewMenu, "fullscreen");
 
     menuCloneLibrary.insert(viewMenu->menuAction()->data().toString(), viewMenu);
     return viewMenu;
@@ -284,16 +283,16 @@ QMenu *ActionManager::buildToolsMenu(bool addIcon, QWidget *parent)
     if (addIcon)
         toolsMenu->setIcon(QIcon::fromTheme("configure", QIcon::fromTheme("preferences-other")));
 
-    toolsMenu->addAction(cloneAction("saveframeas"));
-    toolsMenu->addAction(cloneAction("pause"));
-    toolsMenu->addAction(cloneAction("nextframe"));
+    addCloneOfAction(toolsMenu, "saveframeas");
+    addCloneOfAction(toolsMenu, "pause");
+    addCloneOfAction(toolsMenu, "nextframe");
     toolsMenu->addSeparator();
-    toolsMenu->addAction(cloneAction("decreasespeed"));
-    toolsMenu->addAction(cloneAction("resetspeed"));
-    toolsMenu->addAction(cloneAction("increasespeed"));
+    addCloneOfAction(toolsMenu, "decreasespeed");
+    addCloneOfAction(toolsMenu, "resetspeed");
+    addCloneOfAction(toolsMenu, "increasespeed");
     toolsMenu->addSeparator();
-    toolsMenu->addAction(cloneAction("slideshow"));
-    toolsMenu->addAction(cloneAction("options"));
+    addCloneOfAction(toolsMenu, "slideshow");
+    addCloneOfAction(toolsMenu, "options");
 
     menuCloneLibrary.insert(toolsMenu->menuAction()->data().toString(), toolsMenu);
     return toolsMenu;
@@ -306,8 +305,8 @@ QMenu *ActionManager::buildHelpMenu(bool addIcon, QWidget *parent)
     if (addIcon)
         helpMenu->setIcon(QIcon::fromTheme("help-about"));
 
-    helpMenu->addAction(cloneAction("about"));
-    helpMenu->addAction(cloneAction("welcome"));
+    addCloneOfAction(helpMenu, "about");
+    addCloneOfAction(helpMenu, "welcome");
 
     menuCloneLibrary.insert(helpMenu->menuAction()->data().toString(), helpMenu);
     return helpMenu;
@@ -325,7 +324,7 @@ QMenu *ActionManager::buildRecentsMenu(bool includeClearAction, QWidget *parent)
 
     for ( int i = 0; i < recentsListMaxLength; i++ )
     {
-        auto action = new QAction(tr("Empty"), this);
+        auto action = new QAction(tr("Empty"), recentsMenu);
         action->setVisible(false);
         action->setIconVisibleInMenu(true);
         action->setData("recent" + QString::number(i));
@@ -337,7 +336,7 @@ QMenu *ActionManager::buildRecentsMenu(bool includeClearAction, QWidget *parent)
     if (includeClearAction)
     {
         recentsMenu->addSeparator();
-        recentsMenu->addAction(cloneAction("clearrecents"));
+        addCloneOfAction(recentsMenu, "clearrecents");
     }
 
     menuCloneLibrary.insert(recentsMenu->menuAction()->data().toString(), recentsMenu);
@@ -473,7 +472,7 @@ QMenu *ActionManager::buildOpenWithMenu(QWidget *parent)
     for (int i = 0; i < openWithMaxLength; i++)
     {
 
-        auto action = new QAction(tr("Empty"), this);
+        auto action = new QAction(tr("Empty"), openWithMenu);
         action->setVisible(false);
         action->setIconVisibleInMenu(true);
         action->setData(QVariantList({"openwith" + QString::number(i), ""}));
@@ -500,7 +499,7 @@ QMenu *ActionManager::buildOpenWithMenu(QWidget *parent)
     }
 
     openWithMenu->addSeparator();
-    openWithMenu->addAction(cloneAction("openwithother"));
+    addCloneOfAction(openWithMenu, "openwithother");
 
     menuCloneLibrary.insert(openWithMenu->menuAction()->data().toString(), openWithMenu);
     return openWithMenu;
