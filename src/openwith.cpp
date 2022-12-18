@@ -79,7 +79,7 @@ QList<OpenWith::OpenWithItem> OpenWith::getOpenWithItemsFromDesktopFiles(const Q
         for(const auto &fileInfo : entryInfoList)
         {
             // Don't add qView to the open with menu!
-            if (fileInfo.fileName() == "qView.desktop")
+            if (fileInfo.fileName() == "qView.desktop" || fileInfo.fileName() == "com.interversehq.qView.desktop")
                 continue;
 
             if (!fileInfo.fileName().endsWith(".desktop"))
