@@ -37,6 +37,8 @@ private:
 
     static qreal calculateScrollDelta(qreal currentValue, int minValue, int maxValue, qreal proposedDelta);
 
+    static qreal smoothAnimation(qreal x);
+
     QScrollBar *hScrollBar;
     QScrollBar *vScrollBar;
     GetParametersCallback getParametersCallback;

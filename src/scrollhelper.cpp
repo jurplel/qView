@@ -85,8 +85,7 @@ void ScrollHelper::handleAnimatedScroll()
     }
     else
     {
-        const qreal percent = qPow(1.0 - ((qCos(elapsed / animatedScrollDuration * M_PI) + 1.0) / 2.0), 0.2);
-        QPoint intermediateDelta = animatedScrollTotalDelta * percent;
+        QPoint intermediateDelta = animatedScrollTotalDelta * smoothAnimation(elapsed / animatedScrollDuration);
         applyScrollDelta(intermediateDelta - animatedScrollAppliedDelta);
         animatedScrollTimer->start();
     }
@@ -126,4 +125,11 @@ qreal ScrollHelper::calculateScrollDelta(qreal currentValue, int minValue, int m
             (maxValue - currentValue) + ((currentValue + proposedDelta) - maxValue) * overflowScaleFactor;
     }
     return proposedDelta;
+}
+
+// Converts linear motion from [0,1] into something that looks more natural. Derived from the
+// formula for a circle, i.e. the graph of this is literally the top-left quarter of a circle.
+qreal ScrollHelper::smoothAnimation(qreal x)
+{
+    return qPow(1.0 - qPow(x - 1.0, 2.0), 0.5);
 }
