@@ -105,7 +105,7 @@ private:
     bool showHiddenFiles;
     bool allowMimeContentDetection;
 
-    QPair<QString, uint> lastDirInfo;
+    QPair<QString, qsizetype> lastDirInfo;
     unsigned randomSortSeed;
 
     QStringList lastFilesPreloaded;
