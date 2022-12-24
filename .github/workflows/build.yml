@@ -20,13 +20,16 @@ jobs:
             qtVersion: '6.2.2'
           - runner: 'macOS-10.15'
             qtVersion: '5.12.12'
+            osSuffix: '_legacy'
             skipHardPlugins: 'true'
           - runner: 'windows-2019'
             qtVersion: '6.2.2'
             qtArch: 'win64_msvc2019_64'
+            osSuffix: '_64'
           - runner: 'windows-2019'
             qtVersion: '5.15.2'
             qtArch: 'win32_msvc2019'
+            osSuffix: '_32'
     runs-on: ${{ matrix.runner }}
     steps:
       - name: Set environment variables
@@ -67,5 +70,5 @@ jobs:
       - name: 'Upload Artifact'
         uses: actions/upload-artifact@v3
         with:
-          name: qView${{ env.nightlyString }}-${{ runner.os }}-${{ env.buildNumString }}
+          name: qView${{ env.nightlyString }}-${{ runner.os }}${{ matrix.osSuffix }}-${{ env.buildNumString }}
           path: bin
