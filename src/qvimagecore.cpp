@@ -245,7 +245,7 @@ void QVImageCore::closeImage()
 }
 
 // All file logic, sorting, etc should be moved to a different class or file
-QList<QVImageCore::CompatibleFile> QVImageCore::getCompatibleFiles(const QString &dirPath)
+QList<QVImageCore::CompatibleFile> QVImageCore::getCompatibleFiles(const QString &dirPath) const
 {
     QList<CompatibleFile> fileList;
 
@@ -290,7 +290,7 @@ QList<QVImageCore::CompatibleFile> QVImageCore::getCompatibleFiles(const QString
     return fileList;
 }
 
-void QVImageCore::sortCompatibleFiles(QList<CompatibleFile> &fileList)
+void QVImageCore::sortCompatibleFiles(QList<CompatibleFile> &fileList) const
 {
     if (sortMode == 0) // Natural sorting
     {
@@ -350,7 +350,7 @@ void QVImageCore::sortCompatibleFiles(QList<CompatibleFile> &fileList)
     }
 }
 
-unsigned QVImageCore::getRandomSortSeed(const QString &dirPath, const int fileCount)
+unsigned QVImageCore::getRandomSortSeed(const QString &dirPath, const int fileCount) const
 {
     QString seed = QString::number(baseRandomSortSeed, 16) + dirPath + QString::number(fileCount, 16);
     QByteArray hash = QCryptographicHash::hash(seed.toUtf8(), QCryptographicHash::Md5);

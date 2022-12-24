@@ -55,9 +55,9 @@ public:
     ReadData readFile(const QString &fileName, bool forCache);
     void loadPixmap(const ReadData &readData, bool fromCache);
     void closeImage();
-    QList<CompatibleFile> getCompatibleFiles(const QString &dirPath);
-    void sortCompatibleFiles(QList<CompatibleFile> &fileList);
-    unsigned getRandomSortSeed(const QString &dirPath, const int fileCount);
+    QList<CompatibleFile> getCompatibleFiles(const QString &dirPath) const;
+    void sortCompatibleFiles(QList<CompatibleFile> &fileList) const;
+    unsigned getRandomSortSeed(const QString &dirPath, const int fileCount) const;
     void updateFolderInfo(QString targetFilePath = QString());
     void requestCaching();
     void requestCachingFile(const QString &filePath);
