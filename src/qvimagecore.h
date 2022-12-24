@@ -99,7 +99,6 @@ private:
     int preloadingMode;
     int sortMode;
     bool sortDescending;
-    bool showHiddenFiles;
     bool allowMimeContentDetection;
     int colorSpaceConversion;
 

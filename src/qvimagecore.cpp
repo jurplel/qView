@@ -23,7 +23,6 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     preloadingMode = 1;
     sortMode = 0;
     sortDescending = false;
-    showHiddenFiles = false;
     allowMimeContentDetection = false;
     colorSpaceConversion = 0;
 
@@ -265,11 +264,7 @@ QList<QVImageCore::CompatibleFile> QVImageCore::getCompatibleFiles(const QString
 
     QMimeDatabase::MatchMode mimeMatchMode = allowMimeContentDetection ? QMimeDatabase::MatchDefault : QMimeDatabase::MatchExtension;
 
-    QDir::Filters dirFilters = QDir::Files;
-    if (showHiddenFiles)
-        dirFilters |= QDir::Hidden;
-
-    const QFileInfoList currentFolder = QDir(dirPath).entryInfoList(dirFilters, QDir::Unsorted);
+    const QFileInfoList currentFolder = QDir(dirPath).entryInfoList(QDir::Files | QDir::Hidden, QDir::Unsorted);
     for (const QFileInfo &fileInfo : currentFolder)
     {
         bool matched = false;
@@ -556,9 +551,6 @@ void QVImageCore::settingsUpdated()
 
     //sort ascending
     sortDescending = settingsManager.getBoolean("sortdescending");
-
-    //show hidden files
-    showHiddenFiles = settingsManager.getBoolean("showhiddenfiles");
 
     //allow mime content detection
     allowMimeContentDetection = settingsManager.getBoolean("allowmimecontentdetection");
