@@ -274,7 +274,10 @@ void QVGraphicsView::loadFile(const QString &fileName)
 
 void QVGraphicsView::postLoad()
 {
-    loadedPixmapItem->setPixmap(getLoadedPixmap());
+    // Set the pixmap to the new image and reset the transform's scale to a known value
+    makeUnscaled();
+
+    // Fit and center the new image
     resetScale();
 
     qvApp->getActionManager().addFileToRecentsList(getCurrentFileDetails().fileInfo);
