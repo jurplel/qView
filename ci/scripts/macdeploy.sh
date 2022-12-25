@@ -12,9 +12,10 @@ cd bin
 macdeployqt qView.app
 if [ $1 != "" ]; then
     mv qView.app qView-nightly-$1\.app
-    macdeployqt *.app -dmg
+    macdeployqt *.app -codesign=- -dmg
 else
     brew install create-dmg
+    codesign --sign - --deep qView.app
     create-dmg --volname "qView $VERSION" --window-size 660 400 --icon-size 160 --icon "qView.app" 180 170 --hide-extension qView.app --app-drop-link 480 170 "qView-$VERSION.dmg" "qView.app"
 fi
 

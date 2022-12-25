@@ -23,7 +23,7 @@ jobs:
       macos:
         imageName: 'macOS-11'
         qtVersion: '6.2.2'
-      macosx:
+      macos_legacy:
         imageName: 'macOS-10.15'
         qtVersion: '5.12.12'
         skipHardPlugins: 'true'
