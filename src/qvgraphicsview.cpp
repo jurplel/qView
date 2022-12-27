@@ -518,7 +518,12 @@ void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
         return;
 
     if (shouldRetryFolderInfoUpdate)
-        imageCore.updateFolderInfo();
+    {
+        // If the user just deleted a file through qView, closeImage will have been called which empties
+        // currentFileDetails.fileInfo. In this case updateFolderInfo can't infer the directory from
+        // fileInfo like it normally does, so we'll explicity pass in the folder here.
+        imageCore.updateFolderInfo(QFileInfo(nextImageFilePath).path());
+    }
 
     loadFile(nextImageFilePath);
 }
