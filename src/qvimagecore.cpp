@@ -25,7 +25,7 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     sortDescending = false;
     allowMimeContentDetection = false;
 
-    baseRandomSortSeed = std::chrono::system_clock::now().time_since_epoch().count();
+    randomSortSeed = 0;
 
     currentRotation = 0;
 
@@ -290,73 +290,6 @@ QList<QVImageCore::CompatibleFile> QVImageCore::getCompatibleFiles(const QString
     return fileList;
 }
 
-void QVImageCore::sortCompatibleFiles(QList<CompatibleFile> &fileList) const
-{
-    if (sortMode == 0) // Natural sorting
-    {
-        QCollator collator;
-        collator.setNumericMode(true);
-        std::sort(fileList.begin(),
-                  fileList.end(),
-                  [&collator, this](const CompatibleFile &file1, const CompatibleFile &file2)
-        {
-            if (sortDescending)
-                return collator.compare(file1.fileName, file2.fileName) > 0;
-            else
-                return collator.compare(file1.fileName, file2.fileName) < 0;
-        });
-    }
-    else if (sortMode == 1) // last modified
-    {
-        std::sort(fileList.begin(),
-                  fileList.end(),
-                  [this](const CompatibleFile &file1, const CompatibleFile &file2)
-        {
-            if (sortDescending)
-                return file1.lastModified < file2.lastModified;
-            else
-                return file1.lastModified > file2.lastModified;
-        });
-    }
-    else if (sortMode == 2) // size
-    {
-        std::sort(fileList.begin(),
-                  fileList.end(),
-                  [this](const CompatibleFile &file1, const CompatibleFile &file2)
-        {
-            if (sortDescending)
-                return file1.size < file2.size;
-            else
-                return file1.size > file2.size;
-        });
-    }
-    else if (sortMode == 3) // type
-    {
-        QCollator collator;
-        std::sort(fileList.begin(),
-                  fileList.end(),
-                  [&collator, this](const CompatibleFile &file1, const CompatibleFile &file2)
-        {
-            if (sortDescending)
-                return collator.compare(file1.mimeType, file2.mimeType) > 0;
-            else
-                return collator.compare(file1.mimeType, file2.mimeType) < 0;
-        });
-    }
-    else if (sortMode == 4) // Random
-    {
-        unsigned randomSortSeed = getRandomSortSeed(QFileInfo(fileList.value(0).absoluteFilePath).path(), fileList.count());
-        std::shuffle(fileList.begin(), fileList.end(), std::default_random_engine(randomSortSeed));
-    }
-}
-
-unsigned QVImageCore::getRandomSortSeed(const QString &dirPath, const int fileCount) const
-{
-    QString seed = QString::number(baseRandomSortSeed, 16) + dirPath + QString::number(fileCount, 16);
-    QByteArray hash = QCryptographicHash::hash(seed.toUtf8(), QCryptographicHash::Md5);
-    return hash.toHex().left(8).toUInt(nullptr, 16);
-}
-
 void QVImageCore::updateFolderInfo(QString targetFilePath)
 {
     if (targetFilePath.isEmpty())
@@ -368,11 +301,74 @@ void QVImageCore::updateFolderInfo(QString targetFilePath)
             return;
     }
 
-    // Get file listing
     currentFileDetails.folderFileInfoList = getCompatibleFiles(QFileInfo(targetFilePath).path());
 
+    QPair<QString, qsizetype> dirInfo = {currentFileDetails.fileInfo.absoluteDir().path(),
+                                         currentFileDetails.folderFileInfoList.count()};
+    // If the current folder changed since the last image, assign a new seed for random sorting
+    if (lastDirInfo != dirInfo)
+    {
+        randomSortSeed = std::chrono::system_clock::now().time_since_epoch().count();
+    }
+    lastDirInfo = dirInfo;
+
     // Sorting
-    sortCompatibleFiles(currentFileDetails.folderFileInfoList);
+
+    if (sortMode == 0) // Natural sorting
+    {
+        QCollator collator;
+        collator.setNumericMode(true);
+        std::sort(currentFileDetails.folderFileInfoList.begin(),
+                  currentFileDetails.folderFileInfoList.end(),
+                  [&collator, this](const CompatibleFile &file1, const CompatibleFile &file2)
+        {
+            if (sortDescending)
+                return collator.compare(file1.fileName, file2.fileName) > 0;
+            else
+                return collator.compare(file1.fileName, file2.fileName) < 0;
+        });
+    }
+    else if (sortMode == 1) // last modified
+    {
+        std::sort(currentFileDetails.folderFileInfoList.begin(),
+                  currentFileDetails.folderFileInfoList.end(),
+                  [this](const CompatibleFile &file1, const CompatibleFile &file2)
+        {
+            if (sortDescending)
+                return file1.lastModified < file2.lastModified;
+            else
+                return file1.lastModified > file2.lastModified;
+        });
+    }
+    else if (sortMode == 2) // size
+    {
+        std::sort(currentFileDetails.folderFileInfoList.begin(),
+                  currentFileDetails.folderFileInfoList.end(),
+                  [this](const CompatibleFile &file1, const CompatibleFile &file2)
+        {
+            if (sortDescending)
+                return file1.size < file2.size;
+            else
+                return file1.size > file2.size;
+        });
+    }
+    else if (sortMode == 3) // type
+    {
+        QCollator collator;
+        std::sort(currentFileDetails.folderFileInfoList.begin(),
+                  currentFileDetails.folderFileInfoList.end(),
+                  [&collator, this](const CompatibleFile &file1, const CompatibleFile &file2)
+        {
+            if (sortDescending)
+                return collator.compare(file1.mimeType, file2.mimeType) > 0;
+            else
+                return collator.compare(file1.mimeType, file2.mimeType) < 0;
+        });
+    }
+    else if (sortMode == 4) // Random
+    {
+        std::shuffle(currentFileDetails.folderFileInfoList.begin(), currentFileDetails.folderFileInfoList.end(), std::default_random_engine(randomSortSeed));
+    }
 
     // Set current file index variable
     currentFileDetails.updateLoadedIndexInFolder();
