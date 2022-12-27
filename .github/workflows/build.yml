@@ -37,7 +37,7 @@ jobs:
         run: |
           echo "arch=${{ matrix.qtArch }}" >> $GITHUB_ENV
           if [ "${{ inputs.isRelease }}" != "true" ]; then
-            buildNum=$(date '+%Y-%m-%d').$GITHUB_RUN_ATTEMPT
+            buildNum=JDP.$(date '+%Y-%m-%d').${GITHUB_SHA::7}
             echo "nightlyDefines=NIGHTLY=$buildNum" >> $GITHUB_ENV
             echo "nightlyString=-nightly" >> $GITHUB_ENV
             echo "buildNumString=$buildNum" >> $GITHUB_ENV
