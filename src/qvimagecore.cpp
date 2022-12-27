@@ -302,7 +302,7 @@ void QVImageCore::updateFolderInfo(QString dirPath)
 
     currentFileDetails.folderFileInfoList = getCompatibleFiles(dirPath);
 
-    QPair<QString, qsizetype> dirInfo = {currentFileDetails.fileInfo.absoluteDir().path(),
+    QPair<QString, qsizetype> dirInfo = {dirPath,
                                          currentFileDetails.folderFileInfoList.count()};
     // If the current folder changed since the last image, assign a new seed for random sorting
     if (lastDirInfo != dirInfo)
