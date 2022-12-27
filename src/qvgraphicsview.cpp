@@ -518,7 +518,7 @@ void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
         return;
 
     if (shouldRetryFolderInfoUpdate)
-        imageCore.updateFolderInfo(nextImageFilePath);
+        imageCore.updateFolderInfo();
 
     loadFile(nextImageFilePath);
 }

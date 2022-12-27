@@ -56,7 +56,7 @@ public:
     void loadPixmap(const ReadData &readData, bool fromCache);
     void closeImage();
     QList<CompatibleFile> getCompatibleFiles(const QString &dirPath) const;
-    void updateFolderInfo(QString targetFilePath = QString());
+    void updateFolderInfo(QString dirPath = QString());
     void requestCaching();
     void requestCachingFile(const QString &filePath);
     void addToCache(const ReadData &readImageAndFileInfo);

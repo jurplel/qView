@@ -83,8 +83,7 @@ void QVImageCore::loadFile(const QString &fileName)
 
     if (fileInfo.isDir())
     {
-        QString dummyFilePath = QDir::cleanPath(sanitaryFileName + QDir::separator() + "dummy.jpg");
-        updateFolderInfo(dummyFilePath);
+        updateFolderInfo(sanitaryFileName);
         if (currentFileDetails.folderFileInfoList.isEmpty())
             closeImage();
         else
@@ -290,18 +289,18 @@ QList<QVImageCore::CompatibleFile> QVImageCore::getCompatibleFiles(const QString
     return fileList;
 }
 
-void QVImageCore::updateFolderInfo(QString targetFilePath)
+void QVImageCore::updateFolderInfo(QString dirPath)
 {
-    if (targetFilePath.isEmpty())
+    if (dirPath.isEmpty())
     {
-        targetFilePath = currentFileDetails.fileInfo.absoluteFilePath();
+        dirPath = currentFileDetails.fileInfo.path();
 
-        // No path specified and a file is not already loaded
-        if (targetFilePath.isEmpty())
+        // No directory specified and a file is not already loaded from which we can infer one
+        if (dirPath.isEmpty())
             return;
     }
 
-    currentFileDetails.folderFileInfoList = getCompatibleFiles(QFileInfo(targetFilePath).path());
+    currentFileDetails.folderFileInfoList = getCompatibleFiles(dirPath);
 
     QPair<QString, qsizetype> dirInfo = {currentFileDetails.fileInfo.absoluteDir().path(),
                                          currentFileDetails.folderFileInfoList.count()};
