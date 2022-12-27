@@ -449,7 +449,8 @@ void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
             shouldRetryFolderInfoUpdate = true;
     }
 
-    if (getCurrentFileDetails().folderFileInfoList.isEmpty())
+    const auto &fileList = getCurrentFileDetails().folderFileInfoList;
+    if (fileList.isEmpty())
         return;
 
     int newIndex = getCurrentFileDetails().loadedIndexInFolder;
@@ -472,7 +473,7 @@ void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
         if (newIndex == 0)
         {
             if (isLoopFoldersEnabled)
-                newIndex = getCurrentFileDetails().folderFileInfoList.size()-1;
+                newIndex = fileList.size()-1;
             else
                 emit cancelSlideshow();
         }
@@ -483,7 +484,7 @@ void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
     }
     case GoToFileMode::next:
     {
-        if (getCurrentFileDetails().folderFileInfoList.size()-1 == newIndex)
+        if (fileList.size()-1 == newIndex)
         {
             if (isLoopFoldersEnabled)
                 newIndex = 0;
@@ -497,7 +498,7 @@ void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
     }
     case GoToFileMode::last:
     {
-        newIndex = getCurrentFileDetails().folderFileInfoList.size()-1;
+        newIndex = fileList.size()-1;
         searchDirection = -1;
         break;
     }
@@ -505,14 +506,13 @@ void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
 
     if (searchDirection != 0)
     {
-        const auto &fileList = getCurrentFileDetails().folderFileInfoList;
         while (searchDirection == 1 && newIndex < fileList.size()-1 && !QFile::exists(fileList.value(newIndex).absoluteFilePath))
             newIndex++;
         while (searchDirection == -1 && newIndex > 0 && !QFile::exists(fileList.value(newIndex).absoluteFilePath))
             newIndex--;
     }
 
-    const QString nextImageFilePath = getCurrentFileDetails().folderFileInfoList.value(newIndex).absoluteFilePath;
+    const QString nextImageFilePath = fileList.value(newIndex).absoluteFilePath;
 
     if (!QFile::exists(nextImageFilePath) || nextImageFilePath == getCurrentFileDetails().fileInfo.absoluteFilePath())
         return;
