@@ -434,12 +434,27 @@ void QVGraphicsView::originalSize()
 
 void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
 {
+    bool shouldRetryFolderInfoUpdate = false;
+
+    // Update folder info only after a little idle time as an optimization for when
+    // the user is rapidly navigating through files.
     if (!getCurrentFileDetails().timeSinceLoaded.isValid() || getCurrentFileDetails().timeSinceLoaded.hasExpired(3000))
-        imageCore.updateFolderInfo();
-    if (getCurrentFileDetails().folderFileInfoList.isEmpty())
+    {
+        // Make sure the file still exists because if it disappears from the file listing we'll lose
+        // track of our index within the folder. Use the static 'exists' method to avoid caching.
+        // If we skip updating now, flag it for retry later once we locate a new file.
+        if (QFile::exists(getCurrentFileDetails().fileInfo.absoluteFilePath()))
+            imageCore.updateFolderInfo();
+        else
+            shouldRetryFolderInfoUpdate = true;
+    }
+
+    const auto &fileList = getCurrentFileDetails().folderFileInfoList;
+    if (fileList.isEmpty())
         return;
 
     int newIndex = getCurrentFileDetails().loadedIndexInFolder;
+    int searchDirection = 0;
 
     switch (mode) {
     case GoToFileMode::constant:
@@ -450,6 +465,7 @@ void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
     case GoToFileMode::first:
     {
         newIndex = 0;
+        searchDirection = 1;
         break;
     }
     case GoToFileMode::previous:
@@ -457,17 +473,18 @@ void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
         if (newIndex == 0)
         {
             if (isLoopFoldersEnabled)
-                newIndex = getCurrentFileDetails().folderFileInfoList.size()-1;
+                newIndex = fileList.size()-1;
             else
                 emit cancelSlideshow();
         }
         else
             newIndex--;
+        searchDirection = -1;
         break;
     }
     case GoToFileMode::next:
     {
-        if (getCurrentFileDetails().folderFileInfoList.size()-1 == newIndex)
+        if (fileList.size()-1 == newIndex)
         {
             if (isLoopFoldersEnabled)
                 newIndex = 0;
@@ -476,20 +493,39 @@ void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
         }
         else
             newIndex++;
+        searchDirection = 1;
         break;
     }
     case GoToFileMode::last:
     {
-        newIndex = getCurrentFileDetails().folderFileInfoList.size()-1;
+        newIndex = fileList.size()-1;
+        searchDirection = -1;
         break;
     }
     }
 
-    const QVImageCore::CompatibleFile nextImage = getCurrentFileDetails().folderFileInfoList.value(newIndex);
-    if (!QFileInfo(nextImage.absoluteFilePath).isFile())
+    if (searchDirection != 0)
+    {
+        while (searchDirection == 1 && newIndex < fileList.size()-1 && !QFile::exists(fileList.value(newIndex).absoluteFilePath))
+            newIndex++;
+        while (searchDirection == -1 && newIndex > 0 && !QFile::exists(fileList.value(newIndex).absoluteFilePath))
+            newIndex--;
+    }
+
+    const QString nextImageFilePath = fileList.value(newIndex).absoluteFilePath;
+
+    if (!QFile::exists(nextImageFilePath) || nextImageFilePath == getCurrentFileDetails().fileInfo.absoluteFilePath())
         return;
 
-    loadFile(nextImage.absoluteFilePath);
+    if (shouldRetryFolderInfoUpdate)
+    {
+        // If the user just deleted a file through qView, closeImage will have been called which empties
+        // currentFileDetails.fileInfo. In this case updateFolderInfo can't infer the directory from
+        // fileInfo like it normally does, so we'll explicity pass in the folder here.
+        imageCore.updateFolderInfo(QFileInfo(nextImageFilePath).path());
+    }
+
+    loadFile(nextImageFilePath);
 }
 
 void QVGraphicsView::fitInViewMarginless(const QRectF &rect)

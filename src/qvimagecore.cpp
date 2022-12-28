@@ -81,6 +81,16 @@ void QVImageCore::loadFile(const QString &fileName)
     QFileInfo fileInfo(sanitaryFileName);
     sanitaryFileName = fileInfo.absoluteFilePath();
 
+    if (fileInfo.isDir())
+    {
+        updateFolderInfo(sanitaryFileName);
+        if (currentFileDetails.folderFileInfoList.isEmpty())
+            closeImage();
+        else
+            loadFile(currentFileDetails.folderFileInfoList.at(0).absoluteFilePath);
+        return;
+    }
+
     // Pause playing movie because it feels better that way
     setPaused(true);
 
@@ -234,7 +244,7 @@ void QVImageCore::closeImage()
 }
 
 // All file logic, sorting, etc should be moved to a different class or file
-QList<QVImageCore::CompatibleFile> QVImageCore::getCompatibleFiles()
+QList<QVImageCore::CompatibleFile> QVImageCore::getCompatibleFiles(const QString &dirPath) const
 {
     QList<CompatibleFile> fileList;
 
@@ -244,7 +254,7 @@ QList<QVImageCore::CompatibleFile> QVImageCore::getCompatibleFiles()
 
     QMimeDatabase::MatchMode mimeMatchMode = allowMimeContentDetection ? QMimeDatabase::MatchDefault : QMimeDatabase::MatchExtension;
 
-    const QFileInfoList currentFolder = currentFileDetails.fileInfo.dir().entryInfoList(QDir::Files | QDir::Hidden, QDir::Unsorted);
+    const QFileInfoList currentFolder = QDir(dirPath).entryInfoList(QDir::Files | QDir::Hidden, QDir::Unsorted);
     for (const QFileInfo &fileInfo : currentFolder)
     {
         bool matched = false;
@@ -279,14 +289,20 @@ QList<QVImageCore::CompatibleFile> QVImageCore::getCompatibleFiles()
     return fileList;
 }
 
-void QVImageCore::updateFolderInfo()
+void QVImageCore::updateFolderInfo(QString dirPath)
 {
-    if (!currentFileDetails.fileInfo.isFile())
-        return;
+    if (dirPath.isEmpty())
+    {
+        dirPath = currentFileDetails.fileInfo.path();
 
-    currentFileDetails.folderFileInfoList = getCompatibleFiles();
+        // No directory specified and a file is not already loaded from which we can infer one
+        if (dirPath.isEmpty())
+            return;
+    }
 
-    QPair<QString, qsizetype> dirInfo = {currentFileDetails.fileInfo.absoluteDir().path(),
+    currentFileDetails.folderFileInfoList = getCompatibleFiles(dirPath);
+
+    QPair<QString, qsizetype> dirInfo = {dirPath,
                                          currentFileDetails.folderFileInfoList.count()};
     // If the current folder changed since the last image, assign a new seed for random sorting
     if (lastDirInfo != dirInfo)
