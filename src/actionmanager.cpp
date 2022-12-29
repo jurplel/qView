@@ -97,13 +97,7 @@ QList<QAction*> ActionManager::getAllClonesOfAction(const QString &key, QWidget 
     const auto &actions = getAllClonesOfAction(key);
     for (const auto &action : actions)
     {
-        if (action->associatedWidgets().isEmpty())
-            continue;
-
-        const auto &associatedWidgets = action->associatedWidgets();
-        auto *parentWidget = associatedWidgets.first()->parentWidget();
-
-        if (parentWidget == parent || (parentWidget && parentWidget->parent() == parent))
+        if (hasAncestor(action, parent))
         {
             listOfChildActions.append(action);
         }
@@ -122,13 +116,7 @@ QList<QMenu*> ActionManager::getAllClonesOfMenu(const QString &key, QWidget *par
     const auto &menus = getAllClonesOfMenu(key);
     for (const auto &menu : menus)
     {
-        auto action = menu->menuAction();
-        if (action->associatedWidgets().isEmpty())
-            continue;
-
-        auto *parentWidget = action->associatedWidgets().at(0)->parentWidget();
-
-        if (parentWidget == parent || (parentWidget && parentWidget->parent() == parent))
+        if (hasAncestor(menu->menuAction(), parent))
         {
             listOfChildMenus.append(menu);
         }
@@ -849,4 +837,15 @@ void ActionManager::initializeActionLibrary()
         if (data.last().contains("disable"))
             value->setEnabled(false);
     }
+}
+
+bool ActionManager::hasAncestor(QObject *object, QObject *ancestor)
+{
+    while (object)
+    {
+        if (object == ancestor)
+            return true;
+        object = object->parent();
+    }
+    return false;
 }
