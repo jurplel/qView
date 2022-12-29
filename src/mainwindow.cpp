@@ -936,7 +936,8 @@ void MainWindow::saveFrameAs()
     {
         pause();
     }
-    QFileDialog *saveDialog = new QFileDialog(this, tr("Save frame as…"));
+    QFileDialog *saveDialog = new QFileDialog(this, tr("Save Frame As…"));
+
     saveDialog->setDirectory(settings.value("lastFileDialogDir", QDir::homePath()).toString());
     saveDialog->setNameFilters(qvApp->getNameFilterList());
     saveDialog->selectFile(getCurrentFileDetails().fileInfo.baseName() + "-" + QString::number(graphicsView->getLoadedMovie().currentFrameNumber()) + ".png");
