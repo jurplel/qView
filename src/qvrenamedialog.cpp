@@ -11,8 +11,8 @@ QVRenameDialog::QVRenameDialog(QWidget *parent, QFileInfo fileInfo) :
 
     this->fileInfo = fileInfo;
 
-    setWindowTitle(tr("Rename..."));
-    setLabelText(tr("File name:"));
+    setWindowTitle(tr("Rename…"));
+    setLabelText(tr("Filename:"));
     setTextValue(fileInfo.fileName());
     resize(350, height());
 
@@ -23,7 +23,7 @@ void QVRenameDialog::onFinished(int result)
 {
     if (!fileInfo.isWritable())
     {
-        QMessageBox::critical(this, tr("Error"), tr("Could not rename %1:\nNo write permission or file is read-only.").arg(fileInfo.fileName()));
+        QMessageBox::critical(this, tr("Error"), tr("Could not rename %1:\nGrant write permission or ensure the file is not read-only").arg(fileInfo.fileName()));
         return;
     }
 
