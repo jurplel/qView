@@ -87,7 +87,7 @@ QVAboutDialog::~QVAboutDialog()
 
 void QVAboutDialog::updateText()
 {
-    QString updateText = tr("Checking for updates...");
+    QString updateText = tr("Checking for updates…");
     if (latestVersionNum > VERSION)
     {
         //: %1 is a version number e.g. "4.0 update available"
