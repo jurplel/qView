@@ -140,6 +140,8 @@ signals:
 protected:
     void initializeActionLibrary();
 
+    static bool hasAncestor(QObject *object, QObject *ancestor);
+
 private:
     QHash<QString, QAction*> actionLibrary;
 
