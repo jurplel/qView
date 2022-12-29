@@ -133,7 +133,7 @@ void QVApplication::pickFile(MainWindow *parent)
     QSettings settings;
     settings.beginGroup("recents");
 
-    auto *fileDialog = new QFileDialog(parent, tr("Open..."));
+    auto *fileDialog = new QFileDialog(parent, tr("Open…"));
     fileDialog->setDirectory(settings.value("lastFileDialogDir", QDir::homePath()).toString());
     fileDialog->setFileMode(QFileDialog::ExistingFiles);
     fileDialog->setNameFilters(qvApp->getNameFilterList());
