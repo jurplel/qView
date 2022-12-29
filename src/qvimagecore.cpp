@@ -217,11 +217,7 @@ void QVImageCore::loadPixmap(const ReadData &readData)
 
     emit fileChanged();
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    QtConcurrent::run(this, &QVImageCore::requestCaching);
-#else
-    QtConcurrent::run(&QVImageCore::requestCaching, this);
-#endif
+    requestCaching();
 }
 
 void QVImageCore::closeImage()
@@ -431,7 +427,6 @@ void QVImageCore::requestCachingFile(const QString &filePath)
 
     auto *cacheFutureWatcher = new QFutureWatcher<ReadData>();
     connect(cacheFutureWatcher, &QFutureWatcher<ReadData>::finished, this, [cacheFutureWatcher, this](){
-        qDebug() << "finished callback";
         addToCache(cacheFutureWatcher->result());
         cacheFutureWatcher->deleteLater();
     });
