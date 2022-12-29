@@ -657,10 +657,10 @@ void ActionManager::initializeActionLibrary()
     auto *newWindowAction = new QAction(QIcon::fromTheme("window-new"), tr("New Window"));
     actionLibrary.insert("newwindow", newWindowAction);
 
-    auto *openAction = new QAction(QIcon::fromTheme("document-open"), tr("&Open..."));
+    auto *openAction = new QAction(QIcon::fromTheme("document-open"), tr("&Open…"));
     actionLibrary.insert("open", openAction);
 
-    auto *openUrlAction = new QAction(QIcon::fromTheme("document-open-remote", QIcon::fromTheme("folder-remote")), tr("Open &URL..."));
+    auto *openUrlAction = new QAction(QIcon::fromTheme("document-open-remote", QIcon::fromTheme("folder-remote")), tr("Open &URL…"));
     actionLibrary.insert("openurl", openUrlAction);
 
     auto *closeWindowAction = new QAction(QIcon::fromTheme("window-close"), tr("Close Window"));
@@ -706,7 +706,7 @@ void ActionManager::initializeActionLibrary()
     auto *pasteAction = new QAction(QIcon::fromTheme("edit-paste"), tr("&Paste"));
     actionLibrary.insert("paste", pasteAction);
 
-    auto *renameAction = new QAction(QIcon::fromTheme("edit-rename", QIcon::fromTheme("document-properties")) , tr("R&ename..."));
+    auto *renameAction = new QAction(QIcon::fromTheme("edit-rename", QIcon::fromTheme("document-properties")) , tr("R&ename…"));
     renameAction->setData({"disable"});
     actionLibrary.insert("rename", renameAction);
 
@@ -742,7 +742,7 @@ void ActionManager::initializeActionLibrary()
     flipAction->setData({"disable"});
     actionLibrary.insert("flip", flipAction);
 
-    auto *fullScreenAction = new QAction(QIcon::fromTheme("view-fullscreen"), tr("Enter F&ull Screen"));
+    auto *fullScreenAction = new QAction(QIcon::fromTheme("view-fullscreen"), tr("Enter F&ullscreen"));
     fullScreenAction->setMenuRole(QAction::NoRole);
     actionLibrary.insert("fullscreen", fullScreenAction);
 
@@ -762,7 +762,7 @@ void ActionManager::initializeActionLibrary()
     lastFileAction->setData({"folderdisable"});
     actionLibrary.insert("lastfile", lastFileAction);
 
-    auto *saveFrameAsAction = new QAction(QIcon::fromTheme("document-save-as"), tr("Save Frame &As..."));
+    auto *saveFrameAsAction = new QAction(QIcon::fromTheme("document-save-as"), tr("Save Frame &As…"));
     saveFrameAsAction->setData({"gifdisable"});
     actionLibrary.insert("saveframeas", saveFrameAsAction);
 
@@ -790,14 +790,14 @@ void ActionManager::initializeActionLibrary()
     slideshowAction->setData({"disable"});
     actionLibrary.insert("slideshow", slideshowAction);
 
-    //: This is for the options dialog on windows
+    //: This is for the options dialog on Windows
     auto *optionsAction = new QAction(QIcon::fromTheme("configure", QIcon::fromTheme("preferences-other")), tr("Option&s"));
 #if defined Q_OS_UNIX & !defined Q_OS_MACOS
     //: This is for the options dialog on non-mac unix platforms
     optionsAction->setText(tr("Preference&s"));
 #elif defined Q_OS_MACOS
-    //: This is for the options dialog on mac
-    optionsAction->setText(tr("Preference&s..."));
+    //: This is for the options dialog on macOS
+    optionsAction->setText(tr("Preference&s…"));
 #endif
     actionLibrary.insert("options", optionsAction);
 
@@ -816,13 +816,13 @@ void ActionManager::initializeActionLibrary()
     actionLibrary.insert("clearrecents", clearRecentsAction);
 
     //: Open with other program for unix non-mac
-    auto *openWithOtherAction = new QAction(tr("Other Application..."));
+    auto *openWithOtherAction = new QAction(tr("Other Application…"));
 #ifdef Q_OS_WIN
-    //: Open with other program for windows
+    //: Open with other program for Windows
     openWithOtherAction->setText(tr("Choose another app"));
 #elif defined Q_OS_MACOS
-    //: Open with other program for macos
-    openWithOtherAction->setText(tr("Other..."));
+    //: Open with other program for macOS
+    openWithOtherAction->setText(tr("Other…"));
 #endif
     actionLibrary.insert("openwithother", openWithOtherAction);
 
