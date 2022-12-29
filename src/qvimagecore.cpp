@@ -106,7 +106,6 @@ void QVImageCore::loadFile(const QString &fileName)
         !cachedPixmap->isNull() &&
         previouslyRecordedFileSize == fileInfo.size())
     {
-        qDebug() << "got from cache";
         QSize previouslyRecordedImageSize = qvApp->getPreviouslyRecordedImageSize(sanitaryFileName);
         ReadData readData = {
             *cachedPixmap,
@@ -117,7 +116,6 @@ void QVImageCore::loadFile(const QString &fileName)
     }
     else
     {
-        qDebug() << "loaded manually";
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         loadFutureWatcher.setFuture(QtConcurrent::run(this, &QVImageCore::readFile, sanitaryFileName, false));
 #else
