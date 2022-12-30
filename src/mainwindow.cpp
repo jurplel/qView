@@ -489,7 +489,7 @@ void MainWindow::setWindowSize()
     qreal maxWindowResizedPercentage = qvApp->getSettingsManager().getInteger("maxwindowresizedpercentage")/100.0;
 
 
-    QSize imageSize = getCurrentFileDetails().loadedPixmapSize;
+    QSize imageSize = graphicsView->getEffectiveImageSize();
     imageSize -= QSize(4, 4);
 
 

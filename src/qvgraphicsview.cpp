@@ -395,7 +395,7 @@ void QVGraphicsView::resetScale()
     if (!getCurrentFileDetails().isPixmapLoaded)
         return;
 
-    QSizeF effectiveImageSize = getTransformWithNoScaling().mapRect(QRectF(QPointF(), getCurrentFileDetails().loadedPixmapSize)).size();
+    QSizeF effectiveImageSize = getEffectiveImageSize();
     QSizeF viewSize = getUsableViewportRect().adjusted(MARGIN, MARGIN, -MARGIN, -MARGIN).size();
 
     if (viewSize.isEmpty())
@@ -553,6 +553,11 @@ void QVGraphicsView::centerOn(const QGraphicsItem *item)
     centerOn(item->sceneBoundingRect().center());
 }
 
+QSize QVGraphicsView::getEffectiveImageSize() const
+{
+    return getTransformWithNoScaling().mapRect(QRect(QPoint(), getCurrentFileDetails().loadedPixmapSize)).size();
+}
+
 QRect QVGraphicsView::getUsableViewportRect() const
 {
 #ifdef COCOA_LOADED
@@ -565,7 +570,7 @@ QRect QVGraphicsView::getUsableViewportRect() const
     return rect;
 }
 
-QTransform QVGraphicsView::getTransformWithNoScaling()
+QTransform QVGraphicsView::getTransformWithNoScaling() const
 {
     qreal currentTransformScale = transform().mapRect(QRectF(QPointF(), QSizeF(1, 1))).width();
     return QTransform(transform()).scale(1.0 / currentTransformScale, 1.0 / currentTransformScale);
