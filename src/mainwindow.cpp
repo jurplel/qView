@@ -398,7 +398,6 @@ void MainWindow::populateOpenWithMenu(const QList<OpenWith::OpenWithItem> openWi
             else
             {
                 action->setVisible(false);
-                action->setText(tr("Empty"));
             }
         }
     }
