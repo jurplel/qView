@@ -9,8 +9,13 @@
 
 ActionManager::ActionManager(QObject *parent) : QObject(parent)
 {
+    isSaveRecentsEnabled = true;
     recentsListMaxLength = 10;
     openWithMaxLength = 10;
+
+    // Connect to settings signal
+    connect(&qvApp->getSettingsManager(), &SettingsManager::settingsUpdated, this, &ActionManager::settingsUpdated);
+    settingsUpdated();
 
     initializeActionLibrary();
 
@@ -25,9 +30,6 @@ ActionManager::ActionManager(QObject *parent) : QObject(parent)
     windowMenu = new QMenu(tr("Window"));
     QVCocoaFunctions::setWindowMenu(windowMenu);
 #endif
-
-    // Connect to settings signal
-    connect(&qvApp->getSettingsManager(), &SettingsManager::settingsUpdated, this, &ActionManager::settingsUpdated);
 }
 
 ActionManager::~ActionManager()
