@@ -501,13 +501,10 @@ void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
     }
     }
 
-    if (searchDirection != 0)
-    {
-        while (searchDirection == 1 && newIndex < fileList.size()-1 && !QFile::exists(fileList.value(newIndex).absoluteFilePath))
-            newIndex++;
-        while (searchDirection == -1 && newIndex > 0 && !QFile::exists(fileList.value(newIndex).absoluteFilePath))
-            newIndex--;
-    }
+    while (searchDirection == 1 && newIndex < fileList.size()-1 && !QFile::exists(fileList.value(newIndex).absoluteFilePath))
+        newIndex++;
+    while (searchDirection == -1 && newIndex > 0 && !QFile::exists(fileList.value(newIndex).absoluteFilePath))
+        newIndex--;
 
     const QString nextImageFilePath = fileList.value(newIndex).absoluteFilePath;
 
