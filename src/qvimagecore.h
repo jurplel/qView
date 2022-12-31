@@ -61,7 +61,7 @@ public:
     QList<CompatibleFile> getCompatibleFiles(const QString &dirPath);
     void sortCompatibleFiles(QList<CompatibleFile> &fileList);
     unsigned getRandomSortSeed(const QString &dirPath, const int fileCount);
-    void updateFolderInfo(QString targetFilePath = QString());
+    void updateFolderInfo(QString dirPath = QString());
     void requestCaching();
     void requestCachingFile(const QString &filePath);
     void addToCache(const ReadData &readImageAndFileInfo);
