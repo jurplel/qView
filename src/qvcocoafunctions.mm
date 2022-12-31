@@ -1,3 +1,4 @@
+#include "actionmanager.h"
 #include "qvcocoafunctions.h"
 
 #include <QUrl>
@@ -186,7 +187,8 @@ QList<OpenWith::OpenWithItem> QVCocoaFunctions::getOpenWithItems(const QString &
         openWithItem.name = QString::fromNSString(appName);
 
         QFileIconProvider fiProvider;
-        openWithItem.icon = fiProvider.icon(QFileInfo(QString::fromNSString(absolutePath)));
+        QIcon icon = fiProvider.icon(QFileInfo(QString::fromNSString(absolutePath)));
+        openWithItem.icon = ActionManager::getCacheableIcon("application:" + QString::fromNSString(appId), icon);
 
         // If the program is the default program, save it to add to the beginning after sorting
         if ([appId isEqualToString:defaultApplication])

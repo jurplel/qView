@@ -126,6 +126,8 @@ public:
 
     static void actionTriggered(QAction *triggeredAction, MainWindow *relevantWindow);
 
+    static QIcon getCacheableIcon(const QString &cacheKey, const QIcon &icon);
+
     const QList<SRecent> &getRecentsList() const { return recentsList; }
 
     const QHash<QString, QAction*> &getActionLibrary() const { return actionLibrary; }
