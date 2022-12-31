@@ -438,20 +438,8 @@ void ActionManager::updateRecentsMenu()
                 action->setIcon(QIcon::fromTheme(type.iconName(), QIcon::fromTheme(type.genericIconName())));
 #else
                 // set icons for mac/windows users
-                QFileInfo fileInfo(recent.filePath);
                 QFileIconProvider provider;
-                QIcon icon = provider.icon(fileInfo);
-#ifdef Q_OS_MACOS
-                // On macOS, setIcon() can be really slow, especially if it has to ask the QIcon's engine
-                // (QAbstractFileIconEngine in this case) to generate a pixmap. This normally isn't a problem
-                // because QAbstractFileIconEngine implements caching, however, it doesn't allow caching for
-                // symbolic links or files that have the 'execute' permission present. The latter can be true
-                // when reading files from a Windows network share, for example. To avoid bad performance in
-                // these cases, we'll use a generic file icon instead.
-                if (fileInfo.isSymLink() || fileInfo.isExecutable())
-                    icon = provider.icon(QFileIconProvider::File);
-#endif
-                action->setIcon(icon);
+                action->setIcon(provider.icon(QFileInfo(recent.filePath)));
 #endif
             }
             else
