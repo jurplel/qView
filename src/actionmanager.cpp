@@ -427,6 +427,7 @@ void ActionManager::updateRecentsMenu()
                 auto recent = recentsList.value(i);
 
                 action->setVisible(true);
+                action->setIconVisibleInMenu(false); // Hide icon temporarily to speed up updates in certain cases
                 action->setText(recent.fileName);
 
 #if defined Q_OS_UNIX && !defined Q_OS_MACOS
@@ -436,14 +437,21 @@ void ActionManager::updateRecentsMenu()
                 action->setIcon(QIcon::fromTheme(type.iconName(), QIcon::fromTheme(type.genericIconName())));
 #else
                 // set icons for mac/windows users
+                QFileInfo fileInfo(recent.filePath);
                 QFileIconProvider provider;
-                action->setIcon(provider.icon(QFileInfo(recent.filePath)));
+                QIcon icon = provider.icon(fileInfo);
+#ifdef Q_OS_MACOS
+                // Workaround for native menu slowness
+                if (!fileInfo.suffix().isEmpty())
+                    icon = getCacheableIcon("filetype:" + fileInfo.suffix(), icon);
+#endif
+                action->setIcon(icon);
+                action->setIconVisibleInMenu(true);
 #endif
             }
             else
             {
                 action->setVisible(false);
-                action->setText(tr("Empty"));
             }
         }
     }
@@ -825,6 +833,25 @@ void ActionManager::initializeActionLibrary()
         if (data.last().contains("disable"))
             value->setEnabled(false);
     }
+}
+
+QIcon ActionManager::getCacheableIcon(const QString &cacheKey, const QIcon &icon)
+{
+    static QMutex mutex;
+    static QCache<QString, QIcon> cache;
+    QMutexLocker locker(&mutex);
+    QIcon *cacheEntry = cache.take(cacheKey);
+    if (cacheEntry == nullptr)
+    {
+        cacheEntry = new QIcon();
+        // Depending on the source icon's implementation (e.g. if it's backed by a file engine), it may
+        // not allow pixmap caching, so get a pixmap of each size once and copy it to a generic QIcon
+        for (const auto &iconSize : icon.availableSizes())
+            cacheEntry->addPixmap(icon.pixmap(iconSize));
+    }
+    QIcon cacheableIcon = *cacheEntry;
+    cache.insert(cacheKey, cacheEntry);
+    return cacheableIcon;
 }
 
 bool ActionManager::hasAncestor(QObject *object, QObject *ancestor)
