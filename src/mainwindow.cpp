@@ -497,7 +497,7 @@ void MainWindow::setWindowSize()
     const QSize minWindowSize = screenSize * minWindowResizedPercentage;
     const QSize maxWindowSize = screenSize * maxWindowResizedPercentage;
 
-    if (imageSize.width() < minWindowSize.width() || imageSize.height() < minWindowSize.height())
+    if (imageSize.width() < minWindowSize.width() && imageSize.height() < minWindowSize.height())
     {
         imageSize.scale(minWindowSize, Qt::KeepAspectRatio);
     }
