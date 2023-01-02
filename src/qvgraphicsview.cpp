@@ -288,8 +288,8 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
     {
         const QPointF p1mouse = mapFromScene(scenePos);
         const QPointF move = p1mouse - pos;
-        horizontalScrollBar()->setValue(move.x() + horizontalScrollBar()->value());
-        verticalScrollBar()->setValue(move.y() + verticalScrollBar()->value());
+        horizontalScrollBar()->setValue(horizontalScrollBar()->value() + (move.x() * (isRightToLeft() ? -1 : 1)));
+        verticalScrollBar()->setValue(verticalScrollBar()->value() + move.y());
         lastZoomRoundingError = mapToScene(pos) - scenePos;
     }
     else
