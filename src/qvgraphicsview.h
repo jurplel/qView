@@ -136,6 +136,7 @@ private:
     qreal maxScalingTwoSize;
     QPoint lastZoomEventPos;
     QPointF lastZoomRoundingError;
+    QPointF lastScrollRoundingError;
 
     QTransform absoluteTransform;
     QTransform zoomBasis;

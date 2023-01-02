@@ -46,6 +46,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     isOriginalSize = false;
     lastZoomEventPos = QPoint(-1, -1);
     lastZoomRoundingError = QPointF();
+    lastScrollRoundingError = QPointF();
 
     zoomBasisScaleFactor = 1.0;
 
@@ -167,10 +168,20 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
 
     if (!willZoom)
     {
-        if (event->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier) || event->modifiers() == Qt::ShiftModifier)
-            translate(event->angleDelta().y()/2.0, event->angleDelta().x()/2.0);
-        else
-            translate(event->angleDelta().x()/2.0, event->angleDelta().y()/2.0);
+        const qreal scrollDivisor = 2.0; // To make scrolling less sensitive
+        qreal scrollX = event->angleDelta().x() * (isRightToLeft() ? 1 : -1) / scrollDivisor;
+        qreal scrollY = event->angleDelta().y() * -1 / scrollDivisor;
+
+        if (event->modifiers() & Qt::ShiftModifier)
+            std::swap(scrollX, scrollY);
+
+        QPointF targetScrollDelta = QPointF(scrollX, scrollY) - lastScrollRoundingError;
+        QPoint roundedScrollDelta = targetScrollDelta.toPoint();
+
+        horizontalScrollBar()->setValue(horizontalScrollBar()->value() + roundedScrollDelta.x());
+        verticalScrollBar()->setValue(verticalScrollBar()->value() + roundedScrollDelta.y());
+
+        lastScrollRoundingError = roundedScrollDelta - targetScrollDelta;
 
         return;
     }
