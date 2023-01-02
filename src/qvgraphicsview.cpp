@@ -150,7 +150,7 @@ void QVGraphicsView::mouseMoveEvent(QMouseEvent *event)
     if (pressedMouseButton == Qt::LeftButton)
     {
         QPoint mouseDelta = event->pos() - lastMousePos;
-        scrollHelper->move(-mouseDelta);
+        scrollHelper->move(QPointF(mouseDelta.x() * (isRightToLeft() ? 1 : -1), mouseDelta.y() * -1));
         lastMousePos = event->pos();
         return;
     }
@@ -201,13 +201,14 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
 
     if (!willZoom)
     {
-        qreal xDelta = -event->angleDelta().x() / 2.0;
-        qreal yDelta = -event->angleDelta().y() / 2.0;
+        const qreal scrollDivisor = 2.0; // To make scrolling less sensitive
+        qreal scrollX = event->angleDelta().x() * (isRightToLeft() ? 1 : -1) / scrollDivisor;
+        qreal scrollY = event->angleDelta().y() * -1 / scrollDivisor;
 
         if (event->modifiers() & Qt::ShiftModifier)
-            std::swap(xDelta, yDelta);
+            std::swap(scrollX, scrollY);
 
-        scrollHelper->move(QPointF(xDelta, yDelta));
+        scrollHelper->move(QPointF(scrollX, scrollY));
         constrainBoundsTimer->start();
 
         return;
@@ -536,12 +537,12 @@ void QVGraphicsView::centerOn(const QPointF &pos)
         qint64 horizontal = 0;
         horizontal += horizontalScrollBar()->minimum();
         horizontal += horizontalScrollBar()->maximum();
-        horizontal -= int(viewPoint.x() - targetRect.left() -  (targetRect.width() / 2.0));
+        horizontal -= int(viewPoint.x() - (targetRect.width() / 2.0));
         horizontalScrollBar()->setValue(horizontal);
     }
     else
     {
-        horizontalScrollBar()->setValue(int(viewPoint.x() - targetRect.left() - (targetRect.width() / 2.0)));
+        horizontalScrollBar()->setValue(int(viewPoint.x() - (targetRect.width() / 2.0)));
     }
 
     verticalScrollBar()->setValue(int(viewPoint.y() - targetRect.top() - (targetRect.height() / 2.0)));
