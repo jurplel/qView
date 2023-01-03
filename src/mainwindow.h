@@ -166,6 +166,7 @@ private:
 
     QStack<DeletedPaths> lastDeletedFiles;
 
+    QTimer *populateOpenWithTimer;
     QFutureWatcher<QList<OpenWith::OpenWithItem>> openWithFutureWatcher;
 };
 

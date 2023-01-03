@@ -130,6 +130,12 @@ MainWindow::MainWindow(QWidget *parent) :
     settingsUpdated();
     shortcutsUpdated();
 
+    // Timer for delayed-load Open With menu
+    populateOpenWithTimer = new QTimer(this);
+    populateOpenWithTimer->setSingleShot(true);
+    populateOpenWithTimer->setInterval(500);
+    connect(populateOpenWithTimer, &QTimer::timeout, this, &MainWindow::requestPopulateOpenWithMenu);
+
     // Connection for open with menu population futurewatcher
     connect(&openWithFutureWatcher, &QFutureWatcher<QList<OpenWith::OpenWithItem>>::finished, this, [this](){
         populateOpenWithMenu(openWithFutureWatcher.result());
@@ -309,7 +315,7 @@ void MainWindow::openRecent(int i)
 
 void MainWindow::fileChanged()
 {
-    requestPopulateOpenWithMenu();
+    populateOpenWithTimer->start();
     disableActions();
 
     refreshProperties();
@@ -365,6 +371,9 @@ void MainWindow::disableActions()
 
 void MainWindow::requestPopulateOpenWithMenu()
 {
+    // Wait to start a new run if the one for the previous image hasn't finished yet
+    openWithFutureWatcher.future().waitForFinished();
+
     openWithFutureWatcher.setFuture(QtConcurrent::run([&]{
         const auto &curFilePath = getCurrentFileDetails().fileInfo.absoluteFilePath();
         return OpenWith::getOpenWithItems(curFilePath);
@@ -386,7 +395,10 @@ void MainWindow::populateOpenWithMenu(const QList<OpenWith::OpenWithItem> openWi
                 action->setVisible(true);
                 action->setIconVisibleInMenu(false); // Hide icon temporarily to speed up updates in certain cases
                 action->setText(openWithItem.name);
-                action->setIcon(openWithItem.icon);
+                if (!openWithItem.iconName.isEmpty())
+                    action->setIcon(QIcon::fromTheme(openWithItem.iconName));
+                else
+                    action->setIcon(openWithItem.icon);
                 auto data = action->data().toList();
                 data.replace(1, QVariant::fromValue(openWithItem));
                 action->setData(data);
