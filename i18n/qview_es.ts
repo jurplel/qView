@@ -58,7 +58,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="650"/>
         <source>&amp;Quit</source>
-        <translation>&amp;Cerrar</translation>
+        <translation>&amp;Salir</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="654"/>
@@ -79,7 +79,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="663"/>
         <source>Open &amp;URL...</source>
-        <translation>Abrir una &amp;ubicación...</translation>
+        <translation>Abrir un &amp;URL...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="666"/>
@@ -122,7 +122,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="690"/>
         <source>&amp;Delete</source>
-        <translation>&amp;Eliminar</translation>
+        <translation>&amp;Borrar</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="695"/>
@@ -132,7 +132,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="697"/>
         <source>&amp;Undo Delete</source>
-        <translation>&amp;Deshacer la eliminación</translation>
+        <translation>&amp;Deshacer el borrado</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="702"/>
@@ -162,7 +162,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="721"/>
         <source>Reset &amp;Zoom</source>
-        <translation>Restablecer el &amp;zum</translation>
+        <translation>Res&amp;tablecer la vista</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="725"/>
@@ -237,17 +237,17 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="781"/>
         <source>&amp;Reset Speed</source>
-        <translation>Restablecer la &amp;velocidad</translation>
+        <translation>Res&amp;tablecer la velocidad</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="785"/>
         <source>&amp;Increase Speed</source>
-        <translation>&amp;Aumentar velocidad</translation>
+        <translation>&amp;Aumentar la velocidad</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="789"/>
         <source>Start S&amp;lideshow</source>
-        <translation>Iniciar la &amp;presentación</translation>
+        <translation>&amp;Iniciar la presentación</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="794"/>
@@ -339,7 +339,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="563"/>
         <source>Error: URL is invalid</source>
-        <translation>Error: ubicación no válida</translation>
+        <translation>Error: URL no válido</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="569"/>
@@ -355,7 +355,7 @@
         <location filename="../src/mainwindow.cpp" line="573"/>
         <location filename="../src/mainwindow.cpp" line="629"/>
         <source>Open URL...</source>
-        <translation>Abrir una ubicación...</translation>
+        <translation>Abrir un URL...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="590"/>
@@ -376,7 +376,7 @@
         <location filename="../src/mainwindow.cpp" line="685"/>
         <source>Can&apos;t delete %1:
 No write permission or file is read-only.</source>
-        <translation>No se puede eliminar %1:
+        <translation>No se puede borrar %1:
 No se tiene permiso de escritura o el archivo es de solo lectura.</translation>
     </message>
     <message>
@@ -664,7 +664,7 @@ No tiene permiso de escritura o el archivo es de solo lectura.</translation>
     <message>
         <location filename="../src/qvopenwithdialog.ui" line="14"/>
         <source>Choose Application</source>
-        <translation>Elija una aplicación</translation>
+        <translation>Elegir una aplicación</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="66"/>
@@ -830,7 +830,7 @@ No tiene permiso de escritura o el archivo es de solo lectura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="219"/>
         <source>Choose whether or not the titlebar should always be dark regardless of your chosen macOS appearance</source>
-        <translation>Elige si la barra de título debe ser siempre oscura, independientemente de la apariencia de macOS</translation>
+        <translation>Elija si la barra de título debe ser siempre oscura, independientemente de la apariencia de macOS</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="222"/>
@@ -845,7 +845,7 @@ No tiene permiso de escritura o el archivo es de solo lectura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="239"/>
         <source>Choose whether or not to display the titlebar text while in fullscreen</source>
-        <translation>Elige si se muestra o no el texto de la barra de título a pantalla completa</translation>
+        <translation>Elija si se muestra el texto de la barra de título a pantalla completa</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="242"/>
@@ -890,7 +890,7 @@ No tiene permiso de escritura o el archivo es de solo lectura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="296"/>
         <source>Choose whether or not the image continues to be scaled when zooming above the window size (can be laggier with large images)</source>
-        <translation>Elige si la imagen se sigue escalando al ampliarla por encima del tamaño de la ventana (puede ser más lento con imágenes grandes)</translation>
+        <translation>Elija si se sigue escalando la imagen al ampliarla por encima del tamaño de la ventana (puede ser más lento con imágenes grandes)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="299"/>
@@ -962,7 +962,7 @@ No tiene permiso de escritura o el archivo es de solo lectura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="434"/>
         <source>Zoom &amp;towards cursor</source>
-        <translation>Ampliación &amp;hacia el cursor</translation>
+        <translation>Ampliar &amp;hacia el cursor</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="445"/>
@@ -997,7 +997,7 @@ No tiene permiso de escritura o el archivo es de solo lectura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="489"/>
         <source>Random</source>
-        <translation>Aleatoriamente</translation>
+        <translation>Al azar</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="497"/>
@@ -1038,12 +1038,12 @@ No tiene permiso de escritura o el archivo es de solo lectura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="562"/>
         <source>Controls whether or not qView should go back to the first item after reaching the end of a folder</source>
-        <translation>Controla si qView debe o no volver al primer elemento después de llegar al final de una carpeta</translation>
+        <translation>Controla si qView debe retornar al primer elemento después de llegar al final de una carpeta</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="565"/>
         <source>&amp;Loop through folders</source>
-        <translation>&amp;Recorrer carpetas en &amp;bucle</translation>
+        <translation>&amp;Recorrer las carpetas en bucle</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="588"/>
@@ -1073,7 +1073,7 @@ No tiene permiso de escritura o el archivo es de solo lectura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="648"/>
         <source>Save &amp;recent files</source>
-        <translation>Guardar archivos &amp;recientes</translation>
+        <translation>&amp;Guardar los archivos recientes</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="655"/>
@@ -1104,7 +1104,7 @@ No tiene permiso de escritura o el archivo es de solo lectura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="684"/>
         <source>After deletion:</source>
-        <translation>Después de eliminar:</translation>
+        <translation>Después de borrar:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="691"/>
@@ -1115,7 +1115,7 @@ No tiene permiso de escritura o el archivo es de solo lectura.</translation>
         <location filename="../src/qvoptionsdialog.ui" line="712"/>
         <location filename="../src/qvoptionsdialog.ui" line="760"/>
         <source>Shortcuts</source>
-        <translation>Accesos directos</translation>
+        <translation>Accesos rápidos</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="755"/>
@@ -1148,7 +1148,7 @@ No tiene permiso de escritura o el archivo es de solo lectura.</translation>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="15"/>
         <source>File name:</source>
-        <translation>Nombre de archivo:</translation>
+        <translation>Nombre del archivo:</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="26"/>
@@ -1176,7 +1176,7 @@ No tiene permiso de escritura o el archivo es de solo lectura.</translation>
     <message>
         <location filename="../src/qvshortcutdialog.ui" line="14"/>
         <source>Modify Shortcuts</source>
-        <translation>Modificar accesos directos</translation>
+        <translation>Modificar accesos rápidos</translation>
     </message>
     <message>
         <location filename="../src/qvshortcutdialog.cpp" line="53"/>
@@ -1186,7 +1186,7 @@ No tiene permiso de escritura o el archivo es de solo lectura.</translation>
     <message>
         <location filename="../src/qvshortcutdialog.cpp" line="53"/>
         <source>&quot;%1&quot; is already bound to &quot;%2&quot;</source>
-        <translation>«%1» ya está asociado con «%2»</translation>
+        <translation>«%1» ya está asociado a «%2»</translation>
     </message>
 </context>
 <context>
@@ -1195,7 +1195,7 @@ No tiene permiso de escritura o el archivo es de solo lectura.</translation>
         <location filename="../src/qvwelcomedialog.ui" line="14"/>
         <location filename="../src/qvwelcomedialog.ui" line="155"/>
         <source>Welcome</source>
-        <translation>Bienvenido</translation>
+        <translation>Bienvenida</translation>
     </message>
     <message>
         <location filename="../src/qvwelcomedialog.ui" line="472"/>
@@ -1210,7 +1210,7 @@ No tiene permiso de escritura o el archivo es de solo lectura.</translation>
     <message>
         <location filename="../src/qvwelcomedialog.cpp" line="49"/>
         <source>&lt;ul&gt;&lt;li&gt;Right click to access the main menu&lt;/li&gt;&lt;li&gt;Drag the image to reposition it&lt;/li&gt;&lt;li&gt;Scroll to zoom in and out&lt;/li&gt;&lt;li&gt;Use arrow keys to switch files&lt;/li&gt;&lt;/ul&gt;</source>
-        <translation>&lt;ul&gt;&lt;li&gt;Haga clic derecho para acceder al menú principal&lt;/li&gt;&lt;li&gt;Arrastre la imagen para recolocarla&lt;/li&gt;&lt;li&gt;Use el desplazamiento para ampliar o reducir la imagen&lt;/li&gt;&lt;li&gt;Use las teclas de flecha para cambiar de archivo&lt;/li&gt;&lt;/ul&gt;</translation>
+        <translation>&lt;ul&gt;&lt;li&gt;Haga clic derecho para acceder al menú principal&lt;/li&gt;&lt;li&gt;Arrastre la imagen para recolocarla&lt;/li&gt;&lt;li&gt;Use el desplazamiento para ampliarla o reducirla&lt;/li&gt;&lt;li&gt;Use las teclas de flecha para cambiar de archivo&lt;/li&gt;&lt;/ul&gt;</translation>
     </message>
 </context>
 <context>
@@ -1223,7 +1223,7 @@ No tiene permiso de escritura o el archivo es de solo lectura.</translation>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="46"/>
         <source>Open URL</source>
-        <translation>Abrir URL</translation>
+        <translation>Abrir un URL</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="47"/>
@@ -1253,7 +1253,7 @@ No tiene permiso de escritura o el archivo es de solo lectura.</translation>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="57"/>
         <source>Undo Delete</source>
-        <translation>Deshacer borrado</translation>
+        <translation>Deshacer el borrado</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="59"/>
@@ -1313,7 +1313,7 @@ No tiene permiso de escritura o el archivo es de solo lectura.</translation>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="81"/>
         <source>Reset Zoom</source>
-        <translation>Reiniciar la ampliación</translation>
+        <translation>Restablecer la vista</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="82"/>
@@ -1323,12 +1323,12 @@ No tiene permiso de escritura o el archivo es de solo lectura.</translation>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="83"/>
         <source>Rotate Right</source>
-        <translation>Rotar hacia la derecha</translation>
+        <translation>Girar a la derecha</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="84"/>
         <source>Rotate Left</source>
-        <translation>Rotar hacia la izquierda</translation>
+        <translation>Girar a la izquierda</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="85"/>
@@ -1338,7 +1338,7 @@ No tiene permiso de escritura o el archivo es de solo lectura.</translation>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="86"/>
         <source>Flip</source>
-        <translation>Invertir</translation>
+        <translation>Voltear</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="87"/>
@@ -1348,7 +1348,7 @@ No tiene permiso de escritura o el archivo es de solo lectura.</translation>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="99"/>
         <source>Save Frame As</source>
-        <translation>Guardar Fotograma Como</translation>
+        <translation>Guardar un fotograma como</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="100"/>
@@ -1358,17 +1358,17 @@ No tiene permiso de escritura o el archivo es de solo lectura.</translation>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="101"/>
         <source>Next Frame</source>
-        <translation>Siguiente fotograma</translation>
+        <translation>Fotograma siguiente</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="102"/>
         <source>Decrease Speed</source>
-        <translation>Disminuir la velocidad</translation>
+        <translation>Reducir la velocidad</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="103"/>
         <source>Reset Speed</source>
-        <translation>Reiniciar la velocidad</translation>
+        <translation>Restablecer la velocidad</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="104"/>
@@ -1378,7 +1378,7 @@ No tiene permiso de escritura o el archivo es de solo lectura.</translation>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="105"/>
         <source>Toggle Slideshow</source>
-        <translation>Activar/Desactivar Presentacion</translation>
+        <translation>Activar/desactivar una presentación</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="106"/>
@@ -1388,12 +1388,12 @@ No tiene permiso de escritura o el archivo es de solo lectura.</translation>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="108"/>
         <source>Preferences</source>
-        <translation>Preferencias</translation>
+        <translation>Configuración</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="112"/>
         <source>New Window</source>
-        <translation>Nueva ventana</translation>
+        <translation>Ventana nueva</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="113"/>
@@ -1447,7 +1447,7 @@ No tiene permiso de escritura o el archivo es de solo lectura.</translation>
         <location filename="../src/updatechecker.cpp" line="87"/>
         <source>Update notifications on startup have been disabled.
 You can reenable them in the options dialog.</source>
-        <translation>Notificaciones de actualizaciones al inicio han sido desactivadas.
+        <translation>Se han desactivado las notificaciones de actualización al inicio.
 Es posible reactivarlas en el dialogo de opciones.</translation>
     </message>
 </context>
