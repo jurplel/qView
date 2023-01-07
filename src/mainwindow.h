@@ -75,7 +75,7 @@ public:
 
     void zoomOut();
 
-    void resetZoom();
+    void setZoomToFitEnabled(bool value);
 
     void originalSize();
 
@@ -123,6 +123,8 @@ public slots:
     void fileChanged();
 
     void zoomLevelChanged();
+
+    void zoomToFitChanged();
 
     void disableActions();
 

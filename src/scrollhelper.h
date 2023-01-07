@@ -24,7 +24,7 @@ public:
 
     void move(QPointF delta);
 
-    void constrain();
+    void constrain(bool skipAnimation = false);
 
     void cancelAnimation();
 
@@ -32,6 +32,8 @@ private:
     void beginAnimatedScroll(QPoint delta);
 
     void handleAnimatedScroll();
+
+    void applyScrollDelta(QPoint delta);
 
     static void calculateScrollRange(int contentDimension, int viewportDimension, int offset, bool shouldCenter, int &minValue, int &maxValue);
 
