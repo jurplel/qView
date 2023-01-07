@@ -180,7 +180,7 @@ bool QVGraphicsView::event(QEvent *event)
 //            if (changeFlags & QPinchGesture::RotationAngleChanged) {
 //                qreal rotationDelta = pinchGesture->rotationAngle() - pinchGesture->lastRotationAngle();
 //                rotate(rotationDelta);
-//                centerOn(loadedPixmapItem);
+//                centerImage();
 //            }
             return true;
         }
@@ -335,7 +335,7 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
     }
     else
     {
-        centerOn(loadedPixmapItem);
+        centerImage();
     }
 
     if (isScalingEnabled)
@@ -455,6 +455,11 @@ void QVGraphicsView::zoomToFit()
 void QVGraphicsView::originalSize()
 {
     setZoomLevel(1.0);
+}
+
+void QVGraphicsView::centerImage()
+{
+    centerOn(loadedPixmapItem);
 }
 
 void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)

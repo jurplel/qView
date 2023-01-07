@@ -245,7 +245,12 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
     else if (event->button() == Qt::MouseButton::ForwardButton)
         nextFile();
     else if (event->button() == Qt::MouseButton::MiddleButton)
-        setZoomToFitEnabled(true);
+    {
+        if (!graphicsView->getZoomToFitEnabled())
+            graphicsView->setZoomToFitEnabled(true);
+        else
+            graphicsView->centerImage();
+    }
 
     QMainWindow::mousePressEvent(event);
 }

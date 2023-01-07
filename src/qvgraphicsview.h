@@ -49,6 +49,8 @@ public:
     void zoomToFit();
     void originalSize();
 
+    void centerImage();
+
     void goToFile(const GoToFileMode &mode, int index = 0);
 
     void settingsUpdated();
