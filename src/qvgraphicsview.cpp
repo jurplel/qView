@@ -41,6 +41,8 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     scaleFactor = 1.25;
 
     // Initialize other variables
+    isZoomToFitEnabled = true;
+    isApplyingZoomToFit = false;
     currentScale = 1.0;
     maxScalingTwoSize = 3;
     lastZoomEventPos = QPoint(-1, -1);
@@ -89,7 +91,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 void QVGraphicsView::resizeEvent(QResizeEvent *event)
 {
     QGraphicsView::resizeEvent(event);
-    resetScale();
+    fitOrConstrainImage();
 }
 
 void QVGraphicsView::dropEvent(QDropEvent *event)
@@ -278,8 +280,10 @@ void QVGraphicsView::postLoad()
     // Set the pixmap to the new image and reset the transform's scale to a known value
     makeUnscaled();
 
-    // Fit and center the new image
-    resetScale();
+    fitOrConstrainImage();
+
+    if (isScalingEnabled)
+        expensiveScaleTimer->start();
 
     qvApp->getActionManager().addFileToRecentsList(getCurrentFileDetails().fileInfo);
 
@@ -305,6 +309,9 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
         currentScale *= qPow(scaleFactor, -1);
         return;
     }
+
+    if (!isApplyingZoomToFit)
+        setZoomToFitEnabled(false);
 
     if (pos != lastZoomEventPos)
     {
@@ -342,6 +349,23 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
 void QVGraphicsView::setZoomLevel(qreal absoluteScaleFactor)
 {
     zoom(absoluteScaleFactor / currentScale);
+}
+
+bool QVGraphicsView::getZoomToFitEnabled() const
+{
+    return isZoomToFitEnabled;
+}
+
+void QVGraphicsView::setZoomToFitEnabled(bool value)
+{
+    if (isZoomToFitEnabled == value)
+        return;
+
+    isZoomToFitEnabled = value;
+    if (isZoomToFitEnabled)
+        zoomToFit();
+
+    emit zoomToFitChanged();
 }
 
 void QVGraphicsView::scaleExpensively()
@@ -392,7 +416,7 @@ void QVGraphicsView::animatedFrameChanged(QRect rect)
     }
 }
 
-void QVGraphicsView::resetScale()
+void QVGraphicsView::zoomToFit()
 {
     if (!getCurrentFileDetails().isPixmapLoaded)
         return;
@@ -423,7 +447,9 @@ void QVGraphicsView::resetScale()
     if (targetRatio > 1.0 && !isPastActualSizeEnabled)
         targetRatio = 1.0;
 
+    isApplyingZoomToFit = true;
     setZoomLevel(targetRatio);
+    isApplyingZoomToFit = false;
 }
 
 void QVGraphicsView::originalSize()
@@ -560,6 +586,19 @@ void QVGraphicsView::centerOn(const QGraphicsItem *item)
     centerOn(item->sceneBoundingRect().center());
 }
 
+void QVGraphicsView::fitOrConstrainImage()
+{
+    if (isZoomToFitEnabled)
+        zoomToFit();
+    else
+        scrollHelper->constrain(true);
+}
+
+QSize QVGraphicsView::getEffectiveImageSize() const
+{
+    return getTransformWithNoScaling().mapRect(QRect(QPoint(), getCurrentFileDetails().loadedPixmapSize)).size();
+}
+
 QRect QVGraphicsView::getUsableViewportRect() const
 {
 #ifdef COCOA_LOADED
@@ -615,7 +654,9 @@ void QVGraphicsView::settingsUpdated()
 
     //scaling
     isScalingEnabled = settingsManager.getBoolean("scalingenabled");
-    if (!isScalingEnabled)
+    if (isScalingEnabled)
+        expensiveScaleTimer->start();
+    else
         makeUnscaled();
 
     //scaling2
@@ -649,7 +690,7 @@ void QVGraphicsView::settingsUpdated()
     isLoopFoldersEnabled = settingsManager.getBoolean("loopfoldersenabled");
 
     if (getCurrentFileDetails().isPixmapLoaded)
-        resetScale();
+        fitOrConstrainImage();
 }
 
 void QVGraphicsView::closeImage()

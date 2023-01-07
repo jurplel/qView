@@ -59,6 +59,7 @@ QAction *ActionManager::addCloneOfAction(QWidget *parent, const QString &key)
         newAction->setData(action->data());
         newAction->setText(action->text());
         newAction->setMenuRole(action->menuRole());
+        newAction->setCheckable(action->isCheckable());
         newAction->setEnabled(action->isEnabled());
         newAction->setShortcuts(action->shortcuts());
         newAction->setVisible(action->isVisible());
@@ -251,7 +252,7 @@ QMenu *ActionManager::buildViewMenu(bool addIcon, QWidget *parent)
 
     addCloneOfAction(viewMenu, "zoomin");
     addCloneOfAction(viewMenu, "zoomout");
-    addCloneOfAction(viewMenu, "resetzoom");
+    addCloneOfAction(viewMenu, "zoomtofit");
     addCloneOfAction(viewMenu, "originalsize");
     viewMenu->addSeparator();
     addCloneOfAction(viewMenu, "rotateright");
@@ -603,8 +604,8 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
         relevantWindow->zoomIn();
     } else if (key == "zoomout") {
         relevantWindow->zoomOut();
-    } else if (key == "resetzoom") {
-        relevantWindow->resetZoom();
+    } else if (key == "zoomtofit") {
+        relevantWindow->setZoomToFitEnabled(triggeredAction->isChecked());
     } else if (key == "originalsize") {
         relevantWindow->originalSize();
     } else if (key == "rotateright") {
@@ -715,9 +716,10 @@ void ActionManager::initializeActionLibrary()
     zoomOutAction->setData({"disable"});
     actionLibrary.insert("zoomout", zoomOutAction);
 
-    auto *resetZoomAction = new QAction(QIcon::fromTheme("zoom-fit-best"), tr("Reset &Zoom"));
-    resetZoomAction->setData({"disable"});
-    actionLibrary.insert("resetzoom", resetZoomAction);
+    auto *zoomToFitAction = new QAction(QIcon::fromTheme("zoom-fit-best"), tr("&Zoom to Fit"));
+    zoomToFitAction->setData({"disable"});
+    zoomToFitAction->setCheckable(true);
+    actionLibrary.insert("zoomtofit", zoomToFitAction);
 
     auto *originalSizeAction = new QAction(QIcon::fromTheme("zoom-original"), tr("Ori&ginal Size"));
     originalSizeAction->setData({"disable"});

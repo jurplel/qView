@@ -54,6 +54,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // Connect graphicsview signals
     connect(graphicsView, &QVGraphicsView::fileChanged, this, &MainWindow::fileChanged);
     connect(graphicsView, &QVGraphicsView::zoomLevelChanged, this, &MainWindow::zoomLevelChanged);
+    connect(graphicsView, &QVGraphicsView::zoomToFitChanged, this, &MainWindow::zoomToFitChanged);
     connect(graphicsView, &QVGraphicsView::cancelSlideshow, this, &MainWindow::cancelSlideshow);
 
     // Initialize escape shortcut
@@ -110,6 +111,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(menuBar(), &QMenuBar::triggered, this, [this](QAction *triggeredAction){
         ActionManager::actionTriggered(triggeredAction, this);
     });
+    // Initialize checkable actions
+    zoomToFitChanged();
 
     // Add all actions to this window so keyboard shortcuts are always triggered
     // using virtual menu to hold them so i can connect to the triggered signal
@@ -242,7 +245,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
     else if (event->button() == Qt::MouseButton::ForwardButton)
         nextFile();
     else if (event->button() == Qt::MouseButton::MiddleButton)
-        resetZoom();
+        setZoomToFitEnabled(true);
 
     QMainWindow::mousePressEvent(event);
 }
@@ -326,6 +329,15 @@ void MainWindow::fileChanged()
 void MainWindow::zoomLevelChanged()
 {
     buildWindowTitle();
+}
+
+void MainWindow::zoomToFitChanged()
+{
+    const auto zoomToFitActions = qvApp->getActionManager().getAllClonesOfAction("zoomtofit", this);
+    for (const auto &zoomToFitAction : zoomToFitActions)
+    {
+        zoomToFitAction->setChecked(graphicsView->getZoomToFitEnabled());
+    }
 }
 
 void MainWindow::disableActions()
@@ -894,9 +906,9 @@ void MainWindow::zoomOut()
     graphicsView->zoomOut();
 }
 
-void MainWindow::resetZoom()
+void MainWindow::setZoomToFitEnabled(bool value)
 {
-    graphicsView->resetScale();
+    graphicsView->setZoomToFitEnabled(value);
 }
 
 void MainWindow::originalSize()
@@ -907,25 +919,25 @@ void MainWindow::originalSize()
 void MainWindow::rotateRight()
 {
     graphicsView->rotateImage(90);
-    resetZoom();
+    graphicsView->zoomToFit();
 }
 
 void MainWindow::rotateLeft()
 {
     graphicsView->rotateImage(-90);
-    resetZoom();
+    graphicsView->zoomToFit();
 }
 
 void MainWindow::mirror()
 {
     graphicsView->scale(-1, 1);
-    resetZoom();
+    graphicsView->zoomToFit();
 }
 
 void MainWindow::flip()
 {
     graphicsView->scale(1, -1);
-    resetZoom();
+    graphicsView->zoomToFit();
 }
 
 void MainWindow::firstFile()
@@ -972,7 +984,7 @@ void MainWindow::saveFrameAs()
             nextFrame();
 
         graphicsView->getLoadedMovie().currentPixmap().save(fileName, nullptr, 100);
-        graphicsView->resetScale();
+        graphicsView->zoomToFit();
     });
 }
 

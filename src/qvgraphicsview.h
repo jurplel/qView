@@ -17,13 +17,6 @@ class QVGraphicsView : public QGraphicsView
 public:
     QVGraphicsView(QWidget *parent = nullptr);
 
-    enum class ScaleMode
-    {
-       resetScale,
-       zoom
-    };
-    Q_ENUM(ScaleMode)
-
     enum class GoToFileMode
     {
        constant,
@@ -47,10 +40,13 @@ public:
 
     void setZoomLevel(qreal absoluteScaleFactor);
 
+    bool getZoomToFitEnabled() const;
+    void setZoomToFitEnabled(bool value);
+
     void scaleExpensively();
     void makeUnscaled();
 
-    void resetScale();
+    void zoomToFit();
     void originalSize();
 
     void goToFile(const GoToFileMode &mode, int index = 0);
@@ -74,6 +70,8 @@ signals:
     void fileChanged();
 
     void zoomLevelChanged();
+
+    void zoomToFitChanged();
 
 protected:
     void wheelEvent(QWheelEvent *event) override;
@@ -101,6 +99,8 @@ protected:
     void centerOn(qreal x, qreal y);
 
     void centerOn(const QGraphicsItem *item);
+
+    void fitOrConstrainImage();
 
     QRect getUsableViewportRect() const;
 
@@ -132,6 +132,8 @@ private:
 
     const int MARGIN = -2;
 
+    bool isZoomToFitEnabled;
+    bool isApplyingZoomToFit;
     qreal currentScale;
     qreal maxScalingTwoSize;
     QPoint lastZoomEventPos;
