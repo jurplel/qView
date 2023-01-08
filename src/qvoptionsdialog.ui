@@ -375,6 +375,16 @@
         </widget>
        </item>
        <item row="7" column="1">
+        <widget class="QCheckBox" name="oneToOnePixelSizingCheckbox">
+         <property name="text">
+          <string>Zoom level is relative to screen pixels</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="1">
         <spacer name="horizontalSpacer">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -387,8 +397,13 @@
          </property>
         </spacer>
        </item>
+<<<<<<< HEAD
        <item row="8" column="0">
         <widget class="QLabel" name="cropModeLabel">
+=======
+       <item row="10" column="1">
+        <widget class="QCheckBox" name="pastActualSizeCheckbox">
+>>>>>>> 8a459e5 (Option to make zoom level relative to screen pixels (i.e. at 100% the image maps 1:1 to screen pixels regardless of DPI scaling).)
          <property name="toolTip">
           <string>Ignores select sides of an image when fitting to window (some sides will extend beyond the window boundaries)</string>
          </property>
@@ -397,7 +412,7 @@
          </property>
         </widget>
        </item>
-       <item row="8" column="1">
+       <item row="9" column="1">
         <widget class="QComboBox" name="cropModeComboBox">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -425,8 +440,13 @@
          </item>
         </widget>
        </item>
+<<<<<<< HEAD
        <item row="9" column="1">
         <widget class="QCheckBox" name="pastActualSizeCheckbox">
+=======
+       <item row="9" column="0">
+        <widget class="QLabel" name="cropModeLabel">
+>>>>>>> 8a459e5 (Option to make zoom level relative to screen pixels (i.e. at 100% the image maps 1:1 to screen pixels regardless of DPI scaling).)
          <property name="toolTip">
           <string>Stop the image from going past its actual size when resizing the window - you can still zoom past it though</string>
          </property>
@@ -438,7 +458,7 @@
          </property>
         </widget>
        </item>
-       <item row="10" column="1">
+       <item row="11" column="1">
         <spacer name="horizontalSpacer_9">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -451,7 +471,7 @@
          </property>
         </spacer>
        </item>
-       <item row="11" column="1">
+       <item row="12" column="1">
         <widget class="QCheckBox" name="constrainImagePositionCheckbox">
          <property name="text">
           <string>&amp;Constrain image position</string>
@@ -461,7 +481,7 @@
          </property>
         </widget>
        </item>
-       <item row="12" column="1">
+       <item row="13" column="1">
         <widget class="QCheckBox" name="constrainCentersSmallImageCheckbox">
          <property name="text">
           <string>Keep ce&amp;ntered if smaller</string>
@@ -471,6 +491,54 @@
          </property>
         </widget>
        </item>
+<<<<<<< HEAD
+=======
+       <item row="14" column="1">
+        <spacer name="horizontalSpacer_10">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>5</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="15" column="0">
+        <widget class="QLabel" name="colorSpaceConversionLabel">
+         <property name="text">
+          <string>Color space conversion:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="15" column="1">
+        <widget class="QComboBox" name="colorSpaceConversionComboBox">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <item>
+          <property name="text">
+           <string>Disabled</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>sRGB</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Display P3</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+>>>>>>> 8a459e5 (Option to make zoom level relative to screen pixels (i.e. at 100% the image maps 1:1 to screen pixels regardless of DPI scaling).)
       </layout>
      </widget>
      <widget class="QWidget" name="misc">

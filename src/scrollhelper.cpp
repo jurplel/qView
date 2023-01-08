@@ -19,6 +19,8 @@ void ScrollHelper::move(QPointF delta)
 {
     Parameters p;
     getParametersCallback(p);
+    if (!p.ContentRect.isValid() || !p.UsableViewportRect.isValid())
+        return;
     bool isRightToLeft = hScrollBar->isRightToLeft();
     int hMin, hMax, vMin, vMax;
     calculateScrollRange(

@@ -35,6 +35,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     isScrollZoomsEnabled = true;
     isLoopFoldersEnabled = true;
     isCursorZoomEnabled = true;
+    isOneToOnePixelSizingEnabled = true;
     isConstrainedPositioningEnabled = true;
     isConstrainedSmallCenteringEnabled = true;
     cropMode = 0;
@@ -45,6 +46,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     isApplyingZoomToFit = false;
     isNavigationResetsZoomEnabled = true;
     currentScale = 1.0;
+    appliedScaleAdjustment = 1.0;
     maxScalingTwoSize = 3;
     lastZoomEventPos = QPoint(-1, -1);
     lastZoomRoundingError = QPointF();
@@ -93,6 +95,15 @@ void QVGraphicsView::resizeEvent(QResizeEvent *event)
 {
     QGraphicsView::resizeEvent(event);
     fitOrConstrainImage();
+}
+
+void QVGraphicsView::paintEvent(QPaintEvent *event)
+{
+    // This is the most reliable place to detect DPI changes. QWindow::screenChanged()
+    // doesn't detect when the DPI is changed on the current monitor, for example.
+    handleScaleAdjustmentChange();
+
+    QGraphicsView::paintEvent(event);
 }
 
 void QVGraphicsView::dropEvent(QDropEvent *event)
@@ -286,8 +297,7 @@ void QVGraphicsView::postLoad()
     else
         fitOrConstrainImage();
 
-    if (isScalingEnabled)
-        expensiveScaleTimer->start();
+    expensiveScaleTimer->start();
 
     qvApp->getActionManager().addFileToRecentsList(getCurrentFileDetails().fileInfo);
 
@@ -342,11 +352,7 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
         centerImage();
     }
 
-    if (isScalingEnabled)
-    {
-        expensiveScaleTimer->start();
-    }
-
+    expensiveScaleTimer->start();
     emitZoomLevelChangedTimer->start();
 }
 
@@ -389,6 +395,9 @@ void QVGraphicsView::setNavigationResetsZoomEnabled(bool value)
 
 void QVGraphicsView::scaleExpensively()
 {
+    if (!isScalingEnabled || !getCurrentFileDetails().isPixmapLoaded)
+        return;
+
     // If we are above maximum scaling size
     if ((currentScale >= maxScalingTwoSize) ||
         (!isScalingTwoEnabled && currentScale > 1.00001))
@@ -398,15 +407,17 @@ void QVGraphicsView::scaleExpensively()
         return;
     }
 
-    // Map size of the original pixmap to the scale acquired in fitting with modification from zooming percentage
-    const QSizeF mappedPixmapSize = QSizeF(getCurrentFileDetails().loadedPixmapSize) * currentScale * devicePixelRatioF();
+    // Calculate scaled resolution
+    qreal scaleAdjustment = getScaleAdjustment();
+    const QSizeF mappedSize = QSizeF(getCurrentFileDetails().loadedPixmapSize) * currentScale * scaleAdjustment * devicePixelRatioF();
 
     // Set image to scaled version
-    loadedPixmapItem->setPixmap(imageCore.scaleExpensively(mappedPixmapSize));
+    loadedPixmapItem->setPixmap(imageCore.scaleExpensively(mappedSize));
 
     // Set appropriate scale factor
     qreal targetScale = 1.0 / devicePixelRatioF();
     setTransform(getTransformWithNoScaling().scale(targetScale, targetScale));
+    appliedScaleAdjustment = scaleAdjustment;
 }
 
 void QVGraphicsView::makeUnscaled()
@@ -414,11 +425,14 @@ void QVGraphicsView::makeUnscaled()
     // Return to original size
     if (getCurrentFileDetails().isMovieLoaded)
         loadedPixmapItem->setPixmap(getLoadedMovie().currentPixmap());
-    else
+    else if (getCurrentFileDetails().isPixmapLoaded)
         loadedPixmapItem->setPixmap(getLoadedPixmap());
 
     // Set appropriate scale factor
-    setTransform(getTransformWithNoScaling().scale(currentScale, currentScale));
+    qreal scaleAdjustment = getScaleAdjustment();
+    qreal targetScale = currentScale * scaleAdjustment;
+    setTransform(getTransformWithNoScaling().scale(targetScale, targetScale));
+    appliedScaleAdjustment = scaleAdjustment;
 }
 
 void QVGraphicsView::animatedFrameChanged(QRect rect)
@@ -618,9 +632,9 @@ void QVGraphicsView::fitOrConstrainImage()
         scrollHelper->constrain(true);
 }
 
-QSize QVGraphicsView::getEffectiveImageSize() const
+QSizeF QVGraphicsView::getEffectiveImageSize() const
 {
-    return getTransformWithNoScaling().mapRect(QRect(QPoint(), getCurrentFileDetails().loadedPixmapSize)).size();
+    return getTransformWithNoScaling().mapRect(QRectF(QPoint(), getCurrentFileDetails().loadedPixmapSize)).size() * getScaleAdjustment();
 }
 
 QRect QVGraphicsView::getUsableViewportRect() const
@@ -639,6 +653,23 @@ QTransform QVGraphicsView::getTransformWithNoScaling()
 {
     qreal currentTransformScale = transform().mapRect(QRectF(QPointF(), QSizeF(1, 1))).width();
     return QTransform(transform()).scale(1.0 / currentTransformScale, 1.0 / currentTransformScale);
+}
+
+qreal QVGraphicsView::getScaleAdjustment() const
+{
+    return isOneToOnePixelSizingEnabled ? 1.0 / devicePixelRatioF() : 1.0;
+}
+
+void QVGraphicsView::handleScaleAdjustmentChange()
+{
+    if (appliedScaleAdjustment == getScaleAdjustment())
+        return;
+
+    makeUnscaled();
+
+    fitOrConstrainImage();
+
+    expensiveScaleTimer->start();
 }
 
 void QVGraphicsView::error(int errorNum, const QString &errorString, const QString &fileName)
@@ -704,6 +735,9 @@ void QVGraphicsView::settingsUpdated()
     //cursor zoom
     isCursorZoomEnabled = settingsManager.getBoolean("cursorzoom");
 
+    //one-to-one pixel sizing
+    isOneToOnePixelSizingEnabled = settingsManager.getBoolean("onetoonepixelsizing");
+
     //constrained positioning
     isConstrainedPositioningEnabled = settingsManager.getBoolean("constrainimageposition");
 
@@ -713,8 +747,11 @@ void QVGraphicsView::settingsUpdated()
     //loop folders
     isLoopFoldersEnabled = settingsManager.getBoolean("loopfoldersenabled");
 
-    if (getCurrentFileDetails().isPixmapLoaded)
-        fitOrConstrainImage();
+    // End of settings variables
+
+    handleScaleAdjustmentChange();
+
+    fitOrConstrainImage();
 }
 
 void QVGraphicsView::closeImage()
