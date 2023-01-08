@@ -252,8 +252,9 @@ QMenu *ActionManager::buildViewMenu(bool addIcon, QWidget *parent)
 
     addCloneOfAction(viewMenu, "zoomin");
     addCloneOfAction(viewMenu, "zoomout");
-    addCloneOfAction(viewMenu, "zoomtofit");
     addCloneOfAction(viewMenu, "originalsize");
+    addCloneOfAction(viewMenu, "zoomtofit");
+    addCloneOfAction(viewMenu, "navigationresetszoom");
     viewMenu->addSeparator();
     addCloneOfAction(viewMenu, "rotateright");
     addCloneOfAction(viewMenu, "rotateleft");
@@ -604,10 +605,12 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
         relevantWindow->zoomIn();
     } else if (key == "zoomout") {
         relevantWindow->zoomOut();
-    } else if (key == "zoomtofit") {
-        relevantWindow->setZoomToFitEnabled(triggeredAction->isChecked());
     } else if (key == "originalsize") {
         relevantWindow->originalSize();
+    } else if (key == "zoomtofit") {
+        relevantWindow->setZoomToFitEnabled(triggeredAction->isChecked());
+    } else if (key == "navigationresetszoom") {
+        relevantWindow->setNavigationResetsZoomEnabled(triggeredAction->isChecked());
     } else if (key == "rotateright") {
         relevantWindow->rotateRight();
     } else if (key == "rotateleft") {
@@ -716,14 +719,19 @@ void ActionManager::initializeActionLibrary()
     zoomOutAction->setData({"disable"});
     actionLibrary.insert("zoomout", zoomOutAction);
 
+    auto *originalSizeAction = new QAction(QIcon::fromTheme("zoom-original"), tr("Ori&ginal Size"));
+    originalSizeAction->setData({"disable"});
+    actionLibrary.insert("originalsize", originalSizeAction);
+
     auto *zoomToFitAction = new QAction(QIcon::fromTheme("zoom-fit-best"), tr("&Zoom to Fit"));
     zoomToFitAction->setData({"disable"});
     zoomToFitAction->setCheckable(true);
     actionLibrary.insert("zoomtofit", zoomToFitAction);
 
-    auto *originalSizeAction = new QAction(QIcon::fromTheme("zoom-original"), tr("Ori&ginal Size"));
-    originalSizeAction->setData({"disable"});
-    actionLibrary.insert("originalsize", originalSizeAction);
+    auto *navigationResetsZoomAction = new QAction(tr("&Navigation Resets Zoom"));
+    navigationResetsZoomAction->setData({"disable"});
+    navigationResetsZoomAction->setCheckable(true);
+    actionLibrary.insert("navigationresetszoom", navigationResetsZoomAction);
 
     auto *rotateRightAction = new QAction(QIcon::fromTheme("object-rotate-right"), tr("Rotate &Right"));
     rotateRightAction->setData({"disable"});

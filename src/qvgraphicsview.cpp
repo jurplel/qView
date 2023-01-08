@@ -43,6 +43,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     // Initialize other variables
     isZoomToFitEnabled = true;
     isApplyingZoomToFit = false;
+    isNavigationResetsZoomEnabled = true;
     currentScale = 1.0;
     maxScalingTwoSize = 3;
     lastZoomEventPos = QPoint(-1, -1);
@@ -279,7 +280,10 @@ void QVGraphicsView::postLoad()
     // Set the pixmap to the new image and reset the transform's scale to a known value
     makeUnscaled();
 
-    fitOrConstrainImage();
+    if (isNavigationResetsZoomEnabled && !isZoomToFitEnabled)
+        setZoomToFitEnabled(true);
+    else
+        fitOrConstrainImage();
 
     if (isScalingEnabled)
         expensiveScaleTimer->start();
@@ -365,6 +369,21 @@ void QVGraphicsView::setZoomToFitEnabled(bool value)
         zoomToFit();
 
     emit zoomToFitChanged();
+}
+
+bool QVGraphicsView::getNavigationResetsZoomEnabled() const
+{
+    return isNavigationResetsZoomEnabled;
+}
+
+void QVGraphicsView::setNavigationResetsZoomEnabled(bool value)
+{
+    if (isNavigationResetsZoomEnabled == value)
+        return;
+
+    isNavigationResetsZoomEnabled = value;
+
+    emit navigationResetsZoomChanged();
 }
 
 void QVGraphicsView::scaleExpensively()
