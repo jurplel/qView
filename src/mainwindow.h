@@ -77,6 +77,8 @@ public:
 
     void setZoomToFitEnabled(bool value);
 
+    void setNavigationResetsZoomEnabled(bool value);
+
     void originalSize();
 
     void rotateRight();
@@ -124,7 +126,9 @@ public slots:
 
     void zoomLevelChanged();
 
-    void zoomToFitChanged();
+    void syncZoomToFitChecked();
+
+    void syncNavigationResetsZoomChecked();
 
     void disableActions();
 

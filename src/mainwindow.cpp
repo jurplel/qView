@@ -54,7 +54,8 @@ MainWindow::MainWindow(QWidget *parent) :
     // Connect graphicsview signals
     connect(graphicsView, &QVGraphicsView::fileChanged, this, &MainWindow::fileChanged);
     connect(graphicsView, &QVGraphicsView::zoomLevelChanged, this, &MainWindow::zoomLevelChanged);
-    connect(graphicsView, &QVGraphicsView::zoomToFitChanged, this, &MainWindow::zoomToFitChanged);
+    connect(graphicsView, &QVGraphicsView::zoomToFitChanged, this, &MainWindow::syncZoomToFitChecked);
+    connect(graphicsView, &QVGraphicsView::navigationResetsZoomChanged, this, &MainWindow::syncNavigationResetsZoomChecked);
     connect(graphicsView, &QVGraphicsView::cancelSlideshow, this, &MainWindow::cancelSlideshow);
 
     // Initialize escape shortcut
@@ -112,7 +113,8 @@ MainWindow::MainWindow(QWidget *parent) :
         ActionManager::actionTriggered(triggeredAction, this);
     });
     // Initialize checkable actions
-    zoomToFitChanged();
+    syncZoomToFitChecked();
+    syncNavigationResetsZoomChecked();
 
     // Add all actions to this window so keyboard shortcuts are always triggered
     // using virtual menu to hold them so i can connect to the triggered signal
@@ -336,13 +338,20 @@ void MainWindow::zoomLevelChanged()
     buildWindowTitle();
 }
 
-void MainWindow::zoomToFitChanged()
+void MainWindow::syncZoomToFitChecked()
 {
-    const auto zoomToFitActions = qvApp->getActionManager().getAllClonesOfAction("zoomtofit", this);
-    for (const auto &zoomToFitAction : zoomToFitActions)
-    {
-        zoomToFitAction->setChecked(graphicsView->getZoomToFitEnabled());
-    }
+    const auto actions = qvApp->getActionManager().getAllClonesOfAction("zoomtofit", this);
+    const bool value = graphicsView->getZoomToFitEnabled();
+    for (const auto &action : actions)
+        action->setChecked(value);
+}
+
+void MainWindow::syncNavigationResetsZoomChecked()
+{
+    const auto actions = qvApp->getActionManager().getAllClonesOfAction("navigationresetszoom", this);
+    const bool value = graphicsView->getNavigationResetsZoomEnabled();
+    for (const auto &action : actions)
+        action->setChecked(value);
 }
 
 void MainWindow::disableActions()
@@ -914,6 +923,11 @@ void MainWindow::zoomOut()
 void MainWindow::setZoomToFitEnabled(bool value)
 {
     graphicsView->setZoomToFitEnabled(value);
+}
+
+void MainWindow::setNavigationResetsZoomEnabled(bool value)
+{
+    graphicsView->setNavigationResetsZoomEnabled(value);
 }
 
 void MainWindow::originalSize()
