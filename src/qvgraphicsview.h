@@ -64,7 +64,7 @@ public:
     void setSpeed(const int &desiredSpeed);
     void rotateImage(int rotation);
 
-    QSize getEffectiveImageSize() const;
+    QSizeF getEffectiveImageSize() const;
 
     const QVImageCore::FileDetails& getCurrentFileDetails() const { return imageCore.getCurrentFileDetails(); }
     const QPixmap& getLoadedPixmap() const { return imageCore.getLoadedPixmap(); }
@@ -86,6 +86,8 @@ protected:
     void wheelEvent(QWheelEvent *event) override;
 
     void resizeEvent(QResizeEvent *event) override;
+
+    void paintEvent(QPaintEvent *event) override;
 
     void dropEvent(QDropEvent *event) override;
 
@@ -115,6 +117,10 @@ protected:
 
     QTransform getTransformWithNoScaling() const;
 
+    qreal getScaleAdjustment() const;
+
+    void handleScaleAdjustmentChange();
+
 private slots:
     void animatedFrameChanged(QRect rect);
 
@@ -134,6 +140,7 @@ private:
     bool isScrollZoomsEnabled;
     bool isLoopFoldersEnabled;
     bool isCursorZoomEnabled;
+    bool isOneToOnePixelSizingEnabled;
     bool isConstrainedPositioningEnabled;
     bool isConstrainedSmallCenteringEnabled;
     int cropMode;
@@ -145,6 +152,7 @@ private:
     bool isApplyingZoomToFit;
     bool isNavigationResetsZoomEnabled;
     qreal currentScale;
+    qreal appliedScaleAdjustment;
     qreal maxScalingTwoSize;
     QPoint lastZoomEventPos;
     QPointF lastZoomRoundingError;
