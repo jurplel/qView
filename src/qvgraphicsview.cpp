@@ -281,12 +281,13 @@ void QVGraphicsView::loadMimeData(const QMimeData *mimeData)
 
 void QVGraphicsView::loadFile(const QString &fileName)
 {
-    scrollHelper->cancelAnimation();
     imageCore.loadFile(fileName);
 }
 
 void QVGraphicsView::postLoad()
 {
+    scrollHelper->cancelAnimation();
+
     // Set the pixmap to the new image and reset the transform's scale to a known value
     makeUnscaled();
 
