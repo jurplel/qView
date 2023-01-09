@@ -64,7 +64,7 @@ public:
     void setSpeed(const int &desiredSpeed);
     void rotateImage(int rotation);
 
-    QSizeF getEffectiveImageSize() const;
+    QSizeF getEffectiveOriginalSize() const;
 
     const QVImageCore::FileDetails& getCurrentFileDetails() const { return imageCore.getCurrentFileDetails(); }
     const QPixmap& getLoadedPixmap() const { return imageCore.getLoadedPixmap(); }
@@ -113,7 +113,9 @@ protected:
 
     void fitOrConstrainImage();
 
-    QRect getUsableViewportRect() const;
+    QRectF getContentRect() const;
+
+    QRect getUsableViewportRect(bool addMargin = false) const;
 
     QTransform getTransformWithNoScaling();
 
@@ -153,7 +155,6 @@ private:
     bool isNavigationResetsZoomEnabled;
     qreal currentScale;
     qreal appliedScaleAdjustment;
-    qreal maxScalingTwoSize;
     QPoint lastZoomEventPos;
     QPointF lastZoomRoundingError;
     QPointF lastScrollRoundingError;

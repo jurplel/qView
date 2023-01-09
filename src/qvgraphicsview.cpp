@@ -47,7 +47,6 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     isNavigationResetsZoomEnabled = true;
     currentScale = 1.0;
     appliedScaleAdjustment = 1.0;
-    maxScalingTwoSize = 3;
     lastZoomEventPos = QPoint(-1, -1);
     lastZoomRoundingError = QPointF();
     lastScrollRoundingError = QPointF();
@@ -55,7 +54,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     scrollHelper = new ScrollHelper(this,
         [this](ScrollHelper::Parameters &p)
         {
-            p.ContentRect = transform().mapRect(loadedPixmapItem->boundingRect()).toRect();
+            p.ContentRect = getContentRect().toRect();
             p.UsableViewportRect = getUsableViewportRect();
             p.ShouldConstrain = isConstrainedPositioningEnabled;
             p.ShouldCenter = isConstrainedSmallCenteringEnabled;
@@ -399,8 +398,9 @@ void QVGraphicsView::scaleExpensively()
         return;
 
     // If we are above maximum scaling size
-    if ((currentScale >= maxScalingTwoSize) ||
-        (!isScalingTwoEnabled && currentScale > 1.00001))
+    const QSize contentSize = getContentRect().size().toSize();
+    const QSize maxSize = getUsableViewportRect(true).size() * (isScalingTwoEnabled ? 3 : 1) + QSize(1, 1);
+    if (contentSize.width() > maxSize.width() || contentSize.height() > maxSize.height())
     {
         // Return to original size
         makeUnscaled();
@@ -454,8 +454,8 @@ void QVGraphicsView::zoomToFit()
     if (!getCurrentFileDetails().isPixmapLoaded)
         return;
 
-    QSizeF effectiveImageSize = getTransformWithNoScaling().mapRect(QRectF(QPointF(), getCurrentFileDetails().loadedPixmapSize)).size();
-    QSizeF viewSize = getUsableViewportRect().adjusted(MARGIN, MARGIN, -MARGIN, -MARGIN).size();
+    QSizeF effectiveImageSize = getEffectiveOriginalSize();
+    QSizeF viewSize = getUsableViewportRect(true).size();
 
     if (viewSize.isEmpty())
         return;
@@ -632,12 +632,17 @@ void QVGraphicsView::fitOrConstrainImage()
         scrollHelper->constrain(true);
 }
 
-QSizeF QVGraphicsView::getEffectiveImageSize() const
+QSizeF QVGraphicsView::getEffectiveOriginalSize() const
 {
     return getTransformWithNoScaling().mapRect(QRectF(QPoint(), getCurrentFileDetails().loadedPixmapSize)).size() * getScaleAdjustment();
 }
 
-QRect QVGraphicsView::getUsableViewportRect() const
+QRectF QVGraphicsView::getContentRect() const
+{
+    return transform().mapRect(loadedPixmapItem->boundingRect());
+}
+
+QRect QVGraphicsView::getUsableViewportRect(bool addMargin) const
 {
 #ifdef COCOA_LOADED
     int obscuredHeight = QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
@@ -646,6 +651,8 @@ QRect QVGraphicsView::getUsableViewportRect() const
 #endif
     QRect rect = viewport()->rect();
     rect.setTop(obscuredHeight);
+    if (addMargin)
+        rect.adjust(MARGIN, MARGIN, -MARGIN, -MARGIN);
     return rect;
 }
 
