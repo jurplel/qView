@@ -378,16 +378,17 @@ void MainWindow::populateOpenWithMenu(const QList<OpenWith::OpenWithItem> openWi
                 auto openWithItem = openWithItems.value(i);
 
                 action->setVisible(true);
+                action->setIconVisibleInMenu(false); // Hide icon temporarily to speed up updates in certain cases
                 action->setText(openWithItem.name);
                 action->setIcon(openWithItem.icon);
                 auto data = action->data().toList();
                 data.replace(1, QVariant::fromValue(openWithItem));
                 action->setData(data);
+                action->setIconVisibleInMenu(true);
             }
             else
             {
                 action->setVisible(false);
-                action->setText(tr("Empty"));
             }
         }
     }
