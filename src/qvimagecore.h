@@ -53,7 +53,7 @@ public:
 
     void loadFile(const QString &fileName);
     ReadData readFile(const QString &fileName, bool forCache);
-    void loadPixmap(const ReadData &readData, bool fromCache);
+    void loadPixmap(const ReadData &readData);
     void closeImage();
     QList<CompatibleFile> getCompatibleFiles(const QString &dirPath) const;
     void updateFolderInfo(QString dirPath = QString());
@@ -103,6 +103,8 @@ private:
     int sortMode;
     bool sortDescending;
     bool allowMimeContentDetection;
+
+    static QCache<QString, QPixmap> pixmapCache;
 
     QPair<QString, qsizetype> lastDirInfo;
     unsigned randomSortSeed;
