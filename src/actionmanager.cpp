@@ -448,8 +448,8 @@ void ActionManager::updateRecentsMenu()
                     icon = getCacheableIcon("filetype:" + fileInfo.suffix(), icon);
 #endif
                 action->setIcon(icon);
-                action->setIconVisibleInMenu(true);
 #endif
+                action->setIconVisibleInMenu(true);
             }
             else
             {
