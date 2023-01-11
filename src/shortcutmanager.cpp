@@ -103,10 +103,10 @@ void ShortcutManager::initializeShortcutsList()
     shortcutsList.append({tr("Reset Speed"), "resetspeed", QStringList(QKeySequence(Qt::Key_Backslash).toString()), {}});
     shortcutsList.append({tr("Increase Speed"), "increasespeed", QStringList(QKeySequence(Qt::Key_BracketRight).toString()), {}});
     shortcutsList.append({tr("Toggle Slideshow"), "slideshow", {}, {}});
-    shortcutsList.append({tr("Options"), "options", keyBindingsToStringList(QKeySequence::Preferences), {}});
-#ifdef Q_OS_UNIX
-    shortcutsList.last().readableName = tr("Preferences");
-#endif
+    shortcutsList.append({tr("Settings"), "options", keyBindingsToStringList(QKeySequence::Preferences), {}});
+    if (QOperatingSystemVersion::current() < QOperatingSystemVersion(QOperatingSystemVersion::MacOS, 13)) {
+        shortcutsList.last().readableName = tr("Preferences");
+    }
     // mac exclusive shortcuts
 #ifdef Q_OS_MACOS
     shortcutsList.append({tr("New Window"), "newwindow", keyBindingsToStringList(QKeySequence::New), {}});

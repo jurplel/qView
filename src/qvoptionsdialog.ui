@@ -5,16 +5,8 @@
   <property name="windowModality">
    <enum>Qt::NonModal</enum>
   </property>
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>432</width>
-    <height>485</height>
-   </rect>
-  </property>
   <property name="windowTitle">
-   <string>Options</string>
+   <string>Settings</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -644,11 +636,11 @@
        </item>
        <item row="14" column="1">
         <widget class="QCheckBox" name="mimeContentDetectionCheckbox">
-         <property name="text">
-          <string>Allow &amp;MIME content detection</string>
-         </property>
          <property name="toolTip">
           <string>Detect supported files in folder even if extension isn't recognized (may be slow with larger/network folders)</string>
+         </property>
+         <property name="text">
+          <string>Allow &amp;MIME content detection</string>
          </property>
         </widget>
        </item>
