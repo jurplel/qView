@@ -138,7 +138,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // Timer for delayed-load Open With menu
     populateOpenWithTimer = new QTimer(this);
     populateOpenWithTimer->setSingleShot(true);
-    populateOpenWithTimer->setInterval(500);
+    populateOpenWithTimer->setInterval(250);
     connect(populateOpenWithTimer, &QTimer::timeout, this, &MainWindow::requestPopulateOpenWithMenu);
 
     // Connection for open with menu population futurewatcher
@@ -397,9 +397,6 @@ void MainWindow::disableActions()
 
 void MainWindow::requestPopulateOpenWithMenu()
 {
-    // Wait to start a new run if the one for the previous image hasn't finished yet
-    openWithFutureWatcher.future().waitForFinished();
-
     openWithFutureWatcher.setFuture(QtConcurrent::run([&]{
         const auto &curFilePath = getCurrentFileDetails().fileInfo.absoluteFilePath();
         return OpenWith::getOpenWithItems(curFilePath);
