@@ -56,7 +56,7 @@ public:
 
     void loadFile(const QString &fileName);
     ReadData readFile(const QString &fileName, bool forCache);
-    void loadPixmap(const ReadData &readData, bool fromCache);
+    void loadPixmap(const ReadData &readData);
     void closeImage();
     QList<CompatibleFile> getCompatibleFiles(const QString &dirPath);
     void sortCompatibleFiles(QList<CompatibleFile> &fileList);
@@ -101,6 +101,8 @@ private:
     bool sortDescending;
     bool allowMimeContentDetection;
     int colorSpaceConversion;
+
+    static QCache<QString, QPixmap> pixmapCache;
 
     unsigned baseRandomSortSeed;
 
