@@ -572,7 +572,7 @@ void MainWindow::setWindowSize()
     const int topOfScreen = currentScreen->availableGeometry().y();
 
     if (newRect.y() < (topOfScreen + titlebarHeight))
-        newRect.setY(topOfScreen + titlebarHeight);
+        newRect.moveTop(topOfScreen + titlebarHeight);
 
     setGeometry(newRect);
 }
