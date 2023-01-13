@@ -12,6 +12,7 @@ class OpenWith : public QObject
 public:
     struct OpenWithItem {
         QIcon icon;
+        QString iconName;
         QString name;
         QString exec;
         QStringList args;

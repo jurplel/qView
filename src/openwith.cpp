@@ -104,7 +104,7 @@ QList<OpenWith::OpenWithItem> OpenWith::getOpenWithItemsFromDesktopFiles(const Q
                 else if (line.startsWith("Icon=", Qt::CaseInsensitive) && openWithItem.icon.isNull())
                 {
                     line.remove("Icon=", Qt::CaseInsensitive);
-                    openWithItem.icon = QIcon::fromTheme(line);
+                    openWithItem.iconName = line;
                 }
                 else if (line.startsWith("Categories=", Qt::CaseInsensitive) && openWithItem.categories.isEmpty())
                 {
