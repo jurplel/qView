@@ -18,7 +18,7 @@ const QList<OpenWith::OpenWithItem> OpenWith::getOpenWithItems(const QString &fi
 {
 
     QList<OpenWithItem> listOfOpenWithItems;
-    if (!QFileInfo::exists(filePath))
+    if (!filePath.isNull() && !QFileInfo::exists(filePath))
         return listOfOpenWithItems;
 
 
@@ -247,19 +247,17 @@ QVOpenWithDialog::QVOpenWithDialog(QWidget *parent) :
 
 void QVOpenWithDialog::populateTreeView()
 {
-    auto listOfAllApps = OpenWith::getOpenWithItems("");
-
+    auto listOfAllApps = OpenWith::getOpenWithItems(QString());
 
     for (const auto &category : categories)
     {
         auto *categoryItem = new QStandardItem(QIcon::fromTheme(category.iconName, QIcon::fromTheme("applications-other")), category.readableName);
-
         QMutableListIterator<OpenWith::OpenWithItem> i(listOfAllApps);
         while (i.hasNext()) {
             auto app = i.next();
             if (app.categories.contains(category.name, Qt::CaseInsensitive) || category.name.isEmpty())
             {
-                auto *item = new QStandardItem(app.icon, app.name);
+                auto *item = new QStandardItem(QIcon::fromTheme(app.iconName), app.name);
                 item->setData(app.exec, Qt::UserRole);
                 categoryItem->setChild(categoryItem->rowCount(), item);
                 i.remove();
