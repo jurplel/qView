@@ -484,10 +484,24 @@ void MainWindow::setWindowSize()
     if (!screenValid)
         currentScreen = QGuiApplication::screens().at(0);
 
-    const QSize screenSize = currentScreen->size();
+    QSize extraWidgetsSize { 0, 0 };
 
-    const QSize minWindowSize = screenSize * minWindowResizedPercentage;
-    const QSize maxWindowSize = screenSize * maxWindowResizedPercentage;
+    if (menuBar()->isVisible())
+        extraWidgetsSize.rheight() += menuBar()->height();
+
+    int titlebarOverlap = 0;
+#ifdef COCOA_LOADED
+    // To account for fullsizecontentview on mac
+    titlebarOverlap = QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
+#endif
+    if (titlebarOverlap != 0)
+        extraWidgetsSize.rheight() += titlebarOverlap;
+
+    const QSize windowFrameSize = frameGeometry().size() - geometry().size();
+    const QSize hardLimitSize = currentScreen->availableSize() - windowFrameSize - extraWidgetsSize;
+    const QSize screenSize = currentScreen->size();
+    const QSize minWindowSize = (screenSize * minWindowResizedPercentage).boundedTo(hardLimitSize);
+    const QSize maxWindowSize = (screenSize * maxWindowResizedPercentage).boundedTo(hardLimitSize);
 
     if (imageSize.width() < minWindowSize.width() && imageSize.height() < minWindowSize.height())
     {
@@ -505,21 +519,10 @@ void MainWindow::setWindowSize()
         imageSize = minimumImageSize;
 #endif
 
-    int titlebarOverlap = 0;
-#ifdef COCOA_LOADED
-    // To account for fullsizecontentview on mac
-    titlebarOverlap = QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
-#endif
-    if (titlebarOverlap != 0)
-        imageSize.setHeight(imageSize.height() + titlebarOverlap);
-
-    if (menuBar()->isVisible())
-        imageSize.setHeight(imageSize.height() + menuBar()->height());
-
     // Match center after new geometry
     // This is smoother than a single geometry set for some reason
     QRect oldRect = geometry();
-    resize(imageSize);
+    resize(imageSize + extraWidgetsSize);
     QRect newRect = geometry();
     newRect.moveCenter(oldRect.center());
 
