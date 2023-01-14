@@ -580,12 +580,13 @@ void QVImageCore::settingsUpdated()
 
 void QVImageCore::FileDetails::updateLoadedIndexInFolder()
 {
-    const QString targetPath = fileInfo.absoluteFilePath();
+    const QString targetPath = fileInfo.absoluteFilePath().normalized(QString::NormalizationForm_D);
     for (int i = 0; i < folderFileInfoList.length(); i++)
     {
         // Compare absoluteFilePath first because it's way faster, but double-check with
         // QFileInfo::operator== because it respects file system case sensitivity rules
-        if (folderFileInfoList[i].absoluteFilePath.compare(targetPath, Qt::CaseInsensitive) == 0 &&
+        QString candidatePath = folderFileInfoList[i].absoluteFilePath.normalized(QString::NormalizationForm_D);
+        if (candidatePath.compare(targetPath, Qt::CaseInsensitive) == 0 &&
             QFileInfo(folderFileInfoList[i].absoluteFilePath) == fileInfo)
         {
             loadedIndexInFolder = i;
