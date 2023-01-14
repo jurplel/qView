@@ -155,11 +155,11 @@ bool QVGraphicsView::event(QEvent *event)
 
 void QVGraphicsView::wheelEvent(QWheelEvent *event)
 {
-    #if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
     const QPoint eventPos = event->position().toPoint();
-    #else
+#else
     const QPoint eventPos = event->pos();
-    #endif
+#endif
 
     //Basically, if you are holding ctrl then it scrolls instead of zooms (the shift bit is for horizontal scrolling)
     bool willZoom = isScrollZoomsEnabled;
