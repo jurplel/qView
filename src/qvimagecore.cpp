@@ -30,7 +30,6 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
 
     baseRandomSortSeed = std::chrono::system_clock::now().time_since_epoch().count();
 
-
     connect(&loadedMovie, &QMovie::updated, this, &QVImageCore::animatedFrameChanged);
 
     connect(&loadFutureWatcher, &QFutureWatcher<ReadData>::finished, this, [this](){

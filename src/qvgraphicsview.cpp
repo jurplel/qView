@@ -504,7 +504,7 @@ void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
     if (!getCurrentFileDetails().timeSinceLoaded.isValid() || getCurrentFileDetails().timeSinceLoaded.hasExpired(3000))
     {
         // Make sure the file still exists because if it disappears from the file listing we'll lose
-        // lose track of our index within the folder. Use the static 'exists' method to avoid caching.
+        // track of our index within the folder. Use the static 'exists' method to avoid caching.
         // If we skip updating now, flag it for retry later once we locate a new file.
         if (QFile::exists(getCurrentFileDetails().fileInfo.absoluteFilePath()))
             imageCore.updateFolderInfo();
