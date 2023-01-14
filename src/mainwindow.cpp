@@ -548,11 +548,13 @@ void MainWindow::setWindowSize()
         imageSize = minimumImageSize;
 #endif
 
-    // Adjust image size for fullsizecontentview on mac
+    int titlebarOverlap = 0;
 #ifdef COCOA_LOADED
-    int obscuredHeight = QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
-    imageSize.setHeight(imageSize.height() + obscuredHeight);
+    // To account for fullsizecontentview on mac
+    titlebarOverlap = QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
 #endif
+    if (titlebarOverlap != 0)
+        imageSize.setHeight(imageSize.height() + titlebarOverlap);
 
     if (menuBar()->isVisible())
         imageSize.setHeight(imageSize.height() + menuBar()->height());
@@ -564,12 +566,15 @@ void MainWindow::setWindowSize()
     QRect newRect = geometry();
     newRect.moveCenter(oldRect.center());
 
-    // Ensure titlebar is not above the top of the screen
-    const int titlebarHeight = QApplication::style()->pixelMetric(QStyle::PM_TitleBarHeight);
-    const int topOfScreen = currentScreen->availableGeometry().y();
-
-    if (newRect.y() < (topOfScreen + titlebarHeight))
-        newRect.moveTop(topOfScreen + titlebarHeight);
+    // Ensure titlebar is not above or below the available screen area
+    const QRect availableScreenRect = currentScreen->availableGeometry();
+    const int topFrameHeight = geometry().top() - frameGeometry().top();
+    const int windowMinY = availableScreenRect.top() + topFrameHeight;
+    const int windowMaxY = availableScreenRect.top() + availableScreenRect.height() - titlebarOverlap;
+    if (newRect.top() < windowMinY)
+        newRect.moveTop(windowMinY);
+    if (newRect.top() > windowMaxY)
+        newRect.moveTop(windowMaxY);
 
     setGeometry(newRect);
 }
