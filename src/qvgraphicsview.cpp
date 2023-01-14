@@ -657,7 +657,7 @@ QRect QVGraphicsView::getUsableViewportRect(bool addMargin) const
     return rect;
 }
 
-QTransform QVGraphicsView::getTransformWithNoScaling()
+QTransform QVGraphicsView::getTransformWithNoScaling() const
 {
     qreal currentTransformScale = transform().mapRect(QRectF(QPointF(), QSizeF(1, 1))).width();
     return QTransform(transform()).scale(1.0 / currentTransformScale, 1.0 / currentTransformScale);

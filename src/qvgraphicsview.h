@@ -117,7 +117,7 @@ protected:
 
     QRect getUsableViewportRect(bool addMargin = false) const;
 
-    QTransform getTransformWithNoScaling();
+    QTransform getTransformWithNoScaling() const;
 
     qreal getScaleAdjustment() const;
 
