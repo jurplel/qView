@@ -476,7 +476,7 @@ void MainWindow::setWindowSize()
 
 
     // Try to grab the current screen
-    QScreen *currentScreen = screenAt(geometry().center());
+    QScreen *currentScreen = screenContaining(frameGeometry());
 
     // makeshift validity check
     bool screenValid = QGuiApplication::screens().contains(currentScreen);
@@ -536,9 +536,11 @@ void MainWindow::setWindowSize()
     setGeometry(newRect);
 }
 
-// literally just copy pasted from Qt source code to maintain compatibility with 5.9 (although i've edited it now)
-QScreen *MainWindow::screenAt(const QPoint &point)
+// Initially copied from Qt source code (QGuiApplication::screenAt) and then customized
+QScreen *MainWindow::screenContaining(const QRect &rect)
 {
+    QScreen *bestScreen = nullptr;
+    int bestScreenArea = 0;
     QVarLengthArray<const QScreen *, 8> visitedScreens;
     const auto screens = QGuiApplication::screens();
     for (const QScreen *screen : screens) {
@@ -547,12 +549,16 @@ QScreen *MainWindow::screenAt(const QPoint &point)
         // The virtual siblings include the screen itself, so iterate directly
         const auto siblings = screen->virtualSiblings();
         for (QScreen *sibling : siblings) {
-            if (sibling->geometry().contains(point))
-                return sibling;
+            const QRect intersect = sibling->geometry().intersected(rect);
+            const int area = intersect.width() * intersect.height();
+            if (area > bestScreenArea) {
+                bestScreen = sibling;
+                bestScreenArea = area;
+            }
             visitedScreens.append(sibling);
         }
     }
-    return nullptr;
+    return bestScreen;
 }
 
 bool MainWindow::getIsPixmapLoaded() const
