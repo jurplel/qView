@@ -485,7 +485,7 @@ void MainWindow::setWindowSize()
 
 
     // Try to grab the current screen
-    QScreen *currentScreen = screenAt(geometry().center());
+    QScreen *currentScreen = screenContaining(frameGeometry());
 
     // makeshift validity check
     bool screenValid = QGuiApplication::screens().contains(currentScreen);
@@ -493,10 +493,24 @@ void MainWindow::setWindowSize()
     if (!screenValid)
         currentScreen = QGuiApplication::screens().at(0);
 
-    const QSize screenSize = currentScreen->size();
+    QSize extraWidgetsSize { 0, 0 };
 
-    const QSize minWindowSize = screenSize * minWindowResizedPercentage;
-    const QSize maxWindowSize = screenSize * maxWindowResizedPercentage;
+    if (menuBar()->isVisible())
+        extraWidgetsSize.rheight() += menuBar()->height();
+
+    int titlebarOverlap = 0;
+#ifdef COCOA_LOADED
+    // To account for fullsizecontentview on mac
+    titlebarOverlap = QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
+#endif
+    if (titlebarOverlap != 0)
+        extraWidgetsSize.rheight() += titlebarOverlap;
+
+    const QSize windowFrameSize = frameGeometry().size() - geometry().size();
+    const QSize hardLimitSize = currentScreen->availableSize() - windowFrameSize - extraWidgetsSize;
+    const QSize screenSize = currentScreen->size();
+    const QSize minWindowSize = (screenSize * minWindowResizedPercentage).boundedTo(hardLimitSize);
+    const QSize maxWindowSize = (screenSize * maxWindowResizedPercentage).boundedTo(hardLimitSize);
 
     if (imageSize.width() < minWindowSize.width() && imageSize.height() < minWindowSize.height())
     {
@@ -514,35 +528,31 @@ void MainWindow::setWindowSize()
         imageSize = minimumImageSize;
 #endif
 
-    // Adjust image size for fullsizecontentview on mac
-#ifdef COCOA_LOADED
-    int obscuredHeight = QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
-    imageSize.setHeight(imageSize.height() + obscuredHeight);
-#endif
-
-    if (menuBar()->isVisible())
-        imageSize.setHeight(imageSize.height() + menuBar()->height());
-
     // Match center after new geometry
     // This is smoother than a single geometry set for some reason
     QRect oldRect = geometry();
-    resize(imageSize);
+    resize(imageSize + extraWidgetsSize);
     QRect newRect = geometry();
     newRect.moveCenter(oldRect.center());
 
-    // Ensure titlebar is not above the top of the screen
-    const int titlebarHeight = QApplication::style()->pixelMetric(QStyle::PM_TitleBarHeight);
-    const int topOfScreen = currentScreen->availableGeometry().y();
-
-    if (newRect.y() < (topOfScreen + titlebarHeight))
-        newRect.setY(topOfScreen + titlebarHeight);
+    // Ensure titlebar is not above or below the available screen area
+    const QRect availableScreenRect = currentScreen->availableGeometry();
+    const int topFrameHeight = geometry().top() - frameGeometry().top();
+    const int windowMinY = availableScreenRect.top() + topFrameHeight;
+    const int windowMaxY = availableScreenRect.top() + availableScreenRect.height() - titlebarOverlap;
+    if (newRect.top() < windowMinY)
+        newRect.moveTop(windowMinY);
+    if (newRect.top() > windowMaxY)
+        newRect.moveTop(windowMaxY);
 
     setGeometry(newRect);
 }
 
-// literally just copy pasted from Qt source code to maintain compatibility with 5.9 (although i've edited it now)
-QScreen *MainWindow::screenAt(const QPoint &point)
+// Initially copied from Qt source code (QGuiApplication::screenAt) and then customized
+QScreen *MainWindow::screenContaining(const QRect &rect)
 {
+    QScreen *bestScreen = nullptr;
+    int bestScreenArea = 0;
     QVarLengthArray<const QScreen *, 8> visitedScreens;
     const auto screens = QGuiApplication::screens();
     for (const QScreen *screen : screens) {
@@ -551,12 +561,16 @@ QScreen *MainWindow::screenAt(const QPoint &point)
         // The virtual siblings include the screen itself, so iterate directly
         const auto siblings = screen->virtualSiblings();
         for (QScreen *sibling : siblings) {
-            if (sibling->geometry().contains(point))
-                return sibling;
+            const QRect intersect = sibling->geometry().intersected(rect);
+            const int area = intersect.width() * intersect.height();
+            if (area > bestScreenArea) {
+                bestScreen = sibling;
+                bestScreenArea = area;
+            }
             visitedScreens.append(sibling);
         }
     }
-    return nullptr;
+    return bestScreen;
 }
 
 bool MainWindow::getIsPixmapLoaded() const

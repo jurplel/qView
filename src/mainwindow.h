@@ -43,7 +43,7 @@ public:
 
     void setJustLaunchedWithImage(bool value);
 
-    QScreen *screenAt(const QPoint &point);
+    QScreen *screenContaining(const QRect &rect);
 
     void openRecent(int i);
 
