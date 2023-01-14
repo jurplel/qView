@@ -49,7 +49,6 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     appliedScaleAdjustment = 1.0;
     lastZoomEventPos = QPoint(-1, -1);
     lastZoomRoundingError = QPointF();
-    lastScrollRoundingError = QPointF();
 
     scrollHelper = new ScrollHelper(this,
         [this](ScrollHelper::Parameters &p)

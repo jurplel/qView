@@ -157,7 +157,6 @@ private:
     qreal appliedScaleAdjustment;
     QPoint lastZoomEventPos;
     QPointF lastZoomRoundingError;
-    QPointF lastScrollRoundingError;
 
     QVImageCore imageCore;
 
