@@ -43,8 +43,8 @@ public:
     bool getZoomToFitEnabled() const;
     void setZoomToFitEnabled(bool value);
 
-    bool getNavigationResetsZoomEnabled() const;
-    void setNavigationResetsZoomEnabled(bool value);
+    bool getZoomLockEnabled() const;
+    void setZoomLockEnabled(bool value);
 
     void scaleExpensively();
     void makeUnscaled();
@@ -80,7 +80,7 @@ signals:
 
     void zoomToFitChanged();
 
-    void navigationResetsZoomChanged();
+    void zoomLockChanged();
 
 protected:
     void wheelEvent(QWheelEvent *event) override;
@@ -152,7 +152,7 @@ private:
 
     bool isZoomToFitEnabled;
     bool isApplyingZoomToFit;
-    bool isNavigationResetsZoomEnabled;
+    bool isZoomLockEnabled;
     qreal currentScale;
     qreal appliedScaleAdjustment;
     QPoint lastZoomEventPos;

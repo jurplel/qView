@@ -77,7 +77,7 @@ public:
 
     void setZoomToFitEnabled(bool value);
 
-    void setNavigationResetsZoomEnabled(bool value);
+    void setZoomLockEnabled(bool value);
 
     void originalSize();
 

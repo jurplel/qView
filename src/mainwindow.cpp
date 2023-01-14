@@ -55,7 +55,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(graphicsView, &QVGraphicsView::fileChanged, this, &MainWindow::fileChanged);
     connect(graphicsView, &QVGraphicsView::zoomLevelChanged, this, &MainWindow::zoomLevelChanged);
     connect(graphicsView, &QVGraphicsView::zoomToFitChanged, this, &MainWindow::syncZoomToFitChecked);
-    connect(graphicsView, &QVGraphicsView::navigationResetsZoomChanged, this, &MainWindow::syncNavigationResetsZoomChecked);
+    connect(graphicsView, &QVGraphicsView::zoomLockChanged, this, &MainWindow::syncNavigationResetsZoomChecked);
     connect(graphicsView, &QVGraphicsView::cancelSlideshow, this, &MainWindow::cancelSlideshow);
 
     // Initialize escape shortcut
@@ -349,7 +349,7 @@ void MainWindow::syncZoomToFitChecked()
 void MainWindow::syncNavigationResetsZoomChecked()
 {
     const auto actions = qvApp->getActionManager().getAllClonesOfAction("navigationresetszoom", this);
-    const bool value = graphicsView->getNavigationResetsZoomEnabled();
+    const bool value = graphicsView->getZoomLockEnabled();
     for (const auto &action : actions)
         action->setChecked(value);
 }
@@ -925,9 +925,9 @@ void MainWindow::setZoomToFitEnabled(bool value)
     graphicsView->setZoomToFitEnabled(value);
 }
 
-void MainWindow::setNavigationResetsZoomEnabled(bool value)
+void MainWindow::setZoomLockEnabled(bool value)
 {
-    graphicsView->setNavigationResetsZoomEnabled(value);
+    graphicsView->setZoomLockEnabled(value);
 }
 
 void MainWindow::originalSize()
