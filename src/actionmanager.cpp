@@ -814,7 +814,7 @@ void ActionManager::initializeActionLibrary()
     actionLibrary.insert("clearrecents", clearRecentsAction);
 
     //: Open with other program for unix non-mac
-    auto *openWithOtherAction = new QAction(tr("Other Application..."));
+    auto *openWithOtherAction = new QAction(QIcon::fromTheme("system-run"), tr("Other Application..."));
 #ifdef Q_OS_WIN
     //: Open with other program for windows
     openWithOtherAction->setText(tr("Choose another app"));
