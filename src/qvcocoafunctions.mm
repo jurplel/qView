@@ -219,3 +219,18 @@ QString QVCocoaFunctions::deleteFile(const QString &filePath)
 
     return QString::fromNSString(resultUrl.absoluteString);
 }
+
+QByteArray QVCocoaFunctions::getIccProfileForWindow(const QWindow *window)
+{
+    NSView *view = reinterpret_cast<NSView*>(window->winId());
+    NSColorSpace *nsColorSpace = view.window.colorSpace;
+    if (nsColorSpace)
+    {
+        NSData *iccProfileData = nsColorSpace.ICCProfileData;
+        if (iccProfileData)
+        {
+            return QByteArray::fromNSData(iccProfileData);
+        }
+    }
+    return {};
+}
