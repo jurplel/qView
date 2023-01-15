@@ -158,7 +158,7 @@ private:
     QPoint lastZoomEventPos;
     QPointF lastZoomRoundingError;
 
-    QVImageCore imageCore;
+    QVImageCore imageCore { this };
 
     QTimer *expensiveScaleTimer;
     QTimer *constrainBoundsTimer;
