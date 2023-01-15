@@ -54,8 +54,8 @@ MainWindow::MainWindow(QWidget *parent) :
     // Connect graphicsview signals
     connect(graphicsView, &QVGraphicsView::fileChanged, this, &MainWindow::fileChanged);
     connect(graphicsView, &QVGraphicsView::zoomLevelChanged, this, &MainWindow::zoomLevelChanged);
-    connect(graphicsView, &QVGraphicsView::zoomToFitChanged, this, &MainWindow::syncZoomToFitChecked);
-    connect(graphicsView, &QVGraphicsView::zoomLockChanged, this, &MainWindow::syncNavigationResetsZoomChecked);
+    connect(graphicsView, &QVGraphicsView::resizeResetsZoomChanged, this, &MainWindow::syncResizeResetsZoom);
+    connect(graphicsView, &QVGraphicsView::navResetsZoomChanged, this, &MainWindow::syncNavResetsZoom);
     connect(graphicsView, &QVGraphicsView::cancelSlideshow, this, &MainWindow::cancelSlideshow);
 
     // Initialize escape shortcut
@@ -113,8 +113,8 @@ MainWindow::MainWindow(QWidget *parent) :
         ActionManager::actionTriggered(triggeredAction, this);
     });
     // Initialize checkable actions
-    syncZoomToFitChecked();
-    syncNavigationResetsZoomChecked();
+    syncResizeResetsZoom();
+    syncNavResetsZoom();
 
     // Add all actions to this window so keyboard shortcuts are always triggered
     // using virtual menu to hold them so i can connect to the triggered signal
@@ -248,8 +248,8 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
         nextFile();
     else if (event->button() == Qt::MouseButton::MiddleButton)
     {
-        if (!graphicsView->getZoomToFitEnabled())
-            graphicsView->setZoomToFitEnabled(true);
+        if (!graphicsView->getResizeResetsZoom())
+            graphicsView->setResizeResetsZoom(true);
         else
             graphicsView->centerImage();
     }
@@ -338,18 +338,18 @@ void MainWindow::zoomLevelChanged()
     buildWindowTitle();
 }
 
-void MainWindow::syncZoomToFitChecked()
+void MainWindow::syncResizeResetsZoom()
 {
-    const auto actions = qvApp->getActionManager().getAllClonesOfAction("zoomtofit", this);
-    const bool value = graphicsView->getZoomToFitEnabled();
+    const auto actions = qvApp->getActionManager().getAllClonesOfAction("resizeresetszoom", this);
+    const bool value = graphicsView->getResizeResetsZoom();
     for (const auto &action : actions)
         action->setChecked(value);
 }
 
-void MainWindow::syncNavigationResetsZoomChecked()
+void MainWindow::syncNavResetsZoom()
 {
-    const auto actions = qvApp->getActionManager().getAllClonesOfAction("navigationresetszoom", this);
-    const bool value = graphicsView->getZoomLockEnabled();
+    const auto actions = qvApp->getActionManager().getAllClonesOfAction("navresetszoom", this);
+    const bool value = graphicsView->getNavResetsZoom();
     for (const auto &action : actions)
         action->setChecked(value);
 }
@@ -920,14 +920,19 @@ void MainWindow::zoomOut()
     graphicsView->zoomOut();
 }
 
-void MainWindow::setZoomToFitEnabled(bool value)
+void MainWindow::resetZoom()
 {
-    graphicsView->setZoomToFitEnabled(value);
+    graphicsView->zoomToFit();
 }
 
-void MainWindow::setZoomLockEnabled(bool value)
+void MainWindow::setResizeResetsZoom(bool value)
 {
-    graphicsView->setZoomLockEnabled(value);
+    graphicsView->setResizeResetsZoom(value);
+}
+
+void MainWindow::setNavResetsZoom(bool value)
+{
+    graphicsView->setNavResetsZoom(value);
 }
 
 void MainWindow::originalSize()

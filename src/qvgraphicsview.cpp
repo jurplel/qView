@@ -42,9 +42,9 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     scaleFactor = 1.25;
 
     // Initialize other variables
-    isZoomToFitEnabled = true;
+    resizeResetsZoom = true;
     isApplyingZoomToFit = false;
-    isZoomLockEnabled = true;
+    navResetsZoom = true;
     currentScale = 1.0;
     appliedScaleAdjustment = 1.0;
     lastZoomEventPos = QPoint(-1, -1);
@@ -291,8 +291,8 @@ void QVGraphicsView::postLoad()
     // Set the pixmap to the new image and reset the transform's scale to a known value
     makeUnscaled();
 
-    if (isZoomLockEnabled && !isZoomToFitEnabled)
-        setZoomToFitEnabled(true);
+    if (navResetsZoom && !resizeResetsZoom)
+        setResizeResetsZoom(true);
     else
         fitOrConstrainImage();
 
@@ -324,7 +324,7 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
     }
 
     if (!isApplyingZoomToFit)
-        setZoomToFitEnabled(false);
+        setResizeResetsZoom(false);
 
     if (pos != lastZoomEventPos)
     {
@@ -360,36 +360,36 @@ void QVGraphicsView::setZoomLevel(qreal absoluteScaleFactor)
     zoom(absoluteScaleFactor / currentScale);
 }
 
-bool QVGraphicsView::getZoomToFitEnabled() const
+bool QVGraphicsView::getResizeResetsZoom() const
 {
-    return isZoomToFitEnabled;
+    return resizeResetsZoom;
 }
 
-void QVGraphicsView::setZoomToFitEnabled(bool value)
+void QVGraphicsView::setResizeResetsZoom(bool value)
 {
-    if (isZoomToFitEnabled == value)
+    if (resizeResetsZoom == value)
         return;
 
-    isZoomToFitEnabled = value;
-    if (isZoomToFitEnabled)
+    resizeResetsZoom = value;
+    if (resizeResetsZoom)
         zoomToFit();
 
-    emit zoomToFitChanged();
+    emit resizeResetsZoomChanged();
 }
 
-bool QVGraphicsView::getZoomLockEnabled() const
+bool QVGraphicsView::getNavResetsZoom() const
 {
-    return isZoomLockEnabled;
+    return navResetsZoom;
 }
 
-void QVGraphicsView::setZoomLockEnabled(bool value)
+void QVGraphicsView::setNavResetsZoom(bool value)
 {
-    if (isZoomLockEnabled == value)
+    if (navResetsZoom == value)
         return;
 
-    isZoomLockEnabled = value;
+    navResetsZoom = value;
 
-    emit zoomLockChanged();
+    emit navResetsZoomChanged();
 }
 
 void QVGraphicsView::scaleExpensively()
@@ -626,7 +626,7 @@ void QVGraphicsView::centerOn(const QGraphicsItem *item)
 
 void QVGraphicsView::fitOrConstrainImage()
 {
-    if (isZoomToFitEnabled)
+    if (resizeResetsZoom)
         zoomToFit();
     else
         scrollHelper->constrain(true);

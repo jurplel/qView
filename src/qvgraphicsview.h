@@ -40,11 +40,11 @@ public:
 
     void setZoomLevel(qreal absoluteScaleFactor);
 
-    bool getZoomToFitEnabled() const;
-    void setZoomToFitEnabled(bool value);
+    bool getResizeResetsZoom() const;
+    void setResizeResetsZoom(bool value);
 
-    bool getZoomLockEnabled() const;
-    void setZoomLockEnabled(bool value);
+    bool getNavResetsZoom() const;
+    void setNavResetsZoom(bool value);
 
     void scaleExpensively();
     void makeUnscaled();
@@ -78,9 +78,9 @@ signals:
 
     void zoomLevelChanged();
 
-    void zoomToFitChanged();
+    void resizeResetsZoomChanged();
 
-    void zoomLockChanged();
+    void navResetsZoomChanged();
 
 protected:
     void wheelEvent(QWheelEvent *event) override;
@@ -150,9 +150,9 @@ private:
 
     const int MARGIN = -2;
 
-    bool isZoomToFitEnabled;
+    bool resizeResetsZoom;
     bool isApplyingZoomToFit;
-    bool isZoomLockEnabled;
+    bool navResetsZoom;
     qreal currentScale;
     qreal appliedScaleAdjustment;
     QPoint lastZoomEventPos;

@@ -252,9 +252,10 @@ QMenu *ActionManager::buildViewMenu(bool addIcon, QWidget *parent)
 
     addCloneOfAction(viewMenu, "zoomin");
     addCloneOfAction(viewMenu, "zoomout");
+    addCloneOfAction(viewMenu, "resetzoom");
     addCloneOfAction(viewMenu, "originalsize");
-    addCloneOfAction(viewMenu, "zoomtofit");
-    addCloneOfAction(viewMenu, "zoomlock");
+    addCloneOfAction(viewMenu, "resizeresetszoom");
+    addCloneOfAction(viewMenu, "navresetszoom");
     viewMenu->addSeparator();
     addCloneOfAction(viewMenu, "rotateright");
     addCloneOfAction(viewMenu, "rotateleft");
@@ -605,12 +606,14 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
         relevantWindow->zoomIn();
     } else if (key == "zoomout") {
         relevantWindow->zoomOut();
+    } else if (key == "resetzoom") {
+        relevantWindow->resetZoom();
     } else if (key == "originalsize") {
         relevantWindow->originalSize();
-    } else if (key == "zoomtofit") {
-        relevantWindow->setZoomToFitEnabled(triggeredAction->isChecked());
-    } else if (key == "zoomlock") {
-        relevantWindow->setZoomLockEnabled(triggeredAction->isChecked());
+    } else if (key == "resizeresetszoom") {
+        relevantWindow->setResizeResetsZoom(triggeredAction->isChecked());
+    } else if (key == "navresetszoom") {
+        relevantWindow->setNavResetsZoom(triggeredAction->isChecked());
     } else if (key == "rotateright") {
         relevantWindow->rotateRight();
     } else if (key == "rotateleft") {
@@ -719,19 +722,23 @@ void ActionManager::initializeActionLibrary()
     zoomOutAction->setData({"disable"});
     actionLibrary.insert("zoomout", zoomOutAction);
 
+    auto *resetZoomAction = new QAction(QIcon::fromTheme("zoom-fit-best"), tr("Reset &Zoom"));
+    resetZoomAction->setData({"disable"});
+    actionLibrary.insert("resetzoom", resetZoomAction);
+
     auto *originalSizeAction = new QAction(QIcon::fromTheme("zoom-original"), tr("Ori&ginal Size"));
     originalSizeAction->setData({"disable"});
     actionLibrary.insert("originalsize", originalSizeAction);
 
-    auto *zoomToFitAction = new QAction(QIcon::fromTheme("zoom-fit-page", QIcon::fromTheme("zoom-fit-best")), tr("&Zoom to Fit"));
-    zoomToFitAction->setData({"disable"});
-    zoomToFitAction->setCheckable(true);
-    actionLibrary.insert("zoomtofit", zoomToFitAction);
+    auto *resizeResetsZoomAction = new QAction(QIcon::fromTheme("zoom-fit-page", QIcon::fromTheme("zoom-fit-best")), tr("R&esize Resets Zoom"));
+    resizeResetsZoomAction->setData({"disable"});
+    resizeResetsZoomAction->setCheckable(true);
+    actionLibrary.insert("resizeresetszoom", resizeResetsZoomAction);
 
-    auto *zoomLockAction = new QAction(QIcon::fromTheme("lock", QIcon::fromTheme("system-lock-screen")), tr("Zoom &Lock"));
-    zoomLockAction->setData({"disable"});
-    zoomLockAction->setCheckable(true);
-    actionLibrary.insert("zoomlock", zoomLockAction);
+    auto *navResetsZoomAction = new QAction(QIcon::fromTheme("lock", QIcon::fromTheme("system-lock-screen")), tr("&Navigation Resets Zoom"));
+    navResetsZoomAction->setData({"disable"});
+    navResetsZoomAction->setCheckable(true);
+    actionLibrary.insert("navresetszoom", navResetsZoomAction);
 
     auto *rotateRightAction = new QAction(QIcon::fromTheme("object-rotate-right"), tr("Rotate &Right"));
     rotateRightAction->setData({"disable"});
