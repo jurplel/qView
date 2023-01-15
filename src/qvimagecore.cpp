@@ -1,5 +1,7 @@
 #include "qvimagecore.h"
 #include "qvapplication.h"
+#include "qvwin32functions.h"
+#include "qvcocoafunctions.h"
 #include <random>
 #include <QMessageBox>
 #include <QDir>
@@ -156,8 +158,9 @@ QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, bool forCac
         readImage.setColorSpace(defaultImageColorSpace);
 
     const QColorSpace targetColorSpace =
-        colorSpaceConversion == 1 ? QColorSpace::SRgb :
-        colorSpaceConversion == 2 ? QColorSpace::DisplayP3 :
+        colorSpaceConversion == 1 ? detectDisplayColorSpace() :
+        colorSpaceConversion == 2 ? QColorSpace::SRgb :
+        colorSpaceConversion == 3 ? QColorSpace::DisplayP3 :
         QColorSpace();
 
     if (targetColorSpace.isValid() && readImage.colorSpace() != targetColorSpace)
@@ -464,6 +467,26 @@ void QVImageCore::addToCache(const ReadData &readData)
     qvApp->setPreviouslyRecordedFileSize(readData.fileInfo.absoluteFilePath(), new qint64(fileSize));
     qvApp->setPreviouslyRecordedImageSize(readData.fileInfo.absoluteFilePath(), new QSize(readData.size));
 }
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+QColorSpace QVImageCore::detectDisplayColorSpace() const
+{
+    QWindow *window = static_cast<QWidget*>(parent())->window()->windowHandle();
+
+    QByteArray profileData;
+#ifdef WIN32_LOADED
+    profileData = QVWin32Functions::getIccProfileForWindow(window);
+#endif
+#ifdef COCOA_LOADED
+    profileData = QVCocoaFunctions::getIccProfileForWindow(window);
+#endif
+
+    if (!profileData.isEmpty())
+        return QColorSpace::fromIccProfile(profileData);
+
+    return {};
+}
+#endif
 
 void QVImageCore::jumpToNextFrame()
 {

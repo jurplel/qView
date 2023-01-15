@@ -63,6 +63,9 @@ public:
     void requestCaching();
     void requestCachingFile(const QString &filePath);
     void addToCache(const ReadData &readImageAndFileInfo);
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+    QColorSpace detectDisplayColorSpace() const;
+#endif
 
     void settingsUpdated();
 

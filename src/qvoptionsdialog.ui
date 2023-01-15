@@ -465,6 +465,11 @@
          </item>
          <item>
           <property name="text">
+           <string>Auto-detect</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
            <string>sRGB</string>
           </property>
          </item>

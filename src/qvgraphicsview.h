@@ -142,7 +142,7 @@ private:
     QTransform zoomBasis;
     qreal zoomBasisScaleFactor;
 
-    QVImageCore imageCore;
+    QVImageCore imageCore { this };
 
     QTimer *expensiveScaleTimerNew;
     QPointF centerPoint;
