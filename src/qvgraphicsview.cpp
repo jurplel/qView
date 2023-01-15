@@ -36,7 +36,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     isLoopFoldersEnabled = true;
     isCursorZoomEnabled = true;
     isOneToOnePixelSizingEnabled = true;
-    isConstrainedPositioningEnabled = true;
+    isConstrainedPositioningEnabled = false;
     isConstrainedSmallCenteringEnabled = true;
     cropMode = 0;
     scaleFactor = 1.25;
@@ -336,8 +336,8 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
     scale(scaleFactor, scaleFactor);
     scrollHelper->cancelAnimation();
 
-    // If we have a point to zoom towards and cursor zooming is enabled
-    if (pos != QPoint(-1, -1) && isCursorZoomEnabled)
+    // If we have a point to zoom towards and cursor zooming is enabled/applicable
+    if (pos != QPoint(-1, -1) && isCursorZoomEnabled && (isConstrainedPositioningEnabled || getContentToViewportRatio() >= 1.0))
     {
         const QPointF p1mouse = mapFromScene(scenePos);
         const QPointF move = p1mouse - pos;
@@ -396,9 +396,7 @@ void QVGraphicsView::scaleExpensively()
         return;
 
     // If we are above maximum scaling size
-    const QSize contentSize = getContentRect().size().toSize();
-    const QSize maxSize = getUsableViewportRect(true).size() * (isScalingTwoEnabled ? 3 : 1) + QSize(1, 1);
-    if (contentSize.width() > maxSize.width() || contentSize.height() > maxSize.height())
+    if (getContentToViewportRatio() > (isScalingTwoEnabled ? 3.0 : 1.00001))
     {
         // Return to original size
         makeUnscaled();
@@ -642,6 +640,13 @@ QRect QVGraphicsView::getUsableViewportRect(bool addMargin) const
     if (addMargin)
         rect.adjust(MARGIN, MARGIN, -MARGIN, -MARGIN);
     return rect;
+}
+
+qreal QVGraphicsView::getContentToViewportRatio() const
+{
+    const QSizeF contentSize = getContentRect().size();
+    const QSizeF viewportSize = getUsableViewportRect(true).size();
+    return qMax(contentSize.width() / viewportSize.width(), contentSize.height() / viewportSize.height());
 }
 
 QTransform QVGraphicsView::getTransformWithNoScaling() const
