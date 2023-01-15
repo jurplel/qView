@@ -42,7 +42,7 @@ win32 {
 
     # To build without win32: qmake CONFIG+=NO_WIN32
     !CONFIG(NO_WIN32) {
-        LIBS += -lshell32 -luser32 -lole32 -lshlwapi
+        LIBS += -lshell32 -luser32 -lole32 -lshlwapi -lgdi32
         DEFINES += WIN32_LOADED
         message("Linked to win32 api")
     }
