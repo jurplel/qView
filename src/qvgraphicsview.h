@@ -111,8 +111,6 @@ protected:
 
     void centerOn(const QGraphicsItem *item);
 
-    void fitOrConstrainImage();
-
     QRectF getContentRect() const;
 
     QRect getUsableViewportRect(bool addMargin = false) const;
@@ -151,7 +149,6 @@ private:
     const int MARGIN = -2;
 
     bool resizeResetsZoom;
-    bool isApplyingZoomToFit;
     bool navResetsZoom;
     qreal currentScale;
     qreal appliedScaleAdjustment;

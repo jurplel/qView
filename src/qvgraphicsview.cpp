@@ -43,7 +43,6 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 
     // Initialize other variables
     resizeResetsZoom = true;
-    isApplyingZoomToFit = false;
     navResetsZoom = true;
     currentScale = 1.0;
     appliedScaleAdjustment = 1.0;
@@ -92,7 +91,11 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 void QVGraphicsView::resizeEvent(QResizeEvent *event)
 {
     QGraphicsView::resizeEvent(event);
-    fitOrConstrainImage();
+
+    if (resizeResetsZoom)
+        zoomToFit();
+    else
+        scrollHelper->constrain(true);
 }
 
 void QVGraphicsView::paintEvent(QPaintEvent *event)
@@ -291,10 +294,10 @@ void QVGraphicsView::postLoad()
     // Set the pixmap to the new image and reset the transform's scale to a known value
     makeUnscaled();
 
-    if (navResetsZoom && !resizeResetsZoom)
-        setResizeResetsZoom(true);
+    if (navResetsZoom)
+        zoomToFit();
     else
-        fitOrConstrainImage();
+        scrollHelper->constrain(true);
 
     expensiveScaleTimer->start();
 
@@ -322,9 +325,6 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
         currentScale *= qPow(scaleFactor, -1);
         return;
     }
-
-    if (!isApplyingZoomToFit)
-        setResizeResetsZoom(false);
 
     if (pos != lastZoomEventPos)
     {
@@ -371,8 +371,6 @@ void QVGraphicsView::setResizeResetsZoom(bool value)
         return;
 
     resizeResetsZoom = value;
-    if (resizeResetsZoom)
-        zoomToFit();
 
     emit resizeResetsZoomChanged();
 }
@@ -480,9 +478,7 @@ void QVGraphicsView::zoomToFit()
     if (targetRatio > 1.0 && !isPastActualSizeEnabled)
         targetRatio = 1.0;
 
-    isApplyingZoomToFit = true;
     setZoomLevel(targetRatio);
-    isApplyingZoomToFit = false;
 }
 
 void QVGraphicsView::originalSize()
@@ -624,14 +620,6 @@ void QVGraphicsView::centerOn(const QGraphicsItem *item)
     centerOn(item->sceneBoundingRect().center());
 }
 
-void QVGraphicsView::fitOrConstrainImage()
-{
-    if (resizeResetsZoom)
-        zoomToFit();
-    else
-        scrollHelper->constrain(true);
-}
-
 QSizeF QVGraphicsView::getEffectiveOriginalSize() const
 {
     return getTransformWithNoScaling().mapRect(QRectF(QPoint(), getCurrentFileDetails().loadedPixmapSize)).size() * getScaleAdjustment();
@@ -674,7 +662,10 @@ void QVGraphicsView::handleScaleAdjustmentChange()
 
     makeUnscaled();
 
-    fitOrConstrainImage();
+    if (resizeResetsZoom)
+        zoomToFit();
+    else
+        scrollHelper->constrain(true);
 
     expensiveScaleTimer->start();
 }
@@ -758,7 +749,10 @@ void QVGraphicsView::settingsUpdated()
 
     handleScaleAdjustmentChange();
 
-    fitOrConstrainImage();
+    if (resizeResetsZoom)
+        zoomToFit();
+    else
+        scrollHelper->constrain(true);
 }
 
 void QVGraphicsView::closeImage()

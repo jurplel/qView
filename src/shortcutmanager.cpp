@@ -78,10 +78,10 @@ void ShortcutManager::initializeShortcutsList()
         shortcutsList.last().defaultShortcuts << QKeySequence(Qt::CTRL | Qt::Key_Equal).toString();
 
     shortcutsList.append({tr("Zoom Out"), "zoomout", keyBindingsToStringList(QKeySequence::ZoomOut), {}});
-    shortcutsList.append({tr("Reset Zoom"), "resetzoom", QStringList(QKeySequence(Qt::CTRL | Qt::Key_0).toString()), {}});
+    shortcutsList.append({tr("Reset Zoom"), "resetzoom", QStringList(QKeySequence(Qt::CTRL | Qt::Key_9).toString()), {}});
     shortcutsList.append({tr("Original Size"), "originalsize", QStringList(QKeySequence(Qt::CTRL | Qt::Key_0).toString()), {}});
-    shortcutsList.append({tr("Resize Resets Zoom"), "resizeresetszoom", QStringList(QKeySequence(Qt::CTRL | Qt::Key_9).toString()), {}});
-    shortcutsList.append({tr("Navigation Resets Zoom"), "navresetszoom", QStringList(QKeySequence(Qt::CTRL | Qt::Key_8).toString()), {}});
+    shortcutsList.append({tr("Resize Resets Zoom"), "resizeresetszoom", QStringList(QKeySequence(Qt::CTRL | Qt::Key_8).toString()), {}});
+    shortcutsList.append({tr("Navigation Resets Zoom"), "navresetszoom", QStringList(QKeySequence(Qt::CTRL | Qt::Key_7).toString()), {}});
     shortcutsList.append({tr("Rotate Right"), "rotateright", QStringList(QKeySequence(Qt::Key_Up).toString()), {}});
     shortcutsList.append({tr("Rotate Left"), "rotateleft", QStringList(QKeySequence(Qt::Key_Down).toString()), {}});
     shortcutsList.append({tr("Mirror"), "mirror", QStringList(QKeySequence(Qt::Key_F).toString()), {}});
