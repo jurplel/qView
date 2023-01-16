@@ -28,7 +28,7 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     sortMode = 0;
     sortDescending = false;
     allowMimeContentDetection = false;
-    colorSpaceConversion = 0;
+    colorSpaceConversion = 1;
 
     baseRandomSortSeed = std::chrono::system_clock::now().time_since_epoch().count();
 

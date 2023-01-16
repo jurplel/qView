@@ -174,7 +174,7 @@ void SettingsManager::initializeSettingsLibrary()
     settingsLibrary.insert("pastactualsizeenabled", {true, {}});
     settingsLibrary.insert("constrainimageposition", {true, {}});
     settingsLibrary.insert("constraincentersmallimage", {true, {}});
-    settingsLibrary.insert("colorspaceconversion", {0, {}});
+    settingsLibrary.insert("colorspaceconversion", {1, {}});
     // Miscellaneous
     settingsLibrary.insert("language", {"system", {}});
     settingsLibrary.insert("sortmode", {0, {}});
