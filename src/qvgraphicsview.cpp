@@ -651,8 +651,8 @@ qreal QVGraphicsView::getContentToViewportRatio() const
 
 QTransform QVGraphicsView::getTransformWithNoScaling() const
 {
-    qreal currentTransformScale = transform().mapRect(QRectF(QPointF(), QSizeF(1, 1))).width();
-    return QTransform(transform()).scale(1.0 / currentTransformScale, 1.0 / currentTransformScale);
+    QRectF unityRect = transform().mapRect(QRectF(0, 0, 1, 1));
+    return transform().scale(1.0 / unityRect.width(), 1.0 / unityRect.height());
 }
 
 qreal QVGraphicsView::getScaleAdjustment() const
