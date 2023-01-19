@@ -39,7 +39,6 @@ jobs:
           if [ "${{ inputs.isRelease }}" != "true" ]; then
             buildNum=JDP.$(date '+%Y-%m-%d').${GITHUB_SHA::7}
             echo "nightlyDefines=NIGHTLY=$buildNum" >> $GITHUB_ENV
-            echo "nightlyString=-nightly" >> $GITHUB_ENV
             echo "buildNumString=$buildNum" >> $GITHUB_ENV
           fi
 
@@ -70,5 +69,5 @@ jobs:
       - name: 'Upload Artifact'
         uses: actions/upload-artifact@v3
         with:
-          name: qView${{ env.nightlyString }}-${{ runner.os }}${{ matrix.osSuffix }}${{ env.buildNumString != '' && '-' || '' }}${{ env.buildNumString }}
+          name: qView${{ env.buildNumString != '' && '-' || '' }}${{ env.buildNumString }}-${{ runner.os }}${{ matrix.osSuffix }}
           path: bin
