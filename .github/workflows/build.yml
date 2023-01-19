@@ -70,5 +70,5 @@ jobs:
       - name: 'Upload Artifact'
         uses: actions/upload-artifact@v3
         with:
-          name: qView${{ env.nightlyString }}-${{ runner.os }}${{ matrix.osSuffix }}-${{ env.buildNumString }}
+          name: qView${{ env.nightlyString }}-${{ runner.os }}${{ matrix.osSuffix }}${{ env.buildNumString != '' && '-' || '' }}${{ env.buildNumString }}
           path: bin
