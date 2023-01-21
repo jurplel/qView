@@ -468,9 +468,9 @@ void QVImageCore::addToCache(const ReadData &readData)
     qvApp->setPreviouslyRecordedImageSize(readData.fileInfo.absoluteFilePath(), new QSize(readData.size));
 }
 
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
 QColorSpace QVImageCore::detectDisplayColorSpace() const
 {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     QWindow *window = static_cast<QWidget*>(parent())->window()->windowHandle();
 
     QByteArray profileData;
@@ -483,10 +483,10 @@ QColorSpace QVImageCore::detectDisplayColorSpace() const
 
     if (!profileData.isEmpty())
         return QColorSpace::fromIccProfile(profileData);
+#endif
 
     return {};
 }
-#endif
 
 void QVImageCore::jumpToNextFrame()
 {
