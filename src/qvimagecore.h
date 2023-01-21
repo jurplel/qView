@@ -5,14 +5,17 @@
 #include <QImageReader>
 #include <QPixmap>
 #include <QMovie>
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
-#include <QColorSpace>
-#endif
 #include <QFileInfo>
 #include <QFutureWatcher>
 #include <QTimer>
 #include <QCache>
 #include <QElapsedTimer>
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+#include <QColorSpace>
+#else
+typedef QString QColorSpace;
+#endif
 
 class QVImageCore : public QObject
 {
@@ -65,9 +68,7 @@ public:
     void requestCaching();
     void requestCachingFile(const QString &filePath);
     void addToCache(const ReadData &readImageAndFileInfo);
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
     QColorSpace detectDisplayColorSpace() const;
-#endif
 
     void settingsUpdated();
 
