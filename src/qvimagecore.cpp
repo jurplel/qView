@@ -28,7 +28,7 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     sortMode = 0;
     sortDescending = false;
     allowMimeContentDetection = false;
-    colorSpaceConversion = 0;
+    colorSpaceConversion = 1;
 
     randomSortSeed = 0;
 
