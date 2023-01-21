@@ -53,12 +53,13 @@ public:
         QPixmap pixmap;
         QFileInfo fileInfo;
         QSize size;
+        QColorSpace targetColorSpace;
     };
 
     explicit QVImageCore(QObject *parent = nullptr);
 
     void loadFile(const QString &fileName);
-    ReadData readFile(const QString &fileName, bool forCache);
+    ReadData readFile(const QString &fileName, const QColorSpace targetColorSpace, bool forCache);
     void loadPixmap(const ReadData &readData);
     void closeImage();
     QList<CompatibleFile> getCompatibleFiles(const QString &dirPath);
@@ -68,6 +69,7 @@ public:
     void requestCaching();
     void requestCachingFile(const QString &filePath);
     void addToCache(const ReadData &readImageAndFileInfo);
+    void updateCurrentTargetColorSpace();
     QColorSpace detectDisplayColorSpace() const;
 
     void settingsUpdated();
@@ -107,6 +109,7 @@ private:
     int colorSpaceConversion;
 
     static QCache<QString, QPixmap> pixmapCache;
+    static QColorSpace currentTargetColorSpace;
 
     unsigned baseRandomSortSeed;
 
