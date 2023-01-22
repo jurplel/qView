@@ -2,6 +2,7 @@
 #include "qvapplication.h"
 #include "qvwin32functions.h"
 #include "qvcocoafunctions.h"
+#include "qvlinuxx11functions.h"
 #include <random>
 #include <QMessageBox>
 #include <QDir>
@@ -499,6 +500,9 @@ QColorSpace QVImageCore::detectDisplayColorSpace() const
 #endif
 #ifdef COCOA_LOADED
     profileData = QVCocoaFunctions::getIccProfileForWindow(window);
+#endif
+#ifdef X11_LOADED
+    profileData = QVLinuxX11Functions::getIccProfileForWindow(window);
 #endif
 
     if (!profileData.isEmpty())
