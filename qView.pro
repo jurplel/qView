@@ -74,6 +74,18 @@ macx {
     }
 }
 
+# Linux specific stuff
+linux {
+    !CONFIG(NO_X11) {
+        LIBS += -lX11
+        DEFINES += X11_LOADED
+
+        equals(QT_MAJOR_VERSION, 5) {
+            QT += x11extras
+        }
+    }
+}
+
 # Stuff for make install
 # To use a custom prefix: qmake PREFIX=/usr
 # An environment variable will also work: PREFIX=/usr qmake

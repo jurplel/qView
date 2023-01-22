@@ -18,6 +18,7 @@ SOURCES += \
 
 macx:!CONFIG(NO_COCOA):SOURCES += $$PWD/qvcocoafunctions.mm
 win32:!CONFIG(NO_WIN32):SOURCES += $$PWD/qvwin32functions.cpp
+linux:!CONFIG(NO_X11):SOURCES += $$PWD/qvlinuxx11functions.cpp
 
 HEADERS += \
     $$PWD/mainwindow.h \
@@ -38,6 +39,7 @@ HEADERS += \
 
 macx:!CONFIG(NO_COCOA):HEADERS += $$PWD/qvcocoafunctions.h
 win32:!CONFIG(NO_WIN32):HEADERS += $$PWD/qvwin32functions.h
+linux:!CONFIG(NO_X11):HEADERS += $$PWD/qvlinuxx11functions.h
 
 FORMS += \
         $$PWD/mainwindow.ui \
