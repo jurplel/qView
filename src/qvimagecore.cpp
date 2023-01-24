@@ -14,8 +14,7 @@
 #include <QGuiApplication>
 #include <QScreen>
 
-QCache<QString, QPixmap> QVImageCore::pixmapCache;
-QColorSpace QVImageCore::currentTargetColorSpace;
+QCache<QString, QVImageCore::ReadData> QVImageCore::pixmapCache;
 
 QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
 {
@@ -102,37 +101,28 @@ void QVImageCore::loadFile(const QString &fileName)
     currentFileDetails.isLoadRequested = true;
     waitingOnLoad = true;
 
-    // Figure out target color space (and if it changed this clears cached pixmaps)
-    updateCurrentTargetColorSpace();
+    QColorSpace targetColorSpace = getTargetColorSpace();
+    QString cacheKey = getPixmapCacheKey(sanitaryFileName, fileInfo.size(), targetColorSpace);
 
     //check if cached already before loading the long way
-    auto previouslyRecordedFileSize = qvApp->getPreviouslyRecordedFileSize(sanitaryFileName);
-    auto *cachedPixmap = QVImageCore::pixmapCache.take(sanitaryFileName);
-    if (cachedPixmap != nullptr &&
-        !cachedPixmap->isNull() &&
-        previouslyRecordedFileSize == fileInfo.size())
+    auto *cachedData = QVImageCore::pixmapCache.take(cacheKey);
+    if (cachedData != nullptr)
     {
-        QSize previouslyRecordedImageSize = qvApp->getPreviouslyRecordedImageSize(sanitaryFileName);
-        ReadData readData = {
-            *cachedPixmap,
-            fileInfo,
-            previouslyRecordedImageSize,
-            currentTargetColorSpace
-        };
+        ReadData readData = *cachedData;
+        delete cachedData;
         loadPixmap(readData);
     }
     else
     {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        loadFutureWatcher.setFuture(QtConcurrent::run(this, &QVImageCore::readFile, sanitaryFileName, currentTargetColorSpace, false));
+        loadFutureWatcher.setFuture(QtConcurrent::run(this, &QVImageCore::readFile, sanitaryFileName, targetColorSpace, false));
 #else
-        loadFutureWatcher.setFuture(QtConcurrent::run(&QVImageCore::readFile, this, sanitaryFileName, currentTargetColorSpace, false));
+        loadFutureWatcher.setFuture(QtConcurrent::run(&QVImageCore::readFile, this, sanitaryFileName, targetColorSpace, false));
 #endif
     }
-    delete cachedPixmap;
 }
 
-QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColorSpace targetColorSpace, bool forCache)
+QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColorSpace &targetColorSpace, bool forCache)
 {
     QImageReader imageReader;
     imageReader.setDecideFormatFromContent(true);
@@ -167,17 +157,19 @@ QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColo
 #endif
 
     QPixmap readPixmap = QPixmap::fromImage(readImage);
+    QFileInfo fileInfo(fileName);
 
     ReadData readData = {
         readPixmap,
-        QFileInfo(fileName),
+        fileInfo.absoluteFilePath(),
+        fileInfo.size(),
         imageReader.size(),
         targetColorSpace
     };
     // Only error out when not loading for cache
     if (readPixmap.isNull() && !forCache)
     {
-        emit readError(imageReader.error(), imageReader.errorString(), readData.fileInfo.fileName());
+        emit readError(imageReader.error(), imageReader.errorString(), fileInfo.fileName());
     }
 
     return readData;
@@ -186,7 +178,7 @@ QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColo
 void QVImageCore::loadPixmap(const ReadData &readData)
 {
     // Do this first so we can keep folder info even when loading errored files
-    currentFileDetails.fileInfo = readData.fileInfo;
+    currentFileDetails.fileInfo = QFileInfo(readData.absoluteFilePath);
     currentFileDetails.updateLoadedIndexInFolder();
     if (currentFileDetails.loadedIndexInFolder == -1)
         updateFolderInfo();
@@ -201,7 +193,7 @@ void QVImageCore::loadPixmap(const ReadData &readData)
 
     // Set file details
     currentFileDetails.isPixmapLoaded = true;
-    currentFileDetails.baseImageSize = readData.size;
+    currentFileDetails.baseImageSize = readData.imageSize;
     currentFileDetails.loadedPixmapSize = loadedPixmap.size();
     if (currentFileDetails.baseImageSize == QSize(-1, -1))
     {
@@ -395,8 +387,7 @@ void QVImageCore::requestCaching()
         return;
     }
 
-    // Figure out target color space (and if it changed this clears cached pixmaps)
-    updateCurrentTargetColorSpace();
+    QColorSpace targetColorSpace = getTargetColorSpace();
 
     int preloadingDistance = 1;
 
@@ -429,19 +420,21 @@ void QVImageCore::requestCaching()
         QString filePath = currentFileDetails.folderFileInfoList[index].absoluteFilePath;
         filesToPreload.append(filePath);
 
-        requestCachingFile(filePath);
+        requestCachingFile(filePath, targetColorSpace);
     }
     lastFilesPreloaded = filesToPreload;
 
 }
 
-void QVImageCore::requestCachingFile(const QString &filePath)
+void QVImageCore::requestCachingFile(const QString &filePath, const QColorSpace &targetColorSpace)
 {
+    QFile imgFile(filePath);
+    QString cacheKey = getPixmapCacheKey(filePath, imgFile.size(), targetColorSpace);
+
     //check if image is already loaded or requested
-    if (QVImageCore::pixmapCache.contains(filePath) || lastFilesPreloaded.contains(filePath))
+    if (QVImageCore::pixmapCache.contains(cacheKey) || lastFilesPreloaded.contains(filePath))
         return;
 
-    QFile imgFile(filePath);
     if (imgFile.size()/1024 > QVImageCore::pixmapCache.maxCost()/2)
         return;
 
@@ -452,39 +445,42 @@ void QVImageCore::requestCachingFile(const QString &filePath)
     });
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    cacheFutureWatcher->setFuture(QtConcurrent::run(this, &QVImageCore::readFile, filePath, currentTargetColorSpace, true));
+    cacheFutureWatcher->setFuture(QtConcurrent::run(this, &QVImageCore::readFile, filePath, targetColorSpace, true));
 #else
-    cacheFutureWatcher->setFuture(QtConcurrent::run(&QVImageCore::readFile, this, filePath, currentTargetColorSpace, true));
+    cacheFutureWatcher->setFuture(QtConcurrent::run(&QVImageCore::readFile, this, filePath, targetColorSpace, true));
 #endif
 }
 
 void QVImageCore::addToCache(const ReadData &readData)
 {
-    if (readData.pixmap.isNull() || readData.targetColorSpace != currentTargetColorSpace)
+    if (readData.pixmap.isNull())
         return;
 
+    QString cacheKey = getPixmapCacheKey(readData.absoluteFilePath, readData.fileSize, readData.targetColorSpace);
 
-    auto fileSize = readData.fileInfo.size();
-    QVImageCore::pixmapCache.insert(readData.fileInfo.absoluteFilePath(), new QPixmap(readData.pixmap), fileSize/1024);
-
-    qvApp->setPreviouslyRecordedFileSize(readData.fileInfo.absoluteFilePath(), new qint64(fileSize));
-    qvApp->setPreviouslyRecordedImageSize(readData.fileInfo.absoluteFilePath(), new QSize(readData.size));
+    QVImageCore::pixmapCache.insert(cacheKey, new ReadData(readData), readData.fileSize/1024);
 }
 
-void QVImageCore::updateCurrentTargetColorSpace()
+QString QVImageCore::getPixmapCacheKey(const QString &absoluteFilePath, const qint64 &fileSize, const QColorSpace &targetColorSpace)
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
-    const QColorSpace newTargetColorSpace =
+    QString targetColorSpaceHash = QCryptographicHash::hash(targetColorSpace.iccProfile(), QCryptographicHash::Md5).toHex();
+#else
+    QString targetColorSpaceHash = "";
+#endif
+    return absoluteFilePath + "\n" + QString::number(fileSize) + "\n" + targetColorSpaceHash;
+}
+
+QColorSpace QVImageCore::getTargetColorSpace() const
+{
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+    return
         colorSpaceConversion == 1 ? detectDisplayColorSpace() :
         colorSpaceConversion == 2 ? QColorSpace::SRgb :
         colorSpaceConversion == 3 ? QColorSpace::DisplayP3 :
         QColorSpace();
-
-    if (newTargetColorSpace != currentTargetColorSpace)
-    {
-        QVImageCore::pixmapCache.clear();
-        currentTargetColorSpace = newTargetColorSpace;
-    }
+#else
+    return {};
 #endif
 }
 

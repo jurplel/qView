@@ -222,38 +222,6 @@ void QVApplication::recentsMenuUpdated()
 #endif
 }
 
-qint64 QVApplication::getPreviouslyRecordedFileSize(const QString &fileName)
-{
-    auto previouslyRecordedFileSizePtr = previouslyRecordedFileSizes.object(fileName);
-    qint64 previouslyRecordedFileSize = 0;
-
-    if (previouslyRecordedFileSizePtr)
-        previouslyRecordedFileSize = *previouslyRecordedFileSizePtr;
-
-    return previouslyRecordedFileSize;
-}
-
-void QVApplication::setPreviouslyRecordedFileSize(const QString &fileName, long long *fileSize)
-{
-    previouslyRecordedFileSizes.insert(fileName, fileSize);
-}
-
-QSize QVApplication::getPreviouslyRecordedImageSize(const QString &fileName)
-{
-    auto previouslyRecordedImageSizePtr = previouslyRecordedImageSizes.object(fileName);
-    QSize previouslyRecordedImageSize = QSize();
-
-    if (previouslyRecordedImageSizePtr)
-        previouslyRecordedImageSize = *previouslyRecordedImageSizePtr;
-
-    return previouslyRecordedImageSize;
-}
-
-void QVApplication::setPreviouslyRecordedImageSize(const QString &fileName, QSize *imageSize)
-{
-    previouslyRecordedImageSizes.insert(fileName, imageSize);
-}
-
 void QVApplication::addToLastActiveWindows(MainWindow *window)
 {
     if (!window)
