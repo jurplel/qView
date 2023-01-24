@@ -51,7 +51,7 @@ public:
     struct ReadData
     {
         QPixmap pixmap;
-        QFileInfo fileInfo;
+        QString absoluteFilePath;
         qint64 fileSize;
         QSize imageSize;
         QColorSpace targetColorSpace;

@@ -158,7 +158,7 @@ QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColo
 
     ReadData readData = {
         readPixmap,
-        fileInfo,
+        fileInfo.absoluteFilePath(),
         fileInfo.size(),
         imageReader.size(),
         targetColorSpace
@@ -175,7 +175,7 @@ QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColo
 void QVImageCore::loadPixmap(const ReadData &readData)
 {
     // Do this first so we can keep folder info even when loading errored files
-    currentFileDetails.fileInfo = readData.fileInfo;
+    currentFileDetails.fileInfo = QFileInfo(readData.absoluteFilePath);
     currentFileDetails.updateLoadedIndexInFolder();
     if (currentFileDetails.loadedIndexInFolder == -1)
         updateFolderInfo();
@@ -457,7 +457,7 @@ void QVImageCore::addToCache(const ReadData &readData)
     if (readData.pixmap.isNull())
         return;
 
-    QString cacheKey = getPixmapCacheKey(readData.fileInfo.absoluteFilePath(), readData.fileSize, readData.targetColorSpace);
+    QString cacheKey = getPixmapCacheKey(readData.absoluteFilePath, readData.fileSize, readData.targetColorSpace);
 
     QVImageCore::pixmapCache.insert(cacheKey, new ReadData(readData), readData.fileSize/1024);
 }
