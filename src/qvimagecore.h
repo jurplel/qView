@@ -52,14 +52,15 @@ public:
     {
         QPixmap pixmap;
         QFileInfo fileInfo;
-        QSize size;
+        qint64 fileSize;
+        QSize imageSize;
         QColorSpace targetColorSpace;
     };
 
     explicit QVImageCore(QObject *parent = nullptr);
 
     void loadFile(const QString &fileName);
-    ReadData readFile(const QString &fileName, const QColorSpace targetColorSpace, bool forCache);
+    ReadData readFile(const QString &fileName, const QColorSpace &targetColorSpace, bool forCache);
     void loadPixmap(const ReadData &readData);
     void closeImage();
     QList<CompatibleFile> getCompatibleFiles(const QString &dirPath);
@@ -67,9 +68,10 @@ public:
     unsigned getRandomSortSeed(const QString &dirPath, const int fileCount);
     void updateFolderInfo(QString dirPath = QString());
     void requestCaching();
-    void requestCachingFile(const QString &filePath);
+    void requestCachingFile(const QString &filePath, const QColorSpace &targetColorSpace);
     void addToCache(const ReadData &readImageAndFileInfo);
-    void updateCurrentTargetColorSpace();
+    static QString getPixmapCacheKey(const QString &absoluteFilePath, const qint64 &fileSize, const QColorSpace &targetColorSpace);
+    QColorSpace getTargetColorSpace() const;
     QColorSpace detectDisplayColorSpace() const;
 
     void settingsUpdated();
@@ -108,8 +110,7 @@ private:
     bool allowMimeContentDetection;
     int colorSpaceConversion;
 
-    static QCache<QString, QPixmap> pixmapCache;
-    static QColorSpace currentTargetColorSpace;
+    static QCache<QString, ReadData> pixmapCache;
 
     unsigned baseRandomSortSeed;
 
