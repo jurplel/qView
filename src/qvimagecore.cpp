@@ -457,9 +457,9 @@ void QVImageCore::addToCache(const ReadData &readData)
         return;
 
     QString cacheKey = getPixmapCacheKey(readData.absoluteFilePath, readData.fileSize, readData.targetColorSpace);
-    qsizetype cost = static_cast<qsizetype>(qMax(calculatePixmapMemorySize(readData.pixmap) / 1024, 1LL));
+    qint64 pixmapMemoryBytes = static_cast<qint64>(readData.pixmap.width()) * readData.pixmap.height() * readData.pixmap.depth() / 8;
 
-    QVImageCore::pixmapCache.insert(cacheKey, new ReadData(readData), cost);
+    QVImageCore::pixmapCache.insert(cacheKey, new ReadData(readData), qMax(pixmapMemoryBytes / 1024, 1LL));
 }
 
 QString QVImageCore::getPixmapCacheKey(const QString &absoluteFilePath, const qint64 &fileSize, const QColorSpace &targetColorSpace)
@@ -470,11 +470,6 @@ QString QVImageCore::getPixmapCacheKey(const QString &absoluteFilePath, const qi
     QString targetColorSpaceHash = "";
 #endif
     return absoluteFilePath + "\n" + QString::number(fileSize) + "\n" + targetColorSpaceHash;
-}
-
-qint64 QVImageCore::calculatePixmapMemorySize(const QPixmap &pixmap)
-{
-    return static_cast<qint64>(pixmap.width()) * pixmap.height() * pixmap.depth() / 8;
 }
 
 QColorSpace QVImageCore::getTargetColorSpace() const

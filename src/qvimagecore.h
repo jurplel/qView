@@ -71,7 +71,6 @@ public:
     void requestCachingFile(const QString &filePath, const QColorSpace &targetColorSpace);
     void addToCache(const ReadData &readImageAndFileInfo);
     static QString getPixmapCacheKey(const QString &absoluteFilePath, const qint64 &fileSize, const QColorSpace &targetColorSpace);
-    static qint64 calculatePixmapMemorySize(const QPixmap &pixmap);
     QColorSpace getTargetColorSpace() const;
     QColorSpace detectDisplayColorSpace() const;
 
