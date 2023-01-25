@@ -400,10 +400,6 @@ void QVImageCore::requestCaching()
     {
         int index = i;
 
-        // Don't try to cache the currently loaded image
-        if (index == currentFileDetails.loadedIndexInFolder)
-            continue;
-
         //keep within index range
         if (isLoopFoldersEnabled)
         {
@@ -417,9 +413,12 @@ void QVImageCore::requestCaching()
         if (index > currentFileDetails.folderFileInfoList.length()-1 || index < 0 || currentFileDetails.folderFileInfoList.isEmpty())
             continue;
 
-
         QString filePath = currentFileDetails.folderFileInfoList[index].absoluteFilePath;
         filesToPreload.append(filePath);
+
+        // Don't try to cache the currently loaded image
+        if (index == currentFileDetails.loadedIndexInFolder)
+            continue;
 
         requestCachingFile(filePath, targetColorSpace);
     }
@@ -458,8 +457,9 @@ void QVImageCore::addToCache(const ReadData &readData)
         return;
 
     QString cacheKey = getPixmapCacheKey(readData.absoluteFilePath, readData.fileSize, readData.targetColorSpace);
+    qsizetype cost = static_cast<qsizetype>(qMax(calculatePixmapMemorySize(readData.pixmap) / 1024, 1LL));
 
-    QVImageCore::pixmapCache.insert(cacheKey, new ReadData(readData), readData.fileSize/1024);
+    QVImageCore::pixmapCache.insert(cacheKey, new ReadData(readData), cost);
 }
 
 QString QVImageCore::getPixmapCacheKey(const QString &absoluteFilePath, const qint64 &fileSize, const QColorSpace &targetColorSpace)
@@ -470,6 +470,11 @@ QString QVImageCore::getPixmapCacheKey(const QString &absoluteFilePath, const qi
     QString targetColorSpaceHash = "";
 #endif
     return absoluteFilePath + "\n" + QString::number(fileSize) + "\n" + targetColorSpaceHash;
+}
+
+qint64 QVImageCore::calculatePixmapMemorySize(const QPixmap &pixmap)
+{
+    return static_cast<qint64>(pixmap.width()) * pixmap.height() * pixmap.depth() / 8;
 }
 
 QColorSpace QVImageCore::getTargetColorSpace() const
