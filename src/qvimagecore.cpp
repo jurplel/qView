@@ -212,12 +212,14 @@ void QVImageCore::loadPixmap(const ReadData &readData)
         loadedMovie.setFileName(currentFileDetails.fileInfo.absoluteFilePath());
     }
 
-    currentFileDetails.isMovieLoaded = loadedMovie.isValid() && loadedMovie.frameCount() != 1;
-
-    if (currentFileDetails.isMovieLoaded)
+    if (loadedMovie.isValid() && loadedMovie.frameCount() != 1)
         loadedMovie.start();
-    else if (auto device = loadedMovie.device())
-        device->close();
+
+    currentFileDetails.isMovieLoaded = loadedMovie.state() == QMovie::Running;
+
+    if (!currentFileDetails.isMovieLoaded)
+        if (auto device = loadedMovie.device())
+            device->close();
 
     currentFileDetails.timeSinceLoaded.start();
 
