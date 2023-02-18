@@ -74,12 +74,12 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="660"/>
         <source>&amp;Open...</source>
-        <translation type="unfinished">&amp;Åpne…</translation>
+        <translation>&amp;Åpne …</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="663"/>
         <source>Open &amp;URL...</source>
-        <translation type="unfinished">Åpne &amp;nettadresse…</translation>
+        <translation>Åpne &amp;nettadresse …</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="666"/>
@@ -147,7 +147,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="709"/>
         <source>R&amp;ename...</source>
-        <translation>&amp;Gi nytt navn…</translation>
+        <translation>&amp;Gi nytt navn …</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="713"/>
@@ -217,7 +217,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="765"/>
         <source>Save Frame &amp;As...</source>
-        <translation>Lagre ramme &amp;som…</translation>
+        <translation>Lagre ramme &amp;som …</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="769"/>
@@ -265,7 +265,7 @@
         <location filename="../src/actionmanager.cpp" line="800"/>
         <source>Preference&amp;s...</source>
         <extracomment>This is for the options dialog on mac</extracomment>
-        <translation type="unfinished">&amp;Innstillinge&amp;r…</translation>
+        <translation>&amp;Innstillinge&amp;r …</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="804"/>
@@ -344,7 +344,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="569"/>
         <source>Downloading image...</source>
-        <translation type="unfinished">Laster ned bilde…</translation>
+        <translation>Laster ned bilde …</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="569"/>
@@ -355,7 +355,7 @@
         <location filename="../src/mainwindow.cpp" line="573"/>
         <location filename="../src/mainwindow.cpp" line="629"/>
         <source>Open URL...</source>
-        <translation type="unfinished">Åpne nettadresse…</translation>
+        <translation>Åpne nettadresse …</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="590"/>
@@ -447,7 +447,7 @@ Ingen skrivetilgang, eller så er filen skrivebeskyttet.</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="939"/>
         <source>Save Frame As...</source>
-        <translation type="unfinished">Lagre ramme som…</translation>
+        <translation>Lagre ramme som …</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="968"/>
@@ -526,7 +526,7 @@ Ingen skrivetilgang, eller så er filen skrivebeskyttet.</translation>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="90"/>
         <source>Checking for updates...</source>
-        <translation type="unfinished">Se etter nye versjoner…</translation>
+        <translation>Se etter nye versjoner …</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="94"/>
@@ -564,7 +564,7 @@ Ingen skrivetilgang, eller så er filen skrivebeskyttet.</translation>
     <message>
         <location filename="../src/qvapplication.cpp" line="136"/>
         <source>Open...</source>
-        <translation type="unfinished">Åpne…</translation>
+        <translation>Åpne …</translation>
     </message>
 </context>
 <context>
@@ -1149,7 +1149,7 @@ Ingen skrivetilgang, eller så er filen skrivebeskyttet.</translation>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="14"/>
         <source>Rename...</source>
-        <translation type="unfinished">Gi nytt navn…</translation>
+        <translation>Gi nytt navn …</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="15"/>

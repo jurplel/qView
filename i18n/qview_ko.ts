@@ -53,7 +53,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="468"/>
         <source>Open With</source>
-        <translation type="unfinished"></translation>
+        <translation>다음으로 열기</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="650"/>
@@ -117,22 +117,22 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="688"/>
         <source>&amp;Move to Trash</source>
-        <translation type="unfinished"></translation>
+        <translation>휴지통으로 이동(&amp;M)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="690"/>
         <source>&amp;Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>삭제(&amp;D)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="695"/>
         <source>&amp;Restore from Trash</source>
-        <translation type="unfinished"></translation>
+        <translation>휴지통에서 복구하기(&amp;R)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="697"/>
         <source>&amp;Undo Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>삭제 되돌리기(&amp;U)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="702"/>
@@ -293,19 +293,19 @@
         <location filename="../src/actionmanager.cpp" line="819"/>
         <source>Other Application...</source>
         <extracomment>Open with other program for unix non-mac</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>다른 응용프로그램...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="822"/>
         <source>Choose another app</source>
         <extracomment>Open with other program for windows</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>다른 앱 선택</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="825"/>
         <source>Other...</source>
         <extracomment>Open with other program for macos</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>그 외...</translation>
     </message>
 </context>
 <context>
@@ -323,7 +323,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="390"/>
         <source>Empty</source>
-        <translation type="unfinished">없음</translation>
+        <translation>비어 있음</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="563"/>
@@ -376,56 +376,59 @@
         <location filename="../src/mainwindow.cpp" line="685"/>
         <source>Can&apos;t delete %1:
 No write permission or file is read-only.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 삭제 불가:
+권한이 없거나 읽기 전용 파일입니다.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="689"/>
         <source>Are you sure you want to move %1 to the Trash?</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 파일을 휴지통으로 이동하시겠습니까?</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="691"/>
         <source>Are you sure you want to move %1 to the Recycle Bin?</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 파일을 휴지통으로 이동하시겠습니까?</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="694"/>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>삭제</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="696"/>
         <source>Do not ask again</source>
-        <translation type="unfinished"></translation>
+        <translation>더이상 묻지 않기</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="725"/>
         <source>Can&apos;t delete %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 삭제 불가.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="736"/>
         <location filename="../src/mainwindow.cpp" line="806"/>
         <source>Not Supported</source>
-        <translation type="unfinished"></translation>
+        <translation>지원되지 않음</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="736"/>
         <location filename="../src/mainwindow.cpp" line="806"/>
         <source>This program was compiled with an old version of Qt and this feature is not available.
 If you see this message, please report a bug!</source>
-        <translation type="unfinished"></translation>
+        <translation>오래된 Qt 버전으로 프로그램이 컴파일돼 기능을 사용할 수 없습니다.
+이 메시지를 본다면 버그로 제보해주세요!</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="793"/>
         <source>Can&apos;t undo deletion of %1:
 No write permission or file is read-only.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 파일 삭제를 되돌릴 수 없음:
+권한이 없거나 읽기 전용 파일입니다.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="801"/>
         <source>Failed undoing deletion of %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 파일의 복구에 실패했습니다.</translation>
     </message>
     <message>
         <source>Rename...</source>
@@ -472,17 +475,17 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/openwith.cpp" line="165"/>
         <source>All Applications (*.app)</source>
-        <translation type="unfinished"></translation>
+        <translation>모든 애플리케이션(*.app)</translation>
     </message>
     <message>
         <location filename="../src/openwith.cpp" line="177"/>
         <source>Programs (*.exe *.pif *.com *.bat *.cmd)</source>
-        <translation type="unfinished"></translation>
+        <translation>프로그램 (*.exe *.pif *.com *.bat *.cmd)</translation>
     </message>
     <message>
         <location filename="../src/openwith.cpp" line="177"/>
         <source>All Files (*)</source>
-        <translation type="unfinished"></translation>
+        <translation>모든 파일(*)</translation>
     </message>
 </context>
 <context>
@@ -551,7 +554,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvapplication.cpp" line="40"/>
         <source>Supported Images</source>
-        <translation type="unfinished"></translation>
+        <translation>지원되는 이미지</translation>
     </message>
     <message>
         <location filename="../src/qvapplication.cpp" line="49"/>
@@ -569,7 +572,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvcocoafunctions.mm" line="195"/>
         <source> (default)</source>
-        <translation type="unfinished"></translation>
+        <translation> (기본)</translation>
     </message>
 </context>
 <context>
@@ -667,67 +670,67 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvopenwithdialog.ui" line="14"/>
         <source>Choose Application</source>
-        <translation type="unfinished"></translation>
+        <translation>애플리케이션 선택</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="66"/>
         <source>Development</source>
-        <translation type="unfinished"></translation>
+        <translation>개발</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="67"/>
         <source>Education</source>
-        <translation type="unfinished"></translation>
+        <translation>교육</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="68"/>
         <source>Games</source>
-        <translation type="unfinished"></translation>
+        <translation>게임</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="69"/>
         <source>Graphics</source>
-        <translation type="unfinished"></translation>
+        <translation>그래픽</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="70"/>
         <source>Internet</source>
-        <translation type="unfinished"></translation>
+        <translation>인터넷</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="71"/>
         <source>Multimedia</source>
-        <translation type="unfinished"></translation>
+        <translation>멀티미디어</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="72"/>
         <source>Office</source>
-        <translation type="unfinished"></translation>
+        <translation>오피스</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="73"/>
         <source>Science</source>
-        <translation type="unfinished"></translation>
+        <translation>과학</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="74"/>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>환경설정</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="75"/>
         <source>System</source>
-        <translation type="unfinished"></translation>
+        <translation>시스템</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="76"/>
         <source>Utilities</source>
-        <translation type="unfinished"></translation>
+        <translation>유틸리티</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="77"/>
         <source>Other</source>
-        <translation type="unfinished"></translation>
+        <translation>그 외</translation>
     </message>
 </context>
 <context>
@@ -735,7 +738,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="17"/>
         <source>Options</source>
-        <translation>환경설정</translation>
+        <translation>옵션</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="33"/>
@@ -858,7 +861,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="249"/>
         <source>&amp;Quit on last window closed</source>
-        <translation type="unfinished"></translation>
+        <translation>마지막 창을 닫을 때 종료(&amp;Q)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="257"/>
@@ -1092,27 +1095,27 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="666"/>
         <source>Move Back</source>
-        <translation type="unfinished"></translation>
+        <translation>이전으로</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="671"/>
         <source>Do Nothing</source>
-        <translation type="unfinished"></translation>
+        <translation>아무것도 하지 않음</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="676"/>
         <source>Move Forward</source>
-        <translation type="unfinished"></translation>
+        <translation>다음으로</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="684"/>
         <source>After deletion:</source>
-        <translation type="unfinished"></translation>
+        <translation>삭제 후:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="691"/>
         <source>&amp;Ask before deleting files</source>
-        <translation type="unfinished"></translation>
+        <translation>파일을 삭제하기 전에 묻기(&amp;A)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="712"/>
@@ -1146,30 +1149,32 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="14"/>
         <source>Rename...</source>
-        <translation type="unfinished">이름변경...</translation>
+        <translation>이름 변경...</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="15"/>
         <source>File name:</source>
-        <translation type="unfinished">파일 이름:</translation>
+        <translation>파일 이름:</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="26"/>
         <location filename="../src/qvrenamedialog.cpp" line="45"/>
         <source>Error</source>
-        <translation type="unfinished">오류</translation>
+        <translation>오류</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="26"/>
         <source>Could not rename %1:
 No write permission or file is read-only.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 파일 이름을 변경할 수 없음:
+권한이 없거나 읽기 전용 파일입니다.</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="45"/>
         <source>Could not rename %1:
 (Check that all characters are valid)</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 파일 이름을 변경할 수 없음:
+(문자열이 올바른지 확인)</translation>
     </message>
 </context>
 <context>
@@ -1249,12 +1254,12 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="55"/>
         <source>Restore from Trash</source>
-        <translation type="unfinished"></translation>
+        <translation>휴지통에서 복구하기</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="57"/>
         <source>Undo Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>삭제 되돌리기</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="59"/>
@@ -1274,12 +1279,12 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="65"/>
         <source>Move to Trash</source>
-        <translation type="unfinished"></translation>
+        <translation>휴지통으로 이동</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="69"/>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>삭제</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="71"/>
