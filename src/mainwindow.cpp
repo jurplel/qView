@@ -247,12 +247,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
     else if (event->button() == Qt::MouseButton::ForwardButton)
         nextFile();
     else if (event->button() == Qt::MouseButton::MiddleButton)
-    {
-        if (!graphicsView->getResizeResetsZoom())
-            graphicsView->setResizeResetsZoom(true);
-        else
-            graphicsView->centerImage();
-    }
+        resetZoom();
 
     QMainWindow::mousePressEvent(event);
 }

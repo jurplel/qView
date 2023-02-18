@@ -36,14 +36,13 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     isLoopFoldersEnabled = true;
     isCursorZoomEnabled = true;
     isOneToOnePixelSizingEnabled = true;
-    isConstrainedPositioningEnabled = true;
+    isConstrainedPositioningEnabled = false;
     isConstrainedSmallCenteringEnabled = true;
     cropMode = 0;
     scaleFactor = 1.25;
 
     // Initialize other variables
     resizeResetsZoom = true;
-    isApplyingZoomToFit = false;
     navResetsZoom = true;
     currentScale = 1.0;
     appliedScaleAdjustment = 1.0;
@@ -92,7 +91,11 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 void QVGraphicsView::resizeEvent(QResizeEvent *event)
 {
     QGraphicsView::resizeEvent(event);
-    fitOrConstrainImage();
+
+    if (resizeResetsZoom)
+        zoomToFit();
+    else
+        scrollHelper->constrain(true);
 }
 
 void QVGraphicsView::paintEvent(QPaintEvent *event)
@@ -291,10 +294,10 @@ void QVGraphicsView::postLoad()
     // Set the pixmap to the new image and reset the transform's scale to a known value
     makeUnscaled();
 
-    if (navResetsZoom && !resizeResetsZoom)
-        setResizeResetsZoom(true);
+    if (navResetsZoom)
+        zoomToFit();
     else
-        fitOrConstrainImage();
+        scrollHelper->constrain(true);
 
     expensiveScaleTimer->start();
 
@@ -323,9 +326,6 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
         return;
     }
 
-    if (!isApplyingZoomToFit)
-        setResizeResetsZoom(false);
-
     if (pos != lastZoomEventPos)
     {
         lastZoomEventPos = pos;
@@ -336,8 +336,8 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
     scale(scaleFactor, scaleFactor);
     scrollHelper->cancelAnimation();
 
-    // If we have a point to zoom towards and cursor zooming is enabled
-    if (pos != QPoint(-1, -1) && isCursorZoomEnabled)
+    // If we have a point to zoom towards and cursor zooming is enabled/applicable
+    if (pos != QPoint(-1, -1) && isCursorZoomEnabled && (isConstrainedPositioningEnabled || getContentToViewportRatio() >= 1.0))
     {
         const QPointF p1mouse = mapFromScene(scenePos);
         const QPointF move = p1mouse - pos;
@@ -371,8 +371,6 @@ void QVGraphicsView::setResizeResetsZoom(bool value)
         return;
 
     resizeResetsZoom = value;
-    if (resizeResetsZoom)
-        zoomToFit();
 
     emit resizeResetsZoomChanged();
 }
@@ -398,9 +396,7 @@ void QVGraphicsView::scaleExpensively()
         return;
 
     // If we are above maximum scaling size
-    const QSize contentSize = getContentRect().size().toSize();
-    const QSize maxSize = getUsableViewportRect(true).size() * (isScalingTwoEnabled ? 3 : 1) + QSize(1, 1);
-    if (contentSize.width() > maxSize.width() || contentSize.height() > maxSize.height())
+    if (getContentToViewportRatio() > (isScalingTwoEnabled ? 3.0 : 1.00001))
     {
         // Return to original size
         makeUnscaled();
@@ -480,9 +476,7 @@ void QVGraphicsView::zoomToFit()
     if (targetRatio > 1.0 && !isPastActualSizeEnabled)
         targetRatio = 1.0;
 
-    isApplyingZoomToFit = true;
     setZoomLevel(targetRatio);
-    isApplyingZoomToFit = false;
 }
 
 void QVGraphicsView::originalSize()
@@ -624,14 +618,6 @@ void QVGraphicsView::centerOn(const QGraphicsItem *item)
     centerOn(item->sceneBoundingRect().center());
 }
 
-void QVGraphicsView::fitOrConstrainImage()
-{
-    if (resizeResetsZoom)
-        zoomToFit();
-    else
-        scrollHelper->constrain(true);
-}
-
 QSizeF QVGraphicsView::getEffectiveOriginalSize() const
 {
     return getTransformWithNoScaling().mapRect(QRectF(QPoint(), getCurrentFileDetails().loadedPixmapSize)).size() * getScaleAdjustment();
@@ -656,10 +642,17 @@ QRect QVGraphicsView::getUsableViewportRect(bool addMargin) const
     return rect;
 }
 
+qreal QVGraphicsView::getContentToViewportRatio() const
+{
+    const QSizeF contentSize = getContentRect().size();
+    const QSizeF viewportSize = getUsableViewportRect(true).size();
+    return qMax(contentSize.width() / viewportSize.width(), contentSize.height() / viewportSize.height());
+}
+
 QTransform QVGraphicsView::getTransformWithNoScaling() const
 {
-    qreal currentTransformScale = transform().mapRect(QRectF(QPointF(), QSizeF(1, 1))).width();
-    return QTransform(transform()).scale(1.0 / currentTransformScale, 1.0 / currentTransformScale);
+    QRectF unityRect = transform().mapRect(QRectF(0, 0, 1, 1));
+    return transform().scale(1.0 / unityRect.width(), 1.0 / unityRect.height());
 }
 
 qreal QVGraphicsView::getScaleAdjustment() const
@@ -674,7 +667,10 @@ void QVGraphicsView::handleScaleAdjustmentChange()
 
     makeUnscaled();
 
-    fitOrConstrainImage();
+    if (resizeResetsZoom)
+        zoomToFit();
+    else
+        scrollHelper->constrain(true);
 
     expensiveScaleTimer->start();
 }
@@ -758,7 +754,10 @@ void QVGraphicsView::settingsUpdated()
 
     handleScaleAdjustmentChange();
 
-    fitOrConstrainImage();
+    if (resizeResetsZoom)
+        zoomToFit();
+    else
+        scrollHelper->constrain(true);
 }
 
 void QVGraphicsView::closeImage()
