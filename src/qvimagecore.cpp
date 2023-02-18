@@ -441,11 +441,10 @@ void QVImageCore::addToCache(const ReadData &readData)
     if (readData.pixmap.isNull())
         return;
 
+    auto pixmapMemoryBytes = static_cast<qint64>(readData.pixmap.width()) * readData.pixmap.height() * readData.pixmap.depth() / 8;
+    QVImageCore::pixmapCache.insert(readData.fileInfo.absoluteFilePath(), new QPixmap(readData.pixmap), qMax(pixmapMemoryBytes / 1024, 1LL));
 
-    auto fileSize = readData.fileInfo.size();
-    QVImageCore::pixmapCache.insert(readData.fileInfo.absoluteFilePath(), new QPixmap(readData.pixmap), fileSize/1024);
-
-    qvApp->setPreviouslyRecordedFileSize(readData.fileInfo.absoluteFilePath(), new qint64(fileSize));
+    qvApp->setPreviouslyRecordedFileSize(readData.fileInfo.absoluteFilePath(), new qint64(readData.fileInfo.size()));
     qvApp->setPreviouslyRecordedImageSize(readData.fileInfo.absoluteFilePath(), new QSize(readData.size));
 }
 
