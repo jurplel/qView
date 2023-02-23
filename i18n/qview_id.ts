@@ -6,17 +6,17 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="25"/>
         <source>Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Jendela</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="183"/>
         <source>&amp;File</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Berkas</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="211"/>
         <source>&amp;Edit</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Sunting</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="229"/>
@@ -26,71 +26,71 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="258"/>
         <source>&amp;View</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Tampilkan</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="282"/>
         <source>&amp;Tools</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Peralatan</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="304"/>
         <source>&amp;Help</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Bantuan</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="318"/>
         <source>Open &amp;Recent</source>
-        <translation type="unfinished"></translation>
+        <translation>Buka &amp;Terakhir</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="328"/>
         <location filename="../src/actionmanager.cpp" line="459"/>
         <location filename="../src/actionmanager.cpp" line="476"/>
         <source>Empty</source>
-        <translation type="unfinished"></translation>
+        <translation>Kosong</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="468"/>
         <source>Open With</source>
-        <translation type="unfinished"></translation>
+        <translation>Buka Dengan</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="650"/>
         <source>&amp;Quit</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Keluar</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="654"/>
         <source>Exit</source>
         <extracomment>The quit action is called &quot;Exit&quot; on windows</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Keluar</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="657"/>
         <source>New Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Jendela Baru</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="660"/>
         <source>&amp;Open...</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Buka...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="663"/>
         <source>Open &amp;URL...</source>
-        <translation type="unfinished"></translation>
+        <translation>Buka &amp;URL...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="666"/>
         <source>Close Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Tutup Jendela</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="670"/>
         <source>Close All</source>
         <extracomment>Close all windows, that is</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Tutup Semua</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="673"/>
@@ -1408,12 +1408,12 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/updatechecker.cpp" line="72"/>
         <source>qView Update Available</source>
-        <translation type="unfinished"></translation>
+        <translation>Pembaharuan qView Tersedia</translation>
     </message>
     <message>
         <location filename="../src/updatechecker.cpp" line="73"/>
         <source>qView %1 is available to download.</source>
-        <translation type="unfinished"></translation>
+        <translation>qView %1 tersedia untuk diunduh.</translation>
     </message>
     <message>
         <location filename="../src/updatechecker.cpp" line="77"/>
