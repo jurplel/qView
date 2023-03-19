@@ -21,7 +21,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="229"/>
         <source>&amp;Go</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Go</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="258"/>
@@ -95,99 +95,99 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="673"/>
         <source>Open Containing &amp;Folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Buka isi &amp;Folder</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="676"/>
         <source>Show in E&amp;xplorer</source>
         <extracomment>Open containing folder on windows</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Tampilkan di E&amp;xplorer</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="679"/>
         <source>Show in &amp;Finder</source>
         <extracomment>Open containing folder on macOS</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Tampilkan di &amp;Finder</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="684"/>
         <source>Show File &amp;Info</source>
-        <translation type="unfinished"></translation>
+        <translation>Tampilkan File &amp;Info</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="688"/>
         <source>&amp;Move to Trash</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Pindah ke Tempat Sampah</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="690"/>
         <source>&amp;Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Hapus</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="695"/>
         <source>&amp;Restore from Trash</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Pulihkan dari Sampah</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="697"/>
         <source>&amp;Undo Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Batalkan penghapusan</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="702"/>
         <source>&amp;Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Salin</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="706"/>
         <source>&amp;Paste</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Tempel</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="709"/>
         <source>R&amp;ename...</source>
-        <translation type="unfinished"></translation>
+        <translation>U&amp;bah nama...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="713"/>
         <source>Zoom &amp;In</source>
-        <translation type="unfinished"></translation>
+        <translation>Perbe &amp;sar</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="717"/>
         <source>Zoom &amp;Out</source>
-        <translation type="unfinished"></translation>
+        <translation>Perke &amp;cil</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="721"/>
         <source>Reset &amp;Zoom</source>
-        <translation type="unfinished"></translation>
+        <translation>Setel Ulang &amp;Zoom</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="725"/>
         <source>Ori&amp;ginal Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Ori&amp;ginal Ukuran</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="729"/>
         <source>Rotate &amp;Right</source>
-        <translation type="unfinished"></translation>
+        <translation>Putar &amp;Kanan</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="733"/>
         <source>Rotate &amp;Left</source>
-        <translation type="unfinished"></translation>
+        <translation>Putar &amp;Kiri</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="737"/>
         <source>&amp;Mirror</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Cermin</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="741"/>
         <source>&amp;Flip</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Balik</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="745"/>
