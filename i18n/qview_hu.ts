@@ -21,7 +21,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="229"/>
         <source>&amp;Go</source>
-        <translation>&amp;Odalépés</translation>
+        <translation>&amp;Ugrás</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="258"/>
@@ -197,22 +197,22 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="749"/>
         <source>&amp;First File</source>
-        <translation>Első f&amp;ájl</translation>
+        <translation>Első f&amp;ájlra</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="753"/>
         <source>Previous Fi&amp;le</source>
-        <translation>El&amp;őző fájl</translation>
+        <translation>El&amp;őző fájlra</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="757"/>
         <source>&amp;Next File</source>
-        <translation>K&amp;övetkező fájl</translation>
+        <translation>K&amp;övetkező fájlra</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="761"/>
         <source>Las&amp;t File</source>
-        <translation>Utols&amp;ó fájl</translation>
+        <translation>Utols&amp;ó fájlra</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="765"/>
