@@ -376,7 +376,7 @@
         <location filename="../src/mainwindow.cpp" line="685"/>
         <source>Can&apos;t delete %1:
 No write permission or file is read-only.</source>
-        <translation>Nem lehet törölni a(z) %1 fájlt!
+        <translation>Nem lehet törölni a(z) %1: fájlt!
 Nincs írási jogosultságod vagy a fájl írásvédett.</translation>
     </message>
     <message>
@@ -554,7 +554,7 @@ Nincs írási jogosultságod vagy a fájl csak olvasható.</translation>
     <message>
         <location filename="../src/qvcocoafunctions.mm" line="195"/>
         <source> (default)</source>
-        <translation> (default)</translation>
+        <translation> (alapértelmezett)</translation>
     </message>
 </context>
 <context>
@@ -878,7 +878,7 @@ Nincs írási jogosultságod vagy a fájl csak olvasható.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="296"/>
         <source>Choose whether or not the image continues to be scaled when zooming above the window size (can be laggier with large images)</source>
-        <translation>Válaszd ki, hogy a kép továbbra is méretezve maradjon-e, ha az ablakméret fölé nagyítottál (nagy képeknél magasabb lehet a késleltetés)</translation>
+        <translation>Válaszd ki, hogy a kép továbbra is skálázva maradjon-e, ha az ablakméreten túl nagyítottál (nagy képeknél magasabb lehet a késleltetés)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="299"/>
@@ -899,7 +899,7 @@ Nincs írási jogosultságod vagy a fájl csak olvasható.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="341"/>
         <source>Choose whether scrolling zooms or moves the image (alternative can be accessed at any time by holding ctrl/cmd)</source>
-        <translation>Válaszd ki, hogy az egérgörgővel zoomolj vagy elmozdítsd az adott képet (alternatívaként elérhető a ctrl/cmd nyomva tartásával)</translation>
+        <translation>Válaszd ki, hogy az egérgörgővel zoomoljon vagy elmozdítsa az adott képet (alternatívaként elérhető a ctrl/cmd nyomva tartásával)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="344"/>
@@ -909,12 +909,12 @@ Nincs írási jogosultságod vagy a fájl csak olvasható.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="367"/>
         <source>Stop the image from going past its actual size when resizing the window - you can still zoom past it though</source>
-        <translation>Megakadályozza, hogy a kép az ablak átméretezésekor túllépje a tényleges méretét - a zoomolás továbbra is lehetséges</translation>
+        <translation>A beállítás kikapcsolásával, a megjelenített képfájl igazodik a megjelenítőablak méretéhez - a zoomolás továbbra is lehetséges</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="370"/>
         <source>Image resizes &amp;past actual size</source>
-        <translation>A kép átméretezése a tényle&amp;ges méretre</translation>
+        <translation>A kép aktuális mérete &amp;kövesse az ablak méretét</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="386"/>
@@ -1036,7 +1036,7 @@ Nincs írási jogosultságod vagy a fájl csak olvasható.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="588"/>
         <source>Slideshow direction:</source>
-        <translation>Diavetítés iránya:</translation>
+        <translation>Diavetítés feldolgozási sorrendje:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="596"/>
@@ -1148,14 +1148,14 @@ Nincs írási jogosultságod vagy a fájl csak olvasható.</translation>
         <location filename="../src/qvrenamedialog.cpp" line="26"/>
         <source>Could not rename %1:
 No write permission or file is read-only.</source>
-        <translation>Nem lehet átnevezni a(z) %1: fájlt
+        <translation>Nem lehet átnevezni a(z) %1 fájlt:
 Nincs írási jogosultságod vagy a fájl csak olvasható.</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="45"/>
         <source>Could not rename %1:
 (Check that all characters are valid)</source>
-        <translation>Nem lehet átnevezni a(z) %1:
+        <translation>Nem lehet átnevezni a(z) %1 fájlt:
 (Ellenőrizd, hogy érvényes karaktereket adtál-e meg)</translation>
     </message>
 </context>
@@ -1174,7 +1174,7 @@ Nincs írási jogosultságod vagy a fájl csak olvasható.</translation>
     <message>
         <location filename="../src/qvshortcutdialog.cpp" line="53"/>
         <source>&quot;%1&quot; is already bound to &quot;%2&quot;</source>
-        <translation>&quot;%1&quot;már hozzá van rendelve a(z) &quot;%2&quot;-hoz</translation>
+        <translation>&quot;%1&quot; már hozzá van rendelve a(z) &quot;%2&quot;-hoz</translation>
     </message>
 </context>
 <context>
