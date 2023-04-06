@@ -192,62 +192,62 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="745"/>
         <source>Enter F&amp;ull Screen</source>
-        <translation type="unfinished"></translation>
+        <translation>Ganti ke L&amp;ayar Penuh</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="749"/>
         <source>&amp;First File</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;File Pertama</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="753"/>
         <source>Previous Fi&amp;le</source>
-        <translation type="unfinished"></translation>
+        <translation>Fi&amp;le Sebelumnya</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="757"/>
         <source>&amp;Next File</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;File Berikutnya</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="761"/>
         <source>Las&amp;t File</source>
-        <translation type="unfinished"></translation>
+        <translation>File Ter&amp;akhir</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="765"/>
         <source>Save Frame &amp;As...</source>
-        <translation type="unfinished"></translation>
+        <translation>Simpan Bingkai &amp;Sebagai...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="769"/>
         <source>Pa&amp;use</source>
-        <translation type="unfinished"></translation>
+        <translation>Je&amp;da</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="773"/>
         <source>&amp;Next Frame</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Bingkai Berikutnya</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="777"/>
         <source>&amp;Decrease Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Kurangi Kecepatan</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="781"/>
         <source>&amp;Reset Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Reset Kecepatan</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="785"/>
         <source>&amp;Increase Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Tingkatkan Kecepatan</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="789"/>
         <source>Start S&amp;lideshow</source>
-        <translation type="unfinished"></translation>
+        <translation>Mulai S&amp;lideshow</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="794"/>
