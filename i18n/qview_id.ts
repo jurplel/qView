@@ -253,30 +253,30 @@
         <location filename="../src/actionmanager.cpp" line="794"/>
         <source>Option&amp;s</source>
         <extracomment>This is for the options dialog on windows</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Opsi</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="797"/>
         <source>Preference&amp;s</source>
         <extracomment>This is for the options dialog on non-mac unix platforms</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Preferensi</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="800"/>
         <source>Preference&amp;s...</source>
         <extracomment>This is for the options dialog on mac</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Preferensi...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="804"/>
         <source>&amp;About</source>
-        <translation type="unfinished"></translation>
+        <translation>Tentang</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="807"/>
         <source>&amp;About qView</source>
         <extracomment>This is for the about dialog on mac</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Tentang qView</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="811"/>
