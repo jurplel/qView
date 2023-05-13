@@ -2,6 +2,7 @@
 
 #include "ShlObj_core.h"
 #include "winuser.h"
+#include "wingdi.h"
 #include "Objbase.h"
 #include "appmodel.h"
 #include "Shlwapi.h"
@@ -142,4 +143,28 @@ void QVWin32Functions::showOpenWithDialog(const QString &filePath, const QWindow
     HWND winId = reinterpret_cast<HWND>(parent->winId());
     if (!SUCCEEDED(SHOpenWithDialog(winId, &info)))
         qDebug() << "Failed launching open with dialog";
+}
+
+QByteArray QVWin32Functions::getIccProfileForWindow(const QWindow *window)
+{
+    QByteArray result;
+    const HWND hWnd = reinterpret_cast<HWND>(window->winId());
+    const HDC hDC = GetDC(hWnd);
+    if (hDC)
+    {
+        WCHAR profilePathBuff[MAX_PATH];
+        DWORD profilePathSize = MAX_PATH;
+        if (GetICMProfileW(hDC, &profilePathSize, profilePathBuff))
+        {
+            QString profilePath = QString::fromWCharArray(profilePathBuff);
+            QFile file(profilePath);
+            if (file.open(QIODevice::ReadOnly))
+            {
+                result = file.readAll();
+                file.close();
+            }
+        }
+        ReleaseDC(hWnd, hDC);
+    }
+    return result;
 }

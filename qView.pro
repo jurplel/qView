@@ -42,7 +42,7 @@ win32 {
 
     # To build without win32: qmake CONFIG+=NO_WIN32
     !CONFIG(NO_WIN32) {
-        LIBS += -lshell32 -luser32 -lole32 -lshlwapi
+        LIBS += -lshell32 -luser32 -lole32 -lshlwapi -lgdi32
         DEFINES += WIN32_LOADED
         message("Linked to win32 api")
     }
@@ -71,6 +71,18 @@ macx {
     } else {
         QMAKE_INFO_PLIST = "dist/mac/Info.plist"
         ICON = "dist/mac/qView.icns"
+    }
+}
+
+# Linux specific stuff
+linux {
+    !CONFIG(NO_X11) {
+        LIBS += -lX11
+        DEFINES += X11_LOADED
+
+        equals(QT_MAJOR_VERSION, 5) {
+            QT += x11extras
+        }
     }
 }
 

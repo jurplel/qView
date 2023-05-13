@@ -30,6 +30,8 @@ public:
     static QList<OpenWith::OpenWithItem> getOpenWithItems(const QString &filePath);
 
     static QString deleteFile(const QString &filePath);
+
+    static QByteArray getIccProfileForWindow(const QWindow *window);
 };
 
 #endif // QVCOCOAFUNCTIONS_H

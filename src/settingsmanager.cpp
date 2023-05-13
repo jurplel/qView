@@ -166,6 +166,7 @@ void SettingsManager::initializeSettingsLibrary()
     settingsLibrary.insert("cursorzoom", {true, {}});
     settingsLibrary.insert("cropmode", {0, {}});
     settingsLibrary.insert("pastactualsizeenabled", {true, {}});
+    settingsLibrary.insert("colorspaceconversion", {1, {}});
     // Miscellaneous
     settingsLibrary.insert("language", {"system", {}});
     settingsLibrary.insert("sortmode", {0, {}});

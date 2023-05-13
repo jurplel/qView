@@ -57,6 +57,12 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     ui->langComboLabel->hide();
 #endif
 
+// Hide color space conversion below 5.14, which is when color space support was introduced
+#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
+    ui->colorSpaceConversionComboBox->hide();
+    ui->colorSpaceConversionLabel->hide();
+#endif
+
     syncSettings(false, true);
     connect(ui->langComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &QVOptionsDialog::languageComboBoxCurrentIndexChanged);
     syncShortcuts();
@@ -173,6 +179,8 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
     syncComboBox(ui->cropModeComboBox, "cropmode", defaults, makeConnections);
     // pastactualsizeenabled
     syncCheckbox(ui->pastActualSizeCheckbox, "pastactualsizeenabled", defaults, makeConnections);
+    // colorspaceconversion
+    syncComboBox(ui->colorSpaceConversionComboBox, "colorspaceconversion", defaults, makeConnections);
     // language
     syncComboBoxData(ui->langComboBox, "language", defaults, makeConnections);
     // sortmode

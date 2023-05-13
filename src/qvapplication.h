@@ -47,14 +47,6 @@ public:
 
     void recentsMenuUpdated();
 
-    qint64 getPreviouslyRecordedFileSize(const QString &fileName);
-
-    void setPreviouslyRecordedFileSize(const QString &fileName, long long *fileSize);
-
-    QSize getPreviouslyRecordedImageSize(const QString &fileName);
-
-    void setPreviouslyRecordedImageSize(const QString &fileName, QSize *imageSize);
-
     void addToLastActiveWindows(MainWindow *window);
 
     void deleteFromLastActiveWindows(MainWindow *window);
@@ -92,9 +84,6 @@ private:
     QMenu *dockMenu;
 
     QMenuBar *menuBar;
-
-    QCache<QString, qint64> previouslyRecordedFileSizes;
-    QCache<QString, QSize> previouslyRecordedImageSizes;
 
     QStringList filterList;
     QStringList nameFilterList;
