@@ -1,7 +1,5 @@
-# this file is windows-1251 encoded!
-
 TARGET = qView
-VERSION = 5.0
+VERSION = 6.0
 
 QT += core gui network widgets
 
@@ -48,7 +46,7 @@ win32 {
     }
 
     RC_ICONS = "dist/win/qView.ico"
-    QMAKE_TARGET_COPYRIGHT = "Copyright \\251 2022 jurplel and qView contributors"
+    QMAKE_TARGET_COPYRIGHT = "Copyright \\251 2023 jurplel and qView contributors"
     QMAKE_TARGET_DESCRIPTION = "qView"
 }
 
