@@ -1,7 +1,5 @@
-# this file is windows-1251 encoded!
-
 TARGET = qView
-VERSION = 5.0
+VERSION = 6.0
 
 QT += core gui network widgets
 
