@@ -5,6 +5,14 @@
   <property name="windowModality">
    <enum>Qt::NonModal</enum>
   </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>497</width>
+    <height>558</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Settings</string>
   </property>
@@ -15,7 +23,7 @@
       <enum>Qt::NoFocus</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="window">
       <property name="layoutDirection">
@@ -513,7 +521,12 @@
          </item>
          <item>
           <property name="text">
-           <string>Last Modified</string>
+           <string>Date Modified</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Date Created</string>
           </property>
          </item>
          <item>

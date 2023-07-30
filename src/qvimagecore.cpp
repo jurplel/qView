@@ -277,7 +277,7 @@ QList<QVImageCore::CompatibleFile> QVImageCore::getCompatibleFiles(const QString
             }
         }
         QString mimeType;
-        if (!matched || sortMode == 3)
+        if (!matched || sortMode == 4)
         {
             mimeType = mimeDb.mimeTypeForFile(absoluteFilePath, mimeMatchMode).name();
             matched |= mimeTypes.contains(mimeType);
@@ -288,8 +288,9 @@ QList<QVImageCore::CompatibleFile> QVImageCore::getCompatibleFiles(const QString
                 absoluteFilePath,
                 fileName,
                 sortMode == 1 ? fileInfo.lastModified().toMSecsSinceEpoch() : 0,
-                sortMode == 2 ? fileInfo.size() : 0,
-                sortMode == 3 ? mimeType : QString()
+                sortMode == 2 ? fileInfo.birthTime().toMSecsSinceEpoch() : 0,
+                sortMode == 3 ? fileInfo.size() : 0,
+                sortMode == 4 ? mimeType : QString()
             });
         }
     }
@@ -335,7 +336,7 @@ void QVImageCore::updateFolderInfo(QString dirPath)
                 return collator.compare(file1.fileName, file2.fileName) < 0;
         });
     }
-    else if (sortMode == 1) // last modified
+    else if (sortMode == 1) // date modified
     {
         std::sort(currentFileDetails.folderFileInfoList.begin(),
                   currentFileDetails.folderFileInfoList.end(),
@@ -347,7 +348,20 @@ void QVImageCore::updateFolderInfo(QString dirPath)
                 return file1.lastModified > file2.lastModified;
         });
     }
-    else if (sortMode == 2) // size
+    else if (sortMode == 2) // date created
+    {
+        std::sort(currentFileDetails.folderFileInfoList.begin(),
+                  currentFileDetails.folderFileInfoList.end(),
+                  [this](const CompatibleFile &file1, const CompatibleFile &file2)
+        {
+            if (sortDescending)
+                return file1.lastCreated < file2.lastCreated;
+            else
+                return file1.lastCreated > file2.lastCreated;
+        });
+
+    }
+    else if (sortMode == 3) // size
     {
         std::sort(currentFileDetails.folderFileInfoList.begin(),
                   currentFileDetails.folderFileInfoList.end(),
@@ -359,7 +373,7 @@ void QVImageCore::updateFolderInfo(QString dirPath)
                 return file1.size > file2.size;
         });
     }
-    else if (sortMode == 3) // type
+    else if (sortMode == 4) // type
     {
         QCollator collator;
         std::sort(currentFileDetails.folderFileInfoList.begin(),
@@ -372,7 +386,7 @@ void QVImageCore::updateFolderInfo(QString dirPath)
                 return collator.compare(file1.mimeType, file2.mimeType) < 0;
         });
     }
-    else if (sortMode == 4) // Random
+    else if (sortMode == 5) // Random
     {
         std::shuffle(currentFileDetails.folderFileInfoList.begin(), currentFileDetails.folderFileInfoList.end(), std::default_random_engine(randomSortSeed));
     }

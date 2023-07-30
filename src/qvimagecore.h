@@ -29,6 +29,7 @@ public:
 
         // Only populated if needed for sorting
         qint64 lastModified;
+        qint64 lastCreated;
         qint64 size;
         QString mimeType;
     };
