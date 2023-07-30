@@ -564,7 +564,12 @@
          </item>
          <item>
           <property name="text">
-           <string>Last Modified</string>
+           <string>Date Modified</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Date Created</string>
           </property>
          </item>
          <item>

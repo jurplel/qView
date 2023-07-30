@@ -44,7 +44,7 @@ MainWindow::MainWindow(QWidget *parent) :
     justLaunchedWithImage = false;
     storedWindowState = Qt::WindowNoState;
 
-    // Initialize graphicsview
+    // Initialize graphicsviewkDefaultBufferAlignment
     graphicsView = new QVGraphicsView(this);
     centralWidget()->layout()->addWidget(graphicsView);
 
