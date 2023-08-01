@@ -57,17 +57,17 @@ jobs:
 
       - name: Build qView
         shell: pwsh
-        run: ci/scripts/build.ps1
+        run: dist/scripts/build.ps1
 
       - name: Deploy qView
         shell: pwsh
         run: |
           if ($IsWindows) {
-            Invoke-Expression "& 'ci/scripts/windeployqt.ps1' ${{ env.buildNumString }}"
+            Invoke-Expression "& 'dist/scripts/windeployqt.ps1' ${{ env.buildNumString }}"
           } elseif ($IsMacOS) {
-            bash ci/scripts/macdeploy.sh ${{ env.buildNumString }}
+            bash dist/scripts/macdeploy.sh ${{ env.buildNumString }}
           } else {
-            bash ci/scripts/linuxdeployqt.sh ${{ env.buildNumString }}
+            bash dist/scripts/linuxdeployqt.sh ${{ env.buildNumString }}
           }
 
       - name: 'Upload Artifact'

@@ -26,5 +26,5 @@ mv bin\qView.exe "bin\qView-nightly-$NightlyVersion.exe"
 
 # Call innomake if we are not building a nightly version (no version passed)
 if ($NightlyVersion -ne '') {
-    & "ci/scripts/innomake.ps1"
+    & "dist/scripts/innomake.ps1"
 }
