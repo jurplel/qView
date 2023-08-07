@@ -20,7 +20,7 @@ jobs:
             qtVersion: '6.2.2'
             qtModules: 'qtimageformats'
           - runner: 'macos-latest'
-            qtVersion: '5.12.2'
+            qtVersion: '5.15.2'
             osSuffix: '_legacy'
             skipHardPlugins: 'true'
           - runner: 'windows-2019'
