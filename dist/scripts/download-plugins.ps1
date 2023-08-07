@@ -50,8 +50,8 @@ if ($IsWindows) {
     $out_imf = "bin/appdir/usr/plugins/imageformats"
 }
 
-mkdir -p "$out_frm"
-mkdir -p "$out_imf"
+mkdir -p "$out_frm" -ErrorAction SilentlyContinue
+mkdir -p "$out_imf" -ErrorAction SilentlyContinue
 
 # Copy QtApng
 if ($pluginNames -contains 'qtapng') {
