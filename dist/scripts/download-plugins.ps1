@@ -43,10 +43,14 @@ foreach ($pluginName in $pluginNames) {
 
 
 if ($IsWindows) {
+    $out_frm = "bin/"
+    $out_imf = "bin/imageformats"
 } elseif ($IsMacOS) {
     $out_frm = "bin/qView.app/Contents/Frameworks"
     $out_imf = "bin/qView.app/Contents/PlugIns/imageformats"
 } else {
+    $out_frm = "bin/appdir/usr/lib"
+    $out_imf = "bin/appdir/usr/plugins/imageformats"
 }
 
 mkdir -p "$out_frm"
@@ -54,18 +58,25 @@ mkdir -p "$out_imf"
 
 # Copy QtApng
 if ($pluginNames -contains 'qtapng') {
-    if ($IsMacOS) {
-        cp qtapng/QtApng/plugins/imageformats/* "$out/"
+    if ($IsWindows) {
+        cp qtapng/QtApng/plugins/imageformats/qapng.dll "$out_imf/"
+    } elseif ($IsMacOS) {
+        cp qtapng/QtApng/plugins/imageformats/libqapng.dylib "$out_imf/"
+    } else {
+        cp qtapng/QtApng/plugins/imageformats/libqapng.so "$out_imf/"
     }
 }
 
 if ($pluginNames -contains 'kimageformats') {
     if ($IsWindows) {
-        # cp kimageformats/kimageformats/output/*.dll "$out/"
+        cp kimageformats/kimageformats/output/kimg_*.dll "$out_imf/"
+        cp kimageformats/kimageformats/output/zlib1.dll "$out_frm/"
+        cp kimageformats/kimageformats/output/KF5Archive.dll "$out_frm/"
     } elseif ($IsMacOS) {
         cp kimageformats/kimageformats/output/*.so "$out_imf/"
         cp kimageformats/kimageformats/output/libKF5Archive.5.dylib "$out_frm/"
     } else {
-        # cp kimageformats/kimageformats/output/*.so "$out/"
+        cp kimageformats/kimageformats/output/kimg_*.so "$out_imf/"
+        cp kimageformats/kimageformats/output/libKF5Archive.so.5 "$out_frm/"
     }
 }
