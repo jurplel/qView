@@ -18,11 +18,11 @@ $kimageformatsBuildNum = 107
 
 # Qt version availability and runner names are assumed.
 if ($IsWindows) {
-    # TODO
+    $imageName = "windows-2019"
 } elseif ($IsMacOS) {
     $imageName = "macos-latest"
 } else {
-    # TODO
+    $imageName = "ubuntu-20.04"
 }
 
 $binaryBaseUrl = "https://github.com/jurplel/kimageformats-binaries/releases/download/cont"
