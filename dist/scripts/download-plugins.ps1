@@ -7,10 +7,6 @@ $pluginNames = "qtapng", "kimageformats"
 $qtVersion = ((qmake --version -split '\n')[1] -split ' ')[3]
 Write-Host "Detected Qt Version $qtVersion"
 
-
-# TODO: Remove THIS, only for testing
-$qtVersion = "6.2.2"
-
 # Update these to change which artifacts to download!
 $avifBuildNum = 51
 $apngBuildNum = 66
@@ -32,7 +28,8 @@ if ($pluginNames.count -eq 0) {
 }
 
 foreach ($pluginName in $pluginNames) {
-    $artifactName = "$pluginName-$imageName-$qtVersion.zip"
+    $arch = If (-not $env:arch -or $env:arch -eq '') { "" } Else { "-$env:arch" }
+    $artifactName = "$pluginName-$imageName-$qtVersion$arch.zip"
     $downloadUrl = "$binaryBaseUrl/$artifactName"
 
     Write-Host "Downloading $downloadUrl"
