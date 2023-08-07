@@ -62,6 +62,7 @@ jobs:
       - name: Deploy qView
         shell: pwsh
         run: |
+          Invoke-Expression "& 'dist/scripts/download-plugins.ps1'"
           if ($IsWindows) {
             Invoke-Expression "& 'dist/scripts/windeployqt.ps1' ${{ env.buildNumString }}"
           } elseif ($IsMacOS) {
