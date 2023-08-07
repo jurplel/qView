@@ -18,7 +18,6 @@ jobs:
             qtVersion: '5.15.2'
           - runner: 'macos-latest'
             qtVersion: '6.2.2'
-            qtModules: 'qtimageformats'
           - runner: 'macos-latest'
             qtVersion: '5.15.2'
             osSuffix: '_legacy'
@@ -27,7 +26,6 @@ jobs:
             qtVersion: '6.2.2'
             qtArch: 'win64_msvc2019_64'
             osSuffix: '_64'
-            qtModules: 'qtimageformats'
           - runner: 'windows-2019'
             qtVersion: '5.15.2'
             qtArch: 'win32_msvc2019'
@@ -53,7 +51,7 @@ jobs:
           version: ${{ matrix.qtVersion }}
           arch: ${{ matrix.qtArch }}
           cache: true
-          modules: ${{ matrix.qtModules }}
+          modules: "qtimageformats"
 
       - name: Build qView
         shell: pwsh
