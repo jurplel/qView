@@ -1,5 +1,5 @@
 Name:		qview
-Version:	5.0
+Version:	6.0
 Release:	1
 Summary:	Practical and minimal image viewer
 
@@ -12,6 +12,7 @@ BuildRequires: pkgconfig
 BuildRequires: pkgconfig(Qt5Concurrent) >= 5.9
 BuildRequires: pkgconfig(Qt5Widgets) >= 5.9
 BuildRequires: pkgconfig(Qt5Network) >= 5.9
+BuildRequires: pkgconfig(Qt5X11Extras) >= 5.9
 
 
 %description
