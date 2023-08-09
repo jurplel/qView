@@ -64,7 +64,7 @@ jobs:
       - name: Deploy qView
         shell: pwsh
         run: |
-          if (-Not ${{ matrix.skipPlugins }}) {
+          if ("${{ matrix.skipPlugins }}" == "true") {
             Invoke-Expression "& 'dist/scripts/download-plugins.ps1'"
           }
           if ($IsWindows) {
