@@ -281,7 +281,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="811"/>
         <source>&amp;Welcome</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Selamat Datang</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="815"/>
