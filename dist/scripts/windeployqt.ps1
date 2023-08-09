@@ -23,9 +23,9 @@ windeployqt bin/qView.exe --no-compiler-runtime
 
 
 if ($NightlyVersion -eq '') {
-    # Do renaming-y stuff
-    mv bin\qView.exe "bin\qView-nightly-$NightlyVersion.exe"
-
     # Call innomake if we are not building a nightly version (no version passed)
     & "dist/scripts/innomake.ps1"
+} else {
+    # Do renaming-y stuff otherwise
+    mv bin\qView.exe "bin\qView-nightly-$NightlyVersion.exe"
 }
