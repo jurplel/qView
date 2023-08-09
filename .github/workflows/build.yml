@@ -16,6 +16,8 @@ jobs:
         include:
           - runner: 'ubuntu-20.04'
             qtVersion: '5.15.2'
+          - runner: 'ubuntu-20.04'
+            qtVersion: '5.9'
           - runner: 'macos-latest'
             qtVersion: '6.2.2'
             qtModules: 'qtimageformats'
