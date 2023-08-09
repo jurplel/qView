@@ -119,7 +119,7 @@ private:
 
     static QCache<QString, ReadData> pixmapCache;
 
-    QPair<QString, qsizetype> lastDirInfo;
+    QPair<QString, int> lastDirInfo;
     unsigned randomSortSeed;
 
     QStringList lastFilesPreloaded;
