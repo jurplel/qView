@@ -422,7 +422,8 @@ Kalau kamu melihat pesan ini, tolong laporkan bug!</translation>
         <location filename="../src/mainwindow.cpp" line="793"/>
         <source>Can&apos;t undo deletion of %1:
 No write permission or file is read-only.</source>
-        <translation type="unfinished"></translation>
+        <translation>Tidak dapat mengembalikan penghapusan %1:
+Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="801"/>
