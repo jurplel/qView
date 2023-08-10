@@ -66,11 +66,8 @@ if ($pluginNames -contains 'qtapng') {
 
 if ($pluginNames -contains 'kimageformats') {
     if ($IsWindows) {
-        cp kimageformats/kimageformats/output/kimg_*.dll "$out_imf/"
-        if (Test-Path -Path kimageformats/kimageformats/output/zlib1.dll -PathType Leaf) {
-            cp kimageformats/kimageformats/output/zlib1.dll "$out_frm/"
-            cp kimageformats/kimageformats/output/KF5Archive.dll "$out_frm/"
-        }
+        mv kimageformats/kimageformats/output/kimg_*.dll "$out_imf/"
+        mv kimageformats/kimageformats/output/*.dll "$out_frm/"
     } elseif ($IsMacOS) {
         cp kimageformats/kimageformats/output/*.so "$out_imf/"
         cp kimageformats/kimageformats/output/libKF5Archive.5.dylib "$out_frm/"
