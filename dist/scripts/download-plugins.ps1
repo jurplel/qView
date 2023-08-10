@@ -7,11 +7,6 @@ $pluginNames = "qtapng", "kimageformats"
 $qtVersion = ((qmake --version -split '\n')[1] -split ' ')[3]
 Write-Host "Detected Qt Version $qtVersion"
 
-# Update these to change which artifacts to download!
-$avifBuildNum = 51
-$apngBuildNum = 66
-$kimageformatsBuildNum = 107
-
 # Qt version availability and runner names are assumed.
 if ($IsWindows) {
     $imageName = "windows-2019"
@@ -67,7 +62,45 @@ if ($pluginNames -contains 'qtapng') {
 if ($pluginNames -contains 'kimageformats') {
     if ($IsWindows) {
         mv kimageformats/kimageformats/output/kimg_*.dll "$out_imf/"
-        mv kimageformats/kimageformats/output/*.dll "$out_frm/"
+        # Copy karchive
+        if (Test-Path -Path kimageformats/kimageformats/output/KF5Archive.dll -PathType Leaf) {
+            cp kimageformats/kimageformats/output/zlib1.dll "$out_frm/"
+            cp kimageformats/kimageformats/output/KF5Archive.dll "$out_frm/"
+        }
+        # copy avif stuff
+        if (Test-Path -Path kimageformats/kimageformats/output/avif.dll -PathType Leaf) {
+            cp kimageformats/kimageformats/output/avif.dll "$out_frm/"
+            cp kimageformats/kimageformats/output/aom.dll "$out_frm/"
+        }
+        # copy heif stuff
+        if (Test-Path -Path kimageformats/kimageformats/output/heif.dll -PathType Leaf) {
+            cp kimageformats/kimageformats/output/heif.dll "$out_frm/"
+            cp kimageformats/kimageformats/output/de265.dll "$out_frm/"
+            cp kimageformats/kimageformats/output/libx265.dll "$out_frm/"
+        }
+        # copy raw stuff
+        if (Test-Path -Path kimageformats/kimageformats/output/raw.dll -PathType Leaf) {
+            cp kimageformats/kimageformats/output/zlib1.dll "$out_frm/"
+            cp kimageformats/kimageformats/output/raw.dll "$out_frm/"
+            cp kimageformats/kimageformats/output/lcms2.dll "$out_frm/"
+        }
+        # copy jxl stuff
+        if (Test-Path -Path kimageformats/kimageformats/output/jxl.dll -PathType Leaf) {
+            cp kimageformats/kimageformats/output/jxl.dll "$out_frm/"
+            cp kimageformats/kimageformats/output/jxl_threads.dll "$out_frm/"
+            cp kimageformats/kimageformats/output/hwy.dll "$out_frm/"
+            cp kimageformats/kimageformats/output/brotlicommon.dll "$out_frm/"
+            cp kimageformats/kimageformats/output/brotlidec.dll "$out_frm/"
+            cp kimageformats/kimageformats/output/brotlienc.dll "$out_frm/"
+        }
+        # copy jxl stuff
+        if (Test-Path -Path kimageformats/kimageformats/output/OpenEXR-3_1.dll -PathType Leaf) {
+            cp kimageformats/kimageformats/output/zlib1.dll "$out_frm/"
+            cp kimageformats/kimageformats/output/OpenEXR-3_1.dll "$out_frm/"
+            cp kimageformats/kimageformats/output/Imath-3_1.dll "$out_frm/"
+            cp kimageformats/kimageformats/output/IlmThread-3_1.dll "$out_frm/"
+            cp kimageformats/kimageformats/output/Iex-3_1.dll "$out_frm/"
+        }
     } elseif ($IsMacOS) {
         cp kimageformats/kimageformats/output/*.so "$out_imf/"
         cp kimageformats/kimageformats/output/libKF5Archive.5.dylib "$out_frm/"
