@@ -11,7 +11,9 @@ namespace X11Helper
     Display* getDisplay()
     {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        return QX11Info::display();
+        if (QX11Info::isPlatformX11())
+            return QX11Info::display();
+        return nullptr;
 #else
         if (const auto x11App = qGuiApp->nativeInterface<QNativeInterface::QX11Application>())
            return x11App->display();
