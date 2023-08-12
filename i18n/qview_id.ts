@@ -438,22 +438,22 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="968"/>
         <source>Res&amp;ume</source>
-        <translation type="unfinished"></translation>
+        <translation>Lanjutkan</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="977"/>
         <source>Pause</source>
-        <translation type="unfinished"></translation>
+        <translation>Jeda</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="1000"/>
         <source>Start S&amp;lideshow</source>
-        <translation type="unfinished"></translation>
+        <translation>Mulai tampilan S&amp;lide</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="1009"/>
         <source>Stop S&amp;lideshow</source>
-        <translation type="unfinished"></translation>
+        <translation>Hentikan tampilan S&amp;lide</translation>
     </message>
 </context>
 <context>
@@ -461,17 +461,17 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
     <message>
         <location filename="../src/openwith.cpp" line="165"/>
         <source>All Applications (*.app)</source>
-        <translation type="unfinished"></translation>
+        <translation>Semua Aplikasi (*.app)</translation>
     </message>
     <message>
         <location filename="../src/openwith.cpp" line="177"/>
         <source>Programs (*.exe *.pif *.com *.bat *.cmd)</source>
-        <translation type="unfinished"></translation>
+        <translation>Program (*.exe *.pif *.com *.bat *.cmd)</translation>
     </message>
     <message>
         <location filename="../src/openwith.cpp" line="177"/>
         <source>All Files (*)</source>
-        <translation type="unfinished"></translation>
+        <translation>Semua Berkas (*)</translation>
     </message>
 </context>
 <context>
@@ -479,12 +479,12 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
     <message>
         <location filename="../src/main.cpp" line="17"/>
         <source>file</source>
-        <translation type="unfinished"></translation>
+        <translation>berkas</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="17"/>
         <source>The file to open.</source>
-        <translation type="unfinished"></translation>
+        <translation>Berkas untuk dibuka.</translation>
     </message>
 </context>
 <context>
@@ -492,43 +492,43 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
     <message>
         <location filename="../src/qvaboutdialog.ui" line="20"/>
         <source>About qView</source>
-        <translation type="unfinished"></translation>
+        <translation>Tentang qView</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="44"/>
         <source>version %1</source>
-        <translation type="unfinished"></translation>
+        <translation>versi %1</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="47"/>
         <source>Nightly %1</source>
-        <translation type="unfinished"></translation>
+        <translation>NIghtly %1</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="62"/>
         <source>Built with Qt %1 (%2)&lt;br&gt;Source code available under GPLv3 on &lt;a style=&quot;color: #03A9F4; text-decoration:none;&quot; href=&quot;https://github.com/jurplel/qView&quot;&gt;GitHub&lt;/a&gt;&lt;br&gt;Icon glyph created by Guilhem from the Noun Project&lt;br&gt;Copyright © %3 jurplel and qView contributors</source>
-        <translation type="unfinished"></translation>
+        <translation>Dibuat dengan Qt %1 (%2)&lt;br&gt;Kode sumber tersedia dengan lisensi GPLv3 via &lt;a style=&quot;color: #03A9F4; text-decoration:none;&quot; href=&quot;https://github.com/jurplel/qView&quot;&gt;GitHub&lt;/a&gt;&lt;br&gt;Simbol ikon dibuat oleh Guilhem dari Noun Project&lt;br&gt;Hak Cipta © %3 jurplel dan kontributor qView</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="90"/>
         <source>Checking for updates...</source>
-        <translation type="unfinished"></translation>
+        <translation>Memeriksa pembaharuan...</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="94"/>
         <source>%1 update available</source>
         <extracomment>%1 is a version number e.g. &quot;4.0 update available&quot;</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Pembaharuan ke v%1 tersedia</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="98"/>
         <source>No updates available</source>
-        <translation type="unfinished"></translation>
+        <translation>Tidak ada pembaharuan tersedia</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="102"/>
         <source>Error checking for updates</source>
-        <translation type="unfinished"></translation>
+        <translation>Kesalahan pengecekan pembaruan</translation>
     </message>
 </context>
 <context>
@@ -536,17 +536,17 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
     <message>
         <location filename="../src/qvapplication.cpp" line="40"/>
         <source>Supported Images</source>
-        <translation type="unfinished"></translation>
+        <translation>Format Gambar Didukung</translation>
     </message>
     <message>
         <location filename="../src/qvapplication.cpp" line="49"/>
         <source>All Files</source>
-        <translation type="unfinished"></translation>
+        <translation>Semua Berkas</translation>
     </message>
     <message>
         <location filename="../src/qvapplication.cpp" line="136"/>
         <source>Open...</source>
-        <translation type="unfinished"></translation>
+        <translation>Buka...</translation>
     </message>
 </context>
 <context>
@@ -554,7 +554,7 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
     <message>
         <location filename="../src/qvcocoafunctions.mm" line="195"/>
         <source> (default)</source>
-        <translation type="unfinished"></translation>
+        <translation> (asali)</translation>
     </message>
 </context>
 <context>
@@ -562,13 +562,14 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
     <message>
         <location filename="../src/qvgraphicsview.cpp" line="621"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Kesalahan</translation>
     </message>
     <message>
         <location filename="../src/qvgraphicsview.cpp" line="621"/>
         <source>Error occurred opening &quot;%3&quot;:
 %2 (Error %1)</source>
-        <translation type="unfinished"></translation>
+        <translation>Kesalahan membuka &quot;%3&quot;
+%2 (Kesalahan %1)</translation>
     </message>
 </context>
 <context>
@@ -576,12 +577,12 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
     <message>
         <location filename="../src/qvinfodialog.ui" line="20"/>
         <source>File Info</source>
-        <translation type="unfinished"></translation>
+        <translation>Info Berkas</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="26"/>
         <source>Name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Nama:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="36"/>
@@ -593,37 +594,37 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
         <location filename="../src/qvinfodialog.ui" line="183"/>
         <location filename="../src/qvinfodialog.ui" line="203"/>
         <source>error</source>
-        <translation type="unfinished"></translation>
+        <translation>kesalahan</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="52"/>
         <source>Type:</source>
-        <translation type="unfinished"></translation>
+        <translation>Tipe:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="75"/>
         <source>Location:</source>
-        <translation type="unfinished"></translation>
+        <translation>Lokasi:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="101"/>
         <source>Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Ukuran:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="130"/>
         <source>Modified:</source>
-        <translation type="unfinished"></translation>
+        <translation>Modifikasi:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="153"/>
         <source>Dimensions:</source>
-        <translation type="unfinished"></translation>
+        <translation>Dimensi:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="173"/>
         <source>Aspect Ratio:</source>
-        <translation type="unfinished"></translation>
+        <translation>Rasio Aspek:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="193"/>
@@ -633,17 +634,17 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
     <message>
         <location filename="../src/qvinfodialog.ui" line="213"/>
         <source>Refresh</source>
-        <translation type="unfinished"></translation>
+        <translation>Segarkan</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.cpp" line="49"/>
         <source>%1 (%2 bytes)</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 (%2 bita)</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.cpp" line="51"/>
         <source>%1 x %2 (%3 MP)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 x %2 (%3 MP)</translation>
     </message>
 </context>
 <context>
@@ -651,67 +652,67 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
     <message>
         <location filename="../src/qvopenwithdialog.ui" line="14"/>
         <source>Choose Application</source>
-        <translation type="unfinished"></translation>
+        <translation>Pilih Aplikasi</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="66"/>
         <source>Development</source>
-        <translation type="unfinished"></translation>
+        <translation>Pengembangan</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="67"/>
         <source>Education</source>
-        <translation type="unfinished"></translation>
+        <translation>Edukasi</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="68"/>
         <source>Games</source>
-        <translation type="unfinished"></translation>
+        <translation>Permainan</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="69"/>
         <source>Graphics</source>
-        <translation type="unfinished"></translation>
+        <translation>Grafik</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="70"/>
         <source>Internet</source>
-        <translation type="unfinished"></translation>
+        <translation>Internet</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="71"/>
         <source>Multimedia</source>
-        <translation type="unfinished"></translation>
+        <translation>Multimedia</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="72"/>
         <source>Office</source>
-        <translation type="unfinished"></translation>
+        <translation>Kantor</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="73"/>
         <source>Science</source>
-        <translation type="unfinished"></translation>
+        <translation>Sains</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="74"/>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Pengaturan</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="75"/>
         <source>System</source>
-        <translation type="unfinished"></translation>
+        <translation>Sistem</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="76"/>
         <source>Utilities</source>
-        <translation type="unfinished"></translation>
+        <translation>Utilitas</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="77"/>
         <source>Other</source>
-        <translation type="unfinished"></translation>
+        <translation>Lainnya</translation>
     </message>
 </context>
 <context>
@@ -719,42 +720,42 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="17"/>
         <source>Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Opsi</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="33"/>
         <source>Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Jendela</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="39"/>
         <source>Back&amp;ground color:</source>
-        <translation type="unfinished"></translation>
+        <translation>Warna latar belakan&amp;g:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="56"/>
         <source>Changes the amount of information displayed in the titlebar</source>
-        <translation type="unfinished"></translation>
+        <translation>Ubah informasi yang ditampilkan di bar judul</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="59"/>
         <source>Titlebar text:</source>
-        <translation type="unfinished"></translation>
+        <translation>Teks bar judul:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="66"/>
         <source>&amp;Basic</source>
-        <translation type="unfinished"></translation>
+        <translation>Dasar</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="73"/>
         <source>&amp;Minimal</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Minimal</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="83"/>
         <source>&amp;Practical</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Praktikal</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="90"/>
@@ -765,32 +766,32 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
         <location filename="../src/qvoptionsdialog.ui" line="110"/>
         <location filename="../src/qvoptionsdialog.ui" line="120"/>
         <source>Control when the window should resize to fit the image&apos;s actual size</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Kontrol ketika jendela harus menyesuaikan dengan ukuran asli gambar</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="113"/>
         <source>Window matches image size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Jendela sesuai ukuran gambar:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="127"/>
         <source>Never</source>
-        <translation type="unfinished"></translation>
+        <translation>Jangan pernah</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="132"/>
         <source>When launching</source>
-        <translation type="unfinished"></translation>
+        <translation>Ketika memulai</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="137"/>
         <source>When opening images</source>
-        <translation type="unfinished"></translation>
+        <translation>Ketika membuka gambar</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="145"/>
         <source>Minimum size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Ukuran minimum:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="152"/>
@@ -801,7 +802,7 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
         <location filename="../src/qvoptionsdialog.ui" line="155"/>
         <location filename="../src/qvoptionsdialog.ui" line="187"/>
         <source>% of screen size</source>
-        <translation type="unfinished"></translation>
+        <translation>% dari ukuran layar</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="174"/>
@@ -812,7 +813,7 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="177"/>
         <source>Maximum size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Ukuran maksimum:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="219"/>
@@ -822,12 +823,12 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="222"/>
         <source>&amp;Titlebar always dark</source>
-        <translation type="unfinished"></translation>
+        <translation>Bar judul selalu gelap</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="232"/>
         <source>Show menubar</source>
-        <translation type="unfinished"></translation>
+        <translation>Tampilkan bar menu</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="239"/>
