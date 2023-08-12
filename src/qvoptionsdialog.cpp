@@ -40,9 +40,9 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
 #endif
 
 
-#ifdef Q_OS_UNIX
-    setWindowTitle("Preferences");
-#endif
+    if (QOperatingSystemVersion::current() < QOperatingSystemVersion(QOperatingSystemVersion::MacOS, 13)) {
+        setWindowTitle("Preferences");
+    }
 
 // Platform specific settings
 #ifdef Q_OS_MACOS

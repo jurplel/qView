@@ -798,13 +798,14 @@ void ActionManager::initializeActionLibrary()
     actionLibrary.insert("slideshow", slideshowAction);
 
     //: This is for the options dialog on windows
-    auto *optionsAction = new QAction(QIcon::fromTheme("configure", QIcon::fromTheme("preferences-other")), tr("Option&s"));
-#if defined Q_OS_UNIX & !defined Q_OS_MACOS
-    //: This is for the options dialog on non-mac unix platforms
-    optionsAction->setText(tr("Preference&s"));
-#elif defined Q_OS_MACOS
-    //: This is for the options dialog on mac
-    optionsAction->setText(tr("Preference&s..."));
+    auto *optionsAction = new QAction(QIcon::fromTheme("configure", QIcon::fromTheme("preferences-other")), tr("&Settings"));
+#ifdef Q_OS_MACOS
+    if (QOperatingSystemVersion::current() < QOperatingSystemVersion(QOperatingSystemVersion::MacOS, 13)) {
+        //: This is for the options dialog on older mac versions
+        optionsAction->setText(tr("Preference&s..."));
+    } else {
+        optionsAction->setText(tr("Setting&s..."));
+    }
 #endif
     actionLibrary.insert("options", optionsAction);
 
@@ -823,7 +824,7 @@ void ActionManager::initializeActionLibrary()
     actionLibrary.insert("clearrecents", clearRecentsAction);
 
     //: Open with other program for unix non-mac
-    auto *openWithOtherAction = new QAction(tr("Other Application..."));
+    auto *openWithOtherAction = new QAction(QIcon::fromTheme("system-run"), tr("Other Application..."));
 #ifdef Q_OS_WIN
     //: Open with other program for windows
     openWithOtherAction->setText(tr("Choose another app"));

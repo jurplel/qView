@@ -220,7 +220,7 @@ void QVImageCore::loadPixmap(const ReadData &readData)
     if (!currentFileDetails.isMovieLoaded)
         if (auto device = loadedMovie.device())
             device->close();
-
+    
     currentFileDetails.timeSinceLoaded.start();
 
     emit fileChanged();
@@ -285,7 +285,11 @@ QList<QVImageCore::CompatibleFile> QVImageCore::getCompatibleFiles(const QString
                 absoluteFilePath,
                 fileName,
                 sortMode == 1 ? fileInfo.lastModified().toMSecsSinceEpoch() : 0,
+#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
                 sortMode == 2 ? fileInfo.birthTime().toMSecsSinceEpoch() : 0,
+#else
+                sortMode == 2 ? fileInfo.created().toMSecsSinceEpoch() : 0,
+#endif
                 sortMode == 3 ? fileInfo.size() : 0,
                 sortMode == 4 ? mimeType : QString()
             });
@@ -325,8 +329,8 @@ void QVImageCore::sortCompatibleFiles(QList<CompatibleFile> &fileList)
     }
     else if (sortMode == 2) // date created
     {
-        std::sort(currentFileDetails.folderFileInfoList.begin(),
-                  currentFileDetails.folderFileInfoList.end(),
+        std::sort(fileList.begin(),
+                  fileList.end(),
                   [this](const CompatibleFile &file1, const CompatibleFile &file2)
         {
             if (sortDescending)
@@ -428,6 +432,7 @@ void QVImageCore::requestCaching()
         //if still out of range after looping, just cancel the cache for this index
         if (index > currentFileDetails.folderFileInfoList.length()-1 || index < 0 || currentFileDetails.folderFileInfoList.isEmpty())
             continue;
+
 
         QString filePath = currentFileDetails.folderFileInfoList[index].absoluteFilePath;
         filesToPreload.append(filePath);
