@@ -1,4 +1,4 @@
-#!/usr/bin/pwsh
+#!/usr/bin/env pwsh
 
 param
 (
@@ -6,7 +6,7 @@ param
 )
 
 if ($IsWindows) {
-    ci/scripts/vcvars.ps1
+    dist/scripts/vcvars.ps1
 }
 
 if ((qmake --version -split '\n')[1][17] -eq '6') {

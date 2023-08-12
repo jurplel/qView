@@ -1,5 +1,5 @@
-qview (5.0-5) bionic; urgency=low
+qview (6.0-1) bionic; urgency=low
 
-  * Fix not requiring qtbase5-dev-tools
+  * Initial release
 
- -- jurplel <jurplel@interversehq.com>  Fri, 14 Jan 2022 20:44:22 -0500
+ -- jurplel <jurplel@interversehq.com>  Mon, 7 Aug 2023 14:54:07 -0400

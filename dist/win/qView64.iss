@@ -4,8 +4,8 @@
 #define MyAppExeName "qView.exe"
 
 ; Update these when building
-#define MyAppVersion "5.0"
-#define MyAppYear "2022"
+#define MyAppVersion "6.0"
+#define MyAppYear "2023"
 
 [Setup]
 AppId={{A6A9BAAB-C59E-4EAB-ACE1-3EEDE3031880}

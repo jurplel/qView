@@ -21,7 +21,8 @@ if ($env:arch.substring(3, 2) -eq '32') {
 # Run windeployqt which should be in path
 windeployqt bin/qView.exe --no-compiler-runtime
 
-# Call innomake if we are not building a nightly version (no version passed)
+
 if ($NightlyVersion -eq '') {
-    & "ci/scripts/innomake.ps1"
+    # Call innomake if we are not building a nightly version (no version passed)
+    & "dist/scripts/innomake.ps1"
 }
