@@ -477,8 +477,9 @@ void QVImageCore::addToCache(const ReadData &readData)
         return;
 
     QString cacheKey = getPixmapCacheKey(readData.absoluteFilePath, readData.fileSize, readData.targetColorSpace);
+    qint64 pixmapMemoryBytes = static_cast<qint64>(readData.pixmap.width()) * readData.pixmap.height() * readData.pixmap.depth() / 8;
 
-    QVImageCore::pixmapCache.insert(cacheKey, new ReadData(readData), readData.fileSize/1024);
+    QVImageCore::pixmapCache.insert(cacheKey, new ReadData(readData), qMax(pixmapMemoryBytes / 1024, 1LL));
 }
 
 QString QVImageCore::getPixmapCacheKey(const QString &absoluteFilePath, const qint64 &fileSize, const QColorSpace &targetColorSpace)
