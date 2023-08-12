@@ -1,28 +1,6 @@
-<h1 align=center>qView</h1>
-
-<p align=center>qView is an image viewer designed with minimalism and usability in mind.</p>
-
-<h3 align=center>
-    <a href="https://interversehq.com/qview/">Visit the website</a>
-</h3>
-
-<h4 align=center>
-    <a href="https://interversehq.com/qview/download">Downloads</a> |
-    <a href="https://interversehq.com/qview/changelog">Changelog</a> | <a href="https://interversehq.com/discord">Discord</a>
-</h4>
-
-<p align=center>
-    <a href="https://interversehq.com/qview/download">
-        <img alt="Downloads shield" src="https://img.shields.io/github/downloads/jurplel/qview/total?color=blue&style=flat-square">
-    </a>
-    <a href="https://aur.archlinux.org/packages/qview/">
-        <img alt="AUR shield" src="https://img.shields.io/aur/version/qview?style=flat-square">
-    </a>
-    <a href="https://formulae.brew.sh/cask/qview">
-        <img alt="Homebrew cask shield" src="https://img.shields.io/homebrew/cask/v/qview?style=flat-square">
-    </a>
-</p>
-
-<p align=center>
-    <img alt="Screenshot" src="https://interversehq.com/qview/assets/img/screenshot3.png">
-</p>
+# qView
+This fork of qView has been mostly incorporated back into the official version! It still contains these exclusive features:
+* Option to constrain image position to keep it snapped inside the viewport.
+* Shows zoom level in titlebar in Practical/Verbose mode.
+* Option to make zoom level relative to screen pixels (for Windows/Linux users with DPI scaling enabled; not so useful in macOS due to the way it handles scaling).
+* Menu toggle to preserve zoom level when changing between images.
