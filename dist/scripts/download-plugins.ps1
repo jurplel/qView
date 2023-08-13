@@ -16,7 +16,7 @@ if ($IsWindows) {
     $imageName = "ubuntu-20.04"
 }
 
-$binaryBaseUrl = "https://github.com/jurplel/kimageformats-binaries/releases/download/cont"
+$binaryBaseUrl = "https://github.com/jdpurcell/kimageformats-binaries/releases/download/cont"
 
 if ($pluginNames.count -eq 0) {
     Write-Host "the pluginNames array is empty."
