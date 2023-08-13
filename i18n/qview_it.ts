@@ -95,7 +95,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="673"/>
         <source>Open Containing &amp;Folder</source>
-        <translation type="unfinished">Apri &amp;cartella contenente</translation>
+        <translation>Apri il contenuto della &amp;cartella</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="676"/>
@@ -433,12 +433,12 @@ Nessun permesso di scrittura o il file è di sola lettura.</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="939"/>
         <source>Save Frame As...</source>
-        <translation type="unfinished"></translation>
+        <translation>Salva fotogramma come...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="968"/>
         <source>Res&amp;ume</source>
-        <translation type="unfinished"></translation>
+        <translation>Ricomincia</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="977"/>
@@ -448,12 +448,12 @@ Nessun permesso di scrittura o il file è di sola lettura.</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="1000"/>
         <source>Start S&amp;lideshow</source>
-        <translation type="unfinished"></translation>
+        <translation>Avvia Presentazione</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="1009"/>
         <source>Stop S&amp;lideshow</source>
-        <translation type="unfinished"></translation>
+        <translation>Ferma presentazione</translation>
     </message>
 </context>
 <context>
@@ -502,7 +502,7 @@ Nessun permesso di scrittura o il file è di sola lettura.</translation>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="47"/>
         <source>Nightly %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Notturna %1</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="62"/>
@@ -624,7 +624,7 @@ Nessun permesso di scrittura o il file è di sola lettura.</translation>
     <message>
         <location filename="../src/qvinfodialog.ui" line="173"/>
         <source>Aspect Ratio:</source>
-        <translation type="unfinished"></translation>
+        <translation>Proporzioni:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="193"/>
@@ -730,7 +730,7 @@ Nessun permesso di scrittura o il file è di sola lettura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="39"/>
         <source>Back&amp;ground color:</source>
-        <translation type="unfinished"></translation>
+        <translation>Colore di sfondo:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="56"/>
@@ -740,7 +740,7 @@ Nessun permesso di scrittura o il file è di sola lettura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="59"/>
         <source>Titlebar text:</source>
-        <translation type="unfinished"></translation>
+        <translation>Testo della barra del titolo:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="66"/>
@@ -760,7 +760,7 @@ Nessun permesso di scrittura o il file è di sola lettura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="90"/>
         <source>&amp;Verbose</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Prolisso</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="110"/>
@@ -833,17 +833,17 @@ Nessun permesso di scrittura o il file è di sola lettura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="239"/>
         <source>Choose whether or not to display the titlebar text while in fullscreen</source>
-        <translation type="unfinished"></translation>
+        <translation>Scegli se visualizzare o meno il testo della barra del titolo a schermo intero</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="242"/>
         <source>Show titlebar text in fullscreen</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra il testo della barra del titolo a schermo intero</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="249"/>
         <source>&amp;Quit on last window closed</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Esci all&apos;ultima finestra chiusa</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="257"/>
@@ -863,17 +863,17 @@ Nessun permesso di scrittura o il file è di sola lettura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="273"/>
         <source>&amp;Bilinear filtering</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Filtraggio bilineare</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="283"/>
         <source>Images appear aliased (having jagged edges) without this, but it is faster</source>
-        <translation type="unfinished"></translation>
+        <translation>Le immagini appaiono distorte (con bordi frastagliati) senza questo, ma è più veloce</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="286"/>
         <source>&amp;Image scaling</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Ridimensionamento immagine</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="296"/>
@@ -883,7 +883,7 @@ Nessun permesso di scrittura o il file è di sola lettura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="299"/>
         <source>&amp;Scaling above window size</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Ridimensionamento sopra la dimensione della finestra</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="309"/>
@@ -909,12 +909,12 @@ Nessun permesso di scrittura o il file è di sola lettura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="367"/>
         <source>Stop the image from going past its actual size when resizing the window - you can still zoom past it though</source>
-        <translation type="unfinished"></translation>
+        <translation>Impedisci all&apos;immagine di superare la sua dimensione effettiva durante il ridimensionamento della finestra: puoi comunque eseguire lo zoom</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="370"/>
         <source>Image resizes &amp;past actual size</source>
-        <translation type="unfinished"></translation>
+        <translation>L&apos;immagine si ridimensiona &amp;supera le dimensioni effettive</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="386"/>
@@ -940,17 +940,17 @@ Nessun permesso di scrittura o il file è di sola lettura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="411"/>
         <source>On window resize:</source>
-        <translation type="unfinished"></translation>
+        <translation>Al ridimensionamento della finestra:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="431"/>
         <source>Choose whether or not zooming in and out above 100% zoom will zoom towards the cursor</source>
-        <translation type="unfinished"></translation>
+        <translation>Scegli se lo zoom in avanti e indietro oltre il 100% verrà eseguito in direzione del cursore</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="434"/>
         <source>Zoom &amp;towards cursor</source>
-        <translation type="unfinished"></translation>
+        <translation>Zoom &amp;verso il cursore</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="445"/>
@@ -1006,7 +1006,7 @@ Nessun permesso di scrittura o il file è di sola lettura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="530"/>
         <source>Preloading:</source>
-        <translation type="unfinished"></translation>
+        <translation>Precaricamento:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="544"/>
@@ -1031,12 +1031,12 @@ Nessun permesso di scrittura o il file è di sola lettura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="565"/>
         <source>&amp;Loop through folders</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Esegui il ciclo delle cartelle</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="588"/>
         <source>Slideshow direction:</source>
-        <translation type="unfinished"></translation>
+        <translation>Direzione della presentazione:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="596"/>
@@ -1051,7 +1051,7 @@ Nessun permesso di scrittura o il file è di sola lettura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="609"/>
         <source>Slideshow timer:</source>
-        <translation type="unfinished"></translation>
+        <translation>Timer presentazione:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="616"/>
@@ -1077,7 +1077,7 @@ Nessun permesso di scrittura o il file è di sola lettura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="666"/>
         <source>Move Back</source>
-        <translation type="unfinished"></translation>
+        <translation>Sposta indietro</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="671"/>
@@ -1087,7 +1087,7 @@ Nessun permesso di scrittura o il file è di sola lettura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="676"/>
         <source>Move Forward</source>
-        <translation type="unfinished"></translation>
+        <translation>Sposta avanti</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="684"/>
