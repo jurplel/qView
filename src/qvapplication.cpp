@@ -354,7 +354,7 @@ void QVApplication::defineFilterLists()
         if (fileExtension == ".jpg")
         {
             filterList << "*.jpe" << "*.jfi" << "*.jfif";
-            filterString += "*.jpe *.jfi *.jfif";
+            filterString += "*.jpe *.jfi *.jfif ";
             fileExtensionList << ".jpe" << ".jfi" << ".jfif";
         }
     }
