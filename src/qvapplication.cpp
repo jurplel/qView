@@ -361,7 +361,6 @@ void QVApplication::defineFilterLists()
     filterString.chop(1);
     filterString += ")";
 
-
     // Build mime type list
     const auto &byteArrayMimeTypes = QImageReader::supportedMimeTypes();
     mimeTypeNameList.reserve(byteArrayMimeTypes.size()-1);

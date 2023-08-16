@@ -1,5 +1,5 @@
 Name:		qview
-Version:	6.0
+Version:	6.1
 Release:	1
 Summary:	Practical and minimal image viewer
 
