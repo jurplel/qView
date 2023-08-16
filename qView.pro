@@ -62,7 +62,7 @@ macx {
     }
     QMAKE_TARGET_BUNDLE_PREFIX = "com.interversehq"
 
-    QMAKE_INFO_PLIST = "dist/mac/Info_legacy.plist"
+    QMAKE_INFO_PLIST = "dist/mac/Info.plist"
     # Older icon for qt 5 on mac
     lessThan(QT_MAJOR_VERSION, 6) {
         ICON = "dist/mac/qView_legacy.icns"
