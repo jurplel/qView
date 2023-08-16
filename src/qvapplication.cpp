@@ -360,7 +360,6 @@ void QVApplication::defineFilterLists()
     }
     filterString.chop(1);
     filterString += ")";
-    qDebug() << filterList << filterString << fileExtensionList;
 
     // Build mime type list
     const auto &byteArrayMimeTypes = QImageReader::supportedMimeTypes();
