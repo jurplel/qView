@@ -628,7 +628,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvinfodialog.ui" line="193"/>
         <source>Frames:</source>
-        <translation>幅:</translation>
+        <translation>幅數:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="213"/>
