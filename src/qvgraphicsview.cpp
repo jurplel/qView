@@ -567,7 +567,11 @@ void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
     }
     case GoToFileMode::random:
     {
-        newIndex = QRandomGenerator::global()->bounded(fileList.size());
+        if (fileList.size() > 1)
+        {
+            int randomIndex = QRandomGenerator::global()->bounded(fileList.size()-1);
+            newIndex = randomIndex + (randomIndex >= newIndex ? 1 : 0);
+        }
         searchDirection = 1;
         break;
     }
