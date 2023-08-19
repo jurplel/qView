@@ -565,6 +565,12 @@ void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
         searchDirection = -1;
         break;
     }
+    case GoToFileMode::random:
+    {
+        newIndex = QRandomGenerator::global()->bounded(fileList.size());
+        searchDirection = 1;
+        break;
+    }
     }
 
     while (searchDirection == 1 && newIndex < fileList.size()-1 && !QFile::exists(fileList.value(newIndex).absoluteFilePath))

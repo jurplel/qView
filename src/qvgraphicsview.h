@@ -23,7 +23,8 @@ public:
        first,
        previous,
        next,
-       last
+       last,
+       random
     };
     Q_ENUM(GoToFileMode)
 

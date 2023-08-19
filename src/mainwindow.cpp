@@ -993,6 +993,11 @@ void MainWindow::lastFile()
     graphicsView->goToFile(QVGraphicsView::GoToFileMode::last);
 }
 
+void MainWindow::randomFile()
+{
+    graphicsView->goToFile(QVGraphicsView::GoToFileMode::random);
+}
+
 void MainWindow::saveFrameAs()
 {
     QSettings settings;
