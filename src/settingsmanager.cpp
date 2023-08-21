@@ -151,6 +151,7 @@ void SettingsManager::initializeSettingsLibrary()
     settingsLibrary.insert("bgcolor", {"#212121", {}});
     settingsLibrary.insert("titlebarmode", {1, {}});
     settingsLibrary.insert("windowresizemode", {1, {}});
+    settingsLibrary.insert("aftermatchingsizemode", {1, {}});
     settingsLibrary.insert("minwindowresizedpercentage", {20, {}});
     settingsLibrary.insert("maxwindowresizedpercentage", {70, {}});
     settingsLibrary.insert("titlebaralwaysdark", {true, {}});
