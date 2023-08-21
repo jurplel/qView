@@ -65,6 +65,7 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
 #endif
 
     syncSettings(false, true);
+    connect(ui->windowResizeComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &QVOptionsDialog::windowResizeComboBoxCurrentIndexChanged);
     connect(ui->langComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &QVOptionsDialog::languageComboBoxCurrentIndexChanged);
     syncShortcuts();
     updateButtonBox();
@@ -137,17 +138,9 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
                      ui->titlebarRadioButton2, ui->titlebarRadioButton3}, "titlebarmode", defaults, makeConnections);
     // windowresizemode
     syncComboBox(ui->windowResizeComboBox, "windowresizemode", defaults, makeConnections);
-    if (ui->windowResizeComboBox->currentIndex() == 0) {
-        ui->minWindowResizeLabel->setEnabled(false);
-        ui->minWindowResizeSpinBox->setEnabled(false);
-        ui->maxWindowResizeLabel->setEnabled(false);
-        ui->maxWindowResizeSpinBox->setEnabled(false);
-    } else {
-        ui->minWindowResizeLabel->setEnabled(true);
-        ui->minWindowResizeSpinBox->setEnabled(true);
-        ui->maxWindowResizeLabel->setEnabled(true);
-        ui->maxWindowResizeSpinBox->setEnabled(true);
-    }
+    windowResizeComboBoxCurrentIndexChanged(ui->windowResizeComboBox->currentIndex());
+    // aftermatchingsize
+    syncComboBox(ui->afterMatchingSizeComboBox, "aftermatchingsizemode", defaults, makeConnections);
     // minwindowresizedpercentage
     syncSpinBox(ui->minWindowResizeSpinBox, "minwindowresizedpercentage", defaults, makeConnections);
     // maxwindowresizedperecentage
@@ -456,20 +449,13 @@ void QVOptionsDialog::scalingCheckboxStateChanged(int arg1)
 
 void QVOptionsDialog::windowResizeComboBoxCurrentIndexChanged(int index)
 {
-    if (index == 0)
-    {
-        ui->minWindowResizeLabel->setEnabled(false);
-        ui->minWindowResizeSpinBox->setEnabled(false);
-        ui->maxWindowResizeLabel->setEnabled(false);
-        ui->maxWindowResizeSpinBox->setEnabled(false);
-    }
-    else
-    {
-        ui->minWindowResizeLabel->setEnabled(true);
-        ui->minWindowResizeSpinBox->setEnabled(true);
-        ui->maxWindowResizeLabel->setEnabled(true);
-        ui->maxWindowResizeSpinBox->setEnabled(true);
-    }
+    bool enableRelated = index != 0;
+    ui->afterMatchingSizeLabel->setEnabled(enableRelated);
+    ui->afterMatchingSizeComboBox->setEnabled(enableRelated);
+    ui->minWindowResizeLabel->setEnabled(enableRelated);
+    ui->minWindowResizeSpinBox->setEnabled(enableRelated);
+    ui->maxWindowResizeLabel->setEnabled(enableRelated);
+    ui->maxWindowResizeSpinBox->setEnabled(enableRelated);
 }
 
 void QVOptionsDialog::constrainImagePositionCheckboxStateChanged(int arg1)

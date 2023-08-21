@@ -562,12 +562,21 @@ void MainWindow::setWindowSize()
         imageSize = minimumImageSize;
 #endif
 
-    // Match center after new geometry
+    int afterMatchingSizeMode = qvApp->getSettingsManager().getInteger("aftermatchingsizemode");
+    QPoint referenceCenter =
+        afterMatchingSizeMode == 1 ? geometry().center() :
+        afterMatchingSizeMode == 2 ? currentScreen->availableGeometry().center() :
+        QPoint();
+
+    // Resize window first, reposition later
     // This is smoother than a single geometry set for some reason
-    QRect oldRect = geometry();
     resize(imageSize + extraWidgetsSize);
     QRect newRect = geometry();
-    newRect.moveCenter(oldRect.center());
+
+    if (afterMatchingSizeMode != 0)
+    {
+        newRect.moveCenter(referenceCenter);
+    }
 
     // Ensure titlebar is not above or below the available screen area
     const QRect availableScreenRect = currentScreen->availableGeometry();
@@ -579,6 +588,7 @@ void MainWindow::setWindowSize()
     if (newRect.top() > windowMaxY)
         newRect.moveTop(windowMaxY);
 
+    // Reposition window
     setGeometry(newRect);
 }
 
