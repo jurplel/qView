@@ -2,6 +2,7 @@
 #include "ui_qvinfodialog.h"
 #include <QDateTime>
 #include <QMimeDatabase>
+#include <QTimer>
 
 static int getGcd (int a, int b) {
     return (b == 0) ? a : getGcd(b, a%b);
@@ -31,8 +32,12 @@ void QVInfoDialog::setInfo(const QFileInfo &value, const int &value2, const int 
     width = value2;
     height = value3;
     frameCount = value4;
-    updateInfo();
-    window()->adjustSize();
+    // Instead of running updateInfo immediately, add it to the event queue. This is a workaround
+    // for a (Windows-specific?) delay when calling adjustSize on the window if the font contains
+    // certain characters (e.g. Chinese) the first time that happens for a given font. At least
+    // on Windows, by making the work happen later in the event loop, it allows the main window
+    // to repaint first, giving the illusion of better responsiveness.
+    QTimer::singleShot(0, this, &QVInfoDialog::updateInfo);
 }
 
 void QVInfoDialog::updateInfo()
@@ -63,4 +68,5 @@ void QVInfoDialog::updateInfo()
         ui->framesLabel2->hide();
         ui->framesLabel->hide();
     }
+    window()->adjustSize();
 }
