@@ -328,7 +328,8 @@ void MainWindow::fileChanged()
     populateOpenWithTimer->start();
     disableActions();
 
-    refreshProperties();
+    if (info->isVisible())
+        refreshProperties();
     buildWindowTitle();
     setWindowSize();
 }
