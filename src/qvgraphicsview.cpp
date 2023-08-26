@@ -245,6 +245,18 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
     zoom(zoomFactor, eventPos);
 }
 
+void QVGraphicsView::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Up || event->key() == Qt::Key_Down || event->key() == Qt::Key_Left || event->key() == Qt::Key_Right)
+    {
+        // Normally the arrow keys are assigned to shortcuts, but in case they aren't or get passed
+        // through due to modifier keys, swallow the event to avoid scrolling
+        return;
+    }
+
+    QGraphicsView::keyPressEvent(event);
+}
+
 // Functions
 
 QMimeData *QVGraphicsView::getMimeData() const
