@@ -65,7 +65,7 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     settingsUpdated();
 }
 
-void QVImageCore::loadFile(const QString &fileName)
+void QVImageCore::loadFile(const QString &fileName, bool isReloading)
 {
     if (waitingOnLoad)
     {
@@ -102,7 +102,7 @@ void QVImageCore::loadFile(const QString &fileName)
     QString cacheKey = getPixmapCacheKey(sanitaryFileName, fileInfo.size(), targetColorSpace);
 
     //check if cached already before loading the long way
-    auto *cachedData = QVImageCore::pixmapCache.take(cacheKey);
+    auto *cachedData = isReloading ? nullptr : QVImageCore::pixmapCache.take(cacheKey);
     if (cachedData != nullptr)
     {
         ReadData readData = *cachedData;

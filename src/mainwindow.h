@@ -51,6 +51,8 @@ public:
 
     void pickUrl();
 
+    void reloadFile();
+
     void openContainingFolder();
 
     void openWith(const OpenWith::OpenWithItem &exec);
