@@ -244,6 +244,14 @@ void QVGraphicsView::loadFile(const QString &fileName)
     imageCore.loadFile(fileName);
 }
 
+void QVGraphicsView::reloadFile()
+{
+    if (!getCurrentFileDetails().isPixmapLoaded)
+        return;
+
+    imageCore.loadFile(getCurrentFileDetails().fileInfo.absoluteFilePath(), true);
+}
+
 void QVGraphicsView::postLoad()
 {
     updateLoadedPixmapItem();
