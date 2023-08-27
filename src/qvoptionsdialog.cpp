@@ -65,6 +65,7 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
 #endif
 
     syncSettings(false, true);
+    connect(ui->titlebarRadioButton4, &QRadioButton::toggled, this, &QVOptionsDialog::customTitlebarRadioButtonToggled);
     connect(ui->windowResizeComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &QVOptionsDialog::windowResizeComboBoxCurrentIndexChanged);
     connect(ui->langComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &QVOptionsDialog::languageComboBoxCurrentIndexChanged);
     syncShortcuts();
@@ -134,8 +135,10 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
     updateBgColorButton();
     connect(ui->bgColorButton, &QPushButton::clicked, this, &QVOptionsDialog::bgColorButtonClicked);
     // titlebarmode
-    syncRadioButtons({ui->titlebarRadioButton0, ui->titlebarRadioButton1,
-                     ui->titlebarRadioButton2, ui->titlebarRadioButton3}, "titlebarmode", defaults, makeConnections);
+    syncRadioButtons({ui->titlebarRadioButton0, ui->titlebarRadioButton1, ui->titlebarRadioButton2,
+                      ui->titlebarRadioButton3, ui->titlebarRadioButton4}, "titlebarmode", defaults, makeConnections);
+    customTitlebarRadioButtonToggled(ui->titlebarRadioButton4->isChecked());
+    syncLineEdit(ui->customTitlebarLineEdit, "customtitlebartext", defaults, makeConnections);
     // windowresizemode
     syncComboBox(ui->windowResizeComboBox, "windowresizemode", defaults, makeConnections);
     windowResizeComboBoxCurrentIndexChanged(ui->windowResizeComboBox->currentIndex());
@@ -299,6 +302,20 @@ void QVOptionsDialog::syncDoubleSpinBox(QDoubleSpinBox *doubleSpinBox, const QSt
     }
 }
 
+void QVOptionsDialog::syncLineEdit(QLineEdit *lineEdit, const QString &key, bool defaults, bool makeConnection)
+{
+    auto val = qvApp->getSettingsManager().getString(key, defaults);
+    lineEdit->setText(val);
+    transientSettings.insert(key, val);
+
+    if (makeConnection)
+    {
+        connect(lineEdit, &QLineEdit::textEdited, this, [this, key](QString arg1) {
+            modifySetting(key, arg1);
+        });
+    }
+}
+
 void QVOptionsDialog::syncShortcuts(bool defaults)
 {
     qvApp->getShortcutManager().updateShortcuts();
@@ -445,6 +462,11 @@ void QVOptionsDialog::scalingCheckboxStateChanged(int arg1)
         ui->scalingTwoCheckbox->setEnabled(true);
     else
         ui->scalingTwoCheckbox->setEnabled(false);
+}
+
+void QVOptionsDialog::customTitlebarRadioButtonToggled(bool checked)
+{
+    ui->customTitlebarLineEdit->setEnabled(checked);
 }
 
 void QVOptionsDialog::windowResizeComboBoxCurrentIndexChanged(int index)

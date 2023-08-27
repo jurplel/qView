@@ -35,6 +35,7 @@ protected:
     void syncComboBoxData(QComboBox *comboBox, const QString &key, bool defaults = false, bool makeConnection = false);
     void syncSpinBox(QSpinBox *spinBox, const QString &key, bool defaults = false, bool makeConnection = false);
     void syncDoubleSpinBox(QDoubleSpinBox *doubleSpinBox, const QString &key, bool defaults = false, bool makeConnection = false);
+    void syncLineEdit(QLineEdit *lineEdit, const QString &key, bool defaults = false, bool makeConnection = false);
     void syncShortcuts(bool defaults = false);
     void updateShortcutsTable();
     void updateButtonBox();
@@ -50,6 +51,8 @@ private slots:
     void bgColorCheckboxStateChanged(int arg1);
 
     void scalingCheckboxStateChanged(int arg1);
+
+    void customTitlebarRadioButtonToggled(bool checked);
 
     void windowResizeComboBoxCurrentIndexChanged(int index);
 

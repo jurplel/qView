@@ -451,30 +451,55 @@ void MainWindow::buildWindowTitle()
     QString newString = "qView";
     if (getCurrentFileDetails().fileInfo.isFile())
     {
+        auto getFileName = [&]() { return getCurrentFileDetails().fileInfo.fileName(); };
+        auto getZoomLevel = [&]() { return QString::number(graphicsView->getCurrentScale() * 100.0, 'f', 1) + "%"; };
+        auto getImageIndex = [&]() { return QString::number(getCurrentFileDetails().loadedIndexInFolder+1); };
+        auto getImageCount = [&]() { return QString::number(getCurrentFileDetails().folderFileInfoList.count()); };
+        auto getImageWidth = [&]() { return QString::number(getCurrentFileDetails().baseImageSize.width()); };
+        auto getImageHeight = [&]() { return QString::number(getCurrentFileDetails().baseImageSize.height()); };
+        auto getFileSize = [&]() { return QVInfoDialog::formatBytes(getCurrentFileDetails().fileInfo.size()); };
         switch (qvApp->getSettingsManager().getInteger("titlebarmode")) {
         case 1:
         {
-            newString = getCurrentFileDetails().fileInfo.fileName();
+            newString = getFileName();
             break;
         }
         case 2:
         {
-            newString = QString::number(graphicsView->getCurrentScale() * 100.0, 'f', 1) + "%";
-            newString += " - " + QString::number(getCurrentFileDetails().loadedIndexInFolder+1);
-            newString += "/" + QString::number(getCurrentFileDetails().folderFileInfoList.count());
-            newString += " - " + getCurrentFileDetails().fileInfo.fileName();
+            newString = getZoomLevel() + " - " + getImageIndex() + "/" + getImageCount() + " - " + getFileName();
             break;
         }
         case 3:
         {
-            newString = QString::number(graphicsView->getCurrentScale() * 100.0, 'f', 1) + "%";
-            newString += " - " + QString::number(getCurrentFileDetails().loadedIndexInFolder+1);
-            newString += "/" + QString::number(getCurrentFileDetails().folderFileInfoList.count());
-            newString += " - " + getCurrentFileDetails().fileInfo.fileName();
-            newString += " - "  + QString::number(getCurrentFileDetails().baseImageSize.width());
-            newString += "x" + QString::number(getCurrentFileDetails().baseImageSize.height());
-            newString += " - " + QVInfoDialog::formatBytes(getCurrentFileDetails().fileInfo.size());
-            newString += " - qView";
+            newString = getZoomLevel() + " - " + getImageIndex() + "/" + getImageCount() + " - " + getFileName() + " - " +
+                        getImageWidth() + "x" + getImageHeight() + " - " + getFileSize() + " - qView";
+            break;
+        }
+        case 4:
+        {
+            newString = "";
+            QString customText = qvApp->getSettingsManager().getString("customtitlebartext");
+            for (int i = 0; i < customText.length(); i++)
+            {
+                QChar c = customText.at(i);
+                if (c == '%' && i + 1 < customText.length())
+                {
+                    QChar n = customText.at(++i);
+                    if (n == 'n') newString += getFileName();
+                    else if (n == 'z') newString += getZoomLevel();
+                    else if (n == 'i') newString += getImageIndex();
+                    else if (n == 'c') newString += getImageCount();
+                    else if (n == 'w') newString += getImageWidth();
+                    else if (n == 'h') newString += getImageHeight();
+                    else if (n == 's') newString += getFileSize();
+                    else
+                    {
+                        newString += c;
+                        newString += n;
+                    }
+                }
+                else newString += c;
+            }
             break;
         }
         }
