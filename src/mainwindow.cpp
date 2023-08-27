@@ -668,6 +668,11 @@ void MainWindow::pickUrl()
     inputDialog->open();
 }
 
+void MainWindow::reloadFile()
+{
+    graphicsView->reloadFile();
+}
+
 void MainWindow::openWith(const OpenWith::OpenWithItem &openWithItem)
 {
     OpenWith::openWith(getCurrentFileDetails().fileInfo.absoluteFilePath(), openWithItem);
