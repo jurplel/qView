@@ -471,13 +471,13 @@ void QVOptionsDialog::customTitlebarRadioButtonToggled(bool checked)
 
 void QVOptionsDialog::windowResizeComboBoxCurrentIndexChanged(int index)
 {
-    bool enableRelated = index != 0;
-    ui->afterMatchingSizeLabel->setEnabled(enableRelated);
-    ui->afterMatchingSizeComboBox->setEnabled(enableRelated);
-    ui->minWindowResizeLabel->setEnabled(enableRelated);
-    ui->minWindowResizeSpinBox->setEnabled(enableRelated);
-    ui->maxWindowResizeLabel->setEnabled(enableRelated);
-    ui->maxWindowResizeSpinBox->setEnabled(enableRelated);
+    bool enableRelatedControls = index != 0;
+    ui->afterMatchingSizeLabel->setEnabled(enableRelatedControls);
+    ui->afterMatchingSizeComboBox->setEnabled(enableRelatedControls);
+    ui->minWindowResizeLabel->setEnabled(enableRelatedControls);
+    ui->minWindowResizeSpinBox->setEnabled(enableRelatedControls);
+    ui->maxWindowResizeLabel->setEnabled(enableRelatedControls);
+    ui->maxWindowResizeSpinBox->setEnabled(enableRelatedControls);
 }
 
 void QVOptionsDialog::constrainImagePositionCheckboxStateChanged(int arg1)
