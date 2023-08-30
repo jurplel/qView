@@ -478,13 +478,15 @@ void MainWindow::buildWindowTitle()
         case 4:
         {
             newString = "";
-            QString customText = qvApp->getSettingsManager().getString("customtitlebartext");
+            const QString customText = qvApp->getSettingsManager().getString("customtitlebartext");
             for (int i = 0; i < customText.length(); i++)
             {
-                QChar c = customText.at(i);
-                if (c == '%' && i + 1 < customText.length())
+                const QChar c = customText.at(i);
+                if (c == '%')
                 {
-                    QChar n = customText.at(++i);
+                    i++;
+                    if (i >= customText.length()) break;
+                    const QChar n = customText.at(i);
                     if (n == 'n') newString += getFileName();
                     else if (n == 'z') newString += getZoomLevel();
                     else if (n == 'i') newString += getImageIndex();
@@ -492,11 +494,7 @@ void MainWindow::buildWindowTitle()
                     else if (n == 'w') newString += getImageWidth();
                     else if (n == 'h') newString += getImageHeight();
                     else if (n == 's') newString += getFileSize();
-                    else
-                    {
-                        newString += c;
-                        newString += n;
-                    }
+                    else newString += n;
                 }
                 else newString += c;
             }

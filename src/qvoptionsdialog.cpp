@@ -138,6 +138,7 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
     syncRadioButtons({ui->titlebarRadioButton0, ui->titlebarRadioButton1, ui->titlebarRadioButton2,
                       ui->titlebarRadioButton3, ui->titlebarRadioButton4}, "titlebarmode", defaults, makeConnections);
     customTitlebarRadioButtonToggled(ui->titlebarRadioButton4->isChecked());
+    // customtitlebartext
     syncLineEdit(ui->customTitlebarLineEdit, "customtitlebartext", defaults, makeConnections);
     // windowresizemode
     syncComboBox(ui->windowResizeComboBox, "windowresizemode", defaults, makeConnections);
@@ -231,7 +232,8 @@ void QVOptionsDialog::syncCheckbox(QCheckBox *checkbox, const QString &key, bool
 void QVOptionsDialog::syncRadioButtons(QList<QRadioButton *> buttons, const QString &key, bool defaults, bool makeConnection)
 {
     auto val = qvApp->getSettingsManager().getInteger(key, defaults);
-    buttons.value(val)->setChecked(true);
+    if (auto widget = buttons.value(val))
+        widget->setChecked(true);
     transientSettings.insert(key, val);
 
     if (makeConnection)
