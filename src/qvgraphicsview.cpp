@@ -623,6 +623,9 @@ void QVGraphicsView::centerOn(const QPointF &pos)
     QRect targetRect = getUsableViewportRect();
     QPointF viewPoint = transform().map(pos);
 
+    // Snap to nearest 64th pixel, helps with floating point rounding errors
+    viewPoint = QPointF((viewPoint * 64.0).toPoint()) / 64.0;
+
     if (isRightToLeft())
     {
         qint64 horizontal = 0;
@@ -669,7 +672,7 @@ QRectF QVGraphicsView::getContentRect() const
     return transform().mapRect(loadedPixmapItem->boundingRect());
 }
 
-QRect QVGraphicsView::getUsableViewportRect(bool addMargin) const
+QRect QVGraphicsView::getUsableViewportRect(bool addOverscan) const
 {
 #ifdef COCOA_LOADED
     int obscuredHeight = QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
@@ -678,8 +681,8 @@ QRect QVGraphicsView::getUsableViewportRect(bool addMargin) const
 #endif
     QRect rect = viewport()->rect();
     rect.setTop(obscuredHeight);
-    if (addMargin)
-        rect.adjust(MARGIN, MARGIN, -MARGIN, -MARGIN);
+    if (addOverscan)
+        rect.adjust(-FitOverscan, -FitOverscan, FitOverscan, FitOverscan);
     return rect;
 }
 

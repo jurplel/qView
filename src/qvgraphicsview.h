@@ -17,6 +17,8 @@ class QVGraphicsView : public QGraphicsView
 public:
     QVGraphicsView(QWidget *parent = nullptr);
 
+    static const int FitOverscan = 1;
+
     enum class GoToFileMode
     {
        constant,
@@ -120,7 +122,7 @@ protected:
 
     QRectF getContentRect() const;
 
-    QRect getUsableViewportRect(bool addMargin = false) const;
+    QRect getUsableViewportRect(bool addOverscan = false) const;
 
     QTransform getTransformWithNoScaling() const;
 
@@ -152,8 +154,6 @@ private:
     bool isConstrainedSmallCenteringEnabled;
     int cropMode;
     qreal scaleFactor;
-
-    const int MARGIN = -2;
 
     bool isZoomToFitEnabled;
     bool isApplyingZoomToFit;
