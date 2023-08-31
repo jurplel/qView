@@ -682,7 +682,7 @@ QRect QVGraphicsView::getUsableViewportRect(bool addOverscan) const
     QRect rect = viewport()->rect();
     rect.setTop(obscuredHeight);
     if (addOverscan)
-        rect.adjust(-FitOverscan, -FitOverscan, FitOverscan, FitOverscan);
+        rect.adjust(-fitOverscan, -fitOverscan, fitOverscan, fitOverscan);
     return rect;
 }
 
@@ -765,6 +765,9 @@ void QVGraphicsView::settingsUpdated()
 
     //resize past actual size
     isPastActualSizeEnabled = settingsManager.getBoolean("pastactualsizeenabled");
+
+    //fit overscan
+    fitOverscan = settingsManager.getInteger("fitoverscan");
 
     //scrolling zoom
     isScrollZoomsEnabled = settingsManager.getBoolean("scrollzoomsenabled");

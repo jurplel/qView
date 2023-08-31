@@ -17,8 +17,6 @@ class QVGraphicsView : public QGraphicsView
 public:
     QVGraphicsView(QWidget *parent = nullptr);
 
-    static const int FitOverscan = 1;
-
     enum class GoToFileMode
     {
        constant,
@@ -75,6 +73,8 @@ public:
     const QPixmap& getLoadedPixmap() const { return imageCore.getLoadedPixmap(); }
     const QMovie& getLoadedMovie() const { return imageCore.getLoadedMovie(); }
     qreal getCurrentScale() const { return currentScale; }
+
+    int getFitOverscan() const { return fitOverscan; }
 
 signals:
     void cancelSlideshow();
@@ -146,6 +146,7 @@ private:
     bool isScalingEnabled;
     bool isScalingTwoEnabled;
     bool isPastActualSizeEnabled;
+    int fitOverscan;
     bool isScrollZoomsEnabled;
     bool isLoopFoldersEnabled;
     bool isCursorZoomEnabled;

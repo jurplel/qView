@@ -179,6 +179,8 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
     syncComboBox(ui->cropModeComboBox, "cropmode", defaults, makeConnections);
     // pastactualsizeenabled
     syncCheckbox(ui->pastActualSizeCheckbox, "pastactualsizeenabled", defaults, makeConnections);
+    // fitoverscan
+    syncSpinBox(ui->fitOverscanSpinBox, "fitoverscan", defaults, makeConnections);
     // constrainimageposition
     syncCheckbox(ui->constrainImagePositionCheckbox, "constrainimageposition", defaults, makeConnections);
     if (ui->constrainImagePositionCheckbox->isChecked())
