@@ -511,7 +511,7 @@ void MainWindow::setWindowSize()
 
 
     QSize imageSize = graphicsView->getEffectiveOriginalSize().toSize();
-    imageSize -= QSize(4, 4);
+    imageSize -= QSize(QVGraphicsView::FitOverscan * 2, QVGraphicsView::FitOverscan * 2);
 
 
     // Try to grab the current screen
