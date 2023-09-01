@@ -553,18 +553,10 @@ void QVImageCore::setSpeed(int desiredSpeed)
         loadedMovie.setSpeed(desiredSpeed);
 }
 
-QPixmap QVImageCore::scaleExpensively(const int desiredWidth, const int desiredHeight)
-{
-    return scaleExpensively(QSizeF(desiredWidth, desiredHeight));
-}
-
 QPixmap QVImageCore::scaleExpensively(const QSizeF desiredSize)
 {
     if (!currentFileDetails.isPixmapLoaded)
         return QPixmap();
-
-    QSize size = QSize(loadedPixmap.width(), loadedPixmap.height());
-    size.scale(desiredSize.toSize(), Qt::KeepAspectRatio);
 
     // Get the current frame of the animation if this is an animation
     QPixmap relevantPixmap;
@@ -584,7 +576,11 @@ QPixmap QVImageCore::scaleExpensively(const QSizeF desiredSize)
         return relevantPixmap;
     }
 
-    return relevantPixmap.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);;
+    QSize size = desiredSize.toSize();
+    size.rwidth() = qMax(size.width(), 1);
+    size.rheight() = qMax(size.height(), 1);
+
+    return relevantPixmap.scaled(size, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 }
 
 
