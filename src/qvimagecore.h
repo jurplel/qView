@@ -79,7 +79,6 @@ public:
     void setPaused(bool desiredState);
     void setSpeed(int desiredSpeed);
 
-    QPixmap scaleExpensively(const int desiredWidth, const int desiredHeight);
     QPixmap scaleExpensively(const QSizeF desiredSize);
 
     //returned const reference is read-only
