@@ -174,7 +174,7 @@ void SettingsManager::initializeSettingsLibrary()
 #endif
     settingsLibrary.insert("cropmode", {0, {}});
     settingsLibrary.insert("pastactualsizeenabled", {true, {}});
-    settingsLibrary.insert("fitoverscan", {1, {}});
+    settingsLibrary.insert("fitoverscan", {0, {}});
     settingsLibrary.insert("constrainimageposition", {true, {}});
     settingsLibrary.insert("constraincentersmallimage", {true, {}});
     settingsLibrary.insert("colorspaceconversion", {1, {}});
