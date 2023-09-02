@@ -39,14 +39,15 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     isConstrainedPositioningEnabled = true;
     isConstrainedSmallCenteringEnabled = true;
     cropMode = 0;
-    scaleFactor = 1.25;
+    zoomMultiplier = 1.25;
 
     // Initialize other variables
     isZoomToFitEnabled = true;
     isApplyingZoomToFit = false;
     isNavigationResetsZoomEnabled = true;
-    currentScale = 1.0;
-    appliedScaleAdjustment = 1.0;
+    zoomLevel = 1.0;
+    appliedDpiAdjustment = 1.0;
+    appliedExpensiveScaleZoomLevel = 0.0;
     lastZoomEventPos = QPoint(-1, -1);
     lastZoomRoundingError = QPointF();
 
@@ -66,7 +67,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     expensiveScaleTimer = new QTimer(this);
     expensiveScaleTimer->setSingleShot(true);
     expensiveScaleTimer->setInterval(50);
-    connect(expensiveScaleTimer, &QTimer::timeout, this, [this]{scaleExpensively();});
+    connect(expensiveScaleTimer, &QTimer::timeout, this, [this]{applyExpensiveScaling();});
 
     constrainBoundsTimer = new QTimer(this);
     constrainBoundsTimer->setSingleShot(true);
@@ -99,7 +100,7 @@ void QVGraphicsView::paintEvent(QPaintEvent *event)
 {
     // This is the most reliable place to detect DPI changes. QWindow::screenChanged()
     // doesn't detect when the DPI is changed on the current monitor, for example.
-    handleScaleAdjustmentChange();
+    handleDpiAdjustmentChange();
 
     QGraphicsView::paintEvent(event);
 }
@@ -183,7 +184,7 @@ bool QVGraphicsView::event(QEvent *event)
 
             if (changeFlags & QPinchGesture::ScaleFactorChanged) {
                 const QPoint hotPoint = mapFromGlobal(pinchGesture->hotSpot().toPoint());
-                zoom(pinchGesture->scaleFactor(), hotPoint);
+                zoomRelative(pinchGesture->scaleFactor(), hotPoint);
             }
 
             // Fun rotation stuff maybe later
@@ -233,13 +234,13 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
         return;
 
     const qreal fractionalWheelClicks = qFabs(yDelta) / yScale;
-    const qreal zoomAmountPerWheelClick = scaleFactor - 1.0;
+    const qreal zoomAmountPerWheelClick = zoomMultiplier - 1.0;
     qreal zoomFactor = 1.0 + (fractionalWheelClicks * zoomAmountPerWheelClick);
 
     if (yDelta < 0)
         zoomFactor = qPow(zoomFactor, -1);
 
-    zoom(zoomFactor, eventPos);
+    zoomRelative(zoomFactor, eventPos);
 }
 
 void QVGraphicsView::keyPressEvent(QKeyEvent *event)
@@ -309,7 +310,7 @@ void QVGraphicsView::postLoad()
     scrollHelper->cancelAnimation();
 
     // Set the pixmap to the new image and reset the transform's scale to a known value
-    makeUnscaled();
+    removeExpensiveScaling();
 
     if (isNavigationResetsZoomEnabled && !isZoomToFitEnabled)
         setZoomToFitEnabled(true);
@@ -325,24 +326,26 @@ void QVGraphicsView::postLoad()
 
 void QVGraphicsView::zoomIn(const QPoint &pos)
 {
-    zoom(scaleFactor, pos);
+    zoomRelative(zoomMultiplier, pos);
 }
 
 void QVGraphicsView::zoomOut(const QPoint &pos)
 {
-    zoom(qPow(scaleFactor, -1), pos);
+    zoomRelative(qPow(zoomMultiplier, -1), pos);
 }
 
-void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
+void QVGraphicsView::zoomRelative(qreal relativeLevel, const QPoint &pos)
 {
-    //don't zoom too far out, dude
-    currentScale *= scaleFactor;
-    if (currentScale >= 500 || currentScale <= 0.01)
-    {
-        currentScale *= qPow(scaleFactor, -1);
-        return;
-    }
+    const qreal absoluteLevel = zoomLevel * relativeLevel;
 
+    if (absoluteLevel >= 500 || absoluteLevel <= 0.01)
+        return;
+
+    zoomAbsolute(absoluteLevel, pos);
+}
+
+void QVGraphicsView::zoomAbsolute(const qreal absoluteLevel, const QPoint &pos)
+{
     if (!isApplyingZoomToFit)
         setZoomToFitEnabled(false);
 
@@ -353,7 +356,18 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
     }
     const QPointF scenePos = mapToScene(pos) - lastZoomRoundingError;
 
-    scale(scaleFactor, scaleFactor);
+    if (appliedExpensiveScaleZoomLevel != 0.0)
+    {
+        const qreal baseTransformScale = 1.0 / devicePixelRatioF();
+        const qreal relativeLevel = absoluteLevel / appliedExpensiveScaleZoomLevel;
+        setTransformScale(baseTransformScale * relativeLevel);
+    }
+    else
+    {
+        setTransformScale(absoluteLevel * appliedDpiAdjustment);
+    }
+    zoomLevel = absoluteLevel;
+
     scrollHelper->cancelAnimation();
 
     // If we have a point to zoom towards and cursor zooming is enabled
@@ -373,11 +387,6 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
 
     expensiveScaleTimer->start();
     emitZoomLevelChangedTimer->start();
-}
-
-void QVGraphicsView::setZoomLevel(qreal absoluteScaleFactor)
-{
-    zoom(absoluteScaleFactor / currentScale);
 }
 
 bool QVGraphicsView::getZoomToFitEnabled() const
@@ -412,7 +421,7 @@ void QVGraphicsView::setNavigationResetsZoomEnabled(bool value)
     emit navigationResetsZoomChanged();
 }
 
-void QVGraphicsView::scaleExpensively()
+void QVGraphicsView::applyExpensiveScaling()
 {
     if (!isScalingEnabled || !getCurrentFileDetails().isPixmapLoaded)
         return;
@@ -423,24 +432,25 @@ void QVGraphicsView::scaleExpensively()
     if (contentSize.width() > maxSize.width() || contentSize.height() > maxSize.height())
     {
         // Return to original size
-        makeUnscaled();
+        removeExpensiveScaling();
         return;
     }
 
     // Calculate scaled resolution
-    qreal scaleAdjustment = getScaleAdjustment();
-    const QSizeF mappedSize = QSizeF(getCurrentFileDetails().loadedPixmapSize) * currentScale * scaleAdjustment * devicePixelRatioF();
+    const qreal dpiAdjustment = getDpiAdjustment();
+    const QSizeF mappedSize = QSizeF(getCurrentFileDetails().loadedPixmapSize) * zoomLevel * dpiAdjustment * devicePixelRatioF();
 
     // Set image to scaled version
     loadedPixmapItem->setPixmap(imageCore.scaleExpensively(mappedSize));
 
     // Set appropriate scale factor
-    qreal targetScale = 1.0 / devicePixelRatioF();
-    setTransform(getTransformWithNoScaling().scale(targetScale, targetScale));
-    appliedScaleAdjustment = scaleAdjustment;
+    const qreal newTransformScale = 1.0 / devicePixelRatioF();
+    setTransformScale(newTransformScale);
+    appliedDpiAdjustment = dpiAdjustment;
+    appliedExpensiveScaleZoomLevel = zoomLevel;
 }
 
-void QVGraphicsView::makeUnscaled()
+void QVGraphicsView::removeExpensiveScaling()
 {
     // Return to original size
     if (getCurrentFileDetails().isMovieLoaded)
@@ -449,10 +459,11 @@ void QVGraphicsView::makeUnscaled()
         loadedPixmapItem->setPixmap(getLoadedPixmap());
 
     // Set appropriate scale factor
-    qreal scaleAdjustment = getScaleAdjustment();
-    qreal targetScale = currentScale * scaleAdjustment;
-    setTransform(getTransformWithNoScaling().scale(targetScale, targetScale));
-    appliedScaleAdjustment = scaleAdjustment;
+    const qreal dpiAdjustment = getDpiAdjustment();
+    const qreal newTransformScale = zoomLevel * dpiAdjustment;
+    setTransformScale(newTransformScale);
+    appliedDpiAdjustment = dpiAdjustment;
+    appliedExpensiveScaleZoomLevel = 0.0;
 }
 
 void QVGraphicsView::animatedFrameChanged(QRect rect)
@@ -461,7 +472,7 @@ void QVGraphicsView::animatedFrameChanged(QRect rect)
 
     if (isScalingEnabled)
     {
-        scaleExpensively();
+        applyExpensiveScaling();
     }
     else
     {
@@ -501,13 +512,13 @@ void QVGraphicsView::zoomToFit()
         targetRatio = 1.0;
 
     isApplyingZoomToFit = true;
-    setZoomLevel(targetRatio);
+    zoomAbsolute(targetRatio);
     isApplyingZoomToFit = false;
 }
 
 void QVGraphicsView::originalSize()
 {
-    setZoomLevel(1.0);
+    zoomAbsolute(1.0);
 }
 
 void QVGraphicsView::centerImage()
@@ -664,7 +675,7 @@ void QVGraphicsView::fitOrConstrainImage()
 
 QSizeF QVGraphicsView::getEffectiveOriginalSize() const
 {
-    return getTransformWithNoScaling().mapRect(QRectF(QPoint(), getCurrentFileDetails().loadedPixmapSize)).size() * getScaleAdjustment();
+    return getTransformWithNoScaling().mapRect(QRectF(QPoint(), getCurrentFileDetails().loadedPixmapSize)).size() * getDpiAdjustment();
 }
 
 QRectF QVGraphicsView::getContentRect() const
@@ -686,23 +697,41 @@ QRect QVGraphicsView::getUsableViewportRect(bool addOverscan) const
     return rect;
 }
 
-QTransform QVGraphicsView::getTransformWithNoScaling() const
+void QVGraphicsView::setTransformScale(qreal value)
 {
-    QRectF unityRect = transform().mapRect(QRectF(0, 0, 1, 1));
-    return transform().scale(1.0 / unityRect.width(), 1.0 / unityRect.height());
+#ifdef Q_OS_WIN
+    // On Windows, the positioning of scaled pixels seems to follow a floor rule rather
+    // than rounding, so increase the scale just a hair to cover rounding errors in case
+    // the desired scale was targeting an integer pixel boundary.
+    value *= 1.0 + std::numeric_limits<double>::epsilon();
+#endif
+    setTransform(getTransformWithNoScaling().scale(value, value));
 }
 
-qreal QVGraphicsView::getScaleAdjustment() const
+QTransform QVGraphicsView::getTransformWithNoScaling() const
+{
+    const QTransform t = transform();
+    // Only intended to handle combinations of scaling, mirroring, flipping, and rotation
+    // in increments of 90 degrees. A seemingly simpler approach would be to scale the
+    // transform by the inverse of its scale factor, but the resulting scale factor may
+    // not exactly equal 1 due to floating point rounding errors.
+    if (t.type() == QTransform::TxRotate)
+        return { 0, t.m12() < 0 ? -1.0 : 1.0, t.m21() < 0 ? -1.0 : 1.0, 0, 0, 0 };
+    else
+        return { t.m11() < 0 ? -1.0 : 1.0, 0, 0, t.m22() < 0 ? -1.0 : 1.0, 0, 0 };
+}
+
+qreal QVGraphicsView::getDpiAdjustment() const
 {
     return isOneToOnePixelSizingEnabled ? 1.0 / devicePixelRatioF() : 1.0;
 }
 
-void QVGraphicsView::handleScaleAdjustmentChange()
+void QVGraphicsView::handleDpiAdjustmentChange()
 {
-    if (appliedScaleAdjustment == getScaleAdjustment())
+    if (appliedDpiAdjustment == getDpiAdjustment())
         return;
 
-    makeUnscaled();
+    removeExpensiveScaling();
 
     fitOrConstrainImage();
 
@@ -749,7 +778,7 @@ void QVGraphicsView::settingsUpdated()
     if (isScalingEnabled)
         expensiveScaleTimer->start();
     else
-        makeUnscaled();
+        removeExpensiveScaling();
 
     //scaling2
     if (!isScalingEnabled)
@@ -761,7 +790,7 @@ void QVGraphicsView::settingsUpdated()
     cropMode = settingsManager.getInteger("cropmode");
 
     //scalefactor
-    scaleFactor = settingsManager.getInteger("scalefactor")*0.01+1;
+    zoomMultiplier = 1.0 + (settingsManager.getInteger("scalefactor") / 100.0);
 
     //resize past actual size
     isPastActualSizeEnabled = settingsManager.getBoolean("pastactualsizeenabled");
@@ -789,7 +818,7 @@ void QVGraphicsView::settingsUpdated()
 
     // End of settings variables
 
-    handleScaleAdjustmentChange();
+    handleDpiAdjustmentChange();
 
     fitOrConstrainImage();
 }

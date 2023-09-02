@@ -452,7 +452,7 @@ void MainWindow::buildWindowTitle()
     if (getCurrentFileDetails().fileInfo.isFile())
     {
         auto getFileName = [&]() { return getCurrentFileDetails().fileInfo.fileName(); };
-        auto getZoomLevel = [&]() { return QString::number(graphicsView->getCurrentScale() * 100.0, 'f', 1) + "%"; };
+        auto getZoomLevel = [&]() { return QString::number(graphicsView->getZoomLevel() * 100.0, 'f', 1) + "%"; };
         auto getImageIndex = [&]() { return QString::number(getCurrentFileDetails().loadedIndexInFolder+1); };
         auto getImageCount = [&]() { return QString::number(getCurrentFileDetails().folderFileInfoList.count()); };
         auto getImageWidth = [&]() { return QString::number(getCurrentFileDetails().baseImageSize.width()); };
