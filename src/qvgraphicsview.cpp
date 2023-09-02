@@ -501,8 +501,19 @@ void QVGraphicsView::zoomToFit()
         targetRatio = fitXRatio;
         break;
     default:
-        targetRatio = qMin(fitXRatio, fitYRatio);
+    {
+        QSize xRatioSize = (effectiveImageSize * fitXRatio * devicePixelRatioF()).toSize();
+        QSize yRatioSize = (effectiveImageSize * fitYRatio * devicePixelRatioF()).toSize();
+        QSize maxSize = (viewSize * devicePixelRatioF()).toSize();
+        // If the aspect ratios are extremely close, it's possible that both are sufficient to
+        // fit the image, but one results in the opposing dimension getting rounded down to
+        // just under the view size, so use the larger of the two ratios in that case.
+        if (xRatioSize.boundedTo(maxSize) == xRatioSize && yRatioSize.boundedTo(maxSize) == yRatioSize)
+            targetRatio = qMax(fitXRatio, fitYRatio);
+        else
+            targetRatio = qMin(fitXRatio, fitYRatio);
         break;
+    }
     }
 
     if (targetRatio > 1.0 && !isPastActualSizeEnabled)
