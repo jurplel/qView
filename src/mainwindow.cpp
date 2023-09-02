@@ -537,12 +537,6 @@ void MainWindow::setWindowSize()
     qreal minWindowResizedPercentage = qvApp->getSettingsManager().getInteger("minwindowresizedpercentage")/100.0;
     qreal maxWindowResizedPercentage = qvApp->getSettingsManager().getInteger("maxwindowresizedpercentage")/100.0;
 
-
-    QSize imageSize = graphicsView->getEffectiveOriginalSize().toSize();
-    const int fitOverscan = graphicsView->getFitOverscan();
-    imageSize -= QSize(fitOverscan * 2, fitOverscan * 2);
-
-
     // Try to grab the current screen
     QScreen *currentScreen = screenContaining(frameGeometry());
 
@@ -570,22 +564,20 @@ void MainWindow::setWindowSize()
     const QSize screenSize = currentScreen->size();
     const QSize minWindowSize = (screenSize * minWindowResizedPercentage).boundedTo(hardLimitSize);
     const QSize maxWindowSize = (screenSize * maxWindowResizedPercentage).boundedTo(hardLimitSize);
+    const QSizeF imageSize = graphicsView->getEffectiveOriginalSize();
+    const int fitOverscan = graphicsView->getFitOverscan();
+    const QSize fitOverscanSize = QSize(fitOverscan * 2, fitOverscan * 2);
 
-    if (imageSize.width() < minWindowSize.width() && imageSize.height() < minWindowSize.height())
+    QSize targetSize = imageSize.toSize() - fitOverscanSize;
+
+    if (targetSize.width() > maxWindowSize.width() || targetSize.height() > maxWindowSize.height())
     {
-        imageSize.scale(minWindowSize, Qt::KeepAspectRatio);
-    }
-    else if (imageSize.width() > maxWindowSize.width() || imageSize.height() > maxWindowSize.height())
-    {
-        imageSize.scale(maxWindowSize, Qt::KeepAspectRatio);
+        const QSizeF viewSize = maxWindowSize + fitOverscanSize;
+        const qreal fitRatio = qMin(viewSize.width() / imageSize.width(), viewSize.height() / imageSize.height());
+        targetSize = (imageSize * fitRatio).toSize() - fitOverscanSize;
     }
 
-    // Windows reports the wrong minimum width, so we constrain the image size relative to the dpi to stop weirdness with tiny images
-#ifdef Q_OS_WIN
-    auto minimumImageSize = QSize(qRound(logicalDpiX()*1.5), logicalDpiY()/2);
-    if (imageSize.boundedTo(minimumImageSize) == imageSize)
-        imageSize = minimumImageSize;
-#endif
+    targetSize = targetSize.expandedTo(minWindowSize).boundedTo(maxWindowSize);
 
     int afterMatchingSizeMode = qvApp->getSettingsManager().getInteger("aftermatchingsizemode");
     QPoint referenceCenter =
@@ -595,7 +587,7 @@ void MainWindow::setWindowSize()
 
     // Resize window first, reposition later
     // This is smoother than a single geometry set for some reason
-    resize(imageSize + extraWidgetsSize);
+    resize(targetSize + extraWidgetsSize);
     QRect newRect = geometry();
 
     if (afterMatchingSizeMode != 0)
