@@ -486,7 +486,7 @@ void QVGraphicsView::zoomToFit()
         return;
 
     QSizeF effectiveImageSize = getEffectiveOriginalSize();
-    QSizeF viewSize = getUsableViewportRect(true).size();
+    QSize viewSize = getUsableViewportRect(true).size();
 
     if (viewSize.isEmpty())
         return;
@@ -496,27 +496,42 @@ void QVGraphicsView::zoomToFit()
 
     qreal targetRatio;
 
+    // Each mode will check if the rounded image size already produces the desired fit,
+    // in which case we can use exactly 1.0 to avoid unnecessary scaling
+
     switch (cropMode) { // should be enum tbh
     case 1: // only take into account height
-        targetRatio = fitYRatio;
+        if (qRound(effectiveImageSize.height()) == viewSize.height())
+            targetRatio = 1.0;
+        else
+            targetRatio = fitYRatio;
         break;
     case 2: // only take into account width
-        targetRatio = fitXRatio;
+        if (qRound(effectiveImageSize.width()) == viewSize.width())
+            targetRatio = 1.0;
+        else
+            targetRatio = fitXRatio;
         break;
     default:
-    {
-        QSize xRatioSize = (effectiveImageSize * fitXRatio * devicePixelRatioF()).toSize();
-        QSize yRatioSize = (effectiveImageSize * fitYRatio * devicePixelRatioF()).toSize();
-        QSize maxSize = (viewSize * devicePixelRatioF()).toSize();
-        // If the aspect ratios are extremely close, it's possible that both are sufficient to
-        // fit the image, but one results in the opposing dimension getting rounded down to
-        // just under the view size, so use the larger of the two ratios in that case.
-        if (xRatioSize.boundedTo(maxSize) == xRatioSize && yRatioSize.boundedTo(maxSize) == yRatioSize)
-            targetRatio = qMax(fitXRatio, fitYRatio);
+        if ((qRound(effectiveImageSize.height()) == viewSize.height() && qRound(effectiveImageSize.width()) <= viewSize.width()) ||
+            (qRound(effectiveImageSize.width()) == viewSize.width() && qRound(effectiveImageSize.height()) <= viewSize.height()))
+        {
+            targetRatio = 1.0;
+        }
         else
-            targetRatio = qMin(fitXRatio, fitYRatio);
+        {
+            QSize xRatioSize = (effectiveImageSize * fitXRatio * devicePixelRatioF()).toSize();
+            QSize yRatioSize = (effectiveImageSize * fitYRatio * devicePixelRatioF()).toSize();
+            QSize maxSize = (QSizeF(viewSize) * devicePixelRatioF()).toSize();
+            // If the aspect ratios are extremely close, it's possible that both are sufficient to
+            // fit the image, but one results in the opposing dimension getting rounded down to
+            // just under the view size, so use the larger of the two ratios in that case.
+            if (xRatioSize.boundedTo(maxSize) == xRatioSize && yRatioSize.boundedTo(maxSize) == yRatioSize)
+                targetRatio = qMax(fitXRatio, fitYRatio);
+            else
+                targetRatio = qMin(fitXRatio, fitYRatio);
+        }
         break;
-    }
     }
 
     if (targetRatio > 1.0 && !isPastActualSizeEnabled)
