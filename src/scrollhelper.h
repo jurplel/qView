@@ -1,6 +1,7 @@
 #ifndef SCROLLHELPER_H
 #define SCROLLHELPER_H
 
+#include <functional>
 #include <QAbstractScrollArea>
 #include <QElapsedTimer>
 #include <QScrollBar>
