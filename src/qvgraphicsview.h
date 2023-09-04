@@ -111,12 +111,6 @@ protected:
 
     bool event(QEvent *event) override;
 
-    void centerOn(const QPointF &pos);
-
-    void centerOn(qreal x, qreal y);
-
-    void centerOn(const QGraphicsItem *item);
-
     QRectF getContentRect() const;
 
     QRect getUsableViewportRect(bool addOverscan = false) const;
