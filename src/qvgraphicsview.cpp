@@ -523,9 +523,9 @@ void QVGraphicsView::zoomToFit()
             QSize xRatioSize = (effectiveImageSize * fitXRatio * devicePixelRatioF()).toSize();
             QSize yRatioSize = (effectiveImageSize * fitYRatio * devicePixelRatioF()).toSize();
             QSize maxSize = (QSizeF(viewSize) * devicePixelRatioF()).toSize();
-            // If the aspect ratios are extremely close, it's possible that both are sufficient to
-            // fit the image, but one results in the opposing dimension getting rounded down to
-            // just under the view size, so use the larger of the two ratios in that case.
+            // If the fit ratios are extremely close, it's possible that both are sufficient to
+            // contain the image, but one results in the opposing dimension getting rounded down
+            // to just under the view size, so use the larger of the two ratios in that case.
             if (xRatioSize.boundedTo(maxSize) == xRatioSize && yRatioSize.boundedTo(maxSize) == yRatioSize)
                 targetRatio = qMax(fitXRatio, fitYRatio);
             else
@@ -549,7 +549,25 @@ void QVGraphicsView::originalSize()
 
 void QVGraphicsView::centerImage()
 {
-    centerOn(loadedPixmapItem);
+    QRect viewRect = getUsableViewportRect();
+    QRect contentRect = getContentRect().toRect();
+
+    if (isRightToLeft())
+    {
+        qint64 horizontal = 0;
+        horizontal += horizontalScrollBar()->minimum();
+        horizontal += horizontalScrollBar()->maximum();
+        horizontal -= int((contentRect.width() - viewRect.width()) / 2.0);
+        horizontalScrollBar()->setValue(horizontal);
+    }
+    else
+    {
+        horizontalScrollBar()->setValue(int((contentRect.width() - viewRect.width()) / 2.0));
+    }
+
+    verticalScrollBar()->setValue(int((contentRect.height() - viewRect.height()) / 2.0) - viewRect.top());
+
+    scrollHelper->cancelAnimation();
 }
 
 void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
@@ -653,42 +671,6 @@ void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
     }
 
     loadFile(nextImageFilePath);
-}
-
-void QVGraphicsView::centerOn(const QPointF &pos)
-{
-    QRect targetRect = getUsableViewportRect();
-    QPointF viewPoint = transform().map(pos);
-
-    // Snap to nearest 64th pixel, helps with floating point rounding errors
-    viewPoint = QPointF((viewPoint * 64.0).toPoint()) / 64.0;
-
-    if (isRightToLeft())
-    {
-        qint64 horizontal = 0;
-        horizontal += horizontalScrollBar()->minimum();
-        horizontal += horizontalScrollBar()->maximum();
-        horizontal -= int(viewPoint.x() - (targetRect.width() / 2.0));
-        horizontalScrollBar()->setValue(horizontal);
-    }
-    else
-    {
-        horizontalScrollBar()->setValue(int(viewPoint.x() - (targetRect.width() / 2.0)));
-    }
-
-    verticalScrollBar()->setValue(int(viewPoint.y() - targetRect.top() - (targetRect.height() / 2.0)));
-
-    scrollHelper->cancelAnimation();
-}
-
-void QVGraphicsView::centerOn(qreal x, qreal y)
-{
-    centerOn(QPointF(x, y));
-}
-
-void QVGraphicsView::centerOn(const QGraphicsItem *item)
-{
-    centerOn(item->sceneBoundingRect().center());
 }
 
 void QVGraphicsView::fitOrConstrainImage()
