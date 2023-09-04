@@ -42,6 +42,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     scaleFactor = 1.25;
 
     // Initialize other variables
+    fitOverscan = 1;
     resizeResetsZoom = true;
     navResetsZoom = true;
     currentScale = 1.0;
@@ -661,7 +662,7 @@ QRect QVGraphicsView::getUsableViewportRect(bool addOverscan) const
     QRect rect = viewport()->rect();
     rect.setTop(obscuredHeight);
     if (addOverscan)
-        rect.adjust(-FitOverscan, -FitOverscan, FitOverscan, FitOverscan);
+        rect.adjust(-fitOverscan, -fitOverscan, fitOverscan, fitOverscan);
     return rect;
 }
 
