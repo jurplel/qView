@@ -38,9 +38,9 @@ public:
 
     void zoomOut(const QPoint &pos = QPoint(-1, -1));
 
-    void zoom(qreal scaleFactor, const QPoint &pos = QPoint(-1, -1));
+    void zoomRelative(const qreal relativeLevel, const QPoint &pos = QPoint(-1, -1));
 
-    void setZoomLevel(qreal absoluteScaleFactor);
+    void zoomAbsolute(const qreal absoluteLevel, const QPoint &pos = QPoint(-1, -1));
 
     bool getResizeResetsZoom() const;
     void setResizeResetsZoom(bool value);
@@ -48,8 +48,8 @@ public:
     bool getNavResetsZoom() const;
     void setNavResetsZoom(bool value);
 
-    void scaleExpensively();
-    void makeUnscaled();
+    void applyExpensiveScaling();
+    void removeExpensiveScaling();
 
     void zoomToFit();
     void originalSize();
@@ -71,7 +71,7 @@ public:
     const QVImageCore::FileDetails& getCurrentFileDetails() const { return imageCore.getCurrentFileDetails(); }
     const QPixmap& getLoadedPixmap() const { return imageCore.getLoadedPixmap(); }
     const QMovie& getLoadedMovie() const { return imageCore.getLoadedMovie(); }
-    qreal getCurrentScale() const { return currentScale; }
+    qreal getZoomLevel() const { return zoomLevel; }
 
     int getFitOverscan() const { return fitOverscan; }
 
@@ -123,11 +123,13 @@ protected:
 
     qreal getContentToViewportRatio() const;
 
+    void setTransformScale(qreal absoluteScale);
+
     QTransform getTransformWithNoScaling() const;
 
-    qreal getScaleAdjustment() const;
+    qreal getDpiAdjustment() const;
 
-    void handleScaleAdjustmentChange();
+    void handleDpiAdjustmentChange();
 
 private slots:
     void animatedFrameChanged(QRect rect);
@@ -153,12 +155,13 @@ private:
     bool isConstrainedPositioningEnabled;
     bool isConstrainedSmallCenteringEnabled;
     int cropMode;
-    qreal scaleFactor;
+    qreal zoomMultiplier;
 
     bool resizeResetsZoom;
     bool navResetsZoom;
-    qreal currentScale;
-    qreal appliedScaleAdjustment;
+    qreal zoomLevel;
+    qreal appliedDpiAdjustment;
+    qreal appliedExpensiveScaleZoomLevel;
     QPoint lastZoomEventPos;
     QPointF lastZoomRoundingError;
 

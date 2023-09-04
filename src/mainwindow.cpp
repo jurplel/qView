@@ -454,7 +454,7 @@ void MainWindow::buildWindowTitle()
         }
         case 2:
         {
-            newString = QString::number(graphicsView->getCurrentScale() * 100.0, 'f', 1) + "%";
+            newString = QString::number(graphicsView->getZoomLevel() * 100.0, 'f', 1) + "%";
             newString += " - " + QString::number(getCurrentFileDetails().loadedIndexInFolder+1);
             newString += "/" + QString::number(getCurrentFileDetails().folderFileInfoList.count());
             newString += " - " + getCurrentFileDetails().fileInfo.fileName();
@@ -462,7 +462,7 @@ void MainWindow::buildWindowTitle()
         }
         case 3:
         {
-            newString = QString::number(graphicsView->getCurrentScale() * 100.0, 'f', 1) + "%";
+            newString = QString::number(graphicsView->getZoomLevel() * 100.0, 'f', 1) + "%";
             newString += " - " + QString::number(getCurrentFileDetails().loadedIndexInFolder+1);
             newString += "/" + QString::number(getCurrentFileDetails().folderFileInfoList.count());
             newString += " - " + getCurrentFileDetails().fileInfo.fileName();
