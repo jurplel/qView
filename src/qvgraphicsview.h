@@ -32,6 +32,8 @@ public:
     void loadMimeData(const QMimeData *mimeData);
     void loadFile(const QString &fileName);
 
+    void reloadFile();
+
     void zoomIn(const QPoint &pos = QPoint(-1, -1));
 
     void zoomOut(const QPoint &pos = QPoint(-1, -1));
@@ -157,7 +159,7 @@ private:
     QPoint lastZoomEventPos;
     QPointF lastZoomRoundingError;
 
-    QVImageCore imageCore;
+    QVImageCore imageCore { this };
 
     QTimer *expensiveScaleTimer;
     QTimer *constrainBoundsTimer;

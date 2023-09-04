@@ -44,6 +44,7 @@ void ShortcutManager::initializeShortcutsList()
 {
     shortcutsList.append({tr("Open"), "open", keyBindingsToStringList(QKeySequence::Open), {}});
     shortcutsList.append({tr("Open URL"), "openurl", QStringList(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_O).toString()), {}});
+    shortcutsList.append({tr("Reload File"), "reloadfile", keyBindingsToStringList(QKeySequence::Refresh), {}});
     shortcutsList.append({tr("Open Containing Folder"), "opencontainingfolder", {}, {}});
     //Sets open containing folder action name to platform-appropriate alternative
 #ifdef Q_OS_WIN
@@ -58,7 +59,10 @@ void ShortcutManager::initializeShortcutsList()
 #endif
     shortcutsList.append({tr("Copy"), "copy", keyBindingsToStringList(QKeySequence::Copy), {}});
     shortcutsList.append({tr("Paste"), "paste", keyBindingsToStringList(QKeySequence::Paste), {}});
-    shortcutsList.append({tr("Rename"), "rename", QStringList({QKeySequence(Qt::Key_F2).toString(), QKeySequence(Qt::CTRL | Qt::Key_R).toString()}), {}});
+    shortcutsList.append({tr("Rename"), "rename", QStringList(QKeySequence(Qt::Key_F2).toString()), {}});
+    // ctrl+r for renaming, unless it conflicts with refresh (i.e. reload file)
+    if (!QKeySequence::keyBindings(QKeySequence::Refresh).contains(QKeySequence(Qt::CTRL | Qt::Key_R)))
+        shortcutsList.last().defaultShortcuts << QKeySequence(Qt::CTRL | Qt::Key_R).toString();
     // cmd+enter for renaming, mac-style
     shortcutsList.last().defaultShortcuts.prepend(QKeySequence(Qt::CTRL | Qt::Key_Return).toString());
 

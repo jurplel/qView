@@ -14,6 +14,7 @@ public:
 
     static void showOpenWithDialog(const QString &filePath, const QWindow *parent);
 
+    static QByteArray getIccProfileForWindow(const QWindow *window);
 };
 
 #endif // QVWIN32FUNCTIONS_H

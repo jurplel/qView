@@ -43,13 +43,15 @@ public:
 
     void setJustLaunchedWithImage(bool value);
 
-    QScreen *screenAt(const QPoint &point);
+    QScreen *screenContaining(const QRect &rect);
 
     void openRecent(int i);
 
     void openUrl(const QUrl &url);
 
     void pickUrl();
+
+    void reloadFile();
 
     void openContainingFolder();
 

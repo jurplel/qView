@@ -1,7 +1,5 @@
-# this file is windows-1251 encoded!
-
 TARGET = qView
-VERSION = 5.0
+VERSION = 6.1
 
 QT += core gui network widgets
 
@@ -42,13 +40,13 @@ win32 {
 
     # To build without win32: qmake CONFIG+=NO_WIN32
     !CONFIG(NO_WIN32) {
-        LIBS += -lshell32 -luser32 -lole32 -lshlwapi
+        LIBS += -lshell32 -luser32 -lole32 -lshlwapi -lgdi32
         DEFINES += WIN32_LOADED
         message("Linked to win32 api")
     }
 
     RC_ICONS = "dist/win/qView.ico"
-    QMAKE_TARGET_COPYRIGHT = "Copyright \\251 2022 jurplel and qView contributors"
+    QMAKE_TARGET_COPYRIGHT = "Copyright \\251 2023 jurplel and qView contributors"
     QMAKE_TARGET_DESCRIPTION = "qView"
 }
 
@@ -64,13 +62,24 @@ macx {
     }
     QMAKE_TARGET_BUNDLE_PREFIX = "com.interversehq"
 
-    # Special info.plist for qt 5.9 on mac
-    equals(QT_MAJOR_VERSION, 5):lessThan(QT_MINOR_VERSION, 10) {
-        QMAKE_INFO_PLIST = "dist/mac/Info_legacy.plist"
+    QMAKE_INFO_PLIST = "dist/mac/Info.plist"
+    # Older icon for qt 5 on mac
+    lessThan(QT_MAJOR_VERSION, 6) {
         ICON = "dist/mac/qView_legacy.icns"
     } else {
-        QMAKE_INFO_PLIST = "dist/mac/Info.plist"
         ICON = "dist/mac/qView.icns"
+    }
+}
+
+# Linux specific stuff
+linux {
+    !CONFIG(NO_X11) {
+        LIBS += -lX11
+        DEFINES += X11_LOADED
+
+        equals(QT_MAJOR_VERSION, 5) {
+            QT += x11extras
+        }
     }
 }
 

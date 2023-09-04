@@ -14,18 +14,22 @@ jobs:
     strategy:
       matrix:
         include:
-          - runner: 'ubuntu-18.04'
+          - runner: 'ubuntu-20.04'
             qtVersion: '5.15.2'
-          - runner: 'macOS-11'
+          - runner: 'ubuntu-20.04'
+            qtVersion: '5.9'
+            skipPlugins: 'true'
+          - runner: 'macos-latest'
             qtVersion: '6.2.2'
-          - runner: 'macOS-10.15'
-            qtVersion: '5.12.12'
+            qtModules: 'qtimageformats'
+          - runner: 'macos-latest'
+            qtVersion: '5.15.2'
             osSuffix: '_legacy'
-            skipHardPlugins: 'true'
           - runner: 'windows-2019'
             qtVersion: '6.2.2'
             qtArch: 'win64_msvc2019_64'
             osSuffix: '_64'
+            qtModules: 'qtimageformats'
           - runner: 'windows-2019'
             qtVersion: '5.15.2'
             qtArch: 'win32_msvc2019'
@@ -51,20 +55,24 @@ jobs:
           version: ${{ matrix.qtVersion }}
           arch: ${{ matrix.qtArch }}
           cache: true
+          modules: ${{ matrix.qtModules }}
 
       - name: Build qView
         shell: pwsh
-        run: ci/scripts/build.ps1
+        run: dist/scripts/build.ps1
 
       - name: Deploy qView
         shell: pwsh
         run: |
+          if ("${{ matrix.skipPlugins }}" -ne "true") {
+            Invoke-Expression "& 'dist/scripts/download-plugins.ps1'"
+          }
           if ($IsWindows) {
-            Invoke-Expression "& 'ci/scripts/windeployqt.ps1' ${{ env.buildNumString }}"
+            Invoke-Expression "& 'dist/scripts/windeployqt.ps1' ${{ env.buildNumString }}"
           } elseif ($IsMacOS) {
-            bash ci/scripts/macdeploy.sh ${{ env.buildNumString }}
+            bash dist/scripts/macdeploy.sh ${{ env.buildNumString }}
           } else {
-            bash ci/scripts/linuxdeployqt.sh ${{ env.buildNumString }}
+            bash dist/scripts/linuxdeployqt.sh ${{ env.buildNumString }}
           }
 
       - name: 'Upload Artifact'

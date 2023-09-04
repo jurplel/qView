@@ -178,6 +178,7 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     addCloneOfAction(fileMenu, "open");
     addCloneOfAction(fileMenu, "openurl");
     fileMenu->addMenu(buildRecentsMenu(true, fileMenu));
+    addCloneOfAction(fileMenu, "reloadfile");
     fileMenu->addSeparator();
 #ifdef Q_OS_MACOS
     fileMenu->addSeparator();
@@ -588,6 +589,8 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
         relevantWindow->openWith(openWithItem);
     } else if (key == "openurl") {
         relevantWindow->pickUrl();
+    } else if (key == "reloadfile") {
+        relevantWindow->reloadFile();
     } else if (key == "opencontainingfolder") {
         relevantWindow->openContainingFolder();
     } else if (key == "showfileinfo") {
@@ -666,6 +669,10 @@ void ActionManager::initializeActionLibrary()
 
     auto *openUrlAction = new QAction(QIcon::fromTheme("document-open-remote", QIcon::fromTheme("folder-remote")), tr("Open &URL..."));
     actionLibrary.insert("openurl", openUrlAction);
+
+    auto *reloadFileAction = new QAction(QIcon::fromTheme("view-refresh"), tr("Re&load File"));
+    reloadFileAction->setData({"disable"});
+    actionLibrary.insert("reloadfile", reloadFileAction);
 
     auto *closeWindowAction = new QAction(QIcon::fromTheme("window-close"), tr("Close Window"));
     actionLibrary.insert("closewindow", closeWindowAction);
