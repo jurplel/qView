@@ -42,7 +42,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     zoomMultiplier = 1.25;
 
     // Initialize other variables
-    fitOverscan = 1;
+    fitOverscan = 0;
     resizeResetsZoom = true;
     navResetsZoom = true;
     zoomLevel = 1.0;
