@@ -189,6 +189,8 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
         ui->constrainCentersSmallImageCheckbox->setEnabled(false);
     // constraincentersmallimage
     syncCheckbox(ui->constrainCentersSmallImageCheckbox, "constraincentersmallimage", defaults, makeConnections);
+    // sidewaysscrollnavigates
+    syncCheckbox(ui->sidewaysScrollNavigatesCheckbox, "sidewaysscrollnavigates", defaults, makeConnections);
     // colorspaceconversion
     syncComboBox(ui->colorSpaceConversionComboBox, "colorspaceconversion", defaults, makeConnections);
     // language

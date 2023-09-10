@@ -1,6 +1,7 @@
 #ifndef QVGRAPHICSVIEW_H
 #define QVGRAPHICSVIEW_H
 
+#include "axislocker.h"
 #include "qvimagecore.h"
 #include "scrollhelper.h"
 #include <QGraphicsView>
@@ -28,6 +29,11 @@ public:
     };
     Q_ENUM(GoToFileMode)
 
+    struct SwipeData
+    {
+        int totalDelta;
+        bool triggeredAction;
+    };
 
     QMimeData* getMimeData() const;
     void loadMimeData(const QMimeData *mimeData);
@@ -135,7 +141,6 @@ private slots:
 
 private:
 
-
     QGraphicsPixmapItem *loadedPixmapItem;
 
     bool isFilteringEnabled;
@@ -149,6 +154,7 @@ private:
     bool isOneToOnePixelSizingEnabled;
     bool isConstrainedPositioningEnabled;
     bool isConstrainedSmallCenteringEnabled;
+    bool sidewaysScrollNavigates;
     int cropMode;
     qreal zoomMultiplier;
 
@@ -169,7 +175,9 @@ private:
     QPointF centerPoint;
 
     ScrollHelper *scrollHelper;
+    AxisLocker scrollAxisLocker;
     Qt::MouseButton pressedMouseButton;
     QPoint lastMousePos;
 };
+Q_DECLARE_METATYPE(QVGraphicsView::SwipeData)
 #endif // QVGRAPHICSVIEW_H

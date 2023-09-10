@@ -38,6 +38,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     isOneToOnePixelSizingEnabled = true;
     isConstrainedPositioningEnabled = true;
     isConstrainedSmallCenteringEnabled = true;
+    sidewaysScrollNavigates = false;
     cropMode = 0;
     zoomMultiplier = 1.25;
 
@@ -227,17 +228,37 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
         return;
     }
 
-    const int yDelta = event->angleDelta().y();
-    const qreal yScale = 120.0;
+    const int deltaPerWheelStep = 120;
+    const QPoint effectiveDelta = sidewaysScrollNavigates ?
+        scrollAxisLocker.filterMovement(event->angleDelta(), event->phase()) :
+        event->angleDelta();
 
-    if (yDelta == 0)
+    if (sidewaysScrollNavigates && effectiveDelta.x() != 0)
+    {
+        SwipeData swipeData = scrollAxisLocker.getCustomData().value<SwipeData>();
+        if (swipeData.triggeredAction)
+            return;
+        swipeData.totalDelta += effectiveDelta.x();
+        if (qAbs(swipeData.totalDelta) >= deltaPerWheelStep)
+        {
+            if (swipeData.totalDelta < 0)
+                goToFile(GoToFileMode::next);
+            else
+                goToFile(GoToFileMode::previous);
+            swipeData.triggeredAction = true;
+        }
+        scrollAxisLocker.setCustomData(QVariant::fromValue(swipeData));
+        return;
+    }
+
+    if (effectiveDelta.y() == 0)
         return;
 
-    const qreal fractionalWheelClicks = qFabs(yDelta) / yScale;
-    const qreal zoomAmountPerWheelClick = zoomMultiplier - 1.0;
-    qreal zoomFactor = 1.0 + (fractionalWheelClicks * zoomAmountPerWheelClick);
+    const qreal fractionalWheelSteps = qFabs(effectiveDelta.y()) / deltaPerWheelStep;
+    const qreal zoomAmountPerWheelStep = zoomMultiplier - 1.0;
+    qreal zoomFactor = 1.0 + (fractionalWheelSteps * zoomAmountPerWheelStep);
 
-    if (yDelta < 0)
+    if (effectiveDelta.y() < 0)
         zoomFactor = qPow(zoomFactor, -1);
 
     zoomRelative(zoomFactor, eventPos);
@@ -820,6 +841,9 @@ void QVGraphicsView::settingsUpdated()
 
     //constrained small centering
     isConstrainedSmallCenteringEnabled = settingsManager.getBoolean("constraincentersmallimage");
+
+    //sideways scroll navigates
+    sidewaysScrollNavigates = settingsManager.getBoolean("sidewaysscrollnavigates");
 
     //loop folders
     isLoopFoldersEnabled = settingsManager.getBoolean("loopfoldersenabled");

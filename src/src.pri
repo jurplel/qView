@@ -1,4 +1,5 @@
 SOURCES += \
+    $$PWD/axislocker.cpp \
     $$PWD/main.cpp \
     $$PWD/mainwindow.cpp \
     $$PWD/openwith.cpp \
@@ -22,6 +23,7 @@ win32:!CONFIG(NO_WIN32):SOURCES += $$PWD/qvwin32functions.cpp
 linux:!CONFIG(NO_X11):SOURCES += $$PWD/qvlinuxx11functions.cpp
 
 HEADERS += \
+    $$PWD/axislocker.h \
     $$PWD/mainwindow.h \
     $$PWD/openwith.h \
     $$PWD/qvgraphicsview.h \

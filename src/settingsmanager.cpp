@@ -177,6 +177,7 @@ void SettingsManager::initializeSettingsLibrary()
     settingsLibrary.insert("fitoverscan", {0, {}});
     settingsLibrary.insert("constrainimageposition", {true, {}});
     settingsLibrary.insert("constraincentersmallimage", {true, {}});
+    settingsLibrary.insert("sidewaysscrollnavigates", {false, {}});
     settingsLibrary.insert("colorspaceconversion", {1, {}});
     // Miscellaneous
     settingsLibrary.insert("language", {"system", {}});
