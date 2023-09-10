@@ -6,4 +6,6 @@ This fork of qView has been mostly incorporated back into the official version! 
 * Option to make zoom level relative to screen pixels (for Windows/Linux users with DPI scaling enabled; not so useful in macOS due to the way it handles scaling).
 * Menu toggle to preserve zoom level when changing between images.
 * Random file navigation (Go -> Random File, or "r" keyboard shortcut) to browse randomly without changing sort mode.
+* Option to navigate between images when scrolling sideways (e.g. two finger swipe).
 * Configurable window positioning behavior after matching image size.
+* More accurate zoom-to-fit plus customizable overscan setting.
