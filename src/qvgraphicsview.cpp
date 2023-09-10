@@ -32,6 +32,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     isScalingEnabled = true;
     isScalingTwoEnabled = true;
     isPastActualSizeEnabled = true;
+    fitOverscan = 0;
     isScrollZoomsEnabled = true;
     isLoopFoldersEnabled = true;
     isCursorZoomEnabled = true;
