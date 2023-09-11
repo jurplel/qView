@@ -242,7 +242,7 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
         swipeData.totalDelta += effectiveDelta.x();
         if (qAbs(swipeData.totalDelta) >= deltaPerWheelStep)
         {
-            if (swipeData.totalDelta < 0)
+            if (swipeData.totalDelta * (isRightToLeft() ? -1 : 1) < 0)
                 goToFile(GoToFileMode::next);
             else
                 goToFile(GoToFileMode::previous);
