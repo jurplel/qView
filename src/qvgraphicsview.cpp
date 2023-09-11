@@ -544,23 +544,17 @@ void QVGraphicsView::originalSize()
 
 void QVGraphicsView::centerImage()
 {
-    QRect viewRect = getUsableViewportRect();
-    QRect contentRect = getContentRect().toRect();
+    const QRect viewRect = getUsableViewportRect();
+    const QRect contentRect = getContentRect().toRect();
+    const int hOffset = isRightToLeft() ?
+        horizontalScrollBar()->minimum() + horizontalScrollBar()->maximum() - contentRect.left() :
+        contentRect.left();
+    const int vOffset = contentRect.top() - viewRect.top();
+    const int hOverflow = contentRect.width() - viewRect.width();
+    const int vOverflow = contentRect.height() - viewRect.height();
 
-    if (isRightToLeft())
-    {
-        qint64 horizontal = 0;
-        horizontal += horizontalScrollBar()->minimum();
-        horizontal += horizontalScrollBar()->maximum();
-        horizontal -= int((contentRect.width() - viewRect.width()) / 2.0);
-        horizontalScrollBar()->setValue(horizontal);
-    }
-    else
-    {
-        horizontalScrollBar()->setValue(int((contentRect.width() - viewRect.width()) / 2.0));
-    }
-
-    verticalScrollBar()->setValue(int((contentRect.height() - viewRect.height()) / 2.0) - viewRect.top());
+    horizontalScrollBar()->setValue(hOffset + (hOverflow / (isRightToLeft() ? -2 : 2)));
+    verticalScrollBar()->setValue(vOffset + (vOverflow / 2));
 
     scrollHelper->cancelAnimation();
 }

@@ -29,7 +29,9 @@ void ScrollHelper::move(QPointF delta)
     calculateScrollRange(
         p.ContentRect.width(),
         p.UsableViewportRect.width(),
-        (p.ContentRect.left() * (isRightToLeft ? -1 : 1)) - (isRightToLeft ? p.ContentRect.width() : 0),
+        isRightToLeft ?
+            hScrollBar->minimum() + hScrollBar->maximum() + p.UsableViewportRect.width() - p.ContentRect.left() - p.ContentRect.width() :
+            p.ContentRect.left(),
         p.ShouldCenter,
         hMin,
         hMax
