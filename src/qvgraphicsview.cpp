@@ -269,8 +269,18 @@ void QVGraphicsView::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Up || event->key() == Qt::Key_Down || event->key() == Qt::Key_Left || event->key() == Qt::Key_Right)
     {
-        // Normally the arrow keys are assigned to shortcuts, but in case they aren't or get passed
-        // through due to modifier keys, swallow the event to avoid scrolling
+        // Normally the arrow keys are assigned to shortcuts, but in case they aren't or
+        // get passed through due to modifier keys, handle it here instead of letting the
+        // base class do it to ensure any bounds constraints are enforced.
+        const int stepDown = verticalScrollBar()->singleStep();
+        const int stepRight = horizontalScrollBar()->singleStep() * (isRightToLeft() ? -1 : 1);
+        QPoint delta {};
+        if (event->key() == Qt::Key_Up) delta.ry() -= stepDown;
+        if (event->key() == Qt::Key_Down) delta.ry() += stepDown;
+        if (event->key() == Qt::Key_Left) delta.rx() -= stepRight;
+        if (event->key() == Qt::Key_Right) delta.rx() += stepRight;
+        scrollHelper->move(delta);
+        constrainBoundsTimer->start();
         return;
     }
 
