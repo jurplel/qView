@@ -52,7 +52,7 @@ private slots:
 
     void scalingCheckboxStateChanged(int arg1);
 
-    void customTitlebarRadioButtonToggled(bool checked);
+    void titlebarComboBoxCurrentIndexChanged(int index);
 
     void windowResizeComboBoxCurrentIndexChanged(int index);
 

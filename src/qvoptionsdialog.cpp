@@ -65,7 +65,7 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
 #endif
 
     syncSettings(false, true);
-    connect(ui->titlebarRadioButton4, &QRadioButton::toggled, this, &QVOptionsDialog::customTitlebarRadioButtonToggled);
+    connect(ui->titlebarComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &QVOptionsDialog::titlebarComboBoxCurrentIndexChanged);
     connect(ui->windowResizeComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &QVOptionsDialog::windowResizeComboBoxCurrentIndexChanged);
     connect(ui->langComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &QVOptionsDialog::languageComboBoxCurrentIndexChanged);
     syncShortcuts();
@@ -135,9 +135,8 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
     updateBgColorButton();
     connect(ui->bgColorButton, &QPushButton::clicked, this, &QVOptionsDialog::bgColorButtonClicked);
     // titlebarmode
-    syncRadioButtons({ui->titlebarRadioButton0, ui->titlebarRadioButton1, ui->titlebarRadioButton2,
-                      ui->titlebarRadioButton3, ui->titlebarRadioButton4}, "titlebarmode", defaults, makeConnections);
-    customTitlebarRadioButtonToggled(ui->titlebarRadioButton4->isChecked());
+    syncComboBox(ui->titlebarComboBox, "titlebarmode", defaults, makeConnections);
+    titlebarComboBoxCurrentIndexChanged(ui->titlebarComboBox->currentIndex());
     // customtitlebartext
     syncLineEdit(ui->customTitlebarLineEdit, "customtitlebartext", defaults, makeConnections);
     // windowresizemode
@@ -470,9 +469,9 @@ void QVOptionsDialog::scalingCheckboxStateChanged(int arg1)
         ui->scalingTwoCheckbox->setEnabled(false);
 }
 
-void QVOptionsDialog::customTitlebarRadioButtonToggled(bool checked)
+void QVOptionsDialog::titlebarComboBoxCurrentIndexChanged(int index)
 {
-    ui->customTitlebarLineEdit->setEnabled(checked);
+    ui->customTitlebarLineEdit->setEnabled(index == 4);
 }
 
 void QVOptionsDialog::windowResizeComboBoxCurrentIndexChanged(int index)
