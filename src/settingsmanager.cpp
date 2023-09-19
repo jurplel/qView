@@ -149,6 +149,7 @@ void SettingsManager::initializeSettingsLibrary()
     // Window
     settingsLibrary.insert("bgcolorenabled", {true, {}});
     settingsLibrary.insert("bgcolor", {"#212121", {}});
+    settingsLibrary.insert("checkerboardbackground", {false, {}});
     settingsLibrary.insert("titlebarmode", {1, {}});
     settingsLibrary.insert("customtitlebartext", {"%z - %n", {}});
     settingsLibrary.insert("windowresizemode", {1, {}});

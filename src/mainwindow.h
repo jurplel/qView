@@ -115,6 +115,8 @@ public:
 
     void toggleFullScreen();
 
+    int getTitlebarOverlap() const;
+
     const QVImageCore::FileDetails& getCurrentFileDetails() const { return graphicsView->getCurrentFileDetails(); }
 
 public slots:
@@ -151,6 +153,8 @@ protected:
 
     void mouseDoubleClickEvent(QMouseEvent *event) override;
 
+    void paintEvent(QPaintEvent *event) override;
+
 protected slots:
     void settingsUpdated();
     void shortcutsUpdated();
@@ -167,6 +171,9 @@ private:
     QShortcut *escShortcut;
 
     QVInfoDialog *info;
+
+    QColor customBackgroundColor;
+    bool checkerboardBackground;
 
     bool justLaunchedWithImage;
 

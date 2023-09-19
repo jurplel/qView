@@ -39,8 +39,13 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     setAttribute(Qt::WA_DeleteOnClose);
+    setAttribute(Qt::WA_OpaquePaintEvent);
 
-    // Initialize variables
+    // Initialize configurable variables
+    customBackgroundColor = QColor();
+    checkerboardBackground = false;
+
+    // Initialize other variables
     justLaunchedWithImage = false;
     storedWindowState = Qt::WindowNoState;
 
@@ -264,6 +269,56 @@ void MainWindow::mouseDoubleClickEvent(QMouseEvent *event)
     QMainWindow::mouseDoubleClickEvent(event);
 }
 
+void MainWindow::paintEvent(QPaintEvent *event)
+{
+    Q_UNUSED(event);
+
+    QPainter painter(this);
+
+    const int viewportY = qMax(getTitlebarOverlap(), graphicsView->mapTo(this, QPoint()).y());
+    const QRect headerRect = QRect(0, 0, width(), viewportY);
+    const QRect viewportRect = rect().adjusted(0, viewportY, 0, 0);
+
+    if (headerRect.isValid())
+    {
+        painter.eraseRect(headerRect);
+    }
+
+    if (viewportRect.isValid())
+    {
+        if (checkerboardBackground && getIsPixmapLoaded())
+        {
+            const int gridSize = 16;
+            const QColor darkColor = Qt::darkGray;
+            const QColor lightColor = Qt::lightGray;
+            const int numHorizontalSquares = (viewportRect.width() + (gridSize - 1)) / gridSize;
+            const int numVerticalSquares = (viewportRect.height() + (gridSize - 1)) / gridSize;
+            for (int iY = 0; iY < numVerticalSquares; iY++)
+            {
+                for (int iX = 0; iX < numHorizontalSquares; iX++)
+                {
+                    const bool isDarkSquare = (iX % 2) != (iY % 2);
+                    painter.fillRect(
+                        viewportRect.x() + (iX * gridSize),
+                        viewportRect.y() + (iY * gridSize),
+                        gridSize,
+                        gridSize,
+                        isDarkSquare ? darkColor : lightColor
+                    );
+                }
+            }
+        }
+        else if (customBackgroundColor.isValid())
+        {
+            painter.fillRect(viewportRect, customBackgroundColor);
+        }
+        else
+        {
+            painter.eraseRect(viewportRect);
+        }
+    }
+}
+
 void MainWindow::openFile(const QString &fileName)
 {
     graphicsView->loadFile(fileName);
@@ -275,6 +330,16 @@ void MainWindow::settingsUpdated()
     auto &settingsManager = qvApp->getSettingsManager();
 
     buildWindowTitle();
+
+    //bgcolor
+    customBackgroundColor = QColor();
+    if (settingsManager.getBoolean("bgcolorenabled"))
+    {
+        customBackgroundColor.setNamedColor(settingsManager.getString("bgcolor"));
+    }
+
+    //checkerboardbackground
+    checkerboardBackground = settingsManager.getBoolean("checkerboardbackground");
 
     // menubarenabled
     bool menuBarEnabled = settingsManager.getBoolean("menubarenabled");
@@ -298,6 +363,9 @@ void MainWindow::settingsUpdated()
     ui->fullscreenLabel->setVisible(qvApp->getSettingsManager().getBoolean("fullscreendetails") && (windowState() == Qt::WindowFullScreen));
 
     setWindowSize();
+
+    // repaint in case background color changed
+    update();
 }
 
 void MainWindow::shortcutsUpdated()
@@ -551,11 +619,7 @@ void MainWindow::setWindowSize()
     if (menuBar()->isVisible())
         extraWidgetsSize.rheight() += menuBar()->height();
 
-    int titlebarOverlap = 0;
-#ifdef COCOA_LOADED
-    // To account for fullsizecontentview on mac
-    titlebarOverlap = QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
-#endif
+    const int titlebarOverlap = getTitlebarOverlap();
     if (titlebarOverlap != 0)
         extraWidgetsSize.rheight() += titlebarOverlap;
 
@@ -1166,4 +1230,14 @@ void MainWindow::toggleFullScreen()
         storedWindowState = windowState();
         showFullScreen();
     }
+}
+
+int MainWindow::getTitlebarOverlap() const
+{
+#ifdef COCOA_LOADED
+    // To account for fullsizecontentview on mac
+    return QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
+#endif
+
+    return 0;
 }

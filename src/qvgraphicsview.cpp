@@ -19,6 +19,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setFrameShape(QFrame::NoFrame);
     setTransformationAnchor(QGraphicsView::NoAnchor);
+    viewport()->setAutoFillBackground(false);
 
     // part of a pathetic attempt at gesture support
     grabGesture(Qt::PinchGesture);
@@ -785,21 +786,6 @@ void QVGraphicsView::error(int errorNum, const QString &errorString, const QStri
 void QVGraphicsView::settingsUpdated()
 {
     auto &settingsManager = qvApp->getSettingsManager();
-
-    //bgcolor
-    QBrush newBrush;
-    newBrush.setStyle(Qt::SolidPattern);
-    if (!settingsManager.getBoolean("bgcolorenabled"))
-    {
-        newBrush.setColor(QColor(0, 0, 0, 0));
-    }
-    else
-    {
-        QColor newColor;
-        newColor.setNamedColor(settingsManager.getString("bgcolor"));
-        newBrush.setColor(newColor);
-    }
-    setBackgroundBrush(newBrush);
 
     //filtering
     if (settingsManager.getBoolean("filteringenabled"))

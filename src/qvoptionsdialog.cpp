@@ -134,6 +134,8 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
     transientSettings.insert("bgcolor", ui->bgColorButton->text());
     updateBgColorButton();
     connect(ui->bgColorButton, &QPushButton::clicked, this, &QVOptionsDialog::bgColorButtonClicked);
+    // checkerboardbackground
+    syncCheckbox(ui->checkerboardBackgroundCheckbox, "checkerboardbackground", defaults, makeConnections);
     // titlebarmode
     syncComboBox(ui->titlebarComboBox, "titlebarmode", defaults, makeConnections);
     titlebarComboBoxCurrentIndexChanged(ui->titlebarComboBox->currentIndex());
