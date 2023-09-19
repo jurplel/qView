@@ -166,8 +166,15 @@ void QVGraphicsView::mouseMoveEvent(QMouseEvent *event)
     if (pressedMouseButton == Qt::LeftButton)
     {
         QPoint mouseDelta = event->pos() - lastMousePos;
-        scrollHelper->move(QPointF(mouseDelta.x() * (isRightToLeft() ? 1 : -1), mouseDelta.y() * -1));
-        lastMousePos = event->pos();
+        if (event->modifiers() & Qt::ControlModifier)
+        {
+            window()->move(window()->pos() + mouseDelta);
+        }
+        else
+        {
+            scrollHelper->move(QPointF(mouseDelta.x() * (isRightToLeft() ? 1 : -1), mouseDelta.y() * -1));
+            lastMousePos = event->pos();
+        }
         return;
     }
 
