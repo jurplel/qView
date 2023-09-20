@@ -17,6 +17,26 @@
 
 #include <QDebug>
 
+bool QVWin32Functions::getTitlebarHidden(QWindow *window)
+{
+    const HWND hWnd = reinterpret_cast<HWND>(window->winId());
+    const LONG_PTR windowStyle = GetWindowLongPtr(hWnd, GWL_STYLE);
+    return !(windowStyle & WS_CAPTION);
+}
+
+void QVWin32Functions::setTitlebarHidden(QWindow *window, const bool shouldHide)
+{
+    const HWND hWnd = reinterpret_cast<HWND>(window->winId());
+    const LONG_PTR stylesForTitlebar = WS_CAPTION | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
+    LONG_PTR windowStyle = GetWindowLongPtr(hWnd, GWL_STYLE);
+    if (shouldHide)
+        windowStyle &= ~stylesForTitlebar;
+    else
+        windowStyle |= stylesForTitlebar;
+    SetWindowLongPtr(hWnd, GWL_STYLE, windowStyle);
+    SetWindowPos(hWnd, NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
+}
+
 QList<OpenWith::OpenWithItem> QVWin32Functions::getOpenWithItems(const QString &filePath)
 {
     QList<OpenWith::OpenWithItem> listOfOpenWithItems;

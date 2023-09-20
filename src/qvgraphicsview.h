@@ -177,6 +177,7 @@ private:
     ScrollHelper *scrollHelper;
     AxisLocker scrollAxisLocker;
     Qt::MouseButton pressedMouseButton;
+    Qt::KeyboardModifiers mousePressModifiers;
     QPoint lastMousePos;
 };
 Q_DECLARE_METATYPE(QVGraphicsView::SwipeData)

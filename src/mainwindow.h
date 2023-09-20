@@ -39,6 +39,8 @@ public:
 
     void updateWindowFilePath();
 
+    void updateMenuBarVisible();
+
     bool getTitlebarHidden() const;
 
     void setTitlebarHidden(const bool shouldHide);
@@ -182,6 +184,7 @@ private:
 
     QColor customBackgroundColor;
     bool checkerboardBackground;
+    bool menuBarEnabled;
 
     bool justLaunchedWithImage;
 

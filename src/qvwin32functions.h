@@ -8,6 +8,10 @@
 class QVWin32Functions
 {
 public:
+    static bool getTitlebarHidden(QWindow *window);
+
+    static void setTitlebarHidden(QWindow *window, const bool shouldHide);
+
     static QList<OpenWith::OpenWithItem> getOpenWithItems(const QString &filePath);
 
     static void openWithInvokeAssocHandler(const QString &filePath, void *winAssocHandler);

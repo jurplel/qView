@@ -140,6 +140,7 @@ void QVGraphicsView::mousePressEvent(QMouseEvent *event)
     if (event->button() == Qt::LeftButton)
     {
         pressedMouseButton = Qt::LeftButton;
+        mousePressModifiers = event->modifiers();
         viewport()->setCursor(Qt::ClosedHandCursor);
         lastMousePos = event->pos();
         return;
@@ -153,6 +154,7 @@ void QVGraphicsView::mouseReleaseEvent(QMouseEvent *event)
     if (pressedMouseButton == Qt::LeftButton)
     {
         pressedMouseButton = Qt::NoButton;
+        mousePressModifiers = Qt::NoModifier;
         viewport()->setCursor(Qt::ArrowCursor);
         scrollHelper->constrain();
         return;
@@ -166,9 +168,10 @@ void QVGraphicsView::mouseMoveEvent(QMouseEvent *event)
     if (pressedMouseButton == Qt::LeftButton)
     {
         QPoint mouseDelta = event->pos() - lastMousePos;
-        if (event->modifiers() & Qt::ControlModifier)
+        if (mousePressModifiers & Qt::ControlModifier)
         {
             window()->move(window()->pos() + mouseDelta);
+            // lastMousePos is always the initial position pressed when moving the window
         }
         else
         {

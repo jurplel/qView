@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "qvapplication.h"
 #include "qvcocoafunctions.h"
+#include "qvwin32functions.h"
 #include "qvrenamedialog.h"
 
 #include <QFileDialog>
@@ -44,10 +45,12 @@ MainWindow::MainWindow(QWidget *parent) :
     // Initialize configurable variables
     customBackgroundColor = QColor();
     checkerboardBackground = false;
+    menuBarEnabled = false;
 
     // Initialize other variables
     justLaunchedWithImage = false;
     storedWindowState = Qt::WindowNoState;
+    storedTitlebarHidden = false;
 
     // Initialize graphicsviewkDefaultBufferAlignment
     graphicsView = new QVGraphicsView(this);
@@ -242,6 +245,8 @@ void MainWindow::changeEvent(QEvent *event)
 
         if (qvApp->getSettingsManager().getBoolean("fullscreendetails"))
             ui->fullscreenLabel->setVisible(windowState() == Qt::WindowFullScreen);
+
+        updateMenuBarVisible();
     }
 }
 
@@ -347,12 +352,7 @@ void MainWindow::settingsUpdated()
     checkerboardBackground = settingsManager.getBoolean("checkerboardbackground");
 
     // menubarenabled
-    bool menuBarEnabled = settingsManager.getBoolean("menubarenabled");
-#ifdef Q_OS_MACOS
-    // Menu bar is effectively always enabled on macOS
-    menuBarEnabled = true;
-#endif
-    menuBar()->setVisible(menuBarEnabled);
+    menuBarEnabled = settingsManager.getBoolean("menubarenabled");
 
 #ifdef COCOA_LOADED
     // titlebaralwaysdark
@@ -367,6 +367,7 @@ void MainWindow::settingsUpdated()
 
     ui->fullscreenLabel->setVisible(qvApp->getSettingsManager().getBoolean("fullscreendetails") && (windowState() == Qt::WindowFullScreen));
 
+    updateMenuBarVisible();
     setWindowSize();
 
     // repaint in case background color changed
@@ -592,10 +593,28 @@ void MainWindow::updateWindowFilePath()
     windowHandle()->setFilePath(shouldPopulate ? getCurrentFileDetails().fileInfo.absoluteFilePath() : "");
 }
 
+void MainWindow::updateMenuBarVisible()
+{
+    bool alwaysVisible = false;
+    bool hideWhenImmersive = false;
+#ifdef Q_OS_MACOS
+    alwaysVisible = true;
+#elif defined Q_OS_WIN
+    hideWhenImmersive = true;
+#endif
+    auto isImmersive = [&]() { return getTitlebarHidden() || windowState().testFlag(Qt::WindowFullScreen); };
+    menuBar()->setVisible(alwaysVisible || (menuBarEnabled && !(hideWhenImmersive && isImmersive())));
+}
+
 bool MainWindow::getTitlebarHidden() const
 {
+    if (!windowHandle())
+        return false;
+
 #ifdef COCOA_LOADED
     return QVCocoaFunctions::getTitlebarHidden(windowHandle());
+#elif defined WIN32_LOADED
+    return QVWin32Functions::getTitlebarHidden(windowHandle());
 #else
     return false;
 #endif
@@ -603,13 +622,19 @@ bool MainWindow::getTitlebarHidden() const
 
 void MainWindow::setTitlebarHidden(const bool shouldHide)
 {
+    if (!windowHandle())
+        return;
+
 #ifdef COCOA_LOADED
     QVCocoaFunctions::setTitlebarHidden(windowHandle(), shouldHide);
+#elif defined WIN32_LOADED
+    QVWin32Functions::setTitlebarHidden(windowHandle(), shouldHide);
 #else
     return;
 #endif
 
     updateWindowFilePath();
+    updateMenuBarVisible();
     update();
     graphicsView->fitOrConstrainImage();
 }
@@ -1250,6 +1275,7 @@ void MainWindow::increaseSpeed()
 
 void MainWindow::toggleFullScreen()
 {
+    setUpdatesEnabled(false);
     if (windowState() & Qt::WindowFullScreen)
     {
         setWindowState(storedWindowState);
@@ -1264,6 +1290,7 @@ void MainWindow::toggleFullScreen()
             setTitlebarHidden(false);
         showFullScreen();
     }
+    setUpdatesEnabled(true);
 }
 
 void MainWindow::toggleTitlebarHidden()
