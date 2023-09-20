@@ -73,6 +73,8 @@ public:
     void setSpeed(const int &desiredSpeed);
     void rotateImage(int rotation);
 
+    void fitOrConstrainImage();
+
     QSizeF getEffectiveOriginalSize() const;
 
     const QVImageCore::FileDetails& getCurrentFileDetails() const { return imageCore.getCurrentFileDetails(); }
@@ -117,8 +119,6 @@ protected:
     void keyPressEvent(QKeyEvent *event) override;
 
     bool event(QEvent *event) override;
-
-    void fitOrConstrainImage();
 
     QRectF getContentRect() const;
 

@@ -89,6 +89,22 @@ void QVCocoaFunctions::setFullSizeContentView(QWindow *window)
     }
 }
 
+bool QVCocoaFunctions::getTitlebarHidden(QWindow *window)
+{
+    auto *view = reinterpret_cast<NSView*>(window->winId());
+    return view.window.titleVisibility == NSWindowTitleHidden;
+}
+
+void QVCocoaFunctions::setTitlebarHidden(QWindow *window, const bool shouldHide)
+{
+    auto *view = reinterpret_cast<NSView*>(window->winId());
+    view.window.titleVisibility = shouldHide ? NSWindowTitleHidden : NSWindowTitleVisible;
+    view.window.titlebarAppearsTransparent = shouldHide;
+    [[view.window standardWindowButton:NSWindowCloseButton] setHidden:shouldHide];
+    [[view.window standardWindowButton:NSWindowZoomButton] setHidden:shouldHide];
+    [[view.window standardWindowButton:NSWindowMiniaturizeButton] setHidden:shouldHide];
+}
+
 void QVCocoaFunctions::setVibrancy(bool alwaysDark, QWindow *window)
 {
     auto *view = reinterpret_cast<NSView*>(window->winId());

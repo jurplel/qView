@@ -265,7 +265,12 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
 void MainWindow::mouseDoubleClickEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::MouseButton::LeftButton)
-        toggleFullScreen();
+    {
+        if (event->modifiers() & Qt::ControlModifier)
+            toggleTitlebarHidden();
+        else
+            toggleFullScreen();
+    }
     QMainWindow::mouseDoubleClickEvent(event);
 }
 
@@ -399,6 +404,7 @@ void MainWindow::fileChanged()
     if (info->isVisible())
         refreshProperties();
     buildWindowTitle();
+    updateWindowFilePath();
     setWindowSize();
 }
 
@@ -575,14 +581,37 @@ void MainWindow::buildWindowTitle()
 
     // Update fullscreen label to titlebar text as well
     ui->fullscreenLabel->setText(newString);
+}
 
-    if (windowHandle() != nullptr)
-    {
-        if (getCurrentFileDetails().isPixmapLoaded)
-            windowHandle()->setFilePath(getCurrentFileDetails().fileInfo.absoluteFilePath());
-        else
-            windowHandle()->setFilePath("");
-    }
+void MainWindow::updateWindowFilePath()
+{
+    if (!windowHandle())
+        return;
+
+    const bool shouldPopulate = getCurrentFileDetails().isPixmapLoaded && !getTitlebarHidden();
+    windowHandle()->setFilePath(shouldPopulate ? getCurrentFileDetails().fileInfo.absoluteFilePath() : "");
+}
+
+bool MainWindow::getTitlebarHidden() const
+{
+#ifdef COCOA_LOADED
+    return QVCocoaFunctions::getTitlebarHidden(windowHandle());
+#else
+    return false;
+#endif
+}
+
+void MainWindow::setTitlebarHidden(const bool shouldHide)
+{
+#ifdef COCOA_LOADED
+    QVCocoaFunctions::setTitlebarHidden(windowHandle(), shouldHide);
+#else
+    return;
+#endif
+
+    updateWindowFilePath();
+    update();
+    graphicsView->fitOrConstrainImage();
 }
 
 void MainWindow::setWindowSize()
@@ -1221,15 +1250,28 @@ void MainWindow::increaseSpeed()
 
 void MainWindow::toggleFullScreen()
 {
-    if (windowState() == Qt::WindowFullScreen)
+    if (windowState() & Qt::WindowFullScreen)
     {
         setWindowState(storedWindowState);
+        if (storedTitlebarHidden)
+            setTitlebarHidden(true);
     }
     else
     {
         storedWindowState = windowState();
+        storedTitlebarHidden = getTitlebarHidden();
+        if (storedTitlebarHidden)
+            setTitlebarHidden(false);
         showFullScreen();
     }
+}
+
+void MainWindow::toggleTitlebarHidden()
+{
+    if (windowState() & Qt::WindowFullScreen)
+        return;
+
+    setTitlebarHidden(!getTitlebarHidden());
 }
 
 int MainWindow::getTitlebarOverlap() const
