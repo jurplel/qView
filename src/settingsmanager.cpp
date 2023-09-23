@@ -176,6 +176,7 @@ void SettingsManager::initializeSettingsLibrary()
     settingsLibrary.insert("quitonlastwindow", {false, {}});
     settingsLibrary.insert("menubarenabled", {false, {}});
     settingsLibrary.insert("fullscreendetails", {false, {}});
+    settingsLibrary.insert("submenuicons", {true, {}});
     // Image
     settingsLibrary.insert("filteringenabled", {true, {}});
     settingsLibrary.insert("scalingenabled", {true, {}});

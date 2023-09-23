@@ -12,7 +12,7 @@ public:
 
     static void setTitlebarHidden(QWindow *window, const bool shouldHide);
 
-    static QList<OpenWith::OpenWithItem> getOpenWithItems(const QString &filePath);
+    static QList<OpenWith::OpenWithItem> getOpenWithItems(const QString &filePath, const bool loadIcons);
 
     static void openWithInvokeAssocHandler(const QString &filePath, void *winAssocHandler);
 

@@ -37,7 +37,7 @@ void QVWin32Functions::setTitlebarHidden(QWindow *window, const bool shouldHide)
     SetWindowPos(hWnd, NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
 }
 
-QList<OpenWith::OpenWithItem> QVWin32Functions::getOpenWithItems(const QString &filePath)
+QList<OpenWith::OpenWithItem> QVWin32Functions::getOpenWithItems(const QString &filePath, const bool loadIcons)
 {
     QList<OpenWith::OpenWithItem> listOfOpenWithItems;
 
@@ -106,17 +106,20 @@ QList<OpenWith::OpenWithItem> QVWin32Functions::getOpenWithItems(const QString &
         // Replace ampersands with escaped ampersands for menu items
         openWithItem.name.replace("&", "&&");
 
-        // Set an icon
-        if (isAppx)
+        if (loadIcons)
         {
-            WCHAR realIconPath[MAX_PATH];
-            SHLoadIndirectString(icon, realIconPath, MAX_PATH, NULL);
-            openWithItem.icon = QIcon(QString::fromWCharArray(realIconPath));
-        }
-        else
-        {
-            QFileIconProvider iconProvider;
-            openWithItem.icon = iconProvider.icon(QFileInfo(iconLocation));
+            // Set an icon
+            if (isAppx)
+            {
+                WCHAR realIconPath[MAX_PATH];
+                SHLoadIndirectString(icon, realIconPath, MAX_PATH, NULL);
+                openWithItem.icon = QIcon(QString::fromWCharArray(realIconPath));
+            }
+            else
+            {
+                QFileIconProvider iconProvider;
+                openWithItem.icon = iconProvider.icon(QFileInfo(iconLocation));
+            }
         }
 
         listOfOpenWithItems.append(openWithItem);

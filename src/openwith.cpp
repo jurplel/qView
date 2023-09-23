@@ -1,5 +1,6 @@
 ﻿#include "mainwindow.h"
 #include "openwith.h"
+#include "qvapplication.h"
 #include "qvcocoafunctions.h"
 #include "qvwin32functions.h"
 #include "ui_qvopenwithdialog.h"
@@ -23,10 +24,10 @@ const QList<OpenWith::OpenWithItem> OpenWith::getOpenWithItems(const QString &fi
 
 
 #if defined Q_OS_MACOS && defined COCOA_LOADED
-    listOfOpenWithItems = QVCocoaFunctions::getOpenWithItems(filePath);
+    listOfOpenWithItems = QVCocoaFunctions::getOpenWithItems(filePath, qvApp->getShowSubmenuIcons());
 #elif defined Q_OS_WIN
 #ifdef WIN32_LOADED
-    listOfOpenWithItems = QVWin32Functions::getOpenWithItems(filePath);
+    listOfOpenWithItems = QVWin32Functions::getOpenWithItems(filePath, qvApp->getShowSubmenuIcons());
 #endif
 #else
     listOfOpenWithItems = getOpenWithItemsFromDesktopFiles(filePath);

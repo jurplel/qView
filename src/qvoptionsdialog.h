@@ -50,6 +50,8 @@ private slots:
 
     void bgColorCheckboxStateChanged(int arg1);
 
+    void submenuIconsCheckboxStateChanged(int arg1);
+
     void scalingCheckboxStateChanged(int arg1);
 
     void titlebarComboBoxCurrentIndexChanged(int index);

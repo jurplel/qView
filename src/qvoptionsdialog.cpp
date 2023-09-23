@@ -23,6 +23,7 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     connect(ui->buttonBox, &QDialogButtonBox::clicked, this, &QVOptionsDialog::buttonBoxClicked);
     connect(ui->shortcutsTable, &QTableWidget::cellDoubleClicked, this, &QVOptionsDialog::shortcutCellDoubleClicked);
     connect(ui->bgColorCheckbox, &QCheckBox::stateChanged, this, &QVOptionsDialog::bgColorCheckboxStateChanged);
+    connect(ui->submenuIconsCheckbox, &QCheckBox::stateChanged, this, &QVOptionsDialog::submenuIconsCheckboxStateChanged);
     connect(ui->scalingCheckbox, &QCheckBox::stateChanged, this, &QVOptionsDialog::scalingCheckboxStateChanged);
     connect(ui->constrainImagePositionCheckbox, &QCheckBox::stateChanged, this, &QVOptionsDialog::constrainImagePositionCheckboxStateChanged);
 
@@ -158,6 +159,8 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
     syncCheckbox(ui->menubarCheckbox, "menubarenabled", defaults, makeConnections);
     // fullscreendetails
     syncCheckbox(ui->detailsInFullscreen, "fullscreendetails", defaults, makeConnections);
+    // submenuicons
+    syncCheckbox(ui->submenuIconsCheckbox, "submenuicons", defaults, makeConnections);
     // filteringenabled
     syncCheckbox(ui->filteringCheckbox, "filteringenabled", defaults, makeConnections);
     // scalingenabled
@@ -461,6 +464,13 @@ void QVOptionsDialog::bgColorCheckboxStateChanged(int arg1)
         ui->bgColorButton->setEnabled(false);
 
     updateBgColorButton();
+}
+
+void QVOptionsDialog::submenuIconsCheckboxStateChanged(int arg1)
+{
+    bool savedValue = qvApp->getSettingsManager().getBoolean("submenuicons");
+    if (static_cast<bool>(arg1) != savedValue)
+        QMessageBox::information(this, tr("Restart Required"), tr("You must restart qView to change this setting."));
 }
 
 void QVOptionsDialog::scalingCheckboxStateChanged(int arg1)

@@ -28,6 +28,8 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     if (getSettingsManager().getBoolean("updatenotifications"))
         checkUpdates();
 
+    showSubmenuIcons = getSettingsManager().getBoolean("submenuicons");
+
     // Setup macOS dock menu
     dockMenu = new QMenu();
     connect(dockMenu, &QMenu::triggered, this, [](QAction *triggeredAction){

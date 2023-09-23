@@ -77,6 +77,8 @@ public:
 
     ActionManager &getActionManager() { return actionManager; }
 
+    bool getShowSubmenuIcons() const { return showSubmenuIcons; }
+
 private:
 
     QList<MainWindow*> lastActiveWindows;
@@ -98,6 +100,8 @@ private:
     QPointer<QVOptionsDialog> optionsDialog;
     QPointer<QVWelcomeDialog> welcomeDialog;
     QPointer<QVAboutDialog> aboutDialog;
+
+    bool showSubmenuIcons;
 
     UpdateChecker updateChecker;
 };

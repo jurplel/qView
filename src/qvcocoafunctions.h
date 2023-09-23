@@ -31,7 +31,7 @@ public:
 
     static void setDockRecents(const QStringList &recentPathsList);
 
-    static QList<OpenWith::OpenWithItem> getOpenWithItems(const QString &filePath);
+    static QList<OpenWith::OpenWithItem> getOpenWithItems(const QString &filePath, const bool loadIcons);
 
     static QString deleteFile(const QString &filePath);
 

@@ -436,6 +436,9 @@ void ActionManager::updateRecentsMenu()
                 action->setIconVisibleInMenu(false); // Hide icon temporarily to speed up updates in certain cases
                 action->setText(recent.fileName);
 
+                if (!qvApp->getShowSubmenuIcons())
+                    continue;
+
 #if defined Q_OS_UNIX && !defined Q_OS_MACOS
                 // set icons for linux users
                 QMimeDatabase mimedb;
