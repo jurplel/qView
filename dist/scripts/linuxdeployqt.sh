@@ -31,8 +31,8 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
 ../linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/com.interversehq.qView.desktop -appimage -updateinformation="gh-releases-zsync|jurplel|qView|latest|qView-*x86_64.AppImage.zsync" -extra-plugins=styles/libqt5ct-style.so,platformthemes/libqt5ct.so
 
 if [ $1 != "" ]; then
-    mv *.AppImage qView-nightly-$1-x86_64.AppImage
+    mv *.AppImage qView-JDP-$1-Linux_x86_64.AppImage
 else
-    mv *.AppImage qView-$VERSION-x86_64.AppImage
+    mv *.AppImage qView-JDP-$VERSION-Linux_x86_64.AppImage
 fi
 rm -r appdir

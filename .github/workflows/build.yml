@@ -38,7 +38,7 @@ jobs:
         run: |
           echo "arch=${{ matrix.qtArch }}" >> $GITHUB_ENV
           if [ "${{ inputs.isRelease }}" != "true" ]; then
-            buildNum=JDP.$(date '+%Y-%m-%d').${GITHUB_SHA::7}
+            buildNum=$(date '+%Y-%m-%d').${GITHUB_SHA::7}
             echo "nightlyDefines=NIGHTLY=$buildNum" >> $GITHUB_ENV
             echo "buildNumString=$buildNum" >> $GITHUB_ENV
           fi
@@ -74,5 +74,5 @@ jobs:
       - name: 'Upload Artifact'
         uses: actions/upload-artifact@v3
         with:
-          name: qView${{ env.buildNumString != '' && '-' || '' }}${{ env.buildNumString }}-${{ runner.os }}${{ matrix.osSuffix }}
+          name: qView-JDP${{ env.buildNumString != '' && '-' || '' }}${{ env.buildNumString }}-${{ runner.os }}${{ matrix.osSuffix }}
           path: bin

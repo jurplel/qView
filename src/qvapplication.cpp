@@ -203,7 +203,7 @@ void QVApplication::checkedUpdates()
     {
         aboutDialog->setLatestVersionNum(updateChecker.getLatestVersionNum());
     }
-    else if (updateChecker.getLatestVersionNum() > VERSION &&
+    else if (UpdateChecker::isVersionConsideredUpdate(updateChecker.getLatestVersionNum()) &&
              getSettingsManager().getBoolean("updatenotifications"))
     {
         updateChecker.openDialog();

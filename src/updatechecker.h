@@ -15,19 +15,21 @@ public:
 
     double getLatestVersionNum() const { return latestVersionNum; }
 
+    static bool isVersionConsideredUpdate(double v);
+
 signals:
     void checkedUpdates();
 
 protected:
-    void sendRequest(const QUrl &url);
-
     void readReply(QNetworkReply *reply);
 
     bool showSystemNotification();
 
+    static double parseVersion(QString str);
+
 private:
-    const QString UPDATE_URL = "https://api.github.com/repos/jurplel/qview/releases";
-    const QString DOWNLOAD_URL = "https://interversehq.com/qview/download/";
+    const QString API_BASE_URL = "https://api.github.com/repos/jdpurcell/qView/releases";
+    const QString DOWNLOAD_URL = "https://github.com/jdpurcell/qView/releases";
 
     double latestVersionNum;
 

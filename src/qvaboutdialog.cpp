@@ -41,10 +41,12 @@ QVAboutDialog::QVAboutDialog(double givenLatestVersionNum, QWidget *parent) :
     //set subtitle font & text
     QFont font2 = QFont("Lato", 18 + modifier);
     font2.setStyleName("Regular");
-    QString subtitleText = tr("version %1").arg(QString::number(VERSION, 'f', 1));
-    // If this is a nightly build, display the build number
+    QString subtitleText = tr("Unofficial Fork (jdpurcell)<br>");
 #ifdef NIGHTLY
-        subtitleText = tr("Nightly %1").arg(QT_STRINGIFY(NIGHTLY));
+    subtitleText += tr("Version %1").arg(QT_STRINGIFY(NIGHTLY));
+#else
+    //this fork has no formal releases, just "nightly" builds promoted to releases
+    subtitleText += tr("Unspecified Version");
 #endif
     ui->subtitleLabel->setFont(font2);
     ui->subtitleLabel->setText(subtitleText);
@@ -60,9 +62,10 @@ QVAboutDialog::QVAboutDialog(double givenLatestVersionNum, QWidget *parent) :
     QFont font4 = QFont("Lato", 8 + modifier);
     font4.setStyleName("Regular");
     const QString labelText2 = tr("Built with Qt %1 (%2)<br>"
-                                  R"(Source code available under GPLv3 on <a style="color: #03A9F4; text-decoration:none;" href="https://github.com/jurplel/qView">GitHub</a><br>)"
+                                  "Licensed under the GNU GPLv3<br>"
+                                  R"(Derivative of official qView: <a style="color: #03A9F4; text-decoration:none;" href="https://interversehq.com/qview/">Website</a>, <a style="color: #03A9F4; text-decoration:none;" href="https://github.com/jurplel/qView">GitHub</a><br>)"
                                   "Icon glyph created by Guilhem from the Noun Project<br>"
-                                  "Copyright © %3 jurplel and qView contributors")
+                                  "Copyright © %3 jurplel, jdpurcell, and qView contributors")
                                   .arg(QT_VERSION_STR, QSysInfo::buildCpuArchitecture(), "2018-2023");
 
     ui->infoLabel2->setFont(font4);
@@ -88,21 +91,20 @@ QVAboutDialog::~QVAboutDialog()
 void QVAboutDialog::updateText()
 {
     QString updateText = tr("Checking for updates...");
-    if (latestVersionNum > VERSION)
+    if (UpdateChecker::isVersionConsideredUpdate(latestVersionNum))
     {
-        //: %1 is a version number e.g. "4.0 update available"
-        updateText = tr("%1 update available").arg(QString::number(latestVersionNum, 'f', 1));
+        updateText = tr("An update is available");
     }
     else if (latestVersionNum > 0.0)
     {
         updateText = tr("No updates available");
     }
-    else if (latestVersionNum < 0.0)
+    else if (latestVersionNum <= 0.0)
     {
         updateText = tr("Error checking for updates");
     }
     ui->updateLabel->setText(updateText +
-                             R"(<br><a style="color: #03A9F4; text-decoration:none;" href="https://interversehq.com/qview/">interversehq.com/qview</a>)");
+                             R"(<br><a style="color: #03A9F4; text-decoration:none;" href="https://github.com/jdpurcell/qView">github.com/jdpurcell/qView</a>)");
 }
 
 double QVAboutDialog::getLatestVersionNum() const
