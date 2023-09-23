@@ -16,7 +16,7 @@ UpdateChecker::UpdateChecker(QObject *parent) : QObject(parent)
     connect(&netAccessManager, &QNetworkAccessManager::finished, this, &UpdateChecker::readReply);
 }
 
-void UpdateChecker::check()
+void UpdateChecker::check(bool isManualCheck)
 {
     if (isChecking)
         return;
@@ -26,6 +26,13 @@ void UpdateChecker::check()
     onError(tr("This build is not configured for update checking."));
     return;
 #endif
+
+    if (!isManualCheck)
+    {
+        QDateTime lastCheckTime = getLastCheckTime();
+        if (lastCheckTime.isValid() && QDateTime::currentDateTimeUtc() < lastCheckTime.addSecs(AUTO_CHECK_INTERVAL_HOURS * 3600))
+            return;
+    }
 
     isChecking = true;
     QNetworkRequest request(API_BASE_URL + "/latest");
@@ -63,6 +70,8 @@ void UpdateChecker::readReply(QNetworkReply *reply)
         object.value("body").toString()
     };
 
+    setLastCheckTime(QDateTime::currentDateTimeUtc());
+
     emit checkedUpdates();
 }
 
@@ -77,6 +86,17 @@ void UpdateChecker::onError(QString msg)
     };
 
     emit checkedUpdates();
+}
+
+QDateTime UpdateChecker::getLastCheckTime() const
+{
+    qint64 secsSinceEpoch = QSettings().value("lastupdatecheck").toLongLong();
+    return secsSinceEpoch == 0 ? QDateTime() : QDateTime::fromSecsSinceEpoch(secsSinceEpoch, Qt::UTC);
+}
+
+void UpdateChecker::setLastCheckTime(QDateTime value)
+{
+    QSettings().setValue("lastupdatecheck", value.toSecsSinceEpoch());
 }
 
 double UpdateChecker::parseVersion(QString str)

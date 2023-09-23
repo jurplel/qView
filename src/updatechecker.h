@@ -20,7 +20,7 @@ public:
         bool isConsideredUpdate() const { return isVersionConsideredUpdate(latestVersionNum); }
     };
 
-    void check();
+    void check(bool isManualCheck = false);
 
     void openDialog(QWidget *parent, bool showDisableButton);
 
@@ -38,6 +38,10 @@ protected:
 
     void onError(QString msg);
 
+    QDateTime getLastCheckTime() const;
+
+    void setLastCheckTime(QDateTime value);
+
     static double parseVersion(QString str);
 
     static bool isVersionConsideredUpdate(double v);
@@ -45,6 +49,8 @@ protected:
 private:
     const QString API_BASE_URL = "https://api.github.com/repos/jdpurcell/qView/releases";
     const QString DOWNLOAD_URL = "https://github.com/jdpurcell/qView/releases";
+    // Auto-check happens only at startup (if enabled); this is to rate limit across launches
+    const int AUTO_CHECK_INTERVAL_HOURS = 4;
 
     bool isChecking;
     bool hasChecked;

@@ -82,6 +82,6 @@ void QVAboutDialog::updateCheckForUpdatesButtonState()
 
 void QVAboutDialog::checkForUpdatesButtonClicked()
 {
-    qvApp->getUpdateChecker().check();
+    qvApp->getUpdateChecker().check(true);
     updateCheckForUpdatesButtonState();
 }
