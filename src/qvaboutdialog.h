@@ -13,18 +13,16 @@ class QVAboutDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit QVAboutDialog(double latestVersionNum = -1.0, QWidget *parent = nullptr);
+    explicit QVAboutDialog(QWidget *parent = nullptr);
     ~QVAboutDialog() override;
 
-    void updateText();
+    void updateCheckForUpdatesButtonState();
 
-    double getLatestVersionNum() const;
-    void setLatestVersionNum(double value);
+private slots:
+    void checkForUpdatesButtonClicked();
 
 private:
     Ui::QVAboutDialog *ui;
-
-    double latestVersionNum;
 };
 
 #endif // QVABOUTDIALOG_H

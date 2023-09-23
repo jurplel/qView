@@ -41,8 +41,6 @@ public:
 
     MainWindow *getMainWindow(bool shouldBeEmpty);
 
-    void checkUpdates();
-
     void checkedUpdates();
 
     void recentsMenuUpdated();
@@ -76,6 +74,8 @@ public:
     ShortcutManager &getShortcutManager() { return shortcutManager; }
 
     ActionManager &getActionManager() { return actionManager; }
+
+    UpdateChecker &getUpdateChecker() { return updateChecker; }
 
     bool getShowSubmenuIcons() const { return showSubmenuIcons; }
 

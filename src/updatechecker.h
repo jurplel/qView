@@ -9,13 +9,26 @@ class UpdateChecker : public QObject
 public:
     explicit UpdateChecker(QObject *parent = nullptr);
 
+    struct CheckResult
+    {
+        bool wasSuccessful;
+        QString errorMessage;
+        double latestVersionNum;
+        QString releaseName;
+        QString changelog;
+
+        bool isConsideredUpdate() const { return isVersionConsideredUpdate(latestVersionNum); }
+    };
+
     void check();
 
-    void openDialog();
+    void openDialog(QWidget *parent, bool showDisableButton);
 
-    double getLatestVersionNum() const { return latestVersionNum; }
+    bool getIsChecking() const { return isChecking; }
 
-    static bool isVersionConsideredUpdate(double v);
+    bool getHasChecked() const { return hasChecked; }
+
+    CheckResult getCheckResult() const { return checkResult; }
 
 signals:
     void checkedUpdates();
@@ -23,19 +36,19 @@ signals:
 protected:
     void readReply(QNetworkReply *reply);
 
-    bool showSystemNotification();
+    void onError(QString msg);
 
     static double parseVersion(QString str);
+
+    static bool isVersionConsideredUpdate(double v);
 
 private:
     const QString API_BASE_URL = "https://api.github.com/repos/jdpurcell/qView/releases";
     const QString DOWNLOAD_URL = "https://github.com/jdpurcell/qView/releases";
 
-    double latestVersionNum;
-
-    QString changelog;
-
-    QDateTime releaseDate;
+    bool isChecking;
+    bool hasChecked;
+    CheckResult checkResult;
 
     QNetworkAccessManager netAccessManager;
 };

@@ -6,16 +6,16 @@
 #include <QFontDatabase>
 #include <QJsonDocument>
 
-QVAboutDialog::QVAboutDialog(double givenLatestVersionNum, QWidget *parent) :
+QVAboutDialog::QVAboutDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::QVAboutDialog)
 {
     ui->setupUi(this);
 
-    latestVersionNum = givenLatestVersionNum;
-
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowFlags(windowFlags() & (~Qt::WindowContextHelpButtonHint | Qt::CustomizeWindowHint));
+
+    connect(ui->checkForUpdatesButton, &QPushButton::clicked, this, &QVAboutDialog::checkForUpdatesButtonClicked);
 
     // Application modal on mac, window modal everywhere else
 #ifdef Q_OS_MACOS
@@ -51,13 +51,6 @@ QVAboutDialog::QVAboutDialog(double givenLatestVersionNum, QWidget *parent) :
     ui->subtitleLabel->setFont(font2);
     ui->subtitleLabel->setText(subtitleText);
 
-    //set update font & text
-    QFont font3 = QFont("Lato", 10 + modifier);
-    font3.setStyleName("Regular");
-    ui->updateLabel->setFont(font3);
-    ui->updateLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
-    ui->updateLabel->setOpenExternalLinks(true);
-
     //set infolabel2 font, text, and properties
     QFont font4 = QFont("Lato", 8 + modifier);
     font4.setStyleName("Regular");
@@ -74,13 +67,7 @@ QVAboutDialog::QVAboutDialog(double givenLatestVersionNum, QWidget *parent) :
     ui->infoLabel2->setTextInteractionFlags(Qt::TextBrowserInteraction);
     ui->infoLabel2->setOpenExternalLinks(true);
 
-    if (latestVersionNum < 0.0)
-    {
-        qvApp->checkUpdates();
-        latestVersionNum = 0.0;
-    }
-
-    updateText();
+    updateCheckForUpdatesButtonState();
 }
 
 QVAboutDialog::~QVAboutDialog()
@@ -88,32 +75,13 @@ QVAboutDialog::~QVAboutDialog()
     delete ui;
 }
 
-void QVAboutDialog::updateText()
+void QVAboutDialog::updateCheckForUpdatesButtonState()
 {
-    QString updateText = tr("Checking for updates...");
-    if (UpdateChecker::isVersionConsideredUpdate(latestVersionNum))
-    {
-        updateText = tr("An update is available");
-    }
-    else if (latestVersionNum > 0.0)
-    {
-        updateText = tr("No updates available");
-    }
-    else if (latestVersionNum <= 0.0)
-    {
-        updateText = tr("Error checking for updates");
-    }
-    ui->updateLabel->setText(updateText +
-                             R"(<br><a style="color: #03A9F4; text-decoration:none;" href="https://github.com/jdpurcell/qView">github.com/jdpurcell/qView</a>)");
+    ui->checkForUpdatesButton->setEnabled(!qvApp->getUpdateChecker().getIsChecking());
 }
 
-double QVAboutDialog::getLatestVersionNum() const
+void QVAboutDialog::checkForUpdatesButtonClicked()
 {
-    return latestVersionNum;
-}
-
-void QVAboutDialog::setLatestVersionNum(double value)
-{
-    latestVersionNum = value;
-    updateText();
+    qvApp->getUpdateChecker().check();
+    updateCheckForUpdatesButtonState();
 }

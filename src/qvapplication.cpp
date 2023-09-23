@@ -7,6 +7,7 @@
 #include <QSettings>
 #include <QTimer>
 #include <QFileDialog>
+#include <QMessageBox>
 
 QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
 {
@@ -26,7 +27,7 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     // Check for updates
     // TODO: move this to after first window show event
     if (getSettingsManager().getBoolean("updatenotifications"))
-        checkUpdates();
+        updateChecker.check();
 
     showSubmenuIcons = getSettingsManager().getBoolean("submenuicons");
 
@@ -194,22 +195,26 @@ MainWindow *QVApplication::getMainWindow(bool shouldBeEmpty)
     return window;
 }
 
-void QVApplication::checkUpdates()
-{
-    updateChecker.check();
-}
-
 void QVApplication::checkedUpdates()
 {
+    const UpdateChecker::CheckResult checkResult = updateChecker.getCheckResult();
+
+    QWidget *dialogParent = aboutDialog ? aboutDialog : nullptr;
+
+    if (checkResult.wasSuccessful && checkResult.isConsideredUpdate())
+    {
+        updateChecker.openDialog(dialogParent, !aboutDialog);
+    }
+    else if (aboutDialog)
+    {
+        if (!checkResult.wasSuccessful)
+            QMessageBox::critical(dialogParent, tr("Error"), tr("Error checking for updates:\n%1").arg(checkResult.errorMessage));
+        else
+            QMessageBox::information(dialogParent, tr("No Updates"), tr("You already have the latest version."));
+    }
+
     if (aboutDialog)
-    {
-        aboutDialog->setLatestVersionNum(updateChecker.getLatestVersionNum());
-    }
-    else if (UpdateChecker::isVersionConsideredUpdate(updateChecker.getLatestVersionNum()) &&
-             getSettingsManager().getBoolean("updatenotifications"))
-    {
-        updateChecker.openDialog();
-    }
+        aboutDialog->updateCheckForUpdatesButtonState();
 }
 
 void QVApplication::recentsMenuUpdated()
@@ -297,7 +302,7 @@ void QVApplication::openAboutDialog(QWidget *parent)
         return;
     }
 
-    aboutDialog = new QVAboutDialog(updateChecker.getLatestVersionNum(), parent);
+    aboutDialog = new QVAboutDialog(parent);
     aboutDialog->show();
 }
 
