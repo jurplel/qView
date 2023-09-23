@@ -144,6 +144,22 @@ bool SettingsManager::isDefault(const QString &key) const
     return getSetting(key) == getSetting(key, true);
 }
 
+void SettingsManager::copyFromOfficial()
+{
+    const QSet<QString> keysToSkip = []() {
+        QList<QString> systemDefaultKeys = QSettings{"qView", "NonExistent"}.allKeys();
+        return QSet<QString>{systemDefaultKeys.begin(), systemDefaultKeys.end()};
+    }();
+    QSettings src{"qView", "qView"};
+    QSettings dst{};
+
+    for (const QString &key : src.allKeys())
+    {
+        if (keysToSkip.contains(key)) continue;
+        dst.setValue(key, src.value(key));
+    }
+}
+
 void SettingsManager::initializeSettingsLibrary()
 {
     // Window

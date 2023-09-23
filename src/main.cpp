@@ -12,8 +12,12 @@ int main(int argc, char *argv[])
     QGuiApplication::setHighDpiScaleFactorRoundingPolicy(Qt::HighDpiScaleFactorRoundingPolicy::PassThrough);
 #endif
     QCoreApplication::setOrganizationName("qView");
-    QCoreApplication::setApplicationName("qView");
+    QCoreApplication::setApplicationName("qView-JDP");
     QCoreApplication::setApplicationVersion(QString::number(VERSION));
+
+    if (!QSettings().value("firstlaunch").isValid())
+        SettingsManager::copyFromOfficial();
+
     QVApplication app(argc, argv);
 
     QCommandLineParser parser;
