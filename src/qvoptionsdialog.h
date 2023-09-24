@@ -1,8 +1,8 @@
 #ifndef QVOPTIONSDIALOG_H
 #define QVOPTIONSDIALOG_H
 
+#include "qvnamespace.h"
 #include "qvshortcutdialog.h"
-#include "settingsmanager.h"
 
 #include <QDialog>
 #include <QCheckBox>
@@ -43,6 +43,16 @@ protected:
     void updateBgColorButton();
     void restartNotifyForCheckbox(const QString &key, const int state);
     void populateLanguages();
+    void populateComboBoxes();
+
+    static const QMap<Qv::AfterDelete, QString> mapAfterDelete;
+    static const QMap<Qv::AfterMatchingSize, QString> mapAfterMatchingSize;
+    static const QMap<Qv::ColorSpaceConversion, QString> mapColorSpaceConversion;
+    static const QMap<Qv::FitMode, QString> mapFitMode;
+    static const QMap<Qv::PreloadMode, QString> mapPreloadMode;
+    static const QMap<Qv::SortMode, QString> mapSortMode;
+    static const QMap<Qv::TitleBarText, QString> mapTitleBarText;
+    static const QMap<Qv::WindowResizeMode, QString> mapWindowResizeMode;
 
 private slots:
     void shortcutCellDoubleClicked(int row, int column);

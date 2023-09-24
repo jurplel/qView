@@ -1,6 +1,7 @@
 ﻿#ifndef QVIMAGECORE_H
 #define QVIMAGECORE_H
 
+#include "qvnamespace.h"
 #include <QObject>
 #include <QImageReader>
 #include <QPixmap>
@@ -104,11 +105,11 @@ private:
     QFutureWatcher<ReadData> loadFutureWatcher;
 
     bool isLoopFoldersEnabled;
-    int preloadingMode;
-    int sortMode;
+    Qv::PreloadMode preloadingMode;
+    Qv::SortMode sortMode;
     bool sortDescending;
     bool allowMimeContentDetection;
-    int colorSpaceConversion;
+    Qv::ColorSpaceConversion colorSpaceConversion;
 
     static QCache<QString, ReadData> pixmapCache;
 

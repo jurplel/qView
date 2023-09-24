@@ -1,4 +1,5 @@
 #include "settingsmanager.h"
+#include "qvnamespace.h"
 
 #include <QSettings>
 #include <QTranslator>
@@ -171,10 +172,10 @@ void SettingsManager::initializeSettingsLibrary()
     settingsLibrary.insert("bgcolorenabled", {true, {}});
     settingsLibrary.insert("bgcolor", {"#212121", {}});
     settingsLibrary.insert("checkerboardbackground", {false, {}});
-    settingsLibrary.insert("titlebarmode", {1, {}});
+    settingsLibrary.insert("titlebarmode", {static_cast<int>(Qv::TitleBarText::Minimal), {}});
     settingsLibrary.insert("customtitlebartext", {"%z - %n", {}});
-    settingsLibrary.insert("windowresizemode", {1, {}});
-    settingsLibrary.insert("aftermatchingsizemode", {1, {}});
+    settingsLibrary.insert("windowresizemode", {static_cast<int>(Qv::WindowResizeMode::WhenLaunching), {}});
+    settingsLibrary.insert("aftermatchingsizemode", {static_cast<int>(Qv::AfterMatchingSize::CenterOnPrevious), {}});
     settingsLibrary.insert("minwindowresizedpercentage", {20, {}});
     settingsLibrary.insert("maxwindowresizedpercentage", {70, {}});
     settingsLibrary.insert("nonnativetheme", {false, {}});
@@ -196,22 +197,22 @@ void SettingsManager::initializeSettingsLibrary()
 #else
     settingsLibrary.insert("onetoonepixelsizing", {true, {}});
 #endif
-    settingsLibrary.insert("cropmode", {0, {}});
+    settingsLibrary.insert("cropmode", {static_cast<int>(Qv::FitMode::WholeImage), {}});
     settingsLibrary.insert("pastactualsizeenabled", {true, {}});
     settingsLibrary.insert("fitoverscan", {0, {}});
     settingsLibrary.insert("constrainimageposition", {true, {}});
     settingsLibrary.insert("constraincentersmallimage", {true, {}});
     settingsLibrary.insert("sidewaysscrollnavigates", {false, {}});
-    settingsLibrary.insert("colorspaceconversion", {1, {}});
+    settingsLibrary.insert("colorspaceconversion", {static_cast<int>(Qv::ColorSpaceConversion::AutoDetect), {}});
     // Miscellaneous
     settingsLibrary.insert("language", {"system", {}});
-    settingsLibrary.insert("sortmode", {0, {}});
+    settingsLibrary.insert("sortmode", {static_cast<int>(Qv::SortMode::Name), {}});
     settingsLibrary.insert("sortdescending", {false, {}});
-    settingsLibrary.insert("preloadingmode", {1, {}});
+    settingsLibrary.insert("preloadingmode", {static_cast<int>(Qv::PreloadMode::Adjacent), {}});
     settingsLibrary.insert("loopfoldersenabled", {true, {}});
     settingsLibrary.insert("slideshowreversed", {false, {}});
     settingsLibrary.insert("slideshowtimer", {5, {}});
-    settingsLibrary.insert("afterdelete", {2, {}});
+    settingsLibrary.insert("afterdelete", {static_cast<int>(Qv::AfterDelete::MoveForward), {}});
     settingsLibrary.insert("askdelete", {true, {}});
     settingsLibrary.insert("allowmimecontentdetection", {false, {}});
     settingsLibrary.insert("saverecents", {true, {}});

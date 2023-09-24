@@ -24,11 +24,11 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
 #endif
 
     isLoopFoldersEnabled = true;
-    preloadingMode = 1;
-    sortMode = 0;
+    preloadingMode = Qv::PreloadMode::Adjacent;
+    sortMode = Qv::SortMode::Name;
     sortDescending = false;
     allowMimeContentDetection = false;
-    colorSpaceConversion = 1;
+    colorSpaceConversion = Qv::ColorSpaceConversion::AutoDetect;
 
     baseRandomSortSeed = std::chrono::system_clock::now().time_since_epoch().count();
 
@@ -274,7 +274,7 @@ QList<QVImageCore::CompatibleFile> QVImageCore::getCompatibleFiles(const QString
             }
         }
         QString mimeType;
-        if (!matched || sortMode == 4)
+        if (!matched || sortMode == Qv::SortMode::Type)
         {
             mimeType = mimeDb.mimeTypeForFile(absoluteFilePath, mimeMatchMode).name();
             matched |= mimeTypes.contains(mimeType);
@@ -284,14 +284,14 @@ QList<QVImageCore::CompatibleFile> QVImageCore::getCompatibleFiles(const QString
             fileList.append({
                 absoluteFilePath,
                 fileName,
-                sortMode == 1 ? fileInfo.lastModified().toMSecsSinceEpoch() : 0,
+                sortMode == Qv::SortMode::DateModified ? fileInfo.lastModified().toMSecsSinceEpoch() : 0,
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-                sortMode == 2 ? fileInfo.birthTime().toMSecsSinceEpoch() : 0,
+                sortMode == Qv::SortMode::DateCreated ? fileInfo.birthTime().toMSecsSinceEpoch() : 0,
 #else
-                sortMode == 2 ? fileInfo.created().toMSecsSinceEpoch() : 0,
+                sortMode == Qv::SortMode::DateCreated ? fileInfo.created().toMSecsSinceEpoch() : 0,
 #endif
-                sortMode == 3 ? fileInfo.size() : 0,
-                sortMode == 4 ? mimeType : QString()
+                sortMode == Qv::SortMode::Size ? fileInfo.size() : 0,
+                sortMode == Qv::SortMode::Type ? mimeType : QString()
             });
         }
     }
@@ -301,7 +301,7 @@ QList<QVImageCore::CompatibleFile> QVImageCore::getCompatibleFiles(const QString
 
 void QVImageCore::sortCompatibleFiles(QList<CompatibleFile> &fileList)
 {
-    if (sortMode == 0) // Natural sorting
+    if (sortMode == Qv::SortMode::Name)
     {
         QCollator collator;
         collator.setNumericMode(true);
@@ -315,7 +315,7 @@ void QVImageCore::sortCompatibleFiles(QList<CompatibleFile> &fileList)
                 return collator.compare(file1.fileName, file2.fileName) < 0;
         });
     }
-    else if (sortMode == 1) // date modified
+    else if (sortMode == Qv::SortMode::DateModified)
     {
         std::sort(fileList.begin(),
                   fileList.end(),
@@ -327,7 +327,7 @@ void QVImageCore::sortCompatibleFiles(QList<CompatibleFile> &fileList)
                 return file1.lastModified > file2.lastModified;
         });
     }
-    else if (sortMode == 2) // date created
+    else if (sortMode == Qv::SortMode::DateCreated)
     {
         std::sort(fileList.begin(),
                   fileList.end(),
@@ -340,7 +340,7 @@ void QVImageCore::sortCompatibleFiles(QList<CompatibleFile> &fileList)
         });
 
     }
-    else if (sortMode == 3) // size
+    else if (sortMode == Qv::SortMode::Size)
     {
         std::sort(fileList.begin(),
                   fileList.end(),
@@ -352,7 +352,7 @@ void QVImageCore::sortCompatibleFiles(QList<CompatibleFile> &fileList)
                 return file1.size > file2.size;
         });
     }
-    else if (sortMode == 4) // type
+    else if (sortMode == Qv::SortMode::Type)
     {
         QCollator collator;
         std::sort(fileList.begin(),
@@ -365,7 +365,7 @@ void QVImageCore::sortCompatibleFiles(QList<CompatibleFile> &fileList)
                 return collator.compare(file1.mimeType, file2.mimeType) < 0;
         });
     }
-    else if (sortMode == 5) // Random
+    else if (sortMode == Qv::SortMode::Random)
     {
         unsigned randomSortSeed = getRandomSortSeed(QFileInfo(fileList.value(0).absoluteFilePath).path(), fileList.count());
         std::shuffle(fileList.begin(), fileList.end(), std::default_random_engine(randomSortSeed));
@@ -402,7 +402,7 @@ void QVImageCore::updateFolderInfo(QString dirPath)
 
 void QVImageCore::requestCaching()
 {
-    if (preloadingMode == 0)
+    if (preloadingMode == Qv::PreloadMode::Disabled)
     {
         QVImageCore::pixmapCache.clear();
         return;
@@ -410,10 +410,7 @@ void QVImageCore::requestCaching()
 
     QColorSpace targetColorSpace = getTargetColorSpace();
 
-    int preloadingDistance = 1;
-
-    if (preloadingMode > 1)
-        preloadingDistance = 4;
+    int preloadingDistance = preloadingMode == Qv::PreloadMode::Extended ? 4 : 1;
 
     QStringList filesToPreload;
     for (int i = currentFileDetails.loadedIndexInFolder-preloadingDistance; i <= currentFileDetails.loadedIndexInFolder+preloadingDistance; i++)
@@ -497,9 +494,9 @@ QColorSpace QVImageCore::getTargetColorSpace() const
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     return
-        colorSpaceConversion == 1 ? detectDisplayColorSpace() :
-        colorSpaceConversion == 2 ? QColorSpace::SRgb :
-        colorSpaceConversion == 3 ? QColorSpace::DisplayP3 :
+        colorSpaceConversion == Qv::ColorSpaceConversion::AutoDetect ? detectDisplayColorSpace() :
+        colorSpaceConversion == Qv::ColorSpaceConversion::SRgb ? QColorSpace::SRgb :
+        colorSpaceConversion == Qv::ColorSpaceConversion::DisplayP3 ? QColorSpace::DisplayP3 :
         QColorSpace();
 #else
     return {};
@@ -592,22 +589,24 @@ void QVImageCore::settingsUpdated()
     isLoopFoldersEnabled = settingsManager.getBoolean("loopfoldersenabled");
 
     //preloading mode
-    preloadingMode = settingsManager.getInteger("preloadingmode");
+    preloadingMode = settingsManager.getEnum<Qv::PreloadMode>("preloadingmode");
     switch (preloadingMode) {
-    case 1:
+    case Qv::PreloadMode::Adjacent:
     {
         QVImageCore::pixmapCache.setMaxCost(204800);
         break;
     }
-    case 2:
+    case Qv::PreloadMode::Extended:
     {
         QVImageCore::pixmapCache.setMaxCost(819200);
         break;
     }
+    default:
+        break;
     }
 
     //sort mode
-    sortMode = settingsManager.getInteger("sortmode");
+    sortMode = settingsManager.getEnum<Qv::SortMode>("sortmode");
 
     //sort ascending
     sortDescending = settingsManager.getBoolean("sortdescending");
@@ -618,16 +617,11 @@ void QVImageCore::settingsUpdated()
     //update folder info to reflect new settings (e.g. sort order)
     updateFolderInfo();
 
-    bool changedImagePreprocessing = false;
-
     //colorspaceconversion
-    if (colorSpaceConversion != settingsManager.getInteger("colorspaceconversion"))
-    {
-        colorSpaceConversion = settingsManager.getInteger("colorspaceconversion");
-        changedImagePreprocessing = true;
-    }
+    Qv::ColorSpaceConversion oldColorSpaceConversion = colorSpaceConversion;
+    colorSpaceConversion = settingsManager.getEnum<Qv::ColorSpaceConversion>("colorspaceconversion");
 
-    if (changedImagePreprocessing && currentFileDetails.isPixmapLoaded)
+    if (colorSpaceConversion != oldColorSpaceConversion && currentFileDetails.isPixmapLoaded)
         loadFile(currentFileDetails.fileInfo.absoluteFilePath());
 }
 

@@ -41,7 +41,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     isConstrainedPositioningEnabled = true;
     isConstrainedSmallCenteringEnabled = true;
     sidewaysScrollNavigates = false;
-    cropMode = 0;
+    cropMode = Qv::FitMode::WholeImage;
     zoomMultiplier = 1.25;
 
     // Initialize other variables
@@ -542,14 +542,14 @@ void QVGraphicsView::zoomToFit()
     // Each mode will check if the rounded image size already produces the desired fit,
     // in which case we can use exactly 1.0 to avoid unnecessary scaling
 
-    switch (cropMode) { // should be enum tbh
-    case 1: // only take into account height
+    switch (cropMode) {
+    case Qv::FitMode::OnlyHeight:
         if (qRound(effectiveImageSize.height()) == viewSize.height())
             targetRatio = 1.0;
         else
             targetRatio = fitYRatio;
         break;
-    case 2: // only take into account width
+    case Qv::FitMode::OnlyWidth:
         if (qRound(effectiveImageSize.width()) == viewSize.width())
             targetRatio = 1.0;
         else
@@ -817,7 +817,7 @@ void QVGraphicsView::settingsUpdated()
         isScalingTwoEnabled = settingsManager.getBoolean("scalingtwoenabled");
 
     //cropmode
-    cropMode = settingsManager.getInteger("cropmode");
+    cropMode = settingsManager.getEnum<Qv::FitMode>("cropmode");
 
     //scalefactor
     zoomMultiplier = 1.0 + (settingsManager.getInteger("scalefactor") / 100.0);

@@ -35,6 +35,12 @@ public:
 
     int getInteger(const QString &key, bool defaults = false) const;
 
+    template <typename TEnum>
+    TEnum getEnum(const QString &key, bool defaults = false) const
+    {
+        return static_cast<TEnum>(getInteger(key, defaults));
+    }
+
     double getDouble(const QString &key, bool defaults = false) const;
 
     const QString getString(const QString &key, bool defaults = false) const;

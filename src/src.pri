@@ -27,6 +27,7 @@ HEADERS += \
     $$PWD/mainwindow.h \
     $$PWD/openwith.h \
     $$PWD/qvgraphicsview.h \
+    $$PWD/qvnamespace.h \
     $$PWD/qvoptionsdialog.h \
     $$PWD/qvapplication.h \
     $$PWD/qvaboutdialog.h \

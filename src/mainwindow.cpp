@@ -530,31 +530,31 @@ void MainWindow::buildWindowTitle()
     QString newString = "qView";
     if (getCurrentFileDetails().fileInfo.isFile())
     {
-        auto getFileName = [&]() { return getCurrentFileDetails().fileInfo.fileName(); };
-        auto getZoomLevel = [&]() { return QString::number(graphicsView->getZoomLevel() * 100.0, 'f', 1) + "%"; };
-        auto getImageIndex = [&]() { return QString::number(getCurrentFileDetails().loadedIndexInFolder+1); };
-        auto getImageCount = [&]() { return QString::number(getCurrentFileDetails().folderFileInfoList.count()); };
-        auto getImageWidth = [&]() { return QString::number(getCurrentFileDetails().baseImageSize.width()); };
-        auto getImageHeight = [&]() { return QString::number(getCurrentFileDetails().baseImageSize.height()); };
-        auto getFileSize = [&]() { return QVInfoDialog::formatBytes(getCurrentFileDetails().fileInfo.size()); };
-        switch (qvApp->getSettingsManager().getInteger("titlebarmode")) {
-        case 1:
+        auto getFileName = [this]() { return getCurrentFileDetails().fileInfo.fileName(); };
+        auto getZoomLevel = [this]() { return QString::number(graphicsView->getZoomLevel() * 100.0, 'f', 1) + "%"; };
+        auto getImageIndex = [this]() { return QString::number(getCurrentFileDetails().loadedIndexInFolder+1); };
+        auto getImageCount = [this]() { return QString::number(getCurrentFileDetails().folderFileInfoList.count()); };
+        auto getImageWidth = [this]() { return QString::number(getCurrentFileDetails().baseImageSize.width()); };
+        auto getImageHeight = [this]() { return QString::number(getCurrentFileDetails().baseImageSize.height()); };
+        auto getFileSize = [this]() { return QVInfoDialog::formatBytes(getCurrentFileDetails().fileInfo.size()); };
+        switch (qvApp->getSettingsManager().getEnum<Qv::TitleBarText>("titlebarmode")) {
+        case Qv::TitleBarText::Minimal:
         {
             newString = getFileName();
             break;
         }
-        case 2:
+        case Qv::TitleBarText::Practical:
         {
             newString = getZoomLevel() + " - " + getImageIndex() + "/" + getImageCount() + " - " + getFileName();
             break;
         }
-        case 3:
+        case Qv::TitleBarText::Verbose:
         {
             newString = getZoomLevel() + " - " + getImageIndex() + "/" + getImageCount() + " - " + getFileName() + " - " +
                         getImageWidth() + "x" + getImageHeight() + " - " + getFileSize() + " - qView";
             break;
         }
-        case 4:
+        case Qv::TitleBarText::Custom:
         {
             newString = "";
             const QString customText = qvApp->getSettingsManager().getString("customtitlebartext");
@@ -579,6 +579,8 @@ void MainWindow::buildWindowTitle()
             }
             break;
         }
+        default:
+            break;
         }
     }
 
@@ -649,8 +651,8 @@ void MainWindow::setWindowSize()
         return;
 
     //check if the program is configured to resize the window
-    int windowResizeMode = qvApp->getSettingsManager().getInteger("windowresizemode");
-    if (!(windowResizeMode == 2 || (windowResizeMode == 1 && justLaunchedWithImage)))
+    const auto windowResizeMode = qvApp->getSettingsManager().getEnum<Qv::WindowResizeMode>("windowresizemode");
+    if (!(windowResizeMode == Qv::WindowResizeMode::WhenOpeningImages || (windowResizeMode == Qv::WindowResizeMode::WhenLaunching && justLaunchedWithImage)))
         return;
 
     justLaunchedWithImage = false;
@@ -701,10 +703,10 @@ void MainWindow::setWindowSize()
 
     targetSize = targetSize.expandedTo(minWindowSize).boundedTo(maxWindowSize);
 
-    int afterMatchingSizeMode = qvApp->getSettingsManager().getInteger("aftermatchingsizemode");
+    const auto afterMatchingSizeMode = qvApp->getSettingsManager().getEnum<Qv::AfterMatchingSize>("aftermatchingsizemode");
     QPoint referenceCenter =
-        afterMatchingSizeMode == 1 ? geometry().center() :
-        afterMatchingSizeMode == 2 ? currentScreen->availableGeometry().center() :
+        afterMatchingSizeMode == Qv::AfterMatchingSize::CenterOnPrevious ? geometry().center() :
+        afterMatchingSizeMode == Qv::AfterMatchingSize::CenterOnScreen ? currentScreen->availableGeometry().center() :
         QPoint();
 
     // Resize window first, reposition later
@@ -712,7 +714,7 @@ void MainWindow::setWindowSize()
     resize(targetSize + extraWidgetsSize);
     QRect newRect = geometry();
 
-    if (afterMatchingSizeMode != 0)
+    if (afterMatchingSizeMode != Qv::AfterMatchingSize::AvoidRepositioning)
     {
         newRect.moveCenter(referenceCenter);
     }
@@ -956,10 +958,10 @@ void MainWindow::deleteFile()
     return;
 #endif
 
-    auto afterDelete = qvApp->getSettingsManager().getInteger("afterdelete");
-    if (afterDelete > 1)
+    auto afterDelete = qvApp->getSettingsManager().getEnum<Qv::AfterDelete>("afterdelete");
+    if (afterDelete == Qv::AfterDelete::MoveForward)
         nextFile();
-    else if (afterDelete < 1)
+    else if (afterDelete == Qv::AfterDelete::MoveBack)
         previousFile();
 
     lastDeletedFiles.push({trashFilePath, filePath});

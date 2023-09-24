@@ -20,6 +20,8 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowFlags(windowFlags() & (~Qt::WindowContextHelpButtonHint | Qt::CustomizeWindowHint));
 
+    populateComboBoxes();
+
     connect(ui->buttonBox, &QDialogButtonBox::clicked, this, &QVOptionsDialog::buttonBoxClicked);
     connect(ui->shortcutsTable, &QTableWidget::cellDoubleClicked, this, &QVOptionsDialog::shortcutCellDoubleClicked);
     connect(ui->bgColorCheckbox, &QCheckBox::stateChanged, this, &QVOptionsDialog::bgColorCheckboxStateChanged);
@@ -532,4 +534,95 @@ void QVOptionsDialog::languageComboBoxCurrentIndexChanged(int index)
         QMessageBox::information(this, tr("Restart Required"), tr("You must restart qView to change the language."));
         languageRestartMessageShown = true;
     }
+}
+
+const QMap<Qv::AfterDelete, QString> QVOptionsDialog::mapAfterDelete =
+{
+    { Qv::AfterDelete::MoveBack, tr("Move Back") },
+    { Qv::AfterDelete::DoNothing, tr("Do Nothing") },
+    { Qv::AfterDelete::MoveForward, tr("Move Forward") }
+};
+
+const QMap<Qv::AfterMatchingSize, QString> QVOptionsDialog::mapAfterMatchingSize =
+{
+    { Qv::AfterMatchingSize::AvoidRepositioning, tr("Avoid repositioning") },
+    { Qv::AfterMatchingSize::CenterOnPrevious, tr("Center relative to previous image") },
+    { Qv::AfterMatchingSize::CenterOnScreen, tr("Center relative to screen") }
+};
+
+const QMap<Qv::ColorSpaceConversion, QString> QVOptionsDialog::mapColorSpaceConversion =
+{
+    { Qv::ColorSpaceConversion::Disabled, tr("Disabled") },
+    { Qv::ColorSpaceConversion::AutoDetect, tr("Auto-detect") },
+    { Qv::ColorSpaceConversion::SRgb, tr("sRGB") },
+    { Qv::ColorSpaceConversion::DisplayP3, tr("Display P3") }
+};
+
+const QMap<Qv::FitMode, QString> QVOptionsDialog::mapFitMode =
+{
+    { Qv::FitMode::WholeImage, tr("Fit whole image") },
+    { Qv::FitMode::OnlyHeight, tr("Fit height") },
+    { Qv::FitMode::OnlyWidth, tr("Fit width") }
+};
+
+const QMap<Qv::PreloadMode, QString> QVOptionsDialog::mapPreloadMode =
+{
+    { Qv::PreloadMode::Disabled, tr("Disabled") },
+    { Qv::PreloadMode::Adjacent, tr("Adjacent") },
+    { Qv::PreloadMode::Extended, tr("Extended") }
+};
+
+const QMap<Qv::SortMode, QString> QVOptionsDialog::mapSortMode =
+{
+    { Qv::SortMode::Name, tr("Name") },
+    { Qv::SortMode::DateModified, tr("Date Modified") },
+    { Qv::SortMode::DateCreated, tr("Date Created") },
+    { Qv::SortMode::Size, tr("Size") },
+    { Qv::SortMode::Type, tr("Type") },
+    { Qv::SortMode::Random, tr("Random") }
+};
+
+const QMap<Qv::TitleBarText, QString> QVOptionsDialog::mapTitleBarText =
+{
+    { Qv::TitleBarText::Basic, tr("Basic") },
+    { Qv::TitleBarText::Minimal, tr("Minimal") },
+    { Qv::TitleBarText::Practical, tr("Practical") },
+    { Qv::TitleBarText::Verbose, tr("Verbose") },
+    { Qv::TitleBarText::Custom, tr("Custom") }
+};
+
+const QMap<Qv::WindowResizeMode, QString> QVOptionsDialog::mapWindowResizeMode =
+{
+    { Qv::WindowResizeMode::Never, tr("Never") },
+    { Qv::WindowResizeMode::WhenLaunching, tr("When launching") },
+    { Qv::WindowResizeMode::WhenOpeningImages, tr("When opening images") }
+};
+
+template <typename TEnum>
+static void populateComboBox(QComboBox *comboBox, const QMap<TEnum, QString> &values)
+{
+    comboBox->clear();
+    for (auto it = values.constBegin(); it != values.constEnd(); ++it)
+    {
+        comboBox->addItem(it.value(), static_cast<int>(it.key()));
+    }
+}
+
+void QVOptionsDialog::populateComboBoxes()
+{
+    populateComboBox(ui->titlebarComboBox, mapTitleBarText);
+
+    populateComboBox(ui->windowResizeComboBox, mapWindowResizeMode);
+
+    populateComboBox(ui->afterMatchingSizeComboBox, mapAfterMatchingSize);
+
+    populateComboBox(ui->cropModeComboBox, mapFitMode);
+
+    populateComboBox(ui->colorSpaceConversionComboBox, mapColorSpaceConversion);
+
+    populateComboBox(ui->sortComboBox, mapSortMode);
+
+    populateComboBox(ui->preloadingComboBox, mapPreloadMode);
+
+    populateComboBox(ui->afterDeletionComboBox, mapAfterDelete);
 }

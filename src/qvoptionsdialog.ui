@@ -82,31 +82,6 @@
        </item>
        <item row="3" column="1">
         <widget class="QComboBox" name="titlebarComboBox">
-         <item>
-          <property name="text">
-           <string>Basic</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Minimal</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Practical</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Verbose</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Custom</string>
-          </property>
-         </item>
         </widget>
        </item>
        <item row="4" column="1">
@@ -162,24 +137,6 @@
          <property name="toolTip">
           <string>Control when the window should resize to fit the image's actual size</string>
          </property>
-         <property name="currentIndex">
-          <number>0</number>
-         </property>
-         <item>
-          <property name="text">
-           <string>Never</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>When launching</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>When opening images</string>
-          </property>
-         </item>
         </widget>
        </item>
        <item row="7" column="0">
@@ -191,21 +148,6 @@
        </item>
        <item row="7" column="1">
         <widget class="QComboBox" name="afterMatchingSizeComboBox">
-         <item>
-          <property name="text">
-           <string>Avoid repositioning</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Center relative to previous image</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Center relative to screen</string>
-          </property>
-         </item>
         </widget>
        </item>
        <item row="8" column="0">
@@ -488,30 +430,9 @@
        </item>
        <item row="9" column="1">
         <widget class="QComboBox" name="cropModeComboBox">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
          <property name="toolTip">
           <string>Ignores select sides of an image when fitting to window (some sides will extend beyond the window boundaries)</string>
          </property>
-         <item>
-          <property name="text">
-           <string>Fit whole image</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Fit height</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Fit width</string>
-          </property>
-         </item>
         </widget>
        </item>
        <item row="9" column="0">
@@ -625,32 +546,6 @@
        </item>
        <item row="18" column="1">
         <widget class="QComboBox" name="colorSpaceConversionComboBox">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <item>
-          <property name="text">
-           <string>Disabled</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Auto-detect</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>sRGB</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Display P3</string>
-          </property>
-         </item>
         </widget>
        </item>
       </layout>
@@ -679,36 +574,6 @@
        </item>
        <item row="1" column="1">
         <widget class="QComboBox" name="sortComboBox">
-         <item>
-          <property name="text">
-           <string>Name</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Date Modified</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Date Created</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Size</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Type</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Random</string>
-          </property>
-         </item>
         </widget>
        </item>
        <item row="2" column="1">
@@ -756,24 +621,6 @@
          <property name="toolTip">
           <string>Controls the amount of images preloaded</string>
          </property>
-         <property name="currentIndex">
-          <number>0</number>
-         </property>
-         <item>
-          <property name="text">
-           <string>Disabled</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Adjacent</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Extended</string>
-          </property>
-         </item>
         </widget>
        </item>
        <item row="6" column="1">
@@ -888,24 +735,6 @@
        </item>
        <item row="11" column="1">
         <widget class="QComboBox" name="afterDeletionComboBox">
-         <property name="currentIndex">
-          <number>1</number>
-         </property>
-         <item>
-          <property name="text">
-           <string>Move Back</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Do Nothing</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Move Forward</string>
-          </property>
-         </item>
         </widget>
        </item>
        <item row="11" column="0">

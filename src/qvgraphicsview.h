@@ -1,8 +1,9 @@
 #ifndef QVGRAPHICSVIEW_H
 #define QVGRAPHICSVIEW_H
 
-#include "axislocker.h"
+#include "qvnamespace.h"
 #include "qvimagecore.h"
+#include "axislocker.h"
 #include "scrollhelper.h"
 #include <QGraphicsView>
 #include <QImageReader>
@@ -155,7 +156,7 @@ private:
     bool isConstrainedPositioningEnabled;
     bool isConstrainedSmallCenteringEnabled;
     bool sidewaysScrollNavigates;
-    int cropMode;
+    Qv::FitMode cropMode;
     qreal zoomMultiplier;
 
     bool isZoomToFitEnabled;
