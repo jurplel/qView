@@ -23,7 +23,7 @@
       <enum>Qt::NoFocus</enum>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="window">
       <property name="layoutDirection">
@@ -224,6 +224,30 @@
          </property>
         </spacer>
        </item>
+       <item row="11" column="1">
+        <widget class="QCheckBox" name="nonNativeThemeCheckbox">
+         <property name="text">
+          <string>Non-native theme (supports dark mode)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="1">
+        <widget class="QCheckBox" name="menubarCheckbox">
+         <property name="text">
+          <string>Show menubar</string>
+         </property>
+        </widget>
+       </item>
+       <item row="13" column="1">
+        <widget class="QCheckBox" name="detailsInFullscreen">
+         <property name="toolTip">
+          <string>Choose whether or not to display the titlebar text while in fullscreen</string>
+         </property>
+         <property name="text">
+          <string>Show titlebar text in fullscreen</string>
+         </property>
+        </widget>
+       </item>
        <item row="14" column="1">
         <widget class="QCheckBox" name="submenuIconsCheckbox">
          <property name="toolTip">
@@ -247,30 +271,6 @@
          </property>
          <property name="checked">
           <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="11" column="1">
-        <widget class="QCheckBox" name="nonNativeThemeCheckbox">
-         <property name="text">
-          <string>Non-native theme (supports dark mode)</string>
-         </property>
-        </widget>
-       </item>
-       <item row="12" column="1">
-        <widget class="QCheckBox" name="menubarCheckbox">
-         <property name="text">
-          <string>Show menubar</string>
-         </property>
-        </widget>
-       </item>
-       <item row="13" column="1">
-        <widget class="QCheckBox" name="detailsInFullscreen">
-         <property name="toolTip">
-          <string>Choose whether or not to display the titlebar text while in fullscreen</string>
-         </property>
-         <property name="text">
-          <string>Show titlebar text in fullscreen</string>
          </property>
         </widget>
        </item>
@@ -334,6 +334,19 @@
          </property>
         </widget>
        </item>
+       <item row="3" column="1">
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>5</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
        <item row="4" column="0">
         <widget class="QLabel" name="label_3">
          <property name="toolTip">
@@ -379,6 +392,19 @@
          </property>
         </widget>
        </item>
+       <item row="6" column="1">
+        <widget class="QCheckBox" name="cursorZoomCheckbox">
+         <property name="toolTip">
+          <string>Choose whether or not zooming in and out above 100% zoom will zoom towards the cursor</string>
+         </property>
+         <property name="text">
+          <string>Zoom &amp;towards cursor</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
        <item row="7" column="1">
         <widget class="QCheckBox" name="oneToOnePixelSizingCheckbox">
          <property name="text">
@@ -401,6 +427,23 @@
           </size>
          </property>
         </spacer>
+       </item>
+       <item row="9" column="0">
+        <widget class="QLabel" name="cropModeLabel">
+         <property name="toolTip">
+          <string>Ignores select sides of an image when fitting to window (some sides will extend beyond the window boundaries)</string>
+         </property>
+         <property name="text">
+          <string>On window resize:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="1">
+        <widget class="QComboBox" name="cropModeComboBox">
+         <property name="toolTip">
+          <string>Ignores select sides of an image when fitting to window (some sides will extend beyond the window boundaries)</string>
+         </property>
+        </widget>
        </item>
        <item row="10" column="1">
         <widget class="QCheckBox" name="pastActualSizeCheckbox">
@@ -425,49 +468,6 @@
          </property>
          <property name="maximum">
           <number>5</number>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="1">
-        <widget class="QComboBox" name="cropModeComboBox">
-         <property name="toolTip">
-          <string>Ignores select sides of an image when fitting to window (some sides will extend beyond the window boundaries)</string>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="0">
-        <widget class="QLabel" name="cropModeLabel">
-         <property name="toolTip">
-          <string>Ignores select sides of an image when fitting to window (some sides will extend beyond the window boundaries)</string>
-         </property>
-         <property name="text">
-          <string>On window resize:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <spacer name="horizontalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>5</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="6" column="1">
-        <widget class="QCheckBox" name="cursorZoomCheckbox">
-         <property name="toolTip">
-          <string>Choose whether or not zooming in and out above 100% zoom will zoom towards the cursor</string>
-         </property>
-         <property name="text">
-          <string>Zoom &amp;towards cursor</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -709,6 +709,37 @@
          </property>
         </spacer>
        </item>
+       <item row="11" column="0">
+        <widget class="QLabel" name="label_10">
+         <property name="text">
+          <string>After deletion:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="11" column="1">
+        <widget class="QComboBox" name="afterDeletionComboBox">
+        </widget>
+       </item>
+       <item row="12" column="1">
+        <widget class="QCheckBox" name="askDeleteCheckbox">
+         <property name="text">
+          <string>&amp;Ask before deleting files</string>
+         </property>
+        </widget>
+       </item>
+       <item row="13" column="1">
+        <spacer name="horizontalSpacer_8">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>5</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
        <item row="14" column="1">
         <widget class="QCheckBox" name="mimeContentDetectionCheckbox">
          <property name="toolTip">
@@ -732,37 +763,6 @@
           <string extracomment="The notifications are for new qView releases">&amp;Update notifications on startup</string>
          </property>
         </widget>
-       </item>
-       <item row="11" column="1">
-        <widget class="QComboBox" name="afterDeletionComboBox">
-        </widget>
-       </item>
-       <item row="11" column="0">
-        <widget class="QLabel" name="label_10">
-         <property name="text">
-          <string>After deletion:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="12" column="1">
-        <widget class="QCheckBox" name="askDeleteCheckbox">
-         <property name="text">
-          <string>&amp;Ask before deleting files</string>
-         </property>
-        </widget>
-       </item>
-       <item row="13" column="1">
-        <spacer name="horizontalSpacer_8">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>5</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </widget>
