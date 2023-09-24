@@ -29,7 +29,6 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     setScene(scene);
 
     // Initialize configurable variables
-    isFilteringEnabled = true;
     isScalingEnabled = true;
     isScalingTwoEnabled = true;
     isPastActualSizeEnabled = true;
@@ -876,7 +875,17 @@ void QVGraphicsView::setSpeed(const int &desiredSpeed)
     imageCore.setSpeed(desiredSpeed);
 }
 
-void QVGraphicsView::rotateImage(int rotation)
+void QVGraphicsView::rotateImage(const int relativeAngle)
 {
-    rotate(rotation);
+    rotate(relativeAngle);
+}
+
+void QVGraphicsView::mirrorImage()
+{
+    scale(-1, 1);
+}
+
+void QVGraphicsView::flipImage()
+{
+    scale(1, -1);
 }

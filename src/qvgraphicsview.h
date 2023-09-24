@@ -72,7 +72,9 @@ public:
     void jumpToNextFrame();
     void setPaused(const bool &desiredState);
     void setSpeed(const int &desiredSpeed);
-    void rotateImage(int rotation);
+    void rotateImage(const int relativeAngle);
+    void mirrorImage();
+    void flipImage();
 
     void fitOrConstrainImage();
 
@@ -144,7 +146,6 @@ private:
 
     QGraphicsPixmapItem *loadedPixmapItem;
 
-    bool isFilteringEnabled;
     bool isScalingEnabled;
     bool isScalingTwoEnabled;
     bool isPastActualSizeEnabled;
@@ -173,7 +174,6 @@ private:
     QTimer *expensiveScaleTimer;
     QTimer *constrainBoundsTimer;
     QTimer *emitZoomLevelChangedTimer;
-    QPointF centerPoint;
 
     ScrollHelper *scrollHelper;
     AxisLocker scrollAxisLocker;

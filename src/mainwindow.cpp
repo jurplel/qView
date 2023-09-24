@@ -1119,13 +1119,13 @@ void MainWindow::rotateLeft()
 
 void MainWindow::mirror()
 {
-    graphicsView->scale(-1, 1);
+    graphicsView->mirrorImage();
     graphicsView->zoomToFit();
 }
 
 void MainWindow::flip()
 {
-    graphicsView->scale(1, -1);
+    graphicsView->flipImage();
     graphicsView->zoomToFit();
 }
 
