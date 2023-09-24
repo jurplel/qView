@@ -146,9 +146,14 @@ bool SettingsManager::isDefault(const QString &key) const
 
 void SettingsManager::copyFromOfficial()
 {
-    const QSet<QString> keysToSkip = []() {
+    const QSet<QString> keysToSkip = []()
+    {
+#ifdef Q_OS_MACOS
         QList<QString> systemDefaultKeys = QSettings{"qView", "NonExistent"}.allKeys();
         return QSet<QString>{systemDefaultKeys.begin(), systemDefaultKeys.end()};
+#else
+        return QSet<QString>();
+#endif
     }();
     QSettings src{"qView", "qView"};
     QSettings dst{};
