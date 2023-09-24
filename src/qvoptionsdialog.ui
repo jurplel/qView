@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>497</width>
-    <height>558</height>
+    <height>560</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,7 +23,7 @@
       <enum>Qt::NoFocus</enum>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="window">
       <property name="layoutDirection">
@@ -490,6 +490,91 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="fileOperations">
+      <attribute name="title">
+       <string>File Operations</string>
+      </attribute>
+      <layout class="QFormLayout" name="formLayout_2">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_10">
+         <property name="text">
+          <string>After deletion:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QComboBox" name="afterDeletionComboBox">
+         <property name="currentIndex">
+          <number>1</number>
+         </property>
+         <item>
+          <property name="text">
+           <string>Move Back</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Do Nothing</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Move Forward</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QCheckBox" name="askDeleteCheckbox">
+         <property name="text">
+          <string>&amp;Ask before deleting files</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label_9">
+         <property name="text">
+          <string>Quick command:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLineEdit" name="commandStringLineEdit"/>
+       </item>
+       <item row="4" column="1">
+        <widget class="QLabel" name="label_11">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>When the &quot;Run Command&quot; action is triggered, this string is executed as a command where each occurence of %QVIEW_PATH% is replaced by the path to the currently opened image.</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <spacer name="horizontalSpacer_8">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>5</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
      <widget class="QWidget" name="misc">
       <attribute name="title">
        <string>Miscellaneous</string>
@@ -697,7 +782,7 @@
          </property>
         </spacer>
        </item>
-       <item row="14" column="1">
+       <item row="11" column="1">
         <widget class="QCheckBox" name="mimeContentDetectionCheckbox">
          <property name="toolTip">
           <string>Detect supported files in folder even if extension isn't recognized (may be slow with larger/network folders)</string>
@@ -707,99 +792,17 @@
          </property>
         </widget>
        </item>
-       <item row="15" column="1">
+       <item row="12" column="1">
         <widget class="QCheckBox" name="saveRecentsCheckbox">
          <property name="text">
           <string>Save &amp;recent files</string>
          </property>
         </widget>
        </item>
-       <item row="16" column="1">
+       <item row="13" column="1">
         <widget class="QCheckBox" name="updateCheckbox">
          <property name="text">
           <string extracomment="The notifications are for new qView releases">&amp;Update notifications on startup</string>
-         </property>
-        </widget>
-       </item>
-       <item row="11" column="1">
-        <widget class="QComboBox" name="afterDeletionComboBox">
-         <property name="currentIndex">
-          <number>1</number>
-         </property>
-         <item>
-          <property name="text">
-           <string>Move Back</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Do Nothing</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Move Forward</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="12" column="1">
-        <widget class="QCheckBox" name="askDeleteCheckbox">
-         <property name="text">
-          <string>&amp;Ask before deleting files</string>
-         </property>
-        </widget>
-       </item>
-       <item row="13" column="1">
-        <spacer name="horizontalSpacer_8">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>5</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="11" column="0">
-        <widget class="QLabel" name="label_10">
-         <property name="text">
-          <string>After deletion:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="17" column="1">
-        <spacer name="horizontalSpacer_10">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="18" column="1">
-        <widget class="QLineEdit" name="commandStringLineEdit"/>
-       </item>
-       <item row="18" column="0">
-        <widget class="QLabel" name="label_9">
-         <property name="text">
-          <string>Quick command:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="19" column="1">
-        <widget class="QLabel" name="label_11">
-         <property name="text">
-          <string>When the &quot;Run Command&quot; action is triggered, this string is executed as a command where each occurence of %QVIEW_PATH% is replaced by the path to the currently opened image.</string>
-         </property>
-         <property name="wordWrap">
-          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -879,6 +882,44 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>bgColorCheckbox</tabstop>
+  <tabstop>titlebarRadioButton0</tabstop>
+  <tabstop>titlebarRadioButton1</tabstop>
+  <tabstop>titlebarRadioButton2</tabstop>
+  <tabstop>titlebarRadioButton3</tabstop>
+  <tabstop>windowResizeComboBox</tabstop>
+  <tabstop>minWindowResizeSpinBox</tabstop>
+  <tabstop>maxWindowResizeSpinBox</tabstop>
+  <tabstop>menubarCheckbox</tabstop>
+  <tabstop>detailsInFullscreen</tabstop>
+  <tabstop>darkTitlebarCheckbox</tabstop>
+  <tabstop>quitOnLastWindowCheckbox</tabstop>
+  <tabstop>filteringCheckbox</tabstop>
+  <tabstop>scalingCheckbox</tabstop>
+  <tabstop>scalingTwoCheckbox</tabstop>
+  <tabstop>scaleFactorSpinBox</tabstop>
+  <tabstop>scrollZoomsCheckbox</tabstop>
+  <tabstop>cursorZoomCheckbox</tabstop>
+  <tabstop>cropModeComboBox</tabstop>
+  <tabstop>pastActualSizeCheckbox</tabstop>
+  <tabstop>colorSpaceConversionComboBox</tabstop>
+  <tabstop>afterDeletionComboBox</tabstop>
+  <tabstop>askDeleteCheckbox</tabstop>
+  <tabstop>commandStringLineEdit</tabstop>
+  <tabstop>langComboBox</tabstop>
+  <tabstop>sortComboBox</tabstop>
+  <tabstop>descendingRadioButton0</tabstop>
+  <tabstop>descendingRadioButton1</tabstop>
+  <tabstop>preloadingComboBox</tabstop>
+  <tabstop>loopFoldersCheckbox</tabstop>
+  <tabstop>slideshowDirectionComboBox</tabstop>
+  <tabstop>slideshowTimerSpinBox</tabstop>
+  <tabstop>mimeContentDetectionCheckbox</tabstop>
+  <tabstop>saveRecentsCheckbox</tabstop>
+  <tabstop>updateCheckbox</tabstop>
+  <tabstop>shortcutsTable</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
