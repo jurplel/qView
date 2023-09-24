@@ -41,6 +41,7 @@ protected:
     void updateButtonBox();
     void bgColorButtonClicked();
     void updateBgColorButton();
+    void restartNotifyForCheckbox(const QString &key, const int arg1);
     void populateLanguages();
 
 private slots:
@@ -49,8 +50,6 @@ private slots:
     void buttonBoxClicked(QAbstractButton *button);
 
     void bgColorCheckboxStateChanged(int arg1);
-
-    void submenuIconsCheckboxStateChanged(int arg1);
 
     void scalingCheckboxStateChanged(int arg1);
 

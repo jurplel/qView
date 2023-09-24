@@ -18,6 +18,9 @@ int main(int argc, char *argv[])
     if (!QSettings().value("firstlaunch").isValid())
         SettingsManager::copyFromOfficial();
 
+    if (QSettings().value("options/nonnativetheme").toBool())
+        QApplication::setStyle("fusion");
+
     QVApplication app(argc, argv);
 
     QCommandLineParser parser;

@@ -23,7 +23,8 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     connect(ui->buttonBox, &QDialogButtonBox::clicked, this, &QVOptionsDialog::buttonBoxClicked);
     connect(ui->shortcutsTable, &QTableWidget::cellDoubleClicked, this, &QVOptionsDialog::shortcutCellDoubleClicked);
     connect(ui->bgColorCheckbox, &QCheckBox::stateChanged, this, &QVOptionsDialog::bgColorCheckboxStateChanged);
-    connect(ui->submenuIconsCheckbox, &QCheckBox::stateChanged, this, &QVOptionsDialog::submenuIconsCheckboxStateChanged);
+    connect(ui->nonNativeThemeCheckbox, &QCheckBox::stateChanged, this, [this](int arg1) { restartNotifyForCheckbox("nonnativetheme", arg1); });
+    connect(ui->submenuIconsCheckbox, &QCheckBox::stateChanged, this, [this](int arg1) { restartNotifyForCheckbox("submenuicons", arg1); });
     connect(ui->scalingCheckbox, &QCheckBox::stateChanged, this, &QVOptionsDialog::scalingCheckboxStateChanged);
     connect(ui->constrainImagePositionCheckbox, &QCheckBox::stateChanged, this, &QVOptionsDialog::constrainImagePositionCheckboxStateChanged);
 
@@ -46,6 +47,9 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     }
 
 // Platform specific settings
+#if !defined(Q_OS_WIN) || QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
+    ui->nonNativeThemeCheckbox->hide();
+#endif
 #ifdef Q_OS_MACOS
     ui->menubarCheckbox->hide();
 #else
@@ -151,6 +155,8 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
     syncSpinBox(ui->minWindowResizeSpinBox, "minwindowresizedpercentage", defaults, makeConnections);
     // maxwindowresizedperecentage
     syncSpinBox(ui->maxWindowResizeSpinBox, "maxwindowresizedpercentage", defaults, makeConnections);
+    // nonnativetheme
+    syncCheckbox(ui->nonNativeThemeCheckbox, "nonnativetheme", defaults, makeConnections);
     // titlebaralwaysdark
     syncCheckbox(ui->darkTitlebarCheckbox, "titlebaralwaysdark", defaults, makeConnections);
     // quitonlastwindow
@@ -466,9 +472,9 @@ void QVOptionsDialog::bgColorCheckboxStateChanged(int arg1)
     updateBgColorButton();
 }
 
-void QVOptionsDialog::submenuIconsCheckboxStateChanged(int arg1)
+void QVOptionsDialog::restartNotifyForCheckbox(const QString &key, const int arg1)
 {
-    bool savedValue = qvApp->getSettingsManager().getBoolean("submenuicons");
+    const bool savedValue = qvApp->getSettingsManager().getBoolean(key);
     if (static_cast<bool>(arg1) != savedValue)
         QMessageBox::information(this, tr("Restart Required"), tr("You must restart qView to change this setting."));
 }

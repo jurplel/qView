@@ -282,7 +282,7 @@
          </property>
         </spacer>
        </item>
-       <item row="13" column="1">
+       <item row="14" column="1">
         <widget class="QCheckBox" name="submenuIconsCheckbox">
          <property name="toolTip">
           <string>Show icons in &quot;Open Recent&quot; and &quot;Open With&quot; submenus</string>
@@ -295,7 +295,7 @@
          </property>
         </widget>
        </item>
-       <item row="14" column="1">
+       <item row="15" column="1">
         <widget class="QCheckBox" name="darkTitlebarCheckbox">
          <property name="toolTip">
           <string>Choose whether or not the titlebar should always be dark regardless of your chosen macOS appearance</string>
@@ -309,13 +309,20 @@
         </widget>
        </item>
        <item row="11" column="1">
+        <widget class="QCheckBox" name="nonNativeThemeCheckbox">
+         <property name="text">
+          <string>Non-native theme (supports dark mode)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="1">
         <widget class="QCheckBox" name="menubarCheckbox">
          <property name="text">
           <string>Show menubar</string>
          </property>
         </widget>
        </item>
-       <item row="12" column="1">
+       <item row="13" column="1">
         <widget class="QCheckBox" name="detailsInFullscreen">
          <property name="toolTip">
           <string>Choose whether or not to display the titlebar text while in fullscreen</string>
@@ -325,7 +332,7 @@
          </property>
         </widget>
        </item>
-       <item row="15" column="1">
+       <item row="16" column="1">
         <widget class="QCheckBox" name="quitOnLastWindowCheckbox">
          <property name="text">
           <string>&amp;Quit on last window closed</string>
