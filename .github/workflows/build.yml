@@ -66,7 +66,7 @@ jobs:
           if ($IsWindows) {
             Invoke-Expression "& 'dist/scripts/windeployqt.ps1' ${{ env.buildNumString }}"
           } elseif ($IsMacOS) {
-            bash dist/scripts/macdeploy.sh ${{ env.buildNumString }}
+            bash dist/scripts/macdeploy.sh ${{ env.buildNumString }} ${{ matrix.osSuffix }}
           } else {
             bash dist/scripts/linuxdeployqt.sh ${{ env.buildNumString }}
           }

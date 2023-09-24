@@ -12,7 +12,7 @@ cd bin
 macdeployqt qView.app
 if [ $1 != "" ]; then
     macdeployqt *.app -codesign=- -dmg
-    mv qView.dmg qView-JDP-$1.dmg
+    mv qView.dmg qView-JDP-$1-macOS$2.dmg
 else
     brew install create-dmg
     codesign --sign - --deep qView.app
