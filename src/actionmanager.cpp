@@ -555,14 +555,16 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
         qvApp->pickFile(relevantWindow);
     } else if (key == "closewindow") {
         auto *active = QApplication::activeWindow();
-#ifdef COCOA_LOADED
+#if defined COCOA_LOADED && QT_VERSION < QT_VERSION_CHECK(6, 2, 0)
+        // QTBUG-46701
         QVCocoaFunctions::closeWindow(active->windowHandle());
 #endif
         active->close();
     } else if (key == "closeallwindows") {
         const auto topLevelWindows = QApplication::topLevelWindows();
         for (auto *window : topLevelWindows) {
-#ifdef COCOA_LOADED
+#if defined COCOA_LOADED && QT_VERSION < QT_VERSION_CHECK(6, 2, 0)
+            // QTBUG-46701
             QVCocoaFunctions::closeWindow(window);
 #endif
             window->close();
