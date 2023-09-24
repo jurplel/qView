@@ -23,8 +23,8 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     connect(ui->buttonBox, &QDialogButtonBox::clicked, this, &QVOptionsDialog::buttonBoxClicked);
     connect(ui->shortcutsTable, &QTableWidget::cellDoubleClicked, this, &QVOptionsDialog::shortcutCellDoubleClicked);
     connect(ui->bgColorCheckbox, &QCheckBox::stateChanged, this, &QVOptionsDialog::bgColorCheckboxStateChanged);
-    connect(ui->nonNativeThemeCheckbox, &QCheckBox::stateChanged, this, [this](int arg1) { restartNotifyForCheckbox("nonnativetheme", arg1); });
-    connect(ui->submenuIconsCheckbox, &QCheckBox::stateChanged, this, [this](int arg1) { restartNotifyForCheckbox("submenuicons", arg1); });
+    connect(ui->nonNativeThemeCheckbox, &QCheckBox::stateChanged, this, [this](int state) { restartNotifyForCheckbox("nonnativetheme", state); });
+    connect(ui->submenuIconsCheckbox, &QCheckBox::stateChanged, this, [this](int state) { restartNotifyForCheckbox("submenuicons", state); });
     connect(ui->scalingCheckbox, &QCheckBox::stateChanged, this, &QVOptionsDialog::scalingCheckboxStateChanged);
     connect(ui->constrainImagePositionCheckbox, &QCheckBox::stateChanged, this, &QVOptionsDialog::constrainImagePositionCheckboxStateChanged);
 
@@ -237,8 +237,8 @@ void QVOptionsDialog::syncCheckbox(QCheckBox *checkbox, const QString &key, bool
 
     if (makeConnection)
     {
-        connect(checkbox, &QCheckBox::stateChanged, this, [this, key](int arg1) {
-            modifySetting(key, static_cast<bool>(arg1));
+        connect(checkbox, &QCheckBox::stateChanged, this, [this, key](int state) {
+            modifySetting(key, static_cast<bool>(state));
         });
     }
 }
@@ -298,8 +298,8 @@ void QVOptionsDialog::syncSpinBox(QSpinBox *spinBox, const QString &key, bool de
 
     if (makeConnection)
     {
-        connect(spinBox, QOverload<int>::of(&QSpinBox::valueChanged), this, [this, key](int arg1) {
-            modifySetting(key, arg1);
+        connect(spinBox, QOverload<int>::of(&QSpinBox::valueChanged), this, [this, key](int i) {
+            modifySetting(key, i);
         });
     }
 }
@@ -312,8 +312,8 @@ void QVOptionsDialog::syncDoubleSpinBox(QDoubleSpinBox *doubleSpinBox, const QSt
 
     if (makeConnection)
     {
-        connect(doubleSpinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, [this, key](double arg1) {
-            modifySetting(key, arg1);
+        connect(doubleSpinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, [this, key](double d) {
+            modifySetting(key, d);
         });
     }
 }
@@ -326,8 +326,8 @@ void QVOptionsDialog::syncLineEdit(QLineEdit *lineEdit, const QString &key, bool
 
     if (makeConnection)
     {
-        connect(lineEdit, &QLineEdit::textEdited, this, [this, key](QString arg1) {
-            modifySetting(key, arg1);
+        connect(lineEdit, &QLineEdit::textEdited, this, [this, key](const QString &text) {
+            modifySetting(key, text);
         });
     }
 }
@@ -462,29 +462,22 @@ void QVOptionsDialog::updateBgColorButton()
     ui->bgColorButton->setIcon(QIcon(newPixmap));
 }
 
-void QVOptionsDialog::bgColorCheckboxStateChanged(int arg1)
+void QVOptionsDialog::bgColorCheckboxStateChanged(int state)
 {
-    if (arg1 > 0)
-        ui->bgColorButton->setEnabled(true);
-    else
-        ui->bgColorButton->setEnabled(false);
-
+    ui->bgColorButton->setEnabled(static_cast<bool>(state));
     updateBgColorButton();
 }
 
-void QVOptionsDialog::restartNotifyForCheckbox(const QString &key, const int arg1)
+void QVOptionsDialog::restartNotifyForCheckbox(const QString &key, const int state)
 {
     const bool savedValue = qvApp->getSettingsManager().getBoolean(key);
-    if (static_cast<bool>(arg1) != savedValue)
+    if (static_cast<bool>(state) != savedValue)
         QMessageBox::information(this, tr("Restart Required"), tr("You must restart qView to change this setting."));
 }
 
-void QVOptionsDialog::scalingCheckboxStateChanged(int arg1)
+void QVOptionsDialog::scalingCheckboxStateChanged(int state)
 {
-    if (arg1 > 0)
-        ui->scalingTwoCheckbox->setEnabled(true);
-    else
-        ui->scalingTwoCheckbox->setEnabled(false);
+    ui->scalingTwoCheckbox->setEnabled(static_cast<bool>(state));
 }
 
 void QVOptionsDialog::titlebarComboBoxCurrentIndexChanged(int index)
@@ -503,12 +496,9 @@ void QVOptionsDialog::windowResizeComboBoxCurrentIndexChanged(int index)
     ui->maxWindowResizeSpinBox->setEnabled(enableRelatedControls);
 }
 
-void QVOptionsDialog::constrainImagePositionCheckboxStateChanged(int arg1)
+void QVOptionsDialog::constrainImagePositionCheckboxStateChanged(int state)
 {
-    if (arg1 > 0)
-        ui->constrainCentersSmallImageCheckbox->setEnabled(true);
-    else
-        ui->constrainCentersSmallImageCheckbox->setEnabled(false);
+    ui->constrainCentersSmallImageCheckbox->setEnabled(static_cast<bool>(state));
 }
 
 void QVOptionsDialog::populateLanguages()

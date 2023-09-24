@@ -41,7 +41,7 @@ protected:
     void updateButtonBox();
     void bgColorButtonClicked();
     void updateBgColorButton();
-    void restartNotifyForCheckbox(const QString &key, const int arg1);
+    void restartNotifyForCheckbox(const QString &key, const int state);
     void populateLanguages();
 
 private slots:
@@ -49,15 +49,15 @@ private slots:
 
     void buttonBoxClicked(QAbstractButton *button);
 
-    void bgColorCheckboxStateChanged(int arg1);
+    void bgColorCheckboxStateChanged(int state);
 
-    void scalingCheckboxStateChanged(int arg1);
+    void scalingCheckboxStateChanged(int state);
 
     void titlebarComboBoxCurrentIndexChanged(int index);
 
     void windowResizeComboBoxCurrentIndexChanged(int index);
 
-    void constrainImagePositionCheckboxStateChanged(int arg1);
+    void constrainImagePositionCheckboxStateChanged(int state);
 
     void languageComboBoxCurrentIndexChanged(int index);
 
