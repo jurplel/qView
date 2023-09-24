@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>497</width>
+    <width>508</width>
     <height>558</height>
    </rect>
   </property>
@@ -81,8 +81,7 @@
         </widget>
        </item>
        <item row="3" column="1">
-        <widget class="QComboBox" name="titlebarComboBox">
-        </widget>
+        <widget class="QComboBox" name="titlebarComboBox"/>
        </item>
        <item row="4" column="1">
         <widget class="QLineEdit" name="customTitlebarLineEdit">
@@ -147,8 +146,7 @@
         </widget>
        </item>
        <item row="7" column="1">
-        <widget class="QComboBox" name="afterMatchingSizeComboBox">
-        </widget>
+        <widget class="QComboBox" name="afterMatchingSizeComboBox"/>
        </item>
        <item row="8" column="0">
         <widget class="QLabel" name="minWindowResizeLabel">
@@ -545,8 +543,7 @@
         </widget>
        </item>
        <item row="18" column="1">
-        <widget class="QComboBox" name="colorSpaceConversionComboBox">
-        </widget>
+        <widget class="QComboBox" name="colorSpaceConversionComboBox"/>
        </item>
       </layout>
      </widget>
@@ -573,8 +570,7 @@
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QComboBox" name="sortComboBox">
-        </widget>
+        <widget class="QComboBox" name="sortComboBox"/>
        </item>
        <item row="2" column="1">
         <widget class="QRadioButton" name="descendingRadioButton0">
@@ -717,8 +713,7 @@
         </widget>
        </item>
        <item row="11" column="1">
-        <widget class="QComboBox" name="afterDeletionComboBox">
-        </widget>
+        <widget class="QComboBox" name="afterDeletionComboBox"/>
        </item>
        <item row="12" column="1">
         <widget class="QCheckBox" name="askDeleteCheckbox">
