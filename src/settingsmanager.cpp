@@ -172,7 +172,7 @@ void SettingsManager::initializeSettingsLibrary()
     settingsLibrary.insert("aftermatchingsizemode", {1, {}});
     settingsLibrary.insert("minwindowresizedpercentage", {20, {}});
     settingsLibrary.insert("maxwindowresizedpercentage", {70, {}});
-    settingsLibrary.insert("titlebaralwaysdark", {true, {}});
+    settingsLibrary.insert("titlebaralwaysdark", {false, {}});
     settingsLibrary.insert("quitonlastwindow", {false, {}});
     settingsLibrary.insert("menubarenabled", {false, {}});
     settingsLibrary.insert("fullscreendetails", {false, {}});
