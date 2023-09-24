@@ -196,6 +196,22 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
     syncCheckbox(ui->saveRecentsCheckbox, "saverecents", defaults, makeConnections);
     // updatenotifications
     syncCheckbox(ui->updateCheckbox, "updatenotifications", defaults, makeConnections);
+    // commandstring
+    syncLineEdit(ui->commandStringLineEdit, "commandstring", defaults, makeConnections);
+}
+
+void QVOptionsDialog::syncLineEdit(QLineEdit *lineEdit, const QString &key, bool defaults, bool makeConnection)
+{
+    auto val = qvApp->getSettingsManager().getString(key, defaults);
+    lineEdit->setText(val);
+    transientSettings.insert(key, val);
+
+    if (makeConnection)
+    {
+        connect(lineEdit, &QLineEdit::textEdited, this, [this, key]() {
+            modifySetting(key, this->ui->commandStringLineEdit->text());
+        });
+    }
 }
 
 void QVOptionsDialog::syncCheckbox(QCheckBox *checkbox, const QString &key, bool defaults, bool makeConnection)

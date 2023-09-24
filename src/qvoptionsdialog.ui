@@ -743,13 +743,6 @@
          </item>
         </widget>
        </item>
-       <item row="11" column="0">
-        <widget class="QLabel" name="label_10">
-         <property name="text">
-          <string>After deletion:</string>
-         </property>
-        </widget>
-       </item>
        <item row="12" column="1">
         <widget class="QCheckBox" name="askDeleteCheckbox">
          <property name="text">
@@ -769,6 +762,46 @@
           </size>
          </property>
         </spacer>
+       </item>
+       <item row="11" column="0">
+        <widget class="QLabel" name="label_10">
+         <property name="text">
+          <string>After deletion:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="17" column="1">
+        <spacer name="horizontalSpacer_10">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="18" column="1">
+        <widget class="QLineEdit" name="commandStringLineEdit"/>
+       </item>
+       <item row="18" column="0">
+        <widget class="QLabel" name="label_9">
+         <property name="text">
+          <string>Quick command:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="19" column="1">
+        <widget class="QLabel" name="label_11">
+         <property name="text">
+          <string>When the &quot;Run Command&quot; action is triggered, this string is executed as a command where each occurence of %QVIEW_PATH% is replaced by the path to the currently opened image.</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -855,8 +888,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>325</x>
-     <y>332</y>
+     <x>334</x>
+     <y>548</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
@@ -871,8 +904,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>257</x>
-     <y>332</y>
+     <x>266</x>
+     <y>548</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
