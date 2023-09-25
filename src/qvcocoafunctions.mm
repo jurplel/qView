@@ -65,17 +65,33 @@ void QVCocoaFunctions::setUserDefaults()
 }
 
 // This function should only be called once because it sets observers
-void QVCocoaFunctions::setFullSizeContentView(QWindow *window)
+void QVCocoaFunctions::setFullSizeContentView(QWindow *window, const bool shouldEnable)
 {
     auto *view = reinterpret_cast<NSView*>(window->winId());
 
-    // If this Qt and macOS version combination is already using layer-backed view, then enable full size content view
-    if (view.wantsLayer)
+    const bool isAlreadyEnabled = view.window.styleMask & NSWindowStyleMaskFullSizeContentView;
+    if (shouldEnable == isAlreadyEnabled || (shouldEnable && !view.wantsLayer))
+        return;
+
+    NSRect originalFrame = view.window.frame;
+    if (shouldEnable)
     {
         view.window.styleMask |= NSWindowStyleMaskFullSizeContentView;
+    }
+    else
+    {
+        int titlebarOverlap = view.window.contentView.frame.size.height - view.window.contentLayoutRect.size.height;
+        NSRect adjustedFrame = originalFrame;
+        adjustedFrame.size.height -= titlebarOverlap;
+        [view.window setFrame:adjustedFrame display:NO];
+        view.window.styleMask &= ~NSWindowStyleMaskFullSizeContentView;
+    }
+    [view.window setFrame:originalFrame display:YES];
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 2, 0)
-        // workaround for QTBUG-69975
+    // workaround for QTBUG-69975
+    if (shouldEnable)
+    {
         [[NSNotificationCenter defaultCenter] addObserverForName:NSWindowDidExitFullScreenNotification object:view.window queue:nil usingBlock:^(NSNotification *notification){
             auto *window = reinterpret_cast<NSWindow*>(notification.object);
             window.styleMask |= NSWindowStyleMaskFullSizeContentView;
@@ -85,8 +101,8 @@ void QVCocoaFunctions::setFullSizeContentView(QWindow *window)
             auto *window = reinterpret_cast<NSWindow*>(notification.object);
             window.styleMask |= NSWindowStyleMaskFullSizeContentView;
         }];
-#endif
     }
+#endif
 }
 
 bool QVCocoaFunctions::getTitlebarHidden(QWindow *window)

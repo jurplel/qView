@@ -13,7 +13,7 @@ public:
 
     static void setUserDefaults();
 
-    static void setFullSizeContentView(QWindow *window);
+    static void setFullSizeContentView(QWindow *window, const bool shouldEnable);
 
     static bool getTitlebarHidden(QWindow *window);
 

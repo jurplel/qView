@@ -154,10 +154,6 @@ MainWindow::MainWindow(QWidget *parent) :
         populateOpenWithMenu(openWithFutureWatcher.result());
     });
 
-#ifdef COCOA_LOADED
-    QVCocoaFunctions::setFullSizeContentView(windowHandle());
-#endif
-
     // Load window geometry
     QSettings settings;
     restoreGeometry(settings.value("geometry").toByteArray());
@@ -202,6 +198,12 @@ void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 
 void MainWindow::showEvent(QShowEvent *event)
 {
+#ifdef COCOA_LOADED
+    QTimer::singleShot(0, this, [this]() {
+        QVCocoaFunctions::setFullSizeContentView(windowHandle(), true);
+    });
+#endif
+
     if (!menuBar()->sizeHint().isEmpty())
     {
         ui->fullscreenLabel->setMargin(0);
@@ -213,6 +215,10 @@ void MainWindow::showEvent(QShowEvent *event)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+#ifdef COCOA_LOADED
+    QVCocoaFunctions::setFullSizeContentView(windowHandle(), false);
+#endif
+
     QSettings settings;
     settings.setValue("geometry", saveGeometry());
 
