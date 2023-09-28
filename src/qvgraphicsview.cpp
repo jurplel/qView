@@ -47,6 +47,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     isZoomToFitEnabled = true;
     isApplyingZoomToFit = false;
     isNavigationResetsZoomEnabled = true;
+    loadIsFromSessionRestore = false;
     zoomLevel = 1.0;
     appliedDpiAdjustment = 1.0;
     appliedExpensiveScaleZoomLevel = 0.0;
@@ -94,6 +95,10 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 
 void QVGraphicsView::resizeEvent(QResizeEvent *event)
 {
+    if (const auto mainWindow = qobject_cast<MainWindow*>(window()))
+        if (mainWindow->getIsClosing())
+            return;
+
     QGraphicsView::resizeEvent(event);
     fitOrConstrainImage();
 }
@@ -354,16 +359,21 @@ void QVGraphicsView::postLoad()
     // Set the pixmap to the new image and reset the transform's scale to a known value
     removeExpensiveScaling();
 
-    if (isNavigationResetsZoomEnabled && !isZoomToFitEnabled)
-        setZoomToFitEnabled(true);
-    else
-        fitOrConstrainImage();
+    if (!loadIsFromSessionRestore)
+    {
+        if (isNavigationResetsZoomEnabled && !isZoomToFitEnabled)
+            setZoomToFitEnabled(true);
+        else
+            fitOrConstrainImage();
+    }
 
     expensiveScaleTimer->start();
 
     qvApp->getActionManager().addFileToRecentsList(getCurrentFileDetails().fileInfo);
 
-    emit fileChanged();
+    emit fileChanged(loadIsFromSessionRestore);
+
+    loadIsFromSessionRestore = false;
 }
 
 void QVGraphicsView::zoomIn(const QPoint &pos)
@@ -422,7 +432,7 @@ void QVGraphicsView::zoomAbsolute(const qreal absoluteLevel, const QPoint &pos)
         lastZoomRoundingError = mapToScene(pos) - scenePos;
         constrainBoundsTimer->start();
     }
-    else
+    else if (!loadIsFromSessionRestore)
     {
         centerImage();
     }
@@ -604,6 +614,64 @@ void QVGraphicsView::centerImage()
     verticalScrollBar()->setValue(vOffset + (vOverflow / 2));
 
     scrollHelper->cancelAnimation();
+}
+
+const QJsonObject QVGraphicsView::getSessionState() const
+{
+    QJsonObject state;
+
+    const QTransform transform = getTransformWithNoScaling();
+    const QJsonArray transformValues {
+        static_cast<int>(transform.m11()),
+        static_cast<int>(transform.m22()),
+        static_cast<int>(transform.m21()),
+        static_cast<int>(transform.m12())
+    };
+    state["transform"] = transformValues;
+
+    state["zoomLevel"] = zoomLevel;
+
+    state["hScroll"] = horizontalScrollBar()->value();
+
+    state["vScroll"] = verticalScrollBar()->value();
+
+    state["navResetsZoom"] = isNavigationResetsZoomEnabled;
+
+    state["zoomToFit"] = isZoomToFitEnabled;
+
+    return state;
+}
+
+void QVGraphicsView::loadSessionState(const QJsonObject &state)
+{
+    const QJsonArray transformValues = state["transform"].toArray();
+    const QTransform transform {
+        static_cast<double>(transformValues.at(0).toInt()),
+        static_cast<double>(transformValues.at(3).toInt()),
+        static_cast<double>(transformValues.at(2).toInt()),
+        static_cast<double>(transformValues.at(1).toInt()),
+        0,
+        0
+    };
+    setTransform(transform);
+
+    zoomAbsolute(state["zoomLevel"].toDouble());
+
+    horizontalScrollBar()->setValue(state["hScroll"].toInt());
+
+    verticalScrollBar()->setValue(state["vScroll"].toInt());
+
+    isNavigationResetsZoomEnabled = state["navResetsZoom"].toBool();
+
+    isZoomToFitEnabled = state["zoomToFit"].toBool();
+
+    emit navigationResetsZoomChanged();
+    emit zoomToFitChanged();
+}
+
+void QVGraphicsView::setLoadIsFromSessionRestore(const bool value)
+{
+    loadIsFromSessionRestore = value;
 }
 
 void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)

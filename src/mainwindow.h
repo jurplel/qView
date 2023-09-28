@@ -26,7 +26,7 @@ public:
         QString previousPath;
     };
 
-    explicit MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(QWidget *parent = nullptr, const QJsonObject &windowSessionState = {});
     ~MainWindow() override;
 
     void requestPopulateOpenWithMenu();
@@ -52,6 +52,10 @@ public:
     void setJustLaunchedWithImage(bool value);
 
     QScreen *screenContaining(const QRect &rect);
+
+    const QJsonObject getSessionState() const;
+
+    void loadSessionState(const QJsonObject &state, const bool isInitialPhase);
 
     void openRecent(int i);
 
@@ -129,6 +133,10 @@ public:
 
     const QVImageCore::FileDetails& getCurrentFileDetails() const { return graphicsView->getCurrentFileDetails(); }
 
+    qint64 getLastActivatedTimestamp() const { return lastActivated.msecsSinceReference(); }
+
+    bool getIsClosing() const { return isClosing; }
+
 public slots:
     void openFile(const QString &fileName);
 
@@ -138,7 +146,7 @@ public slots:
 
     void cancelSlideshow();
 
-    void fileChanged();
+    void fileChanged(const bool isRestoringState);
 
     void zoomLevelChanged();
 
@@ -186,7 +194,10 @@ private:
     bool checkerboardBackground;
     bool menuBarEnabled;
 
+    QJsonObject sessionStateToLoad;
     bool justLaunchedWithImage;
+    bool isClosing;
+    QElapsedTimer lastActivated;
 
     Qt::WindowStates storedWindowState;
     bool storedTitlebarHidden;

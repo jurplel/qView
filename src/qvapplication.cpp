@@ -14,6 +14,8 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     setDesktopFileName("com.interversehq.qView.desktop");
 
     // Connections
+    connect(this, &QGuiApplication::commitDataRequest, this, &QVApplication::onCommitDataRequest, Qt::DirectConnection);
+    connect(this, &QCoreApplication::aboutToQuit, this, &QVApplication::onAboutToQuit);
     connect(&actionManager, &ActionManager::recentsMenuUpdated, this, &QVApplication::recentsMenuUpdated);
     connect(&updateChecker, &UpdateChecker::checkedUpdates, this, &QVApplication::checkedUpdates);
 
@@ -139,9 +141,9 @@ void QVApplication::pickFile(MainWindow *parent)
     fileDialog->show();
 }
 
-MainWindow *QVApplication::newWindow()
+MainWindow *QVApplication::newWindow(const QJsonObject &windowSessionState)
 {
-    auto *w = new MainWindow();
+    auto *w = new MainWindow(nullptr, windowSessionState);
     w->show();
     w->raise();
 
@@ -150,49 +152,23 @@ MainWindow *QVApplication::newWindow()
 
 MainWindow *QVApplication::getMainWindow(bool shouldBeEmpty)
 {
-    // Attempt to use from list of last active windows
-    for (const auto &window : qAsConst(lastActiveWindows))
+    MainWindow *foundWindow = nullptr;
+
+    for (MainWindow *window : qAsConst(activeWindows))
     {
-        if (!window)
+        // If an empty window is requested, check this flag because it gets set right
+        // after a load is requested, so it will be set if an image is already loaded
+        // or if a load is currently in progress
+        if (shouldBeEmpty && window->getCurrentFileDetails().isLoadRequested)
             continue;
 
-        if (shouldBeEmpty)
-        {
-            // File info is set if an image load is requested, but not loaded
-            if (!window->getCurrentFileDetails().isLoadRequested)
-            {
-                return window;
-            }
-        }
-        else
-        {
-            return window;
-        }
+        if (foundWindow && foundWindow->getLastActivatedTimestamp() >= window->getLastActivatedTimestamp())
+            continue;
+
+        foundWindow = window;
     }
 
-    // If none of those are valid, scan the list for any existing MainWindow
-    const auto topLevelWidgets = QApplication::topLevelWidgets();
-    for (const auto &widget : topLevelWidgets)
-    {
-        if (auto *window = qobject_cast<MainWindow*>(widget))
-        {
-            if (shouldBeEmpty)
-            {
-                if (!window->getCurrentFileDetails().isLoadRequested)
-                {
-                    return window;
-                }
-            }
-            else
-            {
-                return window;
-            }
-        }
-    }
-
-    // If there are no valid ones, make a new one.
-    auto *window = newWindow();
-    return window;
+    return foundWindow ? foundWindow : newWindow();
 }
 
 void QVApplication::checkedUpdates()
@@ -229,26 +205,30 @@ void QVApplication::recentsMenuUpdated()
 #endif
 }
 
-void QVApplication::addToLastActiveWindows(MainWindow *window)
+void QVApplication::addToActiveWindows(MainWindow *window)
 {
     if (!window)
         return;
 
-    if (!lastActiveWindows.isEmpty() && window == lastActiveWindows.first())
-        return;
-
-    lastActiveWindows.prepend(window);
-
-    if (lastActiveWindows.length() > 5)
-        lastActiveWindows.removeLast();
+    activeWindows.insert(window);
 }
 
-void QVApplication::deleteFromLastActiveWindows(MainWindow *window)
+void QVApplication::deleteFromActiveWindows(MainWindow *window)
 {
     if (!window)
         return;
 
-    lastActiveWindows.removeAll(window);
+    activeWindows.remove(window);
+}
+
+bool QVApplication::foundLoadedImage() const
+{
+    for (MainWindow *window : qAsConst(activeWindows))
+    {
+        if (window->getIsPixmapLoaded())
+            return true;
+    }
+    return false;
 }
 
 void QVApplication::openOptionsDialog(QWidget *parent)
@@ -384,4 +364,101 @@ void QVApplication::defineFilterLists()
     // Build name filter list for file dialogs
     nameFilterList << filterString;
     nameFilterList << tr("All Files") + " (*)";
+}
+
+bool QVApplication::supportsSessionPersistence()
+{
+#if defined(Q_OS_MACOS) && QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    return true;
+#else
+    return false;
+#endif
+}
+
+bool QVApplication::tryRestoreLastSession()
+{
+    if (!supportsSessionPersistence())
+        return false;
+
+    QSettings settings;
+
+    if (!settings.value("options/persistsession").toBool())
+        return false;
+
+    const QJsonObject sessionState = settings.value("sessionstate").toJsonObject();
+
+    if (sessionState.isEmpty() || sessionState["version"].toInt() != Qv::SessionStateVersion)
+        return false;
+
+    const QJsonArray windowArray = sessionState["windows"].toArray();
+    for (const QJsonValue &item : windowArray)
+    {
+        QVApplication::newWindow(item.toObject());
+    }
+
+    settings.remove("sessionstate");
+
+    return true;
+}
+
+bool QVApplication::getIsApplicationQuitting() const
+{
+    return isApplicationQuitting;
+}
+
+bool QVApplication::isSessionStateEnabled() const
+{
+    return supportsSessionPersistence() && getSettingsManager().getBoolean("persistsession");
+}
+
+void QVApplication::setUserDeclinedSessionStateSave(const bool value)
+{
+    userDeclinedSessionStateSave = value;
+}
+
+bool QVApplication::isSessionStateSaveRequested() const
+{
+    return getIsApplicationQuitting() && isSessionStateEnabled() && !userDeclinedSessionStateSave;
+}
+
+void QVApplication::addClosedWindowSessionState(const QJsonObject &state, const qint64 lastActivatedTimestamp)
+{
+    closedWindowData.append({state, lastActivatedTimestamp});
+}
+
+void QVApplication::onCommitDataRequest(QSessionManager &manager)
+{
+    Q_UNUSED(manager)
+
+    isApplicationQuitting = true;
+}
+
+void QVApplication::onAboutToQuit()
+{
+    if (isSessionStateSaveRequested())
+    {
+        QSettings settings;
+        if (!closedWindowData.isEmpty())
+        {
+            QJsonObject state;
+
+            state["version"] = Qv::SessionStateVersion;
+
+            std::sort(
+                closedWindowData.begin(), closedWindowData.end(),
+                [](const ClosedWindowData& a, const ClosedWindowData& b) {
+                    return a.lastActivatedTimestamp < b.lastActivatedTimestamp;
+                });
+            QJsonArray windows;
+            for (const ClosedWindowData& item : closedWindowData)
+                windows.append(item.sessionState);
+            state["windows"] = windows;
+
+            settings.setValue("sessionstate", state);
+        }
+        else
+        {
+            settings.remove("sessionstate");
+        }
+    }
 }

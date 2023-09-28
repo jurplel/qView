@@ -34,7 +34,7 @@
 #include <QNetworkReply>
 #include <QTemporaryFile>
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(QWidget *parent, const QJsonObject &windowSessionState) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
@@ -48,7 +48,10 @@ MainWindow::MainWindow(QWidget *parent) :
     menuBarEnabled = false;
 
     // Initialize other variables
+    sessionStateToLoad = windowSessionState;
     justLaunchedWithImage = false;
+    isClosing = false;
+    lastActivated.start();
     storedWindowState = Qt::WindowNoState;
     storedTitlebarHidden = false;
 
@@ -154,9 +157,17 @@ MainWindow::MainWindow(QWidget *parent) :
         populateOpenWithMenu(openWithFutureWatcher.result());
     });
 
-    // Load window geometry
     QSettings settings;
-    restoreGeometry(settings.value("geometry").toByteArray());
+
+    if (!sessionStateToLoad.isEmpty())
+    {
+        loadSessionState(sessionStateToLoad, true);
+    }
+    else
+    {
+        // Load window geometry
+        restoreGeometry(settings.value("geometry").toByteArray());
+    }
 
     // Show welcome dialog on first launch
     if (!settings.value("firstlaunch", false).toBool())
@@ -174,9 +185,9 @@ MainWindow::~MainWindow()
 
 bool MainWindow::event(QEvent *event)
 {
-    if (event->type() == QEvent::WindowActivate)
+    if (event->type() == QEvent::WindowActivate && !qvApp->getIsApplicationQuitting())
     {
-        qvApp->addToLastActiveWindows(this);
+        lastActivated.start();
     }
     return QMainWindow::event(event);
 }
@@ -210,19 +221,32 @@ void MainWindow::showEvent(QShowEvent *event)
         ui->fullscreenLabel->setMinimumHeight(menuBar()->sizeHint().height());
     }
 
+    if (!sessionStateToLoad.isEmpty())
+    {
+        loadSessionState(sessionStateToLoad, false);
+        sessionStateToLoad = {};
+    }
+
+    qvApp->addToActiveWindows(this);
+
     QMainWindow::showEvent(event);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+    isClosing = true;
+
 #ifdef COCOA_LOADED
     QVCocoaFunctions::setFullSizeContentView(windowHandle(), false);
 #endif
 
+    if (qvApp->isSessionStateSaveRequested())
+        qvApp->addClosedWindowSessionState(getSessionState(), getLastActivatedTimestamp());
+
     QSettings settings;
     settings.setValue("geometry", saveGeometry());
 
-    qvApp->deleteFromLastActiveWindows(this);
+    qvApp->deleteFromActiveWindows(this);
     qvApp->getActionManager().untrackClonedActions(contextMenu);
     qvApp->getActionManager().untrackClonedActions(menuBar());
     qvApp->getActionManager().untrackClonedActions(virtualMenu);
@@ -254,6 +278,8 @@ void MainWindow::changeEvent(QEvent *event)
 
         updateMenuBarVisible();
     }
+
+    QMainWindow::changeEvent(event);
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
@@ -403,7 +429,7 @@ void MainWindow::openRecent(int i)
     cancelSlideshow();
 }
 
-void MainWindow::fileChanged()
+void MainWindow::fileChanged(const bool isRestoringState)
 {
     populateOpenWithTimer->start();
     disableActions();
@@ -412,7 +438,8 @@ void MainWindow::fileChanged()
         refreshProperties();
     buildWindowTitle();
     updateWindowFilePath();
-    setWindowSize();
+    if (!isRestoringState)
+        setWindowSize();
 }
 
 void MainWindow::zoomLevelChanged()
@@ -773,6 +800,44 @@ QScreen *MainWindow::screenContaining(const QRect &rect)
         }
     }
     return bestScreen;
+}
+
+const QJsonObject MainWindow::getSessionState() const
+{
+    QJsonObject state;
+
+    state["geometry"] = QString(saveGeometry().toBase64());
+
+    state["titlebarHidden"] = getTitlebarHidden();
+
+    if (getCurrentFileDetails().isPixmapLoaded)
+        state["path"] = getCurrentFileDetails().fileInfo.absoluteFilePath();
+
+    state["graphicsView"] = graphicsView->getSessionState();
+
+    return state;
+}
+
+void MainWindow::loadSessionState(const QJsonObject &state, const bool isInitialPhase)
+{
+    if (isInitialPhase)
+    {
+        restoreGeometry(QByteArray::fromBase64(state["geometry"].toString().toUtf8()));
+
+        graphicsView->loadSessionState(state["graphicsView"].toObject());
+
+        return;
+    }
+
+    if (state["titlebarHidden"].toBool() != getTitlebarHidden())
+        toggleTitlebarHidden();
+
+    const QString path = state["path"].toString();
+    if (!path.isEmpty())
+    {
+        graphicsView->setLoadIsFromSessionRestore(true);
+        openFile(path);
+    }
 }
 
 bool MainWindow::getIsPixmapLoaded() const

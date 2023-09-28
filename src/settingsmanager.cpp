@@ -184,6 +184,7 @@ void SettingsManager::initializeSettingsLibrary()
     settingsLibrary.insert("menubarenabled", {false, {}});
     settingsLibrary.insert("fullscreendetails", {false, {}});
     settingsLibrary.insert("submenuicons", {true, {}});
+    settingsLibrary.insert("persistsession", {false, {}});
     // Image
     settingsLibrary.insert("filteringenabled", {true, {}});
     settingsLibrary.insert("scalingenabled", {true, {}});

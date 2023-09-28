@@ -29,9 +29,14 @@ int main(int argc, char *argv[])
     parser.addPositionalArgument(QObject::tr("file"), QObject::tr("The file to open."));
     parser.process(app);
 
-    auto *window = QVApplication::newWindow();
     if (!parser.positionalArguments().isEmpty())
-        QVApplication::openFile(window, parser.positionalArguments().constFirst(), true);
+    {
+        QVApplication::openFile(QVApplication::newWindow(), parser.positionalArguments().constFirst(), true);
+    }
+    else if (!QVApplication::tryRestoreLastSession())
+    {
+        QVApplication::newWindow();
+    }
 
     return QApplication::exec();
 }

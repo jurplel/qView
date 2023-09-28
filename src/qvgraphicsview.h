@@ -64,6 +64,12 @@ public:
 
     void centerImage();
 
+    const QJsonObject getSessionState() const;
+
+    void loadSessionState(const QJsonObject &state);
+
+    void setLoadIsFromSessionRestore(const bool value);
+
     void goToFile(const GoToFileMode &mode, int index = 0);
 
     void settingsUpdated();
@@ -90,7 +96,7 @@ public:
 signals:
     void cancelSlideshow();
 
-    void fileChanged();
+    void fileChanged(const bool isRestoringState);
 
     void zoomLevelChanged();
 
@@ -163,6 +169,7 @@ private:
     bool isZoomToFitEnabled;
     bool isApplyingZoomToFit;
     bool isNavigationResetsZoomEnabled;
+    bool loadIsFromSessionRestore;
     qreal zoomLevel;
     qreal appliedDpiAdjustment;
     qreal appliedExpensiveScaleZoomLevel;

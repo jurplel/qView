@@ -59,6 +59,9 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     ui->quitOnLastWindowCheckbox->hide();
 #endif
 
+    if (!QVApplication::supportsSessionPersistence())
+        ui->persistSessionCheckbox->hide();
+
 // Hide language selection below 5.12, as 5.12 does not support embedding the translations :(
 #if (QT_VERSION < QT_VERSION_CHECK(5, 12, 0))
     ui->langComboBox->hide();
@@ -169,6 +172,8 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
     syncCheckbox(ui->detailsInFullscreen, "fullscreendetails", defaults, makeConnections);
     // submenuicons
     syncCheckbox(ui->submenuIconsCheckbox, "submenuicons", defaults, makeConnections);
+    // persistsession
+    syncCheckbox(ui->persistSessionCheckbox, "persistsession", defaults, makeConnections);
     // filteringenabled
     syncCheckbox(ui->filteringCheckbox, "filteringenabled", defaults, makeConnections);
     // scalingenabled

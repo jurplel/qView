@@ -279,6 +279,13 @@
          </property>
         </widget>
        </item>
+       <item row="17" column="1">
+        <widget class="QCheckBox" name="persistSessionCheckbox">
+         <property name="text">
+          <string>Persist session across app restarts</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="image">

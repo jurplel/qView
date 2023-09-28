@@ -4,6 +4,8 @@
 #include "openwith.h"
 
 #include <QSettings>
+#include <QMessageBox>
+#include <QPushButton>
 #include <QMimeDatabase>
 #include <QFileIconProvider>
 
@@ -544,8 +546,21 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
     auto key = triggeredAction->data().toStringList().first();
 
     if (key == "quit") {
+        if (qvApp->isSessionStateEnabled() && qvApp->foundLoadedImage()) {
+            QMessageBox msgBox {relevantWindow};
+            msgBox.setWindowModality(Qt::ApplicationModal);
+            msgBox.setWindowTitle(tr("Remember Session?"));
+            msgBox.setText(tr("Would you like to remember your opened images and re-open them at next launch?"));
+            QPushButton *yesButton = msgBox.addButton(tr("&Remember"), QMessageBox::YesRole);
+            QPushButton *noButton = msgBox.addButton(tr("&End Session"), QMessageBox::NoRole);
+            msgBox.setDefaultButton(yesButton);
+            msgBox.exec();
+            qvApp->setUserDeclinedSessionStateSave(msgBox.clickedButton() == noButton);
+        }
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         if (relevantWindow) // if a window was passed
             relevantWindow->close(); // close it so geometry is saved
+#endif
         QCoreApplication::quit();
     } else if (key == "newwindow") {
         qvApp->newWindow();

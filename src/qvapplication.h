@@ -24,6 +24,12 @@ class QVApplication : public QApplication
     Q_OBJECT
 
 public:
+    struct ClosedWindowData
+    {
+        QJsonObject sessionState;
+        qint64 lastActivatedTimestamp;
+    };
+
     explicit QVApplication(int &argc, char **argv);
     ~QVApplication() override;
 
@@ -37,7 +43,7 @@ public:
 
     static void pickUrl(MainWindow *parnet = nullptr);
 
-    static MainWindow *newWindow();
+    static MainWindow *newWindow(const QJsonObject &windowSessionState = {});
 
     MainWindow *getMainWindow(bool shouldBeEmpty);
 
@@ -45,9 +51,11 @@ public:
 
     void recentsMenuUpdated();
 
-    void addToLastActiveWindows(MainWindow *window);
+    void addToActiveWindows(MainWindow *window);
 
-    void deleteFromLastActiveWindows(MainWindow *window);
+    void deleteFromActiveWindows(MainWindow *window);
+
+    bool foundLoadedImage() const;
 
     void openOptionsDialog(QWidget *parent = nullptr);
 
@@ -69,6 +77,7 @@ public:
 
     const QStringList &getMimeTypeNameList() const { return mimeTypeNameList; }
 
+    const SettingsManager &getSettingsManager() const { return settingsManager; }
     SettingsManager &getSettingsManager() { return settingsManager; }
 
     ShortcutManager &getShortcutManager() { return shortcutManager; }
@@ -79,9 +88,27 @@ public:
 
     bool getShowSubmenuIcons() const { return showSubmenuIcons; }
 
-private:
+    static bool supportsSessionPersistence();
 
-    QList<MainWindow*> lastActiveWindows;
+    static bool tryRestoreLastSession();
+
+    bool getIsApplicationQuitting() const;
+
+    bool isSessionStateEnabled() const;
+
+    void setUserDeclinedSessionStateSave(const bool value);
+
+    bool isSessionStateSaveRequested() const;
+
+    void addClosedWindowSessionState(const QJsonObject &state, const qint64 lastActivatedTimestamp);
+
+protected slots:
+    void onCommitDataRequest(QSessionManager &manager);
+
+    void onAboutToQuit();
+
+private:
+    QSet<MainWindow*> activeWindows;
 
     QMenu *dockMenu;
 
@@ -104,6 +131,10 @@ private:
     bool showSubmenuIcons;
 
     UpdateChecker updateChecker;
+
+    bool isApplicationQuitting {false};
+    bool userDeclinedSessionStateSave {false};
+    QList<ClosedWindowData> closedWindowData;
 };
 
 #endif // QVAPPLICATION_H

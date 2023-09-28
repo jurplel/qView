@@ -3,6 +3,8 @@
 
 namespace Qv
 {
+    static constexpr int SessionStateVersion = 1;
+
     enum class AfterDelete
     {
         MoveBack = 0,
