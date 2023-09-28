@@ -626,7 +626,7 @@ bool MainWindow::getTitlebarHidden() const
 #ifdef COCOA_LOADED
     return QVCocoaFunctions::getTitlebarHidden(windowHandle());
 #elif defined WIN32_LOADED
-    return QVWin32Functions::getTitlebarHidden(windowHandle());
+    return !windowFlags().testFlag(Qt::WindowTitleHint);
 #else
     return false;
 #endif
@@ -637,10 +637,21 @@ void MainWindow::setTitlebarHidden(const bool shouldHide)
     if (!windowHandle())
         return;
 
+    auto customizeWindowFlags = [this](const Qt::WindowFlags flagsToChange, const bool on) {
+        Qt::WindowFlags newFlags = windowFlags() | Qt::CustomizeWindowHint;
+        if (on)
+            newFlags |= flagsToChange;
+        else
+            newFlags &= ~flagsToChange;
+        overrideWindowFlags(newFlags);
+        windowHandle()->setFlags(newFlags);
+    };
+
 #ifdef COCOA_LOADED
     QVCocoaFunctions::setTitlebarHidden(windowHandle(), shouldHide);
+    customizeWindowFlags(Qt::WindowCloseButtonHint | Qt::WindowMinMaxButtonsHint | Qt::WindowFullscreenButtonHint, !shouldHide);
 #elif defined WIN32_LOADED
-    QVWin32Functions::setTitlebarHidden(windowHandle(), shouldHide);
+    customizeWindowFlags(Qt::WindowTitleHint | Qt::WindowMinMaxButtonsHint, !shouldHide);
 #else
     return;
 #endif

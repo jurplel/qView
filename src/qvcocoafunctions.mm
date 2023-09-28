@@ -116,9 +116,6 @@ void QVCocoaFunctions::setTitlebarHidden(QWindow *window, const bool shouldHide)
     auto *view = reinterpret_cast<NSView*>(window->winId());
     view.window.titleVisibility = shouldHide ? NSWindowTitleHidden : NSWindowTitleVisible;
     view.window.titlebarAppearsTransparent = shouldHide;
-    [[view.window standardWindowButton:NSWindowCloseButton] setHidden:shouldHide];
-    [[view.window standardWindowButton:NSWindowZoomButton] setHidden:shouldHide];
-    [[view.window standardWindowButton:NSWindowMiniaturizeButton] setHidden:shouldHide];
 }
 
 void QVCocoaFunctions::setVibrancy(bool alwaysDark, QWindow *window)
