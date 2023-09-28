@@ -262,7 +262,7 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
         return;
     }
 
-    if (effectiveDelta.y() == 0)
+    if (effectiveDelta.y() == 0 || !getCurrentFileDetails().isPixmapLoaded)
         return;
 
     const qreal fractionalWheelSteps = qFabs(effectiveDelta.y()) / deltaPerWheelStep;
