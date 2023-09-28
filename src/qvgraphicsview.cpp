@@ -56,10 +56,10 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     scrollHelper = new ScrollHelper(this,
         [this](ScrollHelper::Parameters &p)
         {
-            p.ContentRect = getContentRect().toRect();
-            p.UsableViewportRect = getUsableViewportRect();
-            p.ShouldConstrain = isConstrainedPositioningEnabled;
-            p.ShouldCenter = isConstrainedSmallCenteringEnabled;
+            p.contentRect = getContentRect().toRect();
+            p.usableViewportRect = getUsableViewportRect();
+            p.shouldConstrain = isConstrainedPositioningEnabled;
+            p.shouldCenter = isConstrainedSmallCenteringEnabled;
         });
 
     connect(&imageCore, &QVImageCore::animatedFrameChanged, this, &QVGraphicsView::animatedFrameChanged);
