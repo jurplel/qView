@@ -234,7 +234,7 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
     const int yDelta = event->angleDelta().y();
     const qreal yScale = 120.0;
 
-    if (yDelta == 0)
+    if (yDelta == 0 || !getCurrentFileDetails().isPixmapLoaded)
         return;
 
     const qreal fractionalWheelClicks = qFabs(yDelta) / yScale;
