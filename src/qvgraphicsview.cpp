@@ -497,7 +497,7 @@ void QVGraphicsView::removeExpensiveScaling()
     // Return to original size
     if (getCurrentFileDetails().isMovieLoaded)
         loadedPixmapItem->setPixmap(getLoadedMovie().currentPixmap());
-    else if (getCurrentFileDetails().isPixmapLoaded)
+    else
         loadedPixmapItem->setPixmap(getLoadedPixmap());
 
     // Set appropriate scale factor
