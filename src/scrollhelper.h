@@ -18,7 +18,7 @@ public:
         bool shouldCenter;
     };
 
-    typedef std::function<void(Parameters &)> GetParametersCallback;
+    using GetParametersCallback = std::function<void(Parameters &)>;
 
     explicit ScrollHelper(QAbstractScrollArea *parent, GetParametersCallback getParametersCallback);
 
