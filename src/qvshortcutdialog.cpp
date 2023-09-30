@@ -27,6 +27,11 @@ QVShortcutDialog::~QVShortcutDialog()
     delete ui;
 }
 
+void QVShortcutDialog::registerGetTransientShortcutCallback(const GetTransientShortcutCallback callback)
+{
+    getTransientShortcutCallback = callback;
+}
+
 void QVShortcutDialog::done(int r)
 {
     if (r == QDialog::Accepted)
@@ -71,9 +76,11 @@ QString QVShortcutDialog::shortcutAlreadyBound(const QKeySequence &chosenSequenc
         return "";
 
     const auto &shortcutsList = qvApp->getShortcutManager().getShortcutsList();
-    for (const auto &shortcut : shortcutsList)
+    for (int i = 0; i < shortcutsList.length(); i++)
     {
-        auto sequenceList = ShortcutManager::stringListToKeySequenceList(shortcut.shortcuts);
+        const auto &shortcut = shortcutsList.value(i);
+        const auto shortcuts = getTransientShortcutCallback ? getTransientShortcutCallback(i) : shortcut.shortcuts;
+        const auto sequenceList = ShortcutManager::stringListToKeySequenceList(shortcuts);
 
         if (sequenceList.contains(chosenSequence) && shortcut.name != exemptShortcut)
             return shortcut.readableName;

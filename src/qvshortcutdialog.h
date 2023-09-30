@@ -14,9 +14,12 @@ class QVShortcutDialog : public QDialog
     Q_OBJECT
 
 public:
+    using GetTransientShortcutCallback = std::function<QStringList(int)>;
+
     explicit QVShortcutDialog(int index, QWidget *parent = nullptr);
     ~QVShortcutDialog() override;
 
+    void registerGetTransientShortcutCallback(const GetTransientShortcutCallback callback);
     QString shortcutAlreadyBound(const QKeySequence &chosenSequence, const QString &exemptShortcut);
     void acceptValidated();
 
@@ -33,6 +36,7 @@ private:
 
     ShortcutManager::SShortcut shortcutObject;
     int index;
+    GetTransientShortcutCallback getTransientShortcutCallback;
 };
 
 #endif // QVSHORTCUTDIALOG_H

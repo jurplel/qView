@@ -384,6 +384,9 @@ void QVOptionsDialog::shortcutCellDoubleClicked(int row, int column)
 {
     Q_UNUSED(column)
     auto *shortcutDialog = new QVShortcutDialog(row, this);
+    shortcutDialog->registerGetTransientShortcutCallback([this](int index) {
+        return transientShortcuts.value(index);
+    });
     connect(shortcutDialog, &QVShortcutDialog::shortcutsListChanged, this, [this](int index, const QStringList &stringListShortcuts) {
         transientShortcuts.replace(index, stringListShortcuts);
         updateShortcutsTable();
