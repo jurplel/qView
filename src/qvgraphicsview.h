@@ -167,26 +167,24 @@ private:
     bool isScalingTwoEnabled {true};
     bool isPastActualSizeEnabled {true};
     int fitOverscan {0};
-    bool isScrollZoomsEnabled {true};
     bool isLoopFoldersEnabled {true};
     bool isCursorZoomEnabled {true};
     bool isOneToOnePixelSizingEnabled {true};
     bool isConstrainedPositioningEnabled {true};
     bool isConstrainedSmallCenteringEnabled {true};
-    bool sidewaysScrollNavigates {false};
     Qv::FitMode cropMode {Qv::FitMode::WholeImage};
     qreal zoomMultiplier {1.25};
 
-    Qv::ViewportClickAction doubleClickAction {Qv::ViewportClickAction::ToggleFullScreen};
-    Qv::ViewportClickAction altDoubleClickAction {Qv::ViewportClickAction::ToggleTitlebarHidden};
-    Qv::ViewportClickAction middleClickAction {Qv::ViewportClickAction::ZoomToFit};
-    Qv::ViewportClickAction altMiddleClickAction {Qv::ViewportClickAction::OriginalSize};
-    Qv::ViewportDragAction dragAction {Qv::ViewportDragAction::Pan};
-    Qv::ViewportDragAction altDragAction {Qv::ViewportDragAction::MoveWindow};
-    Qv::ViewportScrollAction horizontalScrollAction {Qv::ViewportScrollAction::Navigate};
-    Qv::ViewportScrollAction verticalScrollAction {Qv::ViewportScrollAction::Zoom};
-    Qv::ViewportScrollAction altHorizontalScrollAction {Qv::ViewportScrollAction::Pan};
-    Qv::ViewportScrollAction altVerticalScrollAction {Qv::ViewportScrollAction::Pan};
+    Qv::ViewportClickAction doubleClickAction {Qv::ViewportClickAction::None};
+    Qv::ViewportClickAction altDoubleClickAction {Qv::ViewportClickAction::None};
+    Qv::ViewportClickAction middleClickAction {Qv::ViewportClickAction::None};
+    Qv::ViewportClickAction altMiddleClickAction {Qv::ViewportClickAction::None};
+    Qv::ViewportDragAction dragAction {Qv::ViewportDragAction::None};
+    Qv::ViewportDragAction altDragAction {Qv::ViewportDragAction::None};
+    Qv::ViewportScrollAction verticalScrollAction {Qv::ViewportScrollAction::None};
+    Qv::ViewportScrollAction horizontalScrollAction {Qv::ViewportScrollAction::None};
+    Qv::ViewportScrollAction altVerticalScrollAction {Qv::ViewportScrollAction::None};
+    Qv::ViewportScrollAction altHorizontalScrollAction {Qv::ViewportScrollAction::None};
 
     bool isZoomToFitEnabled {true};
     bool isApplyingZoomToFit {false};

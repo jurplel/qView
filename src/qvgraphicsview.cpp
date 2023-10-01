@@ -953,9 +953,6 @@ void QVGraphicsView::settingsUpdated()
     //fit overscan
     fitOverscan = settingsManager.getInteger("fitoverscan");
 
-    //scrolling zoom
-    isScrollZoomsEnabled = settingsManager.getBoolean("scrollzoomsenabled");
-
     //cursor zoom
     isCursorZoomEnabled = settingsManager.getBoolean("cursorzoom");
 
@@ -968,23 +965,22 @@ void QVGraphicsView::settingsUpdated()
     //constrained small centering
     isConstrainedSmallCenteringEnabled = settingsManager.getBoolean("constraincentersmallimage");
 
-    //sideways scroll navigates
-    sidewaysScrollNavigates = settingsManager.getBoolean("sidewaysscrollnavigates");
-
     //loop folders
     isLoopFoldersEnabled = settingsManager.getBoolean("loopfoldersenabled");
 
-    // End of settings variables
+    //mouse actions
+    doubleClickAction = settingsManager.getEnum<Qv::ViewportClickAction>("viewportdoubleclickaction");
+    altDoubleClickAction = settingsManager.getEnum<Qv::ViewportClickAction>("viewportaltdoubleclickaction");
+    middleClickAction = settingsManager.getEnum<Qv::ViewportClickAction>("viewportmiddleclickaction");
+    altMiddleClickAction = settingsManager.getEnum<Qv::ViewportClickAction>("viewportaltmiddleclickaction");
+    dragAction = settingsManager.getEnum<Qv::ViewportDragAction>("viewportdragaction");
+    altDragAction = settingsManager.getEnum<Qv::ViewportDragAction>("viewportaltdragaction");
+    verticalScrollAction = settingsManager.getEnum<Qv::ViewportScrollAction>("viewportverticalscrollaction");
+    horizontalScrollAction = settingsManager.getEnum<Qv::ViewportScrollAction>("viewporthorizontalscrollaction");
+    altVerticalScrollAction = settingsManager.getEnum<Qv::ViewportScrollAction>("viewportaltverticalscrollaction");
+    altHorizontalScrollAction = settingsManager.getEnum<Qv::ViewportScrollAction>("viewportalthorizontalscrollaction");
 
-    horizontalScrollAction = Qv::ViewportScrollAction::Pan;
-    verticalScrollAction = Qv::ViewportScrollAction::Pan;
-    altHorizontalScrollAction = sidewaysScrollNavigates ? Qv::ViewportScrollAction::Navigate : Qv::ViewportScrollAction::None;
-    altVerticalScrollAction = Qv::ViewportScrollAction::Zoom;
-    if (isScrollZoomsEnabled)
-    {
-        std::swap(horizontalScrollAction, altHorizontalScrollAction);
-        std::swap(verticalScrollAction, altVerticalScrollAction);
-    }
+    // End of settings variables
 
     handleDpiAdjustmentChange();
 

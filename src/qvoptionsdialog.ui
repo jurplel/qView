@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>508</width>
-    <height>558</height>
+    <height>569</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -385,19 +385,6 @@
         </widget>
        </item>
        <item row="5" column="1">
-        <widget class="QCheckBox" name="scrollZoomsCheckbox">
-         <property name="toolTip">
-          <string>Choose whether scrolling zooms or moves the image (alternative can be accessed at any time by holding ctrl/cmd)</string>
-         </property>
-         <property name="text">
-          <string>Scrolling &amp;zooms</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="1">
         <widget class="QCheckBox" name="cursorZoomCheckbox">
          <property name="toolTip">
           <string>Choose whether or not zooming in and out above 100% zoom will zoom towards the cursor</string>
@@ -410,7 +397,7 @@
          </property>
         </widget>
        </item>
-       <item row="7" column="1">
+       <item row="6" column="1">
         <widget class="QCheckBox" name="oneToOnePixelSizingCheckbox">
          <property name="text">
           <string>Zoom level is relative to screen pixels</string>
@@ -420,7 +407,7 @@
          </property>
         </widget>
        </item>
-       <item row="8" column="1">
+       <item row="7" column="1">
         <spacer name="horizontalSpacer">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -433,7 +420,7 @@
          </property>
         </spacer>
        </item>
-       <item row="9" column="0">
+       <item row="8" column="0">
         <widget class="QLabel" name="cropModeLabel">
          <property name="toolTip">
           <string>Ignores select sides of an image when fitting to window (some sides will extend beyond the window boundaries)</string>
@@ -443,14 +430,14 @@
          </property>
         </widget>
        </item>
-       <item row="9" column="1">
+       <item row="8" column="1">
         <widget class="QComboBox" name="cropModeComboBox">
          <property name="toolTip">
           <string>Ignores select sides of an image when fitting to window (some sides will extend beyond the window boundaries)</string>
          </property>
         </widget>
        </item>
-       <item row="10" column="1">
+       <item row="9" column="1">
         <widget class="QCheckBox" name="pastActualSizeCheckbox">
          <property name="toolTip">
           <string>Stop the image from going past its actual size when resizing the window - you can still zoom past it though</string>
@@ -463,7 +450,7 @@
          </property>
         </widget>
        </item>
-       <item row="11" column="1">
+       <item row="10" column="1">
         <widget class="QSpinBox" name="fitOverscanSpinBox">
          <property name="suffix">
           <string> pixel overscan</string>
@@ -476,7 +463,7 @@
          </property>
         </widget>
        </item>
-       <item row="12" column="1">
+       <item row="11" column="1">
         <spacer name="horizontalSpacer_9">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -489,7 +476,7 @@
          </property>
         </spacer>
        </item>
-       <item row="13" column="1">
+       <item row="12" column="1">
         <widget class="QCheckBox" name="constrainImagePositionCheckbox">
          <property name="text">
           <string>&amp;Constrain image position</string>
@@ -499,7 +486,7 @@
          </property>
         </widget>
        </item>
-       <item row="14" column="1">
+       <item row="13" column="1">
         <widget class="QCheckBox" name="constrainCentersSmallImageCheckbox">
          <property name="text">
           <string>Keep ce&amp;ntered if smaller</string>
@@ -509,7 +496,7 @@
          </property>
         </widget>
        </item>
-       <item row="15" column="1">
+       <item row="14" column="1">
         <spacer name="horizontalSpacer_10">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -522,34 +509,14 @@
          </property>
         </spacer>
        </item>
-       <item row="16" column="1">
-        <widget class="QCheckBox" name="sidewaysScrollNavigatesCheckbox">
-         <property name="text">
-          <string>Sideways scroll navigates between images</string>
-         </property>
-        </widget>
-       </item>
-       <item row="17" column="1">
-        <spacer name="horizontalSpacer_11">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>5</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="18" column="0">
+       <item row="15" column="0">
         <widget class="QLabel" name="colorSpaceConversionLabel">
          <property name="text">
           <string>Color space conversion:</string>
          </property>
         </widget>
        </item>
-       <item row="18" column="1">
+       <item row="15" column="1">
         <widget class="QComboBox" name="colorSpaceConversionComboBox"/>
        </item>
       </layout>
@@ -822,6 +789,113 @@
           </property>
          </column>
         </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="mouse">
+      <attribute name="title">
+       <string>Mouse</string>
+      </attribute>
+      <layout class="QFormLayout" name="formLayout_5">
+       <item row="0" column="0">
+        <widget class="QLabel" name="doubleClickLabel">
+         <property name="text">
+          <string>Double Click:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QComboBox" name="doubleClickComboBox"/>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="altDoubleClickLabel">
+         <property name="text">
+          <string notr="true">Ctrl + Double Click:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QComboBox" name="altDoubleClickComboBox"/>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="middleClickLabel">
+         <property name="text">
+          <string>Middle Click:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QComboBox" name="middleClickComboBox"/>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="altMiddleClickLabel">
+         <property name="text">
+          <string notr="true">Ctrl + Middle Click</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QComboBox" name="altMiddleClickComboBox"/>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="dragLabel">
+         <property name="text">
+          <string>Drag:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QComboBox" name="dragComboBox"/>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="altDragLabel">
+         <property name="text">
+          <string notr="true">Ctrl + Drag:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QComboBox" name="altDragComboBox"/>
+       </item>
+       <item row="6" column="0">
+        <widget class="QLabel" name="verticalScrollLabel">
+         <property name="text">
+          <string>Vertical Scroll:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1">
+        <widget class="QComboBox" name="verticalScrollComboBox"/>
+       </item>
+       <item row="7" column="0">
+        <widget class="QLabel" name="horizontalScrollLabel">
+         <property name="text">
+          <string>Horizontal Scroll:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="1">
+        <widget class="QComboBox" name="horizontalScrollComboBox"/>
+       </item>
+       <item row="8" column="0">
+        <widget class="QLabel" name="altVerticalScrollLabel">
+         <property name="text">
+          <string notr="true">Ctrl + Vertical Scroll:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="1">
+        <widget class="QComboBox" name="altVerticalScrollComboBox"/>
+       </item>
+       <item row="9" column="0">
+        <widget class="QLabel" name="altHorizontalScrollLabel">
+         <property name="text">
+          <string notr="true">Ctrl + Horizontal Scroll:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="1">
+        <widget class="QComboBox" name="altHorizontalScrollComboBox"/>
        </item>
       </layout>
      </widget>

@@ -53,6 +53,9 @@ protected:
     static const QMap<Qv::SortMode, QString> mapSortMode;
     static const QMap<Qv::TitleBarText, QString> mapTitleBarText;
     static const QMap<Qv::WindowResizeMode, QString> mapWindowResizeMode;
+    static const QMap<Qv::ViewportClickAction, QString> mapViewportClickAction;
+    static const QMap<Qv::ViewportDragAction, QString> mapViewportDragAction;
+    static const QMap<Qv::ViewportScrollAction, QString> mapViewportScrollAction;
 
 private slots:
     void shortcutCellDoubleClicked(int row, int column);

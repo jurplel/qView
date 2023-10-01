@@ -190,7 +190,6 @@ void SettingsManager::initializeSettingsLibrary()
     settingsLibrary.insert("scalingenabled", {true, {}});
     settingsLibrary.insert("scalingtwoenabled", {true, {}});
     settingsLibrary.insert("scalefactor", {25, {}});
-    settingsLibrary.insert("scrollzoomsenabled", {true, {}});
     settingsLibrary.insert("cursorzoom", {true, {}});
 #ifdef Q_OS_MACOS
     // Usually not desired due to the way macOS does DPI scaling
@@ -203,7 +202,6 @@ void SettingsManager::initializeSettingsLibrary()
     settingsLibrary.insert("fitoverscan", {0, {}});
     settingsLibrary.insert("constrainimageposition", {true, {}});
     settingsLibrary.insert("constraincentersmallimage", {true, {}});
-    settingsLibrary.insert("sidewaysscrollnavigates", {false, {}});
     settingsLibrary.insert("colorspaceconversion", {static_cast<int>(Qv::ColorSpaceConversion::AutoDetect), {}});
     // Miscellaneous
     settingsLibrary.insert("language", {"system", {}});
@@ -218,4 +216,15 @@ void SettingsManager::initializeSettingsLibrary()
     settingsLibrary.insert("allowmimecontentdetection", {false, {}});
     settingsLibrary.insert("saverecents", {true, {}});
     settingsLibrary.insert("updatenotifications", {false, {}});
+    // Mouse
+    settingsLibrary.insert("viewportdoubleclickaction", {static_cast<int>(Qv::ViewportClickAction::ToggleFullScreen), {}});
+    settingsLibrary.insert("viewportaltdoubleclickaction", {static_cast<int>(Qv::ViewportClickAction::ToggleTitlebarHidden), {}});
+    settingsLibrary.insert("viewportmiddleclickaction", {static_cast<int>(Qv::ViewportClickAction::ZoomToFit), {}});
+    settingsLibrary.insert("viewportaltmiddleclickaction", {static_cast<int>(Qv::ViewportClickAction::OriginalSize), {}});
+    settingsLibrary.insert("viewportdragaction", {static_cast<int>(Qv::ViewportDragAction::Pan), {}});
+    settingsLibrary.insert("viewportaltdragaction", {static_cast<int>(Qv::ViewportDragAction::MoveWindow), {}});
+    settingsLibrary.insert("viewportverticalscrollaction", {static_cast<int>(Qv::ViewportScrollAction::Zoom), {}});
+    settingsLibrary.insert("viewporthorizontalscrollaction", {static_cast<int>(Qv::ViewportScrollAction::Navigate), {}});
+    settingsLibrary.insert("viewportaltverticalscrollaction", {static_cast<int>(Qv::ViewportScrollAction::Pan), {}});
+    settingsLibrary.insert("viewportalthorizontalscrollaction", {static_cast<int>(Qv::ViewportScrollAction::Pan), {}});
 }

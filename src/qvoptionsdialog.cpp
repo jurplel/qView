@@ -72,6 +72,13 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     ui->colorSpaceConversionLabel->hide();
 #endif
 
+    QString ctrlKeyName = QKeySequence(Qt::CTRL).toString(QKeySequence::NativeText).replace(QRegularExpression("\\+$"), "");
+    ui->altDoubleClickLabel->setText(tr("%1 + Double Click:").arg(ctrlKeyName));
+    ui->altMiddleClickLabel->setText(tr("%1 + Middle Click:").arg(ctrlKeyName));
+    ui->altDragLabel->setText(tr("%1 + Drag:").arg(ctrlKeyName));
+    ui->altVerticalScrollLabel->setText(tr("%1 + Vertical Scroll:").arg(ctrlKeyName));
+    ui->altHorizontalScrollLabel->setText(tr("%1 + Horizontal Scroll:").arg(ctrlKeyName));
+
     syncSettings(false, true);
     connect(ui->titlebarComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &QVOptionsDialog::titlebarComboBoxCurrentIndexChanged);
     connect(ui->windowResizeComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &QVOptionsDialog::windowResizeComboBoxCurrentIndexChanged);
@@ -184,8 +191,6 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
     syncCheckbox(ui->scalingTwoCheckbox, "scalingtwoenabled", defaults, makeConnections);
     // scalefactor
     syncSpinBox(ui->scaleFactorSpinBox, "scalefactor", defaults, makeConnections);
-    // scrollzoomsenabled
-    syncCheckbox(ui->scrollZoomsCheckbox, "scrollzoomsenabled", defaults, makeConnections);
     // cursorzoom
     syncCheckbox(ui->cursorZoomCheckbox, "cursorzoom", defaults, makeConnections);
     // onetoonepixelsizing
@@ -204,8 +209,6 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
         ui->constrainCentersSmallImageCheckbox->setEnabled(false);
     // constraincentersmallimage
     syncCheckbox(ui->constrainCentersSmallImageCheckbox, "constraincentersmallimage", defaults, makeConnections);
-    // sidewaysscrollnavigates
-    syncCheckbox(ui->sidewaysScrollNavigatesCheckbox, "sidewaysscrollnavigates", defaults, makeConnections);
     // colorspaceconversion
     syncComboBox(ui->colorSpaceConversionComboBox, "colorspaceconversion", defaults, makeConnections);
     // language
@@ -232,6 +235,18 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
     syncCheckbox(ui->saveRecentsCheckbox, "saverecents", defaults, makeConnections);
     // updatenotifications
     syncCheckbox(ui->updateCheckbox, "updatenotifications", defaults, makeConnections);
+
+    // mouse actions
+    syncComboBox(ui->doubleClickComboBox, "viewportdoubleclickaction", defaults, makeConnections);
+    syncComboBox(ui->altDoubleClickComboBox, "viewportaltdoubleclickaction", defaults, makeConnections);
+    syncComboBox(ui->middleClickComboBox, "viewportmiddleclickaction", defaults, makeConnections);
+    syncComboBox(ui->altMiddleClickComboBox, "viewportaltmiddleclickaction", defaults, makeConnections);
+    syncComboBox(ui->dragComboBox, "viewportdragaction", defaults, makeConnections);
+    syncComboBox(ui->altDragComboBox, "viewportaltdragaction", defaults, makeConnections);
+    syncComboBox(ui->verticalScrollComboBox, "viewportverticalscrollaction", defaults, makeConnections);
+    syncComboBox(ui->horizontalScrollComboBox, "viewporthorizontalscrollaction", defaults, makeConnections);
+    syncComboBox(ui->altVerticalScrollComboBox, "viewportaltverticalscrollaction", defaults, makeConnections);
+    syncComboBox(ui->altHorizontalScrollComboBox, "viewportalthorizontalscrollaction", defaults, makeConnections);
 }
 
 void QVOptionsDialog::syncCheckbox(QCheckBox *checkbox, const QString &key, bool defaults, bool makeConnection)
@@ -604,6 +619,30 @@ const QMap<Qv::WindowResizeMode, QString> QVOptionsDialog::mapWindowResizeMode =
     { Qv::WindowResizeMode::WhenOpeningImages, tr("When opening images") }
 };
 
+const QMap<Qv::ViewportClickAction, QString> QVOptionsDialog::mapViewportClickAction =
+{
+    { Qv::ViewportClickAction::None, tr("None") },
+    { Qv::ViewportClickAction::ZoomToFit, tr("Zoom to Fit") },
+    { Qv::ViewportClickAction::OriginalSize, tr("Original Size") },
+    { Qv::ViewportClickAction::ToggleFullScreen, tr("Toggle Full Screen") },
+    { Qv::ViewportClickAction::ToggleTitlebarHidden, tr("Toggle Titlebar Hidden") }
+};
+
+const QMap<Qv::ViewportDragAction, QString> QVOptionsDialog::mapViewportDragAction =
+{
+    { Qv::ViewportDragAction::None, tr("None") },
+    { Qv::ViewportDragAction::Pan, tr("Pan") },
+    { Qv::ViewportDragAction::MoveWindow, tr("Move Window") }
+};
+
+const QMap<Qv::ViewportScrollAction, QString> QVOptionsDialog::mapViewportScrollAction =
+{
+    { Qv::ViewportScrollAction::None, tr("None") },
+    { Qv::ViewportScrollAction::Zoom, tr("Zoom") },
+    { Qv::ViewportScrollAction::Navigate, tr("Navigate") },
+    { Qv::ViewportScrollAction::Pan, tr("Pan") }
+};
+
 template <typename TEnum>
 static void populateComboBox(QComboBox *comboBox, const QMap<TEnum, QString> &values)
 {
@@ -631,4 +670,17 @@ void QVOptionsDialog::populateComboBoxes()
     populateComboBox(ui->preloadingComboBox, mapPreloadMode);
 
     populateComboBox(ui->afterDeletionComboBox, mapAfterDelete);
+
+    populateComboBox(ui->doubleClickComboBox, mapViewportClickAction);
+    populateComboBox(ui->altDoubleClickComboBox, mapViewportClickAction);
+    populateComboBox(ui->middleClickComboBox, mapViewportClickAction);
+    populateComboBox(ui->altMiddleClickComboBox, mapViewportClickAction);
+
+    populateComboBox(ui->dragComboBox, mapViewportDragAction);
+    populateComboBox(ui->altDragComboBox, mapViewportDragAction);
+
+    populateComboBox(ui->verticalScrollComboBox, mapViewportScrollAction);
+    populateComboBox(ui->horizontalScrollComboBox, mapViewportScrollAction);
+    populateComboBox(ui->altVerticalScrollComboBox, mapViewportScrollAction);
+    populateComboBox(ui->altHorizontalScrollComboBox, mapViewportScrollAction);
 }
