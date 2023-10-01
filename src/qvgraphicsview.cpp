@@ -20,8 +20,6 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     setFrameShape(QFrame::NoFrame);
     setTransformationAnchor(QGraphicsView::NoAnchor);
     viewport()->setAutoFillBackground(false);
-
-    // part of a pathetic attempt at gesture support
     grabGesture(Qt::PinchGesture);
 
     // Scene setup
@@ -90,12 +88,11 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     settingsUpdated();
 }
 
-
 // Events
 
 void QVGraphicsView::resizeEvent(QResizeEvent *event)
 {
-    if (const auto mainWindow = qobject_cast<MainWindow*>(window()))
+    if (const auto mainWindow = getMainWindow())
         if (mainWindow->getIsClosing())
             return;
 
@@ -143,10 +140,30 @@ void QVGraphicsView::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton)
     {
-        pressedMouseButton = Qt::LeftButton;
-        mousePressModifiers = event->modifiers();
-        viewport()->setCursor(Qt::ClosedHandCursor);
-        lastMousePos = event->pos();
+        const bool isAltAction = event->modifiers().testFlag(Qt::ControlModifier);
+        if ((isAltAction ? altDragAction : dragAction) != Qv::ViewportDragAction::None)
+        {
+            pressedMouseButton = Qt::LeftButton;
+            mousePressModifiers = event->modifiers();
+            viewport()->setCursor(Qt::ClosedHandCursor);
+            lastMousePos = event->pos();
+        }
+        return;
+    }
+    else if (event->button() == Qt::MouseButton::MiddleButton)
+    {
+        const bool isAltAction = event->modifiers().testFlag(Qt::ControlModifier);
+        executeClickAction(isAltAction ? altMiddleClickAction : middleClickAction);
+        return;
+    }
+    else if (event->button() == Qt::MouseButton::BackButton)
+    {
+        goToFile(GoToFileMode::previous);
+        return;
+    }
+    else if (event->button() == Qt::MouseButton::ForwardButton)
+    {
+        goToFile(GoToFileMode::next);
         return;
     }
 
@@ -171,48 +188,47 @@ void QVGraphicsView::mouseMoveEvent(QMouseEvent *event)
 {
     if (pressedMouseButton == Qt::LeftButton)
     {
-        QPoint mouseDelta = event->pos() - lastMousePos;
-        if (mousePressModifiers & Qt::ControlModifier)
-        {
-            window()->move(window()->pos() + mouseDelta);
-            // lastMousePos is always the initial position pressed when moving the window
-        }
-        else
-        {
-            scrollHelper->move(QPointF(mouseDelta.x() * (isRightToLeft() ? 1 : -1), mouseDelta.y() * -1));
+        const bool isAltAction = mousePressModifiers.testFlag(Qt::ControlModifier);
+        const QPoint delta = event->pos() - lastMousePos;
+        bool isMovingWindow = false;
+        executeDragAction(isAltAction ? altDragAction : dragAction, delta, isMovingWindow);
+        if (!isMovingWindow)
             lastMousePos = event->pos();
-        }
         return;
     }
 
     QGraphicsView::mouseMoveEvent(event);
 }
 
+void QVGraphicsView::mouseDoubleClickEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::MouseButton::LeftButton)
+    {
+        const bool isAltAction = event->modifiers().testFlag(Qt::ControlModifier);
+        executeClickAction(isAltAction ? altDoubleClickAction : doubleClickAction);
+        return;
+    }
+
+    QGraphicsView::mouseDoubleClickEvent(event);
+}
+
 bool QVGraphicsView::event(QEvent *event)
 {
-    //this is for touchpad pinch gestures
     if (event->type() == QEvent::Gesture)
     {
-        auto *gestureEvent = static_cast<QGestureEvent*>(event);
+        QGestureEvent *gestureEvent = static_cast<QGestureEvent*>(event);
         if (QGesture *pinch = gestureEvent->gesture(Qt::PinchGesture))
         {
-            auto *pinchGesture = static_cast<QPinchGesture *>(pinch);
-            QPinchGesture::ChangeFlags changeFlags = pinchGesture->changeFlags();
-
-            if (changeFlags & QPinchGesture::ScaleFactorChanged) {
+            QPinchGesture *pinchGesture = static_cast<QPinchGesture*>(pinch);
+            if (pinchGesture->changeFlags() & QPinchGesture::ScaleFactorChanged)
+            {
                 const QPoint hotPoint = mapFromGlobal(pinchGesture->hotSpot().toPoint());
                 zoomRelative(pinchGesture->scaleFactor(), hotPoint);
             }
-
-            // Fun rotation stuff maybe later
-//            if (changeFlags & QPinchGesture::RotationAngleChanged) {
-//                qreal rotationDelta = pinchGesture->rotationAngle() - pinchGesture->lastRotationAngle();
-//                rotate(rotationDelta);
-//                centerImage();
-//            }
             return true;
         }
     }
+
     return QGraphicsView::event(event);
 }
 
@@ -223,61 +239,29 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
 #else
     const QPoint eventPos = event->pos();
 #endif
-
-    //Basically, if you are holding ctrl then it scrolls instead of zooms (the shift bit is for horizontal scrolling)
-    bool willZoom = isScrollZoomsEnabled;
-    if (event->modifiers() == Qt::ControlModifier || event->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier))
-        willZoom = !willZoom;
-
-    if (!willZoom)
-    {
-        const qreal scrollDivisor = 2.0; // To make scrolling less sensitive
-        qreal scrollX = event->angleDelta().x() * (isRightToLeft() ? 1 : -1) / scrollDivisor;
-        qreal scrollY = event->angleDelta().y() * -1 / scrollDivisor;
-
-        if (event->modifiers() & Qt::ShiftModifier)
-            std::swap(scrollX, scrollY);
-
-        scrollHelper->move(QPointF(scrollX, scrollY));
-        constrainBoundsTimer->start();
-
+    const bool isAltAction = event->modifiers().testFlag(Qt::ControlModifier);
+    const Qv::ViewportScrollAction horizontalAction = isAltAction ? altHorizontalScrollAction : horizontalScrollAction;
+    const Qv::ViewportScrollAction verticalAction = isAltAction ? altVerticalScrollAction : verticalScrollAction;
+    const bool hasHorizontalAction = horizontalAction != Qv::ViewportScrollAction::None;
+    const bool hasVerticalAction = verticalAction != Qv::ViewportScrollAction::None;
+    if (!hasHorizontalAction && !hasVerticalAction)
         return;
-    }
-
-    const int deltaPerWheelStep = 120;
-    const QPoint effectiveDelta = sidewaysScrollNavigates ?
-        scrollAxisLocker.filterMovement(event->angleDelta(), event->phase()) :
+    const QPoint baseDelta =
+        hasHorizontalAction && !hasVerticalAction ? QPoint(event->angleDelta().x(), 0) :
+        !hasHorizontalAction && hasVerticalAction ? QPoint(0, event->angleDelta().y()) :
         event->angleDelta();
-
-    if (sidewaysScrollNavigates && effectiveDelta.x() != 0)
-    {
-        SwipeData swipeData = scrollAxisLocker.getCustomData().value<SwipeData>();
-        if (swipeData.triggeredAction)
-            return;
-        swipeData.totalDelta += effectiveDelta.x();
-        if (qAbs(swipeData.totalDelta) >= deltaPerWheelStep)
-        {
-            if (swipeData.totalDelta * (isRightToLeft() ? -1 : 1) < 0)
-                goToFile(GoToFileMode::next);
-            else
-                goToFile(GoToFileMode::previous);
-            swipeData.triggeredAction = true;
-        }
-        scrollAxisLocker.setCustomData(QVariant::fromValue(swipeData));
+    const QPoint effectiveDelta =
+        horizontalAction == verticalAction ? baseDelta :
+        scrollAxisLocker.filterMovement(baseDelta, event->phase(), hasHorizontalAction != hasVerticalAction);
+    const Qv::ViewportScrollAction effectiveAction =
+        effectiveDelta.x() != 0 ? horizontalAction :
+        effectiveDelta.y() != 0 ? verticalAction :
+        Qv::ViewportScrollAction::None;
+    if (effectiveAction == Qv::ViewportScrollAction::None)
         return;
-    }
+    const bool hasShiftModifier = event->modifiers().testFlag(Qt::ShiftModifier);
 
-    if (effectiveDelta.y() == 0 || !getCurrentFileDetails().isPixmapLoaded)
-        return;
-
-    const qreal fractionalWheelSteps = qFabs(effectiveDelta.y()) / deltaPerWheelStep;
-    const qreal zoomAmountPerWheelStep = zoomMultiplier - 1.0;
-    qreal zoomFactor = 1.0 + (fractionalWheelSteps * zoomAmountPerWheelStep);
-
-    if (effectiveDelta.y() < 0)
-        zoomFactor = qPow(zoomFactor, -1);
-
-    zoomRelative(zoomFactor, eventPos);
+    executeScrollAction(effectiveAction, effectiveDelta, eventPos, hasShiftModifier);
 }
 
 void QVGraphicsView::keyPressEvent(QKeyEvent *event)
@@ -303,6 +287,101 @@ void QVGraphicsView::keyPressEvent(QKeyEvent *event)
 }
 
 // Functions
+
+void QVGraphicsView::executeClickAction(const Qv::ViewportClickAction action)
+{
+    if (action == Qv::ViewportClickAction::ZoomToFit)
+    {
+        if (!getZoomToFitEnabled())
+            setZoomToFitEnabled(true);
+        else
+            centerImage();
+    }
+    else if (action == Qv::ViewportClickAction::OriginalSize)
+    {
+        originalSize();
+    }
+    else if (action == Qv::ViewportClickAction::ToggleFullScreen)
+    {
+        if (const auto mainWindow = getMainWindow())
+            mainWindow->toggleFullScreen();
+    }
+    else if (action == Qv::ViewportClickAction::ToggleTitlebarHidden)
+    {
+        if (const auto mainWindow = getMainWindow())
+            mainWindow->toggleTitlebarHidden();
+    }
+}
+
+void QVGraphicsView::executeDragAction(const Qv::ViewportDragAction action, const QPoint delta, bool &isMovingWindow)
+{
+    if (action == Qv::ViewportDragAction::Pan)
+    {
+        scrollHelper->move(QPointF(-delta.x() * (isRightToLeft() ? -1 : 1), -delta.y()));
+    }
+    else if (action == Qv::ViewportDragAction::MoveWindow)
+    {
+        window()->move(window()->pos() + delta);
+        isMovingWindow = true;
+    }
+}
+
+void QVGraphicsView::executeScrollAction(const Qv::ViewportScrollAction action, const QPoint delta, const QPoint mousePos, const bool hasShiftModifier)
+{
+    const int deltaPerWheelStep = 120;
+    const int rtlFlip = isRightToLeft() ? -1 : 1;
+
+    const auto getUniAxisDelta = [delta, rtlFlip]() {
+        return
+            delta.x() != 0 && delta.y() == 0 ? delta.x() * rtlFlip :
+            delta.x() == 0 && delta.y() != 0 ? delta.y() :
+            0;
+    };
+
+    if (action == Qv::ViewportScrollAction::Pan)
+    {
+        const qreal scrollDivisor = 2.0; // To make scrolling less sensitive
+        qreal scrollX = -delta.x() * rtlFlip / scrollDivisor;
+        qreal scrollY = -delta.y() / scrollDivisor;
+
+        if (hasShiftModifier)
+            std::swap(scrollX, scrollY);
+
+        scrollHelper->move(QPointF(scrollX, scrollY));
+        constrainBoundsTimer->start();
+    }
+    else if (action == Qv::ViewportScrollAction::Zoom)
+    {
+        if (!getCurrentFileDetails().isPixmapLoaded)
+            return;
+
+        const int uniAxisDelta = getUniAxisDelta();
+        const qreal fractionalWheelSteps = qFabs(uniAxisDelta) / deltaPerWheelStep;
+        const qreal zoomAmountPerWheelStep = zoomMultiplier - 1.0;
+        qreal zoomFactor = 1.0 + (fractionalWheelSteps * zoomAmountPerWheelStep);
+
+        if (uniAxisDelta < 0)
+            zoomFactor = qPow(zoomFactor, -1);
+
+        zoomRelative(zoomFactor, mousePos);
+    }
+    else if (action == Qv::ViewportScrollAction::Navigate)
+    {
+        SwipeData swipeData = scrollAxisLocker.getCustomData().value<SwipeData>();
+        if (swipeData.triggeredAction)
+            return;
+        swipeData.totalDelta += getUniAxisDelta();
+        if (qAbs(swipeData.totalDelta) >= deltaPerWheelStep)
+        {
+            if (swipeData.totalDelta < 0)
+                goToFile(GoToFileMode::next);
+            else
+                goToFile(GoToFileMode::previous);
+            swipeData.triggeredAction = true;
+        }
+        scrollAxisLocker.setCustomData(QVariant::fromValue(swipeData));
+    }
+}
 
 QMimeData *QVGraphicsView::getMimeData() const
 {
@@ -850,6 +929,11 @@ void QVGraphicsView::handleDpiAdjustmentChange()
     expensiveScaleTimer->start();
 }
 
+MainWindow* QVGraphicsView::getMainWindow() const
+{
+    return qobject_cast<MainWindow*>(window());
+}
+
 void QVGraphicsView::error(int errorNum, const QString &errorString, const QString &fileName)
 {
     if (!errorString.isEmpty())
@@ -917,6 +1001,16 @@ void QVGraphicsView::settingsUpdated()
     isLoopFoldersEnabled = settingsManager.getBoolean("loopfoldersenabled");
 
     // End of settings variables
+
+    horizontalScrollAction = Qv::ViewportScrollAction::Pan;
+    verticalScrollAction = Qv::ViewportScrollAction::Pan;
+    altHorizontalScrollAction = sidewaysScrollNavigates ? Qv::ViewportScrollAction::Navigate : Qv::ViewportScrollAction::None;
+    altVerticalScrollAction = Qv::ViewportScrollAction::Zoom;
+    if (isScrollZoomsEnabled)
+    {
+        std::swap(horizontalScrollAction, altHorizontalScrollAction);
+        std::swap(verticalScrollAction, altVerticalScrollAction);
+    }
 
     handleDpiAdjustmentChange();
 

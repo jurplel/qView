@@ -6,7 +6,7 @@ AxisLocker::AxisLocker()
 {
 }
 
-QPoint AxisLocker::filterMovement(const QPoint delta, const Qt::ScrollPhase phase)
+QPoint AxisLocker::filterMovement(const QPoint delta, const Qt::ScrollPhase phase, const bool isUniAxis)
 {
     if (!lastEvent.isValid() || (phase != Qt::ScrollMomentum && lastEvent.elapsed() >= autoResetDuration))
     {
@@ -35,14 +35,15 @@ QPoint AxisLocker::filterMovement(const QPoint delta, const Qt::ScrollPhase phas
 
     const int absX = qAbs(swallowedDelta.x());
     const int absY = qAbs(swallowedDelta.y());
+    const int threshold = isUniAxis ? 1 : lockMovementDistance;
 
-    if (absX >= lockMovementDistance && absX > absY)
+    if (absX >= threshold && absX > absY)
     {
         horizontalLock = true;
         return {swallowedDelta.x(), 0};
     }
 
-    if (absY >= lockMovementDistance && absY > absX)
+    if (absY >= threshold && absY > absX)
     {
         verticalLock = true;
         return {0, swallowedDelta.y()};

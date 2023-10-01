@@ -282,35 +282,6 @@ void MainWindow::changeEvent(QEvent *event)
     QMainWindow::changeEvent(event);
 }
 
-void MainWindow::mousePressEvent(QMouseEvent *event)
-{
-    if (event->button() == Qt::MouseButton::BackButton)
-        previousFile();
-    else if (event->button() == Qt::MouseButton::ForwardButton)
-        nextFile();
-    else if (event->button() == Qt::MouseButton::MiddleButton)
-    {
-        if (!graphicsView->getZoomToFitEnabled())
-            graphicsView->setZoomToFitEnabled(true);
-        else
-            graphicsView->centerImage();
-    }
-
-    QMainWindow::mousePressEvent(event);
-}
-
-void MainWindow::mouseDoubleClickEvent(QMouseEvent *event)
-{
-    if (event->button() == Qt::MouseButton::LeftButton)
-    {
-        if (event->modifiers() & Qt::ControlModifier)
-            toggleTitlebarHidden();
-        else
-            toggleFullScreen();
-    }
-    QMainWindow::mouseDoubleClickEvent(event);
-}
-
 void MainWindow::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);

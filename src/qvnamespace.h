@@ -60,6 +60,30 @@ namespace Qv
         Custom = 4
     };
 
+    enum class ViewportClickAction
+    {
+        None = 0,
+        ZoomToFit = 1,
+        OriginalSize = 2,
+        ToggleFullScreen = 3,
+        ToggleTitlebarHidden = 4
+    };
+
+    enum class ViewportDragAction
+    {
+        None = 0,
+        Pan = 1,
+        MoveWindow = 2
+    };
+
+    enum class ViewportScrollAction
+    {
+        None = 0,
+        Zoom = 1,
+        Navigate = 2,
+        Pan = 3
+    };
+
     enum class WindowResizeMode
     {
         Never = 0,

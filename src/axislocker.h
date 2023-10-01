@@ -10,7 +10,7 @@ class AxisLocker
 public:
     AxisLocker();
 
-    QPoint filterMovement(const QPoint delta, const Qt::ScrollPhase phase);
+    QPoint filterMovement(const QPoint delta, const Qt::ScrollPhase phase, const bool isUniAxis);
 
     void reset();
 

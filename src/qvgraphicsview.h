@@ -12,6 +12,8 @@
 #include <QTimer>
 #include <QFileInfo>
 
+class MainWindow;
+
 class QVGraphicsView : public QGraphicsView
 {
     Q_OBJECT
@@ -125,9 +127,17 @@ protected:
 
     void mouseMoveEvent(QMouseEvent *event) override;
 
+    void mouseDoubleClickEvent(QMouseEvent *event) override;
+
     void keyPressEvent(QKeyEvent *event) override;
 
     bool event(QEvent *event) override;
+
+    void executeClickAction(const Qv::ViewportClickAction action);
+
+    void executeDragAction(const Qv::ViewportDragAction action, const QPoint delta, bool &isMovingWindow);
+
+    void executeScrollAction(const Qv::ViewportScrollAction action, const QPoint delta, const QPoint mousePos, const bool hasShiftModifier);
 
     QRectF getContentRect() const;
 
@@ -140,6 +150,8 @@ protected:
     qreal getDpiAdjustment() const;
 
     void handleDpiAdjustmentChange();
+
+    MainWindow* getMainWindow() const;
 
 private slots:
     void animatedFrameChanged(QRect rect);
@@ -165,6 +177,17 @@ private:
     bool sidewaysScrollNavigates;
     Qv::FitMode cropMode;
     qreal zoomMultiplier;
+
+    Qv::ViewportClickAction doubleClickAction {Qv::ViewportClickAction::ToggleFullScreen};
+    Qv::ViewportClickAction altDoubleClickAction {Qv::ViewportClickAction::ToggleTitlebarHidden};
+    Qv::ViewportClickAction middleClickAction {Qv::ViewportClickAction::ZoomToFit};
+    Qv::ViewportClickAction altMiddleClickAction {Qv::ViewportClickAction::OriginalSize};
+    Qv::ViewportDragAction dragAction {Qv::ViewportDragAction::Pan};
+    Qv::ViewportDragAction altDragAction {Qv::ViewportDragAction::MoveWindow};
+    Qv::ViewportScrollAction horizontalScrollAction {Qv::ViewportScrollAction::Navigate};
+    Qv::ViewportScrollAction verticalScrollAction {Qv::ViewportScrollAction::Zoom};
+    Qv::ViewportScrollAction altHorizontalScrollAction {Qv::ViewportScrollAction::Pan};
+    Qv::ViewportScrollAction altVerticalScrollAction {Qv::ViewportScrollAction::Pan};
 
     bool isZoomToFitEnabled;
     bool isApplyingZoomToFit;
