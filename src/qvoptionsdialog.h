@@ -78,7 +78,7 @@ private:
 
     QList<QStringList> transientShortcuts;
 
-    bool languageRestartMessageShown;
+    bool languageRestartMessageShown {false};
 };
 
 

@@ -23,22 +23,12 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     QImageReader::setAllocationLimit(8192);
 #endif
 
-    isLoopFoldersEnabled = true;
-    preloadingMode = Qv::PreloadMode::Adjacent;
-    sortMode = Qv::SortMode::Name;
-    sortDescending = false;
-    allowMimeContentDetection = false;
-    colorSpaceConversion = Qv::ColorSpaceConversion::AutoDetect;
-
-    baseRandomSortSeed = std::chrono::system_clock::now().time_since_epoch().count();
-
     connect(&loadedMovie, &QMovie::updated, this, &QVImageCore::animatedFrameChanged);
 
     connect(&loadFutureWatcher, &QFutureWatcher<ReadData>::finished, this, [this](){
         loadPixmap(loadFutureWatcher.result());
     });
 
-    largestDimension = 0;
     const auto screenList = QGuiApplication::screens();
     for (auto const &screen : screenList)
     {
@@ -57,8 +47,6 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
             largestDimension = largerDimension;
         }
     }
-
-    waitingOnLoad = false;
 
     // Connect to settings signal
     connect(&qvApp->getSettingsManager(), &SettingsManager::settingsUpdated, this, &QVImageCore::settingsUpdated);

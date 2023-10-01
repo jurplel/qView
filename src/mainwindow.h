@@ -187,16 +187,16 @@ private:
     QVInfoDialog *info;
 
     QColor customBackgroundColor;
-    bool checkerboardBackground;
-    bool menuBarEnabled;
+    bool checkerboardBackground {false};
+    bool menuBarEnabled {false};
 
     QJsonObject sessionStateToLoad;
-    bool justLaunchedWithImage;
-    bool isClosing;
+    bool justLaunchedWithImage {false};
+    bool isClosing {false};
     QElapsedTimer lastActivated;
 
-    Qt::WindowStates storedWindowState;
-    bool storedTitlebarHidden;
+    Qt::WindowStates storedWindowState {Qt::WindowNoState};
+    bool storedTitlebarHidden {false};
 
     QNetworkAccessManager networkAccessManager;
 

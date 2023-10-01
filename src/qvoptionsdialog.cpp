@@ -15,8 +15,6 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    languageRestartMessageShown = false;
-
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowFlags(windowFlags() & (~Qt::WindowContextHelpButtonHint | Qt::CustomizeWindowHint));
 

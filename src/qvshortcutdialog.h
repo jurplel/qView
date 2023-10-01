@@ -35,7 +35,7 @@ private:
     Ui::QVShortcutDialog *ui;
 
     ShortcutManager::SShortcut shortcutObject;
-    int index;
+    int index {0};
     GetTransientShortcutCallback getTransientShortcutCallback;
 };
 

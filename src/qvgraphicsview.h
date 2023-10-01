@@ -161,22 +161,21 @@ private slots:
     void error(int errorNum, const QString &errorString, const QString &fileName);
 
 private:
-
     QGraphicsPixmapItem *loadedPixmapItem;
 
-    bool isScalingEnabled;
-    bool isScalingTwoEnabled;
-    bool isPastActualSizeEnabled;
-    int fitOverscan;
-    bool isScrollZoomsEnabled;
-    bool isLoopFoldersEnabled;
-    bool isCursorZoomEnabled;
-    bool isOneToOnePixelSizingEnabled;
-    bool isConstrainedPositioningEnabled;
-    bool isConstrainedSmallCenteringEnabled;
-    bool sidewaysScrollNavigates;
-    Qv::FitMode cropMode;
-    qreal zoomMultiplier;
+    bool isScalingEnabled {true};
+    bool isScalingTwoEnabled {true};
+    bool isPastActualSizeEnabled {true};
+    int fitOverscan {0};
+    bool isScrollZoomsEnabled {true};
+    bool isLoopFoldersEnabled {true};
+    bool isCursorZoomEnabled {true};
+    bool isOneToOnePixelSizingEnabled {true};
+    bool isConstrainedPositioningEnabled {true};
+    bool isConstrainedSmallCenteringEnabled {true};
+    bool sidewaysScrollNavigates {false};
+    Qv::FitMode cropMode {Qv::FitMode::WholeImage};
+    qreal zoomMultiplier {1.25};
 
     Qv::ViewportClickAction doubleClickAction {Qv::ViewportClickAction::ToggleFullScreen};
     Qv::ViewportClickAction altDoubleClickAction {Qv::ViewportClickAction::ToggleTitlebarHidden};
@@ -189,17 +188,17 @@ private:
     Qv::ViewportScrollAction altHorizontalScrollAction {Qv::ViewportScrollAction::Pan};
     Qv::ViewportScrollAction altVerticalScrollAction {Qv::ViewportScrollAction::Pan};
 
-    bool isZoomToFitEnabled;
-    bool isApplyingZoomToFit;
-    bool isNavigationResetsZoomEnabled;
-    bool loadIsFromSessionRestore;
-    qreal zoomLevel;
-    qreal appliedDpiAdjustment;
-    qreal appliedExpensiveScaleZoomLevel;
-    QPoint lastZoomEventPos;
+    bool isZoomToFitEnabled {true};
+    bool isApplyingZoomToFit {false};
+    bool isNavigationResetsZoomEnabled {true};
+    bool loadIsFromSessionRestore {false};
+    qreal zoomLevel {1.0};
+    qreal appliedDpiAdjustment {1.0};
+    qreal appliedExpensiveScaleZoomLevel {0.0};
+    QPoint lastZoomEventPos {-1, -1};
     QPointF lastZoomRoundingError;
 
-    QVImageCore imageCore { this };
+    QVImageCore imageCore {this};
 
     QTimer *expensiveScaleTimer;
     QTimer *constrainBoundsTimer;
@@ -207,8 +206,8 @@ private:
 
     ScrollHelper *scrollHelper;
     AxisLocker scrollAxisLocker;
-    Qt::MouseButton pressedMouseButton;
-    Qt::KeyboardModifiers mousePressModifiers;
+    Qt::MouseButton pressedMouseButton {Qt::MouseButton::NoButton};
+    Qt::KeyboardModifiers mousePressModifiers {Qt::KeyboardModifier::NoModifier};
     QPoint lastMousePos;
 };
 Q_DECLARE_METATYPE(QVGraphicsView::SwipeData)

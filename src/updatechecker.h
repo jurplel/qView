@@ -52,8 +52,8 @@ private:
     // Auto-check happens only at startup (if enabled); this is to rate limit across launches
     const int AUTO_CHECK_INTERVAL_HOURS = 4;
 
-    bool isChecking;
-    bool hasChecked;
+    bool isChecking {false};
+    bool hasChecked {false};
     CheckResult checkResult;
 
     QNetworkAccessManager netAccessManager;

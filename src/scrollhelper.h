@@ -44,8 +44,8 @@ private:
     QScrollBar *hScrollBar;
     QScrollBar *vScrollBar;
     GetParametersCallback getParametersCallback;
-    QPointF lastMoveRoundingError {};
-    QPoint overscrollDistance {};
+    QPointF lastMoveRoundingError;
+    QPoint overscrollDistance;
 
     QTimer *animatedScrollTimer;
     QPoint animatedScrollTotalDelta;

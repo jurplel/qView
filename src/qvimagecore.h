@@ -104,22 +104,22 @@ private:
 
     QFutureWatcher<ReadData> loadFutureWatcher;
 
-    bool isLoopFoldersEnabled;
-    Qv::PreloadMode preloadingMode;
-    Qv::SortMode sortMode;
-    bool sortDescending;
-    bool allowMimeContentDetection;
-    Qv::ColorSpaceConversion colorSpaceConversion;
+    bool isLoopFoldersEnabled {true};
+    Qv::PreloadMode preloadingMode {Qv::PreloadMode::Adjacent};
+    Qv::SortMode sortMode {Qv::SortMode::Name};
+    bool sortDescending {false};
+    bool allowMimeContentDetection {false};
+    Qv::ColorSpaceConversion colorSpaceConversion {Qv::ColorSpaceConversion::AutoDetect};
 
     static QCache<QString, ReadData> pixmapCache;
 
-    unsigned baseRandomSortSeed;
+    quint32 baseRandomSortSeed {static_cast<quint32>(std::chrono::system_clock::now().time_since_epoch().count())};
 
     QStringList lastFilesPreloaded;
 
-    int largestDimension;
+    int largestDimension {0};
 
-    bool waitingOnLoad;
+    bool waitingOnLoad {false};
 };
 
 #endif // QVIMAGECORE_H

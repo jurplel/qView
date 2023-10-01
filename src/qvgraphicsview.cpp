@@ -26,32 +26,6 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     auto *scene = new QGraphicsScene(-1000000.0, -1000000.0, 2000000.0, 2000000.0, this);
     setScene(scene);
 
-    // Initialize configurable variables
-    isScalingEnabled = true;
-    isScalingTwoEnabled = true;
-    isPastActualSizeEnabled = true;
-    fitOverscan = 0;
-    isScrollZoomsEnabled = true;
-    isLoopFoldersEnabled = true;
-    isCursorZoomEnabled = true;
-    isOneToOnePixelSizingEnabled = true;
-    isConstrainedPositioningEnabled = true;
-    isConstrainedSmallCenteringEnabled = true;
-    sidewaysScrollNavigates = false;
-    cropMode = Qv::FitMode::WholeImage;
-    zoomMultiplier = 1.25;
-
-    // Initialize other variables
-    isZoomToFitEnabled = true;
-    isApplyingZoomToFit = false;
-    isNavigationResetsZoomEnabled = true;
-    loadIsFromSessionRestore = false;
-    zoomLevel = 1.0;
-    appliedDpiAdjustment = 1.0;
-    appliedExpensiveScaleZoomLevel = 0.0;
-    lastZoomEventPos = QPoint(-1, -1);
-    lastZoomRoundingError = QPointF();
-
     scrollHelper = new ScrollHelper(this,
         [this](ScrollHelper::Parameters &p)
         {

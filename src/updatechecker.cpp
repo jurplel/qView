@@ -10,9 +10,6 @@
 
 UpdateChecker::UpdateChecker(QObject *parent) : QObject(parent)
 {
-    isChecking = false;
-    hasChecked = false;
-
     connect(&netAccessManager, &QNetworkAccessManager::finished, this, &UpdateChecker::readReply);
 }
 

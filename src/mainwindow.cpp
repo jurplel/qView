@@ -42,18 +42,8 @@ MainWindow::MainWindow(QWidget *parent, const QJsonObject &windowSessionState) :
     setAttribute(Qt::WA_DeleteOnClose);
     setAttribute(Qt::WA_OpaquePaintEvent);
 
-    // Initialize configurable variables
-    customBackgroundColor = QColor();
-    checkerboardBackground = false;
-    menuBarEnabled = false;
-
-    // Initialize other variables
     sessionStateToLoad = windowSessionState;
-    justLaunchedWithImage = false;
-    isClosing = false;
     lastActivated.start();
-    storedWindowState = Qt::WindowNoState;
-    storedTitlebarHidden = false;
 
     // Initialize graphicsviewkDefaultBufferAlignment
     graphicsView = new QVGraphicsView(this);

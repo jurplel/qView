@@ -158,9 +158,9 @@ private:
     QTimer *recentsSaveTimer;
 
     // Settings
-    bool isSaveRecentsEnabled;
-    int recentsListMaxLength;
-    int openWithMaxLength;
+    bool isSaveRecentsEnabled {true};
+    int recentsListMaxLength {10};
+    int openWithMaxLength {10};
 };
 
 #endif // MENUBUILDER_H

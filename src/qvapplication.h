@@ -128,7 +128,7 @@ private:
     QPointer<QVWelcomeDialog> welcomeDialog;
     QPointer<QVAboutDialog> aboutDialog;
 
-    bool showSubmenuIcons;
+    bool showSubmenuIcons {true};
 
     UpdateChecker updateChecker;
 
