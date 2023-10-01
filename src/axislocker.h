@@ -25,8 +25,8 @@ private:
     bool verticalLock;
     QVariant customData;
 
-    const int lockMovementDistance {2};
-    const int autoResetDuration {100};
+    int lockMovementDistance {2};
+    int autoResetDuration {250};
 };
 
 #endif // AXISLOCKER_H

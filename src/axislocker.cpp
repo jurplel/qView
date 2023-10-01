@@ -4,11 +4,16 @@
 
 AxisLocker::AxisLocker()
 {
+#ifdef Q_OS_MACOS
+    autoResetDuration = 125;
+#endif
 }
 
 QPoint AxisLocker::filterMovement(const QPoint delta, const Qt::ScrollPhase phase, const bool isUniAxis)
 {
-    if (!lastEvent.isValid() || (phase != Qt::ScrollMomentum && lastEvent.elapsed() >= autoResetDuration))
+    const bool isRealMovement = phase == Qt::NoScrollPhase || phase == Qt::ScrollUpdate;
+
+    if (!lastEvent.isValid() || (isRealMovement && lastEvent.elapsed() >= autoResetDuration))
     {
         swallowedDelta = {};
         horizontalLock = false;
@@ -16,7 +21,7 @@ QPoint AxisLocker::filterMovement(const QPoint delta, const Qt::ScrollPhase phas
         customData = {};
     }
 
-    if (phase != Qt::ScrollMomentum)
+    if (isRealMovement)
     {
         lastEvent.restart();
     }
