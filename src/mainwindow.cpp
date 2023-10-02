@@ -913,7 +913,14 @@ void MainWindow::openContainingFolder()
     const QFileInfo selectedFileInfo = getCurrentFileDetails().fileInfo;
 
 #ifdef Q_OS_WIN
-    QProcess::startDetached("explorer", QStringList() << "/select," << QDir::toNativeSeparators(selectedFileInfo.absoluteFilePath()));
+    QString pathToSelect = QDir::toNativeSeparators(selectedFileInfo.absoluteFilePath());
+    if (pathToSelect.length() > 259)
+    {
+        pathToSelect = QVWin32Functions::getShortPath(pathToSelect);
+        if (pathToSelect.isEmpty())
+            return;
+    }
+    QProcess::startDetached("explorer", QStringList() << "/select," << pathToSelect);
 #elif defined Q_OS_MACOS
     QProcess::execute("open", QStringList() << "-R" << selectedFileInfo.absoluteFilePath());
 #else

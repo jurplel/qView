@@ -14,6 +14,10 @@ public:
 
     static void showOpenWithDialog(const QString &filePath, const QWindow *parent);
 
+    static QString getLongPath(const QString &path);
+
+    static QString getShortPath(const QString &path);
+
     static QByteArray getIccProfileForWindow(const QWindow *window);
 };
 

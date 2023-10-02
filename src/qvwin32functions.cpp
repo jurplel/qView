@@ -148,6 +148,31 @@ void QVWin32Functions::showOpenWithDialog(const QString &filePath, const QWindow
         qDebug() << "Failed launching open with dialog";
 }
 
+static QString getLongOrShortPath(const QString &path, std::function<DWORD(LPCWSTR, LPWSTR, DWORD)> getPathNameFunction)
+{
+    const bool isUnc = path.startsWith(R"(\\)");
+    const QString inputString = isUnc ? (R"(\\?\UNC\)" + path.mid(2)) : (R"(\\?\)" + path);
+    const wchar_t *input = reinterpret_cast<const wchar_t*>(inputString.utf16());
+    const DWORD outputSize = getPathNameFunction(input, nullptr, 0);
+    if (outputSize == 0)
+        return {};
+    QVarLengthArray<wchar_t, MAX_PATH> output(outputSize);
+    if (getPathNameFunction(input, output.data(), output.size()) == 0)
+        return {};
+    const QString outputString = QString::fromWCharArray(output.data());
+    return isUnc ? (R"(\\)" + outputString.mid(8)) : outputString.mid(4);
+}
+
+QString QVWin32Functions::getLongPath(const QString &path)
+{
+    return getLongOrShortPath(path, GetLongPathNameW);
+}
+
+QString QVWin32Functions::getShortPath(const QString &path)
+{
+    return getLongOrShortPath(path, GetShortPathNameW);
+}
+
 QByteArray QVWin32Functions::getIccProfileForWindow(const QWindow *window)
 {
     QByteArray result;

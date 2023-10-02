@@ -67,6 +67,12 @@ void QVImageCore::loadFile(const QString &fileName, bool isReloading)
     if (sanitaryUrl.isLocalFile())
         sanitaryFileName = sanitaryUrl.toLocalFile();
 
+#ifdef WIN32_LOADED
+    QString longFileName = QVWin32Functions::getLongPath(QDir::toNativeSeparators(QFileInfo(sanitaryFileName).absoluteFilePath()));
+    if (!longFileName.isEmpty())
+        sanitaryFileName = longFileName;
+#endif
+
     QFileInfo fileInfo(sanitaryFileName);
     sanitaryFileName = fileInfo.absoluteFilePath();
 
