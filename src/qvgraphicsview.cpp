@@ -112,22 +112,34 @@ void QVGraphicsView::dragLeaveEvent(QDragLeaveEvent *event)
 
 void QVGraphicsView::mousePressEvent(QMouseEvent *event)
 {
+    const auto initializeDrag = [this, event]() {
+        pressedMouseButton = event->button();
+        mousePressModifiers = event->modifiers();
+        viewport()->setCursor(Qt::ClosedHandCursor);
+        lastMousePos = event->pos();
+    };
+
     if (event->button() == Qt::LeftButton)
     {
         const bool isAltAction = event->modifiers().testFlag(Qt::ControlModifier);
         if ((isAltAction ? altDragAction : dragAction) != Qv::ViewportDragAction::None)
         {
-            pressedMouseButton = Qt::LeftButton;
-            mousePressModifiers = event->modifiers();
-            viewport()->setCursor(Qt::ClosedHandCursor);
-            lastMousePos = event->pos();
+            initializeDrag();
         }
         return;
     }
     else if (event->button() == Qt::MouseButton::MiddleButton)
     {
         const bool isAltAction = event->modifiers().testFlag(Qt::ControlModifier);
-        executeClickAction(isAltAction ? altMiddleClickAction : middleClickAction);
+        if (middleButtonMode == Qv::ClickOrDrag::Click)
+        {
+            executeClickAction(isAltAction ? altMiddleClickAction : middleClickAction);
+        }
+        else if (middleButtonMode == Qv::ClickOrDrag::Drag &&
+            (isAltAction ? altMiddleDragAction : middleDragAction) != Qv::ViewportDragAction::None)
+        {
+            initializeDrag();
+        }
         return;
     }
     else if (event->button() == Qt::MouseButton::BackButton)
@@ -146,7 +158,7 @@ void QVGraphicsView::mousePressEvent(QMouseEvent *event)
 
 void QVGraphicsView::mouseReleaseEvent(QMouseEvent *event)
 {
-    if (pressedMouseButton == Qt::LeftButton)
+    if (pressedMouseButton != Qt::NoButton)
     {
         pressedMouseButton = Qt::NoButton;
         mousePressModifiers = Qt::NoModifier;
@@ -160,12 +172,16 @@ void QVGraphicsView::mouseReleaseEvent(QMouseEvent *event)
 
 void QVGraphicsView::mouseMoveEvent(QMouseEvent *event)
 {
-    if (pressedMouseButton == Qt::LeftButton)
+    if (pressedMouseButton != Qt::NoButton)
     {
         const bool isAltAction = mousePressModifiers.testFlag(Qt::ControlModifier);
+        const Qv::ViewportDragAction targetAction =
+            pressedMouseButton == Qt::LeftButton ? (isAltAction ? altDragAction : dragAction) :
+            pressedMouseButton == Qt::MiddleButton ? (isAltAction ? altMiddleDragAction : middleDragAction) :
+            Qv::ViewportDragAction::None;
         const QPoint delta = event->pos() - lastMousePos;
         bool isMovingWindow = false;
-        executeDragAction(isAltAction ? altDragAction : dragAction, delta, isMovingWindow);
+        executeDragAction(targetAction, delta, isMovingWindow);
         if (!isMovingWindow)
             lastMousePos = event->pos();
         return;
@@ -971,10 +987,13 @@ void QVGraphicsView::settingsUpdated()
     //mouse actions
     doubleClickAction = settingsManager.getEnum<Qv::ViewportClickAction>("viewportdoubleclickaction");
     altDoubleClickAction = settingsManager.getEnum<Qv::ViewportClickAction>("viewportaltdoubleclickaction");
-    middleClickAction = settingsManager.getEnum<Qv::ViewportClickAction>("viewportmiddleclickaction");
-    altMiddleClickAction = settingsManager.getEnum<Qv::ViewportClickAction>("viewportaltmiddleclickaction");
     dragAction = settingsManager.getEnum<Qv::ViewportDragAction>("viewportdragaction");
     altDragAction = settingsManager.getEnum<Qv::ViewportDragAction>("viewportaltdragaction");
+    middleButtonMode = settingsManager.getEnum<Qv::ClickOrDrag>("viewportmiddlebuttonmode");
+    middleClickAction = settingsManager.getEnum<Qv::ViewportClickAction>("viewportmiddleclickaction");
+    altMiddleClickAction = settingsManager.getEnum<Qv::ViewportClickAction>("viewportaltmiddleclickaction");
+    middleDragAction = settingsManager.getEnum<Qv::ViewportDragAction>("viewportmiddledragaction");
+    altMiddleDragAction = settingsManager.getEnum<Qv::ViewportDragAction>("viewportaltmiddledragaction");
     verticalScrollAction = settingsManager.getEnum<Qv::ViewportScrollAction>("viewportverticalscrollaction");
     horizontalScrollAction = settingsManager.getEnum<Qv::ViewportScrollAction>("viewporthorizontalscrollaction");
     altVerticalScrollAction = settingsManager.getEnum<Qv::ViewportScrollAction>("viewportaltverticalscrollaction");

@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>508</width>
-    <height>569</height>
+    <height>616</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -797,105 +797,191 @@
        <string>Mouse</string>
       </attribute>
       <layout class="QFormLayout" name="formLayout_5">
-       <item row="0" column="0">
-        <widget class="QLabel" name="doubleClickLabel">
-         <property name="text">
-          <string>Double Click:</string>
+       <item row="0" column="0" colspan="2">
+        <widget class="QGroupBox" name="leftButtonGroup">
+         <property name="title">
+          <string>Left Button</string>
          </property>
+         <layout class="QFormLayout" name="leftButtonLayout">
+          <item row="0" column="0">
+           <widget class="QLabel" name="doubleClickLabel">
+            <property name="text">
+             <string>Double Click:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QComboBox" name="doubleClickComboBox"/>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="altDoubleClickLabel">
+            <property name="text">
+             <string notr="true">Ctrl + Double Click:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QComboBox" name="altDoubleClickComboBox"/>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="dragLabel">
+            <property name="text">
+             <string>Drag:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QComboBox" name="dragComboBox"/>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="altDragLabel">
+            <property name="text">
+             <string notr="true">Ctrl + Drag:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QComboBox" name="altDragComboBox"/>
+          </item>
+         </layout>
         </widget>
        </item>
-       <item row="0" column="1">
-        <widget class="QComboBox" name="doubleClickComboBox"/>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="altDoubleClickLabel">
-         <property name="text">
-          <string notr="true">Ctrl + Double Click:</string>
+       <item row="1" column="0" colspan="2">
+        <widget class="QGroupBox" name="middleButtonGroup">
+         <property name="title">
+          <string>Middle Button</string>
          </property>
+         <layout class="QFormLayout" name="middleButtonLayout">
+          <item row="0" column="0">
+           <widget class="QLabel" name="middleButtonModeLabel">
+            <property name="text">
+             <string>Mode:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <layout class="QHBoxLayout" name="middleButtonModeLayout">
+            <item>
+             <widget class="QRadioButton" name="middleButtonModeClickRadioButton">
+              <property name="text">
+               <string>Click</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="middleButtonModeDragRadioButton">
+              <property name="text">
+               <string>Drag</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="middleClickLabel">
+            <property name="text">
+             <string>Middle Click:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QComboBox" name="middleClickComboBox"/>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="altMiddleClickLabel">
+            <property name="text">
+             <string notr="true">Ctrl + Middle Click:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QComboBox" name="altMiddleClickComboBox"/>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="middleDragLabel">
+            <property name="visible">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Middle Drag:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QComboBox" name="middleDragComboBox">
+            <property name="visible">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="altMiddleDragLabel">
+            <property name="visible">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Ctrl + Middle Drag:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QComboBox" name="altMiddleDragComboBox">
+            <property name="visible">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
-       <item row="1" column="1">
-        <widget class="QComboBox" name="altDoubleClickComboBox"/>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="middleClickLabel">
-         <property name="text">
-          <string>Middle Click:</string>
+       <item row="2" column="0" colspan="2">
+        <widget class="QGroupBox" name="scrollWheelGroup">
+         <property name="title">
+          <string>Scroll Wheel / Touchpad</string>
          </property>
+         <layout class="QFormLayout" name="scrollWheelLayout">
+          <item row="0" column="0">
+           <widget class="QLabel" name="verticalScrollLabel">
+            <property name="text">
+             <string>Vertical Scroll:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QComboBox" name="verticalScrollComboBox"/>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="horizontalScrollLabel">
+            <property name="text">
+             <string>Horizontal Scroll:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QComboBox" name="horizontalScrollComboBox"/>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="altVerticalScrollLabel">
+            <property name="text">
+             <string notr="true">Ctrl + Vertical Scroll:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QComboBox" name="altVerticalScrollComboBox"/>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="altHorizontalScrollLabel">
+            <property name="text">
+             <string notr="true">Ctrl + Horizontal Scroll:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QComboBox" name="altHorizontalScrollComboBox"/>
+          </item>
+         </layout>
         </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QComboBox" name="middleClickComboBox"/>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="altMiddleClickLabel">
-         <property name="text">
-          <string notr="true">Ctrl + Middle Click</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QComboBox" name="altMiddleClickComboBox"/>
-       </item>
-       <item row="4" column="0">
-        <widget class="QLabel" name="dragLabel">
-         <property name="text">
-          <string>Drag:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="1">
-        <widget class="QComboBox" name="dragComboBox"/>
-       </item>
-       <item row="5" column="0">
-        <widget class="QLabel" name="altDragLabel">
-         <property name="text">
-          <string notr="true">Ctrl + Drag:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="1">
-        <widget class="QComboBox" name="altDragComboBox"/>
-       </item>
-       <item row="6" column="0">
-        <widget class="QLabel" name="verticalScrollLabel">
-         <property name="text">
-          <string>Vertical Scroll:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="1">
-        <widget class="QComboBox" name="verticalScrollComboBox"/>
-       </item>
-       <item row="7" column="0">
-        <widget class="QLabel" name="horizontalScrollLabel">
-         <property name="text">
-          <string>Horizontal Scroll:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="1">
-        <widget class="QComboBox" name="horizontalScrollComboBox"/>
-       </item>
-       <item row="8" column="0">
-        <widget class="QLabel" name="altVerticalScrollLabel">
-         <property name="text">
-          <string notr="true">Ctrl + Vertical Scroll:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="1">
-        <widget class="QComboBox" name="altVerticalScrollComboBox"/>
-       </item>
-       <item row="9" column="0">
-        <widget class="QLabel" name="altHorizontalScrollLabel">
-         <property name="text">
-          <string notr="true">Ctrl + Horizontal Scroll:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="1">
-        <widget class="QComboBox" name="altHorizontalScrollComboBox"/>
        </item>
       </layout>
      </widget>

@@ -27,6 +27,8 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     connect(ui->submenuIconsCheckbox, &QCheckBox::stateChanged, this, [this](int state) { restartNotifyForCheckbox("submenuicons", state); });
     connect(ui->scalingCheckbox, &QCheckBox::stateChanged, this, &QVOptionsDialog::scalingCheckboxStateChanged);
     connect(ui->constrainImagePositionCheckbox, &QCheckBox::stateChanged, this, &QVOptionsDialog::constrainImagePositionCheckboxStateChanged);
+    connect(ui->middleButtonModeClickRadioButton, &QRadioButton::clicked, this, &QVOptionsDialog::middleButtonModeChanged);
+    connect(ui->middleButtonModeDragRadioButton, &QRadioButton::clicked, this, &QVOptionsDialog::middleButtonModeChanged);
 
     populateLanguages();
 
@@ -74,8 +76,9 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
 
     QString ctrlKeyName = QKeySequence(Qt::CTRL).toString(QKeySequence::NativeText).replace(QRegularExpression("\\+$"), "");
     ui->altDoubleClickLabel->setText(tr("%1 + Double Click:").arg(ctrlKeyName));
-    ui->altMiddleClickLabel->setText(tr("%1 + Middle Click:").arg(ctrlKeyName));
     ui->altDragLabel->setText(tr("%1 + Drag:").arg(ctrlKeyName));
+    ui->altMiddleClickLabel->setText(tr("%1 + Middle Click:").arg(ctrlKeyName));
+    ui->altMiddleDragLabel->setText(tr("%1 + Middle Drag:").arg(ctrlKeyName));
     ui->altVerticalScrollLabel->setText(tr("%1 + Vertical Scroll:").arg(ctrlKeyName));
     ui->altHorizontalScrollLabel->setText(tr("%1 + Horizontal Scroll:").arg(ctrlKeyName));
 
@@ -239,10 +242,14 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
     // mouse actions
     syncComboBox(ui->doubleClickComboBox, "viewportdoubleclickaction", defaults, makeConnections);
     syncComboBox(ui->altDoubleClickComboBox, "viewportaltdoubleclickaction", defaults, makeConnections);
-    syncComboBox(ui->middleClickComboBox, "viewportmiddleclickaction", defaults, makeConnections);
-    syncComboBox(ui->altMiddleClickComboBox, "viewportaltmiddleclickaction", defaults, makeConnections);
     syncComboBox(ui->dragComboBox, "viewportdragaction", defaults, makeConnections);
     syncComboBox(ui->altDragComboBox, "viewportaltdragaction", defaults, makeConnections);
+    syncRadioButtons({ui->middleButtonModeClickRadioButton, ui->middleButtonModeDragRadioButton}, "viewportmiddlebuttonmode", defaults, makeConnections);
+    middleButtonModeChanged();
+    syncComboBox(ui->middleClickComboBox, "viewportmiddleclickaction", defaults, makeConnections);
+    syncComboBox(ui->altMiddleClickComboBox, "viewportaltmiddleclickaction", defaults, makeConnections);
+    syncComboBox(ui->middleDragComboBox, "viewportmiddledragaction", defaults, makeConnections);
+    syncComboBox(ui->altMiddleDragComboBox, "viewportaltmiddledragaction", defaults, makeConnections);
     syncComboBox(ui->verticalScrollComboBox, "viewportverticalscrollaction", defaults, makeConnections);
     syncComboBox(ui->horizontalScrollComboBox, "viewporthorizontalscrollaction", defaults, makeConnections);
     syncComboBox(ui->altVerticalScrollComboBox, "viewportaltverticalscrollaction", defaults, makeConnections);
@@ -557,6 +564,20 @@ void QVOptionsDialog::languageComboBoxCurrentIndexChanged(int index)
     }
 }
 
+void QVOptionsDialog::middleButtonModeChanged()
+{
+    const bool isClick = ui->middleButtonModeClickRadioButton->isChecked();
+    const bool isDrag = ui->middleButtonModeDragRadioButton->isChecked();
+    ui->middleClickLabel->setVisible(isClick);
+    ui->middleClickComboBox->setVisible(isClick);
+    ui->altMiddleClickLabel->setVisible(isClick);
+    ui->altMiddleClickComboBox->setVisible(isClick);
+    ui->middleDragLabel->setVisible(isDrag);
+    ui->middleDragComboBox->setVisible(isDrag);
+    ui->altMiddleDragLabel->setVisible(isDrag);
+    ui->altMiddleDragComboBox->setVisible(isDrag);
+}
+
 const QMap<Qv::AfterDelete, QString> QVOptionsDialog::mapAfterDelete =
 {
     { Qv::AfterDelete::MoveBack, tr("Move Back") },
@@ -678,6 +699,8 @@ void QVOptionsDialog::populateComboBoxes()
 
     populateComboBox(ui->dragComboBox, mapViewportDragAction);
     populateComboBox(ui->altDragComboBox, mapViewportDragAction);
+    populateComboBox(ui->middleDragComboBox, mapViewportDragAction);
+    populateComboBox(ui->altMiddleDragComboBox, mapViewportDragAction);
 
     populateComboBox(ui->verticalScrollComboBox, mapViewportScrollAction);
     populateComboBox(ui->horizontalScrollComboBox, mapViewportScrollAction);

@@ -74,6 +74,8 @@ private slots:
 
     void languageComboBoxCurrentIndexChanged(int index);
 
+    void middleButtonModeChanged();
+
 private:
     Ui::QVOptionsDialog *ui;
 

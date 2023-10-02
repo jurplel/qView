@@ -19,6 +19,12 @@ namespace Qv
         CenterOnScreen = 2
     };
 
+    enum class ClickOrDrag
+    {
+        Click = 0,
+        Drag = 1
+    };
+
     enum class ColorSpaceConversion
     {
         Disabled = 0,

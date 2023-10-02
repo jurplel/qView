@@ -177,10 +177,13 @@ private:
 
     Qv::ViewportClickAction doubleClickAction {Qv::ViewportClickAction::None};
     Qv::ViewportClickAction altDoubleClickAction {Qv::ViewportClickAction::None};
-    Qv::ViewportClickAction middleClickAction {Qv::ViewportClickAction::None};
-    Qv::ViewportClickAction altMiddleClickAction {Qv::ViewportClickAction::None};
     Qv::ViewportDragAction dragAction {Qv::ViewportDragAction::None};
     Qv::ViewportDragAction altDragAction {Qv::ViewportDragAction::None};
+    Qv::ViewportClickAction middleClickAction {Qv::ViewportClickAction::None};
+    Qv::ViewportClickAction altMiddleClickAction {Qv::ViewportClickAction::None};
+    Qv::ClickOrDrag middleButtonMode {Qv::ClickOrDrag::Click};
+    Qv::ViewportDragAction middleDragAction {Qv::ViewportDragAction::None};
+    Qv::ViewportDragAction altMiddleDragAction {Qv::ViewportDragAction::None};
     Qv::ViewportScrollAction verticalScrollAction {Qv::ViewportScrollAction::None};
     Qv::ViewportScrollAction horizontalScrollAction {Qv::ViewportScrollAction::None};
     Qv::ViewportScrollAction altVerticalScrollAction {Qv::ViewportScrollAction::None};
