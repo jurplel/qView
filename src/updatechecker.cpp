@@ -116,7 +116,6 @@ void UpdateChecker::openDialog(QWidget *parent, bool showDisableButton)
     if (!(hasChecked && checkResult.wasSuccessful && checkResult.isConsideredUpdate()))
         return;
 
-    QLocale locale;
     auto *downloadButton = new QPushButton(QIcon::fromTheme("edit-download", QIcon::fromTheme("document-save")), tr("Download"));
 
     auto *msgBox = new QMessageBox(parent);
