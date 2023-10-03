@@ -3,7 +3,7 @@
 
 namespace Qv
 {
-    static constexpr int SessionStateVersion = 1;
+    inline constexpr int SessionStateVersion = 1;
 
     enum class AfterDelete
     {
@@ -96,6 +96,13 @@ namespace Qv
         WhenLaunching = 1,
         WhenOpeningImages = 2
     };
+
+    inline bool scrollActionIsSelfCompatible(const ViewportScrollAction action)
+    {
+        return
+            action == ViewportScrollAction::None ||
+            action == ViewportScrollAction::Pan;
+    }
 }
 
 #endif // QVNAMESPACE_H

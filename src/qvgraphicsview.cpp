@@ -241,7 +241,7 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
         !hasHorizontalAction && hasVerticalAction ? QPoint(0, event->angleDelta().y()) :
         event->angleDelta();
     const QPoint effectiveDelta =
-        horizontalAction == verticalAction ? baseDelta :
+        horizontalAction == verticalAction && Qv::scrollActionIsSelfCompatible(horizontalAction) ? baseDelta :
         scrollAxisLocker.filterMovement(baseDelta, event->phase(), hasHorizontalAction != hasVerticalAction);
     const Qv::ViewportScrollAction effectiveAction =
         effectiveDelta.x() != 0 ? horizontalAction :
