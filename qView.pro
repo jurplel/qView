@@ -17,8 +17,8 @@ RCC_DIR = build
 
 CONFIG -= debug_and_release debug_and_release_target
 
-# enable c++14
-CONFIG += c++14
+# enable c++17
+CONFIG += c++17
 
 # Print if this is a debug or release build
 CONFIG(debug, debug|release) {
