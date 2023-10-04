@@ -45,7 +45,7 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
 
 
     if (QOperatingSystemVersion::current() < QOperatingSystemVersion(QOperatingSystemVersion::MacOS, 13)) {
-        setWindowTitle("Preferences");
+        setWindowTitle(tr("Preferences"));
     }
 
 // Platform specific settings

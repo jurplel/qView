@@ -41,7 +41,7 @@ QVAboutDialog::QVAboutDialog(QWidget *parent) :
     //set subtitle font & text
     QFont font2 = QFont("Lato", 18 + modifier);
     font2.setStyleName("Regular");
-    QString subtitleText = tr("Unofficial Fork (jdpurcell)<br>");
+    QString subtitleText = tr("Unofficial Fork (jdpurcell)") + "<br>";
 #ifdef NIGHTLY
     subtitleText += tr("Version %1").arg(QT_STRINGIFY(NIGHTLY));
 #else
