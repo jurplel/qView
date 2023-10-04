@@ -577,97 +577,108 @@ void QVOptionsDialog::middleButtonModeChanged()
     ui->altMiddleDragComboBox->setVisible(isDrag);
 }
 
-const QMap<Qv::AfterDelete, QString> QVOptionsDialog::mapAfterDelete =
-{
-    { Qv::AfterDelete::MoveBack, tr("Move Back") },
-    { Qv::AfterDelete::DoNothing, tr("Do Nothing") },
-    { Qv::AfterDelete::MoveForward, tr("Move Forward") }
-};
+const QMap<Qv::AfterDelete, QString> QVOptionsDialog::mapAfterDelete() {
+    return {
+        { Qv::AfterDelete::MoveBack, tr("Move Back") },
+        { Qv::AfterDelete::DoNothing, tr("Do Nothing") },
+        { Qv::AfterDelete::MoveForward, tr("Move Forward") }
+    };
+}
 
-const QMap<Qv::AfterMatchingSize, QString> QVOptionsDialog::mapAfterMatchingSize =
-{
-    { Qv::AfterMatchingSize::AvoidRepositioning, tr("Avoid repositioning") },
-    { Qv::AfterMatchingSize::CenterOnPrevious, tr("Center relative to previous image") },
-    { Qv::AfterMatchingSize::CenterOnScreen, tr("Center relative to screen") }
-};
+const QMap<Qv::AfterMatchingSize, QString> QVOptionsDialog::mapAfterMatchingSize() {
+    return {
+        { Qv::AfterMatchingSize::AvoidRepositioning, tr("Avoid repositioning") },
+        { Qv::AfterMatchingSize::CenterOnPrevious, tr("Center relative to previous image") },
+        { Qv::AfterMatchingSize::CenterOnScreen, tr("Center relative to screen") }
+    };
+}
 
-const QMap<Qv::ColorSpaceConversion, QString> QVOptionsDialog::mapColorSpaceConversion =
-{
-    { Qv::ColorSpaceConversion::Disabled, tr("Disabled") },
-    { Qv::ColorSpaceConversion::AutoDetect, tr("Auto-detect") },
-    { Qv::ColorSpaceConversion::SRgb, tr("sRGB") },
-    { Qv::ColorSpaceConversion::DisplayP3, tr("Display P3") }
-};
+const QMap<Qv::ColorSpaceConversion, QString> QVOptionsDialog::mapColorSpaceConversion() {
+    return {
+        { Qv::ColorSpaceConversion::Disabled, tr("Disabled") },
+        { Qv::ColorSpaceConversion::AutoDetect, tr("Auto-detect") },
+        { Qv::ColorSpaceConversion::SRgb, tr("sRGB") },
+        { Qv::ColorSpaceConversion::DisplayP3, tr("Display P3") }
+    };
+}
 
-const QMap<Qv::FitMode, QString> QVOptionsDialog::mapFitMode =
-{
-    { Qv::FitMode::WholeImage, tr("Fit whole image") },
-    { Qv::FitMode::OnlyHeight, tr("Fit height") },
-    { Qv::FitMode::OnlyWidth, tr("Fit width") }
-};
+const QMap<Qv::FitMode, QString> QVOptionsDialog::mapFitMode() {
+    return {
+        { Qv::FitMode::WholeImage, tr("Fit whole image") },
+        { Qv::FitMode::OnlyHeight, tr("Fit height") },
+        { Qv::FitMode::OnlyWidth, tr("Fit width") }
+    };
+}
 
-const QMap<Qv::PreloadMode, QString> QVOptionsDialog::mapPreloadMode =
-{
-    { Qv::PreloadMode::Disabled, tr("Disabled") },
-    { Qv::PreloadMode::Adjacent, tr("Adjacent") },
-    { Qv::PreloadMode::Extended, tr("Extended") }
-};
+const QMap<Qv::PreloadMode, QString> QVOptionsDialog::mapPreloadMode() {
+    return {
+        { Qv::PreloadMode::Disabled, tr("Disabled") },
+        { Qv::PreloadMode::Adjacent, tr("Adjacent") },
+        { Qv::PreloadMode::Extended, tr("Extended") }
+    };
+}
 
-const QMap<Qv::SortMode, QString> QVOptionsDialog::mapSortMode =
-{
-    { Qv::SortMode::Name, tr("Name") },
-    { Qv::SortMode::DateModified, tr("Date Modified") },
-    { Qv::SortMode::DateCreated, tr("Date Created") },
-    { Qv::SortMode::Size, tr("Size") },
-    { Qv::SortMode::Type, tr("Type") },
-    { Qv::SortMode::Random, tr("Random") }
-};
+const QMap<Qv::SortMode, QString> QVOptionsDialog::mapSortMode() {
+    return {
+        { Qv::SortMode::Name, tr("Name") },
+        { Qv::SortMode::DateModified, tr("Date Modified") },
+        { Qv::SortMode::DateCreated, tr("Date Created") },
+        { Qv::SortMode::Size, tr("Size") },
+        { Qv::SortMode::Type, tr("Type") },
+        { Qv::SortMode::Random, tr("Random") }
+    };
+}
 
-const QMap<Qv::TitleBarText, QString> QVOptionsDialog::mapTitleBarText =
-{
-    { Qv::TitleBarText::Basic, tr("Basic") },
-    { Qv::TitleBarText::Minimal, tr("Minimal") },
-    { Qv::TitleBarText::Practical, tr("Practical") },
-    { Qv::TitleBarText::Verbose, tr("Verbose") },
-    { Qv::TitleBarText::Custom, tr("Custom") }
-};
+const QMap<Qv::TitleBarText, QString> QVOptionsDialog::mapTitleBarText() {
+    return {
+        { Qv::TitleBarText::Basic, tr("Basic") },
+        { Qv::TitleBarText::Minimal, tr("Minimal") },
+        { Qv::TitleBarText::Practical, tr("Practical") },
+        { Qv::TitleBarText::Verbose, tr("Verbose") },
+        { Qv::TitleBarText::Custom, tr("Custom") }
+    };
+}
 
-const QMap<Qv::WindowResizeMode, QString> QVOptionsDialog::mapWindowResizeMode =
-{
-    { Qv::WindowResizeMode::Never, tr("Never") },
-    { Qv::WindowResizeMode::WhenLaunching, tr("When launching") },
-    { Qv::WindowResizeMode::WhenOpeningImages, tr("When opening images") }
-};
+const QMap<Qv::WindowResizeMode, QString> QVOptionsDialog::mapWindowResizeMode() {
+    return {
+        { Qv::WindowResizeMode::Never, tr("Never") },
+        { Qv::WindowResizeMode::WhenLaunching, tr("When launching") },
+        { Qv::WindowResizeMode::WhenOpeningImages, tr("When opening images") }
+    };
+}
 
-const QMap<Qv::ViewportClickAction, QString> QVOptionsDialog::mapViewportClickAction =
-{
-    { Qv::ViewportClickAction::None, tr("None") },
-    { Qv::ViewportClickAction::ZoomToFit, tr("Zoom to Fit") },
-    { Qv::ViewportClickAction::OriginalSize, tr("Original Size") },
-    { Qv::ViewportClickAction::ToggleFullScreen, tr("Toggle Full Screen") },
-    { Qv::ViewportClickAction::ToggleTitlebarHidden, tr("Toggle Titlebar Hidden") }
-};
+const QMap<Qv::ViewportClickAction, QString> QVOptionsDialog::mapViewportClickAction() {
+    return {
+        { Qv::ViewportClickAction::None, tr("None") },
+        { Qv::ViewportClickAction::ZoomToFit, tr("Zoom to Fit") },
+        { Qv::ViewportClickAction::OriginalSize, tr("Original Size") },
+        { Qv::ViewportClickAction::ToggleFullScreen, tr("Toggle Full Screen") },
+        { Qv::ViewportClickAction::ToggleTitlebarHidden, tr("Toggle Titlebar Hidden") }
+    };
+}
 
-const QMap<Qv::ViewportDragAction, QString> QVOptionsDialog::mapViewportDragAction =
-{
-    { Qv::ViewportDragAction::None, tr("None") },
-    { Qv::ViewportDragAction::Pan, tr("Pan") },
-    { Qv::ViewportDragAction::MoveWindow, tr("Move Window") }
-};
+const QMap<Qv::ViewportDragAction, QString> QVOptionsDialog::mapViewportDragAction() {
+    return {
+        { Qv::ViewportDragAction::None, tr("None") },
+        { Qv::ViewportDragAction::Pan, tr("Pan") },
+        { Qv::ViewportDragAction::MoveWindow, tr("Move Window") }
+    };
+}
 
-const QMap<Qv::ViewportScrollAction, QString> QVOptionsDialog::mapViewportScrollAction =
-{
-    { Qv::ViewportScrollAction::None, tr("None") },
-    { Qv::ViewportScrollAction::Zoom, tr("Zoom") },
-    { Qv::ViewportScrollAction::Navigate, tr("Navigate") },
-    { Qv::ViewportScrollAction::Pan, tr("Pan") }
-};
+const QMap<Qv::ViewportScrollAction, QString> QVOptionsDialog::mapViewportScrollAction() {
+    return {
+        { Qv::ViewportScrollAction::None, tr("None") },
+        { Qv::ViewportScrollAction::Zoom, tr("Zoom") },
+        { Qv::ViewportScrollAction::Navigate, tr("Navigate") },
+        { Qv::ViewportScrollAction::Pan, tr("Pan") }
+    };
+}
 
 template <typename TEnum>
-static void populateComboBox(QComboBox *comboBox, const QMap<TEnum, QString> &values)
+static void populateComboBox(QComboBox *comboBox, const QMap<TEnum, QString> &items)
 {
     comboBox->clear();
-    for (auto it = values.constBegin(); it != values.constEnd(); ++it)
+    for (auto it = items.constBegin(); it != items.constEnd(); ++it)
     {
         comboBox->addItem(it.value(), static_cast<int>(it.key()));
     }
@@ -675,34 +686,34 @@ static void populateComboBox(QComboBox *comboBox, const QMap<TEnum, QString> &va
 
 void QVOptionsDialog::populateComboBoxes()
 {
-    populateComboBox(ui->titlebarComboBox, mapTitleBarText);
+    populateComboBox(ui->titlebarComboBox, mapTitleBarText());
 
-    populateComboBox(ui->windowResizeComboBox, mapWindowResizeMode);
+    populateComboBox(ui->windowResizeComboBox, mapWindowResizeMode());
 
-    populateComboBox(ui->afterMatchingSizeComboBox, mapAfterMatchingSize);
+    populateComboBox(ui->afterMatchingSizeComboBox, mapAfterMatchingSize());
 
-    populateComboBox(ui->cropModeComboBox, mapFitMode);
+    populateComboBox(ui->cropModeComboBox, mapFitMode());
 
-    populateComboBox(ui->colorSpaceConversionComboBox, mapColorSpaceConversion);
+    populateComboBox(ui->colorSpaceConversionComboBox, mapColorSpaceConversion());
 
-    populateComboBox(ui->sortComboBox, mapSortMode);
+    populateComboBox(ui->sortComboBox, mapSortMode());
 
-    populateComboBox(ui->preloadingComboBox, mapPreloadMode);
+    populateComboBox(ui->preloadingComboBox, mapPreloadMode());
 
-    populateComboBox(ui->afterDeletionComboBox, mapAfterDelete);
+    populateComboBox(ui->afterDeletionComboBox, mapAfterDelete());
 
-    populateComboBox(ui->doubleClickComboBox, mapViewportClickAction);
-    populateComboBox(ui->altDoubleClickComboBox, mapViewportClickAction);
-    populateComboBox(ui->middleClickComboBox, mapViewportClickAction);
-    populateComboBox(ui->altMiddleClickComboBox, mapViewportClickAction);
+    populateComboBox(ui->doubleClickComboBox, mapViewportClickAction());
+    populateComboBox(ui->altDoubleClickComboBox, mapViewportClickAction());
+    populateComboBox(ui->middleClickComboBox, mapViewportClickAction());
+    populateComboBox(ui->altMiddleClickComboBox, mapViewportClickAction());
 
-    populateComboBox(ui->dragComboBox, mapViewportDragAction);
-    populateComboBox(ui->altDragComboBox, mapViewportDragAction);
-    populateComboBox(ui->middleDragComboBox, mapViewportDragAction);
-    populateComboBox(ui->altMiddleDragComboBox, mapViewportDragAction);
+    populateComboBox(ui->dragComboBox, mapViewportDragAction());
+    populateComboBox(ui->altDragComboBox, mapViewportDragAction());
+    populateComboBox(ui->middleDragComboBox, mapViewportDragAction());
+    populateComboBox(ui->altMiddleDragComboBox, mapViewportDragAction());
 
-    populateComboBox(ui->verticalScrollComboBox, mapViewportScrollAction);
-    populateComboBox(ui->horizontalScrollComboBox, mapViewportScrollAction);
-    populateComboBox(ui->altVerticalScrollComboBox, mapViewportScrollAction);
-    populateComboBox(ui->altHorizontalScrollComboBox, mapViewportScrollAction);
+    populateComboBox(ui->verticalScrollComboBox, mapViewportScrollAction());
+    populateComboBox(ui->horizontalScrollComboBox, mapViewportScrollAction());
+    populateComboBox(ui->altVerticalScrollComboBox, mapViewportScrollAction());
+    populateComboBox(ui->altHorizontalScrollComboBox, mapViewportScrollAction());
 }

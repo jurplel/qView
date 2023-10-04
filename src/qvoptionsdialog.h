@@ -45,17 +45,17 @@ protected:
     void populateLanguages();
     void populateComboBoxes();
 
-    static const QMap<Qv::AfterDelete, QString> mapAfterDelete;
-    static const QMap<Qv::AfterMatchingSize, QString> mapAfterMatchingSize;
-    static const QMap<Qv::ColorSpaceConversion, QString> mapColorSpaceConversion;
-    static const QMap<Qv::FitMode, QString> mapFitMode;
-    static const QMap<Qv::PreloadMode, QString> mapPreloadMode;
-    static const QMap<Qv::SortMode, QString> mapSortMode;
-    static const QMap<Qv::TitleBarText, QString> mapTitleBarText;
-    static const QMap<Qv::WindowResizeMode, QString> mapWindowResizeMode;
-    static const QMap<Qv::ViewportClickAction, QString> mapViewportClickAction;
-    static const QMap<Qv::ViewportDragAction, QString> mapViewportDragAction;
-    static const QMap<Qv::ViewportScrollAction, QString> mapViewportScrollAction;
+    const QMap<Qv::AfterDelete, QString> mapAfterDelete();
+    const QMap<Qv::AfterMatchingSize, QString> mapAfterMatchingSize();
+    const QMap<Qv::ColorSpaceConversion, QString> mapColorSpaceConversion();
+    const QMap<Qv::FitMode, QString> mapFitMode();
+    const QMap<Qv::PreloadMode, QString> mapPreloadMode();
+    const QMap<Qv::SortMode, QString> mapSortMode();
+    const QMap<Qv::TitleBarText, QString> mapTitleBarText();
+    const QMap<Qv::WindowResizeMode, QString> mapWindowResizeMode();
+    const QMap<Qv::ViewportClickAction, QString> mapViewportClickAction();
+    const QMap<Qv::ViewportDragAction, QString> mapViewportDragAction();
+    const QMap<Qv::ViewportScrollAction, QString> mapViewportScrollAction();
 
 private slots:
     void shortcutCellDoubleClicked(int row, int column);
