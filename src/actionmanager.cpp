@@ -671,6 +671,7 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
 void ActionManager::initializeActionLibrary()
 {
     auto *quitAction = new QAction(QIcon::fromTheme("application-exit"), tr("&Quit"));
+    quitAction->setMenuRole(QAction::QuitRole);
     actionLibrary.insert("quit", quitAction);
 #ifdef Q_OS_WIN
     //: The quit action is called "Exit" on windows
@@ -837,6 +838,7 @@ void ActionManager::initializeActionLibrary()
         optionsAction->setText(tr("Setting&s..."));
     }
 #endif
+    optionsAction->setMenuRole(QAction::PreferencesRole);
     actionLibrary.insert("options", optionsAction);
 
     auto *aboutAction = new QAction(QIcon::fromTheme("help-about"), tr("&About"));
@@ -844,6 +846,7 @@ void ActionManager::initializeActionLibrary()
     //: This is for the about dialog on mac
     aboutAction->setText(tr("&About qView"));
 #endif
+    aboutAction->setMenuRole(QAction::AboutRole);
     actionLibrary.insert("about", aboutAction);
 
     auto *welcomeAction = new QAction(QIcon::fromTheme("help-faq", QIcon::fromTheme("help-about")), tr("&Welcome"));
