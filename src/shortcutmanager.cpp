@@ -63,13 +63,16 @@ void ShortcutManager::initializeShortcutsList()
     // ctrl+r for renaming, unless it conflicts with refresh (i.e. reload file)
     if (!QKeySequence::keyBindings(QKeySequence::Refresh).contains(QKeySequence(Qt::CTRL | Qt::Key_R)))
         shortcutsList.last().defaultShortcuts << QKeySequence(Qt::CTRL | Qt::Key_R).toString();
-    // cmd+enter for renaming, mac-style
+#ifdef Q_OS_MACOS
+    // cmd+enter
     shortcutsList.last().defaultShortcuts.prepend(QKeySequence(Qt::CTRL | Qt::Key_Return).toString());
+#endif
 
     shortcutsList.append({tr("Move to Trash"), "delete", keyBindingsToStringList(QKeySequence::Delete), {}});
-    // cmd+backspace for deleting, mac-style
+#ifdef Q_OS_MACOS
+    // cmd+backspace
     shortcutsList.last().defaultShortcuts.prepend(QKeySequence(Qt::CTRL | Qt::Key_Backspace).toString());
-#ifdef Q_OS_WIN
+#elif defined Q_OS_WIN
     shortcutsList.last().readableName = tr("Delete");
 #endif
     shortcutsList.append({tr("Delete Permanently"), "deletepermanent", QStringList(QKeySequence(Qt::SHIFT | Qt::Key_Delete).toString()), {}});
