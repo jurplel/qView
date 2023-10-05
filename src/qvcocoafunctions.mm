@@ -164,11 +164,10 @@ void QVCocoaFunctions::setWindowMenu(QMenu *menu)
     [[NSApplication sharedApplication] setWindowsMenu:nativeMenu];
 }
 
-void QVCocoaFunctions::setAlternates(QMenu *menu, int index0, int index1)
+void QVCocoaFunctions::setAlternate(QMenu *menu, int index)
 {
     NSMenu *nativeMenu = menu->toNSMenu();
-    [[nativeMenu.itemArray objectAtIndex:index0] setAlternate:true];
-    [[nativeMenu.itemArray objectAtIndex:index1] setAlternate:true];
+    [[nativeMenu.itemArray objectAtIndex:index] setAlternate:true];
 }
 
 void QVCocoaFunctions::setDockRecents(const QStringList &recentPathsList)
