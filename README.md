@@ -6,6 +6,7 @@ This fork of qView adds the following features:
 * Custom titlebar mode based on format string.
 * Option to make zoom level relative to screen pixels (for Windows/Linux users with DPI scaling enabled; not so useful in macOS due to the way it handles scaling).
 * Menu toggle to preserve zoom level when changing between images.
+* "Fill Window" zoom option.
 * Ctrl/Cmd double-click viewport to hide the titlebar (macOS/Windows only), Ctrl/Cmd drag viewport to move the window.
 * Random file navigation (Go -> Random File, or "r" keyboard shortcut) to browse randomly without changing sort mode.
 * Navigate between images when scrolling sideways (e.g. two finger swipe).
