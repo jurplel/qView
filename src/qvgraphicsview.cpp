@@ -359,7 +359,7 @@ void QVGraphicsView::executeScrollAction(const Qv::ViewportScrollAction action, 
     else if (action == Qv::ViewportScrollAction::Navigate)
     {
         SwipeData swipeData = scrollAxisLocker.getCustomData().value<SwipeData>();
-        if (swipeData.triggeredAction)
+        if (swipeData.triggeredAction && scrollActionCooldown)
             return;
         swipeData.totalDelta += getUniAxisDelta();
         if (qAbs(swipeData.totalDelta) >= deltaPerWheelStep)
@@ -369,6 +369,7 @@ void QVGraphicsView::executeScrollAction(const Qv::ViewportScrollAction action, 
             else
                 goToFile(GoToFileMode::previous);
             swipeData.triggeredAction = true;
+            swipeData.totalDelta %= deltaPerWheelStep;
         }
         scrollAxisLocker.setCustomData(QVariant::fromValue(swipeData));
     }
@@ -1001,6 +1002,7 @@ void QVGraphicsView::settingsUpdated()
     horizontalScrollAction = settingsManager.getEnum<Qv::ViewportScrollAction>("viewporthorizontalscrollaction");
     altVerticalScrollAction = settingsManager.getEnum<Qv::ViewportScrollAction>("viewportaltverticalscrollaction");
     altHorizontalScrollAction = settingsManager.getEnum<Qv::ViewportScrollAction>("viewportalthorizontalscrollaction");
+    scrollActionCooldown = settingsManager.getBoolean("scrollactioncooldown");
 
     // End of settings variables
 

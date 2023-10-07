@@ -189,6 +189,7 @@ private:
     Qv::ViewportScrollAction horizontalScrollAction {Qv::ViewportScrollAction::None};
     Qv::ViewportScrollAction altVerticalScrollAction {Qv::ViewportScrollAction::None};
     Qv::ViewportScrollAction altHorizontalScrollAction {Qv::ViewportScrollAction::None};
+    bool scrollActionCooldown {false};
 
     std::optional<Qv::CalculatedZoomMode> calculatedZoomMode {Qv::CalculatedZoomMode::ZoomToFit};
     bool navigationResetsZoom {true};

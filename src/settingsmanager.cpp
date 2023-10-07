@@ -230,4 +230,10 @@ void SettingsManager::initializeSettingsLibrary()
     settingsLibrary.insert("viewporthorizontalscrollaction", {static_cast<int>(Qv::ViewportScrollAction::Navigate), {}});
     settingsLibrary.insert("viewportaltverticalscrollaction", {static_cast<int>(Qv::ViewportScrollAction::Pan), {}});
     settingsLibrary.insert("viewportalthorizontalscrollaction", {static_cast<int>(Qv::ViewportScrollAction::Pan), {}});
+#ifdef Q_OS_MACOS
+    // Works best with touchpads that accurately report ScrollPhase (macOS only currently)
+    settingsLibrary.insert("scrollactioncooldown", {true, {}});
+#else
+    settingsLibrary.insert("scrollactioncooldown", {false, {}});
+#endif
 }

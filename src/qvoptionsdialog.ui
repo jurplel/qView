@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>508</width>
-    <height>616</height>
+    <height>639</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -979,6 +979,16 @@
           </item>
           <item row="3" column="1">
            <widget class="QComboBox" name="altHorizontalScrollComboBox"/>
+          </item>
+          <item row="4" column="1">
+           <widget class="QCheckBox" name="scrollActionCooldownCheckbox">
+            <property name="toolTip">
+             <string>Useful for touchpads, to prevent a single swipe from triggering multiple navigations, for example</string>
+            </property>
+            <property name="text">
+             <string>Cooldown for discrete actions</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
