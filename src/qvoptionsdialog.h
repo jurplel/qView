@@ -47,8 +47,8 @@ protected:
 
     const QMap<Qv::AfterDelete, QString> mapAfterDelete();
     const QMap<Qv::AfterMatchingSize, QString> mapAfterMatchingSize();
+    const QMap<Qv::CalculatedZoomMode, QString> mapCalculatedZoomMode();
     const QMap<Qv::ColorSpaceConversion, QString> mapColorSpaceConversion();
-    const QMap<Qv::FitMode, QString> mapFitMode();
     const QMap<Qv::PreloadMode, QString> mapPreloadMode();
     const QMap<Qv::SortMode, QString> mapSortMode();
     const QMap<Qv::TitleBarText, QString> mapTitleBarText();

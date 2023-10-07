@@ -55,8 +55,8 @@ MainWindow::MainWindow(QWidget *parent, const QJsonObject &windowSessionState) :
     // Connect graphicsview signals
     connect(graphicsView, &QVGraphicsView::fileChanged, this, &MainWindow::fileChanged);
     connect(graphicsView, &QVGraphicsView::zoomLevelChanged, this, &MainWindow::zoomLevelChanged);
-    connect(graphicsView, &QVGraphicsView::zoomToFitChanged, this, &MainWindow::syncZoomToFitChecked);
-    connect(graphicsView, &QVGraphicsView::navigationResetsZoomChanged, this, &MainWindow::syncNavigationResetsZoomChecked);
+    connect(graphicsView, &QVGraphicsView::calculatedZoomModeChanged, this, &MainWindow::syncCalculatedZoomMode);
+    connect(graphicsView, &QVGraphicsView::navigationResetsZoomChanged, this, &MainWindow::syncNavigationResetsZoom);
     connect(graphicsView, &QVGraphicsView::cancelSlideshow, this, &MainWindow::cancelSlideshow);
 
     // Initialize escape shortcut
@@ -113,9 +113,6 @@ MainWindow::MainWindow(QWidget *parent, const QJsonObject &windowSessionState) :
     connect(menuBar(), &QMenuBar::triggered, this, [this](QAction *triggeredAction){
         ActionManager::actionTriggered(triggeredAction, this);
     });
-    // Initialize checkable actions
-    syncZoomToFitChecked();
-    syncNavigationResetsZoomChecked();
 
     // Add all actions to this window so keyboard shortcuts are always triggered
     // using virtual menu to hold them so i can connect to the triggered signal
@@ -210,6 +207,9 @@ void MainWindow::showEvent(QShowEvent *event)
         ui->fullscreenLabel->setMargin(0);
         ui->fullscreenLabel->setMinimumHeight(menuBar()->sizeHint().height());
     }
+
+    syncCalculatedZoomMode();
+    syncNavigationResetsZoom();
 
     if (!sessionStateToLoad.isEmpty())
     {
@@ -408,19 +408,20 @@ void MainWindow::zoomLevelChanged()
     buildWindowTitle();
 }
 
-void MainWindow::syncZoomToFitChecked()
+void MainWindow::syncCalculatedZoomMode()
 {
-    const auto actions = qvApp->getActionManager().getAllClonesOfAction("zoomtofit", this);
-    const bool value = graphicsView->getZoomToFitEnabled();
-    for (const auto &action : actions)
-        action->setChecked(value);
+    const bool isZoomToFit = graphicsView->getCalculatedZoomMode() == Qv::CalculatedZoomMode::ZoomToFit;
+    const bool isFillWindow = graphicsView->getCalculatedZoomMode() == Qv::CalculatedZoomMode::FillWindow;
+    for (const auto &action : qvApp->getActionManager().getAllClonesOfAction("zoomtofit", this))
+        action->setChecked(isZoomToFit);
+    for (const auto &action : qvApp->getActionManager().getAllClonesOfAction("fillwindow", this))
+        action->setChecked(isFillWindow);
 }
 
-void MainWindow::syncNavigationResetsZoomChecked()
+void MainWindow::syncNavigationResetsZoom()
 {
-    const auto actions = qvApp->getActionManager().getAllClonesOfAction("navigationresetszoom", this);
-    const bool value = graphicsView->getNavigationResetsZoomEnabled();
-    for (const auto &action : actions)
+    const bool value = graphicsView->getNavigationResetsZoom();
+    for (const auto &action : qvApp->getActionManager().getAllClonesOfAction("navresetszoom", this))
         action->setChecked(value);
 }
 
@@ -1166,14 +1167,19 @@ void MainWindow::zoomOut()
     graphicsView->zoomOut();
 }
 
-void MainWindow::setZoomToFitEnabled(bool value)
+void MainWindow::setZoomToFit(const bool value)
 {
-    graphicsView->setZoomToFitEnabled(value);
+    graphicsView->setCalculatedZoomMode(value ? std::make_optional(Qv::CalculatedZoomMode::ZoomToFit) : std::nullopt);
 }
 
-void MainWindow::setNavigationResetsZoomEnabled(bool value)
+void MainWindow::setFillWindow(const bool value)
 {
-    graphicsView->setNavigationResetsZoomEnabled(value);
+    graphicsView->setCalculatedZoomMode(value ? std::make_optional(Qv::CalculatedZoomMode::FillWindow) : std::nullopt);
+}
+
+void MainWindow::setNavigationResetsZoom(const bool value)
+{
+    graphicsView->setNavigationResetsZoom(value);
 }
 
 void MainWindow::originalSize()
@@ -1184,25 +1190,25 @@ void MainWindow::originalSize()
 void MainWindow::rotateRight()
 {
     graphicsView->rotateImage(90);
-    graphicsView->zoomToFit();
+    graphicsView->fitOrConstrainImage();
 }
 
 void MainWindow::rotateLeft()
 {
     graphicsView->rotateImage(-90);
-    graphicsView->zoomToFit();
+    graphicsView->fitOrConstrainImage();
 }
 
 void MainWindow::mirror()
 {
     graphicsView->mirrorImage();
-    graphicsView->zoomToFit();
+    graphicsView->fitOrConstrainImage();
 }
 
 void MainWindow::flip()
 {
     graphicsView->flipImage();
-    graphicsView->zoomToFit();
+    graphicsView->fitOrConstrainImage();
 }
 
 void MainWindow::firstFile()
@@ -1249,12 +1255,7 @@ void MainWindow::saveFrameAs()
     saveDialog->setAcceptMode(QFileDialog::AcceptSave);
     saveDialog->open();
     connect(saveDialog, &QFileDialog::fileSelected, this, [=](const QString &fileName){
-        graphicsView->originalSize();
-        for(int i=0; i < graphicsView->getLoadedMovie().frameCount(); i++)
-            nextFrame();
-
         graphicsView->getLoadedMovie().currentPixmap().save(fileName, nullptr, 100);
-        graphicsView->zoomToFit();
     });
 }
 

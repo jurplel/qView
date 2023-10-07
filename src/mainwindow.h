@@ -89,9 +89,11 @@ public:
 
     void zoomOut();
 
-    void setZoomToFitEnabled(bool value);
+    void setZoomToFit(const bool value);
 
-    void setNavigationResetsZoomEnabled(bool value);
+    void setFillWindow(const bool value);
+
+    void setNavigationResetsZoom(const bool value);
 
     void originalSize();
 
@@ -150,9 +152,9 @@ public slots:
 
     void zoomLevelChanged();
 
-    void syncZoomToFitChecked();
+    void syncCalculatedZoomMode();
 
-    void syncNavigationResetsZoomChecked();
+    void syncNavigationResetsZoom();
 
     void disableActions();
 

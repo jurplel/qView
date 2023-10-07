@@ -5,6 +5,7 @@
 #include "qvimagecore.h"
 #include "axislocker.h"
 #include "scrollhelper.h"
+#include <optional>
 #include <QGraphicsView>
 #include <QImageReader>
 #include <QMimeData>
@@ -44,24 +45,24 @@ public:
 
     void reloadFile();
 
-    void zoomIn(const QPoint &pos = QPoint(-1, -1));
+    void zoomIn();
 
-    void zoomOut(const QPoint &pos = QPoint(-1, -1));
+    void zoomOut();
 
-    void zoomRelative(const qreal relativeLevel, const QPoint &pos = QPoint(-1, -1));
+    void zoomRelative(const qreal relativeLevel, const std::optional<QPoint> &pos = {});
 
-    void zoomAbsolute(const qreal absoluteLevel, const QPoint &pos = QPoint(-1, -1));
+    void zoomAbsolute(const qreal absoluteLevel, const std::optional<QPoint> &pos = {}, const bool isApplyingCalculation = false);
 
-    bool getZoomToFitEnabled() const;
-    void setZoomToFitEnabled(bool value);
+    const std::optional<Qv::CalculatedZoomMode> &getCalculatedZoomMode() const;
+    void setCalculatedZoomMode(const std::optional<Qv::CalculatedZoomMode> &value);
 
-    bool getNavigationResetsZoomEnabled() const;
-    void setNavigationResetsZoomEnabled(bool value);
+    bool getNavigationResetsZoom() const;
+    void setNavigationResetsZoom(const bool value);
 
     void applyExpensiveScaling();
     void removeExpensiveScaling();
 
-    void zoomToFit();
+    void recalculateZoom();
     void originalSize();
 
     void centerImage();
@@ -102,7 +103,7 @@ signals:
 
     void zoomLevelChanged();
 
-    void zoomToFitChanged();
+    void calculatedZoomModeChanged();
 
     void navigationResetsZoomChanged();
 
@@ -172,7 +173,7 @@ private:
     bool isOneToOnePixelSizingEnabled {true};
     bool isConstrainedPositioningEnabled {true};
     bool isConstrainedSmallCenteringEnabled {true};
-    Qv::FitMode cropMode {Qv::FitMode::WholeImage};
+    Qv::CalculatedZoomMode defaultCalculatedZoomMode {Qv::CalculatedZoomMode::ZoomToFit};
     qreal zoomMultiplier {1.25};
 
     Qv::ViewportClickAction doubleClickAction {Qv::ViewportClickAction::None};
@@ -189,14 +190,13 @@ private:
     Qv::ViewportScrollAction altVerticalScrollAction {Qv::ViewportScrollAction::None};
     Qv::ViewportScrollAction altHorizontalScrollAction {Qv::ViewportScrollAction::None};
 
-    bool isZoomToFitEnabled {true};
-    bool isApplyingZoomToFit {false};
-    bool isNavigationResetsZoomEnabled {true};
+    std::optional<Qv::CalculatedZoomMode> calculatedZoomMode {Qv::CalculatedZoomMode::ZoomToFit};
+    bool navigationResetsZoom {true};
     bool loadIsFromSessionRestore {false};
     qreal zoomLevel {1.0};
     qreal appliedDpiAdjustment {1.0};
     qreal appliedExpensiveScaleZoomLevel {0.0};
-    QPoint lastZoomEventPos {-1, -1};
+    std::optional<QPoint> lastZoomEventPos;
     QPointF lastZoomRoundingError;
 
     QVImageCore imageCore {this};

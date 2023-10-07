@@ -421,17 +421,17 @@
         </spacer>
        </item>
        <item row="8" column="0">
-        <widget class="QLabel" name="cropModeLabel">
+        <widget class="QLabel" name="zoomDefaultLabel">
          <property name="toolTip">
           <string>Ignores select sides of an image when fitting to window (some sides will extend beyond the window boundaries)</string>
          </property>
          <property name="text">
-          <string>On window resize:</string>
+          <string>Zoom default:</string>
          </property>
         </widget>
        </item>
        <item row="8" column="1">
-        <widget class="QComboBox" name="cropModeComboBox">
+        <widget class="QComboBox" name="zoomDefaultComboBox">
          <property name="toolTip">
           <string>Ignores select sides of an image when fitting to window (some sides will extend beyond the window boundaries)</string>
          </property>

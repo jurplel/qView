@@ -198,8 +198,8 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
     syncCheckbox(ui->cursorZoomCheckbox, "cursorzoom", defaults, makeConnections);
     // onetoonepixelsizing
     syncCheckbox(ui->oneToOnePixelSizingCheckbox, "onetoonepixelsizing", defaults, makeConnections);
-    // cropmode
-    syncComboBox(ui->cropModeComboBox, "cropmode", defaults, makeConnections);
+    // calculatedzoommode
+    syncComboBox(ui->zoomDefaultComboBox, "calculatedzoommode", defaults, makeConnections);
     // pastactualsizeenabled
     syncCheckbox(ui->pastActualSizeCheckbox, "pastactualsizeenabled", defaults, makeConnections);
     // fitoverscan
@@ -593,20 +593,19 @@ const QMap<Qv::AfterMatchingSize, QString> QVOptionsDialog::mapAfterMatchingSize
     };
 }
 
+const QMap<Qv::CalculatedZoomMode, QString> QVOptionsDialog::mapCalculatedZoomMode() {
+    return {
+        { Qv::CalculatedZoomMode::ZoomToFit, tr("Zoom to Fit") },
+        { Qv::CalculatedZoomMode::FillWindow, tr("Fill Window") }
+    };
+}
+
 const QMap<Qv::ColorSpaceConversion, QString> QVOptionsDialog::mapColorSpaceConversion() {
     return {
         { Qv::ColorSpaceConversion::Disabled, tr("Disabled") },
         { Qv::ColorSpaceConversion::AutoDetect, tr("Auto-detect") },
         { Qv::ColorSpaceConversion::SRgb, tr("sRGB") },
         { Qv::ColorSpaceConversion::DisplayP3, tr("Display P3") }
-    };
-}
-
-const QMap<Qv::FitMode, QString> QVOptionsDialog::mapFitMode() {
-    return {
-        { Qv::FitMode::WholeImage, tr("Fit whole image") },
-        { Qv::FitMode::OnlyHeight, tr("Fit height") },
-        { Qv::FitMode::OnlyWidth, tr("Fit width") }
     };
 }
 
@@ -651,6 +650,7 @@ const QMap<Qv::ViewportClickAction, QString> QVOptionsDialog::mapViewportClickAc
     return {
         { Qv::ViewportClickAction::None, tr("None") },
         { Qv::ViewportClickAction::ZoomToFit, tr("Zoom to Fit") },
+        { Qv::ViewportClickAction::FillWindow, tr("Fill Window") },
         { Qv::ViewportClickAction::OriginalSize, tr("Original Size") },
         { Qv::ViewportClickAction::ToggleFullScreen, tr("Toggle Full Screen") },
         { Qv::ViewportClickAction::ToggleTitlebarHidden, tr("Toggle Titlebar Hidden") }
@@ -692,7 +692,7 @@ void QVOptionsDialog::populateComboBoxes()
 
     populateComboBox(ui->afterMatchingSizeComboBox, mapAfterMatchingSize());
 
-    populateComboBox(ui->cropModeComboBox, mapFitMode());
+    populateComboBox(ui->zoomDefaultComboBox, mapCalculatedZoomMode());
 
     populateComboBox(ui->colorSpaceConversionComboBox, mapColorSpaceConversion());
 

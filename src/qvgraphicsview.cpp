@@ -282,10 +282,11 @@ void QVGraphicsView::executeClickAction(const Qv::ViewportClickAction action)
 {
     if (action == Qv::ViewportClickAction::ZoomToFit)
     {
-        if (!getZoomToFitEnabled())
-            setZoomToFitEnabled(true);
-        else
-            centerImage();
+        setCalculatedZoomMode(Qv::CalculatedZoomMode::ZoomToFit);
+    }
+    else if (action == Qv::ViewportClickAction::FillWindow)
+    {
+        setCalculatedZoomMode(Qv::CalculatedZoomMode::FillWindow);
     }
     else if (action == Qv::ViewportClickAction::OriginalSize)
     {
@@ -430,8 +431,8 @@ void QVGraphicsView::postLoad()
 
     if (!loadIsFromSessionRestore)
     {
-        if (isNavigationResetsZoomEnabled && !isZoomToFitEnabled)
-            setZoomToFitEnabled(true);
+        if (navigationResetsZoom && calculatedZoomMode != defaultCalculatedZoomMode)
+            setCalculatedZoomMode(defaultCalculatedZoomMode);
         else
             fitOrConstrainImage();
     }
@@ -445,17 +446,17 @@ void QVGraphicsView::postLoad()
     loadIsFromSessionRestore = false;
 }
 
-void QVGraphicsView::zoomIn(const QPoint &pos)
+void QVGraphicsView::zoomIn()
 {
-    zoomRelative(zoomMultiplier, pos);
+    zoomRelative(zoomMultiplier);
 }
 
-void QVGraphicsView::zoomOut(const QPoint &pos)
+void QVGraphicsView::zoomOut()
 {
-    zoomRelative(qPow(zoomMultiplier, -1), pos);
+    zoomRelative(qPow(zoomMultiplier, -1));
 }
 
-void QVGraphicsView::zoomRelative(qreal relativeLevel, const QPoint &pos)
+void QVGraphicsView::zoomRelative(qreal relativeLevel, const std::optional<QPoint> &pos)
 {
     const qreal absoluteLevel = zoomLevel * relativeLevel;
 
@@ -465,17 +466,17 @@ void QVGraphicsView::zoomRelative(qreal relativeLevel, const QPoint &pos)
     zoomAbsolute(absoluteLevel, pos);
 }
 
-void QVGraphicsView::zoomAbsolute(const qreal absoluteLevel, const QPoint &pos)
+void QVGraphicsView::zoomAbsolute(const qreal absoluteLevel, const std::optional<QPoint> &pos, const bool isApplyingCalculation)
 {
-    if (!isApplyingZoomToFit)
-        setZoomToFitEnabled(false);
+    if (!isApplyingCalculation)
+        setCalculatedZoomMode({});
 
     if (pos != lastZoomEventPos)
     {
         lastZoomEventPos = pos;
         lastZoomRoundingError = QPointF();
     }
-    const QPointF scenePos = mapToScene(pos) - lastZoomRoundingError;
+    const QPointF scenePos = pos.has_value() ? mapToScene(pos.value()) - lastZoomRoundingError : QPointF();
 
     if (appliedExpensiveScaleZoomLevel != 0.0)
     {
@@ -492,13 +493,13 @@ void QVGraphicsView::zoomAbsolute(const qreal absoluteLevel, const QPoint &pos)
     scrollHelper->cancelAnimation();
 
     // If we have a point to zoom towards and cursor zooming is enabled
-    if (pos != QPoint(-1, -1) && isCursorZoomEnabled)
+    if (pos.has_value() && isCursorZoomEnabled)
     {
         const QPointF p1mouse = mapFromScene(scenePos);
-        const QPointF move = p1mouse - pos;
+        const QPointF move = p1mouse - pos.value();
         horizontalScrollBar()->setValue(horizontalScrollBar()->value() + (move.x() * (isRightToLeft() ? -1 : 1)));
         verticalScrollBar()->setValue(verticalScrollBar()->value() + move.y());
-        lastZoomRoundingError = mapToScene(pos) - scenePos;
+        lastZoomRoundingError = mapToScene(pos.value()) - scenePos;
         constrainBoundsTimer->start();
     }
     else if (!loadIsFromSessionRestore)
@@ -510,34 +511,38 @@ void QVGraphicsView::zoomAbsolute(const qreal absoluteLevel, const QPoint &pos)
     emitZoomLevelChangedTimer->start();
 }
 
-bool QVGraphicsView::getZoomToFitEnabled() const
+const std::optional<Qv::CalculatedZoomMode> &QVGraphicsView::getCalculatedZoomMode() const
 {
-    return isZoomToFitEnabled;
+    return calculatedZoomMode;
 }
 
-void QVGraphicsView::setZoomToFitEnabled(bool value)
+void QVGraphicsView::setCalculatedZoomMode(const std::optional<Qv::CalculatedZoomMode> &value)
 {
-    if (isZoomToFitEnabled == value)
+    if (calculatedZoomMode == value)
+    {
+        if (calculatedZoomMode.has_value())
+            centerImage();
+        return;
+    }
+
+    calculatedZoomMode = value;
+    if (calculatedZoomMode.has_value())
+        recalculateZoom();
+
+    emit calculatedZoomModeChanged();
+}
+
+bool QVGraphicsView::getNavigationResetsZoom() const
+{
+    return navigationResetsZoom;
+}
+
+void QVGraphicsView::setNavigationResetsZoom(const bool value)
+{
+    if (navigationResetsZoom == value)
         return;
 
-    isZoomToFitEnabled = value;
-    if (isZoomToFitEnabled)
-        zoomToFit();
-
-    emit zoomToFitChanged();
-}
-
-bool QVGraphicsView::getNavigationResetsZoomEnabled() const
-{
-    return isNavigationResetsZoomEnabled;
-}
-
-void QVGraphicsView::setNavigationResetsZoomEnabled(bool value)
-{
-    if (isNavigationResetsZoomEnabled == value)
-        return;
-
-    isNavigationResetsZoomEnabled = value;
+    navigationResetsZoom = value;
 
     emit navigationResetsZoomChanged();
 }
@@ -601,9 +606,9 @@ void QVGraphicsView::animatedFrameChanged(QRect rect)
     }
 }
 
-void QVGraphicsView::zoomToFit()
+void QVGraphicsView::recalculateZoom()
 {
-    if (!getCurrentFileDetails().isPixmapLoaded)
+    if (!getCurrentFileDetails().isPixmapLoaded || !calculatedZoomMode.has_value())
         return;
 
     QSizeF effectiveImageSize = getEffectiveOriginalSize();
@@ -620,20 +625,8 @@ void QVGraphicsView::zoomToFit()
     // Each mode will check if the rounded image size already produces the desired fit,
     // in which case we can use exactly 1.0 to avoid unnecessary scaling
 
-    switch (cropMode) {
-    case Qv::FitMode::OnlyHeight:
-        if (qRound(effectiveImageSize.height()) == viewSize.height())
-            targetRatio = 1.0;
-        else
-            targetRatio = fitYRatio;
-        break;
-    case Qv::FitMode::OnlyWidth:
-        if (qRound(effectiveImageSize.width()) == viewSize.width())
-            targetRatio = 1.0;
-        else
-            targetRatio = fitXRatio;
-        break;
-    default:
+    switch (calculatedZoomMode.value()) {
+    case Qv::CalculatedZoomMode::ZoomToFit:
         if ((qRound(effectiveImageSize.height()) == viewSize.height() && qRound(effectiveImageSize.width()) <= viewSize.width()) ||
             (qRound(effectiveImageSize.width()) == viewSize.width() && qRound(effectiveImageSize.height()) <= viewSize.height()))
         {
@@ -653,14 +646,23 @@ void QVGraphicsView::zoomToFit()
                 targetRatio = qMin(fitXRatio, fitYRatio);
         }
         break;
+    case Qv::CalculatedZoomMode::FillWindow:
+        if ((qRound(effectiveImageSize.height()) == viewSize.height() && qRound(effectiveImageSize.width()) >= viewSize.width()) ||
+            (qRound(effectiveImageSize.width()) == viewSize.width() && qRound(effectiveImageSize.height()) >= viewSize.height()))
+        {
+            targetRatio = 1.0;
+        }
+        else
+        {
+            targetRatio = qMax(fitXRatio, fitYRatio);
+        }
+        break;
     }
 
     if (targetRatio > 1.0 && !isPastActualSizeEnabled)
         targetRatio = 1.0;
 
-    isApplyingZoomToFit = true;
-    zoomAbsolute(targetRatio);
-    isApplyingZoomToFit = false;
+    zoomAbsolute(targetRatio, {}, true);
 }
 
 void QVGraphicsView::originalSize()
@@ -704,9 +706,10 @@ const QJsonObject QVGraphicsView::getSessionState() const
 
     state["vScroll"] = verticalScrollBar()->value();
 
-    state["navResetsZoom"] = isNavigationResetsZoomEnabled;
+    state["navResetsZoom"] = navigationResetsZoom;
 
-    state["zoomToFit"] = isZoomToFitEnabled;
+    if (calculatedZoomMode.has_value())
+        state["calcZoomMode"] = static_cast<int>(calculatedZoomMode.value());
 
     return state;
 }
@@ -730,12 +733,12 @@ void QVGraphicsView::loadSessionState(const QJsonObject &state)
 
     verticalScrollBar()->setValue(state["vScroll"].toInt());
 
-    isNavigationResetsZoomEnabled = state["navResetsZoom"].toBool();
+    navigationResetsZoom = state["navResetsZoom"].toBool();
 
-    isZoomToFitEnabled = state["zoomToFit"].toBool();
+    calculatedZoomMode = state.contains("calcZoomMode") ? std::make_optional(static_cast<Qv::CalculatedZoomMode>(state["calcZoomMode"].toInt())) : std::nullopt;
 
     emit navigationResetsZoomChanged();
-    emit zoomToFitChanged();
+    emit calculatedZoomModeChanged();
 }
 
 void QVGraphicsView::setLoadIsFromSessionRestore(const bool value)
@@ -848,8 +851,8 @@ void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
 
 void QVGraphicsView::fitOrConstrainImage()
 {
-    if (isZoomToFitEnabled)
-        zoomToFit();
+    if (calculatedZoomMode.has_value())
+        recalculateZoom();
     else
         scrollHelper->constrain(true);
 }
@@ -957,8 +960,8 @@ void QVGraphicsView::settingsUpdated()
     else
         isScalingTwoEnabled = settingsManager.getBoolean("scalingtwoenabled");
 
-    //cropmode
-    cropMode = settingsManager.getEnum<Qv::FitMode>("cropmode");
+    //calculatedzoommode
+    defaultCalculatedZoomMode = settingsManager.getEnum<Qv::CalculatedZoomMode>("calculatedzoommode");
 
     //scalefactor
     zoomMultiplier = 1.0 + (settingsManager.getInteger("scalefactor") / 100.0);

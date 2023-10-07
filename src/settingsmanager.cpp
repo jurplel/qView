@@ -197,7 +197,7 @@ void SettingsManager::initializeSettingsLibrary()
 #else
     settingsLibrary.insert("onetoonepixelsizing", {true, {}});
 #endif
-    settingsLibrary.insert("cropmode", {static_cast<int>(Qv::FitMode::WholeImage), {}});
+    settingsLibrary.insert("calculatedzoommode", {static_cast<int>(Qv::CalculatedZoomMode::ZoomToFit), {}});
     settingsLibrary.insert("pastactualsizeenabled", {true, {}});
     settingsLibrary.insert("fitoverscan", {0, {}});
     settingsLibrary.insert("constrainimageposition", {true, {}});

@@ -19,6 +19,12 @@ namespace Qv
         CenterOnScreen = 2
     };
 
+    enum class CalculatedZoomMode
+    {
+        ZoomToFit = 0,
+        FillWindow = 1
+    };
+
     enum class ClickOrDrag
     {
         Click = 0,
@@ -31,13 +37,6 @@ namespace Qv
         AutoDetect = 1,
         SRgb = 2,
         DisplayP3 = 3
-    };
-
-    enum class FitMode
-    {
-        WholeImage = 0,
-        OnlyHeight = 1,
-        OnlyWidth = 2
     };
 
     enum class PreloadMode
@@ -70,9 +69,10 @@ namespace Qv
     {
         None = 0,
         ZoomToFit = 1,
-        OriginalSize = 2,
-        ToggleFullScreen = 3,
-        ToggleTitlebarHidden = 4
+        FillWindow = 2,
+        OriginalSize = 3,
+        ToggleFullScreen = 4,
+        ToggleTitlebarHidden = 5
     };
 
     enum class ViewportDragAction
