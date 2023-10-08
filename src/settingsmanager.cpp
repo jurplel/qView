@@ -209,7 +209,7 @@ void SettingsManager::initializeSettingsLibrary()
     settingsLibrary.insert("sortdescending", {false, {}});
     settingsLibrary.insert("preloadingmode", {static_cast<int>(Qv::PreloadMode::Adjacent), {}});
     settingsLibrary.insert("loopfoldersenabled", {true, {}});
-    settingsLibrary.insert("slideshowreversed", {false, {}});
+    settingsLibrary.insert("slideshowdirection", {static_cast<int>(Qv::SlideshowDirection::Forward), {}});
     settingsLibrary.insert("slideshowtimer", {5, {}});
     settingsLibrary.insert("afterdelete", {static_cast<int>(Qv::AfterDelete::MoveForward), {}});
     settingsLibrary.insert("askdelete", {true, {}});

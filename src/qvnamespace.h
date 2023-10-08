@@ -46,6 +46,13 @@ namespace Qv
         Extended = 2
     };
 
+    enum class SlideshowDirection
+    {
+        Forward = 0,
+        Backward = 1,
+        Random = 2
+    };
+
     enum class SortMode
     {
         Name = 0,

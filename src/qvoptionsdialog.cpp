@@ -18,8 +18,6 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowFlags(windowFlags() & (~Qt::WindowContextHelpButtonHint | Qt::CustomizeWindowHint));
 
-    populateComboBoxes();
-
     connect(ui->buttonBox, &QDialogButtonBox::clicked, this, &QVOptionsDialog::buttonBoxClicked);
     connect(ui->shortcutsTable, &QTableWidget::cellDoubleClicked, this, &QVOptionsDialog::shortcutCellDoubleClicked);
     connect(ui->bgColorCheckbox, &QCheckBox::stateChanged, this, &QVOptionsDialog::bgColorCheckboxStateChanged);
@@ -29,7 +27,11 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     connect(ui->constrainImagePositionCheckbox, &QCheckBox::stateChanged, this, &QVOptionsDialog::constrainImagePositionCheckboxStateChanged);
     connect(ui->middleButtonModeClickRadioButton, &QRadioButton::clicked, this, &QVOptionsDialog::middleButtonModeChanged);
     connect(ui->middleButtonModeDragRadioButton, &QRadioButton::clicked, this, &QVOptionsDialog::middleButtonModeChanged);
+    connect(ui->titlebarComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &QVOptionsDialog::titlebarComboBoxCurrentIndexChanged);
+    connect(ui->windowResizeComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &QVOptionsDialog::windowResizeComboBoxCurrentIndexChanged);
+    connect(ui->langComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &QVOptionsDialog::languageComboBoxCurrentIndexChanged);
 
+    populateComboBoxes();
     populateLanguages();
 
     QSettings settings;
@@ -83,11 +85,10 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     ui->altHorizontalScrollLabel->setText(tr("%1 + Horizontal Scroll:").arg(ctrlKeyName));
 
     syncSettings(false, true);
-    connect(ui->titlebarComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &QVOptionsDialog::titlebarComboBoxCurrentIndexChanged);
-    connect(ui->windowResizeComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &QVOptionsDialog::windowResizeComboBoxCurrentIndexChanged);
-    connect(ui->langComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &QVOptionsDialog::languageComboBoxCurrentIndexChanged);
     syncShortcuts();
     updateButtonBox();
+
+    isInitialLoad = false;
 }
 
 QVOptionsDialog::~QVOptionsDialog()
@@ -156,12 +157,10 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
     syncCheckbox(ui->checkerboardBackgroundCheckbox, "checkerboardbackground", defaults, makeConnections);
     // titlebarmode
     syncComboBox(ui->titlebarComboBox, "titlebarmode", defaults, makeConnections);
-    titlebarComboBoxCurrentIndexChanged(ui->titlebarComboBox->currentIndex());
     // customtitlebartext
     syncLineEdit(ui->customTitlebarLineEdit, "customtitlebartext", defaults, makeConnections);
     // windowresizemode
     syncComboBox(ui->windowResizeComboBox, "windowresizemode", defaults, makeConnections);
-    windowResizeComboBoxCurrentIndexChanged(ui->windowResizeComboBox->currentIndex());
     // aftermatchingsize
     syncComboBox(ui->afterMatchingSizeComboBox, "aftermatchingsizemode", defaults, makeConnections);
     // minwindowresizedpercentage
@@ -215,7 +214,7 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
     // colorspaceconversion
     syncComboBox(ui->colorSpaceConversionComboBox, "colorspaceconversion", defaults, makeConnections);
     // language
-    syncComboBoxData(ui->langComboBox, "language", defaults, makeConnections);
+    syncComboBox(ui->langComboBox, "language", defaults, makeConnections);
     // sortmode
     syncComboBox(ui->sortComboBox, "sortmode", defaults, makeConnections);
     // sortdescending
@@ -224,8 +223,8 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
     syncComboBox(ui->preloadingComboBox, "preloadingmode", defaults, makeConnections);
     // loopfolders
     syncCheckbox(ui->loopFoldersCheckbox, "loopfoldersenabled", defaults, makeConnections);
-    // slideshowreversed
-    syncComboBox(ui->slideshowDirectionComboBox, "slideshowreversed", defaults, makeConnections);
+    // slideshowdirection
+    syncComboBox(ui->slideshowDirectionComboBox, "slideshowdirection", defaults, makeConnections);
     // slideshowtimer
     syncDoubleSpinBox(ui->slideshowTimerSpinBox, "slideshowtimer", defaults, makeConnections);
     // afterdelete
@@ -290,20 +289,6 @@ void QVOptionsDialog::syncRadioButtons(QList<QRadioButton *> buttons, const QStr
 }
 
 void QVOptionsDialog::syncComboBox(QComboBox *comboBox, const QString &key, bool defaults, bool makeConnection)
-{
-    auto val = qvApp->getSettingsManager().getInteger(key, defaults);
-    comboBox->setCurrentIndex(val);
-    transientSettings.insert(key, val);
-
-    if (makeConnection)
-    {
-        connect(comboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [this, key](int index) {
-            modifySetting(key, index);
-        });
-    }
-}
-
-void QVOptionsDialog::syncComboBoxData(QComboBox *comboBox, const QString &key, bool defaults, bool makeConnection)
 {
     auto val = qvApp->getSettingsManager().getString(key, defaults);
     comboBox->setCurrentIndex(comboBox->findData(val));
@@ -513,12 +498,14 @@ void QVOptionsDialog::scalingCheckboxStateChanged(int state)
 
 void QVOptionsDialog::titlebarComboBoxCurrentIndexChanged(int index)
 {
-    ui->customTitlebarLineEdit->setEnabled(index == 4);
+    const auto value = static_cast<Qv::TitleBarText>(ui->titlebarComboBox->itemData(index).toInt());
+    ui->customTitlebarLineEdit->setEnabled(value == Qv::TitleBarText::Custom);
 }
 
 void QVOptionsDialog::windowResizeComboBoxCurrentIndexChanged(int index)
 {
-    bool enableRelatedControls = index != 0;
+    const auto value = static_cast<Qv::WindowResizeMode>(ui->windowResizeComboBox->itemData(index).toInt());
+    bool enableRelatedControls = value != Qv::WindowResizeMode::Never;
     ui->afterMatchingSizeLabel->setEnabled(enableRelatedControls);
     ui->afterMatchingSizeComboBox->setEnabled(enableRelatedControls);
     ui->minWindowResizeLabel->setEnabled(enableRelatedControls);
@@ -557,7 +544,7 @@ void QVOptionsDialog::populateLanguages()
 void QVOptionsDialog::languageComboBoxCurrentIndexChanged(int index)
 {
     Q_UNUSED(index)
-    if (!languageRestartMessageShown)
+    if (!isInitialLoad && !languageRestartMessageShown)
     {
         QMessageBox::information(this, tr("Restart Required"), tr("You must restart qView to change the language."));
         languageRestartMessageShown = true;
@@ -578,7 +565,7 @@ void QVOptionsDialog::middleButtonModeChanged()
     ui->altMiddleDragComboBox->setVisible(isDrag);
 }
 
-const QMap<Qv::AfterDelete, QString> QVOptionsDialog::mapAfterDelete() {
+const Ui::ComboBoxItems<Qv::AfterDelete> QVOptionsDialog::mapAfterDelete() {
     return {
         { Qv::AfterDelete::MoveBack, tr("Move Back") },
         { Qv::AfterDelete::DoNothing, tr("Do Nothing") },
@@ -586,7 +573,7 @@ const QMap<Qv::AfterDelete, QString> QVOptionsDialog::mapAfterDelete() {
     };
 }
 
-const QMap<Qv::AfterMatchingSize, QString> QVOptionsDialog::mapAfterMatchingSize() {
+const Ui::ComboBoxItems<Qv::AfterMatchingSize> QVOptionsDialog::mapAfterMatchingSize() {
     return {
         { Qv::AfterMatchingSize::AvoidRepositioning, tr("Avoid repositioning") },
         { Qv::AfterMatchingSize::CenterOnPrevious, tr("Center relative to previous image") },
@@ -594,14 +581,14 @@ const QMap<Qv::AfterMatchingSize, QString> QVOptionsDialog::mapAfterMatchingSize
     };
 }
 
-const QMap<Qv::CalculatedZoomMode, QString> QVOptionsDialog::mapCalculatedZoomMode() {
+const Ui::ComboBoxItems<Qv::CalculatedZoomMode> QVOptionsDialog::mapCalculatedZoomMode() {
     return {
         { Qv::CalculatedZoomMode::ZoomToFit, tr("Zoom to Fit") },
         { Qv::CalculatedZoomMode::FillWindow, tr("Fill Window") }
     };
 }
 
-const QMap<Qv::ColorSpaceConversion, QString> QVOptionsDialog::mapColorSpaceConversion() {
+const Ui::ComboBoxItems<Qv::ColorSpaceConversion> QVOptionsDialog::mapColorSpaceConversion() {
     return {
         { Qv::ColorSpaceConversion::Disabled, tr("Disabled") },
         { Qv::ColorSpaceConversion::AutoDetect, tr("Auto-detect") },
@@ -610,7 +597,7 @@ const QMap<Qv::ColorSpaceConversion, QString> QVOptionsDialog::mapColorSpaceConv
     };
 }
 
-const QMap<Qv::PreloadMode, QString> QVOptionsDialog::mapPreloadMode() {
+const Ui::ComboBoxItems<Qv::PreloadMode> QVOptionsDialog::mapPreloadMode() {
     return {
         { Qv::PreloadMode::Disabled, tr("Disabled") },
         { Qv::PreloadMode::Adjacent, tr("Adjacent") },
@@ -618,7 +605,15 @@ const QMap<Qv::PreloadMode, QString> QVOptionsDialog::mapPreloadMode() {
     };
 }
 
-const QMap<Qv::SortMode, QString> QVOptionsDialog::mapSortMode() {
+const Ui::ComboBoxItems<Qv::SlideshowDirection> QVOptionsDialog::mapSlideshowDirection() {
+    return {
+        { Qv::SlideshowDirection::Forward, tr("Forward") },
+        { Qv::SlideshowDirection::Backward, tr("Backward") },
+        { Qv::SlideshowDirection::Random, tr("Random") }
+    };
+}
+
+const Ui::ComboBoxItems<Qv::SortMode> QVOptionsDialog::mapSortMode() {
     return {
         { Qv::SortMode::Name, tr("Name") },
         { Qv::SortMode::DateModified, tr("Date Modified") },
@@ -629,7 +624,7 @@ const QMap<Qv::SortMode, QString> QVOptionsDialog::mapSortMode() {
     };
 }
 
-const QMap<Qv::TitleBarText, QString> QVOptionsDialog::mapTitleBarText() {
+const Ui::ComboBoxItems<Qv::TitleBarText> QVOptionsDialog::mapTitleBarText() {
     return {
         { Qv::TitleBarText::Basic, tr("Basic") },
         { Qv::TitleBarText::Minimal, tr("Minimal") },
@@ -639,7 +634,7 @@ const QMap<Qv::TitleBarText, QString> QVOptionsDialog::mapTitleBarText() {
     };
 }
 
-const QMap<Qv::WindowResizeMode, QString> QVOptionsDialog::mapWindowResizeMode() {
+const Ui::ComboBoxItems<Qv::WindowResizeMode> QVOptionsDialog::mapWindowResizeMode() {
     return {
         { Qv::WindowResizeMode::Never, tr("Never") },
         { Qv::WindowResizeMode::WhenLaunching, tr("When launching") },
@@ -647,7 +642,7 @@ const QMap<Qv::WindowResizeMode, QString> QVOptionsDialog::mapWindowResizeMode()
     };
 }
 
-const QMap<Qv::ViewportClickAction, QString> QVOptionsDialog::mapViewportClickAction() {
+const Ui::ComboBoxItems<Qv::ViewportClickAction> QVOptionsDialog::mapViewportClickAction() {
     return {
         { Qv::ViewportClickAction::None, tr("None") },
         { Qv::ViewportClickAction::ZoomToFit, tr("Zoom to Fit") },
@@ -658,7 +653,7 @@ const QMap<Qv::ViewportClickAction, QString> QVOptionsDialog::mapViewportClickAc
     };
 }
 
-const QMap<Qv::ViewportDragAction, QString> QVOptionsDialog::mapViewportDragAction() {
+const Ui::ComboBoxItems<Qv::ViewportDragAction> QVOptionsDialog::mapViewportDragAction() {
     return {
         { Qv::ViewportDragAction::None, tr("None") },
         { Qv::ViewportDragAction::Pan, tr("Pan") },
@@ -666,7 +661,7 @@ const QMap<Qv::ViewportDragAction, QString> QVOptionsDialog::mapViewportDragActi
     };
 }
 
-const QMap<Qv::ViewportScrollAction, QString> QVOptionsDialog::mapViewportScrollAction() {
+const Ui::ComboBoxItems<Qv::ViewportScrollAction> QVOptionsDialog::mapViewportScrollAction() {
     return {
         { Qv::ViewportScrollAction::None, tr("None") },
         { Qv::ViewportScrollAction::Zoom, tr("Zoom") },
@@ -676,12 +671,12 @@ const QMap<Qv::ViewportScrollAction, QString> QVOptionsDialog::mapViewportScroll
 }
 
 template <typename TEnum>
-static void populateComboBox(QComboBox *comboBox, const QMap<TEnum, QString> &items)
+static void populateComboBox(QComboBox *comboBox, const Ui::ComboBoxItems<TEnum> &items)
 {
     comboBox->clear();
-    for (auto it = items.constBegin(); it != items.constEnd(); ++it)
+    for (const auto &item : items)
     {
-        comboBox->addItem(it.value(), static_cast<int>(it.key()));
+        comboBox->addItem(item.second, static_cast<int>(item.first));
     }
 }
 
@@ -700,6 +695,8 @@ void QVOptionsDialog::populateComboBoxes()
     populateComboBox(ui->sortComboBox, mapSortMode());
 
     populateComboBox(ui->preloadingComboBox, mapPreloadMode());
+
+    populateComboBox(ui->slideshowDirectionComboBox, mapSlideshowDirection());
 
     populateComboBox(ui->afterDeletionComboBox, mapAfterDelete());
 

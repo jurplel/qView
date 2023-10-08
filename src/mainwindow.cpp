@@ -1326,10 +1326,18 @@ void MainWindow::cancelSlideshow()
 
 void MainWindow::slideshowAction()
 {
-    if (qvApp->getSettingsManager().getBoolean("slideshowreversed"))
-        previousFile();
-    else
+    switch (qvApp->getSettingsManager().getEnum<Qv::SlideshowDirection>("slideshowdirection"))
+    {
+    case Qv::SlideshowDirection::Forward:
         nextFile();
+        break;
+    case Qv::SlideshowDirection::Backward:
+        previousFile();
+        break;
+    case Qv::SlideshowDirection::Random:
+        randomFile();
+        break;
+    }
 }
 
 void MainWindow::decreaseSpeed()

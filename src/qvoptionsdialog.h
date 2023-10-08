@@ -12,6 +12,9 @@
 
 namespace Ui {
 class QVOptionsDialog;
+
+template <typename TEnum>
+using ComboBoxItems = QVector<std::pair<TEnum, QString>>;
 }
 
 class QVOptionsDialog : public QDialog
@@ -32,7 +35,6 @@ protected:
     void syncCheckbox(QCheckBox *checkbox, const QString &key, bool defaults = false, bool makeConnection = false);
     void syncRadioButtons(QList<QRadioButton*> buttons, const QString &key, bool defaults = false, bool makeConnection = false);
     void syncComboBox(QComboBox *comboBox, const QString &key, bool defaults = false, bool makeConnection = false);
-    void syncComboBoxData(QComboBox *comboBox, const QString &key, bool defaults = false, bool makeConnection = false);
     void syncSpinBox(QSpinBox *spinBox, const QString &key, bool defaults = false, bool makeConnection = false);
     void syncDoubleSpinBox(QDoubleSpinBox *doubleSpinBox, const QString &key, bool defaults = false, bool makeConnection = false);
     void syncLineEdit(QLineEdit *lineEdit, const QString &key, bool defaults = false, bool makeConnection = false);
@@ -45,17 +47,18 @@ protected:
     void populateLanguages();
     void populateComboBoxes();
 
-    const QMap<Qv::AfterDelete, QString> mapAfterDelete();
-    const QMap<Qv::AfterMatchingSize, QString> mapAfterMatchingSize();
-    const QMap<Qv::CalculatedZoomMode, QString> mapCalculatedZoomMode();
-    const QMap<Qv::ColorSpaceConversion, QString> mapColorSpaceConversion();
-    const QMap<Qv::PreloadMode, QString> mapPreloadMode();
-    const QMap<Qv::SortMode, QString> mapSortMode();
-    const QMap<Qv::TitleBarText, QString> mapTitleBarText();
-    const QMap<Qv::WindowResizeMode, QString> mapWindowResizeMode();
-    const QMap<Qv::ViewportClickAction, QString> mapViewportClickAction();
-    const QMap<Qv::ViewportDragAction, QString> mapViewportDragAction();
-    const QMap<Qv::ViewportScrollAction, QString> mapViewportScrollAction();
+    const Ui::ComboBoxItems<Qv::AfterDelete> mapAfterDelete();
+    const Ui::ComboBoxItems<Qv::AfterMatchingSize> mapAfterMatchingSize();
+    const Ui::ComboBoxItems<Qv::CalculatedZoomMode> mapCalculatedZoomMode();
+    const Ui::ComboBoxItems<Qv::ColorSpaceConversion> mapColorSpaceConversion();
+    const Ui::ComboBoxItems<Qv::PreloadMode> mapPreloadMode();
+    const Ui::ComboBoxItems<Qv::SlideshowDirection> mapSlideshowDirection();
+    const Ui::ComboBoxItems<Qv::SortMode> mapSortMode();
+    const Ui::ComboBoxItems<Qv::TitleBarText> mapTitleBarText();
+    const Ui::ComboBoxItems<Qv::WindowResizeMode> mapWindowResizeMode();
+    const Ui::ComboBoxItems<Qv::ViewportClickAction> mapViewportClickAction();
+    const Ui::ComboBoxItems<Qv::ViewportDragAction> mapViewportDragAction();
+    const Ui::ComboBoxItems<Qv::ViewportScrollAction> mapViewportScrollAction();
 
 private slots:
     void shortcutCellDoubleClicked(int row, int column);
@@ -82,6 +85,8 @@ private:
     QHash<QString, QVariant> transientSettings;
 
     QList<QStringList> transientShortcuts;
+
+    bool isInitialLoad {true};
 
     bool languageRestartMessageShown {false};
 };
