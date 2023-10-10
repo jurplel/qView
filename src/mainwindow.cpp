@@ -636,7 +636,7 @@ void MainWindow::setTitlebarHidden(const bool shouldHide)
         windowHandle()->setFlags(newFlags);
     };
 
-#ifdef COCOA_LOADED
+#if defined COCOA_LOADED && QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     QVCocoaFunctions::setTitlebarHidden(windowHandle(), shouldHide);
     customizeWindowFlags(Qt::WindowCloseButtonHint | Qt::WindowMinMaxButtonsHint | Qt::WindowFullscreenButtonHint, !shouldHide);
 #elif defined WIN32_LOADED
