@@ -885,7 +885,7 @@ Keine Schreibberechtigung oder Datei ist schreibgeschützt.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="130"/>
         <source>Window matches image size:</source>
-        <translation>Fenster passt sich an die Bildgröße an:</translation>
+        <translation type="unfinished">Fenster an Bildgröße anpassen:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.cpp" line="644"/>
@@ -1357,7 +1357,7 @@ Keine Schreibberechtigung oder Datei ist schreibgeschützt.</translation>
         <location filename="../src/qvoptionsdialog.ui" line="732"/>
         <source>&amp;Update notifications on startup</source>
         <extracomment>The notifications are for new qView releases</extracomment>
-        <translation>Benachrichtige über qView-Aktualisierungen beim Programmstart</translation>
+        <translation>Benachrichtige über Aktualisierungen beim Programmstart</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="532"/>
