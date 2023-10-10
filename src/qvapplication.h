@@ -92,6 +92,8 @@ public:
 
     static bool tryRestoreLastSession();
 
+    void legacyQuit();
+
     bool getIsApplicationQuitting() const;
 
     bool isSessionStateEnabled() const;

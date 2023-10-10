@@ -559,10 +559,10 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
             qvApp->setUserDeclinedSessionStateSave(msgBox.clickedButton() == noButton);
         }
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        if (relevantWindow) // if a window was passed
-            relevantWindow->close(); // close it so geometry is saved
-#endif
+        qvApp->legacyQuit();
+#else
         QCoreApplication::quit();
+#endif
     } else if (key == "newwindow") {
         qvApp->newWindow();
     } else if (key == "open") {

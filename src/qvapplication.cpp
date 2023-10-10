@@ -368,7 +368,7 @@ void QVApplication::defineFilterLists()
 
 bool QVApplication::supportsSessionPersistence()
 {
-#if defined(Q_OS_MACOS) && QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#if defined(Q_OS_MACOS)
     return true;
 #else
     return false;
@@ -399,6 +399,12 @@ bool QVApplication::tryRestoreLastSession()
     settings.remove("sessionstate");
 
     return true;
+}
+
+void QVApplication::legacyQuit()
+{
+    isApplicationQuitting = true;
+    qGuiApp->postEvent(qGuiApp, new QEvent(QEvent::Quit));
 }
 
 bool QVApplication::getIsApplicationQuitting() const
