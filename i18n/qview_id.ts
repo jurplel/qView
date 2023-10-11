@@ -152,17 +152,17 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="713"/>
         <source>Zoom &amp;In</source>
-        <translation>Perbe &amp;sar</translation>
+        <translation>Perbesar</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="717"/>
         <source>Zoom &amp;Out</source>
-        <translation>Perke &amp;cil</translation>
+        <translation>Perkecil</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="721"/>
         <source>Reset &amp;Zoom</source>
-        <translation>Setel Ulang &amp;Zoom</translation>
+        <translation>Setel Ulang Pembesaran</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="725"/>
