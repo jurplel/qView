@@ -18,6 +18,8 @@ public:
 
     static QString getShortPath(const QString &path);
 
+    static bool showInExplorer(const QString &path);
+
     static QByteArray getIccProfileForWindow(const QWindow *window);
 };
 

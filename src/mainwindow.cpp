@@ -913,15 +913,16 @@ void MainWindow::openContainingFolder()
 
     const QFileInfo selectedFileInfo = getCurrentFileDetails().fileInfo;
 
-#ifdef Q_OS_WIN
+#ifdef WIN32_LOADED
     QString pathToSelect = QDir::toNativeSeparators(selectedFileInfo.absoluteFilePath());
-    if (pathToSelect.length() > 259)
+    if (pathToSelect.length() > 259 && pathToSelect.startsWith(R"(\\)"))
     {
+        // The Shell API seems to handle long paths, unless they are UNC :(
         pathToSelect = QVWin32Functions::getShortPath(pathToSelect);
         if (pathToSelect.isEmpty())
             return;
     }
-    QProcess::startDetached("explorer", QStringList() << "/select," << pathToSelect);
+    QVWin32Functions::showInExplorer(pathToSelect);
 #elif defined Q_OS_MACOS
     QProcess::execute("open", QStringList() << "-R" << selectedFileInfo.absoluteFilePath());
 #else

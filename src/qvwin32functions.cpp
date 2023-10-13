@@ -173,6 +173,18 @@ QString QVWin32Functions::getShortPath(const QString &path)
     return getLongOrShortPath(path, GetShortPathNameW);
 }
 
+bool QVWin32Functions::showInExplorer(const QString &path)
+{
+    bool result = false;
+    LPITEMIDLIST pIdl;
+    if (SUCCEEDED(SHParseDisplayName(reinterpret_cast<const wchar_t*>(path.utf16()), nullptr, &pIdl, 0, nullptr)))
+    {
+        result = SUCCEEDED(SHOpenFolderAndSelectItems(pIdl, 0, nullptr, 0));
+        ILFree(pIdl);
+    }
+    return result;
+}
+
 QByteArray QVWin32Functions::getIccProfileForWindow(const QWindow *window)
 {
     QByteArray result;
