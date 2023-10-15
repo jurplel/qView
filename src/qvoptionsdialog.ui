@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>660</width>
-    <height>620</height>
+    <height>560</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -53,7 +53,7 @@
            <x>0</x>
            <y>0</y>
            <width>472</width>
-           <height>552</height>
+           <height>492</height>
           </rect>
          </property>
          <layout class="QFormLayout" name="formLayout">
@@ -323,7 +323,7 @@
            <x>0</x>
            <y>0</y>
            <width>472</width>
-           <height>498</height>
+           <height>492</height>
           </rect>
          </property>
          <layout class="QFormLayout" name="formLayout_4">
@@ -566,7 +566,7 @@
            <x>0</x>
            <y>0</y>
            <width>472</width>
-           <height>498</height>
+           <height>492</height>
           </rect>
          </property>
          <layout class="QFormLayout" name="formLayout_3">
@@ -833,7 +833,7 @@
            <x>0</x>
            <y>0</y>
            <width>472</width>
-           <height>552</height>
+           <height>620</height>
           </rect>
          </property>
          <layout class="QFormLayout" name="formLayout_5">
@@ -939,37 +939,23 @@
              </item>
              <item row="4" column="0">
               <widget class="QLabel" name="middleDragLabel">
-               <property name="visible">
-                <bool>false</bool>
-               </property>
                <property name="text">
                 <string>Middle Drag:</string>
                </property>
               </widget>
              </item>
              <item row="4" column="1">
-              <widget class="QComboBox" name="middleDragComboBox">
-               <property name="visible">
-                <bool>false</bool>
-               </property>
-              </widget>
+              <widget class="QComboBox" name="middleDragComboBox"/>
              </item>
              <item row="5" column="0">
               <widget class="QLabel" name="altMiddleDragLabel">
-               <property name="visible">
-                <bool>false</bool>
-               </property>
                <property name="text">
                 <string notr="true">Ctrl + Middle Drag:</string>
                </property>
               </widget>
              </item>
              <item row="5" column="1">
-              <widget class="QComboBox" name="altMiddleDragComboBox">
-               <property name="visible">
-                <bool>false</bool>
-               </property>
-              </widget>
+              <widget class="QComboBox" name="altMiddleDragComboBox"/>
              </item>
             </layout>
            </widget>
