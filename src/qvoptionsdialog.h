@@ -44,6 +44,7 @@ protected:
     void bgColorButtonClicked();
     void updateBgColorButton();
     void restartNotifyForCheckbox(const QString &key, const int state);
+    void populateCategories();
     void populateLanguages();
     void populateComboBoxes();
 

@@ -9,982 +9,1036 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>508</width>
-    <height>639</height>
+    <width>660</width>
+    <height>620</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>600</width>
+    <height>400</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Settings</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QTabWidget" name="tabWidget">
-     <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
-     </property>
-     <property name="currentIndex">
-      <number>0</number>
-     </property>
-     <widget class="QWidget" name="window">
-      <property name="layoutDirection">
-       <enum>Qt::LeftToRight</enum>
-      </property>
-      <attribute name="title">
-       <string>Window</string>
-      </attribute>
-      <layout class="QFormLayout" name="formLayout">
-       <item row="0" column="0">
-        <widget class="QCheckBox" name="bgColorCheckbox">
-         <property name="text">
-          <string>Back&amp;ground color:</string>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QListWidget" name="categoryList">
+       <property name="maximumSize">
+        <size>
+         <width>150</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="horizontalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QStackedWidget" name="stackedWidget">
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
+       <widget class="QScrollArea" name="windowScrollArea">
+        <property name="widgetResizable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="window">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>472</width>
+           <height>552</height>
+          </rect>
          </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QPushButton" name="bgColorButton">
-         <property name="focusPolicy">
-          <enum>Qt::NoFocus</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QCheckBox" name="checkerboardBackgroundCheckbox">
-         <property name="text">
-          <string>Checkerboard when image loaded</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <spacer name="horizontalSpacer_12">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>5</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="label">
-         <property name="toolTip">
-          <string>Changes the amount of information displayed in the titlebar</string>
-         </property>
-         <property name="text">
-          <string>Titlebar text:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QComboBox" name="titlebarComboBox"/>
-       </item>
-       <item row="4" column="1">
-        <widget class="QLineEdit" name="customTitlebarLineEdit">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>225</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="toolTip">
-          <string>%n - Filename
+         <layout class="QFormLayout" name="formLayout">
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="bgColorCheckbox">
+            <property name="text">
+             <string>Back&amp;ground color:</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QPushButton" name="bgColorButton">
+            <property name="focusPolicy">
+             <enum>Qt::NoFocus</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QCheckBox" name="checkerboardBackgroundCheckbox">
+            <property name="text">
+             <string>Checkerboard when image loaded</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <spacer name="horizontalSpacer_12">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>5</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label">
+            <property name="toolTip">
+             <string>Changes the amount of information displayed in the titlebar</string>
+            </property>
+            <property name="text">
+             <string>Titlebar text:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QComboBox" name="titlebarComboBox"/>
+          </item>
+          <item row="4" column="1">
+           <widget class="QLineEdit" name="customTitlebarLineEdit">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>225</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>%n - Filename
 %i - Image Index in Folder
 %c - Image Count in Folder
 %s - File Size
 %w - Image Width
 %h - Image Height
 %z - Zoom Level</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="1">
-        <spacer name="horizontalSpacer_4">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>5</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="6" column="0">
-        <widget class="QLabel" name="label_6">
-         <property name="toolTip">
-          <string>Control when the window should resize to fit the image's actual size</string>
-         </property>
-         <property name="text">
-          <string>Window matches image size:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="1">
-        <widget class="QComboBox" name="windowResizeComboBox">
-         <property name="toolTip">
-          <string>Control when the window should resize to fit the image's actual size</string>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="0">
-        <widget class="QLabel" name="afterMatchingSizeLabel">
-         <property name="text">
-          <string>After maching image size:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="1">
-        <widget class="QComboBox" name="afterMatchingSizeComboBox"/>
-       </item>
-       <item row="8" column="0">
-        <widget class="QLabel" name="minWindowResizeLabel">
-         <property name="text">
-          <string>Minimum size:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="1">
-        <widget class="QSpinBox" name="minWindowResizeSpinBox">
-         <property name="toolTip">
-          <string>Control the minimum size that the window should reach when matching the image's actual size</string>
-         </property>
-         <property name="suffix">
-          <string>% of screen size</string>
-         </property>
-         <property name="minimum">
-          <number>0</number>
-         </property>
-         <property name="maximum">
-          <number>100</number>
-         </property>
-         <property name="singleStep">
-          <number>5</number>
-         </property>
-         <property name="value">
-          <number>20</number>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="0">
-        <widget class="QLabel" name="maxWindowResizeLabel">
-         <property name="toolTip">
-          <string>Control the maximum size that the window should reach when matching the image's actual size</string>
-         </property>
-         <property name="text">
-          <string>Maximum size:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="1">
-        <widget class="QSpinBox" name="maxWindowResizeSpinBox">
-         <property name="toolTip">
-          <string>Control the maximum size that the window should reach when matching the image's actual size</string>
-         </property>
-         <property name="suffix">
-          <string>% of screen size</string>
-         </property>
-         <property name="minimum">
-          <number>0</number>
-         </property>
-         <property name="maximum">
-          <number>100</number>
-         </property>
-         <property name="singleStep">
-          <number>5</number>
-         </property>
-         <property name="value">
-          <number>70</number>
-         </property>
-        </widget>
-       </item>
-       <item row="10" column="1">
-        <spacer name="horizontalSpacer_3">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>5</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="11" column="1">
-        <widget class="QCheckBox" name="nonNativeThemeCheckbox">
-         <property name="text">
-          <string>Non-native theme (supports dark mode)</string>
-         </property>
-        </widget>
-       </item>
-       <item row="12" column="1">
-        <widget class="QCheckBox" name="menubarCheckbox">
-         <property name="text">
-          <string>Show menubar</string>
-         </property>
-        </widget>
-       </item>
-       <item row="13" column="1">
-        <widget class="QCheckBox" name="detailsInFullscreen">
-         <property name="toolTip">
-          <string>Choose whether or not to display the titlebar text while in fullscreen</string>
-         </property>
-         <property name="text">
-          <string>Show titlebar text in fullscreen</string>
-         </property>
-        </widget>
-       </item>
-       <item row="14" column="1">
-        <widget class="QCheckBox" name="submenuIconsCheckbox">
-         <property name="toolTip">
-          <string>Show icons in &quot;Open Recent&quot; and &quot;Open With&quot; submenus</string>
-         </property>
-         <property name="text">
-          <string>Show icons in submenus</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="15" column="1">
-        <widget class="QCheckBox" name="darkTitlebarCheckbox">
-         <property name="toolTip">
-          <string>Choose whether or not the titlebar should always be dark regardless of your chosen macOS appearance</string>
-         </property>
-         <property name="text">
-          <string>&amp;Titlebar always dark</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="16" column="1">
-        <widget class="QCheckBox" name="quitOnLastWindowCheckbox">
-         <property name="text">
-          <string>&amp;Quit on last window closed</string>
-         </property>
-        </widget>
-       </item>
-       <item row="17" column="1">
-        <widget class="QCheckBox" name="persistSessionCheckbox">
-         <property name="text">
-          <string>Persist session across app restarts</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="image">
-      <attribute name="title">
-       <string>Image</string>
-      </attribute>
-      <layout class="QFormLayout" name="formLayout_4">
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_2">
-         <property name="text">
-          <string>Scaling:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QCheckBox" name="filteringCheckbox">
-         <property name="toolTip">
-          <string>Turn this off to see individual pixels</string>
-         </property>
-         <property name="text">
-          <string>&amp;Bilinear filtering</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QCheckBox" name="scalingCheckbox">
-         <property name="toolTip">
-          <string>Images appear aliased (having jagged edges) without this, but it is faster</string>
-         </property>
-         <property name="text">
-          <string>&amp;Image scaling</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QCheckBox" name="scalingTwoCheckbox">
-         <property name="toolTip">
-          <string>Choose whether or not the image continues to be scaled when zooming above the window size (can be laggier with large images)</string>
-         </property>
-         <property name="text">
-          <string>&amp;Scaling above window size</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <spacer name="horizontalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>5</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="4" column="0">
-        <widget class="QLabel" name="label_3">
-         <property name="toolTip">
-          <string>The amount to zoom every scroll wheel click</string>
-         </property>
-         <property name="text">
-          <string>Zoom amount:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="1">
-        <widget class="QSpinBox" name="scaleFactorSpinBox">
-         <property name="toolTip">
-          <string>The amount to zoom every scroll wheel click</string>
-         </property>
-         <property name="suffix">
-          <string notr="true">%</string>
-         </property>
-         <property name="minimum">
-          <number>1</number>
-         </property>
-         <property name="maximum">
-          <number>200</number>
-         </property>
-         <property name="singleStep">
-          <number>5</number>
-         </property>
-         <property name="value">
-          <number>25</number>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="1">
-        <widget class="QCheckBox" name="cursorZoomCheckbox">
-         <property name="toolTip">
-          <string>Choose whether or not zooming in and out above 100% zoom will zoom towards the cursor</string>
-         </property>
-         <property name="text">
-          <string>Zoom &amp;towards cursor</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="1">
-        <widget class="QCheckBox" name="oneToOnePixelSizingCheckbox">
-         <property name="text">
-          <string>Zoom level is relative to screen pixels</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="1">
-        <spacer name="horizontalSpacer">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>5</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="8" column="0">
-        <widget class="QLabel" name="zoomDefaultLabel">
-         <property name="toolTip">
-          <string>Ignores select sides of an image when fitting to window (some sides will extend beyond the window boundaries)</string>
-         </property>
-         <property name="text">
-          <string>Zoom default:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="1">
-        <widget class="QComboBox" name="zoomDefaultComboBox">
-         <property name="toolTip">
-          <string>Ignores select sides of an image when fitting to window (some sides will extend beyond the window boundaries)</string>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="1">
-        <widget class="QCheckBox" name="pastActualSizeCheckbox">
-         <property name="toolTip">
-          <string>Stop the image from going past its actual size when resizing the window - you can still zoom past it though</string>
-         </property>
-         <property name="text">
-          <string>Image resizes &amp;past actual size</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="10" column="1">
-        <widget class="QSpinBox" name="fitOverscanSpinBox">
-         <property name="suffix">
-          <string> pixel overscan</string>
-         </property>
-         <property name="minimum">
-          <number>-5</number>
-         </property>
-         <property name="maximum">
-          <number>5</number>
-         </property>
-        </widget>
-       </item>
-       <item row="11" column="1">
-        <spacer name="horizontalSpacer_9">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>5</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="12" column="1">
-        <widget class="QCheckBox" name="constrainImagePositionCheckbox">
-         <property name="text">
-          <string>&amp;Constrain image position</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="13" column="1">
-        <widget class="QCheckBox" name="constrainCentersSmallImageCheckbox">
-         <property name="text">
-          <string>Keep ce&amp;ntered if smaller</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="14" column="1">
-        <spacer name="horizontalSpacer_10">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>5</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="15" column="0">
-        <widget class="QLabel" name="colorSpaceConversionLabel">
-         <property name="text">
-          <string>Color space conversion:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="15" column="1">
-        <widget class="QComboBox" name="colorSpaceConversionComboBox"/>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="misc">
-      <attribute name="title">
-       <string>Miscellaneous</string>
-      </attribute>
-      <layout class="QFormLayout" name="formLayout_3">
-       <item row="0" column="0">
-        <widget class="QLabel" name="langComboLabel">
-         <property name="text">
-          <string>Language:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QComboBox" name="langComboBox"/>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label_8">
-         <property name="text">
-          <string>Sort files by:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QComboBox" name="sortComboBox"/>
-       </item>
-       <item row="2" column="1">
-        <widget class="QRadioButton" name="descendingRadioButton0">
-         <property name="text">
-          <string>A&amp;scending</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QRadioButton" name="descendingRadioButton1">
-         <property name="text">
-          <string>D&amp;escending</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="1">
-        <spacer name="horizontalSpacer_6">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>5</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="5" column="0">
-        <widget class="QLabel" name="label_7">
-         <property name="toolTip">
-          <string>Controls the amount of images preloaded</string>
-         </property>
-         <property name="text">
-          <string>Preloading:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="1">
-        <widget class="QComboBox" name="preloadingComboBox">
-         <property name="toolTip">
-          <string>Controls the amount of images preloaded</string>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="1">
-        <widget class="QCheckBox" name="loopFoldersCheckbox">
-         <property name="toolTip">
-          <string>Controls whether or not qView should go back to the first item after reaching the end of a folder</string>
-         </property>
-         <property name="text">
-          <string>&amp;Loop through folders</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="1">
-        <spacer name="horizontalSpacer_5">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>5</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="8" column="0">
-        <widget class="QLabel" name="label_4">
-         <property name="text">
-          <string>Slideshow direction:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="1">
-        <widget class="QComboBox" name="slideshowDirectionComboBox"/>
-       </item>
-       <item row="9" column="0">
-        <widget class="QLabel" name="label_5">
-         <property name="text">
-          <string>Slideshow timer:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="1">
-        <widget class="QDoubleSpinBox" name="slideshowTimerSpinBox">
-         <property name="suffix">
-          <string> sec</string>
-         </property>
-         <property name="decimals">
-          <number>1</number>
-         </property>
-         <property name="minimum">
-          <double>0.100000000000000</double>
-         </property>
-         <property name="maximum">
-          <double>999.899999999999977</double>
-         </property>
-         <property name="singleStep">
-          <double>0.100000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item row="10" column="1">
-        <spacer name="horizontalSpacer_7">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>5</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="11" column="0">
-        <widget class="QLabel" name="label_10">
-         <property name="text">
-          <string>After deletion:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="11" column="1">
-        <widget class="QComboBox" name="afterDeletionComboBox"/>
-       </item>
-       <item row="12" column="1">
-        <widget class="QCheckBox" name="askDeleteCheckbox">
-         <property name="text">
-          <string>&amp;Ask before deleting files</string>
-         </property>
-        </widget>
-       </item>
-       <item row="13" column="1">
-        <spacer name="horizontalSpacer_8">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>5</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="14" column="1">
-        <widget class="QCheckBox" name="mimeContentDetectionCheckbox">
-         <property name="toolTip">
-          <string>Detect supported files in folder even if extension isn't recognized (may be slow with larger/network folders)</string>
-         </property>
-         <property name="text">
-          <string>Allow &amp;MIME content detection</string>
-         </property>
-        </widget>
-       </item>
-       <item row="15" column="1">
-        <widget class="QCheckBox" name="saveRecentsCheckbox">
-         <property name="text">
-          <string>Save &amp;recent files</string>
-         </property>
-        </widget>
-       </item>
-       <item row="16" column="1">
-        <widget class="QCheckBox" name="updateCheckbox">
-         <property name="text">
-          <string extracomment="The notifications are for new qView releases">&amp;Update notifications on startup</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="shortcuts">
-      <attribute name="title">
-       <string>Shortcuts</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QTableWidget" name="shortcutsTable">
-         <property name="editTriggers">
-          <set>QAbstractItemView::NoEditTriggers</set>
-         </property>
-         <property name="alternatingRowColors">
-          <bool>true</bool>
-         </property>
-         <property name="selectionMode">
-          <enum>QAbstractItemView::SingleSelection</enum>
-         </property>
-         <property name="selectionBehavior">
-          <enum>QAbstractItemView::SelectRows</enum>
-         </property>
-         <property name="showGrid">
-          <bool>false</bool>
-         </property>
-         <property name="rowCount">
-          <number>0</number>
-         </property>
-         <property name="columnCount">
-          <number>2</number>
-         </property>
-         <attribute name="horizontalHeaderCascadingSectionResizes">
-          <bool>true</bool>
-         </attribute>
-         <attribute name="horizontalHeaderDefaultSectionSize">
-          <number>150</number>
-         </attribute>
-         <attribute name="horizontalHeaderHighlightSections">
-          <bool>false</bool>
-         </attribute>
-         <attribute name="horizontalHeaderStretchLastSection">
-          <bool>true</bool>
-         </attribute>
-         <attribute name="verticalHeaderVisible">
-          <bool>false</bool>
-         </attribute>
-         <column>
-          <property name="text">
-           <string>Action</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>Shortcuts</string>
-          </property>
-         </column>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="mouse">
-      <attribute name="title">
-       <string>Mouse</string>
-      </attribute>
-      <layout class="QFormLayout" name="formLayout_5">
-       <item row="0" column="0" colspan="2">
-        <widget class="QGroupBox" name="leftButtonGroup">
-         <property name="title">
-          <string>Left Button</string>
-         </property>
-         <layout class="QFormLayout" name="leftButtonLayout">
-          <item row="0" column="0">
-           <widget class="QLabel" name="doubleClickLabel">
-            <property name="text">
-             <string>Double Click:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QComboBox" name="doubleClickComboBox"/>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="altDoubleClickLabel">
-            <property name="text">
-             <string notr="true">Ctrl + Double Click:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QComboBox" name="altDoubleClickComboBox"/>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="dragLabel">
-            <property name="text">
-             <string>Drag:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QComboBox" name="dragComboBox"/>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="altDragLabel">
-            <property name="text">
-             <string notr="true">Ctrl + Drag:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QComboBox" name="altDragComboBox"/>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="1" column="0" colspan="2">
-        <widget class="QGroupBox" name="middleButtonGroup">
-         <property name="title">
-          <string>Middle Button</string>
-         </property>
-         <layout class="QFormLayout" name="middleButtonLayout">
-          <item row="0" column="0">
-           <widget class="QLabel" name="middleButtonModeLabel">
-            <property name="text">
-             <string>Mode:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <layout class="QHBoxLayout" name="middleButtonModeLayout">
-            <item>
-             <widget class="QRadioButton" name="middleButtonModeClickRadioButton">
-              <property name="text">
-               <string>Click</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QRadioButton" name="middleButtonModeDragRadioButton">
-              <property name="text">
-               <string>Drag</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="middleClickLabel">
-            <property name="text">
-             <string>Middle Click:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QComboBox" name="middleClickComboBox"/>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="altMiddleClickLabel">
-            <property name="text">
-             <string notr="true">Ctrl + Middle Click:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QComboBox" name="altMiddleClickComboBox"/>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="middleDragLabel">
-            <property name="visible">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string>Middle Drag:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QComboBox" name="middleDragComboBox">
-            <property name="visible">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0">
-           <widget class="QLabel" name="altMiddleDragLabel">
-            <property name="visible">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string notr="true">Ctrl + Middle Drag:</string>
             </property>
            </widget>
           </item>
           <item row="5" column="1">
-           <widget class="QComboBox" name="altMiddleDragComboBox">
-            <property name="visible">
-             <bool>false</bool>
+           <spacer name="horizontalSpacer_4">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>5</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="6" column="0">
+           <widget class="QLabel" name="label_6">
+            <property name="toolTip">
+             <string>Control when the window should resize to fit the image's actual size</string>
+            </property>
+            <property name="text">
+             <string>Window matches image size:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="QComboBox" name="windowResizeComboBox">
+            <property name="toolTip">
+             <string>Control when the window should resize to fit the image's actual size</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="0">
+           <widget class="QLabel" name="afterMatchingSizeLabel">
+            <property name="text">
+             <string>After maching image size:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="1">
+           <widget class="QComboBox" name="afterMatchingSizeComboBox"/>
+          </item>
+          <item row="8" column="0">
+           <widget class="QLabel" name="minWindowResizeLabel">
+            <property name="text">
+             <string>Minimum size:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="1">
+           <widget class="QSpinBox" name="minWindowResizeSpinBox">
+            <property name="toolTip">
+             <string>Control the minimum size that the window should reach when matching the image's actual size</string>
+            </property>
+            <property name="suffix">
+             <string>% of screen size</string>
+            </property>
+            <property name="minimum">
+             <number>0</number>
+            </property>
+            <property name="maximum">
+             <number>100</number>
+            </property>
+            <property name="singleStep">
+             <number>5</number>
+            </property>
+            <property name="value">
+             <number>20</number>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="0">
+           <widget class="QLabel" name="maxWindowResizeLabel">
+            <property name="toolTip">
+             <string>Control the maximum size that the window should reach when matching the image's actual size</string>
+            </property>
+            <property name="text">
+             <string>Maximum size:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="1">
+           <widget class="QSpinBox" name="maxWindowResizeSpinBox">
+            <property name="toolTip">
+             <string>Control the maximum size that the window should reach when matching the image's actual size</string>
+            </property>
+            <property name="suffix">
+             <string>% of screen size</string>
+            </property>
+            <property name="minimum">
+             <number>0</number>
+            </property>
+            <property name="maximum">
+             <number>100</number>
+            </property>
+            <property name="singleStep">
+             <number>5</number>
+            </property>
+            <property name="value">
+             <number>70</number>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="1">
+           <spacer name="horizontalSpacer_3">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>5</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="11" column="1">
+           <widget class="QCheckBox" name="nonNativeThemeCheckbox">
+            <property name="text">
+             <string>Non-native theme (supports dark mode)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="12" column="1">
+           <widget class="QCheckBox" name="menubarCheckbox">
+            <property name="text">
+             <string>Show menubar</string>
+            </property>
+           </widget>
+          </item>
+          <item row="13" column="1">
+           <widget class="QCheckBox" name="detailsInFullscreen">
+            <property name="toolTip">
+             <string>Choose whether or not to display the titlebar text while in fullscreen</string>
+            </property>
+            <property name="text">
+             <string>Show titlebar text in fullscreen</string>
+            </property>
+           </widget>
+          </item>
+          <item row="14" column="1">
+           <widget class="QCheckBox" name="submenuIconsCheckbox">
+            <property name="toolTip">
+             <string>Show icons in &quot;Open Recent&quot; and &quot;Open With&quot; submenus</string>
+            </property>
+            <property name="text">
+             <string>Show icons in submenus</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="15" column="1">
+           <widget class="QCheckBox" name="darkTitlebarCheckbox">
+            <property name="toolTip">
+             <string>Choose whether or not the titlebar should always be dark regardless of your chosen macOS appearance</string>
+            </property>
+            <property name="text">
+             <string>&amp;Titlebar always dark</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="16" column="1">
+           <widget class="QCheckBox" name="quitOnLastWindowCheckbox">
+            <property name="text">
+             <string>&amp;Quit on last window closed</string>
+            </property>
+           </widget>
+          </item>
+          <item row="17" column="1">
+           <widget class="QCheckBox" name="persistSessionCheckbox">
+            <property name="text">
+             <string>Persist session across app restarts</string>
             </property>
            </widget>
           </item>
          </layout>
         </widget>
-       </item>
-       <item row="2" column="0" colspan="2">
-        <widget class="QGroupBox" name="scrollWheelGroup">
-         <property name="title">
-          <string>Scroll Wheel / Touchpad</string>
+       </widget>
+       <widget class="QScrollArea" name="imageScrollArea">
+        <property name="widgetResizable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="image">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>472</width>
+           <height>498</height>
+          </rect>
          </property>
-         <layout class="QFormLayout" name="scrollWheelLayout">
+         <layout class="QFormLayout" name="formLayout_4">
           <item row="0" column="0">
-           <widget class="QLabel" name="verticalScrollLabel">
+           <widget class="QLabel" name="label_2">
             <property name="text">
-             <string>Vertical Scroll:</string>
+             <string>Scaling:</string>
             </property>
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QComboBox" name="verticalScrollComboBox"/>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="horizontalScrollLabel">
+           <widget class="QCheckBox" name="filteringCheckbox">
+            <property name="toolTip">
+             <string>Turn this off to see individual pixels</string>
+            </property>
             <property name="text">
-             <string>Horizontal Scroll:</string>
+             <string>&amp;Bilinear filtering</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QComboBox" name="horizontalScrollComboBox"/>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="altVerticalScrollLabel">
+           <widget class="QCheckBox" name="scalingCheckbox">
+            <property name="toolTip">
+             <string>Images appear aliased (having jagged edges) without this, but it is faster</string>
+            </property>
             <property name="text">
-             <string notr="true">Ctrl + Vertical Scroll:</string>
+             <string>&amp;Image scaling</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QComboBox" name="altVerticalScrollComboBox"/>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="altHorizontalScrollLabel">
+           <widget class="QCheckBox" name="scalingTwoCheckbox">
+            <property name="toolTip">
+             <string>Choose whether or not the image continues to be scaled when zooming above the window size (can be laggier with large images)</string>
+            </property>
             <property name="text">
-             <string notr="true">Ctrl + Horizontal Scroll:</string>
+             <string>&amp;Scaling above window size</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
           <item row="3" column="1">
-           <widget class="QComboBox" name="altHorizontalScrollComboBox"/>
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>5</height>
+             </size>
+            </property>
+           </spacer>
           </item>
-          <item row="4" column="1">
-           <widget class="QCheckBox" name="scrollActionCooldownCheckbox">
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_3">
             <property name="toolTip">
-             <string>Useful for touchpads, to prevent a single swipe from triggering multiple navigations, for example</string>
+             <string>The amount to zoom every scroll wheel click</string>
             </property>
             <property name="text">
-             <string>Cooldown for discrete actions</string>
+             <string>Zoom amount:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QSpinBox" name="scaleFactorSpinBox">
+            <property name="toolTip">
+             <string>The amount to zoom every scroll wheel click</string>
+            </property>
+            <property name="suffix">
+             <string notr="true">%</string>
+            </property>
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>200</number>
+            </property>
+            <property name="singleStep">
+             <number>5</number>
+            </property>
+            <property name="value">
+             <number>25</number>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QCheckBox" name="cursorZoomCheckbox">
+            <property name="toolTip">
+             <string>Choose whether or not zooming in and out above 100% zoom will zoom towards the cursor</string>
+            </property>
+            <property name="text">
+             <string>Zoom &amp;towards cursor</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="QCheckBox" name="oneToOnePixelSizingCheckbox">
+            <property name="text">
+             <string>Zoom level is relative to screen pixels</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="1">
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>5</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="8" column="0">
+           <widget class="QLabel" name="zoomDefaultLabel">
+            <property name="toolTip">
+             <string>Ignores select sides of an image when fitting to window (some sides will extend beyond the window boundaries)</string>
+            </property>
+            <property name="text">
+             <string>Zoom default:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="1">
+           <widget class="QComboBox" name="zoomDefaultComboBox">
+            <property name="toolTip">
+             <string>Ignores select sides of an image when fitting to window (some sides will extend beyond the window boundaries)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="1">
+           <widget class="QCheckBox" name="pastActualSizeCheckbox">
+            <property name="toolTip">
+             <string>Stop the image from going past its actual size when resizing the window - you can still zoom past it though</string>
+            </property>
+            <property name="text">
+             <string>Image resizes &amp;past actual size</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="1">
+           <widget class="QSpinBox" name="fitOverscanSpinBox">
+            <property name="suffix">
+             <string> pixel overscan</string>
+            </property>
+            <property name="minimum">
+             <number>-5</number>
+            </property>
+            <property name="maximum">
+             <number>5</number>
+            </property>
+           </widget>
+          </item>
+          <item row="11" column="1">
+           <spacer name="horizontalSpacer_9">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>5</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="12" column="1">
+           <widget class="QCheckBox" name="constrainImagePositionCheckbox">
+            <property name="text">
+             <string>&amp;Constrain image position</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="13" column="1">
+           <widget class="QCheckBox" name="constrainCentersSmallImageCheckbox">
+            <property name="text">
+             <string>Keep ce&amp;ntered if smaller</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="14" column="1">
+           <spacer name="horizontalSpacer_10">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>5</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="15" column="0">
+           <widget class="QLabel" name="colorSpaceConversionLabel">
+            <property name="text">
+             <string>Color space conversion:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="15" column="1">
+           <widget class="QComboBox" name="colorSpaceConversionComboBox"/>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+       <widget class="QScrollArea" name="miscScrollArea">
+        <property name="widgetResizable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="misc">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>472</width>
+           <height>498</height>
+          </rect>
+         </property>
+         <layout class="QFormLayout" name="formLayout_3">
+          <item row="0" column="0">
+           <widget class="QLabel" name="langComboLabel">
+            <property name="text">
+             <string>Language:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QComboBox" name="langComboBox"/>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_8">
+            <property name="text">
+             <string>Sort files by:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QComboBox" name="sortComboBox"/>
+          </item>
+          <item row="2" column="1">
+           <widget class="QRadioButton" name="descendingRadioButton0">
+            <property name="text">
+             <string>A&amp;scending</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QRadioButton" name="descendingRadioButton1">
+            <property name="text">
+             <string>D&amp;escending</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <spacer name="horizontalSpacer_6">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>5</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="label_7">
+            <property name="toolTip">
+             <string>Controls the amount of images preloaded</string>
+            </property>
+            <property name="text">
+             <string>Preloading:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QComboBox" name="preloadingComboBox">
+            <property name="toolTip">
+             <string>Controls the amount of images preloaded</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="QCheckBox" name="loopFoldersCheckbox">
+            <property name="toolTip">
+             <string>Controls whether or not qView should go back to the first item after reaching the end of a folder</string>
+            </property>
+            <property name="text">
+             <string>&amp;Loop through folders</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="1">
+           <spacer name="horizontalSpacer_5">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>5</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="8" column="0">
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>Slideshow direction:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="1">
+           <widget class="QComboBox" name="slideshowDirectionComboBox"/>
+          </item>
+          <item row="9" column="0">
+           <widget class="QLabel" name="label_5">
+            <property name="text">
+             <string>Slideshow timer:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="1">
+           <widget class="QDoubleSpinBox" name="slideshowTimerSpinBox">
+            <property name="suffix">
+             <string> sec</string>
+            </property>
+            <property name="decimals">
+             <number>1</number>
+            </property>
+            <property name="minimum">
+             <double>0.100000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>999.899999999999977</double>
+            </property>
+            <property name="singleStep">
+             <double>0.100000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="1">
+           <spacer name="horizontalSpacer_7">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>5</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="11" column="0">
+           <widget class="QLabel" name="label_10">
+            <property name="text">
+             <string>After deletion:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="11" column="1">
+           <widget class="QComboBox" name="afterDeletionComboBox"/>
+          </item>
+          <item row="12" column="1">
+           <widget class="QCheckBox" name="askDeleteCheckbox">
+            <property name="text">
+             <string>&amp;Ask before deleting files</string>
+            </property>
+           </widget>
+          </item>
+          <item row="13" column="1">
+           <spacer name="horizontalSpacer_8">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>5</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="14" column="1">
+           <widget class="QCheckBox" name="mimeContentDetectionCheckbox">
+            <property name="toolTip">
+             <string>Detect supported files in folder even if extension isn't recognized (may be slow with larger/network folders)</string>
+            </property>
+            <property name="text">
+             <string>Allow &amp;MIME content detection</string>
+            </property>
+           </widget>
+          </item>
+          <item row="15" column="1">
+           <widget class="QCheckBox" name="saveRecentsCheckbox">
+            <property name="text">
+             <string>Save &amp;recent files</string>
+            </property>
+           </widget>
+          </item>
+          <item row="16" column="1">
+           <widget class="QCheckBox" name="updateCheckbox">
+            <property name="text">
+             <string extracomment="The notifications are for new qView releases">&amp;Update notifications on startup</string>
             </property>
            </widget>
           </item>
          </layout>
         </widget>
-       </item>
-      </layout>
-     </widget>
-    </widget>
+       </widget>
+       <widget class="QWidget" name="shortcuts">
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <widget class="QTableWidget" name="shortcutsTable">
+           <property name="editTriggers">
+            <set>QAbstractItemView::NoEditTriggers</set>
+           </property>
+           <property name="alternatingRowColors">
+            <bool>true</bool>
+           </property>
+           <property name="selectionMode">
+            <enum>QAbstractItemView::SingleSelection</enum>
+           </property>
+           <property name="selectionBehavior">
+            <enum>QAbstractItemView::SelectRows</enum>
+           </property>
+           <property name="showGrid">
+            <bool>false</bool>
+           </property>
+           <property name="rowCount">
+            <number>0</number>
+           </property>
+           <property name="columnCount">
+            <number>2</number>
+           </property>
+           <attribute name="horizontalHeaderCascadingSectionResizes">
+            <bool>true</bool>
+           </attribute>
+           <attribute name="horizontalHeaderDefaultSectionSize">
+            <number>150</number>
+           </attribute>
+           <attribute name="horizontalHeaderHighlightSections">
+            <bool>false</bool>
+           </attribute>
+           <attribute name="horizontalHeaderStretchLastSection">
+            <bool>true</bool>
+           </attribute>
+           <attribute name="verticalHeaderVisible">
+            <bool>false</bool>
+           </attribute>
+           <column>
+            <property name="text">
+             <string>Action</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Shortcuts</string>
+            </property>
+           </column>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QScrollArea" name="mouseScrollArea">
+        <property name="widgetResizable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="mouse">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>472</width>
+           <height>552</height>
+          </rect>
+         </property>
+         <layout class="QFormLayout" name="formLayout_5">
+          <item row="0" column="0" colspan="2">
+           <widget class="QGroupBox" name="leftButtonGroup">
+            <property name="title">
+             <string>Left Button</string>
+            </property>
+            <layout class="QFormLayout" name="leftButtonLayout">
+             <item row="0" column="0">
+              <widget class="QLabel" name="doubleClickLabel">
+               <property name="text">
+                <string>Double Click:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QComboBox" name="doubleClickComboBox"/>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="altDoubleClickLabel">
+               <property name="text">
+                <string notr="true">Ctrl + Double Click:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QComboBox" name="altDoubleClickComboBox"/>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="dragLabel">
+               <property name="text">
+                <string>Drag:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QComboBox" name="dragComboBox"/>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="altDragLabel">
+               <property name="text">
+                <string notr="true">Ctrl + Drag:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QComboBox" name="altDragComboBox"/>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="1" column="0" colspan="2">
+           <widget class="QGroupBox" name="middleButtonGroup">
+            <property name="title">
+             <string>Middle Button</string>
+            </property>
+            <layout class="QFormLayout" name="middleButtonLayout">
+             <item row="0" column="0">
+              <widget class="QLabel" name="middleButtonModeLabel">
+               <property name="text">
+                <string>Mode:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <layout class="QHBoxLayout" name="middleButtonModeLayout">
+               <item>
+                <widget class="QRadioButton" name="middleButtonModeClickRadioButton">
+                 <property name="text">
+                  <string>Click</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="middleButtonModeDragRadioButton">
+                 <property name="text">
+                  <string>Drag</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="middleClickLabel">
+               <property name="text">
+                <string>Middle Click:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QComboBox" name="middleClickComboBox"/>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="altMiddleClickLabel">
+               <property name="text">
+                <string notr="true">Ctrl + Middle Click:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QComboBox" name="altMiddleClickComboBox"/>
+             </item>
+             <item row="4" column="0">
+              <widget class="QLabel" name="middleDragLabel">
+               <property name="visible">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Middle Drag:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1">
+              <widget class="QComboBox" name="middleDragComboBox">
+               <property name="visible">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="0">
+              <widget class="QLabel" name="altMiddleDragLabel">
+               <property name="visible">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string notr="true">Ctrl + Middle Drag:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="1">
+              <widget class="QComboBox" name="altMiddleDragComboBox">
+               <property name="visible">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="2" column="0" colspan="2">
+           <widget class="QGroupBox" name="scrollWheelGroup">
+            <property name="title">
+             <string>Scroll Wheel / Touchpad</string>
+            </property>
+            <layout class="QFormLayout" name="scrollWheelLayout">
+             <item row="0" column="0">
+              <widget class="QLabel" name="verticalScrollLabel">
+               <property name="text">
+                <string>Vertical Scroll:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QComboBox" name="verticalScrollComboBox"/>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="horizontalScrollLabel">
+               <property name="text">
+                <string>Horizontal Scroll:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QComboBox" name="horizontalScrollComboBox"/>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="altVerticalScrollLabel">
+               <property name="text">
+                <string notr="true">Ctrl + Vertical Scroll:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QComboBox" name="altVerticalScrollComboBox"/>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="altHorizontalScrollLabel">
+               <property name="text">
+                <string notr="true">Ctrl + Horizontal Scroll:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QComboBox" name="altHorizontalScrollComboBox"/>
+             </item>
+             <item row="4" column="1">
+              <widget class="QCheckBox" name="scrollActionCooldownCheckbox">
+               <property name="toolTip">
+                <string>Useful for touchpads, to prevent a single swipe from triggering multiple navigations, for example</string>
+               </property>
+               <property name="text">
+                <string>Cooldown for discrete actions</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">

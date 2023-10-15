@@ -88,6 +88,10 @@ public:
 
     bool getShowSubmenuIcons() const { return showSubmenuIcons; }
 
+    void ensureFontLoaded(const QString &path);
+
+    static QIcon iconFromFont(const QString &fontFamily, const QChar &codePoint, const int pixelSize, const qreal pixelRatio);
+
     static bool supportsSessionPersistence();
 
     static bool tryRestoreLastSession();
@@ -133,6 +137,8 @@ private:
     bool showSubmenuIcons {true};
 
     UpdateChecker updateChecker;
+
+    QSet<QString> loadedFontPaths;
 
     bool isApplicationQuitting {false};
     bool userDeclinedSessionStateSave {false};

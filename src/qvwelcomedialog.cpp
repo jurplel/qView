@@ -3,7 +3,6 @@
 
 #include "qvapplication.h"
 
-#include <QFontDatabase>
 #include <QSettings>
 
 QVWelcomeDialog::QVWelcomeDialog(QWidget *parent) :
@@ -23,8 +22,8 @@ QVWelcomeDialog::QVWelcomeDialog(QWidget *parent) :
 #endif
 
     // add fonts
-    QFontDatabase::addApplicationFont(":/fonts/Lato-Light.ttf");
-    QFontDatabase::addApplicationFont(":/fonts/Lato-Regular.ttf");
+    qvApp->ensureFontLoaded(":/fonts/Lato-Light.ttf");
+    qvApp->ensureFontLoaded(":/fonts/Lato-Regular.ttf");
 
     int modifier = 0;
     //set main title font

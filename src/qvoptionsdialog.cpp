@@ -18,6 +18,11 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowFlags(windowFlags() & (~Qt::WindowContextHelpButtonHint | Qt::CustomizeWindowHint));
 
+    resize(640, 530);
+
+    qvApp->ensureFontLoaded(":/fonts/MaterialIconsOutlined-Regular.otf");
+
+    connect(ui->categoryList, &QListWidget::currentRowChanged, this, [this](int currentRow) { ui->stackedWidget->setCurrentIndex(currentRow); });
     connect(ui->buttonBox, &QDialogButtonBox::clicked, this, &QVOptionsDialog::buttonBoxClicked);
     connect(ui->shortcutsTable, &QTableWidget::cellDoubleClicked, this, &QVOptionsDialog::shortcutCellDoubleClicked);
     connect(ui->bgColorCheckbox, &QCheckBox::stateChanged, this, &QVOptionsDialog::bgColorCheckboxStateChanged);
@@ -31,11 +36,12 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     connect(ui->windowResizeComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &QVOptionsDialog::windowResizeComboBoxCurrentIndexChanged);
     connect(ui->langComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &QVOptionsDialog::languageComboBoxCurrentIndexChanged);
 
+    populateCategories();
     populateComboBoxes();
     populateLanguages();
 
     QSettings settings;
-    ui->tabWidget->setCurrentIndex(settings.value("optionstab", 1).toInt());
+    ui->categoryList->setCurrentRow(settings.value("optionstab", 1).toInt());
 
     // On macOS, the dialog should not be dependent on any window
 #ifndef Q_OS_MACOS
@@ -101,7 +107,7 @@ void QVOptionsDialog::done(int r)
     // Save window geometry
     QSettings settings;
     settings.setValue("optionsgeometry", saveGeometry());
-    settings.setValue("optionstab", ui->tabWidget->currentIndex());
+    settings.setValue("optionstab", ui->categoryList->currentRow());
 
     QDialog::done(r);
 }
@@ -517,6 +523,22 @@ void QVOptionsDialog::windowResizeComboBoxCurrentIndexChanged(int index)
 void QVOptionsDialog::constrainImagePositionCheckboxStateChanged(int state)
 {
     ui->constrainCentersSmallImageCheckbox->setEnabled(static_cast<bool>(state));
+}
+
+void QVOptionsDialog::populateCategories()
+{
+    const int iconSize = 24;
+    auto addItem = [&](const QChar &iconChar, const QString &text) {
+        ui->categoryList->addItem(new QListWidgetItem(qvApp->iconFromFont("Material Icons Outlined", iconChar, iconSize, devicePixelRatioF()), text));
+    };
+    ui->categoryList->setIconSize(QSize(iconSize, iconSize));
+    ui->categoryList->setFont(QApplication::font());
+    addItem(u'\ue069', tr("Window"));
+    addItem(u'\ue3f4', tr("Image"));
+    addItem(u'\ue429', tr("Miscellaneous"));
+    addItem(u'\ue312', tr("Shortcuts"));
+    addItem(u'\ue323', tr("Mouse"));
+    ui->categoryList->setFixedWidth(ui->categoryList->sizeHintForColumn(0) + ui->categoryList->frameWidth() + 2);
 }
 
 void QVOptionsDialog::populateLanguages()
