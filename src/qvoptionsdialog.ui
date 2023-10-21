@@ -53,10 +53,25 @@
            <x>0</x>
            <y>0</y>
            <width>472</width>
-           <height>492</height>
+           <height>478</height>
           </rect>
          </property>
-         <layout class="QFormLayout" name="formLayout">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <layout class="QFormLayout" name="windowLayout">
+          <property name="fieldGrowthPolicy">
+           <enum>QFormLayout::FieldsStayAtSizeHint</enum>
+          </property>
+          <property name="labelAlignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+          <property name="formAlignment">
+           <set>Qt::AlignHCenter|Qt::AlignTop</set>
+          </property>
           <item row="0" column="0">
            <widget class="QCheckBox" name="bgColorCheckbox">
             <property name="text">
@@ -323,10 +338,25 @@
            <x>0</x>
            <y>0</y>
            <width>472</width>
-           <height>492</height>
+           <height>393</height>
           </rect>
          </property>
-         <layout class="QFormLayout" name="formLayout_4">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <layout class="QFormLayout" name="imageLayout">
+          <property name="fieldGrowthPolicy">
+           <enum>QFormLayout::FieldsStayAtSizeHint</enum>
+          </property>
+          <property name="labelAlignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+          <property name="formAlignment">
+           <set>Qt::AlignHCenter|Qt::AlignTop</set>
+          </property>
           <item row="0" column="0">
            <widget class="QLabel" name="label_2">
             <property name="text">
@@ -566,10 +596,25 @@
            <x>0</x>
            <y>0</y>
            <width>472</width>
-           <height>492</height>
+           <height>448</height>
           </rect>
          </property>
-         <layout class="QFormLayout" name="formLayout_3">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <layout class="QFormLayout" name="miscLayout">
+          <property name="fieldGrowthPolicy">
+           <enum>QFormLayout::FieldsStayAtSizeHint</enum>
+          </property>
+          <property name="labelAlignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+          <property name="formAlignment">
+           <set>Qt::AlignHCenter|Qt::AlignTop</set>
+          </property>
           <item row="0" column="0">
            <widget class="QLabel" name="langComboLabel">
             <property name="text">
@@ -770,7 +815,7 @@
         </widget>
        </widget>
        <widget class="QWidget" name="shortcuts">
-        <layout class="QVBoxLayout" name="verticalLayout_2">
+        <layout class="QVBoxLayout" name="shortcutsLayout">
          <item>
           <widget class="QTableWidget" name="shortcutsTable">
            <property name="editTriggers">
@@ -833,16 +878,31 @@
            <x>0</x>
            <y>0</y>
            <width>472</width>
-           <height>620</height>
+           <height>623</height>
           </rect>
          </property>
-         <layout class="QFormLayout" name="formLayout_5">
-          <item row="0" column="0" colspan="2">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <layout class="QVBoxLayout" name="mouseLayout">
+          <item>
            <widget class="QGroupBox" name="leftButtonGroup">
             <property name="title">
              <string>Left Button</string>
             </property>
             <layout class="QFormLayout" name="leftButtonLayout">
+             <property name="fieldGrowthPolicy">
+              <enum>QFormLayout::FieldsStayAtSizeHint</enum>
+             </property>
+             <property name="labelAlignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="formAlignment">
+              <set>Qt::AlignHCenter|Qt::AlignTop</set>
+             </property>
              <item row="0" column="0">
               <widget class="QLabel" name="doubleClickLabel">
                <property name="text">
@@ -886,12 +946,21 @@
             </layout>
            </widget>
           </item>
-          <item row="1" column="0" colspan="2">
+          <item>
            <widget class="QGroupBox" name="middleButtonGroup">
             <property name="title">
              <string>Middle Button</string>
             </property>
             <layout class="QFormLayout" name="middleButtonLayout">
+             <property name="fieldGrowthPolicy">
+              <enum>QFormLayout::FieldsStayAtSizeHint</enum>
+             </property>
+             <property name="labelAlignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="formAlignment">
+              <set>Qt::AlignHCenter|Qt::AlignTop</set>
+             </property>
              <item row="0" column="0">
               <widget class="QLabel" name="middleButtonModeLabel">
                <property name="text">
@@ -960,12 +1029,21 @@
             </layout>
            </widget>
           </item>
-          <item row="2" column="0" colspan="2">
+          <item>
            <widget class="QGroupBox" name="scrollWheelGroup">
             <property name="title">
              <string>Scroll Wheel / Touchpad</string>
             </property>
             <layout class="QFormLayout" name="scrollWheelLayout">
+             <property name="fieldGrowthPolicy">
+              <enum>QFormLayout::FieldsStayAtSizeHint</enum>
+             </property>
+             <property name="labelAlignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="formAlignment">
+              <set>Qt::AlignHCenter|Qt::AlignTop</set>
+             </property>
              <item row="0" column="0">
               <widget class="QLabel" name="verticalScrollLabel">
                <property name="text">
