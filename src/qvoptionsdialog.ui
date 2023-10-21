@@ -23,8 +23,26 @@
    <string>Settings</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>10</number>
+   </property>
+   <property name="leftMargin">
+    <number>12</number>
+   </property>
+   <property name="topMargin">
+    <number>12</number>
+   </property>
+   <property name="rightMargin">
+    <number>12</number>
+   </property>
+   <property name="bottomMargin">
+    <number>12</number>
+   </property>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="spacing">
+      <number>0</number>
+     </property>
      <item>
       <widget class="QListWidget" name="categoryList">
        <property name="maximumSize">
@@ -52,8 +70,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>472</width>
-           <height>478</height>
+           <width>482</width>
+           <height>474</height>
           </rect>
          </property>
          <property name="sizePolicy">
@@ -71,6 +89,18 @@
           </property>
           <property name="formAlignment">
            <set>Qt::AlignHCenter|Qt::AlignTop</set>
+          </property>
+          <property name="leftMargin">
+           <number>10</number>
+          </property>
+          <property name="topMargin">
+           <number>10</number>
+          </property>
+          <property name="rightMargin">
+           <number>10</number>
+          </property>
+          <property name="bottomMargin">
+           <number>10</number>
           </property>
           <item row="0" column="0">
            <widget class="QCheckBox" name="bgColorCheckbox">
@@ -337,8 +367,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>472</width>
-           <height>393</height>
+           <width>482</width>
+           <height>389</height>
           </rect>
          </property>
          <property name="sizePolicy">
@@ -356,6 +386,18 @@
           </property>
           <property name="formAlignment">
            <set>Qt::AlignHCenter|Qt::AlignTop</set>
+          </property>
+          <property name="leftMargin">
+           <number>10</number>
+          </property>
+          <property name="topMargin">
+           <number>10</number>
+          </property>
+          <property name="rightMargin">
+           <number>10</number>
+          </property>
+          <property name="bottomMargin">
+           <number>10</number>
           </property>
           <item row="0" column="0">
            <widget class="QLabel" name="label_2">
@@ -595,8 +637,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>472</width>
-           <height>448</height>
+           <width>482</width>
+           <height>444</height>
           </rect>
          </property>
          <property name="sizePolicy">
@@ -614,6 +656,18 @@
           </property>
           <property name="formAlignment">
            <set>Qt::AlignHCenter|Qt::AlignTop</set>
+          </property>
+          <property name="leftMargin">
+           <number>10</number>
+          </property>
+          <property name="topMargin">
+           <number>10</number>
+          </property>
+          <property name="rightMargin">
+           <number>10</number>
+          </property>
+          <property name="bottomMargin">
+           <number>10</number>
           </property>
           <item row="0" column="0">
            <widget class="QLabel" name="langComboLabel">
@@ -816,6 +870,18 @@
        </widget>
        <widget class="QWidget" name="shortcuts">
         <layout class="QVBoxLayout" name="shortcutsLayout">
+         <property name="leftMargin">
+          <number>10</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
          <item>
           <widget class="QTableWidget" name="shortcutsTable">
            <property name="editTriggers">
@@ -877,8 +943,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>472</width>
-           <height>623</height>
+           <width>482</width>
+           <height>609</height>
           </rect>
          </property>
          <property name="sizePolicy">
@@ -888,6 +954,18 @@
           </sizepolicy>
          </property>
          <layout class="QVBoxLayout" name="mouseLayout">
+          <property name="leftMargin">
+           <number>10</number>
+          </property>
+          <property name="topMargin">
+           <number>10</number>
+          </property>
+          <property name="rightMargin">
+           <number>10</number>
+          </property>
+          <property name="bottomMargin">
+           <number>10</number>
+          </property>
           <item>
            <widget class="QGroupBox" name="leftButtonGroup">
             <property name="title">
@@ -902,6 +980,18 @@
              </property>
              <property name="formAlignment">
               <set>Qt::AlignHCenter|Qt::AlignTop</set>
+             </property>
+             <property name="leftMargin">
+              <number>10</number>
+             </property>
+             <property name="topMargin">
+              <number>10</number>
+             </property>
+             <property name="rightMargin">
+              <number>10</number>
+             </property>
+             <property name="bottomMargin">
+              <number>10</number>
              </property>
              <item row="0" column="0">
               <widget class="QLabel" name="doubleClickLabel">
@@ -960,6 +1050,18 @@
              </property>
              <property name="formAlignment">
               <set>Qt::AlignHCenter|Qt::AlignTop</set>
+             </property>
+             <property name="leftMargin">
+              <number>10</number>
+             </property>
+             <property name="topMargin">
+              <number>10</number>
+             </property>
+             <property name="rightMargin">
+              <number>10</number>
+             </property>
+             <property name="bottomMargin">
+              <number>10</number>
              </property>
              <item row="0" column="0">
               <widget class="QLabel" name="middleButtonModeLabel">
@@ -1043,6 +1145,18 @@
              </property>
              <property name="formAlignment">
               <set>Qt::AlignHCenter|Qt::AlignTop</set>
+             </property>
+             <property name="leftMargin">
+              <number>10</number>
+             </property>
+             <property name="topMargin">
+              <number>10</number>
+             </property>
+             <property name="rightMargin">
+              <number>10</number>
+             </property>
+             <property name="bottomMargin">
+              <number>10</number>
              </property>
              <item row="0" column="0">
               <widget class="QLabel" name="verticalScrollLabel">
