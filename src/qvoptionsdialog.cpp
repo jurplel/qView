@@ -528,6 +528,7 @@ void QVOptionsDialog::constrainImagePositionCheckboxStateChanged(int state)
 void QVOptionsDialog::populateCategories()
 {
     const int iconSize = 24;
+    const int listRightPadding = 3;
     auto addItem = [&](const QChar &iconChar, const QString &text) {
         ui->categoryList->addItem(new QListWidgetItem(qvApp->iconFromFont("Material Icons Outlined", iconChar, iconSize, devicePixelRatioF()), text));
     };
@@ -538,7 +539,7 @@ void QVOptionsDialog::populateCategories()
     addItem(u'\ue429', tr("Miscellaneous"));
     addItem(u'\ue312', tr("Shortcuts"));
     addItem(u'\ue323', tr("Mouse"));
-    ui->categoryList->setFixedWidth(ui->categoryList->sizeHintForColumn(0) + ui->categoryList->frameWidth() + 2);
+    ui->categoryList->setFixedWidth(ui->categoryList->sizeHintForColumn(0) + ui->categoryList->frameWidth() + listRightPadding);
 }
 
 void QVOptionsDialog::populateLanguages()
