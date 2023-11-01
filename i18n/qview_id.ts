@@ -433,7 +433,7 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="939"/>
         <source>Save Frame As...</source>
-        <translation type="unfinished"></translation>
+        <translation>Simpan Bingkai Sebagai...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="968"/>
@@ -629,7 +629,7 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
     <message>
         <location filename="../src/qvinfodialog.ui" line="193"/>
         <source>Frames:</source>
-        <translation type="unfinished"></translation>
+        <translation>Bingkai:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="213"/>
@@ -766,7 +766,7 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
         <location filename="../src/qvoptionsdialog.ui" line="110"/>
         <location filename="../src/qvoptionsdialog.ui" line="120"/>
         <source>Control when the window should resize to fit the image&apos;s actual size</source>
-        <translation type="unfinished">Kontrol ketika jendela harus menyesuaikan dengan ukuran asli gambar</translation>
+        <translation>Kontrol ketika jendela harus menyesuaikan dengan ukuran asli gambar</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="113"/>
