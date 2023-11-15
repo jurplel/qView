@@ -428,7 +428,7 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="801"/>
         <source>Failed undoing deletion of %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Gagal membatalkan penghapusan %1.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="939"/>
@@ -644,7 +644,7 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
     <message>
         <location filename="../src/qvinfodialog.cpp" line="51"/>
         <source>%1 x %2 (%3 MP)</source>
-        <translation type="unfinished">%1 x %2 (%3 MP)</translation>
+        <translation>%1 x %2 (%3 MP)</translation>
     </message>
 </context>
 <context>
@@ -760,7 +760,7 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="90"/>
         <source>&amp;Verbose</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Verbose</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="110"/>
@@ -838,17 +838,17 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="242"/>
         <source>Show titlebar text in fullscreen</source>
-        <translation type="unfinished"></translation>
+        <translation>Tampilkan teks judul dalam layar penuh</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="249"/>
         <source>&amp;Quit on last window closed</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Keluar pada jendela terakhir ditutup</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="257"/>
         <source>Image</source>
-        <translation type="unfinished"></translation>
+        <translation>Gambar</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="263"/>
