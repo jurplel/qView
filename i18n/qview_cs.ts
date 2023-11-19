@@ -6,7 +6,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="25"/>
         <source>Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Okno</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="183"/>
@@ -48,12 +48,12 @@
         <location filename="../src/actionmanager.cpp" line="459"/>
         <location filename="../src/actionmanager.cpp" line="476"/>
         <source>Empty</source>
-        <translation type="unfinished"></translation>
+        <translation>Prázdné</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="468"/>
         <source>Open With</source>
-        <translation type="unfinished"></translation>
+        <translation>Otevřít s</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="650"/>
@@ -69,7 +69,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="657"/>
         <source>New Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Nové okno</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="660"/>
@@ -84,13 +84,13 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="666"/>
         <source>Close Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Zavřít okno</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="670"/>
         <source>Close All</source>
         <extracomment>Close all windows, that is</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Zavřít vše</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="673"/>
@@ -142,7 +142,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="706"/>
         <source>&amp;Paste</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Vložit</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="709"/>
@@ -270,18 +270,18 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="804"/>
         <source>&amp;About</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;O aplikaci</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="807"/>
         <source>&amp;About qView</source>
         <extracomment>This is for the about dialog on mac</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>&amp;O qView</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="811"/>
         <source>&amp;Welcome</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Vítejte</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="815"/>
@@ -293,19 +293,19 @@
         <location filename="../src/actionmanager.cpp" line="819"/>
         <source>Other Application...</source>
         <extracomment>Open with other program for unix non-mac</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Ostatní aplikace...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="822"/>
         <source>Choose another app</source>
         <extracomment>Open with other program for windows</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Vyberte si jinou aplikaci</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="825"/>
         <source>Other...</source>
         <extracomment>Open with other program for macos</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Ostatní...</translation>
     </message>
 </context>
 <context>
@@ -323,7 +323,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="390"/>
         <source>Empty</source>
-        <translation type="unfinished"></translation>
+        <translation>Prázdné</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="563"/>
@@ -334,7 +334,7 @@
         <location filename="../src/mainwindow.cpp" line="793"/>
         <location filename="../src/mainwindow.cpp" line="801"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Chyba</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="563"/>
@@ -349,23 +349,23 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="569"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Zrušit</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="573"/>
         <location filename="../src/mainwindow.cpp" line="629"/>
         <source>Open URL...</source>
-        <translation type="unfinished"></translation>
+        <translation>Otevřít URL adresu...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="590"/>
         <source>Error </source>
-        <translation type="unfinished"></translation>
+        <translation>Chyba </translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="613"/>
         <source>Error: Invalid image</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Chyba:</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="630"/>
@@ -391,12 +391,12 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/mainwindow.cpp" line="694"/>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Smazat</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="696"/>
         <source>Do not ask again</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Neptej se znova</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="725"/>
@@ -407,7 +407,7 @@ No write permission or file is read-only.</source>
         <location filename="../src/mainwindow.cpp" line="736"/>
         <location filename="../src/mainwindow.cpp" line="806"/>
         <source>Not Supported</source>
-        <translation type="unfinished"></translation>
+        <translation>Nepodporováno</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="736"/>
@@ -440,7 +440,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/mainwindow.cpp" line="977"/>
         <source>Pause</source>
-        <translation type="unfinished"></translation>
+        <translation>Pozastavit</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="1000"/>
@@ -463,12 +463,12 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/openwith.cpp" line="177"/>
         <source>Programs (*.exe *.pif *.com *.bat *.cmd)</source>
-        <translation type="unfinished"></translation>
+        <translation>Programy (*.exe *.pif *.com *.bat *.cmd)</translation>
     </message>
     <message>
         <location filename="../src/openwith.cpp" line="177"/>
         <source>All Files (*)</source>
-        <translation type="unfinished"></translation>
+        <translation>Všechny soubory (*)</translation>
     </message>
 </context>
 <context>
@@ -476,7 +476,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/main.cpp" line="17"/>
         <source>file</source>
-        <translation type="unfinished"></translation>
+        <translation>soubor</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="17"/>
@@ -489,12 +489,12 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvaboutdialog.ui" line="20"/>
         <source>About qView</source>
-        <translation type="unfinished"></translation>
+        <translation>O qView</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="44"/>
         <source>version %1</source>
-        <translation type="unfinished"></translation>
+        <translation>verze %1</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="47"/>
@@ -520,7 +520,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="98"/>
         <source>No updates available</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Žádná aktualizace není dostupná</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="102"/>
@@ -533,17 +533,17 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvapplication.cpp" line="40"/>
         <source>Supported Images</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Podporované obrázky</translation>
     </message>
     <message>
         <location filename="../src/qvapplication.cpp" line="49"/>
         <source>All Files</source>
-        <translation type="unfinished"></translation>
+        <translation>Všechny subory</translation>
     </message>
     <message>
         <location filename="../src/qvapplication.cpp" line="136"/>
         <source>Open...</source>
-        <translation type="unfinished"></translation>
+        <translation>Otevřít...</translation>
     </message>
 </context>
 <context>
@@ -559,7 +559,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvgraphicsview.cpp" line="621"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Chyba</translation>
     </message>
     <message>
         <location filename="../src/qvgraphicsview.cpp" line="621"/>
@@ -573,12 +573,12 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvinfodialog.ui" line="20"/>
         <source>File Info</source>
-        <translation type="unfinished"></translation>
+        <translation>Informace o souboru</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="26"/>
         <source>Name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Jméno:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="36"/>
@@ -590,7 +590,7 @@ No write permission or file is read-only.</source>
         <location filename="../src/qvinfodialog.ui" line="183"/>
         <location filename="../src/qvinfodialog.ui" line="203"/>
         <source>error</source>
-        <translation type="unfinished"></translation>
+        <translation>chyba</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="52"/>
@@ -600,22 +600,22 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvinfodialog.ui" line="75"/>
         <source>Location:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Lokace:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="101"/>
         <source>Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Velikost:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="130"/>
         <source>Modified:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Upraveno:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="153"/>
         <source>Dimensions:</source>
-        <translation type="unfinished"></translation>
+        <translation>Rozměry:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="173"/>
@@ -630,7 +630,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvinfodialog.ui" line="213"/>
         <source>Refresh</source>
-        <translation type="unfinished"></translation>
+        <translation>Obnovit</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.cpp" line="49"/>
@@ -663,17 +663,17 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/openwith.h" line="68"/>
         <source>Games</source>
-        <translation type="unfinished"></translation>
+        <translation>Hry</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="69"/>
         <source>Graphics</source>
-        <translation type="unfinished"></translation>
+        <translation>Grafika</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="70"/>
         <source>Internet</source>
-        <translation type="unfinished"></translation>
+        <translation>Internet</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="71"/>
@@ -688,12 +688,12 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/openwith.h" line="73"/>
         <source>Science</source>
-        <translation type="unfinished"></translation>
+        <translation>Věda</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="74"/>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavení</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="75"/>
@@ -708,7 +708,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/openwith.h" line="77"/>
         <source>Other</source>
-        <translation type="unfinished"></translation>
+        <translation>Ostatní</translation>
     </message>
 </context>
 <context>
@@ -716,12 +716,12 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="17"/>
         <source>Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Možnosti</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="33"/>
         <source>Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Okno</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="39"/>
@@ -772,7 +772,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="127"/>
         <source>Never</source>
-        <translation type="unfinished"></translation>
+        <translation>Nikdy</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="132"/>
@@ -809,7 +809,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="177"/>
         <source>Maximum size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Maximální velikost:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="219"/>
@@ -844,7 +844,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="257"/>
         <source>Image</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Obraz</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="263"/>
@@ -966,22 +966,22 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="474"/>
         <source>Last Modified</source>
-        <translation type="unfinished"></translation>
+        <translation>Naposledy upraveno</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="479"/>
         <source>Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Velikost</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="484"/>
         <source>Type</source>
-        <translation type="unfinished"></translation>
+        <translation>Typ</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="489"/>
         <source>Random</source>
-        <translation type="unfinished"></translation>
+        <translation>Náhodný</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="497"/>
@@ -1068,7 +1068,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="451"/>
         <source>Language:</source>
-        <translation type="unfinished"></translation>
+        <translation>Jazyky:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="666"/>
@@ -1088,7 +1088,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="684"/>
         <source>After deletion:</source>
-        <translation type="unfinished"></translation>
+        <translation>Po smazání:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="691"/>
@@ -1099,12 +1099,12 @@ No write permission or file is read-only.</source>
         <location filename="../src/qvoptionsdialog.ui" line="712"/>
         <location filename="../src/qvoptionsdialog.ui" line="760"/>
         <source>Shortcuts</source>
-        <translation type="unfinished"></translation>
+        <translation>Zkratky</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="755"/>
         <source>Action</source>
-        <translation type="unfinished"></translation>
+        <translation>Akce</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.cpp" line="452"/>
@@ -1127,7 +1127,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="14"/>
         <source>Rename...</source>
-        <translation type="unfinished"></translation>
+        <translation>Přejmenovat...</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="15"/>
@@ -1138,7 +1138,7 @@ No write permission or file is read-only.</source>
         <location filename="../src/qvrenamedialog.cpp" line="26"/>
         <location filename="../src/qvrenamedialog.cpp" line="45"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Chyba</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="26"/>
@@ -1200,12 +1200,12 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="45"/>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation>Otevřít</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="46"/>
         <source>Open URL</source>
-        <translation type="unfinished"></translation>
+        <translation>Otevřít URL adresu</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="47"/>
@@ -1235,32 +1235,32 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="57"/>
         <source>Undo Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Vrátit zpět smazání</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="59"/>
         <source>Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>Kopírovat</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="60"/>
         <source>Paste</source>
-        <translation type="unfinished"></translation>
+        <translation>Vložit</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="61"/>
         <source>Rename</source>
-        <translation type="unfinished"></translation>
+        <translation>Přejmenovat</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="65"/>
         <source>Move to Trash</source>
-        <translation type="unfinished"></translation>
+        <translation>Přesunout do koše</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="69"/>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Smazat</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="71"/>
@@ -1375,17 +1375,17 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="112"/>
         <source>New Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Nové okno</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="113"/>
         <source>Close Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Zavřít okno</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="114"/>
         <source>Close All</source>
-        <translation type="unfinished"></translation>
+        <translation>Zavřít vše</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="116"/>
@@ -1403,7 +1403,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/updatechecker.cpp" line="69"/>
         <source>Download</source>
-        <translation type="unfinished"></translation>
+        <translation>Stáhnout</translation>
     </message>
     <message>
         <location filename="../src/updatechecker.cpp" line="72"/>
