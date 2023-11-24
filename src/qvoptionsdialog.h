@@ -9,6 +9,7 @@
 #include <QRadioButton>
 #include <QComboBox>
 #include <QSpinBox>
+#include <QTableWidget>
 
 namespace Ui {
 class QVOptionsDialog;
@@ -40,6 +41,7 @@ protected:
     void syncLineEdit(QLineEdit *lineEdit, const QString &key, bool defaults = false, bool makeConnection = false);
     void syncShortcuts(bool defaults = false);
     void updateShortcutsTable();
+    void syncFormats(bool defaults = false);
     void updateButtonBox();
     void bgColorButtonClicked();
     void updateBgColorButton();
@@ -78,6 +80,8 @@ private slots:
 
     void languageComboBoxCurrentIndexChanged(int index);
 
+    void formatsItemChanged(QTableWidgetItem *item);
+
     void middleButtonModeChanged();
 
 private:
@@ -87,9 +91,13 @@ private:
 
     QList<QStringList> transientShortcuts;
 
+    QSet<QString> transientDisabledFileExtensions;
+
     bool isInitialLoad {true};
 
     bool languageRestartMessageShown {false};
+
+    bool isLoadingFormats {false};
 };
 
 

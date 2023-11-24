@@ -248,30 +248,24 @@ QList<QVImageCore::CompatibleFile> QVImageCore::getCompatibleFiles(const QString
     QList<CompatibleFile> fileList;
 
     QMimeDatabase mimeDb;
-    const auto &extensions = qvApp->getFileExtensionList();
-    const auto &mimeTypes = qvApp->getMimeTypeNameList();
+    const auto &extensions = qvApp->getFileExtensionSet();
+    const auto &disabledExtensions = qvApp->getDisabledFileExtensions();
+    const auto &mimeTypes = qvApp->getMimeTypeNameSet();
 
     QMimeDatabase::MatchMode mimeMatchMode = allowMimeContentDetection ? QMimeDatabase::MatchDefault : QMimeDatabase::MatchExtension;
 
     const QFileInfoList currentFolder = QDir(dirPath).entryInfoList(QDir::Files | QDir::Hidden, QDir::Unsorted);
     for (const QFileInfo &fileInfo : currentFolder)
     {
-        bool matched = false;
         const QString absoluteFilePath = fileInfo.absoluteFilePath();
         const QString fileName = fileInfo.fileName();
-        for (const QString &extension : extensions)
-        {
-            if (fileName.endsWith(extension, Qt::CaseInsensitive))
-            {
-                matched = true;
-                break;
-            }
-        }
+        const QString suffix = fileInfo.suffix().toLower();
+        bool matched = !suffix.isEmpty() && extensions.contains("." + suffix);
         QString mimeType;
         if (!matched || sortMode == Qv::SortMode::Type)
         {
             mimeType = mimeDb.mimeTypeForFile(absoluteFilePath, mimeMatchMode).name();
-            matched |= mimeTypes.contains(mimeType);
+            matched |= mimeTypes.contains(mimeType) && (suffix.isEmpty() || !disabledExtensions.contains("." + suffix));
         }
         if (matched)
         {

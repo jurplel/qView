@@ -216,6 +216,8 @@ void SettingsManager::initializeSettingsLibrary()
     settingsLibrary.insert("allowmimecontentdetection", {false, {}});
     settingsLibrary.insert("saverecents", {true, {}});
     settingsLibrary.insert("updatenotifications", {false, {}});
+    // Formats
+    settingsLibrary.insert("disabledfileextensions", {"", {}});
     // Mouse
     settingsLibrary.insert("viewportdoubleclickaction", {static_cast<int>(Qv::ViewportClickAction::ToggleFullScreen), {}});
     settingsLibrary.insert("viewportaltdoubleclickaction", {static_cast<int>(Qv::ViewportClickAction::ToggleTitlebarHidden), {}});

@@ -1,6 +1,9 @@
 #ifndef QVNAMESPACE_H
 #define QVNAMESPACE_H
 
+#include <QSet>
+#include <QString>
+
 namespace Qv
 {
     inline constexpr int SessionStateVersion = 1;
@@ -103,6 +106,16 @@ namespace Qv
         WhenLaunching = 1,
         WhenOpeningImages = 2
     };
+
+    inline QSet<QString> listToSet(const QStringList &list)
+    {
+        return QSet<QString>{list.begin(), list.end()};
+    }
+
+    inline QStringList setToList(const QSet<QString> &set)
+    {
+        return QStringList(set.begin(), set.end());
+    }
 
     inline bool scrollActionIsSelfCompatible(const ViewportScrollAction action)
     {

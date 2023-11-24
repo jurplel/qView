@@ -17,6 +17,7 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     // Connections
     connect(this, &QGuiApplication::commitDataRequest, this, &QVApplication::onCommitDataRequest, Qt::DirectConnection);
     connect(this, &QCoreApplication::aboutToQuit, this, &QVApplication::onAboutToQuit);
+    connect(&settingsManager, &SettingsManager::settingsUpdated, this, &QVApplication::settingsUpdated);
     connect(&actionManager, &ActionManager::recentsMenuUpdated, this, &QVApplication::recentsMenuUpdated);
     connect(&updateChecker, &UpdateChecker::checkedUpdates, this, &QVApplication::checkedUpdates);
 
@@ -25,7 +26,7 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     QIcon::setFallbackSearchPaths(QIcon::fallbackSearchPaths() << "/usr/share/pixmaps");
 #endif
 
-    defineFilterLists();
+    settingsUpdated();
 
     // Check for updates
     // TODO: move this to after first window show event
@@ -57,9 +58,6 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     // Set mac-specific application settings
 #ifdef COCOA_LOADED
     QVCocoaFunctions::setUserDefaults();
-#endif
-#ifdef Q_OS_MACOS
-    setQuitOnLastWindowClosed(getSettingsManager().getBoolean("quitonlastwindow"));
 #endif
 
     // Block any erroneous icons from showing up on mac and windows
@@ -318,15 +316,41 @@ void QVApplication::hideIncompatibleActions()
 #endif
 }
 
+void QVApplication::settingsUpdated()
+{
+    auto &settingsManager = qvApp->getSettingsManager();
+
+    QString disabledFileExtensionsStr = settingsManager.getString("disabledfileextensions");
+    disabledFileExtensions = Qv::listToSet(!disabledFileExtensionsStr.isEmpty() ? disabledFileExtensionsStr.split(';') : QStringList());
+
+#ifdef Q_OS_MACOS
+    setQuitOnLastWindowClosed(settingsManager.getBoolean("quitonlastwindow"));
+#endif
+
+    defineFilterLists();
+}
+
 void QVApplication::defineFilterLists()
 {
+    allFileExtensionList.clear();
+    nameFilterList.clear();
+    fileExtensionSet.clear();
+    mimeTypeNameSet.clear();
+
     const auto &byteArrayFormats = QImageReader::supportedImageFormats();
 
     auto filterString = tr("Supported Images") + " (";
-    filterList.reserve(byteArrayFormats.size()-1);
-    fileExtensionList.reserve(byteArrayFormats.size()-1);
+    fileExtensionSet.reserve(byteArrayFormats.size()-1);
 
-    // Build the filterlist, filterstring, and filterregexplist in one loop
+    const auto addExtension = [&](const QString &extension) {
+        allFileExtensionList << extension;
+        if (disabledFileExtensions.contains(extension))
+            return;
+        filterString += "*" + extension + " ";
+        fileExtensionSet << extension;
+    };
+
+    // Build extension and filter lists
     for (const auto &byteArray : byteArrayFormats)
     {
         const auto fileExtension = "." + QString::fromUtf8(byteArray);
@@ -334,16 +358,14 @@ void QVApplication::defineFilterLists()
         if (fileExtension == ".pdf")
             continue;
 
-        filterList << "*" + fileExtension;
-        filterString += "*" + fileExtension + " ";
-        fileExtensionList << fileExtension;
+        addExtension(fileExtension);
 
         // If we support jpg, we actually support the jfif, jfi, and jpe file extensions too almost certainly.
         if (fileExtension == ".jpg")
         {
-            filterList << "*.jpe" << "*.jfi" << "*.jfif";
-            filterString += "*.jpe *.jfi *.jfif ";
-            fileExtensionList << ".jpe" << ".jfi" << ".jfif";
+            addExtension(".jpe");
+            addExtension(".jfi");
+            addExtension(".jfif");
         }
     }
     filterString.chop(1);
@@ -351,7 +373,7 @@ void QVApplication::defineFilterLists()
 
     // Build mime type list
     const auto &byteArrayMimeTypes = QImageReader::supportedMimeTypes();
-    mimeTypeNameList.reserve(byteArrayMimeTypes.size()-1);
+    mimeTypeNameSet.reserve(byteArrayMimeTypes.size()-1);
     for (const auto &byteArray : byteArrayMimeTypes)
     {
         // Qt 5.15 seems to have added pdf support for QImageReader but it is super broken in qView
@@ -359,7 +381,7 @@ void QVApplication::defineFilterLists()
         if (mime == "application/pdf")
             continue;
 
-        mimeTypeNameList << mime;
+        mimeTypeNameSet << mime;
     }
 
     // Build name filter list for file dialogs

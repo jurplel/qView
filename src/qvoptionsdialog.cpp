@@ -35,6 +35,7 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     connect(ui->titlebarComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &QVOptionsDialog::titlebarComboBoxCurrentIndexChanged);
     connect(ui->windowResizeComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &QVOptionsDialog::windowResizeComboBoxCurrentIndexChanged);
     connect(ui->langComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &QVOptionsDialog::languageComboBoxCurrentIndexChanged);
+    connect(ui->formatsTable, &QTableWidget::itemChanged, this, &QVOptionsDialog::formatsItemChanged);
 
     populateCategories();
     populateComboBoxes();
@@ -92,6 +93,7 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
 
     syncSettings(false, true);
     syncShortcuts();
+    syncFormats();
     updateButtonBox();
 
     isInitialLoad = false;
@@ -121,6 +123,7 @@ void QVOptionsDialog::modifySetting(QString key, QVariant value)
 void QVOptionsDialog::saveSettings()
 {
     QSettings settings;
+
     settings.beginGroup("options");
 
     const auto keys = transientSettings.keys();
@@ -130,7 +133,10 @@ void QVOptionsDialog::saveSettings()
         settings.setValue(key, value);
     }
 
+    settings.setValue("disabledfileextensions", Qv::setToList(transientDisabledFileExtensions).join(';'));
+
     settings.endGroup();
+
     settings.beginGroup("shortcuts");
 
     const auto &shortcutsList = qvApp->getShortcutManager().getShortcutsList();
@@ -406,6 +412,38 @@ void QVOptionsDialog::shortcutCellDoubleClicked(int row, int column)
     shortcutDialog->open();
 }
 
+void QVOptionsDialog::syncFormats(bool defaults)
+{
+    if (defaults)
+        transientDisabledFileExtensions.clear();
+    else
+        transientDisabledFileExtensions = qvApp->getDisabledFileExtensions();
+
+    QStringList extensions = qvApp->getAllFileExtensionList();
+    extensions.sort(Qt::CaseInsensitive);
+
+    isLoadingFormats = true;
+
+    ui->formatsTable->setRowCount(extensions.length());
+
+    for (int i = 0; i < extensions.length(); i++)
+    {
+        const QString &extension = extensions.value(i);
+        const bool isDisabled = transientDisabledFileExtensions.contains(extension);
+
+        auto *extensionItem = new QTableWidgetItem();
+        extensionItem->setText(extension);
+        ui->formatsTable->setItem(i, 0, extensionItem);
+
+        auto *enabledItem = new QTableWidgetItem();
+        enabledItem->setCheckState(isDisabled ? Qt::Unchecked : Qt::Checked);
+        enabledItem->setData(Qt::UserRole, extension);
+        ui->formatsTable->setItem(i, 1, enabledItem);
+    }
+
+    isLoadingFormats = false;
+}
+
 void QVOptionsDialog::buttonBoxClicked(QAbstractButton *button)
 {
     auto role = ui->buttonBox->buttonRole(button);
@@ -419,6 +457,7 @@ void QVOptionsDialog::buttonBoxClicked(QAbstractButton *button)
     {
         syncSettings(true);
         syncShortcuts(true);
+        syncFormats(true);
     }
 }
 
@@ -426,8 +465,8 @@ void QVOptionsDialog::updateButtonBox()
 {
     QPushButton *defaultsButton = ui->buttonBox->button(QDialogButtonBox::RestoreDefaults);
     QPushButton *applyButton = ui->buttonBox->button(QDialogButtonBox::Apply);
-    defaultsButton->setEnabled(false);
-    applyButton->setEnabled(false);
+    bool anyUnsaved = false;
+    bool anyNonDefault = false;
 
     // settings
     const QList<QString> settingKeys = transientSettings.keys();
@@ -437,10 +476,8 @@ void QVOptionsDialog::updateButtonBox()
         const auto &savedValue = qvApp->getSettingsManager().getSetting(key);
         const auto &defaultValue = qvApp->getSettingsManager().getSetting(key, true);
 
-        if (transientValue != savedValue)
-            applyButton->setEnabled(true);
-        if (transientValue != defaultValue)
-            defaultsButton->setEnabled(true);
+        anyUnsaved |= transientValue != savedValue;
+        anyNonDefault |= transientValue != defaultValue;
     }
 
     // shortcuts
@@ -451,11 +488,16 @@ void QVOptionsDialog::updateButtonBox()
         QStringList savedValue = shortcutsList.value(i).shortcuts;
         QStringList defaultValue = shortcutsList.value(i).defaultShortcuts;
 
-        if (transientValue != savedValue)
-            applyButton->setEnabled(true);
-        if (transientValue != defaultValue)
-            defaultsButton->setEnabled(true);
+        anyUnsaved |= transientValue != savedValue;
+        anyNonDefault |= transientValue != defaultValue;
     }
+
+    // formats
+    anyUnsaved |= transientDisabledFileExtensions != qvApp->getDisabledFileExtensions();
+    anyNonDefault |= !transientDisabledFileExtensions.isEmpty();
+
+    applyButton->setEnabled(anyUnsaved);
+    defaultsButton->setEnabled(anyNonDefault);
 }
 
 void QVOptionsDialog::bgColorButtonClicked()
@@ -539,6 +581,7 @@ void QVOptionsDialog::populateCategories()
     addItem(u'\ue429', tr("Miscellaneous"));
     addItem(u'\ue312', tr("Shortcuts"));
     addItem(u'\ue323', tr("Mouse"));
+    addItem(u'\ue87b', tr("Formats"));
     ui->categoryList->setFixedWidth(ui->categoryList->sizeHintForColumn(0) + ui->categoryList->frameWidth() + listRightPadding);
 }
 
@@ -572,6 +615,20 @@ void QVOptionsDialog::languageComboBoxCurrentIndexChanged(int index)
         QMessageBox::information(this, tr("Restart Required"), tr("You must restart qView to change the language."));
         languageRestartMessageShown = true;
     }
+}
+
+void QVOptionsDialog::formatsItemChanged(QTableWidgetItem *item)
+{
+    if (isLoadingFormats)
+        return;
+
+    const QString extension = item->data(Qt::UserRole).toString();
+    if (item->checkState() == Qt::Unchecked)
+        transientDisabledFileExtensions.insert(extension);
+    else
+        transientDisabledFileExtensions.remove(extension);
+
+    updateButtonBox();
 }
 
 void QVOptionsDialog::middleButtonModeChanged()

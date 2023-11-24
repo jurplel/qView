@@ -65,17 +65,21 @@ public:
 
     void hideIncompatibleActions();
 
+    void settingsUpdated();
+
     void defineFilterLists();
 
     QMenuBar *getMenuBar() const {  return menuBar; }
 
-    const QStringList &getFilterList() const { return filterList; }
+    const QSet<QString> &getDisabledFileExtensions() const { return disabledFileExtensions; }
+
+    const QStringList &getAllFileExtensionList() const { return allFileExtensionList; }
 
     const QStringList &getNameFilterList() const { return nameFilterList; }
 
-    const QStringList &getFileExtensionList() const { return fileExtensionList; }
+    const QSet<QString> &getFileExtensionSet() const { return fileExtensionSet; }
 
-    const QStringList &getMimeTypeNameList() const { return mimeTypeNameList; }
+    const QSet<QString> &getMimeTypeNameSet() const { return mimeTypeNameSet; }
 
     const SettingsManager &getSettingsManager() const { return settingsManager; }
     SettingsManager &getSettingsManager() { return settingsManager; }
@@ -120,10 +124,12 @@ private:
 
     QMenuBar *menuBar;
 
-    QStringList filterList;
+    QSet<QString> disabledFileExtensions;
+
+    QStringList allFileExtensionList;
     QStringList nameFilterList;
-    QStringList fileExtensionList;
-    QStringList mimeTypeNameList;
+    QSet<QString> fileExtensionSet;
+    QSet<QString> mimeTypeNameSet;
 
     // This order is very important
     SettingsManager settingsManager; 
