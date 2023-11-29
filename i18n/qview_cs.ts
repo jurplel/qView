@@ -11,12 +11,12 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="183"/>
         <source>&amp;File</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Soubor</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="211"/>
         <source>&amp;Edit</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Upravit</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="229"/>
@@ -31,7 +31,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="282"/>
         <source>&amp;Tools</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Nástroje</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="304"/>
@@ -41,7 +41,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="318"/>
         <source>Open &amp;Recent</source>
-        <translation type="unfinished"></translation>
+        <translation>Otevřít &amp;Nejnovější</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="328"/>
@@ -74,12 +74,12 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="660"/>
         <source>&amp;Open...</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Otevřít...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="663"/>
         <source>Open &amp;URL...</source>
-        <translation type="unfinished"></translation>
+        <translation>Otevřít &amp;URL adresu...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="666"/>
@@ -117,17 +117,17 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="688"/>
         <source>&amp;Move to Trash</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Přesunout do koše</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="690"/>
         <source>&amp;Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Smazat</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="695"/>
         <source>&amp;Restore from Trash</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Obnovit z koše</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="697"/>
@@ -137,7 +137,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="702"/>
         <source>&amp;Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Kopírovat</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="706"/>
@@ -396,7 +396,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/mainwindow.cpp" line="696"/>
         <source>Do not ask again</source>
-        <translation type="unfinished">Neptej se znova</translation>
+        <translation>Neptej se znova</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="725"/>
@@ -458,7 +458,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/openwith.cpp" line="165"/>
         <source>All Applications (*.app)</source>
-        <translation type="unfinished"></translation>
+        <translation>Všechny aplikace (*.app)</translation>
     </message>
     <message>
         <location filename="../src/openwith.cpp" line="177"/>
@@ -533,7 +533,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvapplication.cpp" line="40"/>
         <source>Supported Images</source>
-        <translation type="unfinished">Podporované obrázky</translation>
+        <translation>Podporované obrázky</translation>
     </message>
     <message>
         <location filename="../src/qvapplication.cpp" line="49"/>
@@ -595,7 +595,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvinfodialog.ui" line="52"/>
         <source>Type:</source>
-        <translation type="unfinished"></translation>
+        <translation>Typ:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="75"/>
@@ -610,7 +610,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvinfodialog.ui" line="130"/>
         <source>Modified:</source>
-        <translation type="unfinished">Upraveno:</translation>
+        <translation>Upraveno:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="153"/>
@@ -620,7 +620,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvinfodialog.ui" line="173"/>
         <source>Aspect Ratio:</source>
-        <translation type="unfinished"></translation>
+        <translation>Poměr stran:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="193"/>
@@ -653,12 +653,12 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/openwith.h" line="66"/>
         <source>Development</source>
-        <translation type="unfinished"></translation>
+        <translation>Vývoj</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="67"/>
         <source>Education</source>
-        <translation type="unfinished"></translation>
+        <translation>Vzdělání</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="68"/>
@@ -678,7 +678,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/openwith.h" line="71"/>
         <source>Multimedia</source>
-        <translation type="unfinished"></translation>
+        <translation>Multimédia</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="72"/>
@@ -736,7 +736,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="59"/>
         <source>Titlebar text:</source>
-        <translation type="unfinished"></translation>
+        <translation>Text v záhlaví:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="66"/>
@@ -787,7 +787,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="145"/>
         <source>Minimum size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Minimální velikost:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="152"/>
@@ -844,7 +844,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="257"/>
         <source>Image</source>
-        <translation type="unfinished">Obraz</translation>
+        <translation>Obrázek</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="263"/>
@@ -921,17 +921,17 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="390"/>
         <source>Fit whole image</source>
-        <translation type="unfinished"></translation>
+        <translation>Přizpůsobit celý obrázek</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="395"/>
         <source>Fit height</source>
-        <translation type="unfinished"></translation>
+        <translation>Přizpůsobit výšku</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="400"/>
         <source>Fit width</source>
-        <translation type="unfinished"></translation>
+        <translation>Přizpůsobit šířku</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="411"/>
