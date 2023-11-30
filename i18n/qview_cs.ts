@@ -58,13 +58,13 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="650"/>
         <source>&amp;Quit</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Ukončit</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="654"/>
         <source>Exit</source>
         <extracomment>The quit action is called &quot;Exit&quot; on windows</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Ukončit</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="657"/>
@@ -207,7 +207,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="757"/>
         <source>&amp;Next File</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Další soubor</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="761"/>
@@ -232,7 +232,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="777"/>
         <source>&amp;Decrease Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Snížit rychlost</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="781"/>
@@ -242,7 +242,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="785"/>
         <source>&amp;Increase Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Zvýšit rychlost</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="789"/>
@@ -313,7 +313,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="217"/>
         <source>Exit F&amp;ull Screen</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ukončit F&amp;ull Screen</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="222"/>
@@ -339,12 +339,12 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="563"/>
         <source>Error: URL is invalid</source>
-        <translation type="unfinished"></translation>
+        <translation>Chyba: Adresa URL je neplatná</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="569"/>
         <source>Downloading image...</source>
-        <translation type="unfinished"></translation>
+        <translation>Stahování obrázku...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="569"/>
@@ -365,7 +365,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="613"/>
         <source>Error: Invalid image</source>
-        <translation type="unfinished">Chyba:</translation>
+        <translation>Chyba: Neplatný obrázek</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="630"/>
@@ -792,13 +792,13 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="152"/>
         <source>Control the minimum size that the window should reach when matching the image&apos;s actual size</source>
-        <translation type="unfinished"></translation>
+        <translation>Určete minimální velikost, které by okno mělo dosáhnout, když odpovídá skutečné velikosti obrázku</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="155"/>
         <location filename="../src/qvoptionsdialog.ui" line="187"/>
         <source>% of screen size</source>
-        <translation type="unfinished"></translation>
+        <translation>% velikosti obrazovky</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="174"/>
@@ -1163,7 +1163,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvshortcutdialog.cpp" line="53"/>
         <source>Shortcut Already Used</source>
-        <translation type="unfinished"></translation>
+        <translation>Klávesová zkratka je již použitá</translation>
     </message>
     <message>
         <location filename="../src/qvshortcutdialog.cpp" line="53"/>
@@ -1177,7 +1177,7 @@ No write permission or file is read-only.</source>
         <location filename="../src/qvwelcomedialog.ui" line="14"/>
         <location filename="../src/qvwelcomedialog.ui" line="155"/>
         <source>Welcome</source>
-        <translation type="unfinished"></translation>
+        <translation>Vítejte</translation>
     </message>
     <message>
         <location filename="../src/qvwelcomedialog.ui" line="472"/>
@@ -1215,7 +1215,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="50"/>
         <source>Show in Explorer</source>
-        <translation type="unfinished"></translation>
+        <translation>Zobrazit v Průzkumníku soborů</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="52"/>
@@ -1225,12 +1225,12 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="54"/>
         <source>Show File Info</source>
-        <translation type="unfinished"></translation>
+        <translation>Zobrazit informace o souboru</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="55"/>
         <source>Restore from Trash</source>
-        <translation type="unfinished"></translation>
+        <translation>Obnovit z Koše</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="57"/>
@@ -1265,32 +1265,32 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="71"/>
         <source>First File</source>
-        <translation type="unfinished"></translation>
+        <translation>První soubor</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="72"/>
         <source>Previous File</source>
-        <translation type="unfinished"></translation>
+        <translation>Předchozí soubor</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="73"/>
         <source>Next File</source>
-        <translation type="unfinished"></translation>
+        <translation>Další soubor</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="74"/>
         <source>Last File</source>
-        <translation type="unfinished"></translation>
+        <translation>Poslední soubor</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="75"/>
         <source>Zoom In</source>
-        <translation type="unfinished"></translation>
+        <translation>Přiblížit</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="80"/>
         <source>Zoom Out</source>
-        <translation type="unfinished"></translation>
+        <translation>Oddálit</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="81"/>
@@ -1305,22 +1305,22 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="83"/>
         <source>Rotate Right</source>
-        <translation type="unfinished"></translation>
+        <translation>Otočit doprava</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="84"/>
         <source>Rotate Left</source>
-        <translation type="unfinished"></translation>
+        <translation>Otočit doleva</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="85"/>
         <source>Mirror</source>
-        <translation type="unfinished"></translation>
+        <translation>Zrcadlit</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="86"/>
         <source>Flip</source>
-        <translation type="unfinished"></translation>
+        <translation>Převrátit</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="87"/>
@@ -1345,7 +1345,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="102"/>
         <source>Decrease Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>Snížit rychlost</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="103"/>
@@ -1355,7 +1355,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="104"/>
         <source>Increase Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>Zvýšit rychlost</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="105"/>
@@ -1365,12 +1365,12 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="106"/>
         <source>Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Možnosti</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="108"/>
         <source>Preferences</source>
-        <translation type="unfinished"></translation>
+        <translation>Předvolby</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="112"/>
@@ -1390,12 +1390,12 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="116"/>
         <source>Quit</source>
-        <translation type="unfinished"></translation>
+        <translation>Ukončit</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="121"/>
         <source>Exit</source>
-        <translation type="unfinished"></translation>
+        <translation>Ukončit</translation>
     </message>
 </context>
 <context>
@@ -1408,7 +1408,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/updatechecker.cpp" line="72"/>
         <source>qView Update Available</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">qView aktualizace k dispozici</translation>
     </message>
     <message>
         <location filename="../src/updatechecker.cpp" line="73"/>
