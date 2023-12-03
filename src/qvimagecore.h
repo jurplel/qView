@@ -34,6 +34,13 @@ public:
         QString mimeType;
     };
 
+    struct ErrorData
+    {
+        bool hasError;
+        int errorNum;
+        QString errorString;
+    };
+
     struct FileDetails
     {
         QFileInfo fileInfo;
@@ -46,6 +53,8 @@ public:
         QSize loadedPixmapSize;
         QElapsedTimer timeSinceLoaded;
 
+        ErrorData errorData;
+
         void updateLoadedIndexInFolder();
     };
 
@@ -56,13 +65,17 @@ public:
         qint64 fileSize;
         QSize imageSize;
         QColorSpace targetColorSpace;
+
+        ErrorData errorData;
     };
 
     explicit QVImageCore(QObject *parent = nullptr);
 
     void loadFile(const QString &fileName, bool isReloading = false);
-    ReadData readFile(const QString &fileName, const QColorSpace &targetColorSpace, bool forCache);
+    ReadData readFile(const QString &fileName, const QColorSpace &targetColorSpace);
+    void loadReadData(const ReadData &readData);
     void loadPixmap(const ReadData &readData);
+    void enterErrorState();
     void closeImage();
     QList<CompatibleFile> getCompatibleFiles(const QString &dirPath) const;
     void updateFolderInfo(QString dirPath = QString());
@@ -98,8 +111,6 @@ signals:
     void updateLoadedPixmapItem();
 
     void fileChanged();
-
-    void readError(int errorNum, const QString &errorString, const QString &fileName);
 
 private:
     QPixmap loadedPixmap;

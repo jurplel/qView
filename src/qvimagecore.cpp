@@ -38,7 +38,7 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
     connect(&loadedMovie, &QMovie::updated, this, &QVImageCore::animatedFrameChanged);
 
     connect(&loadFutureWatcher, &QFutureWatcher<ReadData>::finished, this, [this](){
-        loadPixmap(loadFutureWatcher.result());
+        loadReadData(loadFutureWatcher.result());
     });
 
     largestDimension = 0;
@@ -110,19 +110,19 @@ void QVImageCore::loadFile(const QString &fileName, bool isReloading)
     {
         ReadData readData = *cachedData;
         delete cachedData;
-        loadPixmap(readData);
+        loadReadData(readData);
     }
     else
     {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        loadFutureWatcher.setFuture(QtConcurrent::run(this, &QVImageCore::readFile, sanitaryFileName, targetColorSpace, false));
+        loadFutureWatcher.setFuture(QtConcurrent::run(this, &QVImageCore::readFile, sanitaryFileName, targetColorSpace));
 #else
-        loadFutureWatcher.setFuture(QtConcurrent::run(&QVImageCore::readFile, this, sanitaryFileName, targetColorSpace, false));
+        loadFutureWatcher.setFuture(QtConcurrent::run(&QVImageCore::readFile, this, sanitaryFileName, targetColorSpace));
 #endif
     }
 }
 
-QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColorSpace &targetColorSpace, bool forCache)
+QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColorSpace &targetColorSpace)
 {
     QImageReader imageReader;
     imageReader.setDecideFormatFromContent(true);
@@ -166,16 +166,24 @@ QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColo
         imageReader.size(),
         targetColorSpace
     };
-    // Only error out when not loading for cache
-    if (readPixmap.isNull() && !forCache)
+
+    if (readPixmap.isNull())
     {
-        emit readError(imageReader.error(), imageReader.errorString(), fileInfo.fileName());
+        readData.errorData = ErrorData {
+            true,
+            imageReader.error(),
+            imageReader.errorString()
+        };
+    }
+    else
+    {
+        readData.errorData.hasError = false;
     }
 
     return readData;
 }
 
-void QVImageCore::loadPixmap(const ReadData &readData)
+void QVImageCore::loadReadData(const ReadData &readData)
 {
     // Do this first so we can keep folder info even when loading errored files
     currentFileDetails.fileInfo = QFileInfo(readData.absoluteFilePath);
@@ -186,9 +194,16 @@ void QVImageCore::loadPixmap(const ReadData &readData)
     // Reset mechanism to avoid stalling while loading
     waitingOnLoad = false;
 
-    if (readData.pixmap.isNull())
-        return;
+    currentFileDetails.errorData = readData.errorData;
 
+    if (readData.errorData.hasError)
+        enterErrorState();
+    else
+        loadPixmap(readData);
+}
+
+void QVImageCore::loadPixmap(const ReadData &readData)
+{
     loadedPixmap = matchCurrentRotation(readData.pixmap);
 
     // Set file details
@@ -231,6 +246,27 @@ void QVImageCore::loadPixmap(const ReadData &readData)
     requestCaching();
 }
 
+void QVImageCore::enterErrorState()
+{
+    loadedPixmap = QPixmap();
+    loadedMovie.stop();
+    loadedMovie.setFileName("");
+    currentFileDetails = {
+        currentFileDetails.fileInfo,
+        currentFileDetails.folderFileInfoList,
+        currentFileDetails.loadedIndexInFolder,
+        false,
+        false,
+        false,
+        QSize(),
+        QSize(),
+        QElapsedTimer(),
+        currentFileDetails.errorData
+    };
+
+    emit fileChanged();
+}
+
 void QVImageCore::closeImage()
 {
     loadedPixmap = QPixmap();
@@ -245,7 +281,8 @@ void QVImageCore::closeImage()
         false,
         QSize(),
         QSize(),
-        QElapsedTimer()
+        QElapsedTimer(),
+        ErrorData {false, 0, ""}
     };
 
     emit fileChanged();
@@ -465,9 +502,9 @@ void QVImageCore::requestCachingFile(const QString &filePath, const QColorSpace 
     });
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    cacheFutureWatcher->setFuture(QtConcurrent::run(this, &QVImageCore::readFile, filePath, targetColorSpace, true));
+    cacheFutureWatcher->setFuture(QtConcurrent::run(this, &QVImageCore::readFile, filePath, targetColorSpace));
 #else
-    cacheFutureWatcher->setFuture(QtConcurrent::run(&QVImageCore::readFile, this, filePath, targetColorSpace, true));
+    cacheFutureWatcher->setFuture(QtConcurrent::run(&QVImageCore::readFile, this, filePath, targetColorSpace));
 #endif
 }
 

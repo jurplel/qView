@@ -437,9 +437,12 @@ void MainWindow::buildWindowTitle()
             newString = QString::number(getCurrentFileDetails().loadedIndexInFolder+1);
             newString += "/" + QString::number(getCurrentFileDetails().folderFileInfoList.count());
             newString += " - " + getCurrentFileDetails().fileInfo.fileName();
-            newString += " - "  + QString::number(getCurrentFileDetails().baseImageSize.width());
-            newString += "x" + QString::number(getCurrentFileDetails().baseImageSize.height());
-            newString += " - " + QVInfoDialog::formatBytes(getCurrentFileDetails().fileInfo.size());
+            if (!getCurrentFileDetails().errorData.hasError)
+            {
+                newString += " - "  + QString::number(getCurrentFileDetails().baseImageSize.width());
+                newString += "x" + QString::number(getCurrentFileDetails().baseImageSize.height());
+                newString += " - " + QVInfoDialog::formatBytes(getCurrentFileDetails().fileInfo.size());
+            }
             newString += " - qView";
             break;
         }
