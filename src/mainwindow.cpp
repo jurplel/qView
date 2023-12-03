@@ -48,6 +48,11 @@ MainWindow::MainWindow(QWidget *parent) :
     graphicsView = new QVGraphicsView(this);
     centralWidget()->layout()->addWidget(graphicsView);
 
+    // Initialize and hide errorWidget
+    errorWidget = new QVErrorWidget(this);
+    centralWidget()->layout()->addWidget(errorWidget);
+    errorWidget->hide();
+
     // Hide fullscreen label by default
     ui->fullscreenLabel->hide();
 
@@ -314,9 +319,22 @@ void MainWindow::openRecent(int i)
 }
 
 void MainWindow::fileChanged()
-{
+{  
     populateOpenWithTimer->start();
     disableActions();
+
+    const auto errorData = getCurrentFileDetails().errorData;
+    if (errorData.hasError)
+    {
+        errorWidget->setError(errorData.errorNum, errorData.errorString, getCurrentFileDetails().fileInfo.fileName());
+        graphicsView->hide();
+        errorWidget->show();
+    }
+    else
+    {
+        graphicsView->show();
+        errorWidget->hide();
+    }
 
     if (info->isVisible())
         refreshProperties();

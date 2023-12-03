@@ -4,6 +4,7 @@
 #include "qvinfodialog.h"
 #include "qvimagecore.h"
 #include "qvgraphicsview.h"
+#include "qverrorwidget.h"
 #include "openwith.h"
 
 #include <QMainWindow>
@@ -148,6 +149,7 @@ protected slots:
 private:
     Ui::MainWindow *ui;
     QVGraphicsView *graphicsView;
+    QVErrorWidget *errorWidget;
 
     QMenu *contextMenu;
     QMenu *virtualMenu;

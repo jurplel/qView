@@ -2,6 +2,7 @@ SOURCES += \
     $$PWD/main.cpp \
     $$PWD/mainwindow.cpp \
     $$PWD/openwith.cpp \
+    $$PWD/qverrorwidget.cpp \
     $$PWD/qvgraphicsview.cpp \
     $$PWD/qvoptionsdialog.cpp \
     $$PWD/qvapplication.cpp \
@@ -23,6 +24,7 @@ linux:!CONFIG(NO_X11):SOURCES += $$PWD/qvlinuxx11functions.cpp
 HEADERS += \
     $$PWD/mainwindow.h \
     $$PWD/openwith.h \
+    $$PWD/qverrorwidget.h \
     $$PWD/qvgraphicsview.h \
     $$PWD/qvoptionsdialog.h \
     $$PWD/qvapplication.h \
@@ -43,6 +45,7 @@ linux:!CONFIG(NO_X11):HEADERS += $$PWD/qvlinuxx11functions.h
 
 FORMS += \
         $$PWD/mainwindow.ui \
+    $$PWD/qverrorwidget.ui \
     $$PWD/qvopenwithdialog.ui \
     $$PWD/qvoptionsdialog.ui \
     $$PWD/qvaboutdialog.ui \

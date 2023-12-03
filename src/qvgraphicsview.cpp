@@ -686,14 +686,14 @@ void QVGraphicsView::settingsUpdated()
 
     //bgcolor
     QBrush newBrush;
-    newBrush.setStyle(Qt::SolidPattern);
     if (!settingsManager.getBoolean("bgcolorenabled"))
     {
-        newBrush.setColor(QColor(0, 0, 0, 0));
+        newBrush.setStyle(Qt::NoBrush);
     }
     else
     {
         QColor newColor;
+        newBrush.setStyle(Qt::SolidPattern);
         newColor.setNamedColor(settingsManager.getString("bgcolor"));
         newBrush.setColor(newColor);
     }
