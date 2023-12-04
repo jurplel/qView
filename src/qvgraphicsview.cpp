@@ -83,29 +83,22 @@ void QVGraphicsView::resizeEvent(QResizeEvent *event)
 
 void QVGraphicsView::dropEvent(QDropEvent *event)
 {
-    QGraphicsView::dropEvent(event);
-    loadMimeData(event->mimeData());
+    event->ignore();
 }
 
 void QVGraphicsView::dragEnterEvent(QDragEnterEvent *event)
 {
-    QGraphicsView::dragEnterEvent(event);
-    if (event->mimeData()->hasUrls())
-    {
-        event->acceptProposedAction();
-    }
+    event->ignore();
 }
 
 void QVGraphicsView::dragMoveEvent(QDragMoveEvent *event)
 {
-    QGraphicsView::dragMoveEvent(event);
-    event->acceptProposedAction();
+    event->ignore();
 }
 
 void QVGraphicsView::dragLeaveEvent(QDragLeaveEvent *event)
 {
-    QGraphicsView::dragLeaveEvent(event);
-    event->accept();
+    event->ignore();
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)

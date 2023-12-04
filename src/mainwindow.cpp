@@ -3,6 +3,7 @@
 #include "qvapplication.h"
 #include "qvcocoafunctions.h"
 #include "qvrenamedialog.h"
+#include "qvcontentwidget.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -44,14 +45,10 @@ MainWindow::MainWindow(QWidget *parent) :
     justLaunchedWithImage = false;
     storedWindowState = Qt::WindowNoState;
 
-    // Initialize graphicsviewkDefaultBufferAlignment
-    graphicsView = new QVGraphicsView(this);
-    centralWidget()->layout()->addWidget(graphicsView);
-
-    // Initialize and hide errorWidget
-    errorWidget = new QVErrorWidget(this);
-    centralWidget()->layout()->addWidget(errorWidget);
-    errorWidget->hide();
+    // Initialize contentWidget and graphicsView
+    auto contentWidget = new QVContentWidget();
+    centralWidget()->layout()->addWidget(contentWidget);
+    graphicsView = contentWidget->getGraphicsView();
 
     // Hide fullscreen label by default
     ui->fullscreenLabel->hide();
@@ -322,19 +319,6 @@ void MainWindow::fileChanged()
 {  
     populateOpenWithTimer->start();
     disableActions();
-
-    const auto errorData = getCurrentFileDetails().errorData;
-    if (errorData.hasError)
-    {
-        errorWidget->setError(errorData.errorNum, errorData.errorString, getCurrentFileDetails().fileInfo.fileName());
-        graphicsView->hide();
-        errorWidget->show();
-    }
-    else
-    {
-        graphicsView->show();
-        errorWidget->hide();
-    }
 
     if (info->isVisible())
         refreshProperties();

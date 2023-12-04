@@ -149,7 +149,6 @@ protected slots:
 private:
     Ui::MainWindow *ui;
     QVGraphicsView *graphicsView;
-    QVErrorWidget *errorWidget;
 
     QMenu *contextMenu;
     QMenu *virtualMenu;
