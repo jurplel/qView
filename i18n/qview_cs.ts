@@ -36,7 +36,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="304"/>
         <source>&amp;Help</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Nápověda</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="318"/>
@@ -182,7 +182,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="737"/>
         <source>&amp;Mirror</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Zrcadlit</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="741"/>
@@ -237,7 +237,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="781"/>
         <source>&amp;Reset Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>#Resetovat rychlost</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="785"/>
@@ -430,7 +430,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/mainwindow.cpp" line="939"/>
         <source>Save Frame As...</source>
-        <translation type="unfinished"></translation>
+        <translation>Uložit Frame jako...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="968"/>
@@ -520,7 +520,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="98"/>
         <source>No updates available</source>
-        <translation type="unfinished">Žádná aktualizace není dostupná</translation>
+        <translation>Žádná aktualizace není dostupná</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="102"/>
@@ -1158,7 +1158,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvshortcutdialog.ui" line="14"/>
         <source>Modify Shortcuts</source>
-        <translation type="unfinished"></translation>
+        <translation>Upravit zkratky</translation>
     </message>
     <message>
         <location filename="../src/qvshortcutdialog.cpp" line="53"/>
@@ -1295,7 +1295,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="81"/>
         <source>Reset Zoom</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Resetovat Zoom</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="82"/>
@@ -1330,7 +1330,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="99"/>
         <source>Save Frame As</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Uložit Frame jako</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="100"/>
@@ -1340,7 +1340,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="101"/>
         <source>Next Frame</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Další Frame</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="102"/>
@@ -1350,7 +1350,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="103"/>
         <source>Reset Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>Resetovat rychlost</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="104"/>
