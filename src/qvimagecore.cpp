@@ -284,7 +284,7 @@ QList<QVImageCore::CompatibleFile> QVImageCore::getCompatibleFiles(const QString
         }
 
         // ignore macOS ._ metadata files
-        if (fileName.startsWith('._'))
+        if (fileName.startsWith("._"))
         {
             matched = false;
         }
