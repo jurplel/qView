@@ -14,7 +14,10 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
 
     // Connections
     connect(&actionManager, &ActionManager::recentsMenuUpdated, this, &QVApplication::recentsMenuUpdated);
-    connect(&updateChecker, &UpdateChecker::checkedUpdates, this, &QVApplication::checkedUpdates);
+
+#ifndef QV_DISABLE_ONLINE_VERSION_CHECK
+connect(&updateChecker, &UpdateChecker::checkedUpdates, this, &QVApplication::checkedUpdates);
+#endif //QV_DISABLE_ONLINE_VERSION_CHECK
 
     // Add fallback fromTheme icon search on linux with qt >5.11
 #if defined Q_OS_UNIX && !defined Q_OS_MACOS && QT_VERSION >= QT_VERSION_CHECK(5, 11, 0)
@@ -23,10 +26,12 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
 
     defineFilterLists();
 
+#ifndef QV_DISABLE_ONLINE_VERSION_CHECK
     // Check for updates
     // TODO: move this to after first window show event
     if (getSettingsManager().getBoolean("updatenotifications"))
         checkUpdates();
+#endif //QV_DISABLE_ONLINE_VERSION_CHECK
 
     // Setup macOS dock menu
     dockMenu = new QMenu();
@@ -192,6 +197,7 @@ MainWindow *QVApplication::getMainWindow(bool shouldBeEmpty)
     return window;
 }
 
+#ifndef QV_DISABLE_ONLINE_VERSION_CHECK
 void QVApplication::checkUpdates()
 {
     updateChecker.check();
@@ -209,6 +215,7 @@ void QVApplication::checkedUpdates()
         updateChecker.openDialog();
     }
 }
+#endif //QV_DISABLE_ONLINE_VERSION_CHECK
 
 void QVApplication::recentsMenuUpdated()
 {
@@ -295,7 +302,11 @@ void QVApplication::openAboutDialog(QWidget *parent)
         return;
     }
 
+#ifndef QV_DISABLE_ONLINE_VERSION_CHECK
     aboutDialog = new QVAboutDialog(updateChecker.getLatestVersionNum(), parent);
+#else
+    aboutDialog = new QVAboutDialog(-1, parent);
+#endif //QV_DISABLE_ONLINE_VERSION_CHECK
     aboutDialog->show();
 }
 

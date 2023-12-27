@@ -13,8 +13,9 @@ SOURCES += \
     $$PWD/qvshortcutdialog.cpp \
     $$PWD/actionmanager.cpp \
     $$PWD/settingsmanager.cpp \
-    $$PWD/shortcutmanager.cpp \
-    $$PWD/updatechecker.cpp
+    $$PWD/shortcutmanager.cpp
+
+!qv_disable_online_version_check:SOURCES += $$PWD/updatechecker.cpp
 
 macx:!CONFIG(NO_COCOA):SOURCES += $$PWD/qvcocoafunctions.mm
 win32:!CONFIG(NO_WIN32):SOURCES += $$PWD/qvwin32functions.cpp
@@ -34,8 +35,10 @@ HEADERS += \
     $$PWD/qvshortcutdialog.h \
     $$PWD/actionmanager.h \
     $$PWD/settingsmanager.h \
-    $$PWD/shortcutmanager.h \
-    $$PWD/updatechecker.h
+    $$PWD/shortcutmanager.h
+
+!qv_disable_online_version_check:HEADERS += $$PWD/updatechecker.h
+
 
 macx:!CONFIG(NO_COCOA):HEADERS += $$PWD/qvcocoafunctions.h
 win32:!CONFIG(NO_WIN32):HEADERS += $$PWD/qvwin32functions.h

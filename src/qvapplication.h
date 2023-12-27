@@ -41,9 +41,11 @@ public:
 
     MainWindow *getMainWindow(bool shouldBeEmpty);
 
+#ifndef QV_DISABLE_ONLINE_VERSION_CHECK
     void checkUpdates();
 
     void checkedUpdates();
+#endif //QV_DISABLE_ONLINE_VERSION_CHECK
 
     void recentsMenuUpdated();
 
@@ -99,7 +101,9 @@ private:
     QPointer<QVWelcomeDialog> welcomeDialog;
     QPointer<QVAboutDialog> aboutDialog;
 
+#ifndef QV_DISABLE_ONLINE_VERSION_CHECK
     UpdateChecker updateChecker;
+#endif //QV_DISABLE_ONLINE_VERSION_CHECK
 };
 
 #endif // QVAPPLICATION_H
