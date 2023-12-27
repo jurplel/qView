@@ -223,7 +223,7 @@ void QVImageCore::loadPixmap(const ReadData &readData)
     if (!currentFileDetails.isMovieLoaded)
         if (auto device = loadedMovie.device())
             device->close();
-    
+
     currentFileDetails.timeSinceLoaded.start();
 
     emit fileChanged();
@@ -282,6 +282,13 @@ QList<QVImageCore::CompatibleFile> QVImageCore::getCompatibleFiles(const QString
             mimeType = mimeDb.mimeTypeForFile(absoluteFilePath, mimeMatchMode).name();
             matched |= mimeTypes.contains(mimeType);
         }
+
+        // ignore macOS ._ metadata files
+        if (fileName.startsWith("._"))
+        {
+            matched = false;
+        }
+
         if (matched)
         {
             fileList.append({
