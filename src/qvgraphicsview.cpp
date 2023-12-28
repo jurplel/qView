@@ -53,7 +53,6 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     connect(&imageCore, &QVImageCore::animatedFrameChanged, this, &QVGraphicsView::animatedFrameChanged);
     connect(&imageCore, &QVImageCore::fileChanged, this, &QVGraphicsView::postLoad);
     connect(&imageCore, &QVImageCore::updateLoadedPixmapItem, this, &QVGraphicsView::updateLoadedPixmapItem);
-    connect(&imageCore, &QVImageCore::readError, this, &QVGraphicsView::error);
 
     // Should replace the other timer eventually
     expensiveScaleTimerNew = new QTimer(this);
@@ -84,29 +83,22 @@ void QVGraphicsView::resizeEvent(QResizeEvent *event)
 
 void QVGraphicsView::dropEvent(QDropEvent *event)
 {
-    QGraphicsView::dropEvent(event);
-    loadMimeData(event->mimeData());
+    event->ignore();
 }
 
 void QVGraphicsView::dragEnterEvent(QDragEnterEvent *event)
 {
-    QGraphicsView::dragEnterEvent(event);
-    if (event->mimeData()->hasUrls())
-    {
-        event->acceptProposedAction();
-    }
+    event->ignore();
 }
 
 void QVGraphicsView::dragMoveEvent(QDragMoveEvent *event)
 {
-    QGraphicsView::dragMoveEvent(event);
-    event->acceptProposedAction();
+    event->ignore();
 }
 
 void QVGraphicsView::dragLeaveEvent(QDragLeaveEvent *event)
 {
-    QGraphicsView::dragLeaveEvent(event);
-    event->accept();
+    event->ignore();
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -681,30 +673,20 @@ void QVGraphicsView::centerOn(const QGraphicsItem *item)
     centerOn(item->sceneBoundingRect().center());
 }
 
-void QVGraphicsView::error(int errorNum, const QString &errorString, const QString &fileName)
-{
-    if (!errorString.isEmpty())
-    {
-        closeImage();
-        QMessageBox::critical(this, tr("Error"), tr("Error occurred opening \"%3\":\n%2 (Error %1)").arg(QString::number(errorNum), errorString, fileName));
-        return;
-    }
-}
-
 void QVGraphicsView::settingsUpdated()
 {
     auto &settingsManager = qvApp->getSettingsManager();
 
     //bgcolor
     QBrush newBrush;
-    newBrush.setStyle(Qt::SolidPattern);
     if (!settingsManager.getBoolean("bgcolorenabled"))
     {
-        newBrush.setColor(QColor(0, 0, 0, 0));
+        newBrush.setStyle(Qt::NoBrush);
     }
     else
     {
         QColor newColor;
+        newBrush.setStyle(Qt::SolidPattern);
         newColor.setNamedColor(settingsManager.getString("bgcolor"));
         newBrush.setColor(newColor);
     }

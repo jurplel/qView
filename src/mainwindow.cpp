@@ -3,6 +3,7 @@
 #include "qvapplication.h"
 #include "qvcocoafunctions.h"
 #include "qvrenamedialog.h"
+#include "qvcontentwidget.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -44,9 +45,10 @@ MainWindow::MainWindow(QWidget *parent) :
     justLaunchedWithImage = false;
     storedWindowState = Qt::WindowNoState;
 
-    // Initialize graphicsviewkDefaultBufferAlignment
-    graphicsView = new QVGraphicsView(this);
-    centralWidget()->layout()->addWidget(graphicsView);
+    // Initialize contentWidget and graphicsView
+    auto contentWidget = new QVContentWidget();
+    centralWidget()->layout()->addWidget(contentWidget);
+    graphicsView = contentWidget->getGraphicsView();
 
     // Hide fullscreen label by default
     ui->fullscreenLabel->hide();
@@ -314,7 +316,7 @@ void MainWindow::openRecent(int i)
 }
 
 void MainWindow::fileChanged()
-{
+{  
     populateOpenWithTimer->start();
     disableActions();
 
@@ -437,9 +439,12 @@ void MainWindow::buildWindowTitle()
             newString = QString::number(getCurrentFileDetails().loadedIndexInFolder+1);
             newString += "/" + QString::number(getCurrentFileDetails().folderFileInfoList.count());
             newString += " - " + getCurrentFileDetails().fileInfo.fileName();
-            newString += " - "  + QString::number(getCurrentFileDetails().baseImageSize.width());
-            newString += "x" + QString::number(getCurrentFileDetails().baseImageSize.height());
-            newString += " - " + QVInfoDialog::formatBytes(getCurrentFileDetails().fileInfo.size());
+            if (!getCurrentFileDetails().errorData.hasError)
+            {
+                newString += " - "  + QString::number(getCurrentFileDetails().baseImageSize.width());
+                newString += "x" + QString::number(getCurrentFileDetails().baseImageSize.height());
+                newString += " - " + QVInfoDialog::formatBytes(getCurrentFileDetails().fileInfo.size());
+            }
             newString += " - qView";
             break;
         }

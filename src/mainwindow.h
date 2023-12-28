@@ -4,6 +4,7 @@
 #include "qvinfodialog.h"
 #include "qvimagecore.h"
 #include "qvgraphicsview.h"
+#include "qverrorwidget.h"
 #include "openwith.h"
 
 #include <QMainWindow>
