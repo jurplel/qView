@@ -180,4 +180,5 @@ void SettingsManager::initializeSettingsLibrary()
     settingsLibrary.insert("allowmimecontentdetection", {false, {}});
     settingsLibrary.insert("saverecents", {true, {}});
     settingsLibrary.insert("updatenotifications", {false, {}});
+    settingsLibrary.insert("commandstring", {"", {}});
 }

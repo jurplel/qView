@@ -848,6 +848,33 @@ void MainWindow::undoDelete()
     disableActions();
 }
 
+void MainWindow::runCommand()
+{
+    const auto fileInfo = graphicsView->getCurrentFileDetails().fileInfo;
+    const QString filePath = '"' + QDir::toNativeSeparators(fileInfo.filePath()) + '"';
+
+    QString commandString = qvApp->getSettingsManager().getString("commandstring");
+    commandString.replace("%QVIEW_PATH%", filePath);
+
+#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
+    if (commandString.isEmpty())
+        return;
+    // this method is deprecated since QT 5.15, but useful on older QT versions with no QProcess::splitCommand
+    QProcess::startDetached(commandString);
+#else
+    const QStringList commandList = QProcess::splitCommand(commandString);
+
+    if (commandList.isEmpty())
+        return;
+
+    const QString program = commandList.first();
+    QStringList arguments = commandList;
+    arguments.removeFirst();
+
+    QProcess::startDetached(program, arguments, fileInfo.dir().path());
+#endif
+}
+
 void MainWindow::copy()
 {
     auto *mimeData = graphicsView->getMimeData();

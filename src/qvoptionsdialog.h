@@ -29,6 +29,7 @@ protected:
     void modifySetting(QString key, QVariant value);
     void saveSettings();
     void syncSettings(bool defaults = false, bool makeConnections = false);
+    void syncLineEdit(QLineEdit *lineEdit, const QString &key, bool defaults = false, bool makeConnection = false);
     void syncCheckbox(QCheckBox *checkbox, const QString &key, bool defaults = false, bool makeConnection = false);
     void syncRadioButtons(QList<QRadioButton*> buttons, const QString &key, bool defaults = false, bool makeConnection = false);
     void syncComboBox(QComboBox *comboBox, const QString &key, bool defaults = false, bool makeConnection = false);

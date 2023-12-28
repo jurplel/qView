@@ -274,6 +274,8 @@ QMenu *ActionManager::buildToolsMenu(bool addIcon, QWidget *parent)
     if (addIcon)
         toolsMenu->setIcon(QIcon::fromTheme("configure", QIcon::fromTheme("preferences-other")));
 
+    addCloneOfAction(toolsMenu, "runcommand");
+    toolsMenu->addSeparator();
     addCloneOfAction(toolsMenu, "saveframeas");
     addCloneOfAction(toolsMenu, "pause");
     addCloneOfAction(toolsMenu, "nextframe");
@@ -596,6 +598,8 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
         relevantWindow->askDeleteFile();
     } else if (key == "undo") {
         relevantWindow->undoDelete();
+    } else if (key == "runcommand") {
+        relevantWindow->runCommand();
     } else if (key == "copy") {
         relevantWindow->copy();
     } else if (key == "paste") {
@@ -769,6 +773,10 @@ void ActionManager::initializeActionLibrary()
     auto *saveFrameAsAction = new QAction(QIcon::fromTheme("document-save-as"), tr("Save Frame &As..."));
     saveFrameAsAction->setData({"gifdisable"});
     actionLibrary.insert("saveframeas", saveFrameAsAction);
+
+    auto *runCommandAction = new QAction(QIcon::fromTheme("system-run"), tr("Run &Command"));
+    runCommandAction->setData({"disable"});
+    actionLibrary.insert("runcommand", runCommandAction);
 
     auto *pauseAction = new QAction(QIcon::fromTheme("media-playback-pause"), tr("Pa&use"));
     pauseAction->setData({"gifdisable"});

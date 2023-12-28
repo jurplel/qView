@@ -67,6 +67,8 @@ public:
 
     void undoDelete();
 
+    void runCommand();
+
     void copy();
 
     void paste();

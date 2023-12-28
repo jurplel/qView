@@ -72,6 +72,7 @@ void ShortcutManager::initializeShortcutsList()
 #ifdef Q_OS_WIN
     shortcutsList.last().readableName = tr("Delete");
 #endif
+    shortcutsList.append({tr("Run Command"), "runcommand", QStringList(QKeySequence(Qt::Key_F4).toString()), {}});
     shortcutsList.append({tr("First File"), "firstfile", QStringList(QKeySequence(Qt::Key_Home).toString()), {}});
     shortcutsList.append({tr("Previous File"), "previousfile", QStringList(QKeySequence(Qt::Key_Left).toString()), {}});
     shortcutsList.append({tr("Next File"), "nextfile", QStringList(QKeySequence(Qt::Key_Right).toString()), {}});
