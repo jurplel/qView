@@ -1,6 +1,7 @@
 #ifndef QVNAMESPACE_H
 #define QVNAMESPACE_H
 
+#include <QColor>
 #include <QSet>
 #include <QString>
 
@@ -122,6 +123,11 @@ namespace Qv
         return
             action == ViewportScrollAction::None ||
             action == ViewportScrollAction::Pan;
+    }
+
+    inline qreal getPerceivedBrightness(const QColor &color)
+    {
+        return (color.red() * 0.299 + color.green() * 0.587 + color.blue() * 0.114) / 255.0;
     }
 }
 

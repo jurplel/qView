@@ -159,8 +159,6 @@ private slots:
 
     void postLoad();
 
-    void error(int errorNum, const QString &errorString, const QString &fileName);
-
 private:
     QGraphicsPixmapItem *loadedPixmapItem;
 

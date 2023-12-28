@@ -37,7 +37,6 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 
     connect(&imageCore, &QVImageCore::animatedFrameChanged, this, &QVGraphicsView::animatedFrameChanged);
     connect(&imageCore, &QVImageCore::fileChanged, this, &QVGraphicsView::postLoad);
-    connect(&imageCore, &QVImageCore::readError, this, &QVGraphicsView::error);
 
     expensiveScaleTimer = new QTimer(this);
     expensiveScaleTimer->setSingleShot(true);
@@ -926,16 +925,6 @@ void QVGraphicsView::handleDpiAdjustmentChange()
 MainWindow* QVGraphicsView::getMainWindow() const
 {
     return qobject_cast<MainWindow*>(window());
-}
-
-void QVGraphicsView::error(int errorNum, const QString &errorString, const QString &fileName)
-{
-    if (!errorString.isEmpty())
-    {
-        closeImage();
-        QMessageBox::critical(this, tr("Error"), tr("Error occurred opening \"%3\":\n%2 (Error %1)").arg(QString::number(errorNum), errorString, fileName));
-        return;
-    }
 }
 
 void QVGraphicsView::settingsUpdated()

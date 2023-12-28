@@ -311,13 +311,19 @@ void MainWindow::paintEvent(QPaintEvent *event)
                 }
             }
         }
-        else if (customBackgroundColor.isValid())
-        {
-            painter.fillRect(viewportRect, customBackgroundColor);
-        }
         else
         {
-            painter.eraseRect(viewportRect);
+            const QColor &backgroundColor = customBackgroundColor.isValid() ? customBackgroundColor : painter.background().color();
+            painter.fillRect(viewportRect, backgroundColor);
+
+            if (getCurrentFileDetails().errorData.has_value())
+            {
+                const QVImageCore::ErrorData &errorData = getCurrentFileDetails().errorData.value();
+                const QString errorMessage = tr("Error occurred opening\n%3\n%2 (Error %1)").arg(QString::number(errorData.errorNum), errorData.errorString, getCurrentFileDetails().fileInfo.fileName());
+                painter.setFont(font());
+                painter.setPen(Qv::getPerceivedBrightness(backgroundColor) > 0.5 ? QColorConstants::Black : QColorConstants::White);
+                painter.drawText(viewportRect, errorMessage, QTextOption(Qt::AlignCenter));
+            }
         }
     }
 }
@@ -399,6 +405,9 @@ void MainWindow::fileChanged(const bool isRestoringState)
     updateWindowFilePath();
     if (!isRestoringState)
         setWindowSize();
+
+    // full repaint to handle error message
+    update();
 }
 
 void MainWindow::zoomLevelChanged()
@@ -523,13 +532,15 @@ void MainWindow::buildWindowTitle()
     QString newString = "qView";
     if (getCurrentFileDetails().fileInfo.isFile())
     {
-        auto getFileName = [this]() { return getCurrentFileDetails().fileInfo.fileName(); };
-        auto getZoomLevel = [this]() { return QString::number(graphicsView->getZoomLevel() * 100.0, 'f', 1) + "%"; };
-        auto getImageIndex = [this]() { return QString::number(getCurrentFileDetails().loadedIndexInFolder+1); };
-        auto getImageCount = [this]() { return QString::number(getCurrentFileDetails().folderFileInfoList.count()); };
-        auto getImageWidth = [this]() { return QString::number(getCurrentFileDetails().baseImageSize.width()); };
-        auto getImageHeight = [this]() { return QString::number(getCurrentFileDetails().baseImageSize.height()); };
-        auto getFileSize = [this]() { return QVInfoDialog::formatBytes(getCurrentFileDetails().fileInfo.size()); };
+        const QVImageCore::FileDetails &fileDetails = getCurrentFileDetails();
+        const bool hasError = fileDetails.errorData.has_value();
+        auto getFileName = [&]() { return fileDetails.fileInfo.fileName(); };
+        auto getZoomLevel = [&]() { return QString::number((hasError ? 1.0 : graphicsView->getZoomLevel()) * 100.0, 'f', 1) + "%"; };
+        auto getImageIndex = [&]() { return QString::number(fileDetails.loadedIndexInFolder+1); };
+        auto getImageCount = [&]() { return QString::number(fileDetails.folderFileInfoList.count()); };
+        auto getImageWidth = [&]() { return QString::number(hasError ? 0 : fileDetails.baseImageSize.width()); };
+        auto getImageHeight = [&]() { return QString::number(hasError ? 0 : fileDetails.baseImageSize.height()); };
+        auto getFileSize = [&]() { return QVInfoDialog::formatBytes(hasError ? 0 : fileDetails.fileInfo.size()); };
         switch (qvApp->getSettingsManager().getEnum<Qv::TitleBarText>("titlebarmode")) {
         case Qv::TitleBarText::Minimal:
         {
