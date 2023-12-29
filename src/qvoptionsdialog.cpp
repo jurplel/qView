@@ -401,10 +401,10 @@ void QVOptionsDialog::updateShortcutsTable()
 void QVOptionsDialog::shortcutCellDoubleClicked(int row, int column)
 {
     Q_UNUSED(column)
-    auto *shortcutDialog = new QVShortcutDialog(row, this);
-    shortcutDialog->registerGetTransientShortcutCallback([this](int index) {
+    auto getTransientShortcutCallback = [this](int index) {
         return transientShortcuts.value(index);
-    });
+    };
+    auto *shortcutDialog = new QVShortcutDialog(row, getTransientShortcutCallback, this);
     connect(shortcutDialog, &QVShortcutDialog::shortcutsListChanged, this, [this](int index, const QStringList &stringListShortcuts) {
         transientShortcuts.replace(index, stringListShortcuts);
         updateShortcutsTable();
