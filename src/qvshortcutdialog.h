@@ -1,6 +1,7 @@
 #ifndef QVSHORTCUTDIALOG_H
 #define QVSHORTCUTDIALOG_H
 
+#include <functional>
 #include <QDialog>
 #include <QAbstractButton>
 #include "shortcutmanager.h"
@@ -14,7 +15,9 @@ class QVShortcutDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit QVShortcutDialog(int index, QWidget *parent = nullptr);
+    using GetTransientShortcutCallback = std::function<QStringList(int)>;
+
+    explicit QVShortcutDialog(int index, const GetTransientShortcutCallback getTransientShortcutCallback, QWidget *parent = nullptr);
     ~QVShortcutDialog() override;
 
     QString shortcutAlreadyBound(const QKeySequence &chosenSequence, const QString &exemptShortcut);
@@ -33,6 +36,7 @@ private:
 
     ShortcutManager::SShortcut shortcutObject;
     int index;
+    GetTransientShortcutCallback getTransientShortcutCallback;
 };
 
 #endif // QVSHORTCUTDIALOG_H
