@@ -72,6 +72,11 @@ void ShortcutManager::initializeShortcutsList()
 #ifdef Q_OS_WIN
     shortcutsList.last().readableName = tr("Delete");
 #endif
+    shortcutsList.append({tr("Delete Permanently"), "deletepermanent", QStringList(QKeySequence(Qt::SHIFT | Qt::Key_Delete).toString()), {}});
+#ifdef Q_OS_MACOS
+    // cmd+option+backspace
+    shortcutsList.last().defaultShortcuts.prepend(QKeySequence(Qt::CTRL | Qt::ALT | Qt::Key_Backspace).toString());
+#endif
     shortcutsList.append({tr("First File"), "firstfile", QStringList(QKeySequence(Qt::Key_Home).toString()), {}});
     shortcutsList.append({tr("Previous File"), "previousfile", QStringList(QKeySequence(Qt::Key_Left).toString()), {}});
     shortcutsList.append({tr("Next File"), "nextfile", QStringList(QKeySequence(Qt::Key_Right).toString()), {}});

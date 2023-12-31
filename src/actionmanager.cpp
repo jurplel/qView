@@ -185,7 +185,7 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     addCloneOfAction(fileMenu, "closeallwindows");
 #endif
 #ifdef COCOA_LOADED
-    QVCocoaFunctions::setAlternates(fileMenu, fileMenu->actions().length()-1, fileMenu->actions().length()-2);
+    QVCocoaFunctions::setAlternate(fileMenu, fileMenu->actions().length()-1);
 #endif
     fileMenu->addSeparator();
     fileMenu->addMenu(buildOpenWithMenu(fileMenu));
@@ -207,6 +207,10 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     addCloneOfAction(editMenu, "rename");
     editMenu->addSeparator();
     addCloneOfAction(editMenu, "delete");
+    addCloneOfAction(editMenu, "deletepermanent");
+#ifdef COCOA_LOADED
+    QVCocoaFunctions::setAlternate(editMenu, editMenu->actions().length()-1);
+#endif
 
     menuBar->addMenu(editMenu);
     // End of edit menu
@@ -594,6 +598,8 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
         relevantWindow->showFileInfo();
     } else if (key == "delete") {
         relevantWindow->askDeleteFile();
+    } else if (key == "deletepermanent") {
+        relevantWindow->askDeleteFile(true);
     } else if (key == "undo") {
         relevantWindow->undoDelete();
     } else if (key == "copy") {
@@ -695,6 +701,10 @@ void ActionManager::initializeActionLibrary()
 #endif
     deleteAction->setData({"disable"});
     actionLibrary.insert("delete", deleteAction);
+
+    auto *deletePermanentAction = new QAction(QIcon::fromTheme("edit-delete"), tr("Delete Permanently"));
+    deletePermanentAction->setData({"disable"});
+    actionLibrary.insert("deletepermanent", deletePermanentAction);
 
     auto *undoAction = new QAction(QIcon::fromTheme("edit-undo"), tr("&Restore from Trash"));
 #ifdef Q_OS_WIN
