@@ -46,7 +46,7 @@ win32 {
     }
 
     RC_ICONS = "dist/win/qView.ico"
-    QMAKE_TARGET_COPYRIGHT = "Copyright \\251 2023 jurplel and qView contributors"
+    QMAKE_TARGET_COPYRIGHT = "Copyright \\251 2024 jurplel and qView contributors"
     QMAKE_TARGET_DESCRIPTION = "qView"
 }
 

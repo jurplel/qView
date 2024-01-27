@@ -58,7 +58,7 @@ QVAboutDialog::QVAboutDialog(QWidget *parent) :
                                   R"(Derivative of official qView: <a style="color: #03A9F4; text-decoration:none;" href="https://interversehq.com/qview/">Website</a>, <a style="color: #03A9F4; text-decoration:none;" href="https://github.com/jurplel/qView">GitHub</a><br>)"
                                   "Icon glyph created by Guilhem from the Noun Project<br>"
                                   "Copyright © %3 jurplel, jdpurcell, and qView contributors")
-                                  .arg(QT_VERSION_STR, QSysInfo::buildCpuArchitecture(), "2018-2023");
+                                  .arg(QT_VERSION_STR, QSysInfo::buildCpuArchitecture(), "2018-2024");
 
     ui->infoLabel2->setFont(font4);
     ui->infoLabel2->setText(labelText2);
