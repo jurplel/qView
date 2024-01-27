@@ -12,6 +12,7 @@ This fork of qView adds the following features:
 * Navigate between images when scrolling sideways (e.g. two finger swipe).
 * Customizable mouse actions (e.g. change what double clicking or middle clicking does).
 * Option to ignore certain file extensions when navigating through a folder.
+* Show image loading errors inside viewport instead of as modal dialog.
 * Windows: Option for different theme; non-native look but it allows for dark mode.
 * Configurable window positioning behavior after matching image size.
 * More accurate zoom-to-fit plus customizable overscan setting.

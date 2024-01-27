@@ -382,112 +382,121 @@
         <translation type="vanished">Leer</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="816"/>
-        <location filename="../src/mainwindow.cpp" line="843"/>
-        <location filename="../src/mainwindow.cpp" line="866"/>
-        <location filename="../src/mainwindow.cpp" line="951"/>
-        <location filename="../src/mainwindow.cpp" line="1031"/>
-        <location filename="../src/mainwindow.cpp" line="1088"/>
-        <location filename="../src/mainwindow.cpp" line="1096"/>
+        <location filename="../src/mainwindow.cpp" line="827"/>
+        <location filename="../src/mainwindow.cpp" line="854"/>
+        <location filename="../src/mainwindow.cpp" line="877"/>
+        <location filename="../src/mainwindow.cpp" line="962"/>
+        <location filename="../src/mainwindow.cpp" line="1042"/>
+        <location filename="../src/mainwindow.cpp" line="1099"/>
+        <location filename="../src/mainwindow.cpp" line="1107"/>
         <source>Error</source>
         <translation>Fehler</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="816"/>
+        <location filename="../src/mainwindow.cpp" line="827"/>
         <source>Error: URL is invalid</source>
         <translation>Fehler: URL ist ungültig</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="822"/>
+        <location filename="../src/mainwindow.cpp" line="833"/>
         <source>Downloading image...</source>
         <translation>Bild herunterladen&#xa0;…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="822"/>
+        <location filename="../src/mainwindow.cpp" line="833"/>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="826"/>
-        <location filename="../src/mainwindow.cpp" line="882"/>
+        <location filename="../src/mainwindow.cpp" line="837"/>
+        <location filename="../src/mainwindow.cpp" line="893"/>
         <source>Open URL...</source>
         <translation>URL öffnen&#xa0;…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="843"/>
+        <location filename="../src/mainwindow.cpp" line="854"/>
         <source>Error </source>
         <translation>Fehler </translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="866"/>
+        <location filename="../src/mainwindow.cpp" line="877"/>
         <source>Error: Invalid image</source>
         <translation>Fehler: ungültige Bilddatei</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="883"/>
+        <location filename="../src/mainwindow.cpp" line="894"/>
         <source>URL of a supported image file:</source>
         <translation>URL zu einer unterstützten Bilddatei:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="951"/>
+        <location filename="../src/mainwindow.cpp" line="962"/>
         <source>Can&apos;t delete %1:
 No write permission or file is read-only.</source>
         <translation>%1 kann nicht gelöscht werden:
 Keine Schreibberechtigung oder Datei ist schreibgeschützt.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="958"/>
+        <location filename="../src/mainwindow.cpp" line="969"/>
         <source>Are you sure you want to delete %1 permanently? This can&apos;t be undone.</source>
         <translation type="unfinished">Sind Sie sicher, dass Sie %1 endgültig löschen möchten? Dies kann nicht rückgängig gemacht werden.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="965"/>
+        <location filename="../src/mainwindow.cpp" line="976"/>
         <source>Are you sure you want to move %1 to the Trash?</source>
         <translation>Sind Sie sicher, dass Sie %1 in den Papierkorb verschieben wollen?</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="963"/>
+        <location filename="../src/mainwindow.cpp" line="974"/>
         <source>Are you sure you want to move %1 to the Recycle Bin?</source>
         <translation>Sind Sie sicher, dass Sie %1 in den Papierkorb verschieben möchten?</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="969"/>
+        <location filename="../src/mainwindow.cpp" line="322"/>
+        <source>Error occurred opening
+%3
+%2 (Error %1)</source>
+<translation>Fehler beim Öffnen von
+%3
+%2 (Fehler %1)</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="980"/>
         <source>Delete</source>
         <translation>Löschen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="972"/>
+        <location filename="../src/mainwindow.cpp" line="983"/>
         <source>Do not ask again</source>
         <translation>Nicht erneut nachfragen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1031"/>
+        <location filename="../src/mainwindow.cpp" line="1042"/>
         <source>Can&apos;t delete %1.</source>
         <translation>Kann %1 nicht löschen.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1021"/>
-        <location filename="../src/mainwindow.cpp" line="1101"/>
+        <location filename="../src/mainwindow.cpp" line="1032"/>
+        <location filename="../src/mainwindow.cpp" line="1112"/>
         <source>Not Supported</source>
         <translation>Nicht unterstützt</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1021"/>
-        <location filename="../src/mainwindow.cpp" line="1101"/>
+        <location filename="../src/mainwindow.cpp" line="1032"/>
+        <location filename="../src/mainwindow.cpp" line="1112"/>
         <source>This program was compiled with an old version of Qt and this feature is not available.
 If you see this message, please report a bug!</source>
         <translation>Dieses Programm wurde mit einer alten Version von Qt kompiliert und diese Funktion ist nicht verfügbar.
 Wenn Sie diese Meldung sehen, melden Sie diesen Fehler bitte!</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1088"/>
+        <location filename="../src/mainwindow.cpp" line="1099"/>
         <source>Can&apos;t undo deletion of %1:
 No write permission or file is read-only.</source>
         <translation>Löschung von %1 kann nicht rückgängig gemacht werden:
 Keine Schreibberechtigung oder Datei ist schreibgeschützt.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1096"/>
+        <location filename="../src/mainwindow.cpp" line="1107"/>
         <source>Failed undoing deletion of %1.</source>
         <translation>Das Wiederherstellen von %1 ist fehlgeschlagen.</translation>
     </message>
@@ -506,27 +515,27 @@ Keine Schreibberechtigung oder Datei ist schreibgeschützt.</translation>
 (Überprüfe, ob du Schreibrechte hast)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1249"/>
+        <location filename="../src/mainwindow.cpp" line="1260"/>
         <source>Save Frame As...</source>
         <translation>Frame speichern als&#xa0;…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1273"/>
+        <location filename="../src/mainwindow.cpp" line="1284"/>
         <source>Res&amp;ume</source>
         <translation>&amp;Fortsetzen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1282"/>
+        <location filename="../src/mainwindow.cpp" line="1293"/>
         <source>Pause</source>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1305"/>
+        <location filename="../src/mainwindow.cpp" line="1316"/>
         <source>Start S&amp;lideshow</source>
         <translation>Diashow &amp;starten</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1314"/>
+        <location filename="../src/mainwindow.cpp" line="1325"/>
         <source>Stop S&amp;lideshow</source>
         <translation>Diashow s&amp;toppen</translation>
     </message>
@@ -679,15 +688,13 @@ Keine Schreibberechtigung oder Datei ist schreibgeschützt.</translation>
 <context>
     <name>QVGraphicsView</name>
     <message>
-        <location filename="../src/qvgraphicsview.cpp" line="936"/>
         <source>Error</source>
-        <translation>Fehler</translation>
+        <translation type="vanished">Fehler</translation>
     </message>
     <message>
-        <location filename="../src/qvgraphicsview.cpp" line="936"/>
         <source>Error occurred opening &quot;%3&quot;:
 %2 (Error %1)</source>
-        <translation>Fehler beim Öffnen von „%3“:
+        <translation type="vanished">Fehler beim Öffnen von „%3“:
 %2 (Fehler %1)</translation>
     </message>
 </context>
@@ -1617,12 +1624,12 @@ Keine Schreibberechtigung oder Datei ist schreibgeschützt.</translation>
         <translation>Tastenkürzel ändern</translation>
     </message>
     <message>
-        <location filename="../src/qvshortcutdialog.cpp" line="58"/>
+        <location filename="../src/qvshortcutdialog.cpp" line="54"/>
         <source>Shortcut Already Used</source>
         <translation>Tastenkürzel bereits vergeben</translation>
     </message>
     <message>
-        <location filename="../src/qvshortcutdialog.cpp" line="58"/>
+        <location filename="../src/qvshortcutdialog.cpp" line="54"/>
         <source>&quot;%1&quot; is already bound to &quot;%2&quot;</source>
         <translation>„%1“ ist schon verknüpft mit „%2“</translation>
     </message>
