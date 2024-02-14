@@ -187,7 +187,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="741"/>
         <source>&amp;Flip</source>
-        <translation>Перевернути</translation>
+        <translation>&amp;Перевернути</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="745"/>
@@ -237,7 +237,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="781"/>
         <source>&amp;Reset Speed</source>
-        <translation>Скинути швидкість</translation>
+        <translation>&amp;Скинути швидкість</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="785"/>
