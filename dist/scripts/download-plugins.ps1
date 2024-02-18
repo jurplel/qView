@@ -17,6 +17,7 @@ if ($IsWindows) {
 }
 
 $binaryBaseUrl = "https://github.com/jurplel/kimageformats-binaries/releases/download/cont"
+$pluginQtVersion = If ($qtVersion -like '6.*') { "6.4.3" } Else { $qtVersion }
 
 if ($pluginNames.count -eq 0) {
     Write-Host "the pluginNames array is empty."
@@ -24,7 +25,7 @@ if ($pluginNames.count -eq 0) {
 
 foreach ($pluginName in $pluginNames) {
     $arch = If (-not $env:arch -or $env:arch -eq '') { "" } Else { "-$env:arch" }
-    $artifactName = "$pluginName-$imageName-$qtVersion$arch.zip"
+    $artifactName = "$pluginName-$imageName-$pluginQtVersion$arch.zip"
     $downloadUrl = "$binaryBaseUrl/$artifactName"
 
     Write-Host "Downloading $downloadUrl"
