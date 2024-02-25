@@ -255,18 +255,17 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
 
 void QVGraphicsView::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key() == Qt::Key_Up || event->key() == Qt::Key_Down || event->key() == Qt::Key_Left || event->key() == Qt::Key_Right)
+    // The base class has logic to scroll in response to certain key presses, but we'll
+    // handle that ourselves here instead to ensure any bounds constraints are enforced.
+    const int scrollXSmallSteps = event->key() == Qt::Key_Left ? -1 : event->key() == Qt::Key_Right ? 1 : 0;
+    const int scrollYSmallSteps = event->key() == Qt::Key_Up ? -1 : event->key() == Qt::Key_Down ? 1 : 0;
+    const int scrollYLargeSteps = event == QKeySequence::MoveToPreviousPage ? -1 : event == QKeySequence::MoveToNextPage ? 1 : 0;
+    if (scrollXSmallSteps != 0 || scrollYSmallSteps != 0 || scrollYLargeSteps != 0)
     {
-        // Normally the arrow keys are assigned to shortcuts, but in case they aren't or
-        // get passed through due to modifier keys, handle it here instead of letting the
-        // base class do it to ensure any bounds constraints are enforced.
-        const int stepDown = verticalScrollBar()->singleStep();
-        const int stepRight = horizontalScrollBar()->singleStep() * (isRightToLeft() ? -1 : 1);
-        QPoint delta {};
-        if (event->key() == Qt::Key_Up) delta.ry() -= stepDown;
-        if (event->key() == Qt::Key_Down) delta.ry() += stepDown;
-        if (event->key() == Qt::Key_Left) delta.rx() -= stepRight;
-        if (event->key() == Qt::Key_Right) delta.rx() += stepRight;
+        const QPoint delta {
+            (horizontalScrollBar()->singleStep() * scrollXSmallSteps) * (isRightToLeft() ? -1 : 1),
+            (verticalScrollBar()->singleStep() * scrollYSmallSteps) + (verticalScrollBar()->pageStep() * scrollYLargeSteps)
+        };
         scrollHelper->move(delta);
         constrainBoundsTimer->start();
         return;
