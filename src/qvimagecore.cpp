@@ -103,6 +103,10 @@ void QVImageCore::loadFile(const QString &fileName, bool isReloading)
         delete cachedData;
         loadPixmap(readData);
     }
+    else if (preloadsInProgress.contains(sanitaryFileName))
+    {
+        waitingOnPreloadPath = sanitaryFileName;
+    }
     else
     {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -480,9 +484,21 @@ void QVImageCore::requestCachingFile(const QString &filePath, const QColorSpace 
     if (imgFile.size()/1024 > QVImageCore::pixmapCache.maxCost()/2)
         return;
 
+    preloadsInProgress.insert(filePath);
+
     auto *cacheFutureWatcher = new QFutureWatcher<ReadData>();
     connect(cacheFutureWatcher, &QFutureWatcher<ReadData>::finished, this, [cacheFutureWatcher, this](){
-        addToCache(cacheFutureWatcher->result());
+        const ReadData readData = cacheFutureWatcher->result();
+        if (waitingOnPreloadPath == readData.absoluteFilePath)
+        {
+            loadPixmap(readData);
+            waitingOnPreloadPath = QString();
+        }
+        else
+        {
+            addToCache(readData);
+        }
+        preloadsInProgress.remove(readData.absoluteFilePath);
         cacheFutureWatcher->deleteLater();
     });
 

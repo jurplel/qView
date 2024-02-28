@@ -127,6 +127,8 @@ private:
     quint32 baseRandomSortSeed {static_cast<quint32>(std::chrono::system_clock::now().time_since_epoch().count())};
 
     QStringList lastFilesPreloaded;
+    QSet<QString> preloadsInProgress;
+    QString waitingOnPreloadPath;
 
     int largestDimension {0};
 
