@@ -4,197 +4,197 @@
 <context>
     <name>ActionManager</name>
     <message>
-        <location filename="../src/actionmanager.cpp" line="28"/>
+        <location filename="../src/actionmanager.cpp" line="29"/>
         <source>Window</source>
         <translation>Fenster</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="171"/>
+        <location filename="../src/actionmanager.cpp" line="185"/>
         <source>&amp;File</source>
         <translation>&amp;Datei</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="200"/>
+        <location filename="../src/actionmanager.cpp" line="214"/>
         <source>&amp;Edit</source>
         <translation>&amp;Bearbeiten</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="222"/>
+        <location filename="../src/actionmanager.cpp" line="236"/>
         <source>&amp;Go</source>
         <translation>&amp;Los</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="252"/>
+        <location filename="../src/actionmanager.cpp" line="266"/>
         <source>&amp;View</source>
         <translation>&amp;Anzeigen</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="278"/>
+        <location filename="../src/actionmanager.cpp" line="292"/>
         <source>&amp;Tools</source>
         <translation>&amp;Werkzeuge</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="300"/>
+        <location filename="../src/actionmanager.cpp" line="314"/>
         <source>&amp;Help</source>
         <translation>&amp;Hilfe</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="314"/>
+        <location filename="../src/actionmanager.cpp" line="328"/>
         <source>Open &amp;Recent</source>
         <translation>&amp;Zuletzt geöffnet</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="324"/>
-        <location filename="../src/actionmanager.cpp" line="483"/>
+        <location filename="../src/actionmanager.cpp" line="338"/>
+        <location filename="../src/actionmanager.cpp" line="497"/>
         <source>Empty</source>
         <translation>Leer</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="475"/>
+        <location filename="../src/actionmanager.cpp" line="489"/>
         <source>Open With</source>
         <translation>Öffnen mit</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="553"/>
+        <location filename="../src/actionmanager.cpp" line="567"/>
         <source>Remember Session?</source>
         <translation type="unfinished">Sitzung speichern?</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="554"/>
+        <location filename="../src/actionmanager.cpp" line="568"/>
         <source>Would you like to remember your opened images and re-open them at next launch?</source>
         <translation type="unfinished">Möchten Sie Ihre geöffneten Bilder speichern und beim nächsten Start wieder öffnen?</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="555"/>
+        <location filename="../src/actionmanager.cpp" line="569"/>
         <source>&amp;Remember</source>
         <translation type="unfinished">Speichern</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="556"/>
+        <location filename="../src/actionmanager.cpp" line="570"/>
         <source>&amp;End Session</source>
         <translation type="unfinished">Sitzung beenden</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="682"/>
+        <location filename="../src/actionmanager.cpp" line="702"/>
         <source>&amp;Quit</source>
         <translation>&amp;Beenden</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="687"/>
+        <location filename="../src/actionmanager.cpp" line="707"/>
         <source>Exit</source>
         <extracomment>The quit action is called &quot;Exit&quot; on windows</extracomment>
         <translation>Beenden</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="690"/>
+        <location filename="../src/actionmanager.cpp" line="710"/>
         <source>New Window</source>
         <translation>Neues Fenster</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="693"/>
+        <location filename="../src/actionmanager.cpp" line="713"/>
         <source>&amp;Open...</source>
         <translation>&amp;Öffnen&#xa0;…</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="696"/>
+        <location filename="../src/actionmanager.cpp" line="716"/>
         <source>Open &amp;URL...</source>
         <translation>&amp;URL öffnen&#xa0;…</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="699"/>
+        <location filename="../src/actionmanager.cpp" line="719"/>
         <source>Re&amp;load File</source>
         <translation type="unfinished">Datei neu laden</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="703"/>
+        <location filename="../src/actionmanager.cpp" line="723"/>
         <source>Close Window</source>
         <translation>Fenster schließen</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="707"/>
+        <location filename="../src/actionmanager.cpp" line="727"/>
         <source>Close All</source>
         <extracomment>Close all windows, that is</extracomment>
         <translation>Alles schließen</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="710"/>
+        <location filename="../src/actionmanager.cpp" line="730"/>
         <source>Open Containing &amp;Folder</source>
         <translation>Öffne beinhaltenden &amp;Ordner</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="713"/>
+        <location filename="../src/actionmanager.cpp" line="733"/>
         <source>Show in E&amp;xplorer</source>
         <extracomment>Open containing folder on windows</extracomment>
         <translation>Im &amp;Explorer anzeigen</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="716"/>
+        <location filename="../src/actionmanager.cpp" line="736"/>
         <source>Show in &amp;Finder</source>
         <extracomment>Open containing folder on macOS</extracomment>
         <translation>Im &amp;Finder anzeigen</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="721"/>
+        <location filename="../src/actionmanager.cpp" line="741"/>
         <source>Show File &amp;Info</source>
         <translation>Datei-&amp;Informationen anzeigen</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="725"/>
+        <location filename="../src/actionmanager.cpp" line="745"/>
         <source>&amp;Move to Trash</source>
         <translation>In den Papierkorb &amp;verschieben</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="727"/>
+        <location filename="../src/actionmanager.cpp" line="747"/>
         <source>&amp;Delete</source>
         <translation>&amp;Löschen</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="732"/>
+        <location filename="../src/actionmanager.cpp" line="752"/>
         <source>Delete Permanently</source>
         <translation type="unfinished">Endgültig löschen</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="736"/>
+        <location filename="../src/actionmanager.cpp" line="756"/>
         <source>&amp;Restore from Trash</source>
         <translation>Aus dem Papierkorb &amp;wiederherstellen</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="738"/>
+        <location filename="../src/actionmanager.cpp" line="758"/>
         <source>&amp;Undo Delete</source>
         <translation>Löschen &amp;rückgängig machen</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="743"/>
+        <location filename="../src/actionmanager.cpp" line="763"/>
         <source>&amp;Copy</source>
         <translation>&amp;Kopieren</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="747"/>
+        <location filename="../src/actionmanager.cpp" line="767"/>
         <source>&amp;Paste</source>
         <translation>&amp;Einfügen</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="750"/>
+        <location filename="../src/actionmanager.cpp" line="770"/>
         <source>R&amp;ename...</source>
         <translation>&amp;Umbenennen&#xa0;…</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="754"/>
+        <location filename="../src/actionmanager.cpp" line="774"/>
         <source>Zoom &amp;In</source>
         <translation>Vergrößern</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="758"/>
+        <location filename="../src/actionmanager.cpp" line="778"/>
         <source>Zoom &amp;Out</source>
         <translation>Verkleinern</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="771"/>
+        <location filename="../src/actionmanager.cpp" line="791"/>
         <source>Fill &amp;Window</source>
         <translation type="unfinished">Fenster ausfüllen</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="850"/>
+        <location filename="../src/actionmanager.cpp" line="870"/>
         <source>&amp;Settings</source>
         <extracomment>This is for the options dialog on windows</extracomment>
         <translation type="unfinished">Einstellungen</translation>
@@ -204,102 +204,102 @@
         <translation type="vanished">Zoom zurücksetzen</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="762"/>
+        <location filename="../src/actionmanager.cpp" line="782"/>
         <source>Ori&amp;ginal Size</source>
         <translation>&amp;Originalgröße</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="766"/>
+        <location filename="../src/actionmanager.cpp" line="786"/>
         <source>&amp;Zoom to Fit</source>
         <translation type="unfinished">Größe an Fenster anpassen</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="776"/>
+        <location filename="../src/actionmanager.cpp" line="796"/>
         <source>&amp;Navigation Resets Zoom</source>
         <translation type="unfinished">Navigation setzt Zoom zurück</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="781"/>
+        <location filename="../src/actionmanager.cpp" line="801"/>
         <source>Rotate &amp;Right</source>
         <translation>Nach &amp;rechts drehen</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="785"/>
+        <location filename="../src/actionmanager.cpp" line="805"/>
         <source>Rotate &amp;Left</source>
         <translation>Nach &amp;links drehen</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="789"/>
+        <location filename="../src/actionmanager.cpp" line="809"/>
         <source>&amp;Mirror</source>
         <translation>&amp;Spiegeln</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="793"/>
+        <location filename="../src/actionmanager.cpp" line="813"/>
         <source>&amp;Flip</source>
         <translation>&amp;Umdrehen</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="797"/>
+        <location filename="../src/actionmanager.cpp" line="817"/>
         <source>Enter F&amp;ull Screen</source>
         <translation>&amp;Vollbildmodus</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="801"/>
+        <location filename="../src/actionmanager.cpp" line="821"/>
         <source>&amp;First File</source>
         <translation>&amp;Erste Datei</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="805"/>
+        <location filename="../src/actionmanager.cpp" line="825"/>
         <source>Previous Fi&amp;le</source>
         <translation>Vorherige Datei</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="809"/>
+        <location filename="../src/actionmanager.cpp" line="829"/>
         <source>&amp;Next File</source>
         <translation>Nächste Datei</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="813"/>
+        <location filename="../src/actionmanager.cpp" line="833"/>
         <source>Las&amp;t File</source>
         <translation>Letzte Datei</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="817"/>
+        <location filename="../src/actionmanager.cpp" line="837"/>
         <source>&amp;Random File</source>
         <translation type="unfinished">Zufällige Datei</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="821"/>
+        <location filename="../src/actionmanager.cpp" line="841"/>
         <source>Save Frame &amp;As...</source>
         <translation>Frame speichern als&#xa0;…</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="825"/>
+        <location filename="../src/actionmanager.cpp" line="845"/>
         <source>Pa&amp;use</source>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="829"/>
+        <location filename="../src/actionmanager.cpp" line="849"/>
         <source>&amp;Next Frame</source>
         <translation>&amp;Nächstes Frame</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="833"/>
+        <location filename="../src/actionmanager.cpp" line="853"/>
         <source>&amp;Decrease Speed</source>
         <translation>Geschwindigkeit &amp;verringern</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="837"/>
+        <location filename="../src/actionmanager.cpp" line="857"/>
         <source>&amp;Reset Speed</source>
         <translation>Geschwindigkeit &amp;zurücksetzen</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="841"/>
+        <location filename="../src/actionmanager.cpp" line="861"/>
         <source>&amp;Increase Speed</source>
         <translation>Geschwindigkeit &amp;erhöhen</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="845"/>
+        <location filename="../src/actionmanager.cpp" line="865"/>
         <source>Start S&amp;lideshow</source>
         <translation>&amp;Diashow starten</translation>
     </message>
@@ -314,52 +314,52 @@
         <translation type="vanished">&amp;Einstellungen</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="854"/>
+        <location filename="../src/actionmanager.cpp" line="874"/>
         <source>Preference&amp;s...</source>
         <extracomment>This is for the options dialog on older mac versions</extracomment>
         <translation>&amp;Einstellungen&#xa0;…</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="856"/>
+        <location filename="../src/actionmanager.cpp" line="876"/>
         <source>Setting&amp;s...</source>
         <translation type="unfinished">Einstellungen</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="862"/>
+        <location filename="../src/actionmanager.cpp" line="882"/>
         <source>&amp;About</source>
         <translation>&amp;Über</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="865"/>
+        <location filename="../src/actionmanager.cpp" line="885"/>
         <source>&amp;About qView</source>
         <extracomment>This is for the about dialog on mac</extracomment>
         <translation>&amp;Über qView</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="870"/>
+        <location filename="../src/actionmanager.cpp" line="890"/>
         <source>&amp;Welcome</source>
         <translation>&amp;Willkommen</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="874"/>
+        <location filename="../src/actionmanager.cpp" line="894"/>
         <source>Clear &amp;Menu</source>
         <extracomment>This is for clearing the recents menu</extracomment>
         <translation>Menü &amp;bereinigen</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="878"/>
+        <location filename="../src/actionmanager.cpp" line="898"/>
         <source>Other Application...</source>
         <extracomment>Open with other program for unix non-mac</extracomment>
         <translation>Andere Anwendung...</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="881"/>
+        <location filename="../src/actionmanager.cpp" line="901"/>
         <source>Choose another app</source>
         <extracomment>Open with other program for windows</extracomment>
         <translation>Andere Anwendung auswählen</translation>
     </message>
     <message>
-        <location filename="../src/actionmanager.cpp" line="884"/>
+        <location filename="../src/actionmanager.cpp" line="904"/>
         <source>Other...</source>
         <extracomment>Open with other program for macos</extracomment>
         <translation>Andere...</translation>
@@ -455,7 +455,7 @@ Keine Schreibberechtigung oder Datei ist schreibgeschützt.</translation>
         <source>Error occurred opening
 %3
 %2 (Error %1)</source>
-<translation>Fehler beim Öffnen von
+        <translation>Fehler beim Öffnen von
 %3
 %2 (Fehler %1)</translation>
     </message>
@@ -640,39 +640,39 @@ Keine Schreibberechtigung oder Datei ist schreibgeschützt.</translation>
         <translation type="vanished">Unterstützte Dateiformate</translation>
     </message>
     <message>
-        <location filename="../src/qvapplication.cpp" line="186"/>
+        <location filename="../src/qvapplication.cpp" line="187"/>
         <source>Error</source>
         <translation type="unfinished">Fehler</translation>
     </message>
     <message>
-        <location filename="../src/qvapplication.cpp" line="186"/>
+        <location filename="../src/qvapplication.cpp" line="187"/>
         <source>Error checking for updates:
 %1</source>
         <translation type="unfinished">Fehler beim Suchen nach Aktualisierungen:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/qvapplication.cpp" line="188"/>
+        <location filename="../src/qvapplication.cpp" line="189"/>
         <source>No Updates</source>
         <translation type="unfinished">Keine Aktualisierungen</translation>
     </message>
     <message>
-        <location filename="../src/qvapplication.cpp" line="188"/>
+        <location filename="../src/qvapplication.cpp" line="189"/>
         <source>You already have the latest version.</source>
         <translation type="unfinished">Sie haben bereits die neueste Version.</translation>
     </message>
     <message>
-        <location filename="../src/qvapplication.cpp" line="342"/>
+        <location filename="../src/qvapplication.cpp" line="343"/>
         <source>Supported Images</source>
         <translation>Unterstützte Bilder</translation>
     </message>
     <message>
-        <location filename="../src/qvapplication.cpp" line="389"/>
+        <location filename="../src/qvapplication.cpp" line="390"/>
         <source>All Files</source>
         <translation>Alle Dateien</translation>
     </message>
     <message>
-        <location filename="../src/qvapplication.cpp" line="115"/>
+        <location filename="../src/qvapplication.cpp" line="116"/>
         <source>Open...</source>
         <translation>Öffnen&#xa0;…</translation>
     </message>
@@ -848,7 +848,7 @@ Keine Schreibberechtigung oder Datei ist schreibgeschützt.</translation>
         <translation type="vanished">Optionen</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="579"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="581"/>
         <source>Window</source>
         <translation>Fenster</translation>
     </message>
@@ -895,17 +895,17 @@ Keine Schreibberechtigung oder Datei ist schreibgeschützt.</translation>
         <translation type="unfinished">Fenster an Bildgröße anpassen:</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="719"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="721"/>
         <source>Never</source>
         <translation>Nie</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="720"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="722"/>
         <source>When launching</source>
         <translation>Beim Programmstart</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="721"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="723"/>
         <source>When opening images</source>
         <translation>Beim Öffnen von Bildern</translation>
     </message>
@@ -1019,7 +1019,7 @@ Keine Schreibberechtigung oder Datei ist schreibgeschützt.</translation>
         <translation type="unfinished">Sitzung über App-Neustarts hinweg beibehalten</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="580"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="582"/>
         <source>Image</source>
         <translation>Bild</translation>
     </message>
@@ -1075,87 +1075,97 @@ Keine Schreibberechtigung oder Datei ist schreibgeschützt.</translation>
         <translation type="unfinished">Standardzoom:</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="583"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="585"/>
         <source>Mouse</source>
         <translation type="unfinished">Maus</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.ui" line="965"/>
+        <location filename="../src/qvoptionsdialog.ui" line="735"/>
+        <source>Navigation speed:</source>
+        <translation>Navigationsgeschwindigkeit</translation>
+    </message>
+    <message>
+        <location filename="../src/qvoptionsdialog.ui" line="742"/>
+        <source> ms</source>
+        <translation> ms</translation>
+    </message>
+    <message>
+        <location filename="../src/qvoptionsdialog.ui" line="982"/>
         <source>Left Button</source>
         <translation type="unfinished">Linke Taste</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.ui" line="992"/>
+        <location filename="../src/qvoptionsdialog.ui" line="1009"/>
         <source>Double Click:</source>
         <translation type="unfinished">Doppelklick:</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.ui" line="1012"/>
+        <location filename="../src/qvoptionsdialog.ui" line="1029"/>
         <source>Drag:</source>
         <translation type="unfinished">Ziehen:</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.ui" line="1035"/>
+        <location filename="../src/qvoptionsdialog.ui" line="1052"/>
         <source>Middle Button</source>
         <translation type="unfinished">Mittlere Taste</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.ui" line="1062"/>
+        <location filename="../src/qvoptionsdialog.ui" line="1079"/>
         <source>Mode:</source>
         <translation type="unfinished">Modus:</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.ui" line="1071"/>
+        <location filename="../src/qvoptionsdialog.ui" line="1088"/>
         <source>Click</source>
         <translation type="unfinished">Klicken</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.ui" line="1078"/>
+        <location filename="../src/qvoptionsdialog.ui" line="1095"/>
         <source>Drag</source>
         <translation type="unfinished">Ziehen</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.ui" line="1087"/>
+        <location filename="../src/qvoptionsdialog.ui" line="1104"/>
         <source>Middle Click:</source>
         <translation type="unfinished">Mittelklick:</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.ui" line="1107"/>
+        <location filename="../src/qvoptionsdialog.ui" line="1124"/>
         <source>Middle Drag:</source>
         <translation type="unfinished">Mittel-Ziehen:</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.ui" line="1130"/>
+        <location filename="../src/qvoptionsdialog.ui" line="1147"/>
         <source>Scroll Wheel / Touchpad</source>
         <translation type="unfinished">Scrollrad / Touchpad</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.ui" line="1157"/>
+        <location filename="../src/qvoptionsdialog.ui" line="1174"/>
         <source>Vertical Scroll:</source>
         <translation type="unfinished">Vertikales Scrollen:</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.ui" line="1167"/>
+        <location filename="../src/qvoptionsdialog.ui" line="1184"/>
         <source>Horizontal Scroll:</source>
         <translation type="unfinished">Horizontales Scrollen:</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.ui" line="1197"/>
+        <location filename="../src/qvoptionsdialog.ui" line="1214"/>
         <source>Useful for touchpads, to prevent a single swipe from triggering multiple navigations, for example</source>
         <translation type="unfinished">Nützlich für Touchpads, um zu verhindern, dass ein einzelner Wischvorgang mehrere Navigationen auslöst, zum Beispiel</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.ui" line="1200"/>
+        <location filename="../src/qvoptionsdialog.ui" line="1217"/>
         <source>Cooldown for discrete actions</source>
         <translation type="unfinished">Abklingzeit für einzelne Aktionen</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.ui" line="1261"/>
+        <location filename="../src/qvoptionsdialog.ui" line="1278"/>
         <source>Extension</source>
         <translation>Erweiterung</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.ui" line="1266"/>
+        <location filename="../src/qvoptionsdialog.ui" line="1283"/>
         <source>Enabled</source>
         <translation>Aktiviert</translation>
     </message>
@@ -1233,7 +1243,7 @@ Keine Schreibberechtigung oder Datei ist schreibgeschützt.</translation>
         <translation type="unfinished">Farbraumkonvertierung:</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="581"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="583"/>
         <source>Miscellaneous</source>
         <translation>Verschiedenes</translation>
     </message>
@@ -1243,7 +1253,7 @@ Keine Schreibberechtigung oder Datei ist schreibgeschützt.</translation>
         <translation>Dateien sortieren nach:</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="698"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="700"/>
         <source>Name</source>
         <translation>Name</translation>
     </message>
@@ -1252,18 +1262,18 @@ Keine Schreibberechtigung oder Datei ist schreibgeschützt.</translation>
         <translation type="vanished">Datum der letzten Änderung</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="701"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="703"/>
         <source>Size</source>
         <translation>Dateigröße</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="702"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="704"/>
         <source>Type</source>
         <translation>Typ</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="692"/>
-        <location filename="../src/qvoptionsdialog.cpp" line="703"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="694"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="705"/>
         <source>Random</source>
         <translation>Zufall</translation>
     </message>
@@ -1289,88 +1299,88 @@ Keine Schreibberechtigung oder Datei ist schreibgeschützt.</translation>
         <translation>Im Voraus laden:</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="673"/>
-        <location filename="../src/qvoptionsdialog.cpp" line="682"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="675"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="684"/>
         <source>Disabled</source>
         <translation>Deaktiviert</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="674"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="676"/>
         <source>Auto-detect</source>
         <translation type="unfinished">Automatisch erkennen</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="675"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="677"/>
         <source>sRGB</source>
         <translation type="unfinished">sRGB</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="676"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="678"/>
         <source>Display P3</source>
         <translation type="unfinished">Display P3</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="683"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="685"/>
         <source>Adjacent</source>
         <translation>Benachbarte</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="684"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="686"/>
         <source>Extended</source>
         <translation>Erweiterte</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.ui" line="735"/>
+        <location filename="../src/qvoptionsdialog.ui" line="752"/>
         <source>Controls whether or not qView should go back to the first item after reaching the end of a folder</source>
         <translation>Legt fest, ob qView zur ersten Datei springen soll, wenn das Ende eines Ordners erreicht wurde</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.ui" line="738"/>
+        <location filename="../src/qvoptionsdialog.ui" line="755"/>
         <source>&amp;Loop through folders</source>
         <translation>Durch Ordner &amp;rotieren</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.ui" line="761"/>
+        <location filename="../src/qvoptionsdialog.ui" line="778"/>
         <source>Slideshow direction:</source>
         <translation>Richtung der Diashow:</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="690"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="692"/>
         <source>Forward</source>
         <translation>Vorwärts</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="691"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="693"/>
         <source>Backward</source>
         <translation>Rückwärts</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.ui" line="771"/>
+        <location filename="../src/qvoptionsdialog.ui" line="788"/>
         <source>Slideshow timer:</source>
         <translation>Diashow-Timer:</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.ui" line="778"/>
+        <location filename="../src/qvoptionsdialog.ui" line="795"/>
         <source> sec</source>
         <translation> Sek.</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.ui" line="840"/>
+        <location filename="../src/qvoptionsdialog.ui" line="857"/>
         <source>Detect supported files in folder even if extension isn&apos;t recognized (may be slow with larger/network folders)</source>
         <translation type="unfinished">Unterstützte Dateien im Ordner erkennen, auch wenn die Erweiterung nicht erkannt wird (kann bei größeren/Netzwerkordnern langsam sein)</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.ui" line="843"/>
+        <location filename="../src/qvoptionsdialog.ui" line="860"/>
         <source>Allow &amp;MIME content detection</source>
         <translation type="unfinished">MIME-Inhaltserkennung zulassen</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.ui" line="850"/>
+        <location filename="../src/qvoptionsdialog.ui" line="867"/>
         <source>Save &amp;recent files</source>
         <translation>Zuletzt geöffnete Dateien speichern</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.ui" line="857"/>
+        <location filename="../src/qvoptionsdialog.ui" line="874"/>
         <source>&amp;Update notifications on startup</source>
         <extracomment>The notifications are for new qView releases</extracomment>
         <translation>Benachrichtige über Aktualisierungen beim Programmstart</translation>
@@ -1381,49 +1391,49 @@ Keine Schreibberechtigung oder Datei ist schreibgeschützt.</translation>
         <translation>Sprache:</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="650"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="652"/>
         <source>Move Back</source>
         <translation>Zurück</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="651"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="653"/>
         <source>Do Nothing</source>
         <translation>Nichts tun</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="652"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="654"/>
         <source>Move Forward</source>
         <translation>Weiter</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.ui" line="810"/>
+        <location filename="../src/qvoptionsdialog.ui" line="827"/>
         <source>After deletion:</source>
         <translation>Nach dem Löschen:</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.ui" line="820"/>
+        <location filename="../src/qvoptionsdialog.ui" line="837"/>
         <source>&amp;Ask before deleting files</source>
         <translation>Vor dem Löschen von Dateien fragen</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.ui" line="923"/>
-        <location filename="../src/qvoptionsdialog.cpp" line="582"/>
+        <location filename="../src/qvoptionsdialog.ui" line="940"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="584"/>
         <source>Shortcuts</source>
         <translation>Tastenkürzel</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.ui" line="918"/>
+        <location filename="../src/qvoptionsdialog.ui" line="935"/>
         <source>Action</source>
         <translation>Aktion</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="592"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="594"/>
         <source>System Language</source>
         <translation>Systemsprache</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="539"/>
-        <location filename="../src/qvoptionsdialog.cpp" line="615"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="541"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="617"/>
         <source>Restart Required</source>
         <translation>Programmneustart erforderlich</translation>
     </message>
@@ -1463,122 +1473,122 @@ Keine Schreibberechtigung oder Datei ist schreibgeschützt.</translation>
         <translation type="unfinished">%1 + Horizontales Scrollen:</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="539"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="541"/>
         <source>You must restart qView to change this setting.</source>
         <translation>Du musst qView neustarten, um diese Einstellung wirksam zu machen.</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="584"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="586"/>
         <source>Formats</source>
         <translation>Formate</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="615"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="617"/>
         <source>You must restart qView to change the language.</source>
         <translation>Du musst qView neustarten, um die Spracheinstellungen wirksam zu machen.</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="658"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="660"/>
         <source>Avoid repositioning</source>
         <translation type="unfinished">Neupositionierung vermeiden</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="659"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="661"/>
         <source>Center relative to previous image</source>
         <translation type="unfinished">Relativ zum vorherigen Bild zentrieren</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="660"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="662"/>
         <source>Center relative to screen</source>
         <translation type="unfinished">Relativ zum Bildschirm zentrieren</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="667"/>
-        <location filename="../src/qvoptionsdialog.cpp" line="729"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="669"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="731"/>
         <source>Fill Window</source>
         <translation type="unfinished">Fenster ausfüllen</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="699"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="701"/>
         <source>Date Modified</source>
         <translation type="unfinished">Änderungsdatum</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="700"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="702"/>
         <source>Date Created</source>
         <translation type="unfinished">Erstellungsdatum</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="709"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="711"/>
         <source>Basic</source>
         <translation>Grundlegend</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="710"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="712"/>
         <source>Minimal</source>
         <translation>Minimal</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="711"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="713"/>
         <source>Practical</source>
         <translation>Praktisch</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="712"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="714"/>
         <source>Verbose</source>
         <translation>Ausschweifend</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="713"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="715"/>
         <source>Custom</source>
         <translation>Benutzerdefiniert</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="727"/>
-        <location filename="../src/qvoptionsdialog.cpp" line="738"/>
-        <location filename="../src/qvoptionsdialog.cpp" line="746"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="729"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="740"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="748"/>
         <source>None</source>
         <translation type="unfinished">Keine</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="666"/>
-        <location filename="../src/qvoptionsdialog.cpp" line="728"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="668"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="730"/>
         <source>Zoom to Fit</source>
         <translation type="unfinished">Größe an Fenster anpassen</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="730"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="732"/>
         <source>Original Size</source>
         <translation type="unfinished">Originalgröße</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="731"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="733"/>
         <source>Toggle Full Screen</source>
         <translation type="unfinished">Vollbildmodus umschalten</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="732"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="734"/>
         <source>Toggle Titlebar Hidden</source>
         <translation type="unfinished">Titelleiste ausgeblendet umschalten</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="739"/>
-        <location filename="../src/qvoptionsdialog.cpp" line="749"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="741"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="751"/>
         <source>Pan</source>
         <translation type="unfinished">Schwenken</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="740"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="742"/>
         <source>Move Window</source>
         <translation type="unfinished">Fenster verschieben</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="747"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="749"/>
         <source>Zoom</source>
         <translation type="unfinished">Zoomen</translation>
     </message>
     <message>
-        <location filename="../src/qvoptionsdialog.cpp" line="748"/>
+        <location filename="../src/qvoptionsdialog.cpp" line="750"/>
         <source>Navigate</source>
         <translation type="unfinished">Navigieren</translation>
     </message>
@@ -1661,122 +1671,122 @@ Keine Schreibberechtigung oder Datei ist schreibgeschützt.</translation>
 <context>
     <name>ShortcutManager</name>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="45"/>
+        <location filename="../src/shortcutmanager.cpp" line="39"/>
         <source>Open</source>
         <translation>Öffnen</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="46"/>
+        <location filename="../src/shortcutmanager.cpp" line="40"/>
         <source>Open URL</source>
         <translation>URL öffnen</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="47"/>
+        <location filename="../src/shortcutmanager.cpp" line="41"/>
         <source>Reload File</source>
         <translation type="unfinished">Datei neu laden</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="48"/>
+        <location filename="../src/shortcutmanager.cpp" line="42"/>
         <source>Open Containing Folder</source>
         <translation>Öffne den beinhaltenden Ordner</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="51"/>
+        <location filename="../src/shortcutmanager.cpp" line="45"/>
         <source>Show in Explorer</source>
         <translation>Im Explorer anzeigen</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="53"/>
+        <location filename="../src/shortcutmanager.cpp" line="47"/>
         <source>Show in Finder</source>
         <translation>Im Finder anzeigen</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="55"/>
+        <location filename="../src/shortcutmanager.cpp" line="49"/>
         <source>Show File Info</source>
         <translation>Datei-Informationen anzeigen</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="56"/>
+        <location filename="../src/shortcutmanager.cpp" line="50"/>
         <source>Restore from Trash</source>
         <translation>Aus dem Papierkorb wiederherstellen</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="58"/>
+        <location filename="../src/shortcutmanager.cpp" line="52"/>
         <source>Undo Delete</source>
         <translation>Löschen rückgängig machen</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="60"/>
+        <location filename="../src/shortcutmanager.cpp" line="54"/>
         <source>Copy</source>
         <translation>Kopieren</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="61"/>
+        <location filename="../src/shortcutmanager.cpp" line="55"/>
         <source>Paste</source>
         <translation>Einfügen</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="62"/>
+        <location filename="../src/shortcutmanager.cpp" line="56"/>
         <source>Rename</source>
         <translation>Umbenennen</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="71"/>
+        <location filename="../src/shortcutmanager.cpp" line="65"/>
         <source>Move to Trash</source>
         <translation>In den Papierkorb verschieben</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="76"/>
+        <location filename="../src/shortcutmanager.cpp" line="70"/>
         <source>Delete</source>
         <translation>Löschen</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="78"/>
+        <location filename="../src/shortcutmanager.cpp" line="72"/>
         <source>Delete Permanently</source>
         <translation type="unfinished">Endgültig löschen</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="83"/>
+        <location filename="../src/shortcutmanager.cpp" line="77"/>
         <source>First File</source>
         <translation>Erste Datei</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="84"/>
+        <location filename="../src/shortcutmanager.cpp" line="78"/>
         <source>Previous File</source>
         <translation>Vorherige Datei</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="85"/>
+        <location filename="../src/shortcutmanager.cpp" line="79"/>
         <source>Next File</source>
         <translation>Nächste Datei</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="86"/>
+        <location filename="../src/shortcutmanager.cpp" line="80"/>
         <source>Last File</source>
         <translation>Letzte Datei</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="87"/>
+        <location filename="../src/shortcutmanager.cpp" line="81"/>
         <source>Random File</source>
         <translation type="unfinished">Zufällige Datei</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="88"/>
+        <location filename="../src/shortcutmanager.cpp" line="82"/>
         <source>Zoom In</source>
         <translation>Zoome hinein</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="93"/>
+        <location filename="../src/shortcutmanager.cpp" line="87"/>
         <source>Zoom Out</source>
         <translation>Zoome heraus</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="96"/>
+        <location filename="../src/shortcutmanager.cpp" line="90"/>
         <source>Fill Window</source>
         <translation type="unfinished">Fenster ausfüllen</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="121"/>
+        <location filename="../src/shortcutmanager.cpp" line="115"/>
         <source>Settings</source>
         <translation type="unfinished">Einstellungen</translation>
     </message>
@@ -1785,77 +1795,77 @@ Keine Schreibberechtigung oder Datei ist schreibgeschützt.</translation>
         <translation type="vanished">Zoom zurücksetzen</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="94"/>
+        <location filename="../src/shortcutmanager.cpp" line="88"/>
         <source>Original Size</source>
         <translation>Originalgröße</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="95"/>
+        <location filename="../src/shortcutmanager.cpp" line="89"/>
         <source>Zoom to Fit</source>
         <translation type="unfinished">Größe an Fenster anpassen</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="97"/>
+        <location filename="../src/shortcutmanager.cpp" line="91"/>
         <source>Navigation Resets Zoom</source>
         <translation type="unfinished">Navigation setzt Zoom zurück</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="98"/>
+        <location filename="../src/shortcutmanager.cpp" line="92"/>
         <source>Rotate Right</source>
         <translation>Nach rechts drehen</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="99"/>
+        <location filename="../src/shortcutmanager.cpp" line="93"/>
         <source>Rotate Left</source>
         <translation>Nach links drehen</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="100"/>
+        <location filename="../src/shortcutmanager.cpp" line="94"/>
         <source>Mirror</source>
         <translation>Spiegeln</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="101"/>
+        <location filename="../src/shortcutmanager.cpp" line="95"/>
         <source>Flip</source>
         <translation>Umdrehen</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="102"/>
+        <location filename="../src/shortcutmanager.cpp" line="96"/>
         <source>Full Screen</source>
         <translation>Vollbild</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="114"/>
+        <location filename="../src/shortcutmanager.cpp" line="108"/>
         <source>Save Frame As</source>
         <translation>Frame speichern unter</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="115"/>
+        <location filename="../src/shortcutmanager.cpp" line="109"/>
         <source>Pause</source>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="116"/>
+        <location filename="../src/shortcutmanager.cpp" line="110"/>
         <source>Next Frame</source>
         <translation>Nächster Frame</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="117"/>
+        <location filename="../src/shortcutmanager.cpp" line="111"/>
         <source>Decrease Speed</source>
         <translation>Geschwindigkeit verringern</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="118"/>
+        <location filename="../src/shortcutmanager.cpp" line="112"/>
         <source>Reset Speed</source>
         <translation>Geschwindigkeit zurücksetzen</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="119"/>
+        <location filename="../src/shortcutmanager.cpp" line="113"/>
         <source>Increase Speed</source>
         <translation>Geschwindigkeit erhöhen</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="120"/>
+        <location filename="../src/shortcutmanager.cpp" line="114"/>
         <source>Toggle Slideshow</source>
         <translation>Diashow ein- und ausschalten</translation>
     </message>
@@ -1864,32 +1874,32 @@ Keine Schreibberechtigung oder Datei ist schreibgeschützt.</translation>
         <translation type="vanished">Optionen</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="123"/>
+        <location filename="../src/shortcutmanager.cpp" line="117"/>
         <source>Preferences</source>
         <translation>Einstellungen</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="127"/>
+        <location filename="../src/shortcutmanager.cpp" line="121"/>
         <source>New Window</source>
         <translation>Neues Fenster</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="128"/>
+        <location filename="../src/shortcutmanager.cpp" line="122"/>
         <source>Close Window</source>
         <translation>Fenster schließen</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="129"/>
+        <location filename="../src/shortcutmanager.cpp" line="123"/>
         <source>Close All</source>
         <translation>Alle schließen</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="131"/>
+        <location filename="../src/shortcutmanager.cpp" line="125"/>
         <source>Quit</source>
         <translation>Beenden</translation>
     </message>
     <message>
-        <location filename="../src/shortcutmanager.cpp" line="136"/>
+        <location filename="../src/shortcutmanager.cpp" line="130"/>
         <source>Exit</source>
         <translation>Beenden</translation>
     </message>
