@@ -80,6 +80,10 @@ public:
 
     QAction *getAction(const QString &key) const;
 
+    bool wouldTriggerAction(const QKeyEvent *event, const QString &key) const;
+
+    void setActionShortcuts(const QString &key, const QList<QKeySequence> &shortcuts) const;
+
     QList<QAction*> getAllInstancesOfAction(const QString &key) const;
 
     QList<QAction*> getAllClonesOfAction(const QString &key) const;
@@ -125,6 +129,8 @@ public:
     static void actionTriggered(QAction *triggeredAction);
 
     static void actionTriggered(QAction *triggeredAction, MainWindow *relevantWindow);
+
+    static bool wouldTriggerAction(const QKeyEvent *event, const QList<QKeySequence> &shortcuts);
 
     static QIcon getCacheableIcon(const QString &cacheKey, const QIcon &icon);
 

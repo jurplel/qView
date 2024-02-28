@@ -96,6 +96,8 @@ public:
 
     static QIcon iconFromFont(const QString &fontFamily, const QChar &codePoint, const int pixelSize, const qreal pixelRatio);
 
+    static qreal keyboardAutoRepeatInterval();
+
     static bool supportsSessionPersistence();
 
     static bool tryRestoreLastSession();

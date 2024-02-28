@@ -9,6 +9,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QFontDatabase>
+#include <QStyleHints>
 
 QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
 {
@@ -415,6 +416,15 @@ QIcon QVApplication::iconFromFont(const QString &fontFamily, const QChar &codePo
     painter.drawText(pixmap.rect(), codePoint);
 
     return QIcon(pixmap);
+}
+
+qreal QVApplication::keyboardAutoRepeatInterval()
+{
+#if (QT_VERSION < QT_VERSION_CHECK(6, 5, 0))
+    return 1.0 / qGuiApp->styleHints()->keyboardAutoRepeatRate();
+#else
+    return 1.0 / qGuiApp->styleHints()->keyboardAutoRepeatRateF();
+#endif
 }
 
 bool QVApplication::supportsSessionPersistence()

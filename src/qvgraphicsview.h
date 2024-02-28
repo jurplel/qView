@@ -152,6 +152,8 @@ protected:
 
     void handleDpiAdjustmentChange();
 
+    void cancelTurboNav();
+
     MainWindow* getMainWindow() const;
 
 private slots:
@@ -209,6 +211,13 @@ private:
     Qt::MouseButton pressedMouseButton {Qt::MouseButton::NoButton};
     Qt::KeyboardModifiers mousePressModifiers {Qt::KeyboardModifier::NoModifier};
     QPoint lastMousePos;
+
+    std::optional<GoToFileMode> turboNavMode;
+    QList<QKeySequence> navPrevShortcuts;
+    QList<QKeySequence> navNextShortcuts;
+    QElapsedTimer lastTurboNav;
+    QElapsedTimer lastTurboNavKeyPress;
+    int turboNavInterval {0};
 };
 Q_DECLARE_METATYPE(QVGraphicsView::SwipeData)
 #endif // QVGRAPHICSVIEW_H

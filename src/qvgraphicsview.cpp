@@ -217,6 +217,30 @@ bool QVGraphicsView::event(QEvent *event)
             return true;
         }
     }
+    else if (event->type() == QEvent::ShortcutOverride && !turboNavMode.has_value())
+    {
+        const QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+        const ActionManager &actionManager = qvApp->getActionManager();
+        if (actionManager.wouldTriggerAction(keyEvent, "previousfile") || actionManager.wouldTriggerAction(keyEvent, "nextfile"))
+        {
+            // Accept event to override shortcut and deliver as key press instead
+            event->accept();
+            return true;
+        }
+    }
+    else if (event->type() == QEvent::KeyRelease && turboNavMode.has_value())
+    {
+        const QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+        if (!keyEvent->isAutoRepeat() &&
+            (ActionManager::wouldTriggerAction(keyEvent, navPrevShortcuts) || ActionManager::wouldTriggerAction(keyEvent, navNextShortcuts)))
+        {
+            cancelTurboNav();
+        }
+    }
+    else if (event->type() == QEvent::FocusOut)
+    {
+        cancelTurboNav();
+    }
 
     return QGraphicsView::event(event);
 }
@@ -255,6 +279,41 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
 
 void QVGraphicsView::keyPressEvent(QKeyEvent *event)
 {
+    if (turboNavMode.has_value())
+    {
+        if (ActionManager::wouldTriggerAction(event, navPrevShortcuts) || ActionManager::wouldTriggerAction(event, navNextShortcuts))
+        {
+            lastTurboNavKeyPress.start();
+            return;
+        }
+    }
+    else
+    {
+        const ActionManager &actionManager = qvApp->getActionManager();
+        const bool navPrev = actionManager.wouldTriggerAction(event, "previousfile");
+        const bool navNext = actionManager.wouldTriggerAction(event, "nextfile");
+        if (navPrev || navNext)
+        {
+            const GoToFileMode navMode = navPrev ? GoToFileMode::previous : GoToFileMode::next;
+            if (event->isAutoRepeat())
+            {
+                turboNavMode = navMode;
+                lastTurboNav.start();
+                lastTurboNavKeyPress.start();
+                // Remove keyboard shortcuts while turbo navigation is in progress to eliminate any
+                // potential overhead. Especially important on macOS which seems to enforce throttling
+                // for menu invocations caused by key repeats, which blocks the UI thread (try setting
+                // the key repeat rate to max without unbinding the shortcuts - it's really bad).
+                navPrevShortcuts = actionManager.getAction("previousfile")->shortcuts();
+                navNextShortcuts = actionManager.getAction("nextfile")->shortcuts();
+                actionManager.setActionShortcuts("previousfile", {});
+                actionManager.setActionShortcuts("nextfile", {});
+            }
+            goToFile(navMode);
+            return;
+        }
+    }
+
     // The base class has logic to scroll in response to certain key presses, but we'll
     // handle that ourselves here instead to ensure any bounds constraints are enforced.
     const int scrollXSmallSteps = event->key() == Qt::Key_Left ? -1 : event->key() == Qt::Key_Right ? 1 : 0;
@@ -443,6 +502,25 @@ void QVGraphicsView::postLoad()
     emit fileChanged(loadIsFromSessionRestore);
 
     loadIsFromSessionRestore = false;
+
+    if (turboNavMode.has_value())
+    {
+        const qint64 navDelay = qMax(turboNavInterval - lastTurboNav.elapsed(), 0LL);
+        QTimer::singleShot(navDelay, this, [this]() {
+            if (!turboNavMode.has_value())
+                return;
+            if (lastTurboNavKeyPress.elapsed() >= qMax(qvApp->keyboardAutoRepeatInterval() * 1.5, 250.0))
+            {
+                // Backup mechanism in case we somehow stop receiving key presses and aren't
+                // notified of it in some other way (e.g. key release, lost focus), as can happen
+                // in macOS if the menu bar gets clicked on while navigation is in progress.
+                cancelTurboNav();
+                return;
+            }
+            lastTurboNav.start();
+            goToFile(turboNavMode.value());
+        });
+    }
 }
 
 void QVGraphicsView::zoomIn()
@@ -921,6 +999,19 @@ void QVGraphicsView::handleDpiAdjustmentChange()
     expensiveScaleTimer->start();
 }
 
+void QVGraphicsView::cancelTurboNav()
+{
+    if (!turboNavMode.has_value())
+        return;
+
+    const ActionManager &actionManager = qvApp->getActionManager();
+    turboNavMode = {};
+    actionManager.setActionShortcuts("previousfile", navPrevShortcuts);
+    actionManager.setActionShortcuts("nextfile", navNextShortcuts);
+    navPrevShortcuts = {};
+    navNextShortcuts = {};
+}
+
 MainWindow* QVGraphicsView::getMainWindow() const
 {
     return qobject_cast<MainWindow*>(window());
@@ -972,6 +1063,9 @@ void QVGraphicsView::settingsUpdated()
 
     //constrained small centering
     isConstrainedSmallCenteringEnabled = settingsManager.getBoolean("constraincentersmallimage");
+
+    //nav speed
+    turboNavInterval = settingsManager.getInteger("navspeed");
 
     //loop folders
     isLoopFoldersEnabled = settingsManager.getBoolean("loopfoldersenabled");

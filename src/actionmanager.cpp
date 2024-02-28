@@ -8,6 +8,7 @@
 #include <QPushButton>
 #include <QMimeDatabase>
 #include <QFileIconProvider>
+#include <QKeyEvent>
 
 ActionManager::ActionManager(QObject *parent) : QObject(parent)
 {
@@ -75,6 +76,19 @@ QAction *ActionManager::getAction(const QString &key) const
         return action;
 
     return nullptr;
+}
+
+bool ActionManager::wouldTriggerAction(const QKeyEvent *event, const QString &key) const
+{
+    return wouldTriggerAction(event, getAction(key)->shortcuts());
+}
+
+void ActionManager::setActionShortcuts(const QString &key, const QList<QKeySequence> &shortcuts) const
+{
+    for (const auto &action : getAllInstancesOfAction(key))
+    {
+        action->setShortcuts(shortcuts);
+    }
 }
 
 QList<QAction*> ActionManager::getAllInstancesOfAction(const QString &key) const
@@ -675,6 +689,12 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
     } else if (key == "slideshow") {
         relevantWindow->toggleSlideshow();
     }
+}
+
+bool ActionManager::wouldTriggerAction(const QKeyEvent *event, const QList<QKeySequence> &shortcuts)
+{
+    const QKeySequence targetSequence = (event->modifiers() | event->key()) & ~(Qt::KeypadModifier | Qt::GroupSwitchModifier);
+    return shortcuts.contains(targetSequence);
 }
 
 void ActionManager::initializeActionLibrary()
