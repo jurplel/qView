@@ -46,3 +46,6 @@ CMakeLists.txt.user*
 
 bin/*
 build/*
+
+*.qm
+.qm

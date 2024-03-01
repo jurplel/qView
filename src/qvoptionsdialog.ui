@@ -721,6 +721,13 @@
          </property>
         </widget>
        </item>
+       <item row="17" column="1">
+        <widget class="QCheckBox" name="skipHiddenCheckbox">
+         <property name="text">
+          <string extracomment="Don't view files with 'hidden' attribute">Skip &amp;hidden files when browsing to next/previous image</string>
+         </property>
+        </widget>
+       </item>
        <item row="11" column="1">
         <widget class="QComboBox" name="afterDeletionComboBox">
          <property name="currentIndex">
