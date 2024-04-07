@@ -36,6 +36,15 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
 
     showSubmenuIcons = getSettingsManager().getBoolean("submenuicons");
 
+    // Block any erroneous icons from showing up on mac and windows
+    // (this is overridden in some cases)
+#if defined Q_OS_MACOS || defined Q_OS_WIN
+    setAttribute(Qt::AA_DontShowIconsInMenus);
+#endif
+    // Adwaita Qt styles should hide icons for a more consistent look
+    if (style()->objectName() == "adwaita-dark" || style()->objectName() == "adwaita")
+        setAttribute(Qt::AA_DontShowIconsInMenus);
+
     // Setup macOS dock menu
     dockMenu = new QMenu();
     connect(dockMenu, &QMenu::triggered, this, [](QAction *triggeredAction){
@@ -60,15 +69,6 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
 #ifdef COCOA_LOADED
     QVCocoaFunctions::setUserDefaults();
 #endif
-
-    // Block any erroneous icons from showing up on mac and windows
-    // (this is overridden in some cases)
-#if defined Q_OS_MACOS || defined Q_OS_WIN
-    setAttribute(Qt::AA_DontShowIconsInMenus);
-#endif
-    // Adwaita Qt styles should hide icons for a more consistent look
-    if (style()->objectName() == "adwaita-dark" || style()->objectName() == "adwaita")
-        setAttribute(Qt::AA_DontShowIconsInMenus);
 
     hideIncompatibleActions();
 }
