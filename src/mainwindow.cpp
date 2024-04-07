@@ -966,7 +966,7 @@ void MainWindow::askDeleteFile(bool permanent)
     QString messageText;
     if (permanent)
     {
-        messageText = tr("Are you sure you want to delete %1 permanently? This can't be undone.").arg(fileName);
+        messageText = tr("Are you sure you want to permanently delete %1? This can't be undone.").arg(fileName);
     }
     else
     {

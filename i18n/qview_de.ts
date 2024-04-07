@@ -437,7 +437,7 @@ Keine Schreibberechtigung oder Datei ist schreibgeschützt.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="969"/>
-        <source>Are you sure you want to delete %1 permanently? This can&apos;t be undone.</source>
+        <source>Are you sure you want to permanently delete %1? This can&apos;t be undone.</source>
         <translation type="unfinished">Sind Sie sicher, dass Sie %1 endgültig löschen möchten? Dies kann nicht rückgängig gemacht werden.</translation>
     </message>
     <message>
@@ -1082,7 +1082,7 @@ Keine Schreibberechtigung oder Datei ist schreibgeschützt.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="735"/>
         <source>Navigation speed:</source>
-        <translation>Navigationsgeschwindigkeit</translation>
+        <translation>Navigationsgeschwindigkeit:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="742"/>
