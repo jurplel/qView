@@ -89,13 +89,13 @@ public:
 
     void zoomOut();
 
+    void originalSize();
+
     void setZoomToFit(const bool value);
 
     void setFillWindow(const bool value);
 
     void setNavigationResetsZoom(const bool value);
-
-    void originalSize();
 
     void rotateRight();
 

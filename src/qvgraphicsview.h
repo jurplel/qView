@@ -63,7 +63,6 @@ public:
     void removeExpensiveScaling();
 
     void recalculateZoom();
-    void originalSize();
 
     void centerImage();
 

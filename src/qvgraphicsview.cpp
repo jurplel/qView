@@ -347,7 +347,7 @@ void QVGraphicsView::executeClickAction(const Qv::ViewportClickAction action)
     }
     else if (action == Qv::ViewportClickAction::OriginalSize)
     {
-        originalSize();
+        setCalculatedZoomMode(Qv::CalculatedZoomMode::OriginalSize);
     }
     else if (action == Qv::ViewportClickAction::ToggleFullScreen)
     {
@@ -545,7 +545,7 @@ void QVGraphicsView::zoomRelative(qreal relativeLevel, const std::optional<QPoin
 
 void QVGraphicsView::zoomAbsolute(const qreal absoluteLevel, const std::optional<QPoint> &pos, const bool isApplyingCalculation)
 {
-    if (!isApplyingCalculation)
+    if (!isApplyingCalculation || !Qv::calculatedZoomModeIsSticky(calculatedZoomMode.value()))
         setCalculatedZoomMode({});
 
     if (pos != lastZoomEventPos)
@@ -734,17 +734,15 @@ void QVGraphicsView::recalculateZoom()
             targetRatio = qMax(fitXRatio, fitYRatio);
         }
         break;
+    case Qv::CalculatedZoomMode::OriginalSize:
+        targetRatio = 1.0;
+        break;
     }
 
     if (targetRatio > 1.0 && !isPastActualSizeEnabled)
         targetRatio = 1.0;
 
     zoomAbsolute(targetRatio, {}, true);
-}
-
-void QVGraphicsView::originalSize()
-{
-    zoomAbsolute(1.0);
 }
 
 void QVGraphicsView::centerImage()

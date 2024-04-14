@@ -26,7 +26,8 @@ namespace Qv
     enum class CalculatedZoomMode
     {
         ZoomToFit = 0,
-        FillWindow = 1
+        FillWindow = 1,
+        OriginalSize = 2
     };
 
     enum class ClickOrDrag
@@ -116,6 +117,13 @@ namespace Qv
     inline QStringList setToList(const QSet<QString> &set)
     {
         return QStringList(set.begin(), set.end());
+    }
+
+    inline bool calculatedZoomModeIsSticky(const CalculatedZoomMode mode)
+    {
+        return
+            mode == CalculatedZoomMode::ZoomToFit ||
+            mode == CalculatedZoomMode::FillWindow;
     }
 
     inline bool scrollActionIsSelfCompatible(const ViewportScrollAction action)

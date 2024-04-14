@@ -666,7 +666,8 @@ const Ui::ComboBoxItems<Qv::AfterMatchingSize> QVOptionsDialog::mapAfterMatching
 const Ui::ComboBoxItems<Qv::CalculatedZoomMode> QVOptionsDialog::mapCalculatedZoomMode() {
     return {
         { Qv::CalculatedZoomMode::ZoomToFit, tr("Zoom to Fit") },
-        { Qv::CalculatedZoomMode::FillWindow, tr("Fill Window") }
+        { Qv::CalculatedZoomMode::FillWindow, tr("Fill Window") },
+        { Qv::CalculatedZoomMode::OriginalSize, tr("Original Size") }
     };
 }
 

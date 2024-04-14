@@ -1177,6 +1177,11 @@ void MainWindow::zoomOut()
     graphicsView->zoomOut();
 }
 
+void MainWindow::originalSize()
+{
+    graphicsView->setCalculatedZoomMode(Qv::CalculatedZoomMode::OriginalSize);
+}
+
 void MainWindow::setZoomToFit(const bool value)
 {
     graphicsView->setCalculatedZoomMode(value ? std::make_optional(Qv::CalculatedZoomMode::ZoomToFit) : std::nullopt);
@@ -1190,11 +1195,6 @@ void MainWindow::setFillWindow(const bool value)
 void MainWindow::setNavigationResetsZoom(const bool value)
 {
     graphicsView->setNavigationResetsZoom(value);
-}
-
-void MainWindow::originalSize()
-{
-    graphicsView->originalSize();
 }
 
 void MainWindow::rotateRight()
