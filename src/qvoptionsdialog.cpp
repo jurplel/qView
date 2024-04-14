@@ -29,6 +29,7 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     connect(ui->nonNativeThemeCheckbox, &QCheckBox::stateChanged, this, [this](int state) { restartNotifyForCheckbox("nonnativetheme", state); });
     connect(ui->submenuIconsCheckbox, &QCheckBox::stateChanged, this, [this](int state) { restartNotifyForCheckbox("submenuicons", state); });
     connect(ui->scalingCheckbox, &QCheckBox::stateChanged, this, &QVOptionsDialog::scalingCheckboxStateChanged);
+    connect(ui->fitZoomLimitCheckbox, &QCheckBox::stateChanged, this, &QVOptionsDialog::fitZoomLimitCheckboxStateChanged);
     connect(ui->constrainImagePositionCheckbox, &QCheckBox::stateChanged, this, &QVOptionsDialog::constrainImagePositionCheckboxStateChanged);
     connect(ui->middleButtonModeClickRadioButton, &QRadioButton::clicked, this, &QVOptionsDialog::middleButtonModeChanged);
     connect(ui->middleButtonModeDragRadioButton, &QRadioButton::clicked, this, &QVOptionsDialog::middleButtonModeChanged);
@@ -156,10 +157,7 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
 
     // bgcolorenabled
     syncCheckbox(ui->bgColorCheckbox, "bgcolorenabled", defaults, makeConnections);
-    if (ui->bgColorCheckbox->isChecked())
-        ui->bgColorButton->setEnabled(true);
-    else
-        ui->bgColorButton->setEnabled(false);
+    bgColorCheckboxStateChanged(ui->bgColorCheckbox->checkState());
     // bgcolor
     ui->bgColorButton->setText(settingsManager.getString("bgcolor", defaults));
     transientSettings.insert("bgcolor", ui->bgColorButton->text());
@@ -197,10 +195,7 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
     syncCheckbox(ui->filteringCheckbox, "filteringenabled", defaults, makeConnections);
     // scalingenabled
     syncCheckbox(ui->scalingCheckbox, "scalingenabled", defaults, makeConnections);
-    if (ui->scalingCheckbox->isChecked())
-        ui->scalingTwoCheckbox->setEnabled(true);
-    else
-        ui->scalingTwoCheckbox->setEnabled(false);
+    scalingCheckboxStateChanged(ui->scalingCheckbox->checkState());
     // scalingtwoenabled
     syncCheckbox(ui->scalingTwoCheckbox, "scalingtwoenabled", defaults, makeConnections);
     // scalefactor
@@ -211,16 +206,16 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
     syncCheckbox(ui->oneToOnePixelSizingCheckbox, "onetoonepixelsizing", defaults, makeConnections);
     // calculatedzoommode
     syncComboBox(ui->zoomDefaultComboBox, "calculatedzoommode", defaults, makeConnections);
-    // pastactualsizeenabled
-    syncCheckbox(ui->pastActualSizeCheckbox, "pastactualsizeenabled", defaults, makeConnections);
+    // fitzoomlimitenabled
+    syncCheckbox(ui->fitZoomLimitCheckbox, "fitzoomlimitenabled", defaults, makeConnections);
+    fitZoomLimitCheckboxStateChanged(ui->fitZoomLimitCheckbox->checkState());
+    // fitzoomlimitpercent
+    syncSpinBox(ui->fitZoomLimitSpinBox, "fitzoomlimitpercent", defaults, makeConnections);
     // fitoverscan
     syncSpinBox(ui->fitOverscanSpinBox, "fitoverscan", defaults, makeConnections);
     // constrainimageposition
     syncCheckbox(ui->constrainImagePositionCheckbox, "constrainimageposition", defaults, makeConnections);
-    if (ui->constrainImagePositionCheckbox->isChecked())
-        ui->constrainCentersSmallImageCheckbox->setEnabled(true);
-    else
-        ui->constrainCentersSmallImageCheckbox->setEnabled(false);
+    constrainImagePositionCheckboxStateChanged(ui->constrainImagePositionCheckbox->checkState());
     // constraincentersmallimage
     syncCheckbox(ui->constrainCentersSmallImageCheckbox, "constraincentersmallimage", defaults, makeConnections);
     // colorspaceconversion
@@ -531,7 +526,6 @@ void QVOptionsDialog::updateBgColorButton()
 void QVOptionsDialog::bgColorCheckboxStateChanged(int state)
 {
     ui->bgColorButton->setEnabled(static_cast<bool>(state));
-    updateBgColorButton();
 }
 
 void QVOptionsDialog::restartNotifyForCheckbox(const QString &key, const int state)
@@ -562,6 +556,11 @@ void QVOptionsDialog::windowResizeComboBoxCurrentIndexChanged(int index)
     ui->minWindowResizeSpinBox->setEnabled(enableRelatedControls);
     ui->maxWindowResizeLabel->setEnabled(enableRelatedControls);
     ui->maxWindowResizeSpinBox->setEnabled(enableRelatedControls);
+}
+
+void QVOptionsDialog::fitZoomLimitCheckboxStateChanged(int state)
+{
+    ui->fitZoomLimitSpinBox->setEnabled(static_cast<bool>(state));
 }
 
 void QVOptionsDialog::constrainImagePositionCheckboxStateChanged(int state)

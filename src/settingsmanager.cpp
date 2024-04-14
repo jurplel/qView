@@ -198,7 +198,8 @@ void SettingsManager::initializeSettingsLibrary()
     settingsLibrary.insert("onetoonepixelsizing", {true, {}});
 #endif
     settingsLibrary.insert("calculatedzoommode", {static_cast<int>(Qv::CalculatedZoomMode::ZoomToFit), {}});
-    settingsLibrary.insert("pastactualsizeenabled", {true, {}});
+    settingsLibrary.insert("fitzoomlimitenabled", {false, {}});
+    settingsLibrary.insert("fitzoomlimitpercent", {100, {}});
     settingsLibrary.insert("fitoverscan", {0, {}});
     settingsLibrary.insert("constrainimageposition", {true, {}});
     settingsLibrary.insert("constraincentersmallimage", {true, {}});

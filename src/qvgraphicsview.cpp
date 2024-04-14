@@ -739,8 +739,8 @@ void QVGraphicsView::recalculateZoom()
         break;
     }
 
-    if (targetRatio > 1.0 && !isPastActualSizeEnabled)
-        targetRatio = 1.0;
+    if (fitZoomLimit.has_value() && targetRatio > fitZoomLimit.value())
+        targetRatio = fitZoomLimit.value();
 
     zoomAbsolute(targetRatio, {}, true);
 }
@@ -1044,8 +1044,8 @@ void QVGraphicsView::settingsUpdated()
     //scalefactor
     zoomMultiplier = 1.0 + (settingsManager.getInteger("scalefactor") / 100.0);
 
-    //resize past actual size
-    isPastActualSizeEnabled = settingsManager.getBoolean("pastactualsizeenabled");
+    //fit zoom limit
+    fitZoomLimit = settingsManager.getBoolean("fitzoomlimitenabled") ? std::make_optional(settingsManager.getInteger("fitzoomlimitpercent") / 100.0) : std::nullopt;
 
     //fit overscan
     fitOverscan = settingsManager.getInteger("fitoverscan");

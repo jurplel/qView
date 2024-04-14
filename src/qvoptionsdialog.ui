@@ -368,7 +368,7 @@
            <x>0</x>
            <y>0</y>
            <width>482</width>
-           <height>389</height>
+           <height>397</height>
           </rect>
          </property>
          <property name="sizePolicy">
@@ -536,16 +536,29 @@
           <item row="8" column="1">
            <widget class="QComboBox" name="zoomDefaultComboBox"/>
           </item>
-          <item row="9" column="1">
-           <widget class="QCheckBox" name="pastActualSizeCheckbox">
-            <property name="toolTip">
-             <string>Stop the image from going past its actual size when resizing the window - you can still zoom past it though</string>
-            </property>
+          <item row="9" column="0">
+           <widget class="QCheckBox" name="fitZoomLimitCheckbox">
             <property name="text">
-             <string>Image resizes &amp;past actual size</string>
+             <string>Limit fit/fill zoom:</string>
             </property>
-            <property name="checked">
-             <bool>true</bool>
+           </widget>
+          </item>
+          <item row="9" column="1">
+           <widget class="QSpinBox" name="fitZoomLimitSpinBox">
+            <property name="suffix">
+             <string>%</string>
+            </property>
+            <property name="minimum">
+             <number>100</number>
+            </property>
+            <property name="maximum">
+             <number>800</number>
+            </property>
+            <property name="singleStep">
+             <number>25</number>
+            </property>
+            <property name="value">
+             <number>100</number>
             </property>
            </widget>
           </item>
@@ -953,7 +966,7 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>482</width>
+           <width>467</width>
            <height>609</height>
           </rect>
          </property>

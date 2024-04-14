@@ -76,6 +76,8 @@ private slots:
 
     void windowResizeComboBoxCurrentIndexChanged(int index);
 
+    void fitZoomLimitCheckboxStateChanged(int state);
+
     void constrainImagePositionCheckboxStateChanged(int state);
 
     void languageComboBoxCurrentIndexChanged(int index);

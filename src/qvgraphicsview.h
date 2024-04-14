@@ -165,7 +165,7 @@ private:
 
     bool isScalingEnabled {true};
     bool isScalingTwoEnabled {true};
-    bool isPastActualSizeEnabled {true};
+    std::optional<qreal> fitZoomLimit;
     int fitOverscan {0};
     bool isLoopFoldersEnabled {true};
     bool isCursorZoomEnabled {true};
