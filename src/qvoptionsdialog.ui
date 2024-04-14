@@ -104,6 +104,12 @@
           </property>
           <item row="0" column="0">
            <widget class="QCheckBox" name="bgColorCheckbox">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text">
              <string>Back&amp;ground color:</string>
             </property>
@@ -538,6 +544,12 @@
           </item>
           <item row="9" column="0">
            <widget class="QCheckBox" name="fitZoomLimitCheckbox">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text">
              <string>Limit fit/fill zoom:</string>
             </property>
