@@ -43,7 +43,7 @@ jobs:
             echo "buildNumString=$buildNum" >> $GITHUB_ENV
           fi
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v3
@@ -72,7 +72,7 @@ jobs:
           }
 
       - name: 'Upload Artifact'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: qView-JDP${{ env.buildNumString != '' && '-' || '' }}${{ env.buildNumString }}-${{ runner.os }}${{ matrix.osSuffix }}
           path: bin
