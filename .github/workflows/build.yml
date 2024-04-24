@@ -18,6 +18,7 @@ jobs:
             qtVersion: '5.15.2'
           - runner: 'ubuntu-20.04'
             qtVersion: '5.9'
+            osSuffix: '_qt5.9'
             skipPlugins: 'true'
           - runner: 'macos-latest'
             qtVersion: '6.5.3'
