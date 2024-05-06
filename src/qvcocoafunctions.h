@@ -23,7 +23,7 @@ public:
 
     static void setWindowMenu(QMenu *menu);
 
-    static void setAlternates(QMenu *menu, int index0, int index1);
+    static void setAlternate(QMenu *menu, int index);
 
     static void setDockRecents(const QStringList &recentPathsList);
 

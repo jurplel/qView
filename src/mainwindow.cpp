@@ -701,11 +701,11 @@ void MainWindow::showFileInfo()
     info->raise();
 }
 
-void MainWindow::askDeleteFile()
+void MainWindow::askDeleteFile(bool permanent)
 {
-    if (!qvApp->getSettingsManager().getBoolean("askdelete"))
+    if (!permanent && !qvApp->getSettingsManager().getBoolean("askdelete"))
     {
-        deleteFile();
+        deleteFile(permanent);
         return;
     }
 
@@ -718,42 +718,79 @@ void MainWindow::askDeleteFile()
         return;
     }
 
-    auto trashString = tr("Are you sure you want to move %1 to the Trash?").arg(fileName);
+    QString messageText;
+    if (permanent)
+    {
+        messageText = tr("Are you sure you want to delete %1 permanently? This can't be undone.").arg(fileName);
+    }
+    else
+    {
 #ifdef Q_OS_WIN
-    trashString = tr("Are you sure you want to move %1 to the Recycle Bin?").arg(fileName);
+        messageText = tr("Are you sure you want to move %1 to the Recycle Bin?").arg(fileName);
+#else
+        messageText = tr("Are you sure you want to move %1 to the Trash?").arg(fileName);
 #endif
+    }
 
-    auto *msgBox = new QMessageBox(QMessageBox::Question, tr("Delete"), trashString,
+    auto *msgBox = new QMessageBox(QMessageBox::Question, tr("Delete"), messageText,
                        QMessageBox::Yes | QMessageBox::No, this);
-    msgBox->setCheckBox(new QCheckBox(tr("Do not ask again")));
+    if (!permanent)
+        msgBox->setCheckBox(new QCheckBox(tr("Do not ask again")));
 
-    connect(msgBox, &QMessageBox::finished, this, [this, msgBox](int result){
-        if (result != 16384)
+    connect(msgBox, &QMessageBox::finished, this, [this, msgBox, permanent](int result){
+        if (result != QMessageBox::Yes)
             return;
 
-        QSettings settings;
-        settings.beginGroup("options");
-        settings.setValue("askdelete", !msgBox->checkBox()->isChecked());
-        qvApp->getSettingsManager().loadSettings();
-        this->deleteFile();
+        if (!permanent)
+        {
+            QSettings settings;
+            settings.beginGroup("options");
+            settings.setValue("askdelete", !msgBox->checkBox()->isChecked());
+            qvApp->getSettingsManager().loadSettings();
+        }
+        this->deleteFile(permanent);
     });
 
     msgBox->open();
 }
 
-void MainWindow::deleteFile()
+void MainWindow::deleteFile(bool permanent)
 {
     const QFileInfo &fileInfo = getCurrentFileDetails().fileInfo;
     const QString filePath = fileInfo.absoluteFilePath();
-    QString trashFilePath = "";
+    const QString fileName = fileInfo.fileName();
 
     graphicsView->closeImage();
 
+    bool success;
+    QString trashFilePath;
+    if (permanent)
+    {
+        success = QFile::remove(filePath);
+    }
+    else
+    {
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
-    const QString fileName = fileInfo.fileName();
+        QFile file(filePath);
+        success = file.moveToTrash();
+        if (success)
+            trashFilePath = file.fileName();
+#elif defined Q_OS_MACOS && COCOA_LOADED
+        QString trashedFile = QVCocoaFunctions::deleteFile(filePath);
+        success = !trashedFile.isEmpty();
+        if (success)
+            trashFilePath = QUrl(trashedFile).toLocalFile(); // remove file:// protocol
+#elif defined Q_OS_UNIX && !defined Q_OS_MACOS
+        trashFilePath = deleteFileLinuxFallback(filePath, false);
+        success = !trashFilePath.isEmpty();
+#else
+        QMessageBox::critical(this, tr("Not Supported"), tr("This program was compiled with an old version of Qt and this feature is not available.\n"
+                                                            "If you see this message, please report a bug!"));
 
-    QFile file(filePath);
-    bool success = file.moveToTrash();
+        return;
+#endif
+    }
+
     if (!success || QFile::exists(filePath))
     {
         openFile(filePath);
@@ -761,26 +798,15 @@ void MainWindow::deleteFile()
         return;
     }
 
-    trashFilePath = file.fileName();
-#elif defined Q_OS_MACOS && COCOA_LOADED
-    QString trashedFile = QVCocoaFunctions::deleteFile(filePath);
-    trashFilePath = QUrl(trashedFile).toLocalFile(); // remove file:// protocol
-#elif defined Q_OS_UNIX && !defined Q_OS_MACOS
-    trashFilePath = deleteFileLinuxFallback(filePath, false);
-#else
-    QMessageBox::critical(this, tr("Not Supported"), tr("This program was compiled with an old version of Qt and this feature is not available.\n"
-                                                        "If you see this message, please report a bug!"));
-
-    return;
-#endif
-
     auto afterDelete = qvApp->getSettingsManager().getInteger("afterdelete");
     if (afterDelete > 1)
         nextFile();
     else if (afterDelete < 1)
         previousFile();
 
-    lastDeletedFiles.push({trashFilePath, filePath});
+    if (!trashFilePath.isEmpty())
+        lastDeletedFiles.push({trashFilePath, filePath});
+
     disableActions();
 }
 
