@@ -43,6 +43,10 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
         setWindowTitle("Preferences");
     }
 
+#ifdef QV_DISABLE_ONLINE_VERSION_CHECK
+    ui->updateCheckbox->hide();
+#endif //QV_DISABLE_ONLINE_VERSION_CHECK
+
 // Platform specific settings
 #ifdef Q_OS_MACOS
     ui->menubarCheckbox->hide();

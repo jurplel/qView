@@ -99,7 +99,9 @@ private:
     QPointer<QVWelcomeDialog> welcomeDialog;
     QPointer<QVAboutDialog> aboutDialog;
 
+#ifndef QV_DISABLE_ONLINE_VERSION_CHECK
     UpdateChecker updateChecker;
+#endif //QV_DISABLE_ONLINE_VERSION_CHECK
 };
 
 #endif // QVAPPLICATION_H
