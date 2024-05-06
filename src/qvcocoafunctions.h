@@ -13,7 +13,7 @@ public:
 
     static void setUserDefaults();
 
-    static void setFullSizeContentView(QWindow *window, const bool shouldEnable);
+    static void setFullSizeContentView(QWindow *window, const bool enable);
 
     static void setVibrancy(bool alwaysDark, QWindow *window);
 

@@ -64,33 +64,36 @@ void QVCocoaFunctions::setUserDefaults()
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"NSFullScreenMenuItemEverywhere"];
 }
 
-// This function should only be called once because it sets observers
-void QVCocoaFunctions::setFullSizeContentView(QWindow *window, const bool shouldEnable)
+// This function should only be enabled once because it sets observers
+void QVCocoaFunctions::setFullSizeContentView(QWindow *window, const bool enable)
 {
     auto *view = reinterpret_cast<NSView*>(window->winId());
 
-    const bool isAlreadyEnabled = view.window.styleMask & NSWindowStyleMaskFullSizeContentView;
-    if (shouldEnable == isAlreadyEnabled || (shouldEnable && !view.wantsLayer))
+    // Make sure the requested state isn't already in effect
+    if (enable == (view.window.styleMask & NSWindowStyleMaskFullSizeContentView))
         return;
 
+    // Changing the style mask causes the window to resize, so snapshot the original size
     NSRect originalFrame = view.window.frame;
-    if (shouldEnable)
+
+    if (enable)
     {
+        // Proceed only if this Qt and macOS version combination is already using layer-backed view
+        if (!view.wantsLayer)
+            return;
         view.window.styleMask |= NSWindowStyleMaskFullSizeContentView;
     }
     else
     {
-        int titlebarOverlap = view.window.contentView.frame.size.height - view.window.contentLayoutRect.size.height;
-        NSRect adjustedFrame = originalFrame;
-        adjustedFrame.size.height -= titlebarOverlap;
-        [view.window setFrame:adjustedFrame display:NO];
         view.window.styleMask &= ~NSWindowStyleMaskFullSizeContentView;
     }
+
+    // Restore original size after style mask change
     [view.window setFrame:originalFrame display:YES];
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 2, 0)
     // workaround for QTBUG-69975
-    if (shouldEnable)
+    if (enable)
     {
         [[NSNotificationCenter defaultCenter] addObserverForName:NSWindowDidExitFullScreenNotification object:view.window queue:nil usingBlock:^(NSNotification *notification){
             auto *window = reinterpret_cast<NSWindow*>(notification.object);
