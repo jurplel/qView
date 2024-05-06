@@ -41,11 +41,9 @@ public:
 
     MainWindow *getMainWindow(bool shouldBeEmpty);
 
-#ifndef QV_DISABLE_ONLINE_VERSION_CHECK
     void checkUpdates();
 
     void checkedUpdates();
-#endif //QV_DISABLE_ONLINE_VERSION_CHECK
 
     void recentsMenuUpdated();
 

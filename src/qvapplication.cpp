@@ -16,7 +16,7 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     connect(&actionManager, &ActionManager::recentsMenuUpdated, this, &QVApplication::recentsMenuUpdated);
 
 #ifndef QV_DISABLE_ONLINE_VERSION_CHECK
-connect(&updateChecker, &UpdateChecker::checkedUpdates, this, &QVApplication::checkedUpdates);
+    connect(&updateChecker, &UpdateChecker::checkedUpdates, this, &QVApplication::checkedUpdates);
 #endif //QV_DISABLE_ONLINE_VERSION_CHECK
 
     // Add fallback fromTheme icon search on linux with qt >5.11
@@ -26,16 +26,15 @@ connect(&updateChecker, &UpdateChecker::checkedUpdates, this, &QVApplication::ch
 
     defineFilterLists();
 
-#ifndef QV_DISABLE_ONLINE_VERSION_CHECK
     // Check for updates
     // TODO: move this to after first window show event
-    if (getSettingsManager().getBoolean("updatenotifications"))
+    if (getSettingsManager().getBoolean("updatenotifications")) {
         checkUpdates();
-#endif //QV_DISABLE_ONLINE_VERSION_CHECK
+    }
 
     // Setup macOS dock menu
     dockMenu = new QMenu();
-    connect(dockMenu, &QMenu::triggered, this, [](QAction *triggeredAction){
+    connect(dockMenu, &QMenu::triggered, this, [](QAction *triggeredAction) {
        ActionManager::actionTriggered(triggeredAction);
     });
 
@@ -49,7 +48,7 @@ connect(&updateChecker, &UpdateChecker::checkedUpdates, this, &QVApplication::ch
 
     // Build menu bar
     menuBar = actionManager.buildMenuBar();
-    connect(menuBar, &QMenuBar::triggered, this, [](QAction *triggeredAction){
+    connect(menuBar, &QMenuBar::triggered, this, [](QAction *triggeredAction) {
         ActionManager::actionTriggered(triggeredAction);
     });
 
@@ -120,7 +119,7 @@ void QVApplication::pickFile(MainWindow *parent)
     if (parent)
         fileDialog->setWindowModality(Qt::WindowModal);
 
-    connect(fileDialog, &QFileDialog::filesSelected, fileDialog, [parent](const QStringList &selected){
+    connect(fileDialog, &QFileDialog::filesSelected, fileDialog, [parent](const QStringList &selected) {
         bool isFirstLoop = true;
         for (const auto &file : selected)
         {
@@ -197,14 +196,16 @@ MainWindow *QVApplication::getMainWindow(bool shouldBeEmpty)
     return window;
 }
 
-#ifndef QV_DISABLE_ONLINE_VERSION_CHECK
 void QVApplication::checkUpdates()
 {
+#ifndef QV_DISABLE_ONLINE_VERSION_CHECK
     updateChecker.check();
+#endif // QV_DISABLE_ONLINE_VERSION_CHECK
 }
 
 void QVApplication::checkedUpdates()
 {
+#ifndef QV_DISABLE_ONLINE_VERSION_CHECK
     if (aboutDialog)
     {
         aboutDialog->setLatestVersionNum(updateChecker.getLatestVersionNum());
@@ -214,8 +215,8 @@ void QVApplication::checkedUpdates()
     {
         updateChecker.openDialog();
     }
+#endif // QV_DISABLE_ONLINE_VERSION_CHECK
 }
-#endif //QV_DISABLE_ONLINE_VERSION_CHECK
 
 void QVApplication::recentsMenuUpdated()
 {
