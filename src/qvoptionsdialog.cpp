@@ -200,6 +200,8 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
     syncCheckbox(ui->saveRecentsCheckbox, "saverecents", defaults, makeConnections);
     // updatenotifications
     syncCheckbox(ui->updateCheckbox, "updatenotifications", defaults, makeConnections);
+    // skiphidden
+    syncCheckbox(ui->skipHiddenCheckbox, "skiphidden", defaults, makeConnections);
 }
 
 void QVOptionsDialog::syncCheckbox(QCheckBox *checkbox, const QString &key, bool defaults, bool makeConnection)
