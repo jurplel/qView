@@ -597,7 +597,7 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
     } else if (key == "showfileinfo") {
         relevantWindow->showFileInfo();
     } else if (key == "delete") {
-        relevantWindow->askDeleteFile();
+        relevantWindow->askDeleteFile(false);
     } else if (key == "deletepermanent") {
         relevantWindow->askDeleteFile(true);
     } else if (key == "undo") {

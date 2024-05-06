@@ -59,7 +59,7 @@ public:
 
     void showFileInfo();
 
-    void askDeleteFile(bool permanent = false);
+    void askDeleteFile(bool permanent);
 
     void deleteFile(bool permanent);
 
