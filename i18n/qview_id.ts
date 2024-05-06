@@ -152,17 +152,17 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="713"/>
         <source>Zoom &amp;In</source>
-        <translation>Perbe &amp;sar</translation>
+        <translation>Perbesar</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="717"/>
         <source>Zoom &amp;Out</source>
-        <translation>Perke &amp;cil</translation>
+        <translation>Perkecil</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="721"/>
         <source>Reset &amp;Zoom</source>
-        <translation>Setel Ulang &amp;Zoom</translation>
+        <translation>Setel Ulang Pembesaran</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="725"/>
@@ -428,12 +428,12 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="801"/>
         <source>Failed undoing deletion of %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Gagal membatalkan penghapusan %1.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="939"/>
         <source>Save Frame As...</source>
-        <translation type="unfinished"></translation>
+        <translation>Simpan Bingkai Sebagai...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="968"/>
@@ -629,7 +629,7 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
     <message>
         <location filename="../src/qvinfodialog.ui" line="193"/>
         <source>Frames:</source>
-        <translation type="unfinished"></translation>
+        <translation>Bingkai:</translation>
     </message>
     <message>
         <location filename="../src/qvinfodialog.ui" line="213"/>
@@ -644,7 +644,7 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
     <message>
         <location filename="../src/qvinfodialog.cpp" line="51"/>
         <source>%1 x %2 (%3 MP)</source>
-        <translation type="unfinished">%1 x %2 (%3 MP)</translation>
+        <translation>%1 x %2 (%3 MP)</translation>
     </message>
 </context>
 <context>
@@ -760,13 +760,13 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="90"/>
         <source>&amp;Verbose</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Verbose</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="110"/>
         <location filename="../src/qvoptionsdialog.ui" line="120"/>
         <source>Control when the window should resize to fit the image&apos;s actual size</source>
-        <translation type="unfinished">Kontrol ketika jendela harus menyesuaikan dengan ukuran asli gambar</translation>
+        <translation>Kontrol ketika jendela harus menyesuaikan dengan ukuran asli gambar</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="113"/>
@@ -838,17 +838,17 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="242"/>
         <source>Show titlebar text in fullscreen</source>
-        <translation type="unfinished"></translation>
+        <translation>Tampilkan teks judul dalam layar penuh</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="249"/>
         <source>&amp;Quit on last window closed</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Keluar pada jendela terakhir ditutup</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="257"/>
         <source>Image</source>
-        <translation type="unfinished"></translation>
+        <translation>Gambar</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="263"/>
@@ -925,7 +925,7 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="390"/>
         <source>Fit whole image</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Muat seluruh gambar</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="395"/>
@@ -965,27 +965,27 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="469"/>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Nama</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="474"/>
         <source>Last Modified</source>
-        <translation type="unfinished"></translation>
+        <translation>Terakhir Dimodifikasi</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="479"/>
         <source>Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Ukuran</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="484"/>
         <source>Type</source>
-        <translation type="unfinished"></translation>
+        <translation>Tipe</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="489"/>
         <source>Random</source>
-        <translation type="unfinished"></translation>
+        <translation>Random</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="497"/>
@@ -1072,7 +1072,7 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="451"/>
         <source>Language:</source>
-        <translation type="unfinished"></translation>
+        <translation>Bahasa:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="666"/>
@@ -1113,17 +1113,17 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
     <message>
         <location filename="../src/qvoptionsdialog.cpp" line="452"/>
         <source>System Language</source>
-        <translation type="unfinished"></translation>
+        <translation>Bahasa Sistem</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.cpp" line="476"/>
         <source>Restart Required</source>
-        <translation type="unfinished"></translation>
+        <translation>Mulai Ulang Diperlukan</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.cpp" line="476"/>
         <source>You must restart qView to change the language.</source>
-        <translation type="unfinished"></translation>
+        <translation>Anda harus memulai ulang qView untuk mengganti bahasa.</translation>
     </message>
 </context>
 <context>
@@ -1131,30 +1131,32 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="14"/>
         <source>Rename...</source>
-        <translation type="unfinished"></translation>
+        <translation>Ganti Nama...</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="15"/>
         <source>File name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Nama berkas:</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="26"/>
         <location filename="../src/qvrenamedialog.cpp" line="45"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Galat</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="26"/>
         <source>Could not rename %1:
 No write permission or file is read-only.</source>
-        <translation type="unfinished"></translation>
+        <translation>Tidak dapat mengganti nama %1:
+Tidak ada izin tulis atau berkas hanya dapat dibaca.</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="45"/>
         <source>Could not rename %1:
 (Check that all characters are valid)</source>
-        <translation type="unfinished"></translation>
+        <translation>Tidak dapat mengganti nama %1:
+(Cek apakah semua karakter valid)</translation>
     </message>
 </context>
 <context>
@@ -1162,17 +1164,17 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvshortcutdialog.ui" line="14"/>
         <source>Modify Shortcuts</source>
-        <translation type="unfinished"></translation>
+        <translation>Ganti Tombol Pintasan</translation>
     </message>
     <message>
         <location filename="../src/qvshortcutdialog.cpp" line="53"/>
         <source>Shortcut Already Used</source>
-        <translation type="unfinished"></translation>
+        <translation>Pintasan Telah Digunakan</translation>
     </message>
     <message>
         <location filename="../src/qvshortcutdialog.cpp" line="53"/>
         <source>&quot;%1&quot; is already bound to &quot;%2&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>&quot;%1&quot; telah digunakan untuk &quot;%2&quot;</translation>
     </message>
 </context>
 <context>
@@ -1181,7 +1183,7 @@ No write permission or file is read-only.</source>
         <location filename="../src/qvwelcomedialog.ui" line="14"/>
         <location filename="../src/qvwelcomedialog.ui" line="155"/>
         <source>Welcome</source>
-        <translation type="unfinished"></translation>
+        <translation>Selamat Datang</translation>
     </message>
     <message>
         <location filename="../src/qvwelcomedialog.ui" line="472"/>
@@ -1204,117 +1206,117 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="45"/>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation>Buka</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="46"/>
         <source>Open URL</source>
-        <translation type="unfinished"></translation>
+        <translation>Buka URL</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="47"/>
         <source>Open Containing Folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Buka Folder</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="50"/>
         <source>Show in Explorer</source>
-        <translation type="unfinished"></translation>
+        <translation>Tampilkan di Penjelajah</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="52"/>
         <source>Show in Finder</source>
-        <translation type="unfinished"></translation>
+        <translation>Tampilkan di Finder</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="54"/>
         <source>Show File Info</source>
-        <translation type="unfinished"></translation>
+        <translation>Tampilkan Info Berkas</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="55"/>
         <source>Restore from Trash</source>
-        <translation type="unfinished"></translation>
+        <translation>Pulihkan dari Sampah</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="57"/>
         <source>Undo Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Batal Hapus</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="59"/>
         <source>Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>Salin</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="60"/>
         <source>Paste</source>
-        <translation type="unfinished"></translation>
+        <translation>Tempel</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="61"/>
         <source>Rename</source>
-        <translation type="unfinished"></translation>
+        <translation>Ganti Nama</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="65"/>
         <source>Move to Trash</source>
-        <translation type="unfinished"></translation>
+        <translation>Buang ke Tempah Sampah</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="69"/>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Hapus</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="71"/>
         <source>First File</source>
-        <translation type="unfinished"></translation>
+        <translation>Berkas Pertama</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="72"/>
         <source>Previous File</source>
-        <translation type="unfinished"></translation>
+        <translation>Berkas Sebelumnya</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="73"/>
         <source>Next File</source>
-        <translation type="unfinished"></translation>
+        <translation>Berkas Berikutnya</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="74"/>
         <source>Last File</source>
-        <translation type="unfinished"></translation>
+        <translation>Berkas Terakhir</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="75"/>
         <source>Zoom In</source>
-        <translation type="unfinished"></translation>
+        <translation>Perbesar</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="80"/>
         <source>Zoom Out</source>
-        <translation type="unfinished"></translation>
+        <translation>Perkecil</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="81"/>
         <source>Reset Zoom</source>
-        <translation type="unfinished"></translation>
+        <translation>Atur Ulang Pembesaran</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="82"/>
         <source>Original Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Ukuran Asli</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="83"/>
         <source>Rotate Right</source>
-        <translation type="unfinished"></translation>
+        <translation>Putar ke Kanan</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="84"/>
         <source>Rotate Left</source>
-        <translation type="unfinished"></translation>
+        <translation>Putar ke Kiri</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="85"/>
@@ -1329,7 +1331,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="87"/>
         <source>Full Screen</source>
-        <translation type="unfinished"></translation>
+        <translation>Layar Penuh</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="99"/>
@@ -1369,37 +1371,37 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="106"/>
         <source>Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Opsi</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="108"/>
         <source>Preferences</source>
-        <translation type="unfinished"></translation>
+        <translation>Preferensi</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="112"/>
         <source>New Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Jendela Baru</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="113"/>
         <source>Close Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Tutup Jendela</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="114"/>
         <source>Close All</source>
-        <translation type="unfinished"></translation>
+        <translation>Tutup Semua</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="116"/>
         <source>Quit</source>
-        <translation type="unfinished"></translation>
+        <translation>Keluar</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="121"/>
         <source>Exit</source>
-        <translation type="unfinished"></translation>
+        <translation>Keluar</translation>
     </message>
 </context>
 <context>
@@ -1407,7 +1409,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/updatechecker.cpp" line="69"/>
         <source>Download</source>
-        <translation type="unfinished"></translation>
+        <translation>Unduh</translation>
     </message>
     <message>
         <location filename="../src/updatechecker.cpp" line="72"/>
