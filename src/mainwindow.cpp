@@ -141,10 +141,6 @@ MainWindow::MainWindow(QWidget *parent) :
         populateOpenWithMenu(openWithFutureWatcher.result());
     });
 
-#ifdef COCOA_LOADED
-    QVCocoaFunctions::setFullSizeContentView(windowHandle());
-#endif
-
     // Load window geometry
     QSettings settings;
     restoreGeometry(settings.value("geometry").toByteArray());
@@ -189,6 +185,16 @@ void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 
 void MainWindow::showEvent(QShowEvent *event)
 {
+#ifdef COCOA_LOADED
+    // Enable full size content view. With some Qt versions, this can break its restoreGeometry
+    // functionality even if we enable this after. Presumably restoreGeometry saves data for
+    // further processing after the window is shown, hence the timer here to queue this on the
+    // event loop and run after that processing happens.
+    QTimer::singleShot(0, this, [this]() {
+        QVCocoaFunctions::setFullSizeContentView(windowHandle(), true);
+    });
+#endif
+
     if (!menuBar()->sizeHint().isEmpty())
     {
         ui->fullscreenLabel->setMargin(0);
@@ -200,6 +206,12 @@ void MainWindow::showEvent(QShowEvent *event)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+#ifdef COCOA_LOADED
+    // Full size content view can confuse saveGeometry, making it think the window is taller than
+    // it really is, so the restored window ends up taller. Turn it off before saving geometry.
+    QVCocoaFunctions::setFullSizeContentView(windowHandle(), false);
+#endif
+
     QSettings settings;
     settings.setValue("geometry", saveGeometry());
 

@@ -64,17 +64,37 @@ void QVCocoaFunctions::setUserDefaults()
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"NSFullScreenMenuItemEverywhere"];
 }
 
-// This function should only be called once because it sets observers
-void QVCocoaFunctions::setFullSizeContentView(QWindow *window)
+// This function should only be enabled once because it sets observers
+void QVCocoaFunctions::setFullSizeContentView(QWindow *window, const bool enable)
 {
     auto *view = reinterpret_cast<NSView*>(window->winId());
 
-    // If this Qt and macOS version combination is already using layer-backed view, then enable full size content view
-    if (view.wantsLayer)
-    {
-        view.window.styleMask |= NSWindowStyleMaskFullSizeContentView;
+    // Make sure the requested state isn't already in effect
+    if (enable == (view.window.styleMask & NSWindowStyleMaskFullSizeContentView))
+        return;
 
-        // workaround for QTBUG-69975
+    // Changing the style mask causes the window to resize, so snapshot the original size
+    NSRect originalFrame = view.window.frame;
+
+    if (enable)
+    {
+        // Proceed only if this Qt and macOS version combination is already using layer-backed view
+        if (!view.wantsLayer)
+            return;
+        view.window.styleMask |= NSWindowStyleMaskFullSizeContentView;
+    }
+    else
+    {
+        view.window.styleMask &= ~NSWindowStyleMaskFullSizeContentView;
+    }
+
+    // Restore original size after style mask change
+    [view.window setFrame:originalFrame display:YES];
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 2, 0)
+    // workaround for QTBUG-69975
+    if (enable)
+    {
         [[NSNotificationCenter defaultCenter] addObserverForName:NSWindowDidExitFullScreenNotification object:view.window queue:nil usingBlock:^(NSNotification *notification){
             auto *window = reinterpret_cast<NSWindow*>(notification.object);
             window.styleMask |= NSWindowStyleMaskFullSizeContentView;
@@ -85,6 +105,7 @@ void QVCocoaFunctions::setFullSizeContentView(QWindow *window)
             window.styleMask |= NSWindowStyleMaskFullSizeContentView;
         }];
     }
+#endif
 }
 
 void QVCocoaFunctions::setVibrancy(bool alwaysDark, QWindow *window)

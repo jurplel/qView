@@ -18,15 +18,16 @@ jobs:
             qtVersion: '5.15.2'
           - runner: 'ubuntu-20.04'
             qtVersion: '5.9'
+            osSuffix: '_qt5.9'
             skipPlugins: 'true'
-          - runner: 'macos-latest'
-            qtVersion: '6.2.2'
+          - runner: 'macos-12'
+            qtVersion: '6.5.3'
             qtModules: 'qtimageformats'
-          - runner: 'macos-latest'
+          - runner: 'macos-12'
             qtVersion: '5.15.2'
             osSuffix: '_legacy'
           - runner: 'windows-2019'
-            qtVersion: '6.2.2'
+            qtVersion: '6.5.3'
             qtArch: 'win64_msvc2019_64'
             osSuffix: '_64'
             qtModules: 'qtimageformats'
@@ -47,7 +48,7 @@ jobs:
             echo "buildNumString=$buildNum" >> $GITHUB_ENV
           fi
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v3
@@ -76,7 +77,7 @@ jobs:
           }
 
       - name: 'Upload Artifact'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: qView${{ env.nightlyString }}-${{ runner.os }}${{ matrix.osSuffix }}-${{ env.buildNumString }}
           path: bin

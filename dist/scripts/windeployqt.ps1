@@ -3,19 +3,32 @@ param
     $NightlyVersion = ""
 )
 
+$qtVersion = ((qmake --version -split '\n')[1] -split ' ')[3]
+Write-Host "Detected Qt Version $qtVersion"
+
 # Download and extract openssl
+if ($qtVersion -like '5.*') {
+    $openSslDownloadUrl = "https://download.firedaemon.com/FireDaemon-OpenSSL/openssl-1.1.1w.zip"
+    $openSslFolderVersion = "1.1"
+    $openSslFilenameVersion = "1_1"
+} else {
+    $openSslDownloadUrl = "https://download.firedaemon.com/FireDaemon-OpenSSL/openssl-3.2.1.zip"
+    $openSslFolderVersion = "3"
+    $openSslFilenameVersion = "3"
+}
+Write-Host "Downloading $openSslDownloadUrl"
 $ProgressPreference = 'SilentlyContinue'
-Invoke-WebRequest https://www.firedaemon.com/download-firedaemon-openssl-1-zip -O openssl.zip
+Invoke-WebRequest -Uri $openSslDownloadUrl -OutFile openssl.zip
 7z x -y .\openssl.zip
 
 # Check if "arch" environment variable is win32
 # If it is, install x86 binaries, otherwise x64 binaries
 if ($env:arch.substring(3, 2) -eq '32') {
-    copy openssl-1.1\x86\bin\libssl-1_1.dll bin\
-    copy openssl-1.1\x86\bin\libcrypto-1_1.dll bin\
-}  Else {
-    copy openssl-1.1\x64\bin\libssl-1_1-x64.dll bin\
-    copy openssl-1.1\x64\bin\libcrypto-1_1-x64.dll bin\
+    copy openssl-$openSslFolderVersion\x86\bin\libssl-$openSslFilenameVersion.dll bin\
+    copy openssl-$openSslFolderVersion\x86\bin\libcrypto-$openSslFilenameVersion.dll bin\
+} else {
+    copy openssl-$openSslFolderVersion\x64\bin\libssl-$openSslFilenameVersion-x64.dll bin\
+    copy openssl-$openSslFolderVersion\x64\bin\libcrypto-$openSslFilenameVersion-x64.dll bin\
 }
 
 # Run windeployqt which should be in path
