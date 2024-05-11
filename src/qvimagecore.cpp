@@ -3,6 +3,7 @@
 #include "qvwin32functions.h"
 #include "qvcocoafunctions.h"
 #include "qvlinuxx11functions.h"
+#include <cstring>
 #include <random>
 #include <QMessageBox>
 #include <QDir>
@@ -147,6 +148,13 @@ QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColo
     }
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+    // Work around Qt ICC profile parsing bug
+    if (!readImage.colorSpace().isValid() && !readImage.colorSpace().iccProfile().isEmpty())
+    {
+        QByteArray profileData = readImage.colorSpace().iccProfile();
+        if (removeTinyDataTagsFromIccProfile(profileData))
+            readImage.setColorSpace(QColorSpace::fromIccProfile(profileData));
+    }
     // Assume image is sRGB if it doesn't specify
     if (!readImage.colorSpace().isValid())
         readImage.setColorSpace(QColorSpace::SRgb);
@@ -536,10 +544,63 @@ QColorSpace QVImageCore::detectDisplayColorSpace() const
 #endif
 
     if (!profileData.isEmpty())
-        return QColorSpace::fromIccProfile(profileData);
+    {
+        QColorSpace colorSpace = QColorSpace::fromIccProfile(profileData);
+        if (!colorSpace.isValid() && removeTinyDataTagsFromIccProfile(profileData))
+            colorSpace = QColorSpace::fromIccProfile(profileData);
+        return colorSpace;
+    }
 #endif
 
     return {};
+}
+
+// Workaround for QTBUG-125241
+bool QVImageCore::removeTinyDataTagsFromIccProfile(QByteArray &profile)
+{
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+    const int offsetTagCount = 128;
+    const qsizetype length = profile.length();
+    qsizetype offset = offsetTagCount;
+    char *data = profile.data();
+    bool foundTinyData = false;
+    // read tag count
+    if (length - offset < 4)
+        return false;
+    quint32 tagCount = qFromBigEndian<quint32>(data + offset);
+    offset += 4;
+    // so we don't have to worry about overflows
+    if (tagCount > 99999)
+        return false;
+    // loop through tags
+    if (length - offset < qsizetype(tagCount * 12))
+        return false;
+    while (tagCount)
+    {
+        tagCount -= 1;
+        const quint32 dataSize = qFromBigEndian<quint32>(data + offset + 8);
+        if (dataSize >= 12)
+        {
+            // this tag is fine
+            offset += 12;
+            continue;
+        }
+        // qt will fail on this tag, remove it
+        foundTinyData = true;
+        if (tagCount)
+        {
+            // shift subsequent tags back
+            std::memmove(data + offset, data + offset + 12, tagCount * 12);
+        }
+        // zero fill gap at end
+        std::memset(data + offset + (tagCount * 12), 0, 12);
+        // decrement tag count
+        qToBigEndian(qFromBigEndian<quint32>(data + offsetTagCount) - 1, data + offsetTagCount);
+    }
+    return foundTinyData;
+#else
+    return false;
+#endif
 }
 
 void QVImageCore::jumpToNextFrame()
