@@ -145,6 +145,22 @@ void QVWin32Functions::showOpenWithDialog(const QString &filePath, const QWindow
         qDebug() << "Failed launching open with dialog";
 }
 
+// Logic borrowed from Qt's private qWinCmdArgs function
+QStringList QVWin32Functions::getCommandLineArgs()
+{
+    const QString cmdLine = QString::fromWCharArray(GetCommandLine());
+    QStringList result;
+    int size;
+    if (wchar_t **argv = CommandLineToArgvW((const wchar_t *)cmdLine.utf16(), &size)) {
+        result.reserve(size);
+        wchar_t **argvEnd = argv + size;
+        for (wchar_t **a = argv; a < argvEnd; ++a)
+            result.append(QString::fromWCharArray(*a));
+        LocalFree(argv);
+    }
+    return result;
+}
+
 QByteArray QVWin32Functions::getIccProfileForWindow(const QWindow *window)
 {
     QByteArray result;
