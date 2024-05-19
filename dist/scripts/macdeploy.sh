@@ -10,7 +10,15 @@ fi
 cd bin
 
 macdeployqt qView.app
+
+if [[ -f "qView.app/Contents/PlugIns/imageformats/kimg_heif.so" && -f "qView.app/Contents/PlugIns/imageformats/libqmacheif.dylib" ]]; then
+    # Prefer kimageformats HEIF plugin for proper color space handling
+    echo "Removing duplicate HEIF plugin"
+    rm "qView.app/Contents/PlugIns/imageformats/libqmacheif.dylib"
+fi
+
 codesign --sign - --deep qView.app
+
 if [ $1 != "" ]; then
     BUILD_NAME=qView-nightly-$1
     mv qView.app "$BUILD_NAME.app"
