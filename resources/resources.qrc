@@ -2,6 +2,7 @@
     <qresource prefix="/fonts">
         <file>Lato-Light.ttf</file>
         <file>Lato-Regular.ttf</file>
+        <file>MaterialIconsOutlined-Regular.otf</file>
     </qresource>
     <qresource prefix="/images">
         <file>checkmark.png</file>
