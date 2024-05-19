@@ -23,6 +23,7 @@ int main(int argc, char *argv[])
     // constructor. Certain characters like U+2033 (double prime) get converted differently in argv versus
     // the value Qt is comparing with (__argv). This makes Qt incorrectly think the data was changed, and
     // it skips fetching unicode arguments from the API.
+    // https://bugreports.qt.io/browse/QTBUG-125380
     parser.process(QVWin32Functions::getCommandLineArgs());
 #else
     parser.process(app);
