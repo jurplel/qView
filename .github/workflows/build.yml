@@ -9,6 +9,11 @@ on:
         description: 'Is this a release build?'
         required: false
         default: false
+      appleNotarize:
+        type: boolean
+        description: 'Notarize with Apple?'
+        required: false
+        default: false
 jobs:
   build:
     strategy:
@@ -63,6 +68,12 @@ jobs:
         run: dist/scripts/build.ps1
 
       - name: Deploy qView
+        env:
+          APPLE_NOTARIZE_REQUESTED: ${{ inputs.appleNotarize }}
+          APPLE_DEVID_APP_CERT_DATA: ${{ secrets.APPLE_DEVID_APP_CERT_DATA }}
+          APPLE_DEVID_APP_CERT_PASS: ${{ secrets.APPLE_DEVID_APP_CERT_PASS }}
+          APPLE_ID_USER: ${{ secrets.APPLE_ID_USER }}
+          APPLE_ID_PASS: ${{ secrets.APPLE_ID_PASS }}
         shell: pwsh
         run: |
           if ("${{ matrix.skipPlugins }}" -ne "true") {
