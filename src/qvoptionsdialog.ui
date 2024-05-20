@@ -23,8 +23,26 @@
    <string>Settings</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>10</number>
+   </property>
+   <property name="leftMargin">
+    <number>12</number>
+   </property>
+   <property name="topMargin">
+    <number>12</number>
+   </property>
+   <property name="rightMargin">
+    <number>12</number>
+   </property>
+   <property name="bottomMargin">
+    <number>12</number>
+   </property>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="spacing">
+      <number>0</number>
+     </property>
      <item>
       <widget class="QListWidget" name="categoryList">
        <property name="maximumSize">
@@ -52,11 +70,23 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>472</width>
-           <height>552</height>
+           <width>482</width>
+           <height>562</height>
           </rect>
          </property>
          <layout class="QFormLayout" name="windowLayout">
+          <property name="leftMargin">
+           <number>10</number>
+          </property>
+          <property name="topMargin">
+           <number>10</number>
+          </property>
+          <property name="rightMargin">
+           <number>10</number>
+          </property>
+          <property name="bottomMargin">
+           <number>10</number>
+          </property>
           <item row="0" column="0">
            <widget class="QCheckBox" name="bgColorCheckbox">
             <property name="text">
@@ -286,11 +316,23 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>472</width>
-           <height>552</height>
+           <width>482</width>
+           <height>562</height>
           </rect>
          </property>
          <layout class="QFormLayout" name="imageLayout">
+          <property name="leftMargin">
+           <number>10</number>
+          </property>
+          <property name="topMargin">
+           <number>10</number>
+          </property>
+          <property name="rightMargin">
+           <number>10</number>
+          </property>
+          <property name="bottomMargin">
+           <number>10</number>
+          </property>
           <item row="0" column="0">
            <widget class="QLabel" name="label_2">
             <property name="text">
@@ -534,11 +576,23 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>472</width>
-           <height>552</height>
+           <width>482</width>
+           <height>562</height>
           </rect>
          </property>
          <layout class="QFormLayout" name="miscLayout">
+          <property name="leftMargin">
+           <number>10</number>
+          </property>
+          <property name="topMargin">
+           <number>10</number>
+          </property>
+          <property name="rightMargin">
+           <number>10</number>
+          </property>
+          <property name="bottomMargin">
+           <number>10</number>
+          </property>
           <item row="0" column="0">
            <widget class="QLabel" name="langComboLabel">
             <property name="text">
@@ -829,6 +883,18 @@
        </widget>
        <widget class="QWidget" name="shortcuts">
         <layout class="QVBoxLayout" name="verticalLayout_2">
+         <property name="leftMargin">
+          <number>10</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
          <item>
           <widget class="QTableWidget" name="shortcutsTable">
            <property name="editTriggers">
