@@ -74,7 +74,7 @@ QVAboutDialog::QVAboutDialog(double givenLatestVersionNum, QWidget *parent) :
 #ifndef QV_DISABLE_ONLINE_VERSION_CHECK
     if (latestVersionNum < 0.0)
     {
-        qvApp->checkUpdates();
+        qvApp->checkUpdates(false);
         latestVersionNum = 0.0;
     }
 #endif //QV_DISABLE_ONLINE_VERSION_CHECK

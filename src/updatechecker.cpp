@@ -14,8 +14,15 @@ UpdateChecker::UpdateChecker(QObject *parent) : QObject(parent)
     connect(&netAccessManager, &QNetworkAccessManager::finished, this, &UpdateChecker::readReply);
 }
 
-void UpdateChecker::check()
+void UpdateChecker::check(bool isStartupCheck)
 {
+    if (isStartupCheck)
+    {
+        QDateTime lastCheckTime = getLastCheckTime();
+        if (lastCheckTime.isValid() && QDateTime::currentDateTimeUtc() < lastCheckTime.addSecs(STARTUP_CHECK_INTERVAL_HOURS * 3600))
+            return;
+    }
+
     sendRequest(UPDATE_URL + "/latest");
 }
 
@@ -65,7 +72,20 @@ void UpdateChecker::readReply(QNetworkReply *reply)
     releaseDate = QDateTime::fromString(object.value("published_at").toString(), Qt::ISODate);
     releaseDate = releaseDate.toTimeSpec(Qt::LocalTime);
 
+    setLastCheckTime(QDateTime::currentDateTimeUtc());
+
     emit checkedUpdates();
+}
+
+QDateTime UpdateChecker::getLastCheckTime() const
+{
+    qint64 secsSinceEpoch = QSettings().value("lastupdatecheck").toLongLong();
+    return secsSinceEpoch == 0 ? QDateTime() : QDateTime::fromSecsSinceEpoch(secsSinceEpoch, Qt::UTC);
+}
+
+void UpdateChecker::setLastCheckTime(QDateTime value)
+{
+    QSettings().setValue("lastupdatecheck", value.toSecsSinceEpoch());
 }
 
 void UpdateChecker::openDialog()
