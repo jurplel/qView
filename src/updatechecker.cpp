@@ -16,7 +16,7 @@ UpdateChecker::UpdateChecker(QObject *parent) : QObject(parent)
 
 void UpdateChecker::check()
 {
-    sendRequest(UPDATE_URL);
+    sendRequest(UPDATE_URL + "/latest");
 }
 
 void UpdateChecker::sendRequest(const QUrl &url)
@@ -49,7 +49,7 @@ void UpdateChecker::readReply(QNetworkReply *reply)
         return;
     }
 
-    QJsonObject object = json.array().first().toObject();
+    QJsonObject object = json.object();
 
     latestVersionNum = object.value("tag_name").toString("0.0").toDouble();
 
