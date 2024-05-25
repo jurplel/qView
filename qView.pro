@@ -137,8 +137,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 DEFINES += QT_NO_FOREACH
 
 # To disables both manual and automatic checking for updates either uncomment line below or
-# add config flag while building from the commad line.
-CONFIG += qv_disable_online_version_check
+# add config flag while building from the command line.
+#CONFIG += qv_disable_online_version_check
 
 qv_disable_online_version_check {
     DEFINES += QV_DISABLE_ONLINE_VERSION_CHECK
