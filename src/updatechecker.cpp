@@ -53,9 +53,14 @@ void UpdateChecker::readReply(QNetworkReply *reply)
 
     latestVersionNum = object.value("tag_name").toString("0.0").toDouble();
 
-    QStringList changelogList = object.value("body").toString().split("\n");
+    static const QRegularExpression newLineRegEx("\r?\n");
+    QStringList changelogList = object.value("body").toString().split(newLineRegEx);
+    // remove "changelog" heading
     changelogList.removeFirst();
-    changelog = changelogList.join("");
+    // remove additional newline if present
+    if (!changelogList.isEmpty() && changelogList.first().isEmpty())
+        changelogList.removeFirst();
+    changelog = changelogList.join("\n");
 
     releaseDate = QDateTime::fromString(object.value("published_at").toString(), Qt::ISODate);
     releaseDate = releaseDate.toTimeSpec(Qt::LocalTime);
@@ -71,7 +76,7 @@ void UpdateChecker::openDialog()
     auto *msgBox = new QMessageBox();
     msgBox->setWindowTitle(tr("qView Update Available"));
     msgBox->setText(tr("qView %1 is available to download.").arg(QString::number(latestVersionNum, 'f', 1))
-                    + "\n\n" + releaseDate.toString(locale.dateFormat()) + "\n" + changelog);
+                    + "\n\n" + releaseDate.toString(locale.dateFormat()) + "\n\n" + changelog);
     msgBox->setWindowModality(Qt::ApplicationModal);
     msgBox->setStandardButtons(QMessageBox::Close | QMessageBox::Reset);
     msgBox->button(QMessageBox::Reset)->setText(tr("&Disable Update Checking"));
