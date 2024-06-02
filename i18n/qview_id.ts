@@ -796,7 +796,7 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="152"/>
         <source>Control the minimum size that the window should reach when matching the image&apos;s actual size</source>
-        <translation type="unfinished"></translation>
+        <translation>Atur ukuran minimal yang harus dicapai ketika mencocokkan ukuran asli gambar</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="155"/>
@@ -808,7 +808,7 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
         <location filename="../src/qvoptionsdialog.ui" line="174"/>
         <location filename="../src/qvoptionsdialog.ui" line="184"/>
         <source>Control the maximum size that the window should reach when matching the image&apos;s actual size</source>
-        <translation type="unfinished"></translation>
+        <translation>Atur ukuran maksimal yang harus dicapai ketika mencocokkan ukuran asli gambar</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="177"/>
@@ -823,22 +823,22 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca (read-only).</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="222"/>
         <source>&amp;Titlebar always dark</source>
-        <translation>Bar judul selalu gelap</translation>
+        <translation>&amp;Bilah judul selalu gelap</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="232"/>
         <source>Show menubar</source>
-        <translation>Tampilkan bar menu</translation>
+        <translation>Tampilkan bilah menu</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="239"/>
         <source>Choose whether or not to display the titlebar text while in fullscreen</source>
-        <translation type="unfinished"></translation>
+        <translation>Pilih apakah bilah teks judul ditampilkan atau tidak pada layar penuh</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="242"/>
         <source>Show titlebar text in fullscreen</source>
-        <translation>Tampilkan teks judul dalam layar penuh</translation>
+        <translation>Tampilkan bilah teks judul dalam layar penuh</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="249"/>
