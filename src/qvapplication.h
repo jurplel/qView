@@ -41,7 +41,7 @@ public:
 
     MainWindow *getMainWindow(bool shouldBeEmpty);
 
-    void checkUpdates();
+    void checkUpdates(bool isStartupCheck);
 
     void checkedUpdates();
 

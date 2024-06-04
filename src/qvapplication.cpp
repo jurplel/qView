@@ -29,7 +29,7 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     // Check for updates
     // TODO: move this to after first window show event
     if (getSettingsManager().getBoolean("updatenotifications")) {
-        checkUpdates();
+        checkUpdates(true);
     }
 
     // Setup macOS dock menu
@@ -196,10 +196,10 @@ MainWindow *QVApplication::getMainWindow(bool shouldBeEmpty)
     return window;
 }
 
-void QVApplication::checkUpdates()
+void QVApplication::checkUpdates(bool isStartupCheck)
 {
 #ifndef QV_DISABLE_ONLINE_VERSION_CHECK
-    updateChecker.check();
+    updateChecker.check(isStartupCheck);
 #endif // QV_DISABLE_ONLINE_VERSION_CHECK
 }
 
