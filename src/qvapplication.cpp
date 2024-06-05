@@ -7,6 +7,7 @@
 #include <QSettings>
 #include <QTimer>
 #include <QFileDialog>
+#include <QFontDatabase>
 
 QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
 {
@@ -389,4 +390,37 @@ void QVApplication::defineFilterLists()
     // Build name filter list for file dialogs
     nameFilterList << filterString;
     nameFilterList << tr("All Files") + " (*)";
+}
+
+void QVApplication::ensureFontLoaded(const QString &path)
+{
+    if (loadedFontPaths.contains(path))
+        return;
+
+    QFontDatabase::addApplicationFont(path);
+    loadedFontPaths.insert(path);
+}
+
+QIcon QVApplication::iconFromFont(const QString &fontFamily, const QChar &codePoint, const int pixelSize, const qreal pixelRatio)
+{
+    const int scaledPixelSize = qRound(pixelSize * pixelRatio);
+
+    QFont font(fontFamily);
+    font.setPixelSize(pixelSize);
+
+    QPixmap pixmap(scaledPixelSize, scaledPixelSize);
+    pixmap.fill(Qt::transparent);
+    pixmap.setDevicePixelRatio(pixelRatio);
+
+    QPainter painter(&pixmap);
+    painter.setFont(font);
+    painter.setPen(QApplication::palette().color(QPalette::WindowText));
+    painter.drawText(pixmap.rect(), codePoint);
+
+    return QIcon(pixmap);
+}
+
+qreal QVApplication::getPerceivedBrightness(const QColor &color)
+{
+    return (color.red() * 0.299 + color.green() * 0.587 + color.blue() * 0.114) / 255.0;
 }

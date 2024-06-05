@@ -20,15 +20,20 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowFlags(windowFlags() & (~Qt::WindowContextHelpButtonHint | Qt::CustomizeWindowHint));
 
+    resize(640, 530);
+
+    qvApp->ensureFontLoaded(":/fonts/MaterialIconsOutlined-Regular.otf");
+
+    connect(ui->categoryList, &QListWidget::currentRowChanged, this, [this](int currentRow) { ui->stackedWidget->setCurrentIndex(currentRow); });
     connect(ui->buttonBox, &QDialogButtonBox::clicked, this, &QVOptionsDialog::buttonBoxClicked);
     connect(ui->shortcutsTable, &QTableWidget::cellDoubleClicked, this, &QVOptionsDialog::shortcutCellDoubleClicked);
     connect(ui->bgColorCheckbox, &QCheckBox::stateChanged, this, &QVOptionsDialog::bgColorCheckboxStateChanged);
     connect(ui->scalingCheckbox, &QCheckBox::stateChanged, this, &QVOptionsDialog::scalingCheckboxStateChanged);
 
-    populateLanguages();
-
     QSettings settings;
-    ui->tabWidget->setCurrentIndex(settings.value("optionstab", 1).toInt());
+
+    populateCategories(settings.value("optionstab", 1).toInt());
+    populateLanguages();
 
     // On macOS, the dialog should not be dependent on any window
 #ifndef Q_OS_MACOS
@@ -79,12 +84,21 @@ QVOptionsDialog::~QVOptionsDialog()
     delete ui;
 }
 
+void QVOptionsDialog::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::PaletteChange)
+    {
+        populateCategories(ui->categoryList->currentRow());
+    }
+    QDialog::changeEvent(event);
+}
+
 void QVOptionsDialog::done(int r)
 {
     // Save window geometry
     QSettings settings;
     settings.setValue("optionsgeometry", saveGeometry());
-    settings.setValue("optionstab", ui->tabWidget->currentIndex());
+    settings.setValue("optionstab", ui->categoryList->currentRow());
 
     QDialog::done(r);
 }
@@ -450,6 +464,34 @@ void QVOptionsDialog::windowResizeComboBoxCurrentIndexChanged(int index)
     ui->minWindowResizeSpinBox->setEnabled(enableRelatedControls);
     ui->maxWindowResizeLabel->setEnabled(enableRelatedControls);
     ui->maxWindowResizeSpinBox->setEnabled(enableRelatedControls);
+}
+
+void QVOptionsDialog::populateCategories(int selectedRow)
+{
+    const int iconSize = 24;
+    const int listRightPadding = 3;
+    auto addItem = [&](const QChar &iconChar, const QString &text) {
+        ui->categoryList->addItem(new QListWidgetItem(qvApp->iconFromFont("Material Icons Outlined", iconChar, iconSize, devicePixelRatioF()), text));
+    };
+    ui->categoryList->setIconSize(QSize(iconSize, iconSize));
+    ui->categoryList->setFont(QApplication::font());
+    const QString currentStyle = qApp->style()->objectName();
+    if (currentStyle.compare("fusion", Qt::CaseInsensitive) == 0 ||
+        currentStyle.compare("macos", Qt::CaseInsensitive) == 0)
+    {
+        const QColor textColor = QApplication::palette().color(QPalette::WindowText);
+        QPalette palette = ui->categoryList->palette();
+        palette.setColor(QPalette::HighlightedText, textColor);
+        palette.setColor(QPalette::Highlight, qvApp->getPerceivedBrightness(textColor) > 0.5 ? QColor(0, 65, 127) : QColor(75, 166, 255));
+        ui->categoryList->setPalette(palette);
+    }
+    ui->categoryList->clear();
+    addItem(u'\ue069', tr("Window"));
+    addItem(u'\ue3f4', tr("Image"));
+    addItem(u'\ue429', tr("Miscellaneous"));
+    addItem(u'\ue312', tr("Shortcuts"));
+    ui->categoryList->setCurrentRow(selectedRow);
+    ui->categoryList->setFixedWidth(ui->categoryList->sizeHintForColumn(0) + ui->categoryList->frameWidth() + listRightPadding);
 }
 
 void QVOptionsDialog::populateLanguages()
