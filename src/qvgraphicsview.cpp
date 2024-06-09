@@ -20,6 +20,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     setDragMode(QGraphicsView::ScrollHandDrag);
     setFrameShape(QFrame::NoFrame);
     setTransformationAnchor(QGraphicsView::NoAnchor);
+    viewport()->setAutoFillBackground(false);
 
     // part of a pathetic attempt at gesture support
     grabGesture(Qt::PinchGesture);
@@ -683,21 +684,6 @@ void QVGraphicsView::centerOn(const QGraphicsItem *item)
 void QVGraphicsView::settingsUpdated()
 {
     auto &settingsManager = qvApp->getSettingsManager();
-
-    //bgcolor
-    QBrush newBrush;
-    newBrush.setStyle(Qt::SolidPattern);
-    if (!settingsManager.getBoolean("bgcolorenabled"))
-    {
-        newBrush.setColor(QColor(0, 0, 0, 0));
-    }
-    else
-    {
-        QColor newColor;
-        newColor.setNamedColor(settingsManager.getString("bgcolor"));
-        newBrush.setColor(newColor);
-    }
-    setBackgroundBrush(newBrush);
 
     //filtering
     if (settingsManager.getBoolean("filteringenabled"))

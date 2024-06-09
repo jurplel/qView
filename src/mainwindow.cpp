@@ -39,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     setAttribute(Qt::WA_DeleteOnClose);
+    setAttribute(Qt::WA_OpaquePaintEvent);
 
     // Initialize variables
     justLaunchedWithImage = false;
@@ -266,6 +267,16 @@ void MainWindow::mouseDoubleClickEvent(QMouseEvent *event)
     QMainWindow::mouseDoubleClickEvent(event);
 }
 
+void MainWindow::paintEvent(QPaintEvent *event)
+{
+    Q_UNUSED(event);
+
+    QPainter painter(this);
+
+    const QColor &backgroundColor = customBackgroundColor.isValid() ? customBackgroundColor : painter.background().color();
+    painter.fillRect(rect(), backgroundColor);
+}
+
 void MainWindow::openFile(const QString &fileName)
 {
     graphicsView->loadFile(fileName);
@@ -277,6 +288,9 @@ void MainWindow::settingsUpdated()
     auto &settingsManager = qvApp->getSettingsManager();
 
     buildWindowTitle();
+
+    //bgcolor
+    customBackgroundColor = settingsManager.getBoolean("bgcolorenabled") ? QColor(settingsManager.getString("bgcolor")) : QColor();
 
     // menubarenabled
     bool menuBarEnabled = settingsManager.getBoolean("menubarenabled");
@@ -300,6 +314,9 @@ void MainWindow::settingsUpdated()
     ui->fullscreenLabel->setVisible(qvApp->getSettingsManager().getBoolean("fullscreendetails") && (windowState() == Qt::WindowFullScreen));
 
     setWindowSize();
+
+    // repaint in case background color changed
+    update();
 }
 
 void MainWindow::shortcutsUpdated()

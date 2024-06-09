@@ -141,6 +141,8 @@ protected:
 
     void mouseDoubleClickEvent(QMouseEvent *event) override;
 
+    void paintEvent(QPaintEvent *event) override;
+
 protected slots:
     void settingsUpdated();
     void shortcutsUpdated();
@@ -157,6 +159,8 @@ private:
     QShortcut *escShortcut;
 
     QVInfoDialog *info;
+
+    QColor customBackgroundColor;
 
     bool justLaunchedWithImage;
 
