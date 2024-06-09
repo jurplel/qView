@@ -77,6 +77,8 @@ public:
 
     ActionManager &getActionManager() { return actionManager; }
 
+    static qreal getPerceivedBrightness(const QColor &color);
+
 private:
 
     QList<MainWindow*> lastActiveWindows;

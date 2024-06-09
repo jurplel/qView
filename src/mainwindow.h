@@ -111,6 +111,8 @@ public:
 
     void toggleFullScreen();
 
+    int getTitlebarOverlap() const;
+
     const QVImageCore::FileDetails& getCurrentFileDetails() const { return graphicsView->getCurrentFileDetails(); }
 
 public slots:

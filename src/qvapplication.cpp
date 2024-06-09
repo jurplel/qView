@@ -390,3 +390,8 @@ void QVApplication::defineFilterLists()
     nameFilterList << filterString;
     nameFilterList << tr("All Files") + " (*)";
 }
+
+qreal QVApplication::getPerceivedBrightness(const QColor &color)
+{
+    return (color.red() * 0.299 + color.green() * 0.587 + color.blue() * 0.114) / 255.0;
+}
