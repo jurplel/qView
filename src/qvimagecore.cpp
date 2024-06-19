@@ -147,7 +147,7 @@ QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColo
         readImage = imageReader.read();
     }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0) && QT_VERSION < QT_VERSION_CHECK(6, 7, 2)
     // Work around Qt ICC profile parsing bug
     if (!readImage.colorSpace().isValid() && !readImage.colorSpace().iccProfile().isEmpty())
     {
@@ -155,6 +155,9 @@ QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColo
         if (removeTinyDataTagsFromIccProfile(profileData))
             readImage.setColorSpace(QColorSpace::fromIccProfile(profileData));
     }
+#endif
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     // Assume image is sRGB if it doesn't specify
     if (!readImage.colorSpace().isValid())
         readImage.setColorSpace(QColorSpace::SRgb);
@@ -546,8 +549,10 @@ QColorSpace QVImageCore::detectDisplayColorSpace() const
     if (!profileData.isEmpty())
     {
         QColorSpace colorSpace = QColorSpace::fromIccProfile(profileData);
+#if QT_VERSION < QT_VERSION_CHECK(6, 7, 2)
         if (!colorSpace.isValid() && removeTinyDataTagsFromIccProfile(profileData))
             colorSpace = QColorSpace::fromIccProfile(profileData);
+#endif
         return colorSpace;
     }
 #endif
@@ -555,10 +560,10 @@ QColorSpace QVImageCore::detectDisplayColorSpace() const
     return {};
 }
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0) && QT_VERSION < QT_VERSION_CHECK(6, 7, 2)
 // Workaround for QTBUG-125241
 bool QVImageCore::removeTinyDataTagsFromIccProfile(QByteArray &profile)
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     const int offsetTagCount = 128;
     const qsizetype length = profile.length();
     qsizetype offset = offsetTagCount;
@@ -598,10 +603,8 @@ bool QVImageCore::removeTinyDataTagsFromIccProfile(QByteArray &profile)
         qToBigEndian(qFromBigEndian<quint32>(data + offsetTagCount) - 1, data + offsetTagCount);
     }
     return foundTinyData;
-#else
-    return false;
-#endif
 }
+#endif
 
 void QVImageCore::jumpToNextFrame()
 {
