@@ -81,6 +81,9 @@ public:
     static QString getPixmapCacheKey(const QString &absoluteFilePath, const qint64 &fileSize, const QColorSpace &targetColorSpace);
     QColorSpace getTargetColorSpace() const;
     QColorSpace detectDisplayColorSpace() const;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0) && QT_VERSION < QT_VERSION_CHECK(6, 7, 2)
+    static bool removeTinyDataTagsFromIccProfile(QByteArray &profile);
+#endif
 
     void settingsUpdated();
 
