@@ -39,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     setAttribute(Qt::WA_DeleteOnClose);
+    setAttribute(Qt::WA_OpaquePaintEvent);
 
     // Initialize variables
     justLaunchedWithImage = false;
@@ -266,6 +267,28 @@ void MainWindow::mouseDoubleClickEvent(QMouseEvent *event)
     QMainWindow::mouseDoubleClickEvent(event);
 }
 
+void MainWindow::paintEvent(QPaintEvent *event)
+{
+    Q_UNUSED(event);
+
+    QPainter painter(this);
+
+    const int viewportY = qMax(getTitlebarOverlap(), graphicsView->mapTo(this, QPoint()).y());
+    const QRect viewportRect = rect().adjusted(0, viewportY, 0, 0);
+
+    const QColor &backgroundColor = customBackgroundColor.isValid() ? customBackgroundColor : painter.background().color();
+    painter.fillRect(rect(), backgroundColor);
+
+    if (getCurrentFileDetails().errorData.hasError && viewportRect.isValid())
+    {
+        const QVImageCore::ErrorData &errorData = getCurrentFileDetails().errorData;
+        const QString errorMessage = tr("Error occurred opening\n%3\n%2 (Error %1)").arg(QString::number(errorData.errorNum), errorData.errorString, getCurrentFileDetails().fileInfo.fileName());
+        painter.setFont(font());
+        painter.setPen(QVApplication::getPerceivedBrightness(backgroundColor) > 0.5 ? Qt::black : Qt::white);
+        painter.drawText(viewportRect, errorMessage, QTextOption(Qt::AlignCenter));
+    }
+}
+
 void MainWindow::openFile(const QString &fileName)
 {
     graphicsView->loadFile(fileName);
@@ -277,6 +300,9 @@ void MainWindow::settingsUpdated()
     auto &settingsManager = qvApp->getSettingsManager();
 
     buildWindowTitle();
+
+    //bgcolor
+    customBackgroundColor = settingsManager.getBoolean("bgcolorenabled") ? QColor(settingsManager.getString("bgcolor")) : QColor();
 
     // menubarenabled
     bool menuBarEnabled = settingsManager.getBoolean("menubarenabled");
@@ -300,6 +326,9 @@ void MainWindow::settingsUpdated()
     ui->fullscreenLabel->setVisible(qvApp->getSettingsManager().getBoolean("fullscreendetails") && (windowState() == Qt::WindowFullScreen));
 
     setWindowSize();
+
+    // repaint in case background color changed
+    update();
 }
 
 void MainWindow::shortcutsUpdated()
@@ -333,6 +362,9 @@ void MainWindow::fileChanged()
     if (info->isVisible())
         refreshProperties();
     buildWindowTitle();
+
+    // repaint to handle error message
+    update();
 }
 
 void MainWindow::disableActions()
@@ -449,9 +481,12 @@ void MainWindow::buildWindowTitle()
             newString = QString::number(getCurrentFileDetails().loadedIndexInFolder+1);
             newString += "/" + QString::number(getCurrentFileDetails().folderFileInfoList.count());
             newString += " - " + getCurrentFileDetails().fileInfo.fileName();
-            newString += " - "  + QString::number(getCurrentFileDetails().baseImageSize.width());
-            newString += "x" + QString::number(getCurrentFileDetails().baseImageSize.height());
-            newString += " - " + QVInfoDialog::formatBytes(getCurrentFileDetails().fileInfo.size());
+            if (!getCurrentFileDetails().errorData.hasError)
+            {
+                newString += " - "  + QString::number(getCurrentFileDetails().baseImageSize.width());
+                newString += "x" + QString::number(getCurrentFileDetails().baseImageSize.height());
+                newString += " - " + QVInfoDialog::formatBytes(getCurrentFileDetails().fileInfo.size());
+            }
             newString += " - qView";
             break;
         }
@@ -511,11 +546,7 @@ void MainWindow::setWindowSize()
     if (menuBar()->isVisible())
         extraWidgetsSize.rheight() += menuBar()->height();
 
-    int titlebarOverlap = 0;
-#ifdef COCOA_LOADED
-    // To account for fullsizecontentview on mac
-    titlebarOverlap = QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
-#endif
+    const int titlebarOverlap = getTitlebarOverlap();
     if (titlebarOverlap != 0)
         extraWidgetsSize.rheight() += titlebarOverlap;
 
@@ -1134,4 +1165,14 @@ void MainWindow::toggleFullScreen()
         storedWindowState = windowState();
         showFullScreen();
     }
+}
+
+int MainWindow::getTitlebarOverlap() const
+{
+#ifdef COCOA_LOADED
+    // To account for fullsizecontentview on mac
+    return QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
+#endif
+
+    return 0;
 }

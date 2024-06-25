@@ -115,14 +115,14 @@ void QVImageCore::loadFile(const QString &fileName, bool isReloading)
     else
     {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        loadFutureWatcher.setFuture(QtConcurrent::run(this, &QVImageCore::readFile, sanitaryFileName, targetColorSpace, false));
+        loadFutureWatcher.setFuture(QtConcurrent::run(this, &QVImageCore::readFile, sanitaryFileName, targetColorSpace));
 #else
-        loadFutureWatcher.setFuture(QtConcurrent::run(&QVImageCore::readFile, this, sanitaryFileName, targetColorSpace, false));
+        loadFutureWatcher.setFuture(QtConcurrent::run(&QVImageCore::readFile, this, sanitaryFileName, targetColorSpace));
 #endif
     }
 }
 
-QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColorSpace &targetColorSpace, bool forCache)
+QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColorSpace &targetColorSpace)
 {
     QImageReader imageReader;
     imageReader.setDecideFormatFromContent(true);
@@ -164,12 +164,17 @@ QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColo
         fileInfo.absoluteFilePath(),
         fileInfo.size(),
         imageReader.size(),
-        targetColorSpace
+        targetColorSpace,
+        {}
     };
-    // Only error out when not loading for cache
-    if (readPixmap.isNull() && !forCache)
+
+    if (readPixmap.isNull())
     {
-        emit readError(imageReader.error(), imageReader.errorString(), fileInfo.fileName());
+        readData.errorData = {
+            true,
+            imageReader.error(),
+            imageReader.errorString()
+        };
     }
 
     return readData;
@@ -177,6 +182,16 @@ QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColo
 
 void QVImageCore::loadPixmap(const ReadData &readData)
 {
+    if (readData.errorData.hasError)
+    {
+        currentFileDetails = getEmptyFileDetails();
+        currentFileDetails.errorData = readData.errorData;
+    }
+    else
+    {
+        currentFileDetails.errorData = {};
+    }
+
     // Do this first so we can keep folder info even when loading errored files
     currentFileDetails.fileInfo = QFileInfo(readData.absoluteFilePath);
     currentFileDetails.updateLoadedIndexInFolder();
@@ -186,8 +201,11 @@ void QVImageCore::loadPixmap(const ReadData &readData)
     // Reset mechanism to avoid stalling while loading
     waitingOnLoad = false;
 
-    if (readData.pixmap.isNull())
+    if (currentFileDetails.errorData.hasError)
+    {
+        loadEmptyPixmap();
         return;
+    }
 
     loadedPixmap = matchCurrentRotation(readData.pixmap);
 
@@ -233,10 +251,22 @@ void QVImageCore::loadPixmap(const ReadData &readData)
 
 void QVImageCore::closeImage()
 {
+    currentFileDetails = getEmptyFileDetails();
+    loadEmptyPixmap();
+}
+
+void QVImageCore::loadEmptyPixmap()
+{
     loadedPixmap = QPixmap();
     loadedMovie.stop();
     loadedMovie.setFileName("");
-    currentFileDetails = {
+
+    emit fileChanged();
+}
+
+QVImageCore::FileDetails QVImageCore::getEmptyFileDetails()
+{
+    return {
         QFileInfo(),
         currentFileDetails.folderFileInfoList,
         currentFileDetails.loadedIndexInFolder,
@@ -245,10 +275,9 @@ void QVImageCore::closeImage()
         false,
         QSize(),
         QSize(),
-        QElapsedTimer()
+        QElapsedTimer(),
+        {}
     };
-
-    emit fileChanged();
 }
 
 // All file logic, sorting, etc should be moved to a different class or file
@@ -479,9 +508,9 @@ void QVImageCore::requestCachingFile(const QString &filePath, const QColorSpace 
     });
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    cacheFutureWatcher->setFuture(QtConcurrent::run(this, &QVImageCore::readFile, filePath, targetColorSpace, true));
+    cacheFutureWatcher->setFuture(QtConcurrent::run(this, &QVImageCore::readFile, filePath, targetColorSpace));
 #else
-    cacheFutureWatcher->setFuture(QtConcurrent::run(&QVImageCore::readFile, this, filePath, targetColorSpace, true));
+    cacheFutureWatcher->setFuture(QtConcurrent::run(&QVImageCore::readFile, this, filePath, targetColorSpace));
 #endif
 }
 

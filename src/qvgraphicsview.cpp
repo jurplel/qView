@@ -20,6 +20,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     setDragMode(QGraphicsView::ScrollHandDrag);
     setFrameShape(QFrame::NoFrame);
     setTransformationAnchor(QGraphicsView::NoAnchor);
+    viewport()->setAutoFillBackground(false);
 
     // part of a pathetic attempt at gesture support
     grabGesture(Qt::PinchGesture);
@@ -53,7 +54,6 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     connect(&imageCore, &QVImageCore::animatedFrameChanged, this, &QVGraphicsView::animatedFrameChanged);
     connect(&imageCore, &QVImageCore::fileChanged, this, &QVGraphicsView::postLoad);
     connect(&imageCore, &QVImageCore::updateLoadedPixmapItem, this, &QVGraphicsView::updateLoadedPixmapItem);
-    connect(&imageCore, &QVImageCore::readError, this, &QVGraphicsView::error);
 
     // Should replace the other timer eventually
     expensiveScaleTimerNew = new QTimer(this);
@@ -681,34 +681,9 @@ void QVGraphicsView::centerOn(const QGraphicsItem *item)
     centerOn(item->sceneBoundingRect().center());
 }
 
-void QVGraphicsView::error(int errorNum, const QString &errorString, const QString &fileName)
-{
-    if (!errorString.isEmpty())
-    {
-        closeImage();
-        QMessageBox::critical(this, tr("Error"), tr("Error occurred opening \"%3\":\n%2 (Error %1)").arg(QString::number(errorNum), errorString, fileName));
-        return;
-    }
-}
-
 void QVGraphicsView::settingsUpdated()
 {
     auto &settingsManager = qvApp->getSettingsManager();
-
-    //bgcolor
-    QBrush newBrush;
-    newBrush.setStyle(Qt::SolidPattern);
-    if (!settingsManager.getBoolean("bgcolorenabled"))
-    {
-        newBrush.setColor(QColor(0, 0, 0, 0));
-    }
-    else
-    {
-        QColor newColor;
-        newColor.setNamedColor(settingsManager.getString("bgcolor"));
-        newBrush.setColor(newColor);
-    }
-    setBackgroundBrush(newBrush);
 
     //filtering
     if (settingsManager.getBoolean("filteringenabled"))
