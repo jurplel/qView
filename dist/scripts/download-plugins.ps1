@@ -23,8 +23,8 @@ if ($pluginNames.count -eq 0) {
 }
 
 foreach ($pluginName in $pluginNames) {
-    $arch = If (-not $env:arch -or $env:arch -eq '') { "" } Else { "-$env:arch" }
-    $artifactName = "$pluginName-$imageName-$qtVersion$arch.zip"
+    $qtArch = $env:qtArch ? "-$env:qtArch" : ''
+    $artifactName = "$pluginName-$imageName-$qtVersion$qtArch.zip"
     $downloadUrl = "$binaryBaseUrl/$artifactName"
 
     Write-Host "Downloading $downloadUrl"
@@ -76,7 +76,9 @@ if ($pluginNames -contains 'kimageformats') {
         if (Test-Path -Path kimageformats/kimageformats/output/heif.dll -PathType Leaf) {
             cp kimageformats/kimageformats/output/heif.dll "$out_frm/"
             cp kimageformats/kimageformats/output/libde265.dll "$out_frm/"
-            cp kimageformats/kimageformats/output/libx265.dll "$out_frm/"
+            if ($env:buildArch -ne 'Arm64') {
+                cp kimageformats/kimageformats/output/libx265.dll "$out_frm/"
+            }
             cp kimageformats/kimageformats/output/aom.dll "$out_frm/"
         }
         # copy raw stuff
