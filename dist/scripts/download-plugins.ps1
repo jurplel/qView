@@ -9,7 +9,7 @@ Write-Host "Detected Qt Version $qtVersion"
 
 # Qt version availability and runner names are assumed.
 if ($IsWindows) {
-    $imageName = "windows-2019"
+    $imageName = "windows-2022"
 } elseif ($IsMacOS) {
     $imageName = "macos-12"
 } else {
