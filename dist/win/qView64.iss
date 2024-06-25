@@ -1,4 +1,4 @@
-#define MyAppName "qView"
+﻿#define MyAppName "qView"
 #define MyAppPublisher "jurplel and qView contributors"
 #define MyAppURL "https://interversehq.com/qview/"
 #define MyAppExeName "qView.exe"
@@ -25,15 +25,15 @@ WizardImageFile=wiz.bmp
 UninstallDisplayName={#MyAppName}
 UninstallDisplayIcon={app}\{#MyAppExeName}
 VersionInfoVersion={#MyAppVersion}
-AppCopyright=Copyright � 2018-{#MyAppYear}, {#MyAppPublisher}
+AppCopyright=Copyright © 2018-{#MyAppYear}, {#MyAppPublisher}
 MinVersion=0,6.1
 DisableProgramGroupPage=yes
 ChangesAssociations=yes
 Compression=lzma
 SolidCompression=yes
 PrivilegesRequiredOverridesAllowed=dialog
-ArchitecturesInstallIn64BitMode=x64
-ArchitecturesAllowed=x64
+ArchitecturesInstallIn64BitMode=x64compatible
+ArchitecturesAllowed=x64compatible
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -44,7 +44,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "fileassociation"; Description: "Create file associations"; GroupDescription: "Other:";
 
 [Files]
-Source: "qView-win64/*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
+Source: "qView-Win64/*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 Source: "qView.VisualElementsManifest.xml"; DestDir: "{app}"; Flags: ignoreversion
 Source: "win-tile-m.png"; DestDir: "{app}"; Flags: ignoreversion
 Source: "win-tile-s.png"; DestDir: "{app}"; Flags: ignoreversion
@@ -106,7 +106,6 @@ Root: HKA; Subkey: "SOFTWARE\Classes\.rgba\OpenWithProgids"; ValueType: string; 
 Root: HKA; Subkey: "SOFTWARE\Classes\.sgi\OpenWithProgids"; ValueType: string; ValueName: "{#MyAppName}.1"; ValueData: ""; Flags: uninsdeletevalue; Tasks: fileassociation
 Root: HKA; Subkey: "SOFTWARE\Classes\.tga\OpenWithProgids"; ValueType: string; ValueName: "{#MyAppName}.1"; ValueData: ""; Flags: uninsdeletevalue; Tasks: fileassociation
 Root: HKA; Subkey: "SOFTWARE\Classes\.xcf\OpenWithProgids"; ValueType: string; ValueName: "{#MyAppName}.1"; ValueData: ""; Flags: uninsdeletevalue; Tasks: fileassociation
-
 
 ; Capabilities keys for default programs/apps to work
 Root: HKA; Subkey: "Software\{#MyAppName}"; Flags: uninsdeletekey; Tasks: fileassociation

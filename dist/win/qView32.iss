@@ -1,4 +1,4 @@
-#define MyAppName "qView"
+﻿#define MyAppName "qView"
 #define MyAppPublisher "jurplel and qView contributors"
 #define MyAppURL "https://interversehq.com/qview/"
 #define MyAppExeName "qView.exe"
@@ -25,14 +25,14 @@ WizardImageFile=wiz.bmp
 UninstallDisplayName={#MyAppName}
 UninstallDisplayIcon={app}\{#MyAppExeName}
 VersionInfoVersion={#MyAppVersion}
-AppCopyright=Copyright � 2018-{#MyAppYear}, {#MyAppPublisher}
+AppCopyright=Copyright © 2018-{#MyAppYear}, {#MyAppPublisher}
 MinVersion=0,6.1
 DisableProgramGroupPage=yes
 ChangesAssociations=yes
 Compression=lzma
 SolidCompression=yes
 PrivilegesRequiredOverridesAllowed=dialog
-ArchitecturesAllowed=x86 x64
+ArchitecturesAllowed=x86compatible
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -43,7 +43,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "fileassociation"; Description: "Create file associations"; GroupDescription: "Other:";
 
 [Files]
-Source: "qView-win32/*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
+Source: "qView-Win32/*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 Source: "qView.VisualElementsManifest.xml"; DestDir: "{app}"; Flags: ignoreversion
 Source: "win-tile-m.png"; DestDir: "{app}"; Flags: ignoreversion
 Source: "win-tile-s.png"; DestDir: "{app}"; Flags: ignoreversion
