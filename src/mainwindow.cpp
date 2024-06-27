@@ -273,19 +273,38 @@ void MainWindow::paintEvent(QPaintEvent *event)
 
     QPainter painter(this);
 
-    const int viewportY = qMax(getTitlebarOverlap(), graphicsView->mapTo(this, QPoint()).y());
-    const QRect viewportRect = rect().adjusted(0, viewportY, 0, 0);
-
     const QColor &backgroundColor = customBackgroundColor.isValid() ? customBackgroundColor : painter.background().color();
-    painter.fillRect(rect(), backgroundColor);
 
-    if (getCurrentFileDetails().errorData.hasError && viewportRect.isValid())
+    // Find the top of the viewport to account for the menu bar if it's inside the window
+    // and/or the label that displays titlebar text in full screen mode.
+    const int viewportY = graphicsView->mapTo(this, QPoint()).y();
+    // On macOS, part of the viewport may be additionally covered with the window's translucent
+    // titlebar due to full size content view.
+    const int unobscuredViewportY = qMax(getTitlebarOverlap(), viewportY);
+
+    // Erase the area above the viewport, i.e. fill it with the painter's default color.
+    const QRect headerRect = QRect(0, 0, width(), viewportY);
+    if (headerRect.isValid())
+    {
+        painter.eraseRect(headerRect);
+    }
+
+    // Fill the viewport with the background color.
+    const QRect viewportRect = rect().adjusted(0, viewportY, 0, 0);
+    if (viewportRect.isValid())
+    {
+        painter.fillRect(viewportRect, backgroundColor);
+    }
+
+    // If there's an error message, draw it centered inside the unobscured area of the viewport.
+    const QRect unobscuredViewportRect = rect().adjusted(0, unobscuredViewportY, 0, 0);
+    if (getCurrentFileDetails().errorData.hasError && unobscuredViewportRect.isValid())
     {
         const QVImageCore::ErrorData &errorData = getCurrentFileDetails().errorData;
         const QString errorMessage = tr("Error occurred opening\n%3\n%2 (Error %1)").arg(QString::number(errorData.errorNum), errorData.errorString, getCurrentFileDetails().fileInfo.fileName());
         painter.setFont(font());
         painter.setPen(QVApplication::getPerceivedBrightness(backgroundColor) > 0.5 ? Qt::black : Qt::white);
-        painter.drawText(viewportRect, errorMessage, QTextOption(Qt::AlignCenter));
+        painter.drawText(unobscuredViewportRect, errorMessage, QTextOption(Qt::AlignCenter));
     }
 }
 
