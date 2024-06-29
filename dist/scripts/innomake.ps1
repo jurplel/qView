@@ -1,6 +1,8 @@
-# Script assumes $env:arch will start with win64 or win32
-$win64orwin32 = $env:arch.substring(0, 5)
-New-Item -Path "dist\win\qView-$win64orwin32" -ItemType Directory -ea 0
-copy -R bin\* "dist\win\qView-$win64orwin32"
-iscc dist\win\qView$($env:arch.substring(3, 2)).iss
+$suffix =
+    $env:buildArch -eq 'X86' ? '32' :
+    $env:buildArch -eq 'Arm64' ? 'Arm64' :
+    '64';
+New-Item -Path "dist\win\qView-Win$suffix" -ItemType Directory -ea 0
+copy -R bin\* "dist\win\qView-Win$suffix"
+iscc dist\win\qView$suffix.iss
 copy dist\win\Output\* bin\

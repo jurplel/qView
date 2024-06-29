@@ -18,7 +18,7 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName={autopf}\{#MyAppName}
 LicenseFile=../../LICENSE
-OutputBaseFilename={#MyAppName}-{#MyAppVersion}-win32
+OutputBaseFilename={#MyAppName}-{#MyAppVersion}-winarm64
 SetupIconFile=qView.ico
 WizardSmallImageFile=wiz-small.bmp
 WizardImageFile=wiz.bmp
@@ -32,7 +32,8 @@ ChangesAssociations=yes
 Compression=lzma
 SolidCompression=yes
 PrivilegesRequiredOverridesAllowed=dialog
-ArchitecturesAllowed=x86compatible
+ArchitecturesInstallIn64BitMode=arm64
+ArchitecturesAllowed=arm64
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -43,7 +44,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "fileassociation"; Description: "Create file associations"; GroupDescription: "Other:";
 
 [Files]
-Source: "qView-Win32/*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
+Source: "qView-WinArm64/*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 Source: "qView.VisualElementsManifest.xml"; DestDir: "{app}"; Flags: ignoreversion
 Source: "win-tile-m.png"; DestDir: "{app}"; Flags: ignoreversion
 Source: "win-tile-s.png"; DestDir: "{app}"; Flags: ignoreversion

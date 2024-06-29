@@ -28,24 +28,33 @@ jobs:
           - runner: 'macos-12'
             qtVersion: '6.5.3'
             qtModules: 'qtimageformats'
+            buildArch: 'Universal'
           - runner: 'macos-12'
             qtVersion: '5.15.2'
             osSuffix: '_legacy'
-          - runner: 'windows-2019'
+          - runner: 'windows-2022'
             qtVersion: '6.5.3'
             qtArch: 'win64_msvc2019_64'
             osSuffix: '_64'
             qtModules: 'qtimageformats'
-          - runner: 'windows-2019'
+          - runner: 'windows-2022'
+            qtVersion: '6.5.3'
+            qtArch: 'win64_msvc2019_arm64'
+            osSuffix: '_arm64'
+            qtModules: 'qtimageformats'
+            buildArch: 'Arm64'
+          - runner: 'windows-2022'
             qtVersion: '5.15.2'
             qtArch: 'win32_msvc2019'
             osSuffix: '_32'
+            buildArch: 'X86'
     runs-on: ${{ matrix.runner }}
     steps:
       - name: Set environment variables
         shell: bash
         run: |
-          echo "arch=${{ matrix.qtArch }}" >> $GITHUB_ENV
+          echo "qtArch=${{ matrix.qtArch }}" >> $GITHUB_ENV
+          echo "buildArch=${{ matrix.buildArch }}" >> $GITHUB_ENV
           if [ "${{ inputs.isRelease }}" != "true" ]; then
             buildNum=$(date '+%Y-%m-%d').$GITHUB_RUN_ATTEMPT
             echo "nightlyDefines=NIGHTLY=$buildNum" >> $GITHUB_ENV
