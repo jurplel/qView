@@ -137,6 +137,8 @@ private:
     unsigned randomSortSeed;
 
     QStringList lastFilesPreloaded;
+    QStringList preloadFilesInProgress;
+    QString waitingOnPreloadFile;
 
     int largestDimension;
 
