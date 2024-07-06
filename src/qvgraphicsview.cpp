@@ -42,7 +42,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     zoomMultiplier = 1.25;
 
     // Initialize other variables
-    fitOverscan = 2;
+    fitOverscan = 0;
     zoomLevel = 1.0;
     appliedDpiAdjustment = 1.0;
     appliedExpensiveScaleZoomLevel = 0.0;
@@ -420,15 +420,41 @@ void QVGraphicsView::zoomToFit()
 
     qreal targetRatio;
 
+    // Each mode will check if the rounded image size already produces the desired fit,
+    // in which case we can use exactly 1.0 to avoid unnecessary scaling
+
     switch (cropMode) { // should be enum tbh
     case 1: // only take into account height
-        targetRatio = fitYRatio;
+        if (qRound(effectiveImageSize.height()) == viewSize.height())
+            targetRatio = 1.0;
+        else
+            targetRatio = fitYRatio;
         break;
     case 2: // only take into account width
-        targetRatio = fitXRatio;
+        if (qRound(effectiveImageSize.width()) == viewSize.width())
+            targetRatio = 1.0;
+        else
+            targetRatio = fitXRatio;
         break;
     default:
-        targetRatio = qMin(fitXRatio, fitYRatio);
+        if ((qRound(effectiveImageSize.height()) == viewSize.height() && qRound(effectiveImageSize.width()) <= viewSize.width()) ||
+            (qRound(effectiveImageSize.width()) == viewSize.width() && qRound(effectiveImageSize.height()) <= viewSize.height()))
+        {
+            targetRatio = 1.0;
+        }
+        else
+        {
+            QSize xRatioSize = (effectiveImageSize * fitXRatio * devicePixelRatioF()).toSize();
+            QSize yRatioSize = (effectiveImageSize * fitYRatio * devicePixelRatioF()).toSize();
+            QSize maxSize = (QSizeF(viewSize) * devicePixelRatioF()).toSize();
+            // If the fit ratios are extremely close, it's possible that both are sufficient to
+            // contain the image, but one results in the opposing dimension getting rounded down
+            // to just under the view size, so use the larger of the two ratios in that case.
+            if (xRatioSize.boundedTo(maxSize) == xRatioSize && yRatioSize.boundedTo(maxSize) == yRatioSize)
+                targetRatio = qMax(fitXRatio, fitYRatio);
+            else
+                targetRatio = qMin(fitXRatio, fitYRatio);
+        }
         break;
     }
 
@@ -587,13 +613,26 @@ qreal QVGraphicsView::getContentToViewportRatio() const
 
 void QVGraphicsView::setTransformScale(qreal value)
 {
+#ifdef Q_OS_WIN
+    // On Windows, the positioning of scaled pixels seems to follow a floor rule rather
+    // than rounding, so increase the scale just a hair to cover rounding errors in case
+    // the desired scale was targeting an integer pixel boundary.
+    value *= 1.0 + std::numeric_limits<double>::epsilon();
+#endif
     setTransform(getTransformWithNoScaling().scale(value, value));
 }
 
 QTransform QVGraphicsView::getTransformWithNoScaling() const
 {
-    const QRectF unityRect = transform().mapRect(QRectF(0, 0, 1, 1));
-    return transform().scale(1.0 / unityRect.width(), 1.0 / unityRect.height());
+    const QTransform t = transform();
+    // Only intended to handle combinations of scaling, mirroring, flipping, and rotation
+    // in increments of 90 degrees. A seemingly simpler approach would be to scale the
+    // transform by the inverse of its scale factor, but the resulting scale factor may
+    // not exactly equal 1 due to floating point rounding errors.
+    if (t.type() == QTransform::TxRotate)
+        return { 0, t.m12() < 0 ? -1.0 : 1.0, t.m21() < 0 ? -1.0 : 1.0, 0, 0, 0 };
+    else
+        return { t.m11() < 0 ? -1.0 : 1.0, 0, 0, t.m22() < 0 ? -1.0 : 1.0, 0, 0 };
 }
 
 qreal QVGraphicsView::getDpiAdjustment() const
