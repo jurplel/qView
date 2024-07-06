@@ -54,7 +54,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Connect graphicsview signals
     connect(graphicsView, &QVGraphicsView::fileChanged, this, &MainWindow::fileChanged);
-    connect(graphicsView, &QVGraphicsView::updatedLoadedPixmapItem, this, &MainWindow::setWindowSize);
     connect(graphicsView, &QVGraphicsView::cancelSlideshow, this, &MainWindow::cancelSlideshow);
 
     // Initialize escape shortcut
@@ -381,6 +380,7 @@ void MainWindow::fileChanged()
     if (info->isVisible())
         refreshProperties();
     buildWindowTitle();
+    setWindowSize();
 
     // repaint to handle error message
     update();
@@ -547,8 +547,9 @@ void MainWindow::setWindowSize()
     qreal maxWindowResizedPercentage = qvApp->getSettingsManager().getInteger("maxwindowresizedpercentage")/100.0;
 
 
+    const int fitOverscan = graphicsView->getFitOverscan();
     QSize imageSize = getCurrentFileDetails().loadedPixmapSize;
-    imageSize -= QSize(4, 4);
+    imageSize -= QSize(fitOverscan * 2, fitOverscan * 2);
 
 
     // Try to grab the current screen
@@ -996,7 +997,7 @@ void MainWindow::zoomOut()
 
 void MainWindow::resetZoom()
 {
-    graphicsView->resetScale();
+    graphicsView->zoomToFit();
 }
 
 void MainWindow::originalSize()
@@ -1018,13 +1019,13 @@ void MainWindow::rotateLeft()
 
 void MainWindow::mirror()
 {
-    graphicsView->scale(-1, 1);
+    graphicsView->mirrorImage();
     resetZoom();
 }
 
 void MainWindow::flip()
 {
-    graphicsView->scale(1, -1);
+    graphicsView->flipImage();
     resetZoom();
 }
 
@@ -1072,7 +1073,7 @@ void MainWindow::saveFrameAs()
             nextFrame();
 
         graphicsView->getLoadedMovie().currentPixmap().save(fileName, nullptr, 100);
-        graphicsView->resetScale();
+        graphicsView->zoomToFit();
     });
 }
 
