@@ -323,7 +323,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="390"/>
         <source>Empty</source>
-        <translation type="unfinished">Vide</translation>
+        <translation>Vide</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="563"/>
@@ -376,57 +376,59 @@
         <location filename="../src/mainwindow.cpp" line="685"/>
         <source>Can&apos;t delete %1:
 No write permission or file is read-only.</source>
-        <translation type="unfinished">Impossible de supprimer %1:
+        <translation>Impossible de supprimer %1:
 Le fichier est en lecture seule ou la permission en écriture est absente.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="689"/>
         <source>Are you sure you want to move %1 to the Trash?</source>
-        <translation type="unfinished"></translation>
+        <translation>Êtes-vous sûr de vouloir déplacer %1 vers la corbeille&#x202f;?</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="691"/>
         <source>Are you sure you want to move %1 to the Recycle Bin?</source>
-        <translation type="unfinished"></translation>
+        <translation>Êtes-vous sûr de vouloir déplacer %1 dans la corbeille&#x202f;?</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="694"/>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Supprimer</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="696"/>
         <source>Do not ask again</source>
-        <translation type="unfinished"></translation>
+        <translation>Ne plus redemander</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="725"/>
         <source>Can&apos;t delete %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible de supprimer %1.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="736"/>
         <location filename="../src/mainwindow.cpp" line="806"/>
         <source>Not Supported</source>
-        <translation type="unfinished"></translation>
+        <translation>Non supporté</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="736"/>
         <location filename="../src/mainwindow.cpp" line="806"/>
         <source>This program was compiled with an old version of Qt and this feature is not available.
 If you see this message, please report a bug!</source>
-        <translation type="unfinished"></translation>
+        <translation>Ce programme a été compilé avec une ancienne version de Qt et cette fonctionnalité n&apos;est pas disponible.
+Si vous voyez ce message, veuillez signaler un bogue&#x202f;!</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="793"/>
         <source>Can&apos;t undo deletion of %1:
 No write permission or file is read-only.</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible d&apos;annuler la suppression de %1&#x202f;:
+Pas d&apos;autorisation d&apos;écriture ou le fichier est en lecture seule.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="801"/>
         <source>Failed undoing deletion of %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Échec de l&apos;annulation de la suppression de %1.</translation>
     </message>
     <message>
         <source>Rename...</source>
@@ -473,17 +475,17 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/openwith.cpp" line="165"/>
         <source>All Applications (*.app)</source>
-        <translation type="unfinished"></translation>
+        <translation>Toutes les applications (*.app)</translation>
     </message>
     <message>
         <location filename="../src/openwith.cpp" line="177"/>
         <source>Programs (*.exe *.pif *.com *.bat *.cmd)</source>
-        <translation type="unfinished"></translation>
+        <translation>Exécutables (*.exe *.pif *.com *.bat *.cmd)</translation>
     </message>
     <message>
         <location filename="../src/openwith.cpp" line="177"/>
         <source>All Files (*)</source>
-        <translation type="unfinished"></translation>
+        <translation>Tous les fichiers (*)</translation>
     </message>
 </context>
 <context>
@@ -552,7 +554,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvapplication.cpp" line="40"/>
         <source>Supported Images</source>
-        <translation type="unfinished"></translation>
+        <translation>Formats d&apos;images supportés</translation>
     </message>
     <message>
         <location filename="../src/qvapplication.cpp" line="49"/>
@@ -570,7 +572,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvcocoafunctions.mm" line="195"/>
         <source> (default)</source>
-        <translation type="unfinished"></translation>
+        <translation> (par défaut)</translation>
     </message>
 </context>
 <context>
@@ -668,67 +670,67 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvopenwithdialog.ui" line="14"/>
         <source>Choose Application</source>
-        <translation type="unfinished"></translation>
+        <translation>Choisir une application</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="66"/>
         <source>Development</source>
-        <translation type="unfinished"></translation>
+        <translation>Développement</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="67"/>
         <source>Education</source>
-        <translation type="unfinished"></translation>
+        <translation>Éducation</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="68"/>
         <source>Games</source>
-        <translation type="unfinished"></translation>
+        <translation>Jeux</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="69"/>
         <source>Graphics</source>
-        <translation type="unfinished"></translation>
+        <translation>Graphisme</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="70"/>
         <source>Internet</source>
-        <translation type="unfinished"></translation>
+        <translation>Internet</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="71"/>
         <source>Multimedia</source>
-        <translation type="unfinished"></translation>
+        <translation>Multimédia</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="72"/>
         <source>Office</source>
-        <translation type="unfinished"></translation>
+        <translation>Bureautique</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="73"/>
         <source>Science</source>
-        <translation type="unfinished"></translation>
+        <translation>Sciences</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="74"/>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Paramètres</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="75"/>
         <source>System</source>
-        <translation type="unfinished"></translation>
+        <translation>Système</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="76"/>
         <source>Utilities</source>
-        <translation type="unfinished"></translation>
+        <translation>Utilitaires</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="77"/>
         <source>Other</source>
-        <translation type="unfinished"></translation>
+        <translation>Autre</translation>
     </message>
 </context>
 <context>
@@ -859,7 +861,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="249"/>
         <source>&amp;Quit on last window closed</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Quitter à la fermeture de la dernière fenêtre</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="257"/>
@@ -1093,27 +1095,27 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="666"/>
         <source>Move Back</source>
-        <translation type="unfinished"></translation>
+        <translation>Revenir en arrière</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="671"/>
         <source>Do Nothing</source>
-        <translation type="unfinished"></translation>
+        <translation>Ne rien faire</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="676"/>
         <source>Move Forward</source>
-        <translation type="unfinished"></translation>
+        <translation>Aller en avant</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="684"/>
         <source>After deletion:</source>
-        <translation type="unfinished"></translation>
+        <translation>Après suppression&#x202f;:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="691"/>
         <source>&amp;Ask before deleting files</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Demander avant de supprimer des fichiers</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="712"/>
@@ -1147,30 +1149,32 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="14"/>
         <source>Rename...</source>
-        <translation type="unfinished">Renommer…</translation>
+        <translation>Renommer…</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="15"/>
         <source>File name:</source>
-        <translation type="unfinished">Nom du fichier&#xa0;:</translation>
+        <translation>Nom du fichier&#x202f;:</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="26"/>
         <location filename="../src/qvrenamedialog.cpp" line="45"/>
         <source>Error</source>
-        <translation type="unfinished">Erreur</translation>
+        <translation>Erreur</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="26"/>
         <source>Could not rename %1:
 No write permission or file is read-only.</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible de renommer %1&#x202f;:
+Pas d&apos;autorisation d&apos;écriture ou le fichier est en lecture seule.</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="45"/>
         <source>Could not rename %1:
 (Check that all characters are valid)</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible de renommer %1.
+(Vérifier que tous les caractères sont valides)</translation>
     </message>
 </context>
 <context>
@@ -1250,12 +1254,12 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="55"/>
         <source>Restore from Trash</source>
-        <translation type="unfinished"></translation>
+        <translation>Restaurer depuis la corbeille</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="57"/>
         <source>Undo Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Annuler la suppression</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="59"/>
@@ -1275,12 +1279,12 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="65"/>
         <source>Move to Trash</source>
-        <translation type="unfinished"></translation>
+        <translation>Déplacer dans la corbeille</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="69"/>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Supprimer</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="71"/>
