@@ -126,7 +126,6 @@ void QVImageCore::loadFile(const QString &fileName, bool isReloading)
 QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColorSpace &targetColorSpace)
 {
     QImageReader imageReader;
-    imageReader.setDecideFormatFromContent(true);
     imageReader.setAutoTransform(true);
 
     imageReader.setFileName(fileName);
