@@ -37,12 +37,14 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     isScrollZoomsEnabled = true;
     isLoopFoldersEnabled = true;
     isCursorZoomEnabled = true;
+    isOneToOnePixelSizingEnabled = true;
     cropMode = 0;
     zoomMultiplier = 1.25;
 
     // Initialize other variables
     fitOverscan = 2;
     zoomLevel = 1.0;
+    appliedDpiAdjustment = 1.0;
     appliedExpensiveScaleZoomLevel = 0.0;
     lastZoomEventPos = QPoint(-1, -1);
     lastZoomRoundingError = QPointF();
@@ -76,6 +78,15 @@ void QVGraphicsView::resizeEvent(QResizeEvent *event)
 {
     QGraphicsView::resizeEvent(event);
     zoomToFit();
+}
+
+void QVGraphicsView::paintEvent(QPaintEvent *event)
+{
+    // This is the most reliable place to detect DPI changes. QWindow::screenChanged()
+    // doesn't detect when the DPI is changed on the current monitor, for example.
+    handleDpiAdjustmentChange();
+
+    QGraphicsView::paintEvent(event);
 }
 
 void QVGraphicsView::dropEvent(QDropEvent *event)
@@ -312,7 +323,7 @@ void QVGraphicsView::zoomAbsolute(const qreal absoluteLevel, const QPoint &pos)
     }
     else
     {
-        setTransformScale(absoluteLevel);
+        setTransformScale(absoluteLevel * appliedDpiAdjustment);
     }
     zoomLevel = absoluteLevel;
 
@@ -350,7 +361,8 @@ void QVGraphicsView::applyExpensiveScaling()
     }
 
     // Calculate scaled resolution
-    const QSizeF mappedSize = QSizeF(getCurrentFileDetails().loadedPixmapSize) * zoomLevel * devicePixelRatioF();
+    const qreal dpiAdjustment = getDpiAdjustment();
+    const QSizeF mappedSize = QSizeF(getCurrentFileDetails().loadedPixmapSize) * zoomLevel * dpiAdjustment * devicePixelRatioF();
 
     // Set image to scaled version
     loadedPixmapItem->setPixmap(imageCore.scaleExpensively(mappedSize));
@@ -358,6 +370,7 @@ void QVGraphicsView::applyExpensiveScaling()
     // Set appropriate scale factor
     const qreal newTransformScale = 1.0 / devicePixelRatioF();
     setTransformScale(newTransformScale);
+    appliedDpiAdjustment = dpiAdjustment;
     appliedExpensiveScaleZoomLevel = zoomLevel;
 }
 
@@ -370,7 +383,10 @@ void QVGraphicsView::removeExpensiveScaling()
         loadedPixmapItem->setPixmap(getLoadedPixmap());
 
     // Set appropriate scale factor
-    setTransformScale(zoomLevel);
+    const qreal dpiAdjustment = getDpiAdjustment();
+    const qreal newTransformScale = zoomLevel * dpiAdjustment;
+    setTransformScale(newTransformScale);
+    appliedDpiAdjustment = dpiAdjustment;
     appliedExpensiveScaleZoomLevel = 0.0;
 }
 
@@ -540,7 +556,7 @@ void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
 
 QSizeF QVGraphicsView::getEffectiveOriginalSize() const
 {
-    return getTransformWithNoScaling().mapRect(QRectF(QPoint(), getCurrentFileDetails().loadedPixmapSize)).size();
+    return getTransformWithNoScaling().mapRect(QRectF(QPoint(), getCurrentFileDetails().loadedPixmapSize)).size() * getDpiAdjustment();
 }
 
 QRectF QVGraphicsView::getContentRect() const
@@ -578,6 +594,24 @@ QTransform QVGraphicsView::getTransformWithNoScaling() const
 {
     const QRectF unityRect = transform().mapRect(QRectF(0, 0, 1, 1));
     return transform().scale(1.0 / unityRect.width(), 1.0 / unityRect.height());
+}
+
+qreal QVGraphicsView::getDpiAdjustment() const
+{
+    return isOneToOnePixelSizingEnabled ? 1.0 / devicePixelRatioF() : 1.0;
+}
+
+void QVGraphicsView::handleDpiAdjustmentChange()
+{
+    if (appliedDpiAdjustment == getDpiAdjustment())
+        return;
+
+    removeExpensiveScaling();
+
+    zoomToFit();
+
+    if (isScalingEnabled)
+        expensiveScaleTimer->start();
 }
 
 void QVGraphicsView::settingsUpdated()
@@ -618,10 +652,15 @@ void QVGraphicsView::settingsUpdated()
     //cursor zoom
     isCursorZoomEnabled = settingsManager.getBoolean("cursorzoom");
 
+    //one-to-one pixel sizing
+    isOneToOnePixelSizingEnabled = settingsManager.getBoolean("onetoonepixelsizing");
+
     //loop folders
     isLoopFoldersEnabled = settingsManager.getBoolean("loopfoldersenabled");
 
     // End of settings variables
+
+    handleDpiAdjustmentChange();
 
     zoomToFit();
 }

@@ -82,6 +82,8 @@ protected:
 
     void resizeEvent(QResizeEvent *event) override;
 
+    void paintEvent(QPaintEvent *event) override;
+
     void dropEvent(QDropEvent *event) override;
 
     void dragEnterEvent(QDragEnterEvent *event) override;
@@ -110,6 +112,10 @@ protected:
 
     QTransform getTransformWithNoScaling() const;
 
+    qreal getDpiAdjustment() const;
+
+    void handleDpiAdjustmentChange();
+
 private slots:
     void animatedFrameChanged(QRect rect);
 
@@ -128,10 +134,12 @@ private:
     bool isScrollZoomsEnabled;
     bool isLoopFoldersEnabled;
     bool isCursorZoomEnabled;
+    bool isOneToOnePixelSizingEnabled;
     int cropMode;
     qreal zoomMultiplier;
 
     qreal zoomLevel;
+    qreal appliedDpiAdjustment;
     qreal appliedExpensiveScaleZoomLevel;
     QPoint lastZoomEventPos;
     QPointF lastZoomRoundingError;
