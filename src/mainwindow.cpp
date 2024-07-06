@@ -54,6 +54,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Connect graphicsview signals
     connect(graphicsView, &QVGraphicsView::fileChanged, this, &MainWindow::fileChanged);
+    connect(graphicsView, &QVGraphicsView::zoomLevelChanged, this, &MainWindow::zoomLevelChanged);
     connect(graphicsView, &QVGraphicsView::cancelSlideshow, this, &MainWindow::cancelSlideshow);
 
     // Initialize escape shortcut
@@ -386,6 +387,11 @@ void MainWindow::fileChanged()
     update();
 }
 
+void MainWindow::zoomLevelChanged()
+{
+    buildWindowTitle();
+}
+
 void MainWindow::disableActions()
 {
     const auto &actionLibrary = qvApp->getActionManager().getActionLibrary();
@@ -490,14 +496,16 @@ void MainWindow::buildWindowTitle()
         }
         case 2:
         {
-            newString = QString::number(getCurrentFileDetails().loadedIndexInFolder+1);
+            newString = QString::number(graphicsView->getZoomLevel() * 100.0, 'f', 1) + "%";
+            newString += " - " + QString::number(getCurrentFileDetails().loadedIndexInFolder+1);
             newString += "/" + QString::number(getCurrentFileDetails().folderFileInfoList.count());
             newString += " - " + getCurrentFileDetails().fileInfo.fileName();
             break;
         }
         case 3:
         {
-            newString = QString::number(getCurrentFileDetails().loadedIndexInFolder+1);
+            newString = QString::number(graphicsView->getZoomLevel() * 100.0, 'f', 1) + "%";
+            newString += " - " + QString::number(getCurrentFileDetails().loadedIndexInFolder+1);
             newString += "/" + QString::number(getCurrentFileDetails().folderFileInfoList.count());
             newString += " - " + getCurrentFileDetails().fileInfo.fileName();
             if (!getCurrentFileDetails().errorData.hasError)
