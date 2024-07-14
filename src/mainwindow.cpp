@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Connect graphicsview signals
     connect(graphicsView, &QVGraphicsView::fileChanged, this, &MainWindow::fileChanged);
-    connect(graphicsView, &QVGraphicsView::updatedLoadedPixmapItem, this, &MainWindow::setWindowSize);
+    connect(graphicsView, &QVGraphicsView::zoomLevelChanged, this, &MainWindow::zoomLevelChanged);
     connect(graphicsView, &QVGraphicsView::cancelSlideshow, this, &MainWindow::cancelSlideshow);
 
     // Initialize escape shortcut
@@ -381,9 +381,15 @@ void MainWindow::fileChanged()
     if (info->isVisible())
         refreshProperties();
     buildWindowTitle();
+    setWindowSize();
 
     // repaint to handle error message
     update();
+}
+
+void MainWindow::zoomLevelChanged()
+{
+    buildWindowTitle();
 }
 
 void MainWindow::disableActions()
@@ -490,14 +496,16 @@ void MainWindow::buildWindowTitle()
         }
         case 2:
         {
-            newString = QString::number(getCurrentFileDetails().loadedIndexInFolder+1);
+            newString = QString::number(graphicsView->getZoomLevel() * 100.0, 'f', 1) + "%";
+            newString += " - " + QString::number(getCurrentFileDetails().loadedIndexInFolder+1);
             newString += "/" + QString::number(getCurrentFileDetails().folderFileInfoList.count());
             newString += " - " + getCurrentFileDetails().fileInfo.fileName();
             break;
         }
         case 3:
         {
-            newString = QString::number(getCurrentFileDetails().loadedIndexInFolder+1);
+            newString = QString::number(graphicsView->getZoomLevel() * 100.0, 'f', 1) + "%";
+            newString += " - " + QString::number(getCurrentFileDetails().loadedIndexInFolder+1);
             newString += "/" + QString::number(getCurrentFileDetails().folderFileInfoList.count());
             newString += " - " + getCurrentFileDetails().fileInfo.fileName();
             if (!getCurrentFileDetails().errorData.hasError)
@@ -546,11 +554,6 @@ void MainWindow::setWindowSize()
     qreal minWindowResizedPercentage = qvApp->getSettingsManager().getInteger("minwindowresizedpercentage")/100.0;
     qreal maxWindowResizedPercentage = qvApp->getSettingsManager().getInteger("maxwindowresizedpercentage")/100.0;
 
-
-    QSize imageSize = getCurrentFileDetails().loadedPixmapSize;
-    imageSize -= QSize(4, 4);
-
-
     // Try to grab the current screen
     QScreen *currentScreen = screenContaining(frameGeometry());
 
@@ -574,27 +577,25 @@ void MainWindow::setWindowSize()
     const QSize screenSize = currentScreen->size();
     const QSize minWindowSize = (screenSize * minWindowResizedPercentage).boundedTo(hardLimitSize);
     const QSize maxWindowSize = (screenSize * maxWindowResizedPercentage).boundedTo(hardLimitSize);
+    const QSizeF imageSize = graphicsView->getEffectiveOriginalSize();
+    const int fitOverscan = graphicsView->getFitOverscan();
+    const QSize fitOverscanSize = QSize(fitOverscan * 2, fitOverscan * 2);
 
-    if (imageSize.width() < minWindowSize.width() && imageSize.height() < minWindowSize.height())
+    QSize targetSize = imageSize.toSize() - fitOverscanSize;
+
+    if (targetSize.width() > maxWindowSize.width() || targetSize.height() > maxWindowSize.height())
     {
-        imageSize.scale(minWindowSize, Qt::KeepAspectRatio);
-    }
-    else if (imageSize.width() > maxWindowSize.width() || imageSize.height() > maxWindowSize.height())
-    {
-        imageSize.scale(maxWindowSize, Qt::KeepAspectRatio);
+        const QSizeF viewSize = maxWindowSize + fitOverscanSize;
+        const qreal fitRatio = qMin(viewSize.width() / imageSize.width(), viewSize.height() / imageSize.height());
+        targetSize = (imageSize * fitRatio).toSize() - fitOverscanSize;
     }
 
-    // Windows reports the wrong minimum width, so we constrain the image size relative to the dpi to stop weirdness with tiny images
-#ifdef Q_OS_WIN
-    auto minimumImageSize = QSize(qRound(logicalDpiX()*1.5), logicalDpiY()/2);
-    if (imageSize.boundedTo(minimumImageSize) == imageSize)
-        imageSize = minimumImageSize;
-#endif
+    targetSize = targetSize.expandedTo(minWindowSize).boundedTo(maxWindowSize);
 
     // Match center after new geometry
     // This is smoother than a single geometry set for some reason
     QRect oldRect = geometry();
-    resize(imageSize + extraWidgetsSize);
+    resize(targetSize + extraWidgetsSize);
     QRect newRect = geometry();
     newRect.moveCenter(oldRect.center());
 
@@ -996,7 +997,7 @@ void MainWindow::zoomOut()
 
 void MainWindow::resetZoom()
 {
-    graphicsView->resetScale();
+    graphicsView->zoomToFit();
 }
 
 void MainWindow::originalSize()
@@ -1018,13 +1019,13 @@ void MainWindow::rotateLeft()
 
 void MainWindow::mirror()
 {
-    graphicsView->scale(-1, 1);
+    graphicsView->mirrorImage();
     resetZoom();
 }
 
 void MainWindow::flip()
 {
-    graphicsView->scale(1, -1);
+    graphicsView->flipImage();
     resetZoom();
 }
 
@@ -1072,7 +1073,7 @@ void MainWindow::saveFrameAs()
             nextFrame();
 
         graphicsView->getLoadedMovie().currentPixmap().save(fileName, nullptr, 100);
-        graphicsView->resetScale();
+        graphicsView->zoomToFit();
     });
 }
 

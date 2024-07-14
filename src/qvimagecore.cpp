@@ -33,9 +33,6 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
 
     randomSortSeed = 0;
 
-    currentRotation = 0;
-
-
     connect(&loadedMovie, &QMovie::updated, this, &QVImageCore::animatedFrameChanged);
 
     connect(&loadFutureWatcher, &QFutureWatcher<ReadData>::finished, this, [this](){
@@ -218,7 +215,7 @@ void QVImageCore::loadPixmap(const ReadData &readData)
         return;
     }
 
-    loadedPixmap = matchCurrentRotation(readData.pixmap);
+    loadedPixmap = readData.pixmap;
 
     // Set file details
     currentFileDetails.isPixmapLoaded = true;
@@ -659,62 +656,10 @@ void QVImageCore::setSpeed(int desiredSpeed)
         loadedMovie.setSpeed(desiredSpeed);
 }
 
-void QVImageCore::rotateImage(int rotation)
-{
-        currentRotation += rotation;
-
-        // normalize between 360 and 0
-        currentRotation = (currentRotation % 360 + 360) % 360;
-        QTransform transform;
-
-        QImage transformedImage;
-        if (currentFileDetails.isMovieLoaded)
-        {
-            transform.rotate(currentRotation);
-            transformedImage = loadedMovie.currentImage().transformed(transform);
-        }
-        else
-        {
-            transform.rotate(rotation);
-            transformedImage = loadedPixmap.toImage().transformed(transform);
-        }
-
-        loadedPixmap.convertFromImage(transformedImage);
-
-        currentFileDetails.loadedPixmapSize = QSize(loadedPixmap.width(), loadedPixmap.height());
-        emit updateLoadedPixmapItem();
-}
-
-QImage QVImageCore::matchCurrentRotation(const QImage &imageToRotate)
-{
-    if (!currentRotation)
-        return imageToRotate;
-
-    QTransform transform;
-    transform.rotate(currentRotation);
-    return imageToRotate.transformed(transform);
-}
-
-QPixmap QVImageCore::matchCurrentRotation(const QPixmap &pixmapToRotate)
-{
-    if (!currentRotation)
-        return pixmapToRotate;
-
-    return QPixmap::fromImage(matchCurrentRotation(pixmapToRotate.toImage()));
-}
-
-QPixmap QVImageCore::scaleExpensively(const int desiredWidth, const int desiredHeight)
-{
-    return scaleExpensively(QSizeF(desiredWidth, desiredHeight));
-}
-
 QPixmap QVImageCore::scaleExpensively(const QSizeF desiredSize)
 {
     if (!currentFileDetails.isPixmapLoaded)
         return QPixmap();
-
-    QSize size = QSize(loadedPixmap.width(), loadedPixmap.height());
-    size.scale(desiredSize.toSize(), Qt::KeepAspectRatio);
 
     // Get the current frame of the animation if this is an animation
     QPixmap relevantPixmap;
@@ -725,7 +670,6 @@ QPixmap QVImageCore::scaleExpensively(const QSizeF desiredSize)
     else
     {
         relevantPixmap = loadedMovie.currentPixmap();
-        relevantPixmap = matchCurrentRotation(relevantPixmap);
     }
 
     // If we are really close to the original size, just return the original
@@ -735,7 +679,11 @@ QPixmap QVImageCore::scaleExpensively(const QSizeF desiredSize)
         return relevantPixmap;
     }
 
-    return relevantPixmap.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);;
+    QSize size = desiredSize.toSize();
+    size.rwidth() = qMax(size.width(), 1);
+    size.rheight() = qMax(size.height(), 1);
+
+    return relevantPixmap.scaled(size, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 }
 
 
