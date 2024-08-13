@@ -212,7 +212,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="761"/>
         <source>Las&amp;t File</source>
-        <translation>Derradeiro ficheiro</translation>
+        <translation>Derradei&amp;ro ficheiro</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="765"/>
