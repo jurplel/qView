@@ -41,7 +41,7 @@ public:
 
     MainWindow *getMainWindow(bool shouldBeEmpty);
 
-    void checkUpdates(bool isStartupCheck);
+    void checkUpdates();
 
     void checkedUpdates();
 
@@ -77,8 +77,6 @@ public:
 
     ActionManager &getActionManager() { return actionManager; }
 
-    static qreal getPerceivedBrightness(const QColor &color);
-
 private:
 
     QList<MainWindow*> lastActiveWindows;
@@ -101,9 +99,7 @@ private:
     QPointer<QVWelcomeDialog> welcomeDialog;
     QPointer<QVAboutDialog> aboutDialog;
 
-#ifndef QV_DISABLE_ONLINE_VERSION_CHECK
     UpdateChecker updateChecker;
-#endif //QV_DISABLE_ONLINE_VERSION_CHECK
 };
 
 #endif // QVAPPLICATION_H

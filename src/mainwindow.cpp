@@ -32,6 +32,11 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QTemporaryFile>
+#include <QDBusInterface>
+#include <QDBusConnection>
+#include <QDebug>
+#include <QProcessEnvironment>
+#include <QDBusReply>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -39,7 +44,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     setAttribute(Qt::WA_DeleteOnClose);
-    setAttribute(Qt::WA_OpaquePaintEvent);
 
     // Initialize variables
     justLaunchedWithImage = false;
@@ -85,6 +89,7 @@ MainWindow::MainWindow(QWidget *parent) :
     contextMenu->addMenu(actionManager.buildOpenWithMenu(contextMenu));
     actionManager.addCloneOfAction(contextMenu, "opencontainingfolder");
     actionManager.addCloneOfAction(contextMenu, "showfileinfo");
+    actionManager.addCloneOfAction(contextMenu, "setwallpaper");
     contextMenu->addSeparator();
     actionManager.addCloneOfAction(contextMenu, "rename");
     actionManager.addCloneOfAction(contextMenu, "delete");
@@ -142,6 +147,13 @@ MainWindow::MainWindow(QWidget *parent) :
         populateOpenWithMenu(openWithFutureWatcher.result());
     });
 
+    // Connect to the SetWallpaper action
+    connect(qvApp->getActionManager().getAction("setwallpaper"), &QAction::triggered, this, &MainWindow::setAsWallpaper);
+
+#ifdef COCOA_LOADED
+    QVCocoaFunctions::setFullSizeContentView(windowHandle());
+#endif
+
     // Load window geometry
     QSettings settings;
     restoreGeometry(settings.value("geometry").toByteArray());
@@ -186,16 +198,6 @@ void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 
 void MainWindow::showEvent(QShowEvent *event)
 {
-#ifdef COCOA_LOADED
-    // Enable full size content view. With some Qt versions, this can break its restoreGeometry
-    // functionality even if we enable this after. Presumably restoreGeometry saves data for
-    // further processing after the window is shown, hence the timer here to queue this on the
-    // event loop and run after that processing happens.
-    QTimer::singleShot(0, this, [this]() {
-        QVCocoaFunctions::setFullSizeContentView(windowHandle(), true);
-    });
-#endif
-
     if (!menuBar()->sizeHint().isEmpty())
     {
         ui->fullscreenLabel->setMargin(0);
@@ -207,12 +209,6 @@ void MainWindow::showEvent(QShowEvent *event)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-#ifdef COCOA_LOADED
-    // Full size content view can confuse saveGeometry, making it think the window is taller than
-    // it really is, so the restored window ends up taller. Turn it off before saving geometry.
-    QVCocoaFunctions::setFullSizeContentView(windowHandle(), false);
-#endif
-
     QSettings settings;
     settings.setValue("geometry", saveGeometry());
 
@@ -267,47 +263,6 @@ void MainWindow::mouseDoubleClickEvent(QMouseEvent *event)
     QMainWindow::mouseDoubleClickEvent(event);
 }
 
-void MainWindow::paintEvent(QPaintEvent *event)
-{
-    Q_UNUSED(event);
-
-    QPainter painter(this);
-
-    const QColor &backgroundColor = customBackgroundColor.isValid() ? customBackgroundColor : painter.background().color();
-
-    // Find the top of the viewport to account for the menu bar if it's inside the window
-    // and/or the label that displays titlebar text in full screen mode.
-    const int viewportY = graphicsView->mapTo(this, QPoint()).y();
-    // On macOS, part of the viewport may be additionally covered with the window's translucent
-    // titlebar due to full size content view.
-    const int unobscuredViewportY = qMax(getTitlebarOverlap(), viewportY);
-
-    // Erase the area above the viewport, i.e. fill it with the painter's default color.
-    const QRect headerRect = QRect(0, 0, width(), viewportY);
-    if (headerRect.isValid())
-    {
-        painter.eraseRect(headerRect);
-    }
-
-    // Fill the viewport with the background color.
-    const QRect viewportRect = rect().adjusted(0, viewportY, 0, 0);
-    if (viewportRect.isValid())
-    {
-        painter.fillRect(viewportRect, backgroundColor);
-    }
-
-    // If there's an error message, draw it centered inside the unobscured area of the viewport.
-    const QRect unobscuredViewportRect = rect().adjusted(0, unobscuredViewportY, 0, 0);
-    if (getCurrentFileDetails().errorData.hasError && unobscuredViewportRect.isValid())
-    {
-        const QVImageCore::ErrorData &errorData = getCurrentFileDetails().errorData;
-        const QString errorMessage = tr("Error occurred opening\n%3\n%2 (Error %1)").arg(QString::number(errorData.errorNum), errorData.errorString, getCurrentFileDetails().fileInfo.fileName());
-        painter.setFont(font());
-        painter.setPen(QVApplication::getPerceivedBrightness(backgroundColor) > 0.5 ? Qt::black : Qt::white);
-        painter.drawText(unobscuredViewportRect, errorMessage, QTextOption(Qt::AlignCenter));
-    }
-}
-
 void MainWindow::openFile(const QString &fileName)
 {
     graphicsView->loadFile(fileName);
@@ -319,9 +274,6 @@ void MainWindow::settingsUpdated()
     auto &settingsManager = qvApp->getSettingsManager();
 
     buildWindowTitle();
-
-    //bgcolor
-    customBackgroundColor = settingsManager.getBoolean("bgcolorenabled") ? QColor(settingsManager.getString("bgcolor")) : QColor();
 
     // menubarenabled
     bool menuBarEnabled = settingsManager.getBoolean("menubarenabled");
@@ -345,9 +297,6 @@ void MainWindow::settingsUpdated()
     ui->fullscreenLabel->setVisible(qvApp->getSettingsManager().getBoolean("fullscreendetails") && (windowState() == Qt::WindowFullScreen));
 
     setWindowSize();
-
-    // repaint in case background color changed
-    update();
 }
 
 void MainWindow::shortcutsUpdated()
@@ -378,12 +327,8 @@ void MainWindow::fileChanged()
     populateOpenWithTimer->start();
     disableActions();
 
-    if (info->isVisible())
-        refreshProperties();
+    refreshProperties();
     buildWindowTitle();
-
-    // repaint to handle error message
-    update();
 }
 
 void MainWindow::disableActions()
@@ -500,12 +445,9 @@ void MainWindow::buildWindowTitle()
             newString = QString::number(getCurrentFileDetails().loadedIndexInFolder+1);
             newString += "/" + QString::number(getCurrentFileDetails().folderFileInfoList.count());
             newString += " - " + getCurrentFileDetails().fileInfo.fileName();
-            if (!getCurrentFileDetails().errorData.hasError)
-            {
-                newString += " - "  + QString::number(getCurrentFileDetails().baseImageSize.width());
-                newString += "x" + QString::number(getCurrentFileDetails().baseImageSize.height());
-                newString += " - " + QVInfoDialog::formatBytes(getCurrentFileDetails().fileInfo.size());
-            }
+            newString += " - "  + QString::number(getCurrentFileDetails().baseImageSize.width());
+            newString += "x" + QString::number(getCurrentFileDetails().baseImageSize.height());
+            newString += " - " + QVInfoDialog::formatBytes(getCurrentFileDetails().fileInfo.size());
             newString += " - qView";
             break;
         }
@@ -565,7 +507,11 @@ void MainWindow::setWindowSize()
     if (menuBar()->isVisible())
         extraWidgetsSize.rheight() += menuBar()->height();
 
-    const int titlebarOverlap = getTitlebarOverlap();
+    int titlebarOverlap = 0;
+#ifdef COCOA_LOADED
+    // To account for fullsizecontentview on mac
+    titlebarOverlap = QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
+#endif
     if (titlebarOverlap != 0)
         extraWidgetsSize.rheight() += titlebarOverlap;
 
@@ -730,11 +676,6 @@ void MainWindow::pickUrl()
     inputDialog->open();
 }
 
-void MainWindow::reloadFile()
-{
-    graphicsView->reloadFile();
-}
-
 void MainWindow::openWith(const OpenWith::OpenWithItem &openWithItem)
 {
     OpenWith::openWith(getCurrentFileDetails().fileInfo.absoluteFilePath(), openWithItem);
@@ -763,11 +704,73 @@ void MainWindow::showFileInfo()
     info->raise();
 }
 
-void MainWindow::askDeleteFile(bool permanent)
+// Set as wallpaper function
+void MainWindow::setAsWallpaper()
 {
-    if (!permanent && !qvApp->getSettingsManager().getBoolean("askdelete"))
+    if (!getCurrentFileDetails().isPixmapLoaded)
+        return;
+
+    QString imagePath = getCurrentFileDetails().fileInfo.absoluteFilePath();
+    QString plugin = "org.kde.image";
+
+    QString jscript = QString(
+        "var allDesktops = desktops();"
+        "print(allDesktops);"
+        "for (i=0;i<allDesktops.length;i++) {"
+        "    d = allDesktops[i];"
+        "    d.wallpaperPlugin = \"%1\";"
+        "    d.currentConfigGroup = Array(\"Wallpaper\", \"%1\", \"General\");"
+        "    d.writeConfig(\"Image\", \"file://%2\")"
+        "}"
+    ).arg(plugin, imagePath);
+
+    QDBusConnection bus = QDBusConnection::sessionBus();
+    QDBusInterface interface("org.kde.plasmashell", "/PlasmaShell",
+                             "org.kde.PlasmaShell", bus);
+
+    if (!interface.isValid()) {
+        qDebug() << "Error: Failed to connect to org.kde.plasmashell";
+        return;
+    }
+
+    QDBusReply<void> reply = interface.call("evaluateScript", jscript);
+
+    if (!reply.isValid()) {
+        qDebug() << "Error: Failed to set wallpaper. " << reply.error().message();
+    } else {
+        qDebug() << "Wallpaper set successfully.";
+    }
+
+    // Set lockscreen wallpaper
+    QString lockscreenCmd = QString("kwriteconfig5 --file kscreenlockerrc --group Greeter "
+                                    "--group Wallpaper --group org.kde.image --group General "
+                                    "--key Image \"file://%1\"").arg(imagePath);
+
+    int lockscreenResult = QProcess::execute(lockscreenCmd);
+
+    if (lockscreenResult != 0) {
+        qDebug() << "Error setting lockscreen wallpaper. Command:" << lockscreenCmd;
+    } else {
+        qDebug() << "Lockscreen wallpaper set successfully.";
+    }
+
+    // Refresh the desktop to apply changes immediately
+    QDBusInterface kwinInterface("org.kde.KWin", "/KWin", "org.kde.KWin", bus);
+    if (kwinInterface.isValid()) {
+        kwinInterface.call("reconfigure");
+        qDebug() << "KWin reconfigured.";
+    } else {
+        qDebug() << "Failed to reconfigure KWin.";
+    }
+}
+
+
+
+void MainWindow::askDeleteFile()
+{
+    if (!qvApp->getSettingsManager().getBoolean("askdelete"))
     {
-        deleteFile(permanent);
+        deleteFile();
         return;
     }
 
@@ -780,79 +783,42 @@ void MainWindow::askDeleteFile(bool permanent)
         return;
     }
 
-    QString messageText;
-    if (permanent)
-    {
-        messageText = tr("Are you sure you want to delete %1 permanently? This can't be undone.").arg(fileName);
-    }
-    else
-    {
+    auto trashString = tr("Are you sure you want to move %1 to the Trash?").arg(fileName);
 #ifdef Q_OS_WIN
-        messageText = tr("Are you sure you want to move %1 to the Recycle Bin?").arg(fileName);
-#else
-        messageText = tr("Are you sure you want to move %1 to the Trash?").arg(fileName);
+    trashString = tr("Are you sure you want to move %1 to the Recycle Bin?").arg(fileName);
 #endif
-    }
 
-    auto *msgBox = new QMessageBox(QMessageBox::Question, tr("Delete"), messageText,
+    auto *msgBox = new QMessageBox(QMessageBox::Question, tr("Delete"), trashString,
                        QMessageBox::Yes | QMessageBox::No, this);
-    if (!permanent)
-        msgBox->setCheckBox(new QCheckBox(tr("Do not ask again")));
+    msgBox->setCheckBox(new QCheckBox(tr("Do not ask again")));
 
-    connect(msgBox, &QMessageBox::finished, this, [this, msgBox, permanent](int result){
-        if (result != QMessageBox::Yes)
+    connect(msgBox, &QMessageBox::finished, this, [this, msgBox](int result){
+        if (result != 16384)
             return;
 
-        if (!permanent)
-        {
-            QSettings settings;
-            settings.beginGroup("options");
-            settings.setValue("askdelete", !msgBox->checkBox()->isChecked());
-            qvApp->getSettingsManager().loadSettings();
-        }
-        this->deleteFile(permanent);
+        QSettings settings;
+        settings.beginGroup("options");
+        settings.setValue("askdelete", !msgBox->checkBox()->isChecked());
+        qvApp->getSettingsManager().loadSettings();
+        this->deleteFile();
     });
 
     msgBox->open();
 }
 
-void MainWindow::deleteFile(bool permanent)
+void MainWindow::deleteFile()
 {
     const QFileInfo &fileInfo = getCurrentFileDetails().fileInfo;
     const QString filePath = fileInfo.absoluteFilePath();
-    const QString fileName = fileInfo.fileName();
+    QString trashFilePath = "";
 
     graphicsView->closeImage();
 
-    bool success;
-    QString trashFilePath;
-    if (permanent)
-    {
-        success = QFile::remove(filePath);
-    }
-    else
-    {
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
-        QFile file(filePath);
-        success = file.moveToTrash();
-        if (success)
-            trashFilePath = file.fileName();
-#elif defined Q_OS_MACOS && COCOA_LOADED
-        QString trashedFile = QVCocoaFunctions::deleteFile(filePath);
-        success = !trashedFile.isEmpty();
-        if (success)
-            trashFilePath = QUrl(trashedFile).toLocalFile(); // remove file:// protocol
-#elif defined Q_OS_UNIX && !defined Q_OS_MACOS
-        trashFilePath = deleteFileLinuxFallback(filePath, false);
-        success = !trashFilePath.isEmpty();
-#else
-        QMessageBox::critical(this, tr("Not Supported"), tr("This program was compiled with an old version of Qt and this feature is not available.\n"
-                                                            "If you see this message, please report a bug!"));
+    const QString fileName = fileInfo.fileName();
 
-        return;
-#endif
-    }
-
+    QFile file(filePath);
+    bool success = file.moveToTrash();
     if (!success || QFile::exists(filePath))
     {
         openFile(filePath);
@@ -860,15 +826,26 @@ void MainWindow::deleteFile(bool permanent)
         return;
     }
 
+    trashFilePath = file.fileName();
+#elif defined Q_OS_MACOS && COCOA_LOADED
+    QString trashedFile = QVCocoaFunctions::deleteFile(filePath);
+    trashFilePath = QUrl(trashedFile).toLocalFile(); // remove file:// protocol
+#elif defined Q_OS_UNIX && !defined Q_OS_MACOS
+    trashFilePath = deleteFileLinuxFallback(filePath, false);
+#else
+    QMessageBox::critical(this, tr("Not Supported"), tr("This program was compiled with an old version of Qt and this feature is not available.\n"
+                                                        "If you see this message, please report a bug!"));
+
+    return;
+#endif
+
     auto afterDelete = qvApp->getSettingsManager().getInteger("afterdelete");
     if (afterDelete > 1)
         nextFile();
     else if (afterDelete < 1)
         previousFile();
 
-    if (!trashFilePath.isEmpty())
-        lastDeletedFiles.push({trashFilePath, filePath});
-
+    lastDeletedFiles.push({trashFilePath, filePath});
     disableActions();
 }
 
@@ -1178,20 +1155,11 @@ void MainWindow::toggleFullScreen()
     if (windowState() == Qt::WindowFullScreen)
     {
         setWindowState(storedWindowState);
+        setWindowSize();
     }
     else
     {
         storedWindowState = windowState();
         showFullScreen();
     }
-}
-
-int MainWindow::getTitlebarOverlap() const
-{
-#ifdef COCOA_LOADED
-    // To account for fullsizecontentview on mac
-    return QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
-#endif
-
-    return 0;
 }

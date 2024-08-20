@@ -14,8 +14,6 @@ public:
 
     static void showOpenWithDialog(const QString &filePath, const QWindow *parent);
 
-    static QStringList getCommandLineArgs();
-
     static QByteArray getIccProfileForWindow(const QWindow *window);
 };
 

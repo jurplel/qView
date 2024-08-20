@@ -14,16 +14,9 @@ UpdateChecker::UpdateChecker(QObject *parent) : QObject(parent)
     connect(&netAccessManager, &QNetworkAccessManager::finished, this, &UpdateChecker::readReply);
 }
 
-void UpdateChecker::check(bool isStartupCheck)
+void UpdateChecker::check()
 {
-    if (isStartupCheck)
-    {
-        QDateTime lastCheckTime = getLastCheckTime();
-        if (lastCheckTime.isValid() && QDateTime::currentDateTimeUtc() < lastCheckTime.addSecs(STARTUP_CHECK_INTERVAL_HOURS * 3600))
-            return;
-    }
-
-    sendRequest(UPDATE_URL + "/latest");
+    sendRequest(UPDATE_URL);
 }
 
 void UpdateChecker::sendRequest(const QUrl &url)
@@ -56,36 +49,18 @@ void UpdateChecker::readReply(QNetworkReply *reply)
         return;
     }
 
-    QJsonObject object = json.object();
+    QJsonObject object = json.array().first().toObject();
 
     latestVersionNum = object.value("tag_name").toString("0.0").toDouble();
 
-    static const QRegularExpression newLineRegEx("\r?\n");
-    QStringList changelogList = object.value("body").toString().split(newLineRegEx);
-    // remove "changelog" heading
+    QStringList changelogList = object.value("body").toString().split("\n");
     changelogList.removeFirst();
-    // remove additional newline if present
-    if (!changelogList.isEmpty() && changelogList.first().isEmpty())
-        changelogList.removeFirst();
-    changelog = changelogList.join("\n");
+    changelog = changelogList.join("");
 
     releaseDate = QDateTime::fromString(object.value("published_at").toString(), Qt::ISODate);
     releaseDate = releaseDate.toTimeSpec(Qt::LocalTime);
 
-    setLastCheckTime(QDateTime::currentDateTimeUtc());
-
     emit checkedUpdates();
-}
-
-QDateTime UpdateChecker::getLastCheckTime() const
-{
-    qint64 secsSinceEpoch = QSettings().value("lastupdatecheck").toLongLong();
-    return secsSinceEpoch == 0 ? QDateTime() : QDateTime::fromSecsSinceEpoch(secsSinceEpoch, Qt::UTC);
-}
-
-void UpdateChecker::setLastCheckTime(QDateTime value)
-{
-    QSettings().setValue("lastupdatecheck", value.toSecsSinceEpoch());
 }
 
 void UpdateChecker::openDialog()
@@ -96,7 +71,7 @@ void UpdateChecker::openDialog()
     auto *msgBox = new QMessageBox();
     msgBox->setWindowTitle(tr("qView Update Available"));
     msgBox->setText(tr("qView %1 is available to download.").arg(QString::number(latestVersionNum, 'f', 1))
-                    + "\n\n" + releaseDate.toString(locale.dateFormat()) + "\n\n" + changelog);
+                    + "\n\n" + releaseDate.toString(locale.dateFormat()) + "\n" + changelog);
     msgBox->setWindowModality(Qt::ApplicationModal);
     msgBox->setStandardButtons(QMessageBox::Close | QMessageBox::Reset);
     msgBox->button(QMessageBox::Reset)->setText(tr("&Disable Update Checking"));

@@ -71,13 +71,11 @@ QVAboutDialog::QVAboutDialog(double givenLatestVersionNum, QWidget *parent) :
     ui->infoLabel2->setTextInteractionFlags(Qt::TextBrowserInteraction);
     ui->infoLabel2->setOpenExternalLinks(true);
 
-#ifndef QV_DISABLE_ONLINE_VERSION_CHECK
     if (latestVersionNum < 0.0)
     {
-        qvApp->checkUpdates(false);
+        qvApp->checkUpdates();
         latestVersionNum = 0.0;
     }
-#endif //QV_DISABLE_ONLINE_VERSION_CHECK
 
     updateText();
 }
@@ -89,7 +87,6 @@ QVAboutDialog::~QVAboutDialog()
 
 void QVAboutDialog::updateText()
 {
-#ifndef QV_DISABLE_ONLINE_VERSION_CHECK
     QString updateText = tr("Checking for updates...");
     if (latestVersionNum > VERSION)
     {
@@ -104,12 +101,8 @@ void QVAboutDialog::updateText()
     {
         updateText = tr("Error checking for updates");
     }
-    updateText +=  + "<br>";
-#else
-    QString updateText = "";
-#endif //QV_DISABLE_ONLINE_VERSION_CHECK
     ui->updateLabel->setText(updateText +
-                             R"(<a style="color: #03A9F4; text-decoration:none;" href="https://interversehq.com/qview/">interversehq.com/qview</a>)");
+                             R"(<br><a style="color: #03A9F4; text-decoration:none;" href="https://interversehq.com/qview/">interversehq.com/qview</a>)");
 }
 
 double QVAboutDialog::getLatestVersionNum() const

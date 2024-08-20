@@ -64,37 +64,17 @@ void QVCocoaFunctions::setUserDefaults()
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"NSFullScreenMenuItemEverywhere"];
 }
 
-// This function should only be enabled once because it sets observers
-void QVCocoaFunctions::setFullSizeContentView(QWindow *window, const bool enable)
+// This function should only be called once because it sets observers
+void QVCocoaFunctions::setFullSizeContentView(QWindow *window)
 {
     auto *view = reinterpret_cast<NSView*>(window->winId());
 
-    // Make sure the requested state isn't already in effect
-    if (enable == (view.window.styleMask & NSWindowStyleMaskFullSizeContentView))
-        return;
-
-    // Changing the style mask causes the window to resize, so snapshot the original size
-    NSRect originalFrame = view.window.frame;
-
-    if (enable)
+    // If this Qt and macOS version combination is already using layer-backed view, then enable full size content view
+    if (view.wantsLayer)
     {
-        // Proceed only if this Qt and macOS version combination is already using layer-backed view
-        if (!view.wantsLayer)
-            return;
         view.window.styleMask |= NSWindowStyleMaskFullSizeContentView;
-    }
-    else
-    {
-        view.window.styleMask &= ~NSWindowStyleMaskFullSizeContentView;
-    }
 
-    // Restore original size after style mask change
-    [view.window setFrame:originalFrame display:YES];
-
-#if QT_VERSION < QT_VERSION_CHECK(6, 2, 0)
-    // workaround for QTBUG-69975
-    if (enable)
-    {
+        // workaround for QTBUG-69975
         [[NSNotificationCenter defaultCenter] addObserverForName:NSWindowDidExitFullScreenNotification object:view.window queue:nil usingBlock:^(NSNotification *notification){
             auto *window = reinterpret_cast<NSWindow*>(notification.object);
             window.styleMask |= NSWindowStyleMaskFullSizeContentView;
@@ -105,7 +85,6 @@ void QVCocoaFunctions::setFullSizeContentView(QWindow *window, const bool enable
             window.styleMask |= NSWindowStyleMaskFullSizeContentView;
         }];
     }
-#endif
 }
 
 void QVCocoaFunctions::setVibrancy(bool alwaysDark, QWindow *window)
@@ -154,10 +133,11 @@ void QVCocoaFunctions::setWindowMenu(QMenu *menu)
     [[NSApplication sharedApplication] setWindowsMenu:nativeMenu];
 }
 
-void QVCocoaFunctions::setAlternate(QMenu *menu, int index)
+void QVCocoaFunctions::setAlternates(QMenu *menu, int index0, int index1)
 {
     NSMenu *nativeMenu = menu->toNSMenu();
-    [[nativeMenu.itemArray objectAtIndex:index] setAlternate:true];
+    [[nativeMenu.itemArray objectAtIndex:index0] setAlternate:true];
+    [[nativeMenu.itemArray objectAtIndex:index1] setAlternate:true];
 }
 
 void QVCocoaFunctions::setDockRecents(const QStringList &recentPathsList)

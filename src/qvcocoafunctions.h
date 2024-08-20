@@ -13,7 +13,7 @@ public:
 
     static void setUserDefaults();
 
-    static void setFullSizeContentView(QWindow *window, const bool enable);
+    static void setFullSizeContentView(QWindow *window);
 
     static void setVibrancy(bool alwaysDark, QWindow *window);
 
@@ -23,7 +23,7 @@ public:
 
     static void setWindowMenu(QMenu *menu);
 
-    static void setAlternate(QMenu *menu, int index);
+    static void setAlternates(QMenu *menu, int index0, int index1);
 
     static void setDockRecents(const QStringList &recentPathsList);
 

@@ -177,7 +177,6 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     addCloneOfAction(fileMenu, "open");
     addCloneOfAction(fileMenu, "openurl");
     fileMenu->addMenu(buildRecentsMenu(true, fileMenu));
-    addCloneOfAction(fileMenu, "reloadfile");
     fileMenu->addSeparator();
 #ifdef Q_OS_MACOS
     fileMenu->addSeparator();
@@ -185,7 +184,7 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     addCloneOfAction(fileMenu, "closeallwindows");
 #endif
 #ifdef COCOA_LOADED
-    QVCocoaFunctions::setAlternate(fileMenu, fileMenu->actions().length()-1);
+    QVCocoaFunctions::setAlternates(fileMenu, fileMenu->actions().length()-1, fileMenu->actions().length()-2);
 #endif
     fileMenu->addSeparator();
     fileMenu->addMenu(buildOpenWithMenu(fileMenu));
@@ -207,10 +206,6 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     addCloneOfAction(editMenu, "rename");
     editMenu->addSeparator();
     addCloneOfAction(editMenu, "delete");
-    addCloneOfAction(editMenu, "deletepermanent");
-#ifdef COCOA_LOADED
-    QVCocoaFunctions::setAlternate(editMenu, editMenu->actions().length()-1);
-#endif
 
     menuBar->addMenu(editMenu);
     // End of edit menu
@@ -590,16 +585,12 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
         relevantWindow->openWith(openWithItem);
     } else if (key == "openurl") {
         relevantWindow->pickUrl();
-    } else if (key == "reloadfile") {
-        relevantWindow->reloadFile();
     } else if (key == "opencontainingfolder") {
         relevantWindow->openContainingFolder();
     } else if (key == "showfileinfo") {
         relevantWindow->showFileInfo();
     } else if (key == "delete") {
-        relevantWindow->askDeleteFile(false);
-    } else if (key == "deletepermanent") {
-        relevantWindow->askDeleteFile(true);
+        relevantWindow->askDeleteFile();
     } else if (key == "undo") {
         relevantWindow->undoDelete();
     } else if (key == "copy") {
@@ -648,6 +639,8 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
         relevantWindow->increaseSpeed();
     } else if (key == "slideshow") {
         relevantWindow->toggleSlideshow();
+    } else if (key == "setwallpaper") {
+        relevantWindow->setAsWallpaper();
     }
 }
 
@@ -668,10 +661,6 @@ void ActionManager::initializeActionLibrary()
 
     auto *openUrlAction = new QAction(QIcon::fromTheme("document-open-remote", QIcon::fromTheme("folder-remote")), tr("Open &URL..."));
     actionLibrary.insert("openurl", openUrlAction);
-
-    auto *reloadFileAction = new QAction(QIcon::fromTheme("view-refresh"), tr("Re&load File"));
-    reloadFileAction->setData({"disable"});
-    actionLibrary.insert("reloadfile", reloadFileAction);
 
     auto *closeWindowAction = new QAction(QIcon::fromTheme("window-close"), tr("Close Window"));
     actionLibrary.insert("closewindow", closeWindowAction);
@@ -695,16 +684,16 @@ void ActionManager::initializeActionLibrary()
     showFileInfoAction->setData({"disable"});
     actionLibrary.insert("showfileinfo", showFileInfoAction);
 
+    auto *setWallpaperAction = new QAction(QIcon::fromTheme("preferences-desktop-wallpaper"), tr("Set as &Wallpaper"));
+    setWallpaperAction->setData({"disable"});
+    actionLibrary.insert("setwallpaper", setWallpaperAction);
+
     auto *deleteAction = new QAction(QIcon::fromTheme("edit-delete"), tr("&Move to Trash"));
 #ifdef Q_OS_WIN
     deleteAction->setText(tr("&Delete"));
 #endif
     deleteAction->setData({"disable"});
     actionLibrary.insert("delete", deleteAction);
-
-    auto *deletePermanentAction = new QAction(QIcon::fromTheme("edit-delete"), tr("Delete Permanently"));
-    deletePermanentAction->setData({"disable"});
-    actionLibrary.insert("deletepermanent", deletePermanentAction);
 
     auto *undoAction = new QAction(QIcon::fromTheme("edit-undo"), tr("&Restore from Trash"));
 #ifdef Q_OS_WIN
