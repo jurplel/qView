@@ -1,7 +1,7 @@
 TARGET = qView
 VERSION = 6.1
 
-QT += core gui network widgets
+QT += core gui network widgets dbus
 
 TEMPLATE = app
 

@@ -90,6 +90,21 @@ bool QVApplication::event(QEvent *event)
     return QApplication::event(event);
 }
 
+// Check if the current desktop environment is KDE (for Set as Wallpaper setting)
+bool QVApplication::isRunningKDE()
+{
+    // Check for KDE-specific environment variables
+    if (!qEnvironmentVariableIsEmpty("KDE_FULL_SESSION") || !qEnvironmentVariableIsEmpty("KDE_SESSION_VERSION"))
+        return true;
+
+    // Check if the XDG_CURRENT_DESKTOP environment variable contains KDE
+    QString xdgCurrentDesktop = qEnvironmentVariable("XDG_CURRENT_DESKTOP");
+    if (xdgCurrentDesktop.toLower().contains("kde"))
+        return true;
+
+    return false;
+}
+
 void QVApplication::openFile(MainWindow *window, const QString &file, bool resize)
 {
     window->setJustLaunchedWithImage(resize);
@@ -300,7 +315,7 @@ void QVApplication::openAboutDialog(QWidget *parent)
 }
 
 void QVApplication::hideIncompatibleActions()
-{    
+{
     // Deletion actions
 #if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
     auto hideDeleteActions = [this]{

@@ -639,7 +639,7 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
         relevantWindow->increaseSpeed();
     } else if (key == "slideshow") {
         relevantWindow->toggleSlideshow();
-    } else if (key == "setwallpaper") {
+    } else if (QVApplication::isRunningKDE() && key == "setwallpaper") {
         relevantWindow->setAsWallpaper();
     }
 }
@@ -687,6 +687,11 @@ void ActionManager::initializeActionLibrary()
     auto *setWallpaperAction = new QAction(QIcon::fromTheme("preferences-desktop-wallpaper"), tr("Set as &Wallpaper"));
     setWallpaperAction->setData({"disable"});
     actionLibrary.insert("setwallpaper", setWallpaperAction);
+
+    // Hide the action if not running KDE
+    if (!QVApplication::isRunningKDE()) {
+        setWallpaperAction->setVisible(false);
+    }
 
     auto *deleteAction = new QAction(QIcon::fromTheme("edit-delete"), tr("&Move to Trash"));
 #ifdef Q_OS_WIN

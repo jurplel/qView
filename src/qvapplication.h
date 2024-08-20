@@ -29,6 +29,8 @@ public:
 
     bool event(QEvent *event) override;
 
+    static bool isRunningKDE(); // Check if the current desktop environment is KDE (for Set as Wallpaper setting)
+
     static void openFile(MainWindow *window, const QString &file, bool resize = true);
 
     static void openFile(const QString &file, bool resize = true);
@@ -91,7 +93,7 @@ private:
     QStringList mimeTypeNameList;
 
     // This order is very important
-    SettingsManager settingsManager; 
+    SettingsManager settingsManager;
     ActionManager actionManager;
     ShortcutManager shortcutManager;
 

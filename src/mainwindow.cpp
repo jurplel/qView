@@ -89,7 +89,11 @@ MainWindow::MainWindow(QWidget *parent) :
     contextMenu->addMenu(actionManager.buildOpenWithMenu(contextMenu));
     actionManager.addCloneOfAction(contextMenu, "opencontainingfolder");
     actionManager.addCloneOfAction(contextMenu, "showfileinfo");
-    actionManager.addCloneOfAction(contextMenu, "setwallpaper");
+
+    if (QVApplication::isRunningKDE()) {
+        actionManager.addCloneOfAction(contextMenu, "setwallpaper");
+    }
+
     contextMenu->addSeparator();
     actionManager.addCloneOfAction(contextMenu, "rename");
     actionManager.addCloneOfAction(contextMenu, "delete");
