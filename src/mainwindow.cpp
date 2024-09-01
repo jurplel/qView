@@ -746,9 +746,9 @@ void MainWindow::setAsWallpaper()
     }
 
     // Set lockscreen wallpaper
-    QString lockscreenCmd = QString("kwriteconfig5 --file kscreenlockerrc --group Greeter "
-                                    "--group Wallpaper --group org.kde.image --group General "
-                                    "--key Image \"file://%1\"").arg(imagePath);
+    QString lockscreenCmd = QString(
+        "kwriteconfig5 --file kscreenlockerrc --group Greeter --group Wallpaper --group org.kde.image --group General --key Image \"file://%1\""
+    ).arg(imagePath);
 
     int lockscreenResult = QProcess::execute(lockscreenCmd);
 
