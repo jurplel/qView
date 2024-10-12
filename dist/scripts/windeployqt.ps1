@@ -10,25 +10,25 @@ if ($env:buildArch -ne 'Arm64') {
     # Download and extract openssl
     if ($qtVersion.Major -le 5) {
         $openSslDownloadUrl = "https://download.firedaemon.com/FireDaemon-OpenSSL/openssl-1.1.1w.zip"
-        $openSslFolderVersion = "1.1"
+        $openSslSubfolder = "openssl-1.1\"
         $openSslFilenameVersion = "1_1"
     } else {
-        $openSslDownloadUrl = "https://download.firedaemon.com/FireDaemon-OpenSSL/openssl-3.2.1.zip"
-        $openSslFolderVersion = "3"
+        $openSslDownloadUrl = "https://download.firedaemon.com/FireDaemon-OpenSSL/openssl-3.3.2.zip"
+        $openSslSubfolder = ""
         $openSslFilenameVersion = "3"
     }
     Write-Host "Downloading $openSslDownloadUrl"
     $ProgressPreference = 'SilentlyContinue'
     Invoke-WebRequest -Uri $openSslDownloadUrl -OutFile openssl.zip
-    7z x -y .\openssl.zip
+    7z x -y openssl.zip -o"openssl"
 
     # Install approprate binaries for architecture
     if ($env:buildArch -eq 'X86') {
-        copy openssl-$openSslFolderVersion\x86\bin\libssl-$openSslFilenameVersion.dll bin\
-        copy openssl-$openSslFolderVersion\x86\bin\libcrypto-$openSslFilenameVersion.dll bin\
+        copy openssl\$openSslSubfolder\x86\bin\libssl-$openSslFilenameVersion.dll bin\
+        copy openssl\$openSslSubfolder\x86\bin\libcrypto-$openSslFilenameVersion.dll bin\
     } else {
-        copy openssl-$openSslFolderVersion\x64\bin\libssl-$openSslFilenameVersion-x64.dll bin\
-        copy openssl-$openSslFolderVersion\x64\bin\libcrypto-$openSslFilenameVersion-x64.dll bin\
+        copy openssl\$openSslSubfolder\x64\bin\libssl-$openSslFilenameVersion-x64.dll bin\
+        copy openssl\$openSslSubfolder\x64\bin\libcrypto-$openSslFilenameVersion-x64.dll bin\
     }
 }
 
