@@ -4,14 +4,14 @@
 
 $pluginNames = "qtapng", "kimageformats"
 
-$qtVersion = ((qmake --version -split '\n')[1] -split ' ')[3]
+$qtVersion = [version]((qmake --version -split '\n')[1] -split ' ')[3]
 Write-Host "Detected Qt Version $qtVersion"
 
 # Qt version availability and runner names are assumed.
 if ($IsWindows) {
     $imageName = "windows-2022"
 } elseif ($IsMacOS) {
-    $imageName = "macos-12"
+    $imageName = $qtVersion -lt [version]'6.5.3' ? "macos-13" : "macos-14"
 } else {
     $imageName = "ubuntu-20.04"
 }

@@ -3,12 +3,12 @@ param
     $NightlyVersion = ""
 )
 
-$qtVersion = ((qmake --version -split '\n')[1] -split ' ')[3]
+$qtVersion = [version]((qmake --version -split '\n')[1] -split ' ')[3]
 Write-Host "Detected Qt Version $qtVersion"
 
 if ($env:buildArch -ne 'Arm64') {
     # Download and extract openssl
-    if ($qtVersion -like '5.*') {
+    if ($qtVersion.Major -le 5) {
         $openSslDownloadUrl = "https://download.firedaemon.com/FireDaemon-OpenSSL/openssl-1.1.1w.zip"
         $openSslFolderVersion = "1.1"
         $openSslFilenameVersion = "1_1"
