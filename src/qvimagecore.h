@@ -34,13 +34,6 @@ public:
         QString mimeType;
     };
 
-    struct ErrorData
-    {
-        bool hasError;
-        int errorNum;
-        QString errorString;
-    };
-
     struct FileDetails
     {
         QFileInfo fileInfo;
@@ -52,7 +45,6 @@ public:
         QSize baseImageSize;
         QSize loadedPixmapSize;
         QElapsedTimer timeSinceLoaded;
-        ErrorData errorData;
 
         void updateLoadedIndexInFolder();
     };
@@ -64,13 +56,12 @@ public:
         qint64 fileSize;
         QSize imageSize;
         QColorSpace targetColorSpace;
-        ErrorData errorData;
     };
 
     explicit QVImageCore(QObject *parent = nullptr);
 
-    void loadFile(const QString &fileName, bool isReloading = false);
-    ReadData readFile(const QString &fileName, const QColorSpace &targetColorSpace);
+    void loadFile(const QString &fileName);
+    ReadData readFile(const QString &fileName, const QColorSpace &targetColorSpace, bool forCache);
     void loadPixmap(const ReadData &readData);
     void closeImage();
     QList<CompatibleFile> getCompatibleFiles(const QString &dirPath) const;
@@ -81,9 +72,6 @@ public:
     static QString getPixmapCacheKey(const QString &absoluteFilePath, const qint64 &fileSize, const QColorSpace &targetColorSpace);
     QColorSpace getTargetColorSpace() const;
     QColorSpace detectDisplayColorSpace() const;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0) && QT_VERSION < QT_VERSION_CHECK(6, 7, 2)
-    static bool removeTinyDataTagsFromIccProfile(QByteArray &profile);
-#endif
 
     void settingsUpdated();
 
@@ -111,9 +99,7 @@ signals:
 
     void fileChanged();
 
-protected:
-    void loadEmptyPixmap();
-    FileDetails getEmptyFileDetails();
+    void readError(int errorNum, const QString &errorString, const QString &fileName);
 
 private:
     QPixmap loadedPixmap;

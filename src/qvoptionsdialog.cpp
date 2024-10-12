@@ -43,10 +43,6 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
         setWindowTitle("Preferences");
     }
 
-#ifdef QV_DISABLE_ONLINE_VERSION_CHECK
-    ui->updateCheckbox->hide();
-#endif //QV_DISABLE_ONLINE_VERSION_CHECK
-
 // Platform specific settings
 #ifdef Q_OS_MACOS
     ui->menubarCheckbox->hide();
@@ -68,7 +64,6 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
 #endif
 
     syncSettings(false, true);
-    connect(ui->windowResizeComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &QVOptionsDialog::windowResizeComboBoxCurrentIndexChanged);
     connect(ui->langComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &QVOptionsDialog::languageComboBoxCurrentIndexChanged);
     syncShortcuts();
     updateButtonBox();
@@ -141,7 +136,17 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
                      ui->titlebarRadioButton2, ui->titlebarRadioButton3}, "titlebarmode", defaults, makeConnections);
     // windowresizemode
     syncComboBox(ui->windowResizeComboBox, "windowresizemode", defaults, makeConnections);
-    windowResizeComboBoxCurrentIndexChanged(ui->windowResizeComboBox->currentIndex());
+    if (ui->windowResizeComboBox->currentIndex() == 0) {
+        ui->minWindowResizeLabel->setEnabled(false);
+        ui->minWindowResizeSpinBox->setEnabled(false);
+        ui->maxWindowResizeLabel->setEnabled(false);
+        ui->maxWindowResizeSpinBox->setEnabled(false);
+    } else {
+        ui->minWindowResizeLabel->setEnabled(true);
+        ui->minWindowResizeSpinBox->setEnabled(true);
+        ui->maxWindowResizeLabel->setEnabled(true);
+        ui->maxWindowResizeSpinBox->setEnabled(true);
+    }
     // minwindowresizedpercentage
     syncSpinBox(ui->minWindowResizeSpinBox, "minwindowresizedpercentage", defaults, makeConnections);
     // maxwindowresizedperecentage
@@ -200,8 +205,6 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
     syncCheckbox(ui->saveRecentsCheckbox, "saverecents", defaults, makeConnections);
     // updatenotifications
     syncCheckbox(ui->updateCheckbox, "updatenotifications", defaults, makeConnections);
-    // skiphidden
-    syncCheckbox(ui->skipHiddenCheckbox, "skiphidden", defaults, makeConnections);
 }
 
 void QVOptionsDialog::syncCheckbox(QCheckBox *checkbox, const QString &key, bool defaults, bool makeConnection)
@@ -336,10 +339,7 @@ void QVOptionsDialog::updateShortcutsTable()
 void QVOptionsDialog::shortcutCellDoubleClicked(int row, int column)
 {
     Q_UNUSED(column)
-    auto getTransientShortcutCallback = [this](int index) {
-        return transientShortcuts.value(index);
-    };
-    auto *shortcutDialog = new QVShortcutDialog(row, getTransientShortcutCallback, this);
+    auto *shortcutDialog = new QVShortcutDialog(row, this);
     connect(shortcutDialog, &QVShortcutDialog::shortcutsListChanged, this, [this](int index, const QStringList &stringListShortcuts) {
         transientShortcuts.replace(index, stringListShortcuts);
         updateShortcutsTable();
@@ -445,11 +445,20 @@ void QVOptionsDialog::scalingCheckboxStateChanged(int arg1)
 
 void QVOptionsDialog::windowResizeComboBoxCurrentIndexChanged(int index)
 {
-    bool enableRelatedControls = index != 0;
-    ui->minWindowResizeLabel->setEnabled(enableRelatedControls);
-    ui->minWindowResizeSpinBox->setEnabled(enableRelatedControls);
-    ui->maxWindowResizeLabel->setEnabled(enableRelatedControls);
-    ui->maxWindowResizeSpinBox->setEnabled(enableRelatedControls);
+    if (index == 0)
+    {
+        ui->minWindowResizeLabel->setEnabled(false);
+        ui->minWindowResizeSpinBox->setEnabled(false);
+        ui->maxWindowResizeLabel->setEnabled(false);
+        ui->maxWindowResizeSpinBox->setEnabled(false);
+    }
+    else
+    {
+        ui->minWindowResizeLabel->setEnabled(true);
+        ui->minWindowResizeSpinBox->setEnabled(true);
+        ui->maxWindowResizeLabel->setEnabled(true);
+        ui->maxWindowResizeSpinBox->setEnabled(true);
+    }
 }
 
 void QVOptionsDialog::populateLanguages()

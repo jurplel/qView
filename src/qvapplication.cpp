@@ -14,10 +14,7 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
 
     // Connections
     connect(&actionManager, &ActionManager::recentsMenuUpdated, this, &QVApplication::recentsMenuUpdated);
-
-#ifndef QV_DISABLE_ONLINE_VERSION_CHECK
     connect(&updateChecker, &UpdateChecker::checkedUpdates, this, &QVApplication::checkedUpdates);
-#endif //QV_DISABLE_ONLINE_VERSION_CHECK
 
     // Add fallback fromTheme icon search on linux with qt >5.11
 #if defined Q_OS_UNIX && !defined Q_OS_MACOS && QT_VERSION >= QT_VERSION_CHECK(5, 11, 0)
@@ -28,13 +25,12 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
 
     // Check for updates
     // TODO: move this to after first window show event
-    if (getSettingsManager().getBoolean("updatenotifications")) {
-        checkUpdates(true);
-    }
+    if (getSettingsManager().getBoolean("updatenotifications"))
+        checkUpdates();
 
     // Setup macOS dock menu
     dockMenu = new QMenu();
-    connect(dockMenu, &QMenu::triggered, this, [](QAction *triggeredAction) {
+    connect(dockMenu, &QMenu::triggered, this, [](QAction *triggeredAction){
        ActionManager::actionTriggered(triggeredAction);
     });
 
@@ -48,7 +44,7 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
 
     // Build menu bar
     menuBar = actionManager.buildMenuBar();
-    connect(menuBar, &QMenuBar::triggered, this, [](QAction *triggeredAction) {
+    connect(menuBar, &QMenuBar::triggered, this, [](QAction *triggeredAction){
         ActionManager::actionTriggered(triggeredAction);
     });
 
@@ -94,6 +90,21 @@ bool QVApplication::event(QEvent *event)
     return QApplication::event(event);
 }
 
+// Check if the current desktop environment is KDE (for Set as Wallpaper setting)
+bool QVApplication::isRunningKDE()
+{
+    // Check for KDE-specific environment variables
+    if (!qEnvironmentVariableIsEmpty("KDE_FULL_SESSION") || !qEnvironmentVariableIsEmpty("KDE_SESSION_VERSION"))
+        return true;
+
+    // Check if the XDG_CURRENT_DESKTOP environment variable contains KDE
+    QString xdgCurrentDesktop = qEnvironmentVariable("XDG_CURRENT_DESKTOP");
+    if (xdgCurrentDesktop.toLower().contains("kde"))
+        return true;
+
+    return false;
+}
+
 void QVApplication::openFile(MainWindow *window, const QString &file, bool resize)
 {
     window->setJustLaunchedWithImage(resize);
@@ -119,7 +130,7 @@ void QVApplication::pickFile(MainWindow *parent)
     if (parent)
         fileDialog->setWindowModality(Qt::WindowModal);
 
-    connect(fileDialog, &QFileDialog::filesSelected, fileDialog, [parent](const QStringList &selected) {
+    connect(fileDialog, &QFileDialog::filesSelected, fileDialog, [parent](const QStringList &selected){
         bool isFirstLoop = true;
         for (const auto &file : selected)
         {
@@ -196,16 +207,13 @@ MainWindow *QVApplication::getMainWindow(bool shouldBeEmpty)
     return window;
 }
 
-void QVApplication::checkUpdates(bool isStartupCheck)
+void QVApplication::checkUpdates()
 {
-#ifndef QV_DISABLE_ONLINE_VERSION_CHECK
-    updateChecker.check(isStartupCheck);
-#endif // QV_DISABLE_ONLINE_VERSION_CHECK
+    updateChecker.check();
 }
 
 void QVApplication::checkedUpdates()
 {
-#ifndef QV_DISABLE_ONLINE_VERSION_CHECK
     if (aboutDialog)
     {
         aboutDialog->setLatestVersionNum(updateChecker.getLatestVersionNum());
@@ -215,7 +223,6 @@ void QVApplication::checkedUpdates()
     {
         updateChecker.openDialog();
     }
-#endif // QV_DISABLE_ONLINE_VERSION_CHECK
 }
 
 void QVApplication::recentsMenuUpdated()
@@ -303,16 +310,12 @@ void QVApplication::openAboutDialog(QWidget *parent)
         return;
     }
 
-#ifndef QV_DISABLE_ONLINE_VERSION_CHECK
     aboutDialog = new QVAboutDialog(updateChecker.getLatestVersionNum(), parent);
-#else
-    aboutDialog = new QVAboutDialog(-1, parent);
-#endif //QV_DISABLE_ONLINE_VERSION_CHECK
     aboutDialog->show();
 }
 
 void QVApplication::hideIncompatibleActions()
-{    
+{
     // Deletion actions
 #if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
     auto hideDeleteActions = [this]{
@@ -389,9 +392,4 @@ void QVApplication::defineFilterLists()
     // Build name filter list for file dialogs
     nameFilterList << filterString;
     nameFilterList << tr("All Files") + " (*)";
-}
-
-qreal QVApplication::getPerceivedBrightness(const QColor &color)
-{
-    return (color.red() * 0.299 + color.green() * 0.587 + color.blue() * 0.114) / 255.0;
 }

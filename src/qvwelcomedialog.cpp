@@ -53,9 +53,6 @@ QVWelcomeDialog::QVWelcomeDialog(QWidget *parent) :
     ui->infoLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
     ui->infoLabel->setOpenExternalLinks(true);
 
-#ifdef QV_DISABLE_ONLINE_VERSION_CHECK
-    ui->updateCheckBox->hide();
-#else
     ui->updateCheckBox->setChecked(qvApp->getSettingsManager().getBoolean("updatenotifications"));
     connect(ui->updateCheckBox, &QCheckBox::stateChanged, qvApp, [](int state){
         QSettings settings;
@@ -63,7 +60,6 @@ QVWelcomeDialog::QVWelcomeDialog(QWidget *parent) :
         settings.setValue("updatenotifications", state > 0);
         qvApp->getSettingsManager().loadSettings();
     });
-#endif //QV_DISABLE_ONLINE_VERSION_CHECK
 }
 
 QVWelcomeDialog::~QVWelcomeDialog()

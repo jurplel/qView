@@ -6,7 +6,7 @@
 
 #include <QDebug>
 
-QVShortcutDialog::QVShortcutDialog(int index, GetTransientShortcutCallback getTransientShortcutCallback, QWidget *parent) :
+QVShortcutDialog::QVShortcutDialog(int index, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::QVShortcutDialog)
 {
@@ -19,8 +19,7 @@ QVShortcutDialog::QVShortcutDialog(int index, GetTransientShortcutCallback getTr
 
     shortcutObject = qvApp->getShortcutManager().getShortcutsList().value(index);
     this->index = index;
-    this->getTransientShortcutCallback = getTransientShortcutCallback;
-    ui->keySequenceEdit->setKeySequence(getTransientShortcutCallback(index).join(", "));
+    ui->keySequenceEdit->setKeySequence(shortcutObject.shortcuts.join(", "));
 }
 
 QVShortcutDialog::~QVShortcutDialog()
@@ -72,10 +71,9 @@ QString QVShortcutDialog::shortcutAlreadyBound(const QKeySequence &chosenSequenc
         return "";
 
     const auto &shortcutsList = qvApp->getShortcutManager().getShortcutsList();
-    for (int i = 0; i < shortcutsList.length(); i++)
+    for (const auto &shortcut : shortcutsList)
     {
-        const auto &shortcut = shortcutsList.value(i);
-        const auto sequenceList = ShortcutManager::stringListToKeySequenceList(getTransientShortcutCallback(i));
+        auto sequenceList = ShortcutManager::stringListToKeySequenceList(shortcut.shortcuts);
 
         if (sequenceList.contains(chosenSequence) && shortcut.name != exemptShortcut)
             return shortcut.readableName;

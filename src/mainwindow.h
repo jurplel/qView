@@ -51,17 +51,17 @@ public:
 
     void pickUrl();
 
-    void reloadFile();
-
     void openContainingFolder();
 
     void openWith(const OpenWith::OpenWithItem &exec);
 
     void showFileInfo();
 
-    void askDeleteFile(bool permanent);
+    void setAsWallpaper();
 
-    void deleteFile(bool permanent);
+    void askDeleteFile();
+
+    void deleteFile();
 
     QString deleteFileLinuxFallback(const QString &path, bool putBack);
 
@@ -111,8 +111,6 @@ public:
 
     void toggleFullScreen();
 
-    int getTitlebarOverlap() const;
-
     const QVImageCore::FileDetails& getCurrentFileDetails() const { return graphicsView->getCurrentFileDetails(); }
 
 public slots:
@@ -143,8 +141,6 @@ protected:
 
     void mouseDoubleClickEvent(QMouseEvent *event) override;
 
-    void paintEvent(QPaintEvent *event) override;
-
 protected slots:
     void settingsUpdated();
     void shortcutsUpdated();
@@ -161,8 +157,6 @@ private:
     QShortcut *escShortcut;
 
     QVInfoDialog *info;
-
-    QColor customBackgroundColor;
 
     bool justLaunchedWithImage;
 

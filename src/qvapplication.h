@@ -29,6 +29,8 @@ public:
 
     bool event(QEvent *event) override;
 
+    static bool isRunningKDE(); // Check if the current desktop environment is KDE (for Set as Wallpaper setting)
+
     static void openFile(MainWindow *window, const QString &file, bool resize = true);
 
     static void openFile(const QString &file, bool resize = true);
@@ -41,7 +43,7 @@ public:
 
     MainWindow *getMainWindow(bool shouldBeEmpty);
 
-    void checkUpdates(bool isStartupCheck);
+    void checkUpdates();
 
     void checkedUpdates();
 
@@ -77,8 +79,6 @@ public:
 
     ActionManager &getActionManager() { return actionManager; }
 
-    static qreal getPerceivedBrightness(const QColor &color);
-
 private:
 
     QList<MainWindow*> lastActiveWindows;
@@ -93,7 +93,7 @@ private:
     QStringList mimeTypeNameList;
 
     // This order is very important
-    SettingsManager settingsManager; 
+    SettingsManager settingsManager;
     ActionManager actionManager;
     ShortcutManager shortcutManager;
 
@@ -101,9 +101,7 @@ private:
     QPointer<QVWelcomeDialog> welcomeDialog;
     QPointer<QVAboutDialog> aboutDialog;
 
-#ifndef QV_DISABLE_ONLINE_VERSION_CHECK
     UpdateChecker updateChecker;
-#endif //QV_DISABLE_ONLINE_VERSION_CHECK
 };
 
 #endif // QVAPPLICATION_H
