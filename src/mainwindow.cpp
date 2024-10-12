@@ -41,6 +41,12 @@ MainWindow::MainWindow(QWidget *parent) :
     setAttribute(Qt::WA_DeleteOnClose);
     setAttribute(Qt::WA_OpaquePaintEvent);
 
+#if defined COCOA_LOADED && QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
+    // Allow the titlebar to overlap widgets with full size content view
+    setAttribute(Qt::WA_ContentsMarginsRespectsSafeArea, false);
+    centralWidget()->setAttribute(Qt::WA_ContentsMarginsRespectsSafeArea, false);
+#endif
+
     // Initialize variables
     justLaunchedWithImage = false;
     storedWindowState = Qt::WindowNoState;
