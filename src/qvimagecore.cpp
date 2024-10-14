@@ -135,6 +135,7 @@ QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColo
         QIcon icon;
         icon.addFile(fileName);
         readImage = icon.pixmap(largestDimension).toImage();
+        readImage.setDevicePixelRatio(1.0);
         // If this fails, try reading the normal way so that a proper error message is given
         if (readImage.isNull())
             readImage = imageReader.read();
