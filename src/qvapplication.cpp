@@ -347,8 +347,12 @@ void QVApplication::defineFilterLists()
     const auto &byteArrayFormats = QImageReader::supportedImageFormats();
 
     auto filterString = tr("Supported Images") + " (";
-    filterList.reserve(byteArrayFormats.size()-1);
     fileExtensionList.reserve(byteArrayFormats.size()-1);
+
+    const auto addExtension = [&](const QString &extension) {
+        filterString += "*" + extension + " ";
+        fileExtensionList << extension;
+    };
 
     // Build the filterlist, filterstring, and filterregexplist in one loop
     for (const auto &byteArray : byteArrayFormats)
@@ -358,16 +362,25 @@ void QVApplication::defineFilterLists()
         if (fileExtension == ".pdf")
             continue;
 
-        filterList << "*" + fileExtension;
-        filterString += "*" + fileExtension + " ";
-        fileExtensionList << fileExtension;
+        addExtension(fileExtension);
 
-        // If we support jpg, we actually support the jfif, jfi, and jpe file extensions too almost certainly.
+        // Register additional file extensions that decoders support but don't advertise
         if (fileExtension == ".jpg")
         {
-            filterList << "*.jpe" << "*.jfi" << "*.jfif";
-            filterString += "*.jpe *.jfi *.jfif ";
-            fileExtensionList << ".jpe" << ".jfi" << ".jfif";
+            addExtension(".jpe");
+            addExtension(".jfi");
+#if QT_VERSION < QT_VERSION_CHECK(6, 8, 0)
+            addExtension(".jfif");
+#endif
+        }
+        else if (fileExtension == ".heic")
+        {
+            addExtension(".heics");
+        }
+        else if (fileExtension == ".heif")
+        {
+            addExtension(".heifs");
+            addExtension(".hif");
         }
     }
     filterString.chop(1);

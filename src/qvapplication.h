@@ -63,8 +63,6 @@ public:
 
     QMenuBar *getMenuBar() const {  return menuBar; }
 
-    const QStringList &getFilterList() const { return filterList; }
-
     const QStringList &getNameFilterList() const { return nameFilterList; }
 
     const QStringList &getFileExtensionList() const { return fileExtensionList; }
@@ -87,7 +85,6 @@ private:
 
     QMenuBar *menuBar;
 
-    QStringList filterList;
     QStringList nameFilterList;
     QStringList fileExtensionList;
     QStringList mimeTypeNameList;
