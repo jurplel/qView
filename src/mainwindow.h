@@ -126,6 +126,8 @@ public slots:
 
     void fileChanged();
 
+    void zoomLevelChanged();
+
     void disableActions();
 
 protected:
