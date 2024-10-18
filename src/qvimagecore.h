@@ -36,8 +36,8 @@ public:
 
     struct ErrorData
     {
-        bool hasError;
-        int errorNum;
+        bool hasError = false;
+        int errorNum = 0;
         QString errorString;
     };
 
