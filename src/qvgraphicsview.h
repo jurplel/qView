@@ -130,7 +130,6 @@ private:
     bool isScalingEnabled;
     bool isScalingTwoEnabled;
     bool isPastActualSizeEnabled;
-    int fitOverscan;
     bool isScrollZoomsEnabled;
     bool isLoopFoldersEnabled;
     bool isCursorZoomEnabled;
@@ -138,6 +137,7 @@ private:
     int cropMode;
     qreal zoomMultiplier;
 
+    int fitOverscan;
     qreal zoomLevel;
     qreal appliedDpiAdjustment;
     qreal appliedExpensiveScaleZoomLevel;

@@ -466,7 +466,11 @@ void QVGraphicsView::zoomToFit()
 
 void QVGraphicsView::originalSize()
 {
-    zoomAbsolute(1.0);
+    const bool originalSizeAsToggle = true;
+    if (originalSizeAsToggle && zoomLevel == 1.0)
+        zoomToFit();
+    else
+        zoomAbsolute(1.0);
 }
 
 void QVGraphicsView::centerImage()
