@@ -148,6 +148,5 @@ private:
     QVImageCore imageCore { this };
 
     QTimer *expensiveScaleTimer;
-    QTimer *emitZoomLevelChangedTimer;
 };
 #endif // QVGRAPHICSVIEW_H

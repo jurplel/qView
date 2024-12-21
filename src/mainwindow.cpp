@@ -74,6 +74,12 @@ MainWindow::MainWindow(QWidget *parent) :
     slideshowTimer = new QTimer(this);
     connect(slideshowTimer, &QTimer::timeout, this, &MainWindow::slideshowAction);
 
+    // Timer for updating titlebar after zoom change
+    zoomTitlebarUpdateTimer = new QTimer(this);
+    zoomTitlebarUpdateTimer->setSingleShot(true);
+    zoomTitlebarUpdateTimer->setInterval(50);
+    connect(zoomTitlebarUpdateTimer, &QTimer::timeout, this, &MainWindow::buildWindowTitle);
+
     // Context menu
     auto &actionManager = qvApp->getActionManager();
 
@@ -389,7 +395,8 @@ void MainWindow::fileChanged()
 
 void MainWindow::zoomLevelChanged()
 {
-    buildWindowTitle();
+    if (!zoomTitlebarUpdateTimer->isActive())
+        zoomTitlebarUpdateTimer->start();
 }
 
 void MainWindow::disableActions()
