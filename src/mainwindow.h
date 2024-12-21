@@ -159,6 +159,7 @@ private:
     QMenu *virtualMenu;
 
     QTimer *slideshowTimer;
+    QTimer *zoomTitlebarUpdateTimer;
 
     QShortcut *escShortcut;
 

@@ -58,11 +58,6 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     expensiveScaleTimer->setInterval(50);
     connect(expensiveScaleTimer, &QTimer::timeout, this, [this]{applyExpensiveScaling();});
 
-    emitZoomLevelChangedTimer = new QTimer(this);
-    emitZoomLevelChangedTimer->setSingleShot(true);
-    emitZoomLevelChangedTimer->setInterval(50);
-    connect(emitZoomLevelChangedTimer, &QTimer::timeout, this, [this]{emit zoomLevelChanged();});
-
     loadedPixmapItem = new QGraphicsPixmapItem();
     scene->addItem(loadedPixmapItem);
 
@@ -344,7 +339,7 @@ void QVGraphicsView::zoomAbsolute(const qreal absoluteLevel, const QPoint &pos)
     if (isScalingEnabled)
         expensiveScaleTimer->start();
 
-    emitZoomLevelChangedTimer->start();
+    emit zoomLevelChanged();
 }
 
 void QVGraphicsView::applyExpensiveScaling()
