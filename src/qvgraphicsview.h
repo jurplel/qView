@@ -105,6 +105,10 @@ protected:
 
     bool event(QEvent *event) override;
 
+    bool isSmoothScalingRequested() const;
+
+    bool isExpensiveScalingRequested() const;
+
     QRect getContentRect() const;
 
     QRect getUsableViewportRect() const;
@@ -121,6 +125,8 @@ protected:
 
     void handleDpiAdjustmentChange();
 
+    void handleSmoothScalingChange();
+
     MainWindow* getMainWindow() const;
 
 private slots:
@@ -133,9 +139,9 @@ private:
 
     QGraphicsPixmapItem *loadedPixmapItem;
 
-    bool isFilteringEnabled;
-    bool isScalingEnabled;
-    bool isScalingTwoEnabled;
+    int smoothScalingMode;
+    bool expensiveScalingAboveWindowSize;
+    qreal smoothScalingLimit;
     bool isPastActualSizeEnabled;
     bool isScrollZoomsEnabled;
     bool isLoopFoldersEnabled;

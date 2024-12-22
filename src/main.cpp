@@ -16,6 +16,9 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("qView");
     QCoreApplication::setApplicationName("qView");
     QCoreApplication::setApplicationVersion(QString::number(VERSION));
+
+    SettingsManager::migrateOldSettings();
+
     QVApplication app(argc, argv);
 
     QCommandLineParser parser;
