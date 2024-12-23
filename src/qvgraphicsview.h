@@ -102,11 +102,9 @@ protected:
 
     bool event(QEvent *event) override;
 
-    QRectF getContentRect() const;
+    QRect getContentRect() const;
 
     QRect getUsableViewportRect(const bool addOverscan = false) const;
-
-    qreal getContentToViewportRatio() const;
 
     void setTransformScale(qreal absoluteScale);
 
