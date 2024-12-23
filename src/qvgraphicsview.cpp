@@ -311,7 +311,10 @@ void QVGraphicsView::zoomAbsolute(const qreal absoluteLevel, const QPoint &pos)
     zoomLevel = absoluteLevel;
 
     // If we are zooming in, we have a point to zoom towards, the mouse is on top of the viewport, and cursor zooming is enabled
-    if (getContentToViewportRatio() >= 1.0 && pos != QPoint(-1, -1) && underMouse() && isCursorZoomEnabled)
+    const QSize contentSize = getContentRect().size();
+    const QSize viewportSize = getUsableViewportRect(true).size();
+    const bool reachedViewportSize = contentSize.width() >= viewportSize.width() || contentSize.height() >= viewportSize.height();
+    if (reachedViewportSize && pos != QPoint(-1, -1) && underMouse() && isCursorZoomEnabled)
     {
         const QPointF p1mouse = mapFromScene(scenePos);
         const QPointF move = p1mouse - pos;
@@ -335,8 +338,10 @@ void QVGraphicsView::applyExpensiveScaling()
     if (!isScalingEnabled || !getCurrentFileDetails().isPixmapLoaded)
         return;
 
-    // If we are above maximum scaling size
-    if (getContentToViewportRatio() > (isScalingTwoEnabled ? 3.0 : 1.00001))
+    // Don't go over the maximum scaling size - small tolerance added to cover rounding errors
+    const QSize contentSize = getContentRect().size();
+    const QSize maxSize = getUsableViewportRect(true).size() * (isScalingTwoEnabled ? 3 : 1) + QSize(2, 2);
+    if (contentSize.width() > maxSize.width() || contentSize.height() > maxSize.height())
     {
         // Return to original size
         removeExpensiveScaling();
@@ -459,7 +464,7 @@ void QVGraphicsView::originalSize()
 void QVGraphicsView::centerImage()
 {
     const QRect viewRect = getUsableViewportRect();
-    const QRect contentRect = getContentRect().toRect();
+    const QRect contentRect = getContentRect();
     const int hOffset = isRightToLeft() ?
         horizontalScrollBar()->minimum() + horizontalScrollBar()->maximum() - contentRect.left() :
         contentRect.left();
@@ -572,9 +577,16 @@ QSizeF QVGraphicsView::getEffectiveOriginalSize() const
     return getTransformWithNoScaling().mapRect(QRectF(QPoint(), getCurrentFileDetails().loadedPixmapSize)).size() * getDpiAdjustment();
 }
 
-QRectF QVGraphicsView::getContentRect() const
+QRect QVGraphicsView::getContentRect() const
 {
-    return transform().mapRect(loadedPixmapItem->boundingRect());
+    // Avoid using loadedPixmapItem and the active transform because the pixmap may have expensive scaling applied
+    // which introduces a rounding error to begin with, and even worse, the error will be magnified if we're in the
+    // the process of zooming in and haven't re-applied the expensive scaling yet. If that's the case, callers need
+    // to know what the content rect will be once the dust settles rather than what's being temporarily displayed.
+    const QRectF loadedPixmapBoundingRect = QRectF(QPoint(), getCurrentFileDetails().loadedPixmapSize);
+    const qreal effectiveTransformScale = zoomLevel * appliedDpiAdjustment;
+    const QTransform effectiveTransform = getTransformWithNoScaling().scale(effectiveTransformScale, effectiveTransformScale);
+    return effectiveTransform.mapRect(loadedPixmapBoundingRect).toRect();
 }
 
 QRect QVGraphicsView::getUsableViewportRect(const bool addOverscan) const
@@ -589,13 +601,6 @@ QRect QVGraphicsView::getUsableViewportRect(const bool addOverscan) const
     if (addOverscan)
         rect.adjust(-fitOverscan, -fitOverscan, fitOverscan, fitOverscan);
     return rect;
-}
-
-qreal QVGraphicsView::getContentToViewportRatio() const
-{
-    const QSizeF contentSize = getContentRect().size();
-    const QSizeF viewportSize = getUsableViewportRect(true).size();
-    return qMax(contentSize.width() / viewportSize.width(), contentSize.height() / viewportSize.height());
 }
 
 void QVGraphicsView::setTransformScale(qreal value)
