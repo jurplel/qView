@@ -42,7 +42,6 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     zoomMultiplier = 1.25;
 
     // Initialize other variables
-    fitOverscan = 0;
     zoomLevel = 1.0;
     appliedDpiAdjustment = 1.0;
     appliedExpensiveScaleZoomLevel = 0.0;
@@ -324,7 +323,7 @@ void QVGraphicsView::zoomAbsolute(const qreal absoluteLevel, const QPoint &pos)
 
     // If we are zooming in, we have a point to zoom towards, the mouse is on top of the viewport, and cursor zooming is enabled
     const QSize contentSize = getContentRect().size();
-    const QSize viewportSize = getUsableViewportRect(true).size();
+    const QSize viewportSize = getUsableViewportRect().size();
     const bool reachedViewportSize = contentSize.width() >= viewportSize.width() || contentSize.height() >= viewportSize.height();
     if (reachedViewportSize && pos != QPoint(-1, -1) && underMouse() && isCursorZoomEnabled)
     {
@@ -352,7 +351,7 @@ void QVGraphicsView::applyExpensiveScaling()
 
     // Don't go over the maximum scaling size - small tolerance added to cover rounding errors
     const QSize contentSize = getContentRect().size();
-    const QSize maxSize = getUsableViewportRect(true).size() * (isScalingTwoEnabled ? 3 : 1) + QSize(2, 2);
+    const QSize maxSize = getUsableViewportRect().size() * (isScalingTwoEnabled ? 3 : 1) + QSize(2, 2);
     if (contentSize.width() > maxSize.width() || contentSize.height() > maxSize.height())
     {
         // Return to original size
@@ -409,48 +408,62 @@ void QVGraphicsView::zoomToFit()
     if (!getCurrentFileDetails().isPixmapLoaded)
         return;
 
-    QSizeF effectiveImageSize = getEffectiveOriginalSize();
-    QSize viewSize = getUsableViewportRect(true).size();
+    const QSizeF imageSize = getEffectiveOriginalSize();
+    const QSize viewSize = getUsableViewportRect().size();
 
     if (viewSize.isEmpty())
         return;
 
-    qreal fitXRatio = viewSize.width() / effectiveImageSize.width();
-    qreal fitYRatio = viewSize.height() / effectiveImageSize.height();
+    const qreal logicalPixelScale = devicePixelRatioF();
+    const auto gvRound = [logicalPixelScale](const qreal value) {
+        return roundToCompleteLogicalPixel(value, logicalPixelScale);
+    };
+    const auto gvReverseRound = [logicalPixelScale](const int value) {
+        return reverseLogicalPixelRounding(value, logicalPixelScale);
+    };
 
-    qreal targetRatio;
+    const qreal fitXRatio = gvReverseRound(viewSize.width()) / imageSize.width();
+    const qreal fitYRatio = gvReverseRound(viewSize.height()) / imageSize.height();
 
     // Each mode will check if the rounded image size already produces the desired fit,
     // in which case we can use exactly 1.0 to avoid unnecessary scaling
+    const int imageOverflowX = gvRound(imageSize.width()) - viewSize.width();
+    const int imageOverflowY = gvRound(imageSize.height()) - viewSize.height();
+
+    qreal targetRatio;
 
     switch (cropMode) { // should be enum tbh
     case 1: // only take into account height
-        if (qRound(effectiveImageSize.height()) == viewSize.height())
+        if (imageOverflowY == 0)
             targetRatio = 1.0;
         else
             targetRatio = fitYRatio;
         break;
     case 2: // only take into account width
-        if (qRound(effectiveImageSize.width()) == viewSize.width())
+        if (imageOverflowX == 0)
             targetRatio = 1.0;
         else
             targetRatio = fitXRatio;
         break;
     default:
-        if ((qRound(effectiveImageSize.height()) == viewSize.height() && qRound(effectiveImageSize.width()) <= viewSize.width()) ||
-            (qRound(effectiveImageSize.width()) == viewSize.width() && qRound(effectiveImageSize.height()) <= viewSize.height()))
+        // In rare cases, if the window sizing code just barely increased the size to enforce
+        // the minimum and intends for a tiny upscale to occur (e.g. to 100.3%), that could get
+        // misdetected as the special case for 1.0 here and leave an unintentional 1 pixel
+        // border. So if we match on only one dimension, make sure the other dimension will have
+        // at least a few pixels of border showing.
+        if ((imageOverflowX == 0 && (imageOverflowY == 0 || imageOverflowY <= -2)) ||
+            (imageOverflowY == 0 && (imageOverflowX == 0 || imageOverflowX <= -2)))
         {
             targetRatio = 1.0;
         }
         else
         {
-            QSize xRatioSize = (effectiveImageSize * fitXRatio * devicePixelRatioF()).toSize();
-            QSize yRatioSize = (effectiveImageSize * fitYRatio * devicePixelRatioF()).toSize();
-            QSize maxSize = (QSizeF(viewSize) * devicePixelRatioF()).toSize();
             // If the fit ratios are extremely close, it's possible that both are sufficient to
             // contain the image, but one results in the opposing dimension getting rounded down
             // to just under the view size, so use the larger of the two ratios in that case.
-            if (xRatioSize.boundedTo(maxSize) == xRatioSize && yRatioSize.boundedTo(maxSize) == yRatioSize)
+            const bool isOverallFitToXRatio = gvRound(imageSize.height() * fitXRatio) == viewSize.height();
+            const bool isOverallFitToYRatio = gvRound(imageSize.width() * fitYRatio) == viewSize.width();
+            if (isOverallFitToXRatio || isOverallFitToYRatio)
                 targetRatio = qMax(fitXRatio, fitYRatio);
             else
                 targetRatio = qMin(fitXRatio, fitYRatio);
@@ -598,10 +611,15 @@ QRect QVGraphicsView::getContentRect() const
     const QRectF loadedPixmapBoundingRect = QRectF(QPoint(), getCurrentFileDetails().loadedPixmapSize);
     const qreal effectiveTransformScale = zoomLevel / appliedDpiAdjustment;
     const QTransform effectiveTransform = getTransformWithNoScaling().scale(effectiveTransformScale, effectiveTransformScale);
-    return effectiveTransform.mapRect(loadedPixmapBoundingRect).toRect();
+    const QRectF contentRect = effectiveTransform.mapRect(loadedPixmapBoundingRect);
+    const qreal logicalPixelScale = devicePixelRatioF();
+    const auto gvRound = [logicalPixelScale](const qreal value) {
+        return roundToCompleteLogicalPixel(qAbs(value), logicalPixelScale) * (value >= 0 ? 1 : -1);
+    };
+    return QRect(gvRound(contentRect.left()), gvRound(contentRect.top()), gvRound(contentRect.width()), gvRound(contentRect.height()));
 }
 
-QRect QVGraphicsView::getUsableViewportRect(const bool addOverscan) const
+QRect QVGraphicsView::getUsableViewportRect() const
 {
 #ifdef COCOA_LOADED
     int obscuredHeight = QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
@@ -610,18 +628,19 @@ QRect QVGraphicsView::getUsableViewportRect(const bool addOverscan) const
 #endif
     QRect rect = viewport()->rect();
     rect.setTop(obscuredHeight);
-    if (addOverscan)
-        rect.adjust(-fitOverscan, -fitOverscan, fitOverscan, fitOverscan);
     return rect;
 }
 
 void QVGraphicsView::setTransformScale(qreal value)
 {
-#ifdef Q_OS_WIN
-    // On Windows, the positioning of scaled pixels seems to follow a floor rule rather
-    // than rounding, so increase the scale just a hair to cover rounding errors in case
-    // the desired scale was targeting an integer pixel boundary.
-    value *= 1.0 + std::numeric_limits<double>::epsilon();
+#ifndef Q_OS_MACOS
+    // If fractional display scaling is in use, when attempting to target a given size, the resulting error
+    // can be [0,1) unlike the typical [0,0.5] without scaling or integer scaling. This is because the
+    // image origin which is always at an integer logical pixel becomes potentially a fractional physical
+    // pixel due to the display scaling, adding to the overall error. As a result, tiny rounding errors can
+    // cause us to miss the size we were targetting, so increase the scale just a hair to compensate.
+    if (value != std::floor(value))
+        value *= 1.0 + std::numeric_limits<double>::epsilon();
 #endif
     setTransform(getTransformWithNoScaling().scale(value, value));
 }
@@ -642,6 +661,24 @@ QTransform QVGraphicsView::getTransformWithNoScaling() const
 qreal QVGraphicsView::getDpiAdjustment() const
 {
     return isOneToOnePixelSizingEnabled ? devicePixelRatioF() : 1.0;
+}
+
+int QVGraphicsView::roundToCompleteLogicalPixel(const qreal value, const qreal logicalScale)
+{
+    const int valueRoundedDown = qFloor(value);
+    const int valueRoundedUp = valueRoundedDown + 1;
+    const int physicalPixelsDrawn = qRound(value * logicalScale);
+    const int physicalPixelsShownIfRoundingUp = qRound(valueRoundedUp * logicalScale);
+    return physicalPixelsDrawn >= physicalPixelsShownIfRoundingUp ? valueRoundedUp : valueRoundedDown;
+}
+
+qreal QVGraphicsView::reverseLogicalPixelRounding(const int value, const qreal logicalScale)
+{
+    // For a given input value, its physical pixels fall within [value-0.5,value+0.5), so
+    // calculate the first physical pixel of the next value (rounding up if between pixels),
+    // and the pixel prior to that is the last one within the current value.
+    int maxPhysicalPixelForValue = qCeil((value + 0.5) * logicalScale) - 1;
+    return maxPhysicalPixelForValue / logicalScale;
 }
 
 void QVGraphicsView::handleDpiAdjustmentChange()
