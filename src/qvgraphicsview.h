@@ -68,7 +68,9 @@ public:
     const QMovie& getLoadedMovie() const { return imageCore.getLoadedMovie(); }
     qreal getZoomLevel() const { return zoomLevel; }
 
-    int getFitOverscan() const { return fitOverscan; }
+    static int roundToCompleteLogicalPixel(const qreal value, const qreal logicalScale);
+
+    static qreal reverseLogicalPixelRounding(const int value, const qreal logicalScale);
 
 signals:
     void cancelSlideshow();
@@ -104,7 +106,7 @@ protected:
 
     QRect getContentRect() const;
 
-    QRect getUsableViewportRect(const bool addOverscan = false) const;
+    QRect getUsableViewportRect() const;
 
     void setTransformScale(qreal absoluteScale);
 
@@ -135,7 +137,6 @@ private:
     int cropMode;
     qreal zoomMultiplier;
 
-    int fitOverscan;
     qreal zoomLevel;
     qreal appliedDpiAdjustment;
     qreal appliedExpensiveScaleZoomLevel;
