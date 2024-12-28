@@ -110,6 +110,11 @@ void QVImageCore::loadFile(const QString &fileName, bool isReloading)
         delete cachedData;
         loadPixmap(readData);
     }
+    //or see if the preloader is already working on it
+    else if (preloadFilesInProgress.contains(sanitaryFileName))
+    {
+        waitingOnPreloadFile = sanitaryFileName;
+    }
     else
     {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -123,7 +128,6 @@ void QVImageCore::loadFile(const QString &fileName, bool isReloading)
 QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColorSpace &targetColorSpace)
 {
     QImageReader imageReader;
-    imageReader.setDecideFormatFromContent(true);
     imageReader.setAutoTransform(true);
 
     imageReader.setFileName(fileName);
@@ -510,9 +514,21 @@ void QVImageCore::requestCachingFile(const QString &filePath, const QColorSpace 
     if (imgFile.size()/1024 > QVImageCore::pixmapCache.maxCost()/2)
         return;
 
+    preloadFilesInProgress.append(filePath);
+
     auto *cacheFutureWatcher = new QFutureWatcher<ReadData>();
     connect(cacheFutureWatcher, &QFutureWatcher<ReadData>::finished, this, [cacheFutureWatcher, this](){
-        addToCache(cacheFutureWatcher->result());
+        const ReadData readData = cacheFutureWatcher->result();
+        if (waitingOnPreloadFile == readData.absoluteFilePath)
+        {
+            loadPixmap(readData);
+            waitingOnPreloadFile = QString();
+        }
+        else
+        {
+            addToCache(readData);
+        }
+        preloadFilesInProgress.removeAll(readData.absoluteFilePath);
         cacheFutureWatcher->deleteLater();
     });
 

@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     parser.addHelpOption();
     parser.addVersionOption();
     parser.addPositionalArgument(QObject::tr("file"), QObject::tr("The file to open."));
-#if defined Q_OS_WIN && WIN32_LOADED
+#if defined Q_OS_WIN && WIN32_LOADED && QT_VERSION < QT_VERSION_CHECK(6, 7, 2)
     // Workaround for unicode characters getting mangled in certain cases. To support unicode arguments on
     // Windows, QCoreApplication normally ignores argv and gets them from the Windows API instead. But this
     // only happens if it thinks argv hasn't been modified prior to being passed into QCoreApplication's
