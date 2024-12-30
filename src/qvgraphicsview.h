@@ -2,12 +2,15 @@
 #define QVGRAPHICSVIEW_H
 
 #include "qvimagecore.h"
+#include "logicalpixelfitter.h"
 #include <QGraphicsView>
 #include <QImageReader>
 #include <QMimeData>
 #include <QDir>
 #include <QTimer>
 #include <QFileInfo>
+
+class MainWindow;
 
 class QVGraphicsView : public QGraphicsView
 {
@@ -63,14 +66,12 @@ public:
 
     QSizeF getEffectiveOriginalSize() const;
 
+    LogicalPixelFitter getPixelFitter() const;
+
     const QVImageCore::FileDetails& getCurrentFileDetails() const { return imageCore.getCurrentFileDetails(); }
     const QPixmap& getLoadedPixmap() const { return imageCore.getLoadedPixmap(); }
     const QMovie& getLoadedMovie() const { return imageCore.getLoadedMovie(); }
     qreal getZoomLevel() const { return zoomLevel; }
-
-    static int roundToCompleteLogicalPixel(const qreal value, const qreal logicalScale);
-
-    static qreal reverseLogicalPixelRounding(const int value, const qreal logicalScale);
 
 signals:
     void cancelSlideshow();
@@ -115,6 +116,8 @@ protected:
     qreal getDpiAdjustment() const;
 
     void handleDpiAdjustmentChange();
+
+    MainWindow* getMainWindow() const;
 
 private slots:
     void animatedFrameChanged(QRect rect);
