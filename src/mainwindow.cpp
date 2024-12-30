@@ -286,30 +286,24 @@ void MainWindow::paintEvent(QPaintEvent *event)
     QPainter painter(this);
 
     const QColor &backgroundColor = customBackgroundColor.isValid() ? customBackgroundColor : painter.background().color();
-
-    // Find the top of the viewport to account for the menu bar if it's inside the window
-    // and/or the label that displays titlebar text in full screen mode.
-    const int viewportY = graphicsView->mapTo(this, QPoint()).y();
-    // On macOS, part of the viewport may be additionally covered with the window's translucent
-    // titlebar due to full size content view.
-    const int unobscuredViewportY = qMax(getTitlebarOverlap(), viewportY);
+    const ViewportPosition viewportPos = getViewportPosition();
 
     // Erase the area above the viewport, i.e. fill it with the painter's default color.
-    const QRect headerRect = QRect(0, 0, width(), viewportY);
+    const QRect headerRect = QRect(0, 0, width(), viewportPos.widgetY);
     if (headerRect.isValid())
     {
         painter.eraseRect(headerRect);
     }
 
     // Fill the viewport with the background color.
-    const QRect viewportRect = rect().adjusted(0, viewportY, 0, 0);
+    const QRect viewportRect = rect().adjusted(0, viewportPos.widgetY, 0, 0);
     if (viewportRect.isValid())
     {
         painter.fillRect(viewportRect, backgroundColor);
     }
 
     // If there's an error message, draw it centered inside the unobscured area of the viewport.
-    const QRect unobscuredViewportRect = rect().adjusted(0, unobscuredViewportY, 0, 0);
+    const QRect unobscuredViewportRect = rect().adjusted(0, viewportPos.widgetY + viewportPos.obscuredHeight, 0, 0);
     if (getCurrentFileDetails().errorData.hasError && unobscuredViewportRect.isValid())
     {
         const QVImageCore::ErrorData &errorData = getCurrentFileDetails().errorData;
@@ -591,31 +585,18 @@ void MainWindow::setWindowSize()
     const QSize minWindowSize = (screenSize * minWindowResizedPercentage).boundedTo(hardLimitSize);
     const QSize maxWindowSize = (screenSize * qMax(maxWindowResizedPercentage, minWindowResizedPercentage)).boundedTo(hardLimitSize);
     const QSizeF imageSize = graphicsView->getEffectiveOriginalSize();
-    const qreal logicalPixelScale = graphicsView->devicePixelRatioF();
+    const LogicalPixelFitter fitter = graphicsView->getPixelFitter();
     const bool enforceMinSizeBothDimensions = false;
 
-    const auto gvRoundSizeF = [logicalPixelScale](const QSizeF value) {
-        return QSize(
-            QVGraphicsView::roundToCompleteLogicalPixel(value.width(), logicalPixelScale),
-            QVGraphicsView::roundToCompleteLogicalPixel(value.height(), logicalPixelScale)
-        );
-    };
-    const auto gvReverseRoundSize = [logicalPixelScale](const QSize value) {
-        return QSizeF(
-            QVGraphicsView::reverseLogicalPixelRounding(value.width(), logicalPixelScale),
-            QVGraphicsView::reverseLogicalPixelRounding(value.height(), logicalPixelScale)
-        );
-    };
-
-    QSize targetSize = gvRoundSizeF(imageSize);
+    QSize targetSize = fitter.snapSize(imageSize);
 
     const bool limitToMin = targetSize.width() < minWindowSize.width() && targetSize.height() < minWindowSize.height();
     const bool limitToMax = targetSize.width() > maxWindowSize.width() || targetSize.height() > maxWindowSize.height();
     if (limitToMin || limitToMax)
     {
-        const QSizeF enforcedSize = gvReverseRoundSize((limitToMin ? minWindowSize : maxWindowSize));
+        const QSizeF enforcedSize = fitter.unsnapSize(limitToMin ? minWindowSize : maxWindowSize);
         const qreal fitRatio = qMin(enforcedSize.width() / imageSize.width(), enforcedSize.height() / imageSize.height());
-        targetSize = gvRoundSizeF(imageSize * fitRatio);
+        targetSize = fitter.snapSize(imageSize * fitRatio);
     }
 
     if (enforceMinSizeBothDimensions)
@@ -1224,4 +1205,16 @@ int MainWindow::getTitlebarOverlap() const
 #endif
 
     return 0;
+}
+
+MainWindow::ViewportPosition MainWindow::getViewportPosition() const
+{
+    ViewportPosition result;
+    // This accounts for anything that may be above the viewport such as the menu bar (if it's inside
+    // the window) and/or the label that displays titlebar text in full screen mode.
+    result.widgetY = windowHandle() ? graphicsView->mapTo(this, QPoint()).y() : 0;
+    // On macOS, part of the viewport may be additionally covered with the window's translucent
+    // titlebar due to full size content view.
+    result.obscuredHeight = qMax(getTitlebarOverlap() - result.widgetY, 0);
+    return result;
 }

@@ -26,6 +26,12 @@ public:
         QString previousPath;
     };
 
+    struct ViewportPosition
+    {
+        int widgetY;
+        int obscuredHeight;
+    };
+
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override;
 
@@ -112,6 +118,8 @@ public:
     void toggleFullScreen();
 
     int getTitlebarOverlap() const;
+
+    ViewportPosition getViewportPosition() const;
 
     const QVImageCore::FileDetails& getCurrentFileDetails() const { return graphicsView->getCurrentFileDetails(); }
 

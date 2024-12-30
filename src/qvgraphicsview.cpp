@@ -414,21 +414,14 @@ void QVGraphicsView::zoomToFit()
     if (viewSize.isEmpty())
         return;
 
-    const qreal logicalPixelScale = devicePixelRatioF();
-    const auto gvRound = [logicalPixelScale](const qreal value) {
-        return roundToCompleteLogicalPixel(value, logicalPixelScale);
-    };
-    const auto gvReverseRound = [logicalPixelScale](const int value) {
-        return reverseLogicalPixelRounding(value, logicalPixelScale);
-    };
-
-    const qreal fitXRatio = gvReverseRound(viewSize.width()) / imageSize.width();
-    const qreal fitYRatio = gvReverseRound(viewSize.height()) / imageSize.height();
+    const LogicalPixelFitter fitter = getPixelFitter();
+    const qreal fitXRatio = fitter.unsnapWidth(viewSize.width()) / imageSize.width();
+    const qreal fitYRatio = fitter.unsnapHeight(viewSize.height()) / imageSize.height();
 
     // Each mode will check if the rounded image size already produces the desired fit,
     // in which case we can use exactly 1.0 to avoid unnecessary scaling
-    const int imageOverflowX = gvRound(imageSize.width()) - viewSize.width();
-    const int imageOverflowY = gvRound(imageSize.height()) - viewSize.height();
+    const int imageOverflowX = fitter.snapWidth(imageSize.width()) - viewSize.width();
+    const int imageOverflowY = fitter.snapHeight(imageSize.height()) - viewSize.height();
 
     qreal targetRatio;
 
@@ -461,8 +454,8 @@ void QVGraphicsView::zoomToFit()
             // If the fit ratios are extremely close, it's possible that both are sufficient to
             // contain the image, but one results in the opposing dimension getting rounded down
             // to just under the view size, so use the larger of the two ratios in that case.
-            const bool isOverallFitToXRatio = gvRound(imageSize.height() * fitXRatio) == viewSize.height();
-            const bool isOverallFitToYRatio = gvRound(imageSize.width() * fitYRatio) == viewSize.width();
+            const bool isOverallFitToXRatio = fitter.snapHeight(imageSize.height() * fitXRatio) == viewSize.height();
+            const bool isOverallFitToYRatio = fitter.snapWidth(imageSize.width() * fitYRatio) == viewSize.width();
             if (isOverallFitToXRatio || isOverallFitToYRatio)
                 targetRatio = qMax(fitXRatio, fitYRatio);
             else
@@ -602,6 +595,12 @@ QSizeF QVGraphicsView::getEffectiveOriginalSize() const
     return getTransformWithNoScaling().mapRect(QRectF(QPoint(), getCurrentFileDetails().loadedPixmapSize)).size() / getDpiAdjustment();
 }
 
+LogicalPixelFitter QVGraphicsView::getPixelFitter() const
+{
+    const MainWindow::ViewportPosition viewportPos = getMainWindow()->getViewportPosition();
+    return LogicalPixelFitter(devicePixelRatioF(), QPoint(0, viewportPos.widgetY + viewportPos.obscuredHeight));
+}
+
 QRect QVGraphicsView::getContentRect() const
 {
     // Avoid using loadedPixmapItem and the active transform because the pixmap may have expensive scaling applied
@@ -612,36 +611,25 @@ QRect QVGraphicsView::getContentRect() const
     const qreal effectiveTransformScale = zoomLevel / appliedDpiAdjustment;
     const QTransform effectiveTransform = getTransformWithNoScaling().scale(effectiveTransformScale, effectiveTransformScale);
     const QRectF contentRect = effectiveTransform.mapRect(loadedPixmapBoundingRect);
-    const qreal logicalPixelScale = devicePixelRatioF();
-    const auto gvRound = [logicalPixelScale](const qreal value) {
-        return roundToCompleteLogicalPixel(qAbs(value), logicalPixelScale) * (value >= 0 ? 1 : -1);
-    };
-    return QRect(gvRound(contentRect.left()), gvRound(contentRect.top()), gvRound(contentRect.width()), gvRound(contentRect.height()));
+    const QSize snappedSize = getPixelFitter().snapSize(contentRect.size());
+    const bool isHorizontalReversed = effectiveTransform.m11() < 0 || effectiveTransform.m21() < 0;
+    const bool isVerticalReversed = effectiveTransform.m22() < 0 || effectiveTransform.m12() < 0;
+    const QPointF topLeftCorrection = QPointF(
+        isHorizontalReversed ? contentRect.width() - snappedSize.width() : 0,
+        isVerticalReversed ? contentRect.height() - snappedSize.height() : 0
+    );
+    return QRect((contentRect.topLeft() + topLeftCorrection).toPoint(), snappedSize);
 }
 
 QRect QVGraphicsView::getUsableViewportRect() const
 {
-#ifdef COCOA_LOADED
-    int obscuredHeight = QVCocoaFunctions::getObscuredHeight(window()->windowHandle());
-#else
-    int obscuredHeight = 0;
-#endif
     QRect rect = viewport()->rect();
-    rect.setTop(obscuredHeight);
+    rect.setTop(getMainWindow()->getViewportPosition().obscuredHeight);
     return rect;
 }
 
 void QVGraphicsView::setTransformScale(qreal value)
 {
-#ifndef Q_OS_MACOS
-    // If fractional display scaling is in use, when attempting to target a given size, the resulting error
-    // can be [0,1) unlike the typical [0,0.5] without scaling or integer scaling. This is because the
-    // image origin which is always at an integer logical pixel becomes potentially a fractional physical
-    // pixel due to the display scaling, adding to the overall error. As a result, tiny rounding errors can
-    // cause us to miss the size we were targetting, so increase the scale just a hair to compensate.
-    if (value != std::floor(value))
-        value *= 1.0 + std::numeric_limits<double>::epsilon();
-#endif
     setTransform(getTransformWithNoScaling().scale(value, value));
 }
 
@@ -663,24 +651,6 @@ qreal QVGraphicsView::getDpiAdjustment() const
     return isOneToOnePixelSizingEnabled ? devicePixelRatioF() : 1.0;
 }
 
-int QVGraphicsView::roundToCompleteLogicalPixel(const qreal value, const qreal logicalScale)
-{
-    const int valueRoundedDown = qFloor(value);
-    const int valueRoundedUp = valueRoundedDown + 1;
-    const int physicalPixelsDrawn = qRound(value * logicalScale);
-    const int physicalPixelsShownIfRoundingUp = qRound(valueRoundedUp * logicalScale);
-    return physicalPixelsDrawn >= physicalPixelsShownIfRoundingUp ? valueRoundedUp : valueRoundedDown;
-}
-
-qreal QVGraphicsView::reverseLogicalPixelRounding(const int value, const qreal logicalScale)
-{
-    // For a given input value, its physical pixels fall within [value-0.5,value+0.5), so
-    // calculate the first physical pixel of the next value (rounding up if between pixels),
-    // and the pixel prior to that is the last one within the current value.
-    int maxPhysicalPixelForValue = qCeil((value + 0.5) * logicalScale) - 1;
-    return maxPhysicalPixelForValue / logicalScale;
-}
-
 void QVGraphicsView::handleDpiAdjustmentChange()
 {
     if (appliedDpiAdjustment == getDpiAdjustment())
@@ -692,6 +662,11 @@ void QVGraphicsView::handleDpiAdjustmentChange()
 
     if (isScalingEnabled)
         expensiveScaleTimer->start();
+}
+
+MainWindow* QVGraphicsView::getMainWindow() const
+{
+    return qobject_cast<MainWindow*>(window());
 }
 
 void QVGraphicsView::settingsUpdated()
