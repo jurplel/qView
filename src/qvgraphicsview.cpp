@@ -305,7 +305,7 @@ void QVGraphicsView::zoomAbsolute(const qreal absoluteLevel, const QPoint &pos)
     }
     else
     {
-        setTransformScale(absoluteLevel / appliedDpiAdjustment);
+        setTransformScale(absoluteLevel * appliedDpiAdjustment);
     }
     zoomLevel = absoluteLevel;
 
@@ -349,7 +349,7 @@ void QVGraphicsView::applyExpensiveScaling()
 
     // Calculate scaled resolution
     const qreal dpiAdjustment = getDpiAdjustment();
-    const QSizeF mappedSize = QSizeF(getCurrentFileDetails().loadedPixmapSize) * zoomLevel * (devicePixelRatioF() / dpiAdjustment);
+    const QSizeF mappedSize = QSizeF(getCurrentFileDetails().loadedPixmapSize) * zoomLevel * dpiAdjustment * devicePixelRatioF();
 
     // Set image to scaled version
     loadedPixmapItem->setPixmap(imageCore.scaleExpensively(mappedSize));
@@ -371,7 +371,7 @@ void QVGraphicsView::removeExpensiveScaling()
 
     // Set appropriate scale factor
     const qreal dpiAdjustment = getDpiAdjustment();
-    const qreal newTransformScale = zoomLevel / dpiAdjustment;
+    const qreal newTransformScale = zoomLevel * dpiAdjustment;
     setTransformScale(newTransformScale);
     appliedDpiAdjustment = dpiAdjustment;
     appliedExpensiveScaleZoomLevel = 0.0;
@@ -580,7 +580,7 @@ void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
 
 QSizeF QVGraphicsView::getEffectiveOriginalSize() const
 {
-    return getTransformWithNoScaling().mapRect(QRectF(QPoint(), getCurrentFileDetails().loadedPixmapSize)).size() / getDpiAdjustment();
+    return getTransformWithNoScaling().mapRect(QRectF(QPoint(), getCurrentFileDetails().loadedPixmapSize)).size() * getDpiAdjustment();
 }
 
 LogicalPixelFitter QVGraphicsView::getPixelFitter() const
@@ -596,7 +596,7 @@ QRect QVGraphicsView::getContentRect() const
     // the process of zooming in and haven't re-applied the expensive scaling yet. If that's the case, callers need
     // to know what the content rect will be once the dust settles rather than what's being temporarily displayed.
     const QRectF loadedPixmapBoundingRect = QRectF(QPoint(), getCurrentFileDetails().loadedPixmapSize);
-    const qreal effectiveTransformScale = zoomLevel / appliedDpiAdjustment;
+    const qreal effectiveTransformScale = zoomLevel * appliedDpiAdjustment;
     const QTransform effectiveTransform = getTransformWithNoScaling().scale(effectiveTransformScale, effectiveTransformScale);
     const QRectF contentRect = effectiveTransform.mapRect(loadedPixmapBoundingRect);
     const QSize snappedSize = getPixelFitter().snapSize(contentRect.size());
@@ -636,7 +636,11 @@ QTransform QVGraphicsView::getTransformWithNoScaling() const
 
 qreal QVGraphicsView::getDpiAdjustment() const
 {
-    return isOneToOnePixelSizingEnabled ? devicePixelRatioF() : 1.0;
+    // Although inverting this potentially introduces a rounding error, it is inevitable. For
+    // example with 1:1 pixel sizing @ 100% zoom, the transform's scale must be set to the
+    // inverted value. Pre-inverting it here helps keep things consistent, e.g. so that the
+    // content rect calculation has the same error that will happen during painting.
+    return isOneToOnePixelSizingEnabled ? 1.0 / devicePixelRatioF() : 1.0;
 }
 
 void QVGraphicsView::handleDpiAdjustmentChange()
