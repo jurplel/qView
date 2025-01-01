@@ -109,9 +109,13 @@ protected:
 
     QRect getUsableViewportRect() const;
 
-    void setTransformScale(qreal absoluteScale);
+    void setTransformScale(const qreal absoluteScale);
 
-    QTransform getTransformWithNoScaling() const;
+    void setTransformWithNormalization(const QTransform &matrix);
+
+    QTransform getUnspecializedTransform() const;
+
+    QTransform normalizeTransformOrigin(const QTransform &matrix, const QSizeF &pixmapSize) const;
 
     qreal getDpiAdjustment() const;
 
