@@ -1019,12 +1019,14 @@ void MainWindow::rotateRight()
 {
     graphicsView->rotateImage(90);
     resetZoom();
+    setWindowSize();
 }
 
 void MainWindow::rotateLeft()
 {
     graphicsView->rotateImage(-90);
     resetZoom();
+    setWindowSize();
 }
 
 void MainWindow::mirror()
