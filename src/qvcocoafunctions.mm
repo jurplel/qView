@@ -108,17 +108,27 @@ void QVCocoaFunctions::setFullSizeContentView(QWindow *window, const bool enable
 #endif
 }
 
-bool QVCocoaFunctions::getTitlebarHidden(QWindow *window)
+bool QVCocoaFunctions::getTitlebarHidden(const QWidget *window)
 {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 9, 0)
+    return window->windowFlags().testFlags(Qt::NoTitleBarBackgroundHint);
+#else
     auto *view = reinterpret_cast<NSView*>(window->winId());
     return view.window.titleVisibility == NSWindowTitleHidden;
+#endif
 }
 
-void QVCocoaFunctions::setTitlebarHidden(QWindow *window, const bool shouldHide)
+void QVCocoaFunctions::setTitlebarHidden(QWidget *window, const bool hide)
 {
     auto *view = reinterpret_cast<NSView*>(window->winId());
-    view.window.titleVisibility = shouldHide ? NSWindowTitleHidden : NSWindowTitleVisible;
-    view.window.titlebarAppearsTransparent = shouldHide;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 9, 0)
+    Qt::WindowFlags newFlags = window->windowFlags().setFlag(Qt::NoTitleBarBackgroundHint, hide);
+    window->overrideWindowFlags(newFlags);
+    window->windowHandle()->setFlags(newFlags);
+#else
+    view.window.titlebarAppearsTransparent = hide;
+#endif
+    view.window.titleVisibility = hide ? NSWindowTitleHidden : NSWindowTitleVisible;
 }
 
 void QVCocoaFunctions::setVibrancy(bool alwaysDark, QWindow *window)

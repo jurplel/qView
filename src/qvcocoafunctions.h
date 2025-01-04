@@ -15,9 +15,9 @@ public:
 
     static void setFullSizeContentView(QWindow *window, const bool enable);
 
-    static bool getTitlebarHidden(QWindow *window);
+    static bool getTitlebarHidden(const QWidget *window);
 
-    static void setTitlebarHidden(QWindow *window, const bool shouldHide);
+    static void setTitlebarHidden(QWidget *window, const bool hide);
 
     static void setVibrancy(bool alwaysDark, QWindow *window);
 

@@ -41,7 +41,7 @@ public:
 
     bool getTitlebarHidden() const;
 
-    void setTitlebarHidden(const bool shouldHide);
+    void setTitlebarHidden(const bool hide);
 
     void setWindowSize();
 

@@ -553,18 +553,18 @@ bool MainWindow::getTitlebarHidden() const
         return false;
 
 #if defined COCOA_LOADED && QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    return QVCocoaFunctions::getTitlebarHidden(windowHandle());
+    return QVCocoaFunctions::getTitlebarHidden(this);
 #else
     return !windowFlags().testFlag(Qt::WindowTitleHint);
 #endif
 }
 
-void MainWindow::setTitlebarHidden(const bool shouldHide)
+void MainWindow::setTitlebarHidden(const bool hide)
 {
     if (!windowHandle())
         return;
 
-    auto customizeWindowFlags = [this](const Qt::WindowFlags flagsToChange, const bool on) {
+    const auto customizeWindowFlags = [this](const Qt::WindowFlags flagsToChange, const bool on) {
         Qt::WindowFlags newFlags = windowFlags() | Qt::CustomizeWindowHint;
         if (on)
             newFlags |= flagsToChange;
@@ -575,18 +575,18 @@ void MainWindow::setTitlebarHidden(const bool shouldHide)
     };
 
 #if defined COCOA_LOADED && QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    QVCocoaFunctions::setTitlebarHidden(windowHandle(), shouldHide);
-    customizeWindowFlags(Qt::WindowCloseButtonHint | Qt::WindowMinMaxButtonsHint | Qt::WindowFullscreenButtonHint, !shouldHide);
+    QVCocoaFunctions::setTitlebarHidden(this, hide);
+    customizeWindowFlags(Qt::WindowCloseButtonHint | Qt::WindowMinMaxButtonsHint | Qt::WindowFullscreenButtonHint, !hide);
 #elif defined WIN32_LOADED
-    customizeWindowFlags(Qt::WindowTitleHint | Qt::WindowMinMaxButtonsHint, !shouldHide);
+    customizeWindowFlags(Qt::WindowTitleHint | Qt::WindowMinMaxButtonsHint, !hide);
 #else
-    customizeWindowFlags(Qt::WindowTitleHint, !shouldHide);
+    customizeWindowFlags(Qt::WindowTitleHint, !hide);
 #endif
 
     const auto toggleTitlebarActions = qvApp->getActionManager().getAllClonesOfAction("toggletitlebar", this);
     for (const auto &toggleTitlebarAction : toggleTitlebarActions)
     {
-        toggleTitlebarAction->setText(shouldHide ? tr("Show Title&bar") : tr("Hide Title&bar"));
+        toggleTitlebarAction->setText(hide ? tr("Show Title&bar") : tr("Hide Title&bar"));
     }
 
     updateWindowFilePath();

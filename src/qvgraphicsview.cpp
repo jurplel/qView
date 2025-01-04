@@ -132,7 +132,9 @@ void QVGraphicsView::mousePressEvent(QMouseEvent *event)
 
     if (event->button() == Qt::LeftButton && event->modifiers().testFlag(Qt::ControlModifier))
     {
-        initializeDrag();
+        const auto windowState = window()->windowState();
+        if (!windowState.testFlag(Qt::WindowFullScreen) && !windowState.testFlag(Qt::WindowMaximized))
+            initializeDrag();
         return;
     }
 
