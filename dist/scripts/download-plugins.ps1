@@ -4,14 +4,14 @@
 
 $pluginNames = "qtapng", "kimageformats"
 
-$qtVersion = ((qmake --version -split '\n')[1] -split ' ')[3]
+$qtVersion = [version]((qmake --version -split '\n')[1] -split ' ')[3]
 Write-Host "Detected Qt Version $qtVersion"
 
 # Qt version availability and runner names are assumed.
 if ($IsWindows) {
     $imageName = "windows-2022"
 } elseif ($IsMacOS) {
-    $imageName = "macos-12"
+    $imageName = $qtVersion -lt [version]'6.5.3' ? "macos-13" : "macos-14"
 } else {
     $imageName = "ubuntu-20.04"
 }
@@ -71,14 +71,14 @@ if ($pluginNames -contains 'kimageformats') {
         if (Test-Path -Path kimageformats/kimageformats/output/avif.dll -PathType Leaf) {
             cp kimageformats/kimageformats/output/avif.dll "$out_frm/"
             cp kimageformats/kimageformats/output/aom.dll "$out_frm/"
+            cp kimageformats/kimageformats/output/jpeg62.dll "$out_frm/"
+            cp kimageformats/kimageformats/output/libyuv.dll "$out_frm/"
         }
         # copy heif stuff
         if (Test-Path -Path kimageformats/kimageformats/output/heif.dll -PathType Leaf) {
             cp kimageformats/kimageformats/output/heif.dll "$out_frm/"
             cp kimageformats/kimageformats/output/libde265.dll "$out_frm/"
-            if ($env:buildArch -ne 'Arm64') {
-                cp kimageformats/kimageformats/output/libx265.dll "$out_frm/"
-            }
+            cp kimageformats/kimageformats/output/libx265.dll "$out_frm/"
             cp kimageformats/kimageformats/output/aom.dll "$out_frm/"
         }
         # copy raw stuff

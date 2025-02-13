@@ -165,22 +165,31 @@ QByteArray QVWin32Functions::getIccProfileForWindow(const QWindow *window)
 {
     QByteArray result;
     const HWND hWnd = reinterpret_cast<HWND>(window->winId());
-    const HDC hDC = GetDC(hWnd);
-    if (hDC)
+    const HMONITOR hMonitor = MonitorFromWindow(hWnd, MONITOR_DEFAULTTONEAREST);
+    if (hMonitor)
     {
-        WCHAR profilePathBuff[MAX_PATH];
-        DWORD profilePathSize = MAX_PATH;
-        if (GetICMProfileW(hDC, &profilePathSize, profilePathBuff))
+        MONITORINFOEXW monitorInfo;
+        monitorInfo.cbSize = sizeof(MONITORINFOEXW);
+        if (GetMonitorInfoW(hMonitor, &monitorInfo))
         {
-            QString profilePath = QString::fromWCharArray(profilePathBuff);
-            QFile file(profilePath);
-            if (file.open(QIODevice::ReadOnly))
+            const HDC hDC = CreateICW(monitorInfo.szDevice, monitorInfo.szDevice, NULL, NULL);
+            if (hDC)
             {
-                result = file.readAll();
-                file.close();
+                WCHAR profilePathBuff[MAX_PATH];
+                DWORD profilePathSize = MAX_PATH;
+                if (GetICMProfileW(hDC, &profilePathSize, profilePathBuff))
+                {
+                    QString profilePath = QString::fromWCharArray(profilePathBuff);
+                    QFile file(profilePath);
+                    if (file.open(QIODevice::ReadOnly))
+                    {
+                        result = file.readAll();
+                        file.close();
+                    }
+                }
+                ReleaseDC(hWnd, hDC);
             }
         }
-        ReleaseDC(hWnd, hDC);
     }
     return result;
 }
