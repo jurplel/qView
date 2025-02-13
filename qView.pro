@@ -1,5 +1,5 @@
 TARGET = qView
-VERSION = 6.1
+VERSION = 7.0
 
 QT += core gui network widgets
 
@@ -46,7 +46,7 @@ win32 {
     }
 
     RC_ICONS = "dist/win/qView.ico"
-    QMAKE_TARGET_COPYRIGHT = "Copyright \\251 2023 jurplel and qView contributors"
+    QMAKE_TARGET_COPYRIGHT = "Copyright \\251 2025 jurplel and qView contributors"
     QMAKE_TARGET_DESCRIPTION = "qView"
 }
 
