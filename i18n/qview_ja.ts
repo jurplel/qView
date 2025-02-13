@@ -894,7 +894,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="312"/>
         <source>Zoom amount:</source>
-        <translation>拡大量</translation>
+        <translation type="unfinished">拡大量</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="341"/>
@@ -1036,7 +1036,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="588"/>
         <source>Slideshow direction:</source>
-        <translation>スライドショーの方向</translation>
+        <translation type="unfinished">スライドショーの方向</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="596"/>
@@ -1051,7 +1051,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="609"/>
         <source>Slideshow timer:</source>
-        <translation>スライドショーを進める時間</translation>
+        <translation type="unfinished">スライドショーを進める時間</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="616"/>
@@ -1136,7 +1136,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="15"/>
         <source>File name:</source>
-        <translation>ファイル名</translation>
+        <translation type="unfinished">ファイル名</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="26"/>
