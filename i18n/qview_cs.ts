@@ -237,7 +237,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="781"/>
         <source>&amp;Reset Speed</source>
-        <translation>#Resetovat rychlost</translation>
+        <translation>&amp;Resetovat rychlost</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="785"/>
