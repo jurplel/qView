@@ -340,7 +340,7 @@
     </message>
     <message>
         <source>Empty</source>
-        <translation type="vanished">Vide</translation>
+        <translation>Vide</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="652"/>
@@ -404,7 +404,7 @@ Pas de perission d&apos;écriture ou fichier en lecture seule.</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="793"/>
         <source>Are you sure you want to move %1 to the Trash?</source>
-        <translation>Êtes-vous sûr de vouloir déplacer %1 dans la corbeille ?</translation>
+        <translation>Êtes-vous sûr de vouloir déplacer %1 vers la corbeille&#x202f;?</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="791"/>
@@ -428,12 +428,12 @@ Pas de perission d&apos;écriture ou fichier en lecture seule.</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="800"/>
         <source>Do not ask again</source>
-        <translation>Ne plus demander</translation>
+        <translation>Ne plus redemander</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="859"/>
         <source>Can&apos;t delete %1.</source>
-        <translation>Pas possible de supprimer %1.</translation>
+        <translation>Impossible de supprimer %1.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="849"/>
@@ -447,19 +447,19 @@ Pas de perission d&apos;écriture ou fichier en lecture seule.</translation>
         <source>This program was compiled with an old version of Qt and this feature is not available.
 If you see this message, please report a bug!</source>
         <translation>Ce programme a été compilé avec une ancienne version de Qt et cette fonctionnalité n&apos;est pas disponible.
-Si vous voyez ce message, veuillez signaler un bogue !</translation>
+Si vous voyez ce message, veuillez signaler un bogue&#x202f;!</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="916"/>
         <source>Can&apos;t undo deletion of %1:
 No write permission or file is read-only.</source>
-        <translation>Pas posssible d&apos;annuler la suppression de %1 :
-Pas de permission d&apos;écriture ou fichier en lecteure seule.</translation>
+        <translation>Impossible d&apos;annuler la suppression de %1&#x202f;:
+Pas d&apos;autorisation d&apos;écriture ou le fichier est en lecture seule.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="924"/>
         <source>Failed undoing deletion of %1.</source>
-        <translation>Échec d&apos;annulation de la supperssion de %1.</translation>
+        <translation>Échec de l&apos;annulation de la suppression de %1.</translation>
     </message>
     <message>
         <source>Rename...</source>
@@ -511,7 +511,7 @@ Pas de permission d&apos;écriture ou fichier en lecteure seule.</translation>
     <message>
         <location filename="../src/openwith.cpp" line="175"/>
         <source>Programs (*.exe *.pif *.com *.bat *.cmd)</source>
-        <translation>Programmes  (*.exe *.pif *.com *.bat *.cmd)</translation>
+        <translation>Exécutables (*.exe *.pif *.com *.bat *.cmd)</translation>
     </message>
     <message>
         <location filename="../src/openwith.cpp" line="175"/>
@@ -585,7 +585,7 @@ Pas de permission d&apos;écriture ou fichier en lecteure seule.</translation>
     <message>
         <location filename="../src/qvapplication.cpp" line="349"/>
         <source>Supported Images</source>
-        <translation>Images supportées</translation>
+        <translation>Formats d&apos;images supportés</translation>
     </message>
     <message>
         <location filename="../src/qvapplication.cpp" line="391"/>
@@ -603,7 +603,7 @@ Pas de permission d&apos;écriture ou fichier en lecteure seule.</translation>
     <message>
         <location filename="../src/qvcocoafunctions.mm" line="217"/>
         <source> (default)</source>
-        <translation> (défaut)</translation>
+        <translation> (par défaut)</translation>
     </message>
 </context>
 <context>
@@ -699,7 +699,7 @@ Pas de permission d&apos;écriture ou fichier en lecteure seule.</translation>
     <message>
         <location filename="../src/qvopenwithdialog.ui" line="14"/>
         <source>Choose Application</source>
-        <translation>Choisissez une application</translation>
+        <translation>Choisir une application</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="67"/>
@@ -739,7 +739,7 @@ Pas de permission d&apos;écriture ou fichier en lecteure seule.</translation>
     <message>
         <location filename="../src/openwith.h" line="74"/>
         <source>Science</source>
-        <translation>Science</translation>
+        <translation>Sciences</translation>
     </message>
     <message>
         <location filename="../src/openwith.h" line="75"/>
@@ -759,7 +759,7 @@ Pas de permission d&apos;écriture ou fichier en lecteure seule.</translation>
     <message>
         <location filename="../src/openwith.h" line="78"/>
         <source>Other</source>
-        <translation>Autres</translation>
+        <translation>Autre</translation>
     </message>
 </context>
 <context>
@@ -1179,7 +1179,7 @@ Pas de permission d&apos;écriture ou fichier en lecteure seule.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="741"/>
         <source>Move Back</source>
-        <translation>Revenir au précédent</translation>
+        <translation>Revenir en arrière</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="746"/>
@@ -1189,12 +1189,12 @@ Pas de permission d&apos;écriture ou fichier en lecteure seule.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="751"/>
         <source>Move Forward</source>
-        <translation>Passer au suivant</translation>
+        <translation>Aller en avant</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="759"/>
         <source>After deletion:</source>
-        <translation>Après suppression :</translation>
+        <translation>Après suppression&#x202f;:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="766"/>
@@ -1238,7 +1238,7 @@ Pas de permission d&apos;écriture ou fichier en lecteure seule.</translation>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="15"/>
         <source>File name:</source>
-        <translation>Nom du fichier&#xa0;:</translation>
+        <translation>Nom du fichier&#x202f;:</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="26"/>
@@ -1250,15 +1250,15 @@ Pas de permission d&apos;écriture ou fichier en lecteure seule.</translation>
         <location filename="../src/qvrenamedialog.cpp" line="26"/>
         <source>Could not rename %1:
 No write permission or file is read-only.</source>
-        <translation>Pas pu renommer %1 :
-Pas de permission d&apos;écriture ou fichier en lecture seule.</translation>
+        <translation>Impossible de renommer %1&#x202f;:
+Pas d&apos;autorisation d&apos;écriture ou le fichier est en lecture seule.</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="45"/>
         <source>Could not rename %1:
 (Check that all characters are valid)</source>
-        <translation>Pas pu renommer %1 :
-(Vérifiez si tous les caractères sont valides)</translation>
+        <translation>Impossible de renommer %1.
+(Vérifier que tous les caractères sont valides)</translation>
     </message>
 </context>
 <context>
@@ -1343,7 +1343,7 @@ Pas de permission d&apos;écriture ou fichier en lecture seule.</translation>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="56"/>
         <source>Restore from Trash</source>
-        <translation>Récupérer dans la corbeille</translation>
+        <translation>Restaurer depuis la corbeille</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="58"/>
