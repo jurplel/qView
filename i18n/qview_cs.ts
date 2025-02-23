@@ -74,12 +74,12 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="660"/>
         <source>&amp;Open...</source>
-        <translation>&amp;Otevřít...</translation>
+        <translation>&amp;Otevřít…</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="663"/>
         <source>Open &amp;URL...</source>
-        <translation>Otevřít &amp;URL...</translation>
+        <translation>Otevřít &amp;URL…</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="666"/>
@@ -237,7 +237,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="781"/>
         <source>&amp;Reset Speed</source>
-        <translation>#Resetovat rychlost</translation>
+        <translation>&amp;Resetovat rychlost</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="785"/>
@@ -293,7 +293,7 @@
         <location filename="../src/actionmanager.cpp" line="819"/>
         <source>Other Application...</source>
         <extracomment>Open with other program for unix non-mac</extracomment>
-        <translation>Ostatní aplikace...</translation>
+        <translation>Ostatní aplikace…</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="822"/>
@@ -305,7 +305,7 @@
         <location filename="../src/actionmanager.cpp" line="825"/>
         <source>Other...</source>
         <extracomment>Open with other program for macos</extracomment>
-        <translation>Ostatní...</translation>
+        <translation>Ostatní…</translation>
     </message>
 </context>
 <context>
@@ -344,7 +344,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="569"/>
         <source>Downloading image...</source>
-        <translation>Stahování obrázku...</translation>
+        <translation>Stahování obrázku…</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="569"/>
@@ -355,7 +355,7 @@
         <location filename="../src/mainwindow.cpp" line="573"/>
         <location filename="../src/mainwindow.cpp" line="629"/>
         <source>Open URL...</source>
-        <translation>Otevřít URL...</translation>
+        <translation>Otevřít URL…</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="590"/>
@@ -433,7 +433,7 @@ Není oprávnění k zápisu nebo je soubor jen ke čtení.</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="939"/>
         <source>Save Frame As...</source>
-        <translation>Uložit snímek jako...</translation>
+        <translation>Uložit snímek jako…</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="968"/>
@@ -546,7 +546,7 @@ Není oprávnění k zápisu nebo je soubor jen ke čtení.</translation>
     <message>
         <location filename="../src/qvapplication.cpp" line="136"/>
         <source>Open...</source>
-        <translation>Otevřít...</translation>
+        <translation>Otevřít…</translation>
     </message>
 </context>
 <context>
@@ -1131,7 +1131,7 @@ Není oprávnění k zápisu nebo je soubor jen ke čtení.</translation>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="14"/>
         <source>Rename...</source>
-        <translation>Přejmenovat...</translation>
+        <translation>Přejmenovat…</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="15"/>
