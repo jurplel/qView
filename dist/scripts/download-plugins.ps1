@@ -4,7 +4,7 @@
 
 $pluginNames = "qtapng", "kimageformats"
 
-$qtVersion = [version]((qmake --version -split '\n')[1] -split ' ')[3]
+$qtVersion = [version](qmake -query QT_VERSION)
 Write-Host "Detected Qt Version $qtVersion"
 
 # Qt version availability and runner names are assumed.
@@ -33,9 +33,8 @@ foreach ($pluginName in $pluginNames) {
     Remove-Item $artifactName
 }
 
-
 if ($IsWindows) {
-    $out_frm = "bin/"
+    $out_frm = "bin"
     $out_imf = "bin/imageformats"
 } elseif ($IsMacOS) {
     $out_frm = "bin/qView.app/Contents/Frameworks"
@@ -45,73 +44,27 @@ if ($IsWindows) {
     $out_imf = "bin/appdir/usr/plugins/imageformats"
 }
 
-New-Item -Type Directory -Path "$out_frm" -ErrorAction SilentlyContinue
-New-Item -Type Directory -Path "$out_imf" -ErrorAction SilentlyContinue
+New-Item -Type Directory -Path "$out_frm" -Force
+New-Item -Type Directory -Path "$out_imf" -Force
 
-# Copy QtApng
+function MoveLibraries($category, $destDir, $files) {
+    foreach ($file in $files) {
+        Write-Host "${category}: $($file.Name)"
+        Move-Item -Path $file.FullName -Destination $destDir
+    }
+}
+
+# Deploy QtApng
 if ($pluginNames -contains 'qtapng') {
-    if ($IsWindows) {
-        cp qtapng/QtApng/output/qapng.dll "$out_imf/"
-    } elseif ($IsMacOS) {
-        cp qtapng/QtApng/output/libqapng.* "$out_imf/"
-    } else {
-        cp qtapng/QtApng/output/libqapng.so "$out_imf/"
-    }
+    Write-Host "`nDeploying QtApng:"
+    MoveLibraries 'imf' $out_imf (Get-ChildItem "qtapng/QtApng/output")
 }
 
+# Deploy KImageFormats
 if ($pluginNames -contains 'kimageformats') {
-    if ($IsWindows) {
-        mv kimageformats/kimageformats/output/kimg_*.dll "$out_imf/"
-        # Copy karchive
-        if (Test-Path -Path kimageformats/kimageformats/output/KF5Archive.dll -PathType Leaf) {
-            cp kimageformats/kimageformats/output/zlib1.dll "$out_frm/"
-            cp kimageformats/kimageformats/output/KF5Archive.dll "$out_frm/"
-        }
-        # copy avif stuff
-        if (Test-Path -Path kimageformats/kimageformats/output/avif.dll -PathType Leaf) {
-            cp kimageformats/kimageformats/output/avif.dll "$out_frm/"
-            cp kimageformats/kimageformats/output/aom.dll "$out_frm/"
-            cp kimageformats/kimageformats/output/jpeg62.dll "$out_frm/"
-            cp kimageformats/kimageformats/output/libyuv.dll "$out_frm/"
-        }
-        # copy heif stuff
-        if (Test-Path -Path kimageformats/kimageformats/output/heif.dll -PathType Leaf) {
-            cp kimageformats/kimageformats/output/heif.dll "$out_frm/"
-            cp kimageformats/kimageformats/output/libde265.dll "$out_frm/"
-            cp kimageformats/kimageformats/output/libx265.dll "$out_frm/"
-            cp kimageformats/kimageformats/output/aom.dll "$out_frm/"
-        }
-        # copy raw stuff
-        if (Test-Path -Path kimageformats/kimageformats/output/raw.dll -PathType Leaf) {
-            cp kimageformats/kimageformats/output/zlib1.dll "$out_frm/"
-            cp kimageformats/kimageformats/output/raw.dll "$out_frm/"
-            cp kimageformats/kimageformats/output/lcms2.dll "$out_frm/"
-        }
-        # copy jxl stuff
-        if (Test-Path -Path kimageformats/kimageformats/output/jxl.dll -PathType Leaf) {
-            cp kimageformats/kimageformats/output/jxl.dll "$out_frm/"
-            cp kimageformats/kimageformats/output/jxl_cms.dll "$out_frm/"
-            cp kimageformats/kimageformats/output/jxl_threads.dll "$out_frm/"
-            cp kimageformats/kimageformats/output/lcms2.dll "$out_frm/"
-            cp kimageformats/kimageformats/output/hwy.dll "$out_frm/"
-            cp kimageformats/kimageformats/output/brotlicommon.dll "$out_frm/"
-            cp kimageformats/kimageformats/output/brotlidec.dll "$out_frm/"
-            cp kimageformats/kimageformats/output/brotlienc.dll "$out_frm/"
-        }
-        # copy openexr stuff
-        if (Test-Path -Path kimageformats/kimageformats/output/OpenEXR-3_2.dll -PathType Leaf) {
-            cp kimageformats/kimageformats/output/deflate.dll "$out_frm/"
-            cp kimageformats/kimageformats/output/OpenEXR-3_2.dll "$out_frm/"
-            cp kimageformats/kimageformats/output/OpenEXRCore-3_2.dll "$out_frm/"
-            cp kimageformats/kimageformats/output/Imath-3_1.dll "$out_frm/"
-            cp kimageformats/kimageformats/output/IlmThread-3_2.dll "$out_frm/"
-            cp kimageformats/kimageformats/output/Iex-3_2.dll "$out_frm/"
-        }
-    } elseif ($IsMacOS) {
-        cp kimageformats/kimageformats/output/*.so "$out_imf/"
-        cp kimageformats/kimageformats/output/libKF5Archive.5.dylib "$out_frm/"
-    } else {
-        cp kimageformats/kimageformats/output/kimg_*.so "$out_imf/"
-        cp kimageformats/kimageformats/output/libKF5Archive.so.5 "$out_frm/"
-    }
+    Write-Host "`nDeploying KImageFormats:"
+    MoveLibraries 'imf' $out_imf (Get-ChildItem "kimageformats/kimageformats/output" -Filter "kimg_*")
+    MoveLibraries 'frm' $out_frm (Get-ChildItem "kimageformats/kimageformats/output")
 }
+
+Write-Host ''
