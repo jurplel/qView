@@ -603,6 +603,9 @@ LogicalPixelFitter QVGraphicsView::getPixelFitter() const
 
 QRect QVGraphicsView::getContentRect() const
 {
+    if (!getCurrentFileDetails().isPixmapLoaded)
+        return {};
+
     // Avoid using loadedPixmapItem and the active transform because the pixmap may have expensive scaling applied
     // which introduces a rounding error to begin with, and even worse, the error will be magnified if we're in the
     // the process of zooming in and haven't re-applied the expensive scaling yet. If that's the case, callers need
