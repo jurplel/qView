@@ -383,7 +383,7 @@ void QVGraphicsView::animatedFrameChanged(QRect rect)
 {
     Q_UNUSED(rect)
 
-    if (isScalingEnabled)
+    if (isExpensiveScalingRequested())
     {
         scaleExpensively();
     }
