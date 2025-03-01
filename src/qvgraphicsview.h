@@ -96,6 +96,12 @@ protected:
 
     bool event(QEvent *event) override;
 
+    qreal getZoomLevel() const;
+
+    bool isSmoothScalingRequested() const;
+
+    bool isExpensiveScalingRequested() const;
+
     void fitInViewMarginless(const QRectF &rect);
     void fitInViewMarginless(const QGraphicsItem *item);
 
@@ -105,6 +111,7 @@ protected:
 
     void centerOn(const QGraphicsItem *item);
 
+    void handleSmoothScalingChange();
 
 private slots:
     void animatedFrameChanged(QRect rect);
@@ -118,6 +125,7 @@ private:
 
     QGraphicsPixmapItem *loadedPixmapItem;
 
+    qreal smoothScalingLimit = 3.0;
     bool isFilteringEnabled;
     bool isScalingEnabled;
     bool isScalingTwoEnabled;

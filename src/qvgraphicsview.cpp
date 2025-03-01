@@ -305,10 +305,7 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
         centerOn(loadedPixmapItem);
     }
 
-    if (isScalingEnabled && !isOriginalSize)
-    {
-        expensiveScaleTimerNew->start();
-    }
+    handleSmoothScalingChange();
 }
 
 void QVGraphicsView::scaleExpensively()
@@ -321,15 +318,6 @@ void QVGraphicsView::scaleExpensively()
     bool flipped = false;
     if (transform().m22() < 0)
         flipped = true;
-
-    // If we are above maximum scaling size
-    if ((currentScale >= maxScalingTwoSize) ||
-        (!isScalingTwoEnabled && currentScale > 1.00001))
-    {
-        // Return to original size
-        makeUnscaled();
-        return;
-    }
 
     // Map size of the original pixmap to the scale acquired in fitting with modification from zooming percentage
     const QRectF mappedRect = absoluteTransform.mapRect(QRectF({}, getCurrentFileDetails().loadedPixmapSize));
@@ -422,9 +410,6 @@ void QVGraphicsView::resetScale()
         return;
 
     fitInViewMarginless(loadedPixmapItem);
-
-    if (isScalingEnabled)
-        expensiveScaleTimerNew->start();
 }
 
 void QVGraphicsView::originalSize()
@@ -448,6 +433,8 @@ void QVGraphicsView::originalSize()
     absoluteTransform = transform();
 
     isOriginalSize = true;
+
+    handleSmoothScalingChange();
 }
 
 
@@ -547,6 +534,22 @@ void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
     loadFile(nextImageFilePath);
 }
 
+qreal QVGraphicsView::getZoomLevel() const
+{
+    return absoluteTransform.mapRect(QRectF(0, 0, 1, 1)).width();
+}
+
+bool QVGraphicsView::isSmoothScalingRequested() const
+{
+    return isFilteringEnabled && (smoothScalingLimit == 0 || getZoomLevel() < smoothScalingLimit);
+}
+
+bool QVGraphicsView::isExpensiveScalingRequested() const
+{
+    return getCurrentFileDetails().isPixmapLoaded && isScalingEnabled && getZoomLevel() < smoothScalingLimit &&
+        currentScale <= (isScalingTwoEnabled ? maxScalingTwoSize : 1.00001);
+}
+
 void QVGraphicsView::fitInViewMarginless(const QRectF &rect)
 {
 #ifdef COCOA_LOADED
@@ -636,6 +639,8 @@ void QVGraphicsView::fitInViewMarginless(const QRectF &rect)
     isOriginalSize = false;
     currentScale = 1.0;
     zoomBasisScaleFactor = 1.0;
+
+    handleSmoothScalingChange();
 }
 
 void QVGraphicsView::fitInViewMarginless(const QGraphicsItem *item)
@@ -681,26 +686,28 @@ void QVGraphicsView::centerOn(const QGraphicsItem *item)
     centerOn(item->sceneBoundingRect().center());
 }
 
+void QVGraphicsView::handleSmoothScalingChange()
+{
+    loadedPixmapItem->setTransformationMode(isSmoothScalingRequested() ? Qt::SmoothTransformation : Qt::FastTransformation);
+
+    if (isExpensiveScalingRequested())
+        expensiveScaleTimerNew->start();
+    else
+        makeUnscaled();
+}
+
 void QVGraphicsView::settingsUpdated()
 {
     auto &settingsManager = qvApp->getSettingsManager();
 
     //filtering
-    if (settingsManager.getBoolean("filteringenabled"))
-        loadedPixmapItem->setTransformationMode(Qt::SmoothTransformation);
-    else
-        loadedPixmapItem->setTransformationMode(Qt::FastTransformation);
+    isFilteringEnabled = settingsManager.getBoolean("filteringenabled");
 
     //scaling
     isScalingEnabled = settingsManager.getBoolean("scalingenabled");
-    if (!isScalingEnabled)
-        makeUnscaled();
 
     //scaling2
-    if (!isScalingEnabled)
-        isScalingTwoEnabled = false;
-    else
-        isScalingTwoEnabled = settingsManager.getBoolean("scalingtwoenabled");
+    isScalingTwoEnabled = isScalingEnabled && settingsManager.getBoolean("scalingtwoenabled");
 
     //cropmode
     cropMode = settingsManager.getInteger("cropmode");
@@ -719,6 +726,8 @@ void QVGraphicsView::settingsUpdated()
 
     //loop folders
     isLoopFoldersEnabled = settingsManager.getBoolean("loopfoldersenabled");
+
+    handleSmoothScalingChange();
 
     if (getCurrentFileDetails().isPixmapLoaded)
         resetScale();
