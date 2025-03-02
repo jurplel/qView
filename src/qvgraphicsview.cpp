@@ -310,6 +310,9 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
 
 void QVGraphicsView::scaleExpensively()
 {
+    if (!isExpensiveScalingRequested())
+        return;
+
     // Determine if mirrored or flipped
     bool mirrored = false;
     if (transform().m11() < 0)
@@ -547,7 +550,7 @@ bool QVGraphicsView::isSmoothScalingRequested() const
 bool QVGraphicsView::isExpensiveScalingRequested() const
 {
     return getCurrentFileDetails().isPixmapLoaded && isScalingEnabled && getZoomLevel() < smoothScalingLimit &&
-        currentScale <= (isScalingTwoEnabled ? maxScalingTwoSize : 1.00001);
+        !isOriginalSize && currentScale <= (isScalingTwoEnabled ? maxScalingTwoSize : 1.00001);
 }
 
 void QVGraphicsView::fitInViewMarginless(const QRectF &rect)
