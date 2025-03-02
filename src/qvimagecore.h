@@ -61,7 +61,7 @@ public:
     {
         QPixmap pixmap;
         QString absoluteFilePath;
-        qint64 fileSize;
+        qint64 fileSize = 0;
         QSize imageSize;
         QColorSpace targetColorSpace;
         ErrorData errorData;
