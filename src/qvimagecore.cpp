@@ -130,6 +130,9 @@ void QVImageCore::loadFile(const QString &fileName, bool isReloading)
 
 QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColorSpace &targetColorSpace)
 {
+    if (qvApp->getIsApplicationQuitting())
+        return {};
+
     QImageReader imageReader;
     imageReader.setAutoTransform(true);
 
@@ -151,6 +154,9 @@ QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColo
         readImage = imageReader.read();
     }
 
+    if (qvApp->getIsApplicationQuitting())
+        return {};
+
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0) && QT_VERSION < QT_VERSION_CHECK(6, 7, 2)
     // Work around Qt ICC profile parsing bug
     if (!readImage.colorSpace().isValid() && !readImage.colorSpace().iccProfile().isEmpty())
@@ -170,6 +176,9 @@ QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColo
     if (targetColorSpace.isValid() && readImage.colorSpace() != targetColorSpace)
         readImage.convertToColorSpace(targetColorSpace);
 #endif
+
+    if (qvApp->getIsApplicationQuitting())
+        return {};
 
     QPixmap readPixmap = QPixmap::fromImage(readImage);
     QFileInfo fileInfo(fileName);

@@ -13,6 +13,7 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     setDesktopFileName("com.interversehq.qView.desktop");
 
     // Connections
+    connect(this, &QCoreApplication::aboutToQuit, this, &QVApplication::onAboutToQuit);
     connect(&actionManager, &ActionManager::recentsMenuUpdated, this, &QVApplication::recentsMenuUpdated);
 
 #ifndef QV_DISABLE_ONLINE_VERSION_CHECK
@@ -404,7 +405,22 @@ void QVApplication::defineFilterLists()
     nameFilterList << tr("All Files") + " (*)";
 }
 
+bool QVApplication::getIsApplicationQuitting() const
+{
+    return isApplicationQuitting;
+}
+
 qreal QVApplication::getPerceivedBrightness(const QColor &color)
 {
     return (color.red() * 0.299 + color.green() * 0.587 + color.blue() * 0.114) / 255.0;
+}
+
+void QVApplication::onAboutToQuit()
+{
+    isApplicationQuitting = true;
+
+    // Delay destroying application until thread pool threads have finished. If preloader
+    // threads are still running, they require an application instance to construct a
+    // QPixmap (even a null one) without crashing.
+    QThreadPool::globalInstance()->waitForDone();
 }
