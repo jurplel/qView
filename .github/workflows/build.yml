@@ -134,6 +134,4 @@ jobs:
           body: |
             Latest automatic build from the master branch. Might be broken.
 
-            Last updated: $(date +'%Y-%m-%d %H:%M:%S')
-
           files: release_files/*.zip
