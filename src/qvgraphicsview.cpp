@@ -155,9 +155,6 @@ bool QVGraphicsView::event(QEvent *event)
 void QVGraphicsView::wheelEvent(QWheelEvent *event)
 {
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    if (event->device()->type() == QInputDevice::DeviceType::TouchPad || event->device()->type() == QInputDevice::DeviceType::TouchScreen) {
-        return;
-    }
 #endif
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
@@ -166,12 +163,20 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
     const QPoint eventPos = event->pos();
 #endif
 
-    //Basically, if you are holding ctrl then it scrolls instead of zooms (the shift bit is for horizontal scrolling)
-    bool willZoom = isScrollZoomsEnabled;
-    if (event->modifiers() == Qt::ControlModifier || event->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier))
-        willZoom = !willZoom;
+    const bool modifierPressed = event->modifiers().testAnyFlag(Qt::ControlModifier);
+    const bool isTouchDevice = event->device()->type() == QInputDevice::DeviceType::TouchPad || event->device()->type() == QInputDevice::DeviceType::TouchScreen;    \
+    bool dontZoom = !isScrollZoomsEnabled;
+    if (modifierPressed)
+    {
+        dontZoom = !dontZoom;
+    }
+    if (isTouchDevice)
+    {
+        // If this is a touch device, override setting
+        dontZoom = !modifierPressed;
+    }
 
-    if (!willZoom)
+    if (dontZoom)
     {
         const qreal scrollDivisor = 2.0; // To make scrolling less sensitive
         qreal scrollX = event->angleDelta().x() * (isRightToLeft() ? 1 : -1) / scrollDivisor;
