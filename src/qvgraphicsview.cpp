@@ -163,7 +163,7 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
     const QPoint eventPos = event->pos();
 #endif
 
-    const bool modifierPressed = event->modifiers().testAnyFlag(Qt::ControlModifier);
+    const bool modifierPressed = event->modifiers().testFlag(Qt::ControlModifier);
     const bool isTouchDevice = event->device()->type() == QInputDevice::DeviceType::TouchPad || event->device()->type() == QInputDevice::DeviceType::TouchScreen;    \
     bool dontZoom = !isScrollZoomsEnabled;
     if (modifierPressed)
