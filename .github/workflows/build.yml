@@ -101,3 +101,29 @@ jobs:
         with:
           name: qView${{ env.nightlyString }}-${{ runner.os }}${{ matrix.osSuffix }}-${{ env.buildNumString }}
           path: bin
+  nightly-release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: List downloaded files
+        run: ls -l artifacts/
+
+      - name: Update "Nightly" Release
+        uses: andelf/nightly-release@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: nightly
+          name: "qView Nightly"
+          prerelease: true
+          body: |
+            Latest automatic build from the master branch. Might be broken.
+
+            Last updated: $(date +'%Y-%m-%d %H:%M:%S')
+
+          files: artifacts/*
