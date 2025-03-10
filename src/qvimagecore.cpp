@@ -15,7 +15,7 @@
 #include <QGuiApplication>
 #include <QScreen>
 
-QCache<QString, QVImageCore::ReadData> QVImageCore::pixmapCache;
+QCache<QString, QVImageCore::ReadData> QVImageCore::imageCache;
 
 QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
 {
@@ -106,7 +106,7 @@ void QVImageCore::loadFile(const QString &fileName, bool isReloading)
     QString cacheKey = getPixmapCacheKey(sanitaryFileName, fileInfo.size(), targetColorSpace);
 
     //check if cached already before loading the long way
-    auto *cachedData = isReloading ? nullptr : QVImageCore::pixmapCache.take(cacheKey);
+    auto *cachedData = isReloading ? nullptr : QVImageCore::imageCache.take(cacheKey);
     if (cachedData != nullptr)
     {
         ReadData readData = *cachedData;
@@ -240,7 +240,7 @@ void QVImageCore::loadPixmap(const ReadData &readData)
         currentFileDetails.baseImageSize = currentFileDetails.loadedPixmapSize;
     }
 
-    addToCache(readData);
+    addToCache(std::move(readData));
 
     // Animation detection
     loadedMovie.setFormat("");
@@ -467,7 +467,7 @@ void QVImageCore::requestCaching()
 {
     if (preloadingMode == 0)
     {
-        QVImageCore::pixmapCache.clear();
+        QVImageCore::imageCache.clear();
         return;
     }
 
@@ -516,10 +516,10 @@ void QVImageCore::requestCachingFile(const QString &filePath, const QColorSpace 
     QString cacheKey = getPixmapCacheKey(filePath, imgFile.size(), targetColorSpace);
 
     //check if image is already loaded or requested
-    if (QVImageCore::pixmapCache.contains(cacheKey) || lastFilesPreloaded.contains(filePath))
+    if (QVImageCore::imageCache.contains(cacheKey) || lastFilesPreloaded.contains(filePath))
         return;
 
-    if (imgFile.size()/1024 > QVImageCore::pixmapCache.maxCost()/2)
+    if (imgFile.size()/1024 > QVImageCore::imageCache.maxCost()/2)
         return;
 
     preloadFilesInProgress.append(filePath);
@@ -534,7 +534,7 @@ void QVImageCore::requestCachingFile(const QString &filePath, const QColorSpace 
         }
         else
         {
-            addToCache(readData);
+            addToCache(std::move(readData));
         }
         preloadFilesInProgress.removeAll(readData.absoluteFilePath);
         cacheFutureWatcher->deleteLater();
@@ -547,7 +547,7 @@ void QVImageCore::requestCachingFile(const QString &filePath, const QColorSpace 
 #endif
 }
 
-void QVImageCore::addToCache(const ReadData &readData)
+void QVImageCore::addToCache(const ReadData &&readData)
 {
     if (readData.image.isNull())
         return;
@@ -555,7 +555,7 @@ void QVImageCore::addToCache(const ReadData &readData)
     QString cacheKey = getPixmapCacheKey(readData.absoluteFilePath, readData.fileSize, readData.targetColorSpace);
     qint64 pixmapMemoryBytes = static_cast<qint64>(readData.image.width()) * readData.image.height() * readData.image.depth() / 8;
 
-    QVImageCore::pixmapCache.insert(cacheKey, new ReadData(readData), qMax(pixmapMemoryBytes / 1024, 1LL));
+    QVImageCore::imageCache.insert(cacheKey, new ReadData(std::move(readData)), qMax(pixmapMemoryBytes / 1024, 1LL));
 }
 
 QString QVImageCore::getPixmapCacheKey(const QString &absoluteFilePath, const qint64 &fileSize, const QColorSpace &targetColorSpace)
@@ -775,12 +775,12 @@ void QVImageCore::settingsUpdated()
     switch (preloadingMode) {
     case 1:
     {
-        QVImageCore::pixmapCache.setMaxCost(204800);
+        QVImageCore::imageCache.setMaxCost(204800);
         break;
     }
     case 2:
     {
-        QVImageCore::pixmapCache.setMaxCost(819200);
+        QVImageCore::imageCache.setMaxCost(819200);
         break;
     }
     }

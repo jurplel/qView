@@ -77,7 +77,7 @@ public:
     void updateFolderInfo(QString dirPath = QString());
     void requestCaching();
     void requestCachingFile(const QString &filePath, const QColorSpace &targetColorSpace);
-    void addToCache(const ReadData &readImageAndFileInfo);
+    void addToCache(const ReadData &&readImageAndFileInfo);
     static QString getPixmapCacheKey(const QString &absoluteFilePath, const qint64 &fileSize, const QColorSpace &targetColorSpace);
     QColorSpace getTargetColorSpace() const;
     QColorSpace detectDisplayColorSpace() const;
@@ -131,7 +131,7 @@ private:
     bool allowMimeContentDetection;
     int colorSpaceConversion;
 
-    static QCache<QString, ReadData> pixmapCache;
+    static QCache<QString, ReadData> imageCache;
 
     QPair<QString, int> lastDirInfo;
     unsigned randomSortSeed;
