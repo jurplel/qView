@@ -114,6 +114,7 @@ private slots:
     void updateLoadedPixmapItem();
 
 private:
+    void updateFilteringMode();
 
 
     QGraphicsPixmapItem *loadedPixmapItem;
@@ -128,12 +129,15 @@ private:
     int cropMode;
     qreal scaleFactor;
 
-    const int MARGIN = -2;
+    constexpr static int MARGIN = -2;
+    constexpr static qreal MAX_EXPENSIVE_SCALING_SIZE = 3;
+
+    // Set to too high a value to activate for now...
+    constexpr static qreal MAX_FILTERING_SIZE = 5000;
 
     qreal currentScale;
     QSize scaledSize;
     bool isOriginalSize;
-    qreal maxScalingTwoSize;
     QPoint lastZoomEventPos;
     QPointF lastZoomRoundingError;
     QPointF lastScrollRoundingError;
