@@ -113,6 +113,16 @@ jobs:
       - name: List downloaded files
         run: ls -l artifacts/
 
+      - name: Package artifacts for release
+        run: |
+          mkdir release_files
+          cd artifacts
+          for dir in */; do
+            zip -r "../release_files/$(basename "$dir").zip" "$dir"
+          done
+          cd ..
+          ls -l release_files/
+
       - name: Update "Nightly" Release
         uses: andelf/nightly-release@main
         env:
