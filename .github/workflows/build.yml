@@ -136,4 +136,4 @@ jobs:
 
             Last updated: $(date +'%Y-%m-%d %H:%M:%S')
 
-          files: artifacts/*
+          files: release_files/*.zip
