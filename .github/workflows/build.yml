@@ -103,6 +103,7 @@ jobs:
           path: bin
   nightly-release:
     needs: build
+    if: github.ref_name == 'master'
     runs-on: ubuntu-latest
     steps:
       - name: Download all artifacts
