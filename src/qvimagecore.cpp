@@ -151,8 +151,11 @@ QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColo
         readImage = imageReader.read();
     }
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     readImage.convertTo(QImage::Format::Format_ARGB32_Premultiplied);
-
+#else
+    readImage = readImage.convertToFormat(QImage::Format::Format_ARGB32_Premultiplied);
+#endif
     // Handle color space information
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0) && QT_VERSION < QT_VERSION_CHECK(6, 7, 2)
