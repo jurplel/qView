@@ -59,7 +59,7 @@ public:
 
     struct ReadData
     {
-        QPixmap pixmap;
+        QImage image;
         QString absoluteFilePath;
         qint64 fileSize;
         QSize imageSize;

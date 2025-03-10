@@ -151,6 +151,13 @@ QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColo
         readImage = imageReader.read();
     }
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+    readImage.convertTo(QImage::Format::Format_ARGB32_Premultiplied);
+#else
+    readImage = readImage.convertToFormat(QImage::Format::Format_ARGB32_Premultiplied);
+#endif
+    // Handle color space information
+
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0) && QT_VERSION < QT_VERSION_CHECK(6, 7, 2)
     // Work around Qt ICC profile parsing bug
     if (!readImage.colorSpace().isValid() && !readImage.colorSpace().iccProfile().isEmpty())
@@ -171,11 +178,10 @@ QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColo
         readImage.convertToColorSpace(targetColorSpace);
 #endif
 
-    QPixmap readPixmap = QPixmap::fromImage(readImage);
     QFileInfo fileInfo(fileName);
 
     ReadData readData = {
-        readPixmap,
+        readImage,
         fileInfo.absoluteFilePath(),
         fileInfo.size(),
         imageReader.size(),
@@ -183,7 +189,7 @@ QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColo
         {}
     };
 
-    if (readPixmap.isNull())
+    if (readImage.isNull())
     {
         readData.errorData = {
             true,
@@ -222,7 +228,7 @@ void QVImageCore::loadPixmap(const ReadData &readData)
         return;
     }
 
-    loadedPixmap = matchCurrentRotation(readData.pixmap);
+    loadedPixmap = QPixmap::fromImage(matchCurrentRotation(readData.image));
 
     // Set file details
     currentFileDetails.isPixmapLoaded = true;
@@ -543,11 +549,11 @@ void QVImageCore::requestCachingFile(const QString &filePath, const QColorSpace 
 
 void QVImageCore::addToCache(const ReadData &readData)
 {
-    if (readData.pixmap.isNull())
+    if (readData.image.isNull())
         return;
 
     QString cacheKey = getPixmapCacheKey(readData.absoluteFilePath, readData.fileSize, readData.targetColorSpace);
-    qint64 pixmapMemoryBytes = static_cast<qint64>(readData.pixmap.width()) * readData.pixmap.height() * readData.pixmap.depth() / 8;
+    qint64 pixmapMemoryBytes = static_cast<qint64>(readData.image.width()) * readData.image.height() * readData.image.depth() / 8;
 
     QVImageCore::pixmapCache.insert(cacheKey, new ReadData(readData), qMax(pixmapMemoryBytes / 1024, 1LL));
 }
@@ -711,6 +717,7 @@ QImage QVImageCore::matchCurrentRotation(const QImage &imageToRotate)
     return imageToRotate.transformed(transform);
 }
 
+// TODO: Remove this function---extremely inefficient
 QPixmap QVImageCore::matchCurrentRotation(const QPixmap &pixmapToRotate)
 {
     if (!currentRotation)
@@ -718,6 +725,7 @@ QPixmap QVImageCore::matchCurrentRotation(const QPixmap &pixmapToRotate)
 
     return QPixmap::fromImage(matchCurrentRotation(pixmapToRotate.toImage()));
 }
+
 
 QPixmap QVImageCore::scaleExpensively(const int desiredWidth, const int desiredHeight)
 {
