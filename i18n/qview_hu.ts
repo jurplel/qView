@@ -993,7 +993,7 @@ Nincs írási jogosultságod vagy a fájl csak olvasható.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="481"/>
         <source>sRGB</source>
-        <translation>sRGB</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="486"/>
@@ -1064,7 +1064,7 @@ Nincs írási jogosultságod vagy a fájl csak olvasható.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="17"/>
         <source>Settings</source>
-        <translation type="unfinished">Beállítások</translation>
+        <translation>Beállítások</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="524"/>
@@ -1465,7 +1465,7 @@ Nincs írási jogosultságod vagy a fájl csak olvasható.</translation>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="115"/>
         <source>Settings</source>
-        <translation type="unfinished">Beállítások</translation>
+        <translation>Beállítások</translation>
     </message>
     <message>
         <source>Options</source>
