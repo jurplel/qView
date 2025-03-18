@@ -1101,12 +1101,12 @@ Brak uprawnień do zapisu lub plik jest tylko do odczytu.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="604"/>
         <source>Adjacent</source>
-        <translation>Sąsiedni</translation>
+        <translation>Sąsiednie</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="609"/>
         <source>Extended</source>
-        <translation>Rozszerzona</translation>
+        <translation>Rozszerzone</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="617"/>
