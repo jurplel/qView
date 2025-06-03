@@ -6,37 +6,37 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="30"/>
         <source>Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Aken</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="172"/>
         <source>&amp;File</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Fail</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="201"/>
         <source>&amp;Edit</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Muuda</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="223"/>
         <source>&amp;Go</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Ava</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="252"/>
         <source>&amp;View</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Vaata</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="276"/>
         <source>&amp;Tools</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Tarvikud</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="298"/>
         <source>&amp;Help</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Abiteave</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="312"/>
@@ -1175,18 +1175,18 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="14"/>
         <source>Rename...</source>
-        <translation type="unfinished"></translation>
+        <translation>Muuda nime...</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="15"/>
         <source>File name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Failinimi:</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="26"/>
         <location filename="../src/qvrenamedialog.cpp" line="45"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Viga</translation>
     </message>
     <message>
         <location filename="../src/qvrenamedialog.cpp" line="26"/>
@@ -1333,57 +1333,57 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="82"/>
         <source>Next File</source>
-        <translation type="unfinished"></translation>
+        <translation>Järgmine fail</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="83"/>
         <source>Last File</source>
-        <translation type="unfinished"></translation>
+        <translation>Viimane fail</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="84"/>
         <source>Zoom In</source>
-        <translation type="unfinished"></translation>
+        <translation>Suumi sisse</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="89"/>
         <source>Zoom Out</source>
-        <translation type="unfinished"></translation>
+        <translation>Suumi välja</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="90"/>
         <source>Reset Zoom</source>
-        <translation type="unfinished"></translation>
+        <translation>Lähtesta suum</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="91"/>
         <source>Original Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Algne suurus</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="92"/>
         <source>Rotate Right</source>
-        <translation type="unfinished"></translation>
+        <translation>Pööra paremale</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="93"/>
         <source>Rotate Left</source>
-        <translation type="unfinished"></translation>
+        <translation>Pööra vasakule</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="94"/>
         <source>Mirror</source>
-        <translation type="unfinished"></translation>
+        <translation>Peegelda</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="95"/>
         <source>Flip</source>
-        <translation type="unfinished"></translation>
+        <translation>Pööra ümber</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="96"/>
         <source>Full Screen</source>
-        <translation type="unfinished"></translation>
+        <translation>Täisekraanivaade</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="108"/>
