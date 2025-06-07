@@ -11,37 +11,37 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="172"/>
         <source>&amp;File</source>
-        <translation>&amp;文件</translation>
+        <translation>文件(&amp;F)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="201"/>
         <source>&amp;Edit</source>
-        <translation>&amp;编辑</translation>
+        <translation>编辑(&amp;E)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="223"/>
         <source>&amp;Go</source>
-        <translation>&amp;前往</translation>
+        <translation>转到(&amp;G)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="252"/>
         <source>&amp;View</source>
-        <translation>&amp;查看</translation>
+        <translation>查看(&amp;V)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="276"/>
         <source>&amp;Tools</source>
-        <translation>&amp;工具</translation>
+        <translation>工具(&amp;T)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="298"/>
         <source>&amp;Help</source>
-        <translation>&amp;帮助</translation>
+        <translation>帮助(&amp;H)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="312"/>
         <source>Open &amp;Recent</source>
-        <translation>最近打开</translation>
+        <translation>最近打开(&amp;R)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="322"/>
@@ -57,7 +57,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="660"/>
         <source>&amp;Quit</source>
-        <translation>&amp;退出</translation>
+        <translation>退出(&amp;Q)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="664"/>
@@ -73,17 +73,17 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="670"/>
         <source>&amp;Open...</source>
-        <translation>&amp;打开...</translation>
+        <translation>打开(&amp;O)...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="673"/>
         <source>Open &amp;URL...</source>
-        <translation></translation>
+        <translation>打开URL(&amp;U)...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="676"/>
         <source>Re&amp;load File</source>
-        <translation type="unfinished"></translation>
+        <translation>重载文件(&amp;L)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="680"/>
@@ -94,175 +94,175 @@
         <location filename="../src/actionmanager.cpp" line="684"/>
         <source>Close All</source>
         <extracomment>Close all windows, that is</extracomment>
-        <translation>关闭所有</translation>
+        <translation>关闭所有窗口</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="687"/>
         <source>Open Containing &amp;Folder</source>
-        <translation>打开文件夹</translation>
+        <translation>打开文件夹(&amp;F)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="690"/>
         <source>Show in E&amp;xplorer</source>
         <extracomment>Open containing folder on windows</extracomment>
-        <translation>在资源管理器中查看</translation>
+        <translation>在文件管理器中查看(&amp;X)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="693"/>
         <source>Show in &amp;Finder</source>
         <extracomment>Open containing folder on macOS</extracomment>
-        <translation>在文件夹中查看</translation>
+        <translation>在捜索中查看(&amp;F)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="698"/>
         <source>Show File &amp;Info</source>
-        <translation>查看文件信息</translation>
+        <translation>显示文件信息(&amp;I)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="702"/>
         <source>&amp;Move to Trash</source>
-        <translation>移至废纸篓</translation>
+        <translation>移至废纸篓(&amp;M)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="704"/>
         <source>&amp;Delete</source>
-        <translation>&amp;删除</translation>
+        <translation>删除(&amp;D)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="709"/>
         <source>Delete Permanently</source>
-        <translation type="unfinished"></translation>
+        <translation>永久删除</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="713"/>
         <source>&amp;Restore from Trash</source>
-        <translation>移出废纸篓</translation>
+        <translation>移出废纸篓(&amp;R)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="715"/>
         <source>&amp;Undo Delete</source>
-        <translation>撤销删除</translation>
+        <translation>撤销删除(&amp;U)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="720"/>
         <source>&amp;Copy</source>
-        <translation>&amp;复制</translation>
+        <translation>复制(&amp;C)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="724"/>
         <source>&amp;Paste</source>
-        <translation>&amp;粘贴</translation>
+        <translation>粘贴(&amp;P)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="727"/>
         <source>R&amp;ename...</source>
-        <translation>重命名...</translation>
+        <translation>重命名(&amp;R)...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="731"/>
         <source>Zoom &amp;In</source>
-        <translation>放大</translation>
+        <translation>放大(&amp;I)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="735"/>
         <source>Zoom &amp;Out</source>
-        <translation>缩小</translation>
+        <translation>缩小(&amp;O)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="739"/>
         <source>Reset &amp;Zoom</source>
-        <translation>重置缩放</translation>
+        <translation>重置缩放(&amp;Z)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="743"/>
         <source>Ori&amp;ginal Size</source>
-        <translation>原始大小</translation>
+        <translation>原始大小(&amp;G)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="747"/>
         <source>Rotate &amp;Right</source>
-        <translation>顺时针旋转</translation>
+        <translation>顺时针旋转(&amp;R)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="751"/>
         <source>Rotate &amp;Left</source>
-        <translation>逆时针旋转</translation>
+        <translation>逆时针旋转(&amp;L)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="755"/>
         <source>&amp;Mirror</source>
-        <translation>&amp;镜像</translation>
+        <translation>镜像(&amp;M)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="759"/>
         <source>&amp;Flip</source>
-        <translation>&amp;翻转</translation>
+        <translation>翻转(&amp;F)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="763"/>
         <source>Enter F&amp;ull Screen</source>
-        <translation>全屏</translation>
+        <translation>全屏(&amp;F)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="767"/>
         <source>&amp;First File</source>
-        <translation>&amp;首文件</translation>
+        <translation>首文件(&amp;F)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="771"/>
         <source>Previous Fi&amp;le</source>
-        <translation>上一张</translation>
+        <translation>上一张图片(&amp;L)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="775"/>
         <source>&amp;Next File</source>
-        <translation>&amp;下一张图片</translation>
+        <translation>下一张图片(&amp;N)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="779"/>
         <source>Las&amp;t File</source>
-        <translation>末文件</translation>
+        <translation>末文件(&amp;T)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="783"/>
         <source>Save Frame &amp;As...</source>
-        <translation>保存帧为...</translation>
+        <translation>保存帧为(&amp;A)...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="787"/>
         <source>Pa&amp;use</source>
-        <translation>暂停</translation>
+        <translation>暂停(&amp;U)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="791"/>
         <source>&amp;Next Frame</source>
-        <translation>下一帧</translation>
+        <translation>下一帧(&amp;N)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="795"/>
         <source>&amp;Decrease Speed</source>
-        <translation>&amp;减速</translation>
+        <translation>减速(&amp;D)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="799"/>
         <source>&amp;Reset Speed</source>
-        <translation>&amp;重置速度</translation>
+        <translation>重置速度(&amp;R)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="803"/>
         <source>&amp;Increase Speed</source>
-        <translation>&amp;加速</translation>
+        <translation>加速(&amp;I)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="807"/>
         <source>Start S&amp;lideshow</source>
-        <translation>播放幻灯片</translation>
+        <translation>播放幻灯片(&amp;L)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="812"/>
         <source>&amp;Settings</source>
         <extracomment>This is for the options dialog on windows</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>设置(&amp;S)</translation>
     </message>
     <message>
         <source>Option&amp;s</source>
@@ -278,34 +278,34 @@
         <location filename="../src/actionmanager.cpp" line="816"/>
         <source>Preference&amp;s...</source>
         <extracomment>This is for the options dialog on older mac versions</extracomment>
-        <translation>首选项&amp;s...</translation>
+        <translation>首选项(&amp;S)...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="818"/>
         <source>Setting&amp;s...</source>
-        <translation type="unfinished"></translation>
+        <translation>设置(&amp;S)...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="823"/>
         <source>&amp;About</source>
-        <translation>&amp;关于</translation>
+        <translation>关于(&amp;A)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="826"/>
         <source>&amp;About qView</source>
         <extracomment>This is for the about dialog on mac</extracomment>
-        <translation>&amp;关于qView</translation>
+        <translation>关于qView(&amp;A)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="830"/>
         <source>&amp;Welcome</source>
-        <translation>&amp;欢迎</translation>
+        <translation>欢迎(&amp;W)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="834"/>
         <source>Clear &amp;Menu</source>
         <extracomment>This is for clearing the recents menu</extracomment>
-        <translation>&amp;清除菜单</translation>
+        <translation>清除菜单(&amp;M)</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="838"/>
@@ -323,7 +323,7 @@
         <location filename="../src/actionmanager.cpp" line="844"/>
         <source>Other...</source>
         <extracomment>Open with other program for macos</extracomment>
-        <translation>其他…</translation>
+        <translation>其它…</translation>
     </message>
 </context>
 <context>
@@ -331,12 +331,12 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="242"/>
         <source>Exit F&amp;ull Screen</source>
-        <translation>退出全屏</translation>
+        <translation>退出全屏(&amp;U)</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="247"/>
         <source>Enter F&amp;ull Screen</source>
-        <translation>进入全屏</translation>
+        <translation>进入全屏(&amp;U)</translation>
     </message>
     <message>
         <source>Empty</source>
@@ -399,7 +399,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/mainwindow.cpp" line="792"/>
         <source>Are you sure you want to delete %1 permanently? This can&apos;t be undone.</source>
-        <translation type="unfinished"></translation>
+        <translation>您确定要永久删除 %1 吗？此操作无法撤消。</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="799"/>
@@ -416,7 +416,9 @@ No write permission or file is read-only.</source>
         <source>Error occurred opening
 %3
 %2 (Error %1)</source>
-        <translation type="unfinished"></translation>
+        <translation>打开时出错
+%3
+%2 (错误代码 %1)</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="803"/>
@@ -481,7 +483,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/mainwindow.cpp" line="1097"/>
         <source>Res&amp;ume</source>
-        <translation>播放</translation>
+        <translation>播放(&amp;U)</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="1106"/>
@@ -491,12 +493,12 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/mainwindow.cpp" line="1129"/>
         <source>Start S&amp;lideshow</source>
-        <translation>开始幻灯片放映</translation>
+        <translation>开始幻灯片放映(&amp;L)</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="1138"/>
         <source>Stop S&amp;lideshow</source>
-        <translation>停止幻灯片放映</translation>
+        <translation>停止幻灯片放映(&amp;L)</translation>
     </message>
 </context>
 <context>
@@ -504,7 +506,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/openwith.cpp" line="163"/>
         <source>All Applications (*.app)</source>
-        <translation>应用(*.app)</translation>
+        <translation>所有应用(*.app)</translation>
     </message>
     <message>
         <location filename="../src/openwith.cpp" line="175"/>
@@ -545,7 +547,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="47"/>
         <source>Nightly %1</source>
-        <translation>稳定版 %1</translation>
+        <translation>每晚构建版 %1</translation>
     </message>
     <message>
         <source>Built with Qt %1 (%2)&lt;br&gt;Source code available under GPLv3 on &lt;a style=&quot;color: #03A9F4; text-decoration:none;&quot; href=&quot;https://github.com/jurplel/qView&quot;&gt;Github&lt;/a&gt;&lt;br&gt;Icon glyph created by Guilhem from the Noun Project&lt;br&gt;Copyright © %3 jurplel and qView contributors</source>
@@ -587,7 +589,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvapplication.cpp" line="349"/>
         <source>Supported Images</source>
-        <translation>支持的图像格式</translation>
+        <translation>已支持的图像格式</translation>
     </message>
     <message>
         <location filename="../src/qvapplication.cpp" line="404"/>
@@ -778,7 +780,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="39"/>
         <source>Back&amp;ground color:</source>
-        <translation>背景色:</translation>
+        <translation>背景颜色(&amp;G)：</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="56"/>
@@ -793,22 +795,22 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="66"/>
         <source>&amp;Basic</source>
-        <translation>&amp;最简</translation>
+        <translation>最简(&amp;B)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="73"/>
         <source>&amp;Minimal</source>
-        <translation>&amp;基本</translation>
+        <translation>基本(&amp;M)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="83"/>
         <source>&amp;Practical</source>
-        <translation>&amp;适量</translation>
+        <translation>适量(&amp;P)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="90"/>
         <source>&amp;Verbose</source>
-        <translation>&amp;详细</translation>
+        <translation>详细(&amp;V)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="110"/>
@@ -871,7 +873,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="222"/>
         <source>&amp;Titlebar always dark</source>
-        <translation>&amp;总是深色标题栏</translation>
+        <translation>总是深色标题栏(&amp;T)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="232"/>
@@ -891,7 +893,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="249"/>
         <source>&amp;Quit on last window closed</source>
-        <translation>&amp;最后一个窗口关闭时退出</translation>
+        <translation>最后一个窗口关闭时退出(&amp;Q)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="257"/>
@@ -911,7 +913,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="273"/>
         <source>&amp;Bilinear filtering</source>
-        <translation>&amp;双线性过滤</translation>
+        <translation>双线性过滤(&amp;B)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="283"/>
@@ -921,7 +923,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="286"/>
         <source>&amp;Image scaling</source>
-        <translation>&amp;图像缩放</translation>
+        <translation>图像缩放(&amp;I)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="296"/>
@@ -931,7 +933,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="299"/>
         <source>&amp;Scaling above window size</source>
-        <translation>&amp;缩放到窗口大小以上</translation>
+        <translation>缩放到窗口大小以上(&amp;S)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="309"/>
@@ -952,7 +954,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="344"/>
         <source>Scrolling &amp;zooms</source>
-        <translation>滚动和缩放</translation>
+        <translation>滚动和缩放(&amp;Z)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="367"/>
@@ -962,7 +964,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="370"/>
         <source>Image resizes &amp;past actual size</source>
-        <translation>图像大小超过实际大小</translation>
+        <translation>图像大小超过实际大小(&amp;P)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="386"/>
@@ -978,12 +980,12 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="395"/>
         <source>Fit height</source>
-        <translation>适应高</translation>
+        <translation>适应高度</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="400"/>
         <source>Fit width</source>
-        <translation>适应宽</translation>
+        <translation>适应宽度</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="411"/>
@@ -1003,22 +1005,22 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="457"/>
         <source>Color space conversion:</source>
-        <translation type="unfinished"></translation>
+        <translation>色彩空间转换：</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="476"/>
         <source>Auto-detect</source>
-        <translation type="unfinished"></translation>
+        <translation>自动检测</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="481"/>
         <source>sRGB</source>
-        <translation type="unfinished"></translation>
+        <translation>sRGB (标准红绿蓝色彩空间)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="486"/>
         <source>Display P3</source>
-        <translation type="unfinished"></translation>
+        <translation>显示P3</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="495"/>
@@ -1057,18 +1059,18 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="552"/>
         <source>A&amp;scending</source>
-        <translation>升序</translation>
+        <translation>升序(&amp;S)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="562"/>
         <source>D&amp;escending</source>
-        <translation>降序</translation>
+        <translation>降序(&amp;E)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="582"/>
         <location filename="../src/qvoptionsdialog.ui" line="592"/>
         <source>Controls the amount of images preloaded</source>
-        <translation>% 屏幕大小</translation>
+        <translation>控制预加载的图像数量</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="585"/>
@@ -1084,17 +1086,17 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="17"/>
         <source>Settings</source>
-        <translation type="unfinished">设置</translation>
+        <translation>设置</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="524"/>
         <source>Date Modified</source>
-        <translation type="unfinished"></translation>
+        <translation>修改日期</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="529"/>
         <source>Date Created</source>
-        <translation type="unfinished"></translation>
+        <translation>创建日期</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="604"/>
@@ -1114,7 +1116,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="620"/>
         <source>&amp;Loop through folders</source>
-        <translation>&amp;循环浏览文件夹</translation>
+        <translation>循环浏览文件夹(&amp;L)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="643"/>
@@ -1144,23 +1146,23 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="703"/>
         <source>Detect supported files in folder even if extension isn&apos;t recognized (may be slow with larger/network folders)</source>
-        <translation type="unfinished"></translation>
+        <translation>根据内容识别文件，忽略扩展名（对于较大的/网络文件夹可能会很慢）</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="706"/>
         <source>Allow &amp;MIME content detection</source>
-        <translation type="unfinished"></translation>
+        <translation>允许检测 MIME 内容(&amp;M)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="713"/>
         <source>Save &amp;recent files</source>
-        <translation>保存最近的文件</translation>
+        <translation>保存最近的文件(&amp;R)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="720"/>
         <source>&amp;Update notifications on startup</source>
         <extracomment>The notifications are for new qView releases</extracomment>
-        <translation>&amp;启动时更新通知</translation>
+        <translation>启动时更新通知(&amp;U)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="501"/>
@@ -1170,13 +1172,13 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="727"/>
         <source>Skip hidden files when browsing to the next/previous file</source>
-        <translation type="unfinished"></translation>
+        <translation>浏览到下一个/上一个文件时跳过隐藏文件</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="730"/>
         <source>Skip hidden files</source>
         <extracomment>Don&apos;t view files with &apos;hidden&apos; attribute</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>跳过隐藏文件</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="741"/>
@@ -1201,7 +1203,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="766"/>
         <source>&amp;Ask before deleting files</source>
-        <translation>&amp;删除文件前询问</translation>
+        <translation>删除文件前询问(&amp;A)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="787"/>
@@ -1292,7 +1294,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvwelcomedialog.ui" line="472"/>
         <source>&amp;Enable update notifications on startup</source>
-        <translation>&amp;启动时更新通知</translation>
+        <translation>启动时更新通知(&amp;E)</translation>
     </message>
     <message>
         <location filename="../src/qvwelcomedialog.cpp" line="42"/>
@@ -1315,12 +1317,12 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="46"/>
         <source>Open URL</source>
-        <translation>打开链接</translation>
+        <translation>打开 URL</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="47"/>
         <source>Reload File</source>
-        <translation type="unfinished"></translation>
+        <translation>重载文件</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="48"/>
@@ -1380,7 +1382,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="75"/>
         <source>Delete Permanently</source>
-        <translation type="unfinished"></translation>
+        <translation>永久删除</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="80"/>
@@ -1485,7 +1487,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="115"/>
         <source>Settings</source>
-        <translation type="unfinished">设置</translation>
+        <translation>设置</translation>
     </message>
     <message>
         <source>Options</source>
@@ -1542,7 +1544,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/updatechecker.cpp" line="102"/>
         <source>&amp;Disable Update Checking</source>
-        <translation>关闭更新检查</translation>
+        <translation>关闭更新检查(&amp;D)</translation>
     </message>
     <message>
         <location filename="../src/updatechecker.cpp" line="112"/>
