@@ -272,7 +272,7 @@ void QVGraphicsView::postLoad()
 
     zoomToFit();
 
-    if (isScalingEnabled)
+    if (isExpensiveScalingRequested())
         expensiveScaleTimer->start();
 
     qvApp->getActionManager().addFileToRecentsList(getCurrentFileDetails().fileInfo);
@@ -338,26 +338,15 @@ void QVGraphicsView::zoomAbsolute(const qreal absoluteLevel, const QPoint &pos)
         centerImage();
     }
 
-    if (isScalingEnabled)
-        expensiveScaleTimer->start();
+    handleSmoothScalingChange();
 
     emit zoomLevelChanged();
 }
 
 void QVGraphicsView::applyExpensiveScaling()
 {
-    if (!isScalingEnabled || !getCurrentFileDetails().isPixmapLoaded)
+    if (!isExpensiveScalingRequested())
         return;
-
-    // Don't go over the maximum scaling size - small tolerance added to cover rounding errors
-    const QSize contentSize = getContentRect().size();
-    const QSize maxSize = getUsableViewportRect().size() * (isScalingTwoEnabled ? 3 : 1) + QSize(2, 2);
-    if (contentSize.width() > maxSize.width() || contentSize.height() > maxSize.height())
-    {
-        // Return to original size
-        removeExpensiveScaling();
-        return;
-    }
 
     // Calculate scaled resolution
     const qreal dpiAdjustment = getDpiAdjustment();
@@ -389,11 +378,33 @@ void QVGraphicsView::removeExpensiveScaling()
     appliedExpensiveScaleZoomLevel = 0.0;
 }
 
+void QVGraphicsView::handleSmoothScalingChange()
+{
+    const bool exceededSmoothScaleLimit = getZoomLevel() >= MAX_FILTERING_SIZE;
+    loadedPixmapItem->setTransformationMode(!exceededSmoothScaleLimit && isFilteringEnabled ? Qt::SmoothTransformation : Qt::FastTransformation);
+
+    if (isExpensiveScalingRequested())
+        expensiveScaleTimer->start();
+    else if (appliedExpensiveScaleZoomLevel != 0.0)
+        removeExpensiveScaling();
+}
+
+bool QVGraphicsView::isExpensiveScalingRequested() const
+{
+    if (!getCurrentFileDetails().isPixmapLoaded || !isScalingEnabled || getZoomLevel() >= MAX_FILTERING_SIZE)
+        return false;
+
+    // Don't go over the maximum scaling size - small tolerance added to cover rounding errors
+    const QSize contentSize = getContentRect().size();
+    const QSize maxSize = getUsableViewportRect().size() * (isScalingTwoEnabled ? MAX_EXPENSIVE_SCALING_SIZE : 1) + QSize(2, 2);
+    return contentSize.width() <= maxSize.width() && contentSize.height() <= maxSize.height();
+}
+
 void QVGraphicsView::animatedFrameChanged(QRect rect)
 {
     Q_UNUSED(rect)
 
-    if (isScalingEnabled)
+    if (isExpensiveScalingRequested())
     {
         applyExpensiveScaling();
     }
@@ -677,7 +688,7 @@ void QVGraphicsView::handleDpiAdjustmentChange()
 
     zoomToFit();
 
-    if (isScalingEnabled)
+    if (isExpensiveScalingRequested())
         expensiveScaleTimer->start();
 }
 
@@ -691,23 +702,13 @@ void QVGraphicsView::settingsUpdated()
     auto &settingsManager = qvApp->getSettingsManager();
 
     //filtering
-    if (settingsManager.getBoolean("filteringenabled"))
-        loadedPixmapItem->setTransformationMode(Qt::SmoothTransformation);
-    else
-        loadedPixmapItem->setTransformationMode(Qt::FastTransformation);
+    isFilteringEnabled = settingsManager.getBoolean("filteringenabled");
 
     //scaling
     isScalingEnabled = settingsManager.getBoolean("scalingenabled");
-    if (isScalingEnabled)
-        expensiveScaleTimer->start();
-    else
-        removeExpensiveScaling();
 
     //scaling2
-    if (!isScalingEnabled)
-        isScalingTwoEnabled = false;
-    else
-        isScalingTwoEnabled = settingsManager.getBoolean("scalingtwoenabled");
+    isScalingTwoEnabled = isScalingEnabled && settingsManager.getBoolean("scalingtwoenabled");
 
     //cropmode
     cropMode = settingsManager.getInteger("cropmode");
@@ -731,6 +732,8 @@ void QVGraphicsView::settingsUpdated()
     isLoopFoldersEnabled = settingsManager.getBoolean("loopfoldersenabled");
 
     // End of settings variables
+
+    handleSmoothScalingChange();
 
     handleDpiAdjustmentChange();
 

@@ -129,6 +129,9 @@ private slots:
     void postLoad();
 
 private:
+    void handleSmoothScalingChange();
+
+    bool isExpensiveScalingRequested() const;
 
 
     QGraphicsPixmapItem *loadedPixmapItem;
@@ -143,6 +146,11 @@ private:
     bool isOneToOnePixelSizingEnabled;
     int cropMode;
     qreal zoomMultiplier;
+
+    constexpr static qreal MAX_EXPENSIVE_SCALING_SIZE = 3;
+
+    // Set to too high a value to activate for now...
+    constexpr static qreal MAX_FILTERING_SIZE = 5000;
 
     qreal zoomLevel;
     qreal appliedDpiAdjustment;
