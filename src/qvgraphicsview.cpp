@@ -43,6 +43,7 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     // Initialize other variables
     currentScale = 1.0;
     scaledSize = QSize();
+    maxScalingTwoSize = 3;
     isOriginalSize = false;
     lastZoomEventPos = QPoint(-1, -1);
     lastZoomRoundingError = QPointF();
@@ -291,8 +292,6 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
         return;
     }
 
-    updateFilteringMode();
-
     if (pos != lastZoomEventPos)
     {
         lastZoomEventPos = pos;
@@ -336,7 +335,7 @@ void QVGraphicsView::scaleExpensively()
         flipped = true;
 
     // If we are above maximum scaling size
-    if ((currentScale >= MAX_EXPENSIVE_SCALING_SIZE) ||
+    if ((currentScale >= maxScalingTwoSize) ||
         (!isScalingTwoEnabled && currentScale > 1.00001))
     {
         // Return to original size
@@ -402,11 +401,6 @@ void QVGraphicsView::makeUnscaled()
     // Reset transformation
     zoomBasis = transform();
     zoomBasisScaleFactor = 1.0;
-}
-
-void QVGraphicsView::updateFilteringMode() {
-    const bool exceededSmoothScaleLimit = currentScale >= MAX_FILTERING_SIZE;
-    loadedPixmapItem->setTransformationMode(!exceededSmoothScaleLimit && isFilteringEnabled ? Qt::SmoothTransformation : Qt::FastTransformation);
 }
 
 void QVGraphicsView::animatedFrameChanged(QRect rect)
@@ -653,7 +647,6 @@ void QVGraphicsView::fitInViewMarginless(const QRectF &rect)
 
     isOriginalSize = false;
     currentScale = 1.0;
-    updateFilteringMode();
     zoomBasisScaleFactor = 1.0;
 }
 
@@ -705,8 +698,10 @@ void QVGraphicsView::settingsUpdated()
     auto &settingsManager = qvApp->getSettingsManager();
 
     //filtering
-    isFilteringEnabled = settingsManager.getBoolean("filteringenabled");
-    updateFilteringMode();
+    if (settingsManager.getBoolean("filteringenabled"))
+        loadedPixmapItem->setTransformationMode(Qt::SmoothTransformation);
+    else
+        loadedPixmapItem->setTransformationMode(Qt::FastTransformation);
 
     //scaling
     isScalingEnabled = settingsManager.getBoolean("scalingenabled");
