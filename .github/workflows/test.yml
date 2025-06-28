@@ -16,6 +16,7 @@ jobs:
         with:
           version: '6.8'
           cache: true
+          modules: 'qtimageformats qttools'
 
       - name: Configure CMake
         run: cmake -B build -DBUILD_TESTS=ON

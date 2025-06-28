@@ -21,33 +21,37 @@ jobs:
         include:
           - runner: 'ubuntu-22.04'
             qtVersion: '5.15.2'
+            qtModules: 'qttools'
           - runner: 'ubuntu-22.04'
             qtVersion: '5.9'
             osSuffix: '_qt5.9'
             skipPlugins: 'true'
+            qtModules: 'qttools'
           - runner: 'macos-14'
             qtVersion: '6.8.3'
-            qtModules: 'qtimageformats'
+            qtModules: 'qtimageformats qttools'
             buildArch: 'Universal'
           - runner: 'macos-13'
             qtVersion: '5.15.2'
             osSuffix: '_legacy'
+            qtModules: 'qttools'
           - runner: 'windows-2022'
             qtVersion: '6.8.3'
             qtArch: 'win64_msvc2022_64'
             osSuffix: '_64'
-            qtModules: 'qtimageformats'
+            qtModules: 'qtimageformats qttools'
           - runner: 'windows-2022'
             qtVersion: '6.8.3'
             qtArch: 'win64_msvc2022_arm64_cross_compiled'
             osSuffix: '_arm64'
-            qtModules: 'qtimageformats'
+            qtModules: 'qtimageformats qttools'
             buildArch: 'Arm64'
           - runner: 'windows-2022'
             qtVersion: '5.15.2'
             qtArch: 'win32_msvc2019'
             osSuffix: '_32'
             buildArch: 'X86'
+            qtModules: 'qttools'
     runs-on: ${{ matrix.runner }}
     steps:
       - name: Set environment variables
@@ -119,7 +123,7 @@ jobs:
         run: |
           mkdir release_files
           cd artifacts
-          for dir in */; do
+          for dir in */ a; do
             zip -r "../release_files/$(basename "$dir").zip" "$dir"
           done
           cd ..
