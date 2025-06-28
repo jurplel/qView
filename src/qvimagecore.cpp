@@ -4,6 +4,7 @@
 #include "qvcocoafunctions.h"
 #include "qvlinuxx11functions.h"
 #include "imagemagickreader.h"
+#include <utility>
 #include <cstring>
 #include <random>
 #include <QMessageBox>
@@ -136,9 +137,9 @@ QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColo
     int errorCode = 0;
     QString errorString;
 
-    const auto result = ImageMagickReader::read(fileName);
-    readImage = result.image;
-    errorString = result.error;
+    auto result = ImageMagickReader::read(fileName);
+    readImage = std::move(result.image);
+    errorString = std::move(result.error);
 
     if (!readImage.isNull()) {
         imageSize = readImage.size();
@@ -161,7 +162,7 @@ QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColo
     QFileInfo fileInfo(fileName);
 
     ReadData readData = {
-        readImage,
+        std::move(readImage),
         fileInfo.absoluteFilePath(),
         fileInfo.size(),
         imageSize,
@@ -169,7 +170,7 @@ QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColo
         {}
     };
 
-    if (readImage.isNull())
+    if (readData.image.isNull())
     {
         readData.errorData = {
             true,
