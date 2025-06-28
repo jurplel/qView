@@ -30,6 +30,9 @@ if ($IsMacOS -and $env:buildArch -eq 'Universal') {
 } elseif ($IsWindows) {
     # Workaround for https://developercommunity.visualstudio.com/t/10664660
     $cmakeArgs += '-DCMAKE_CXX_FLAGS=-D_DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR'
+    if ($env:buildArch -eq 'X86') {
+        $cmakeArgs += "-A Win32"
+    }
 }
 
 # Create a build directory, configure, and build
