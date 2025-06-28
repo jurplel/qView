@@ -32,8 +32,9 @@ else()
     set(QT_VERSION_MAJOR 5)
 endif()
 
-# ImageMagick backend
-find_package(ImageMagick COMPONENTS Magick++ REQUIRED)
+# Vips image backend
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(VIPS REQUIRED IMPORTED_TARGET vips-cpp)
 
 # Source files
 set(PROJECT_SOURCES
@@ -52,7 +53,7 @@ set(PROJECT_SOURCES
     src/actionmanager.cpp
     src/settingsmanager.cpp
     src/shortcutmanager.cpp
-    src/imagemagickreader.cpp
+    src/vipsreader.cpp
 )
 
 # Header files
@@ -71,13 +72,10 @@ set(PROJECT_HEADERS
     src/actionmanager.h
     src/settingsmanager.h
     src/shortcutmanager.h
-    src/imagemagickreader.h
+    src/vipsreader.h
 )
 
-if(WITH_IMAGEMAGICK)
-    list(APPEND PROJECT_SOURCES src/imagemagickreader.cpp)
-    list(APPEND PROJECT_HEADERS src/imagemagickreader.h)
-endif()
+
 
 # UI form files
 set(PROJECT_FORMS
@@ -135,10 +133,8 @@ add_executable(${PROJECT_NAME} ${EXECUTABLE_TYPE} ${PROJECT_SOURCES} ${PROJECT_H
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Gui Qt${QT_VERSION_MAJOR}::Network Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Svg)
 
-# Link ImageMagick and add required compile definitions
-target_include_directories(${PROJECT_NAME} PRIVATE ${ImageMagick_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} PRIVATE ${ImageMagick_LIBRARIES})
-target_compile_definitions(${PROJECT_NAME} PRIVATE MAGICKCORE_QUANTUM_DEPTH=16 MAGICKCORE_HDRI_ENABLE=1)
+# Link Vips
+target_link_libraries(${PROJECT_NAME} PRIVATE PkgConfig::VIPS)
 
 # Set the executable name to lowercase on Linux
 if(UNIX AND NOT APPLE)

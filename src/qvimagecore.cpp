@@ -3,8 +3,7 @@
 #include "qvwin32functions.h"
 #include "qvcocoafunctions.h"
 #include "qvlinuxx11functions.h"
-#include "imagemagickreader.h"
-#include <utility>
+#include "vipsreader.h"
 #include <cstring>
 #include <random>
 #include <QMessageBox>
@@ -137,7 +136,7 @@ QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColo
     int errorCode = 0;
     QString errorString;
 
-    auto result = ImageMagickReader::read(fileName);
+    auto result = VipsReader::read(fileName);
     readImage = std::move(result.image);
     errorString = std::move(result.error);
 

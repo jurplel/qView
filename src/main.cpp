@@ -1,11 +1,13 @@
 #include "mainwindow.h"
 #include "qvapplication.h"
 #include "qvwin32functions.h"
+#include "vipsreader.h"
 
 #include <QCommandLineParser>
 
 int main(int argc, char *argv[])
 {
+    VipsReader::init();
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QCoreApplication::setOrganizationName("qView");
     QCoreApplication::setApplicationName("qView");
@@ -33,5 +35,7 @@ int main(int argc, char *argv[])
     if (!parser.positionalArguments().isEmpty())
         QVApplication::openFile(window, parser.positionalArguments().constFirst(), true);
 
-    return QApplication::exec();
+    const int result = QApplication::exec();
+    VipsReader::shutdown();
+    return result;
 }
