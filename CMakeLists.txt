@@ -139,7 +139,7 @@ if(WIN32)
         target_link_libraries(${PROJECT_NAME} PRIVATE shell32 user32 ole32 shlwapi gdi32)
     endif()
 
-    set(CMAKE_RC_ICONS "dist/win/qView.ico")
+    set(ICON_PATH "${CMAKE_CURRENT_SOURCE_DIR}/dist/win/qView.ico")
 elseif(APPLE)
     # macOS specific: link to Cocoa framework and configure the app bundle.
     if(NOT NO_COCOA)
