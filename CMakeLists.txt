@@ -101,7 +101,15 @@ elseif(UNIX AND NOT APPLE)
 endif()
 
 # Add the executable and link Qt libraries
-add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS} ${PROJECT_FORMS} resources/resources.qrc)
+set(PROJECT_RESOURCES resources/resources.qrc)
+if(WIN32)
+    configure_file(
+        "${CMAKE_CURRENT_SOURCE_DIR}/dist/win/qView.rc.in"
+        "${CMAKE_CURRENT_BINARY_DIR}/qView.rc"
+    )
+    list(APPEND PROJECT_RESOURCES "${CMAKE_CURRENT_BINARY_DIR}/qView.rc")
+endif()
+add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS} ${PROJECT_FORMS} ${PROJECT_RESOURCES})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Gui Qt${QT_VERSION_MAJOR}::Network Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Svg)
 
@@ -123,7 +131,7 @@ if(WIN32)
         target_compile_definitions(${PROJECT_NAME} PRIVATE WIN32_LOADED)
         target_link_libraries(${PROJECT_NAME} PRIVATE shell32 user32 ole32 shlwapi gdi32)
     endif()
-    set_target_properties(${PROJECT_NAME} PROPERTIES WIN32_EXECUTABLE ON MACOSX_BUNDLE OFF)
+    set_target_properties(${PROJECT_NAME} PROPERTIES WIN32_EXECUTABLE ON)
     set(CMAKE_RC_ICONS "dist/win/qView.ico")
 elif(APPLE)
     # macOS specific: link to Cocoa framework, configure the app bundle, and set the icon.
