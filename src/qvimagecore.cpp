@@ -3,6 +3,7 @@
 #include "qvwin32functions.h"
 #include "qvcocoafunctions.h"
 #include "qvlinuxx11functions.h"
+#include "imagemagickreader.h"
 #include <cstring>
 #include <random>
 #include <QMessageBox>
@@ -130,25 +131,17 @@ void QVImageCore::loadFile(const QString &fileName, bool isReloading)
 
 QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColorSpace &targetColorSpace)
 {
-    QImageReader imageReader;
-    imageReader.setAutoTransform(true);
-
-    imageReader.setFileName(fileName);
-
     QImage readImage;
-    if (imageReader.format() == "svg" || imageReader.format() == "svgz")
-    {
-        // Render vectors into a high resolution
-        QIcon icon;
-        icon.addFile(fileName);
-        readImage = icon.pixmap(largestDimension).toImage();
-        // If this fails, try reading the normal way so that a proper error message is given
-        if (readImage.isNull())
-            readImage = imageReader.read();
-    }
-    else
-    {
-        readImage = imageReader.read();
+    QSize imageSize;
+    int errorCode = 0;
+    QString errorString;
+
+    const auto result = ImageMagickReader::read(fileName);
+    readImage = result.image;
+    errorString = result.error;
+
+    if (!readImage.isNull()) {
+        imageSize = readImage.size();
     }
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
@@ -173,9 +166,10 @@ QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColo
     if (!readImage.colorSpace().isValid())
         readImage.setColorSpace(QColorSpace::SRgb);
 
-    // Convert image color space if we have a target that's different
-    if (targetColorSpace.isValid() && readImage.colorSpace() != targetColorSpace)
+    if (colorSpaceConversion == 1 && targetColorSpace.isValid())
+    {
         readImage.convertToColorSpace(targetColorSpace);
+    }
 #endif
 
     QFileInfo fileInfo(fileName);
@@ -184,7 +178,7 @@ QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColo
         readImage,
         fileInfo.absoluteFilePath(),
         fileInfo.size(),
-        imageReader.size(),
+        imageSize,
         targetColorSpace,
         {}
     };
@@ -193,8 +187,8 @@ QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColo
     {
         readData.errorData = {
             true,
-            imageReader.error(),
-            imageReader.errorString()
+            errorCode,
+            errorString
         };
     }
 

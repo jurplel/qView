@@ -1,4 +1,4 @@
-﻿#ifndef QVIMAGECORE_H
+#ifndef QVIMAGECORE_H
 #define QVIMAGECORE_H
 
 #include <QObject>
