@@ -2,6 +2,13 @@ cmake_minimum_required(VERSION 3.16)
 
 project(qView VERSION 7.0 LANGUAGES CXX)
 
+# Set the application type for platform-specific executables
+if(WIN32)
+    set(EXECUTABLE_TYPE WIN32)
+elseif(APPLE)
+    set(EXECUTABLE_TYPE MACOSX_BUNDLE)
+endif()
+
 # Enable C++14
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -109,7 +116,7 @@ if(WIN32)
     )
     list(APPEND PROJECT_RESOURCES "${CMAKE_CURRENT_BINARY_DIR}/qView.rc")
 endif()
-add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS} ${PROJECT_FORMS} ${PROJECT_RESOURCES})
+add_executable(${PROJECT_NAME} ${EXECUTABLE_TYPE} ${PROJECT_SOURCES} ${PROJECT_HEADERS} ${PROJECT_FORMS} ${PROJECT_RESOURCES})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Gui Qt${QT_VERSION_MAJOR}::Network Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Svg)
 
@@ -131,7 +138,7 @@ if(WIN32)
         target_compile_definitions(${PROJECT_NAME} PRIVATE WIN32_LOADED)
         target_link_libraries(${PROJECT_NAME} PRIVATE shell32 user32 ole32 shlwapi gdi32)
     endif()
-    set_target_properties(${PROJECT_NAME} PROPERTIES WIN32_EXECUTABLE ON)
+    
     set(CMAKE_RC_ICONS "dist/win/qView.ico")
 elif(APPLE)
     # macOS specific: link to Cocoa framework, configure the app bundle, and set the icon.
@@ -139,7 +146,7 @@ elif(APPLE)
         target_compile_definitions(${PROJECT_NAME} PRIVATE COCOA_LOADED)
         target_link_libraries(${PROJECT_NAME} PRIVATE "-framework Cocoa")
     endif()
-    set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE ON MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/dist/mac/Info.plist")
+    set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/dist/mac/Info.plist")
     # Use a different icon for older Qt versions on macOS.
     if(QT_VERSION_MAJOR LESS 6)
         set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_ICON_FILE "dist/mac/qView_legacy.icns")
