@@ -191,7 +191,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="755"/>
         <source>&amp;Mirror</source>
-        <translation>&amp;Es&amp;pello</translation>
+        <translation>Es&amp;pello</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="759"/>
@@ -201,7 +201,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="763"/>
         <source>Enter F&amp;ull Screen</source>
-        <translation>&amp;Pantalla chea</translation>
+        <translation>Pantalla c&amp;hea</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="767"/>
@@ -283,18 +283,18 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="818"/>
         <source>Setting&amp;s...</source>
-        <translation>&amp;Configuración...</translation>
+        <translation>Axuste&amp;s...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="823"/>
         <source>&amp;About</source>
-        <translation>&amp;Sobre</translation>
+        <translation>&amp;Acerca de</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="826"/>
         <source>&amp;About qView</source>
         <extracomment>This is for the about dialog on mac</extracomment>
-        <translation>&amp;Sobre qview</translation>
+        <translation>&amp;Acerca de qview</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="830"/>
@@ -331,12 +331,12 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="242"/>
         <source>Exit F&amp;ull Screen</source>
-        <translation>Saír da pantalla ch&amp;ea</translation>
+        <translation>Saír da pantalla c&amp;hea</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="247"/>
         <source>Enter F&amp;ull Screen</source>
-        <translation>Modo pantalla ch&amp;ea</translation>
+        <translation>Modo pantalla c&amp;hea</translation>
     </message>
     <message>
         <source>Empty</source>
@@ -469,7 +469,7 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="1097"/>
         <source>Res&amp;ume</source>
-        <translation>Rea&amp;nudar</translation>
+        <translation>Contin&amp;uar</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="1106"/>
@@ -891,7 +891,7 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="273"/>
         <source>&amp;Bilinear filtering</source>
-        <translation>&amp;Filtrado bilinear</translation>
+        <translation>Filtrado &amp;bilinear</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="283"/>
@@ -901,7 +901,7 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="286"/>
         <source>&amp;Image scaling</source>
-        <translation>&amp;Escalado da imaxe</translation>
+        <translation>Escalado da &amp;imaxe</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="296"/>
@@ -932,7 +932,7 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="344"/>
         <source>Scrolling &amp;zooms</source>
-        <translation>&amp;Ampliar co desprazamento</translation>
+        <translation>&amp;Zoom coa roda do rato</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="367"/>
@@ -1064,7 +1064,7 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="17"/>
         <source>Settings</source>
-        <translation type="unfinished">Axustes</translation>
+        <translation>Axustes</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="524"/>
@@ -1094,7 +1094,7 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="620"/>
         <source>&amp;Loop through folders</source>
-        <translation>&amp;Percorre os cartafoles</translation>
+        <translation>&amp;Percorre os cartafois</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="643"/>
@@ -1465,7 +1465,7 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="115"/>
         <source>Settings</source>
-        <translation type="unfinished">Axustes</translation>
+        <translation>Axustes</translation>
     </message>
     <message>
         <source>Options</source>
