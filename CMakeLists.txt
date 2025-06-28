@@ -25,7 +25,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 # Find either Qt6 or Qt5
-find_package(Qt6 COMPONENTS Core Gui Network Widgets Svg LinguistTools)
+find_package(Qt6 QUIET COMPONENTS Core Gui Network Widgets Svg LinguistTools)
 if (Qt6_FOUND)
     set(QT_VERSION_MAJOR 6)
 else()
@@ -198,7 +198,11 @@ endif()
 
 # Handle translations
 file(GLOB TRANSLATIONS "i18n/qview_*.ts")
-qt_add_translations(${PROJECT_NAME} TS_FILES ${TRANSLATIONS})
+if(QT_VERSION_MAJOR EQUAL 6)
+    qt_add_translations(${PROJECT_NAME} TS_FILES ${TRANSLATIONS})
+else()
+    qt5_add_translations(${PROJECT_NAME} ${TRANSLATIONS})
+endif()
 
 # Installation rules
 include(GNUInstallDirs)
