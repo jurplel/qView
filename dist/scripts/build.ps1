@@ -2,13 +2,14 @@
 
 param
 (
+    [switch]$CI,
     $Prefix = "/usr"
 )
 
 if ($IsWindows) {
     dist/scripts/vcvars.ps1
 } elseif ($IsMacOS) {
-    if ($qtVersion -lt [version]'6.5.3') {
+    if (-not $CI -and $qtVersion -lt [version]'6.5.3') {
         # Workaround for QTBUG-117484
         sudo xcode-select --switch /Applications/Xcode_14.3.1.app
     }

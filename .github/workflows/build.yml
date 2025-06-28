@@ -74,7 +74,7 @@ jobs:
 
       - name: Build qView
         shell: pwsh
-        run: dist/scripts/build.ps1
+        run: dist/scripts/build.ps1 -CI
 
       - name: Deploy qView
         env:
