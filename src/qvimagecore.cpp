@@ -142,30 +142,16 @@ QVImageCore::ReadData QVImageCore::readFile(const QString &fileName, const QColo
 
     if (!readImage.isNull()) {
         imageSize = readImage.size();
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+        if (!result.colorProfile.isEmpty())
+        {
+            QColorSpace colorSpace = QColorSpace::fromIccProfile(result.colorProfile);
+            readImage.setColorSpace(colorSpace);
+        }
+#endif
     }
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
-    readImage.convertTo(QImage::Format::Format_ARGB32_Premultiplied);
-#else
-    readImage = readImage.convertToFormat(QImage::Format::Format_ARGB32_Premultiplied);
-#endif
-    // Handle color space information
-
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0) && QT_VERSION < QT_VERSION_CHECK(6, 7, 2)
-    // Work around Qt ICC profile parsing bug
-    if (!readImage.colorSpace().isValid() && !readImage.colorSpace().iccProfile().isEmpty())
-    {
-        QByteArray profileData = readImage.colorSpace().iccProfile();
-        if (removeTinyDataTagsFromIccProfile(profileData))
-            readImage.setColorSpace(QColorSpace::fromIccProfile(profileData));
-    }
-#endif
-
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
-    // Assume image is sRGB if it doesn't specify
-    if (!readImage.colorSpace().isValid())
-        readImage.setColorSpace(QColorSpace::SRgb);
-
     if (colorSpaceConversion == 1 && targetColorSpace.isValid())
     {
         readImage.convertToColorSpace(targetColorSpace);
