@@ -83,7 +83,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="676"/>
         <source>Re&amp;load File</source>
-        <translation>Re&amp;cargar Ficheiro</translation>
+        <translation>Re&amp;cargar ficheiro</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="680"/>
@@ -166,17 +166,17 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="735"/>
         <source>Zoom &amp;Out</source>
-        <translation>&amp;Afastar</translation>
+        <translation>A&amp;fastar</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="739"/>
         <source>Reset &amp;Zoom</source>
-        <translation>Restablecer aproximación</translation>
+        <translation>Restablecer &amp;zoom</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="743"/>
         <source>Ori&amp;ginal Size</source>
-        <translation>&amp;Tamaño orixinal</translation>
+        <translation>Tamaño ori&amp;xinal</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="747"/>
@@ -191,7 +191,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="755"/>
         <source>&amp;Mirror</source>
-        <translation>&amp;Espello</translation>
+        <translation>&amp;Es&amp;pello</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="759"/>
@@ -206,7 +206,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="767"/>
         <source>&amp;First File</source>
-        <translation>&amp;Primeiro Ficheiro</translation>
+        <translation>&amp;Primeiro ficheiro</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="771"/>
@@ -216,7 +216,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="775"/>
         <source>&amp;Next File</source>
-        <translation>&amp;Seguinte Ficheiro</translation>
+        <translation>&amp;Seguinte ficheiro</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="779"/>
@@ -510,7 +510,7 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
     <message>
         <location filename="../src/main.cpp" line="18"/>
         <source>file</source>
-        <translation>Ficheiro</translation>
+        <translation>ficheiro</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="18"/>
@@ -1124,7 +1124,7 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="703"/>
         <source>Detect supported files in folder even if extension isn&apos;t recognized (may be slow with larger/network folders)</source>
-        <translation>Detectar arquivos compatíbeis no cartafol aínda que a extensión non sexa recoñecida (pode ser lento con cartafois grandes ou en rede)</translation>
+        <translation>Detectar ficheiros compatíbeis no cartafol aínda que a extensión non sexa recoñecida (pode ser lento con cartafois grandes ou en rede)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="706"/>
@@ -1134,7 +1134,7 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="713"/>
         <source>Save &amp;recent files</source>
-        <translation>Gardar &amp;ficheiros recentes</translation>
+        <translation>Gardar ficheiros &amp;recentes</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="720"/>
@@ -1282,7 +1282,7 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
     <message>
         <location filename="../src/qvwelcomedialog.cpp" line="49"/>
         <source>&lt;ul&gt;&lt;li&gt;Right click to access the main menu&lt;/li&gt;&lt;li&gt;Drag the image to reposition it&lt;/li&gt;&lt;li&gt;Scroll to zoom in and out&lt;/li&gt;&lt;li&gt;Use arrow keys to switch files&lt;/li&gt;&lt;/ul&gt;</source>
-        <translation>&lt;ul&gt;&lt;li&gt;Prema co botón dereito para acceder ao menú principal&lt;/li&gt;&lt;li&gt;Arrastre a imaxe para reposicionala&lt;/li&gt;&lt;li&gt;Desprácese para ampliar e diminuír&lt;/li&gt;&lt;li&gt;Emprega as frechas para trocar ficheiros&lt;/li&gt;&lt;/ul&gt;</translation>
+        <translation>&lt;ul&gt;&lt;li&gt;Preme co botón dereito para acceder ao menú principal&lt;/li&gt;&lt;li&gt;Arrastra a imaxe para reposicionala&lt;/li&gt;&lt;li&gt;Despraza a roda do rato para ampliar ou reducir&lt;/li&gt;&lt;li&gt;Emprega as teclas de frecha para trocar de ficheiro&lt;/li&gt;&lt;/ul&gt;</translation>
     </message>
 </context>
 <context>
