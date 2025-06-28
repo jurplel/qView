@@ -22,6 +22,7 @@ VipsReader::ReadResult VipsReader::read(const QString &fileName)
 {
         try
     {
+        // TODO: VIPS loader does not fall back to magick. Fails with e.g. dng images on my system silently.
         vips::VImage in = vips::VImage::new_from_file(fileName.toUtf8().constData(),
                                                   vips::VImage::option()->set("access", VIPS_ACCESS_SEQUENTIAL));
 
