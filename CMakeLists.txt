@@ -32,7 +32,11 @@ if(Qt6_FOUND)
     # Find optional tools
     find_package(Qt6 QUIET COMPONENTS LinguistTools)
 else()
-    find_package(Qt5 REQUIRED COMPONENTS Core Gui Network Widgets Svg)
+    set(QT5_FIND_COMPONENTS Core Gui Network Widgets Svg)
+    if(UNIX AND NOT APPLE)
+        list(APPEND QT5_FIND_COMPONENTS X11Extras)
+    endif()
+    find_package(Qt5 REQUIRED COMPONENTS ${QT5_FIND_COMPONENTS})
     set(QT_VERSION_MAJOR 5)
     set(QT_VERSION ${Qt5_VERSION})
     # Find optional tools
@@ -187,6 +191,10 @@ elseif(APPLE)
     set_target_properties(${PROJECT_NAME} PROPERTIES
         MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_BINARY_DIR}/Info.plist"
     )
+elseif(UNIX AND NOT APPLE)
+    if(NOT NO_X11 AND NOT QT6_FOUND)
+        target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::X11Extras)
+    endif()
 endif()
 
 # Compile definitions
