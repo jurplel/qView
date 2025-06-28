@@ -14,16 +14,44 @@ if ($IsWindows) {
     }
 }
 
+# Prepare CMake arguments
+$cmakeArgs = @(
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DCMAKE_INSTALL_PREFIX=$Prefix"
+)
+
+if ($env:nightlyDefines) {
+    $cmakeArgs += "-D$($env:nightlyDefines)"
+}
+
 if ($IsMacOS -and $env:buildArch -eq 'Universal') {
-    $argDeviceArchs = 'QMAKE_APPLE_DEVICE_ARCHS=x86_64 arm64'
+    $cmakeArgs += "-DCMAKE_OSX_ARCHITECTURES=x86_64;arm64"
 } elseif ($IsWindows) {
     # Workaround for https://developercommunity.visualstudio.com/t/10664660
-    $argVcrMutexWorkaround = 'DEFINES+=_DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR'
+    $cmakeArgs += '-DCMAKE_CXX_FLAGS=-D_DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR'
 }
-qmake $args[0] PREFIX=$Prefix DEFINES+="$env:nightlyDefines" $argVcrMutexWorkaround $argDeviceArchs
 
+# Create a build directory, configure, and build
+New-Item -ItemType Directory -Force -Path build
+Push-Location build
+try {
+    cmake $cmakeArgs ..
+    cmake --build . --config Release
+} finally {
+    Pop-Location
+}
+
+# Copy artifact to bin directory for deployment scripts
+New-Item -ItemType Directory -Force -Path bin
 if ($IsWindows) {
-    nmake
+    # MSVC generator might put executables in a config-specific subdirectory
+    $exePath = "build/Release/qView.exe"
+    if (-not (Test-Path $exePath)) {
+        $exePath = "build/qView.exe"
+    }
+    Copy-Item -Path $exePath -Destination "bin/qView.exe" -Force
+} elseif ($IsMacOS) {
+    Copy-Item -Path "build/qView.app" -Destination "bin/qView.app" -Recurse -Force
 } else {
-    make
+    Copy-Item -Path "build/qview" -Destination "bin/qview" -Force
 }

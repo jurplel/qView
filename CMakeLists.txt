@@ -105,6 +105,11 @@ add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS} ${PROJECT_F
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Gui Qt${QT_VERSION_MAJOR}::Network Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Svg)
 
+# Set the executable name to lowercase on Linux
+if(UNIX AND NOT APPLE)
+    set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "qview")
+endif()
+
 # Add compile definitions based on options
 if(NOT QV_DISABLE_ONLINE_VERSION_CHECK)
     target_compile_definitions(${PROJECT_NAME} PRIVATE QV_DISABLE_ONLINE_VERSION_CHECK)
@@ -153,6 +158,12 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
     QT_DEPRECATED_WARNINGS
     QT_NO_FOREACH
 )
+
+# Check for nightly builds, which are identified by the NIGHTLY preprocessor definition.
+if(DEFINED NIGHTLY)
+    message(STATUS "This is nightly ${NIGHTLY}")
+    target_compile_definitions(${PROJECT_NAME} PRIVATE "NIGHTLY=\"${NIGHTLY}\"")
+endif()
 
 # Handle translations
 file(GLOB TRANSLATIONS "i18n/qview_*.ts")
