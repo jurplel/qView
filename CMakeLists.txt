@@ -8,6 +8,18 @@ if(BUILD_TESTS)
     enable_testing()
 endif()
 
+# Optional clang-tidy integration
+option(ENABLE_CLANG_TIDY "Enable clang-tidy" OFF)
+if(ENABLE_CLANG_TIDY)
+    find_program(CLANG_TIDY_EXE clang-tidy)
+    if(CLANG_TIDY_EXE)
+        message(STATUS "clang-tidy found: ${CLANG_TIDY_EXE}")
+        set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
+    else()
+        message(WARNING "clang-tidy requested but not found.")
+    endif()
+endif()
+
 # Set the application type for platform-specific executables
 if(WIN32)
     set(EXECUTABLE_TYPE WIN32)

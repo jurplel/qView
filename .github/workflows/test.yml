@@ -1,11 +1,11 @@
-name: Run Unit Tests
+name: Run Checks
 
 on:
   push:
   pull_request:
 
 jobs:
-  test:
+  unit-tests:
     name: Run Unit Tests
     runs-on: ubuntu-latest
     steps:
@@ -26,3 +26,25 @@ jobs:
 
       - name: Run tests
         run: ctest --test-dir build
+
+  clang-tidy:
+    name: Run clang-tidy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.8'
+          cache: true
+          modules: 'qtimageformats'
+
+      - name: Install clang-tidy
+        run: sudo apt-get update && sudo apt-get install -y clang-tidy
+
+      - name: Configure CMake
+        run: cmake -B build -DENABLE_CLANG_TIDY=ON
+
+      - name: Run clang-tidy
+        run: cmake --build build
