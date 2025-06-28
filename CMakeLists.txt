@@ -2,6 +2,12 @@ cmake_minimum_required(VERSION 3.16)
 
 project(qView VERSION 7.0 LANGUAGES CXX)
 
+# Optional test building
+option(BUILD_TESTS "Build tests" OFF)
+if(BUILD_TESTS)
+    enable_testing()
+endif()
+
 # Set the application type for platform-specific executables
 if(WIN32)
     set(EXECUTABLE_TYPE WIN32)
@@ -207,3 +213,8 @@ install(FILES dist/linux/com.interversehq.qView.desktop DESTINATION ${CMAKE_INST
 install(DIRECTORY dist/linux/hicolor/ DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor)
 install(FILES LICENSE DESTINATION ${CMAKE_INSTALL_DATADIR}/licenses/qview)
 install(FILES dist/linux/com.interversehq.qView.appdata.xml DESTINATION ${CMAKE_INSTALL_DATADIR}/metainfo)
+
+# Include tests if requested
+if(BUILD_TESTS)
+    add_subdirectory(tests)
+endif()
