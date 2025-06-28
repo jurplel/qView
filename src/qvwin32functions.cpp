@@ -148,14 +148,12 @@ void QVWin32Functions::showOpenWithDialog(const QString &filePath, const QWindow
 // Logic borrowed from Qt's private qWinCmdArgs function
 QStringList QVWin32Functions::getCommandLineArgs()
 {
-    const QString cmdLine = QString::fromWCharArray(GetCommandLine());
     QStringList result;
     int size;
-    if (wchar_t **argv = CommandLineToArgvW((const wchar_t *)cmdLine.utf16(), &size)) {
+    if (wchar_t **argv = CommandLineToArgvW(GetCommandLineW(), &size)) {
         result.reserve(size);
-        wchar_t **argvEnd = argv + size;
-        for (wchar_t **a = argv; a < argvEnd; ++a)
-            result.append(QString::fromWCharArray(*a));
+        for (int i = 0; i < size; ++i)
+            result.append(QString::fromWCharArray(argv[i]));
         LocalFree(argv);
     }
     return result;
