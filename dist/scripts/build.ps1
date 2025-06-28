@@ -32,6 +32,8 @@ if ($IsMacOS -and $env:buildArch -eq 'Universal') {
     $cmakeArgs += '-DCMAKE_CXX_FLAGS=-D_DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR'
     if ($env:buildArch -eq 'X86') {
         $cmakeArgs += "-A Win32"
+    } elseif ($env:buildArch -eq 'Arm64') {
+        $cmakeArgs += "-A ARM64"
     }
 }
 
