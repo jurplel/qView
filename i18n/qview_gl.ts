@@ -83,7 +83,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="676"/>
         <source>Re&amp;load File</source>
-        <translation>Recargar &amp;arquivo</translation>
+        <translation>Re&amp;cargar Ficheiro</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="680"/>
@@ -206,7 +206,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="767"/>
         <source>&amp;First File</source>
-        <translation>&amp;Primeiro ficheiro</translation>
+        <translation>&amp;Primeiro Ficheiro</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="771"/>
@@ -216,7 +216,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="775"/>
         <source>&amp;Next File</source>
-        <translation>&amp;Ficheiro seguinte</translation>
+        <translation>&amp;Seguinte Ficheiro</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="779"/>
@@ -437,7 +437,9 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
         <source>Error occurred opening
 %3
 %2 (Error %1)</source>
-        <translation>Produciuse un erro ao abrir</translation>
+        <translation>Produciuse un erro ao abrir
+%3
+%2 (Erro %1)</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="855"/>
@@ -981,22 +983,22 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="457"/>
         <source>Color space conversion:</source>
-        <translation type="unfinished"></translation>
+        <translation>Conversión do espazo de cor:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="476"/>
         <source>Auto-detect</source>
-        <translation type="unfinished"></translation>
+        <translation>Autodetección</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="481"/>
         <source>sRGB</source>
-        <translation type="unfinished"></translation>
+        <translation>sRGB</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="486"/>
         <source>Display P3</source>
-        <translation type="unfinished"></translation>
+        <translation>Display P3</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="495"/>
@@ -1067,12 +1069,12 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="524"/>
         <source>Date Modified</source>
-        <translation type="unfinished"></translation>
+        <translation>Data de modificación</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="529"/>
         <source>Date Created</source>
-        <translation type="unfinished"></translation>
+        <translation>Data de creación</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="604"/>
@@ -1122,12 +1124,12 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="703"/>
         <source>Detect supported files in folder even if extension isn&apos;t recognized (may be slow with larger/network folders)</source>
-        <translation type="unfinished"></translation>
+        <translation>Detectar arquivos compatíbeis no cartafol aínda que a extensión non sexa recoñecida (pode ser lento con cartafois grandes ou en rede)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="706"/>
         <source>Allow &amp;MIME content detection</source>
-        <translation type="unfinished"></translation>
+        <translation>Permitir a detección de contido &amp;MIME</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="713"/>
@@ -1148,13 +1150,13 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="727"/>
         <source>Skip hidden files when browsing to the next/previous file</source>
-        <translation type="unfinished"></translation>
+        <translation>Omitir ficheiros ocultos ao navegar ao ficheiro seguinte/anterior</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="730"/>
         <source>Skip hidden files</source>
         <extracomment>Don&apos;t view files with &apos;hidden&apos; attribute</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Omitir ficheiros ocultos</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="741"/>
@@ -1298,7 +1300,7 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="47"/>
         <source>Reload File</source>
-        <translation type="unfinished"></translation>
+        <translation>Recargar ficheiro</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="48"/>
@@ -1358,7 +1360,7 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="75"/>
         <source>Delete Permanently</source>
-        <translation type="unfinished"></translation>
+        <translation>Eliminar permanentemente</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="80"/>
