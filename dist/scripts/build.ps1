@@ -36,7 +36,7 @@ New-Item -ItemType Directory -Force -Path build
 Push-Location build
 try {
     cmake $cmakeArgs ..
-    cmake --build . --config Release
+    cmake --build . --config Release --parallel
 } finally {
     Pop-Location
 }

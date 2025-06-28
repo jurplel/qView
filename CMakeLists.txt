@@ -138,33 +138,43 @@ if(WIN32)
         target_compile_definitions(${PROJECT_NAME} PRIVATE WIN32_LOADED)
         target_link_libraries(${PROJECT_NAME} PRIVATE shell32 user32 ole32 shlwapi gdi32)
     endif()
-    
+
     set(CMAKE_RC_ICONS "dist/win/qView.ico")
-elif(APPLE)
-    # macOS specific: link to Cocoa framework, configure the app bundle, and set the icon.
+elseif(APPLE)
+    # macOS specific: link to Cocoa framework and configure the app bundle.
     if(NOT NO_COCOA)
         target_compile_definitions(${PROJECT_NAME} PRIVATE COCOA_LOADED)
         target_link_libraries(${PROJECT_NAME} PRIVATE "-framework Cocoa")
     endif()
-    set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/dist/mac/Info.plist")
-    # Use a different icon for older Qt versions on macOS.
+
+    # Set the icon based on the Qt version, as per the Qt documentation.
     if(QT_VERSION_MAJOR LESS 6)
-        set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_ICON_FILE "dist/mac/qView_legacy.icns")
+        set(MACOSX_BUNDLE_ICON_FILE "qView_legacy.icns")
     else()
-        set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_ICON_FILE "dist/mac/qView.icns")
+        set(MACOSX_BUNDLE_ICON_FILE "qView.icns")
     endif()
-elseif(UNIX AND NOT APPLE)
-    # Linux specific: find and link to the X11 libraries.
-    if(NOT NO_X11)
-        find_package(X11 REQUIRED)
-        target_compile_definitions(${PROJECT_NAME} PRIVATE X11_LOADED)
-        target_link_libraries(${PROJECT_NAME} PRIVATE X11::X11)
-        # For Qt5, also link to the X11Extras module.
-        if(QT_VERSION_MAJOR EQUAL 5)
-            find_package(Qt5 COMPONENTS X11Extras REQUIRED)
-            target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::X11Extras)
-        endif()
-    endif()
+
+    set(app_icon_macos "${CMAKE_CURRENT_SOURCE_DIR}/dist/mac/${MACOSX_BUNDLE_ICON_FILE}")
+    set_source_files_properties(${app_icon_macos} PROPERTIES
+        MACOSX_PACKAGE_LOCATION "Resources"
+    )
+    target_sources(${PROJECT_NAME} PRIVATE ${app_icon_macos})
+
+    # The Info.plist.in file contains placeholders that will be replaced by
+    # CMake. We set MACOSX_ICON_FILENAME here so that configure_file can
+    # substitute it in the plist.
+    set(MACOSX_ICON_FILENAME ${MACOSX_BUNDLE_ICON_FILE})
+    configure_file(
+        "${CMAKE_CURRENT_SOURCE_DIR}/dist/mac/Info.plist.in"
+        "${CMAKE_CURRENT_BINARY_DIR}/Info.plist"
+        @ONLY
+    )
+
+    # Set bundle properties. MACOSX_BUNDLE_INFO_PLIST tells CMake to use our
+    # generated Info.plist instead of the default one.
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+        MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_BINARY_DIR}/Info.plist"
+    )
 endif()
 
 # Compile definitions

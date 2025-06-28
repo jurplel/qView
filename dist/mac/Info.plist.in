@@ -3,23 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleExecutable</key>
-	<string>${EXECUTABLE_NAME}</string>
+	<string>@PROJECT_NAME@</string>
 	<key>CFBundleName</key>
-	<string>qView</string>
+	<string>@PROJECT_NAME@</string>
 	<key>CFBundleGetInfoString</key>
-	<string>${QMAKE_SHORT_VERSION}</string>
+	<string>@PROJECT_VERSION@</string>
 	<key>CFBundleIconFile</key>
-	<string>${ASSETCATALOG_COMPILER_APPICON_NAME}</string>
+	<string>@MACOSX_ICON_FILENAME@</string>
 	<key>CFBundleIdentifier</key>
-	<string>${PRODUCT_BUNDLE_IDENTIFIER}</string>
+	<string>com.interversehq.qView</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>LSMinimumSystemVersion</key>
-	<string>${MACOSX_DEPLOYMENT_TARGET}</string>
+	<string>@CMAKE_OSX_DEPLOYMENT_TARGET@</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 	<key>CFBundleShortVersionString</key>
-	<string>${QMAKE_SHORT_VERSION}</string>
+	<string>@PROJECT_VERSION@</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
