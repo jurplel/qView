@@ -66,10 +66,12 @@ target_link_libraries(actionmanagertests PRIVATE
 # Platform-specific libraries
 if(WIN32 AND NOT NO_WIN32)
     target_compile_definitions(actionmanagertests PRIVATE WIN32_LOADED)
-    target_link_libraries(actionmanagertests PRIVATE shell32 user32 ole32 shlwapi gdi32)
 elseif(APPLE AND NOT NO_COCOA)
     target_compile_definitions(actionmanagertests PRIVATE COCOA_LOADED)
-    target_link_libraries(actionmanagertests PRIVATE "-framework Cocoa")
+endif()
+
+if(PLATFORM_SPECIFIC_LIBS)
+    target_link_libraries(actionmanagertests PRIVATE ${PLATFORM_SPECIFIC_LIBS})
 endif()
 
 # Add compile definitions
