@@ -169,7 +169,10 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
     }
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    const bool isTouchDevice = event->device()->type() == QInputDevice::DeviceType::TouchPad || event->device()->type() == QInputDevice::DeviceType::TouchScreen;    \
+    bool isTouchDevice = event->device()->type() == QInputDevice::DeviceType::TouchPad || event->device()->type() == QInputDevice::DeviceType::TouchScreen;
+    // Real touchpads are likely to exhibit these characteristics in empirical testing
+    isTouchDevice = isTouchDevice && event->phase() != Qt::NoScrollPhase;
+    isTouchDevice = isTouchDevice && event->device()->capabilities().testFlag(QInputDevice::Capability::NormalizedPosition);
     if (isTouchDevice)
     {
         // If this is a touch device, override setting
