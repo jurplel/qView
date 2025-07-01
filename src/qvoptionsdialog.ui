@@ -3,7 +3,7 @@
  <class>QVOptionsDialog</class>
  <widget class="QDialog" name="QVOptionsDialog">
   <property name="windowModality">
-   <enum>Qt::NonModal</enum>
+   <enum>Qt::WindowModality::NonModal</enum>
   </property>
   <property name="geometry">
    <rect>
@@ -20,14 +20,14 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::FocusPolicy::NoFocus</enum>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="window">
       <property name="layoutDirection">
-       <enum>Qt::LeftToRight</enum>
+       <enum>Qt::LayoutDirection::LeftToRight</enum>
       </property>
       <attribute name="title">
        <string>Window</string>
@@ -46,7 +46,7 @@
        <item row="0" column="1">
         <widget class="QPushButton" name="bgColorButton">
          <property name="focusPolicy">
-          <enum>Qt::NoFocus</enum>
+          <enum>Qt::FocusPolicy::NoFocus</enum>
          </property>
         </widget>
        </item>
@@ -91,10 +91,10 @@
          </property>
         </widget>
        </item>
-       <item row="6" column="1">
+       <item row="5" column="1">
         <spacer name="horizontalSpacer_4">
          <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+          <enum>Qt::Orientation::Horizontal</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -104,17 +104,7 @@
          </property>
         </spacer>
        </item>
-       <item row="7" column="0">
-        <widget class="QLabel" name="label_6">
-         <property name="toolTip">
-          <string>Control when the window should resize to fit the image's actual size</string>
-         </property>
-         <property name="text">
-          <string>Window matches image size:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="1">
+       <item row="6" column="1">
         <widget class="QComboBox" name="windowResizeComboBox">
          <property name="toolTip">
           <string>Control when the window should resize to fit the image's actual size</string>
@@ -139,14 +129,17 @@
          </item>
         </widget>
        </item>
-       <item row="8" column="0">
-        <widget class="QLabel" name="minWindowResizeLabel">
+       <item row="6" column="0">
+        <widget class="QLabel" name="label_6">
+         <property name="toolTip">
+          <string>Control when the window should resize to fit the image's actual size</string>
+         </property>
          <property name="text">
-          <string>Minimum size:</string>
+          <string>Window matches image size:</string>
          </property>
         </widget>
        </item>
-       <item row="8" column="1">
+       <item row="7" column="1">
         <widget class="QSpinBox" name="minWindowResizeSpinBox">
          <property name="toolTip">
           <string>Control the minimum size that the window should reach when matching the image's actual size</string>
@@ -168,17 +161,14 @@
          </property>
         </widget>
        </item>
-       <item row="9" column="0">
-        <widget class="QLabel" name="maxWindowResizeLabel">
-         <property name="toolTip">
-          <string>Control the maximum size that the window should reach when matching the image's actual size</string>
-         </property>
+       <item row="7" column="0">
+        <widget class="QLabel" name="minWindowResizeLabel">
          <property name="text">
-          <string>Maximum size:</string>
+          <string>Minimum size:</string>
          </property>
         </widget>
        </item>
-       <item row="9" column="1">
+       <item row="8" column="1">
         <widget class="QSpinBox" name="maxWindowResizeSpinBox">
          <property name="toolTip">
           <string>Control the maximum size that the window should reach when matching the image's actual size</string>
@@ -200,10 +190,20 @@
          </property>
         </widget>
        </item>
-       <item row="10" column="1">
+       <item row="8" column="0">
+        <widget class="QLabel" name="maxWindowResizeLabel">
+         <property name="toolTip">
+          <string>Control the maximum size that the window should reach when matching the image's actual size</string>
+         </property>
+         <property name="text">
+          <string>Maximum size:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="1">
         <spacer name="horizontalSpacer_3">
          <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+          <enum>Qt::Orientation::Horizontal</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -213,7 +213,24 @@
          </property>
         </spacer>
        </item>
-       <item row="13" column="1">
+       <item row="10" column="1">
+        <widget class="QCheckBox" name="menubarCheckbox">
+         <property name="text">
+          <string>Show menubar</string>
+         </property>
+        </widget>
+       </item>
+       <item row="11" column="1">
+        <widget class="QCheckBox" name="detailsInFullscreen">
+         <property name="toolTip">
+          <string>Choose whether or not to display the titlebar text while in fullscreen</string>
+         </property>
+         <property name="text">
+          <string>Show titlebar text in fullscreen</string>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="1">
         <widget class="QCheckBox" name="darkTitlebarCheckbox">
          <property name="toolTip">
           <string>Choose whether or not the titlebar should always be dark regardless of your chosen macOS appearance</string>
@@ -226,24 +243,7 @@
          </property>
         </widget>
        </item>
-       <item row="11" column="1">
-        <widget class="QCheckBox" name="menubarCheckbox">
-         <property name="text">
-          <string>Show menubar</string>
-         </property>
-        </widget>
-       </item>
-       <item row="12" column="1">
-        <widget class="QCheckBox" name="detailsInFullscreen">
-         <property name="toolTip">
-          <string>Choose whether or not to display the titlebar text while in fullscreen</string>
-         </property>
-         <property name="text">
-          <string>Show titlebar text in fullscreen</string>
-         </property>
-        </widget>
-       </item>
-       <item row="14" column="1">
+       <item row="13" column="1">
         <widget class="QCheckBox" name="quitOnLastWindowCheckbox">
          <property name="text">
           <string>&amp;Quit on last window closed</string>
@@ -303,6 +303,19 @@
          </property>
         </widget>
        </item>
+       <item row="3" column="1">
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>5</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
        <item row="4" column="0">
         <widget class="QLabel" name="label_3">
          <property name="toolTip">
@@ -336,22 +349,57 @@
         </widget>
        </item>
        <item row="5" column="1">
-        <widget class="QCheckBox" name="scrollZoomsCheckbox">
+        <widget class="QCheckBox" name="cursorZoomCheckbox">
          <property name="toolTip">
-          <string>Choose whether scrolling zooms or moves the image (alternative can be accessed at any time by holding ctrl/cmd)</string>
+          <string>Choose whether or not zooming in and out above 100% zoom will zoom towards the cursor</string>
          </property>
          <property name="text">
-          <string>Scrolling &amp;zooms</string>
+          <string>Zoom &amp;towards cursor</string>
          </property>
          <property name="checked">
           <bool>true</bool>
          </property>
         </widget>
        </item>
+       <item row="6" column="1">
+        <widget class="QComboBox" name="scrollZoomsComboBox">
+         <property name="currentText">
+          <string>Auto</string>
+         </property>
+         <property name="currentIndex">
+          <number>1</number>
+         </property>
+         <item>
+          <property name="text">
+           <string>Zoom</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Auto</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Scroll</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="6" column="0">
+        <widget class="QLabel" name="label_9">
+         <property name="toolTip">
+          <string>When enabled, the scrolling action zooms the image</string>
+         </property>
+         <property name="text">
+          <string>Scrolling behavior:</string>
+         </property>
+        </widget>
+       </item>
        <item row="7" column="1">
         <spacer name="horizontalSpacer">
          <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+          <enum>Qt::Orientation::Horizontal</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -360,19 +408,6 @@
           </size>
          </property>
         </spacer>
-       </item>
-       <item row="9" column="1">
-        <widget class="QCheckBox" name="pastActualSizeCheckbox">
-         <property name="toolTip">
-          <string>Stop the image from going past its actual size when resizing the window - you can still zoom past it though</string>
-         </property>
-         <property name="text">
-          <string>Image resizes &amp;past actual size</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
        </item>
        <item row="8" column="1">
         <widget class="QComboBox" name="cropModeComboBox">
@@ -412,26 +447,13 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="1">
-        <spacer name="horizontalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>5</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="6" column="1">
-        <widget class="QCheckBox" name="cursorZoomCheckbox">
+       <item row="9" column="1">
+        <widget class="QCheckBox" name="pastActualSizeCheckbox">
          <property name="toolTip">
-          <string>Choose whether or not zooming in and out above 100% zoom will zoom towards the cursor</string>
+          <string>Stop the image from going past its actual size when resizing the window - you can still zoom past it though</string>
          </property>
          <property name="text">
-          <string>Zoom &amp;towards cursor</string>
+          <string>Image resizes &amp;past actual size</string>
          </property>
          <property name="checked">
           <bool>true</bool>
@@ -441,7 +463,7 @@
        <item row="10" column="1">
         <spacer name="horizontalSpacer_9">
          <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+          <enum>Qt::Orientation::Horizontal</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -450,13 +472,6 @@
           </size>
          </property>
         </spacer>
-       </item>
-       <item row="11" column="0">
-        <widget class="QLabel" name="colorSpaceConversionLabel">
-         <property name="text">
-          <string>Color space conversion:</string>
-         </property>
-        </widget>
        </item>
        <item row="11" column="1">
         <widget class="QComboBox" name="colorSpaceConversionComboBox">
@@ -486,6 +501,13 @@
            <string>Display P3</string>
           </property>
          </item>
+        </widget>
+       </item>
+       <item row="11" column="0">
+        <widget class="QLabel" name="colorSpaceConversionLabel">
+         <property name="text">
+          <string>Color space conversion:</string>
+         </property>
         </widget>
        </item>
       </layout>
@@ -566,7 +588,7 @@
        <item row="4" column="1">
         <spacer name="horizontalSpacer_6">
          <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+          <enum>Qt::Orientation::Horizontal</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -627,7 +649,7 @@
        <item row="7" column="1">
         <spacer name="horizontalSpacer_5">
          <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+          <enum>Qt::Orientation::Horizontal</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -687,7 +709,7 @@
        <item row="10" column="1">
         <spacer name="horizontalSpacer_7">
          <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+          <enum>Qt::Orientation::Horizontal</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -770,7 +792,7 @@
        <item row="13" column="1">
         <spacer name="horizontalSpacer_8">
          <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+          <enum>Qt::Orientation::Horizontal</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -790,16 +812,16 @@
        <item>
         <widget class="QTableWidget" name="shortcutsTable">
          <property name="editTriggers">
-          <set>QAbstractItemView::NoEditTriggers</set>
+          <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
          </property>
          <property name="alternatingRowColors">
           <bool>true</bool>
          </property>
          <property name="selectionMode">
-          <enum>QAbstractItemView::SingleSelection</enum>
+          <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
          </property>
          <property name="selectionBehavior">
-          <enum>QAbstractItemView::SelectRows</enum>
+          <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
          </property>
          <property name="showGrid">
           <bool>false</bool>
@@ -844,13 +866,13 @@
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::FocusPolicy::NoFocus</enum>
      </property>
      <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+      <enum>Qt::Orientation::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::Ok|QDialogButtonBox::RestoreDefaults</set>
+      <set>QDialogButtonBox::StandardButton::Apply|QDialogButtonBox::StandardButton::Cancel|QDialogButtonBox::StandardButton::Ok|QDialogButtonBox::StandardButton::RestoreDefaults</set>
      </property>
     </widget>
    </item>

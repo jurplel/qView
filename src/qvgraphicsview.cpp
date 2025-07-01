@@ -34,7 +34,8 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     isScalingEnabled = true;
     isScalingTwoEnabled = true;
     isPastActualSizeEnabled = true;
-    isScrollZoomsEnabled = true;
+    scrollZooms = 1;
+
     isLoopFoldersEnabled = true;
     isCursorZoomEnabled = true;
     cropMode = 0;
@@ -162,21 +163,25 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
 #endif
 
     const bool modifierPressed = event->modifiers().testFlag(Qt::ControlModifier);
-    bool dontZoom = !isScrollZoomsEnabled;
+    bool dontZoom = scrollZooms == 2;
     if (modifierPressed)
     {
         dontZoom = !dontZoom;
     }
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    bool isTouchDevice = event->device()->type() == QInputDevice::DeviceType::TouchPad || event->device()->type() == QInputDevice::DeviceType::TouchScreen;
-    // Real touchpads are likely to exhibit these characteristics in empirical testing
-    isTouchDevice = isTouchDevice && event->phase() != Qt::NoScrollPhase;
-    isTouchDevice = isTouchDevice && event->device()->capabilities().testFlag(QInputDevice::Capability::NormalizedPosition);
-    if (isTouchDevice)
+    // Auto-detect touchpad
+    if (scrollZooms == 1)
     {
-        // If this is a touch device, override setting
-        dontZoom = !modifierPressed;
+        bool isTouchDevice = event->device()->type() == QInputDevice::DeviceType::TouchPad || event->device()->type() == QInputDevice::DeviceType::TouchScreen;
+        // Real touchpads are likely to exhibit these characteristics in empirical testing
+        isTouchDevice = isTouchDevice && event->phase() != Qt::NoScrollPhase;
+        isTouchDevice = isTouchDevice && event->device()->capabilities().testFlag(QInputDevice::Capability::NormalizedPosition);
+        if (isTouchDevice)
+        {
+            // If this is a touch device, override setting
+            dontZoom = !modifierPressed;
+        }
     }
 #endif
 
@@ -731,8 +736,8 @@ void QVGraphicsView::settingsUpdated()
     //resize past actual size
     isPastActualSizeEnabled = settingsManager.getBoolean("pastactualsizeenabled");
 
-    //scrolling zoom
-    isScrollZoomsEnabled = settingsManager.getBoolean("scrollzoomsenabled");
+    //scroll zoom
+    scrollZooms = settingsManager.getInteger("scrollzoom");
 
     //cursor zoom
     isCursorZoomEnabled = settingsManager.getBoolean("cursorzoom");
