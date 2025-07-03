@@ -21,7 +21,6 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     setFrameShape(QFrame::NoFrame);
     setTransformationAnchor(QGraphicsView::NoAnchor);
     viewport()->setAutoFillBackground(false);
-    viewport()->setAttribute(Qt::WA_AcceptTouchEvents);
 
     // part of a pathetic attempt at gesture support
     grabGesture(Qt::PinchGesture);
@@ -64,7 +63,6 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 
 
     loadedPixmapItem = new QGraphicsPixmapItem();
-    loadedPixmapItem->setAcceptTouchEvents(true);
     scene->addItem(loadedPixmapItem);
 
     // Connect to settings signal

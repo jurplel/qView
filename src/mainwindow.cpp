@@ -252,6 +252,7 @@ void MainWindow::changeEvent(QEvent *event)
         if (qvApp->getSettingsManager().getBoolean("fullscreendetails"))
             ui->fullscreenLabel->setVisible(windowState() == Qt::WindowFullScreen);
     }
+    QMainWindow::changeEvent(event);
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
@@ -312,6 +313,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
         painter.setPen(QVApplication::getPerceivedBrightness(backgroundColor) > 0.5 ? Qt::black : Qt::white);
         painter.drawText(unobscuredViewportRect, errorMessage, QTextOption(Qt::AlignCenter));
     }
+    QMainWindow::paintEvent(event);
 }
 
 void MainWindow::openFile(const QString &fileName)
