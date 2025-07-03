@@ -745,18 +745,50 @@ void MainWindow::setAsWallpaper()
         qDebug() << "Wallpaper set successfully.";
     }
 
-    // Set lockscreen wallpaper
-    QString lockscreenCmd = QString(
-        "kwriteconfig5 --file kscreenlockerrc --group Greeter --group Wallpaper --group org.kde.image --group General --key Image \"file://%1\""
-    ).arg(imagePath);
+    // Print the image path to the console
+    qDebug() << "Setting lockscreen wallpaper...";
+    qDebug() << "Image path:" << imagePath;
 
-    int lockscreenResult = QProcess::execute(lockscreenCmd);
+    QString command = "kwriteconfig6";
+    QStringList arguments;
+    arguments << "--file" << "kscreenlockerrc"
+              << "--group" << "Greeter"
+              << "--group" << "Wallpaper"
+              << "--group" << "org.kde.image"
+              << "--group" << "General"
+              << "--key" << "Image" << imagePath;
 
-    if (lockscreenResult != 0) {
-        qDebug() << "Error setting lockscreen wallpaper. Command:" << lockscreenCmd;
+    QProcess process;
+    process.start(command, arguments);
+    process.waitForFinished();
+
+    // Optional: Check for errors
+    if (process.exitCode() != 0) {
+        qDebug() << "Error executing kwriteconfig6 for key=Image:" << process.errorString();
     } else {
-        qDebug() << "Lockscreen wallpaper set successfully.";
+        qDebug() << "[Key=Image] Lockscreen wallpaper set successfully.";
     }
+
+    QString commandPi = "kwriteconfig6";
+    QStringList argumentsPi;
+    argumentsPi << "--file" << "kscreenlockerrc"
+              << "--group" << "Greeter"
+              << "--group" << "Wallpaper"
+              << "--group" << "org.kde.image"
+              << "--group" << "General"
+              << "--key" << "PreviewImage" << imagePath;
+
+    QProcess processPi;
+    processPi.start(commandPi, argumentsPi);
+    processPi.waitForFinished();
+
+    // Optional: Check for errors
+    if (processPi.exitCode() != 0) {
+        qDebug() << "Error executing kwriteconfig6 for key=PreviewImage:" << processPi.errorString();
+    } else {
+        qDebug() << "[Key=PreviewImage] Lockscreen wallpaper set successfully.";
+    }
+
 
     // Refresh the desktop to apply changes immediately
     QDBusInterface kwinInterface("org.kde.KWin", "/KWin", "org.kde.KWin", bus);
