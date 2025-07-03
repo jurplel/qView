@@ -150,6 +150,13 @@ bool QVGraphicsView::event(QEvent *event)
             return true;
         }
     }
+    else if (event->type() == QEvent::NativeGesture) {
+        auto *nativeEvent = static_cast<QNativeGestureEvent*>(event);
+        if (nativeEvent->gestureType() == Qt::ZoomNativeGesture) {
+            zoom(nativeEvent->value()+1, nativeEvent->position().toPoint());
+            return true;
+        }
+    }
     return QGraphicsView::event(event);
 }
 
