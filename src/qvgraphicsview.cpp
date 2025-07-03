@@ -153,7 +153,12 @@ bool QVGraphicsView::event(QEvent *event)
     else if (event->type() == QEvent::NativeGesture) {
         auto *nativeEvent = static_cast<QNativeGestureEvent*>(event);
         if (nativeEvent->gestureType() == Qt::ZoomNativeGesture) {
-            zoom(nativeEvent->value()+1, nativeEvent->position().toPoint());
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+    const QPoint eventPos = nativeEvent->position().toPoint();
+#else
+    const QPoint eventPos = nativeEvent->pos();
+#endif
+            zoom(nativeEvent->value()+1, eventPos);
             return true;
         }
     }
