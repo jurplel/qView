@@ -24,6 +24,7 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     connect(ui->shortcutsTable, &QTableWidget::cellDoubleClicked, this, &QVOptionsDialog::shortcutCellDoubleClicked);
     connect(ui->bgColorCheckbox, &QCheckBox::stateChanged, this, &QVOptionsDialog::bgColorCheckboxStateChanged);
     connect(ui->scalingCheckbox, &QCheckBox::stateChanged, this, &QVOptionsDialog::scalingCheckboxStateChanged);
+    connect(ui->scrollZoomsComboBox, &QComboBox::currentIndexChanged, this, &QVOptionsDialog::scrollZoomsComboBoxCurrentIndexChanged);
 
     populateLanguages();
 
@@ -38,6 +39,12 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     restoreGeometry(settings.value("optionsgeometry").toByteArray());
 #endif
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    // Hide scroll zoom auto-detect option if unsupported
+    // TODO: This causes an issue with saving/loading settings
+    // between different Qt versions.
+    ui->scrollZoomsComboBox->removeItem(1);
+#endif
 
     if (QOperatingSystemVersion::current() < QOperatingSystemVersion(QOperatingSystemVersion::MacOS, 13)) {
         setWindowTitle("Preferences");
@@ -166,8 +173,10 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
     syncCheckbox(ui->scalingTwoCheckbox, "scalingtwoenabled", defaults, makeConnections);
     // scalefactor
     syncSpinBox(ui->scaleFactorSpinBox, "scalefactor", defaults, makeConnections);
-    // scrollzoomsenabled
-    syncCheckbox(ui->scrollZoomsCheckbox, "scrollzoomsenabled", defaults, makeConnections);
+    // scrollzoom
+    syncComboBox(ui->scrollZoomsComboBox, "scrollzoom", defaults, makeConnections);
+    // fractionalzoom
+    syncCheckbox(ui->fractionalZoomCheckbox, "fractionalzoom", defaults, makeConnections);
     // cursorzoom
     syncCheckbox(ui->cursorZoomCheckbox, "cursorzoom", defaults, makeConnections);
     // cropmode
@@ -483,4 +492,10 @@ void QVOptionsDialog::languageComboBoxCurrentIndexChanged(int index)
         QMessageBox::information(this, tr("Restart Required"), tr("You must restart qView to change the language."));
         languageRestartMessageShown = true;
     }
+}
+
+void QVOptionsDialog::scrollZoomsComboBoxCurrentIndexChanged(int index)
+{
+    const bool zoomScrollEnabled = index != 2;
+    ui->fractionalZoomCheckbox->setEnabled(zoomScrollEnabled);
 }

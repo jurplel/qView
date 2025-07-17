@@ -304,6 +304,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
         painter.setPen(QVApplication::getPerceivedBrightness(backgroundColor) > 0.5 ? Qt::black : Qt::white);
         painter.drawText(unobscuredViewportRect, errorMessage, QTextOption(Qt::AlignCenter));
     }
+    QMainWindow::paintEvent(event);
 }
 
 void MainWindow::fullscreenChanged()

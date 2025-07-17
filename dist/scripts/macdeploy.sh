@@ -30,18 +30,24 @@ cd bin
 echo "Running macdeployqt"
 macdeployqt qView.app
 
-if [[ -f "qView.app/Contents/PlugIns/imageformats/kimg_heif.so" && -f "qView.app/Contents/PlugIns/imageformats/libqmacheif.dylib" ]]; then
+IMF_DIR=qView.app/Contents/PlugIns/imageformats
+if [[ (-f "$IMF_DIR/kimg_heif.dylib" || -f "$IMF_DIR/kimg_heif.so") && -f "$IMF_DIR/libqmacheif.dylib" ]]; then
     # Prefer kimageformats HEIF plugin for proper color space handling
     echo "Removing duplicate HEIF plugin"
-    rm "qView.app/Contents/PlugIns/imageformats/libqmacheif.dylib"
+    rm "$IMF_DIR/libqmacheif.dylib"
+fi
+if [[ (-f "$IMF_DIR/kimg_tga.dylib" || -f "$IMF_DIR/kimg_tga.so") && -f "$IMF_DIR/libqtga.dylib" ]]; then
+    # Prefer kimageformats TGA plugin which supports more formats
+    echo "Removing duplicate TGA plugin"
+    rm "$IMF_DIR/libqtga.dylib"
 fi
 
 echo "Running codesign"
 if [[ "$APPLE_NOTARIZE_REQUESTED" == "true" ]]; then
     APP_IDENTIFIER=$(/usr/libexec/PlistBuddy -c "Print CFBundleIdentifier" "qView.app/Contents/Info.plist")
-    codesign --sign "$CODESIGN_CERT_NAME" --deep --options runtime --timestamp "qView.app"
+    codesign --sign "$CODESIGN_CERT_NAME" --deep --force --options runtime --timestamp "qView.app"
 else
-    codesign --sign "$CODESIGN_CERT_NAME" --deep "qView.app"
+    codesign --sign "$CODESIGN_CERT_NAME" --deep --force "qView.app"
 fi
 
 echo "Creating disk image"

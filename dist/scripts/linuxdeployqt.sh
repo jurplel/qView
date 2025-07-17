@@ -1,5 +1,7 @@
 #!/usr/bin/bash
 
+sudo apt install libfuse2
+
 wget 'https://sourceforge.net/projects/qt5ct/files/latest/download'
 tar xf download
 cd qt5ct*

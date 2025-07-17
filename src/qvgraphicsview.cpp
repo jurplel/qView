@@ -34,7 +34,8 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     isScalingEnabled = true;
     isScalingTwoEnabled = true;
     isPastActualSizeEnabled = true;
-    isScrollZoomsEnabled = true;
+    scrollZooms = 1;
+
     isLoopFoldersEnabled = true;
     isCursorZoomEnabled = true;
     cropMode = 0;
@@ -43,14 +44,13 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     // Initialize other variables
     currentScale = 1.0;
     scaledSize = QSize();
-    maxScalingTwoSize = 3;
     isOriginalSize = false;
     lastZoomEventPos = QPoint(-1, -1);
     lastZoomRoundingError = QPointF();
     lastScrollRoundingError = QPointF();
     mousePressButton = Qt::MouseButton::NoButton;
     mousePressModifiers = Qt::KeyboardModifier::NoModifier;
-
+  
     zoomBasisScaleFactor = 1.0;
 
     connect(&imageCore, &QVImageCore::animatedFrameChanged, this, &QVGraphicsView::animatedFrameChanged);
@@ -148,7 +148,7 @@ void QVGraphicsView::mouseReleaseEvent(QMouseEvent *event)
         mousePressButton = Qt::NoButton;
         mousePressModifiers = Qt::NoModifier;
     }
-
+  
     QGraphicsView::mouseReleaseEvent(event);
     viewport()->setCursor(Qt::ArrowCursor);
 }
@@ -190,23 +190,51 @@ bool QVGraphicsView::event(QEvent *event)
             return true;
         }
     }
+    else if (event->type() == QEvent::NativeGesture) {
+        auto *nativeEvent = static_cast<QNativeGestureEvent*>(event);
+        if (nativeEvent->gestureType() == Qt::ZoomNativeGesture) {
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+    const QPoint eventPos = nativeEvent->position().toPoint();
+#else
+    const QPoint eventPos = nativeEvent->pos();
+#endif
+            zoom(nativeEvent->value()+1, eventPos);
+            return true;
+        }
+    }
     return QGraphicsView::event(event);
 }
 
 void QVGraphicsView::wheelEvent(QWheelEvent *event)
 {
-    #if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
     const QPoint eventPos = event->position().toPoint();
-    #else
+#else
     const QPoint eventPos = event->pos();
-    #endif
+#endif
 
-    //Basically, if you are holding ctrl then it scrolls instead of zooms (the shift bit is for horizontal scrolling)
-    bool willZoom = isScrollZoomsEnabled;
-    if (event->modifiers() == Qt::ControlModifier || event->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier))
-        willZoom = !willZoom;
+    const bool modifierPressed = event->modifiers().testFlag(Qt::ControlModifier);
+    bool dontZoom = scrollZooms == 2;
+    if (modifierPressed)
+    {
+        dontZoom = !dontZoom;
+    }
 
-    if (!willZoom)
+bool touchDeviceDetected = false;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    // Auto-detect touchpad
+    touchDeviceDetected = event->device()->type() == QInputDevice::DeviceType::TouchPad || event->device()->type() == QInputDevice::DeviceType::TouchScreen;
+    // Real touchpads are likely to exhibit these characteristics in empirical testing
+    touchDeviceDetected = touchDeviceDetected && event->phase() != Qt::NoScrollPhase;
+    if (touchDeviceDetected && scrollZooms == 1)
+    {
+        // If this is a touch device, override setting
+        dontZoom = !modifierPressed;
+    }
+#endif
+
+    if (dontZoom)
     {
         const qreal scrollDivisor = 2.0; // To make scrolling less sensitive
         qreal scrollX = event->angleDelta().x() * (isRightToLeft() ? 1 : -1) / scrollDivisor;
@@ -232,9 +260,13 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
     if (yDelta == 0)
         return;
 
-    const qreal fractionalWheelClicks = qFabs(yDelta) / yScale;
     const qreal zoomAmountPerWheelClick = scaleFactor - 1.0;
-    qreal zoomFactor = 1.0 + (fractionalWheelClicks * zoomAmountPerWheelClick);
+    qreal zoomFactor = zoomAmountPerWheelClick;
+    if (isFractionalZoomEnabled || touchDeviceDetected) {
+        const qreal fractionalWheelClicks = qFabs(yDelta) / yScale;
+        zoomFactor *= fractionalWheelClicks;
+    }
+    zoomFactor += 1.0;
 
     if (yDelta < 0)
         zoomFactor = qPow(zoomFactor, -1);
@@ -320,6 +352,8 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
         return;
     }
 
+    updateFilteringMode();
+
     if (pos != lastZoomEventPos)
     {
         lastZoomEventPos = pos;
@@ -363,7 +397,7 @@ void QVGraphicsView::scaleExpensively()
         flipped = true;
 
     // If we are above maximum scaling size
-    if ((currentScale >= maxScalingTwoSize) ||
+    if ((currentScale >= MAX_EXPENSIVE_SCALING_SIZE) ||
         (!isScalingTwoEnabled && currentScale > 1.00001))
     {
         // Return to original size
@@ -429,6 +463,11 @@ void QVGraphicsView::makeUnscaled()
     // Reset transformation
     zoomBasis = transform();
     zoomBasisScaleFactor = 1.0;
+}
+
+void QVGraphicsView::updateFilteringMode() {
+    const bool exceededSmoothScaleLimit = currentScale >= MAX_FILTERING_SIZE;
+    loadedPixmapItem->setTransformationMode(!exceededSmoothScaleLimit && isFilteringEnabled ? Qt::SmoothTransformation : Qt::FastTransformation);
 }
 
 void QVGraphicsView::animatedFrameChanged(QRect rect)
@@ -675,6 +714,7 @@ void QVGraphicsView::fitInViewMarginless(const QRectF &rect)
 
     isOriginalSize = false;
     currentScale = 1.0;
+    updateFilteringMode();
     zoomBasisScaleFactor = 1.0;
 }
 
@@ -726,10 +766,8 @@ void QVGraphicsView::settingsUpdated()
     auto &settingsManager = qvApp->getSettingsManager();
 
     //filtering
-    if (settingsManager.getBoolean("filteringenabled"))
-        loadedPixmapItem->setTransformationMode(Qt::SmoothTransformation);
-    else
-        loadedPixmapItem->setTransformationMode(Qt::FastTransformation);
+    isFilteringEnabled = settingsManager.getBoolean("filteringenabled");
+    updateFilteringMode();
 
     //scaling
     isScalingEnabled = settingsManager.getBoolean("scalingenabled");
@@ -751,8 +789,11 @@ void QVGraphicsView::settingsUpdated()
     //resize past actual size
     isPastActualSizeEnabled = settingsManager.getBoolean("pastactualsizeenabled");
 
-    //scrolling zoom
-    isScrollZoomsEnabled = settingsManager.getBoolean("scrollzoomsenabled");
+    //scroll zoom
+    scrollZooms = settingsManager.getInteger("scrollzoom");
+
+    //fractional zoom
+    isFractionalZoomEnabled = settingsManager.getBoolean("fractionalzoom");
 
     //cursor zoom
     isCursorZoomEnabled = settingsManager.getBoolean("cursorzoom");

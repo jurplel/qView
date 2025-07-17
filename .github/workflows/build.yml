@@ -19,27 +19,27 @@ jobs:
     strategy:
       matrix:
         include:
-          - runner: 'ubuntu-20.04'
+          - runner: 'ubuntu-22.04'
             qtVersion: '5.15.2'
-          - runner: 'ubuntu-20.04'
+          - runner: 'ubuntu-22.04'
             qtVersion: '5.9'
             osSuffix: '_qt5.9'
             skipPlugins: 'true'
           - runner: 'macos-14'
-            qtVersion: '6.7.3'
+            qtVersion: '6.8.3'
             qtModules: 'qtimageformats'
             buildArch: 'Universal'
           - runner: 'macos-13'
             qtVersion: '5.15.2'
             osSuffix: '_legacy'
           - runner: 'windows-2022'
-            qtVersion: '6.7.3'
-            qtArch: 'win64_msvc2019_64'
+            qtVersion: '6.8.3'
+            qtArch: 'win64_msvc2022_64'
             osSuffix: '_64'
             qtModules: 'qtimageformats'
           - runner: 'windows-2022'
-            qtVersion: '6.7.3'
-            qtArch: 'win64_msvc2019_arm64'
+            qtVersion: '6.8.3'
+            qtArch: 'win64_msvc2022_arm64_cross_compiled'
             osSuffix: '_arm64'
             qtModules: 'qtimageformats'
             buildArch: 'Arm64'
@@ -101,3 +101,38 @@ jobs:
         with:
           name: qView${{ env.nightlyString }}-${{ runner.os }}${{ matrix.osSuffix }}-${{ env.buildNumString }}
           path: bin
+  nightly-release:
+    needs: build
+    if: github.ref_name == 'master' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: List downloaded files
+        run: ls -l artifacts/
+
+      - name: Package artifacts for release
+        run: |
+          mkdir release_files
+          cd artifacts
+          for dir in */; do
+            zip -r "../release_files/$(basename "$dir").zip" "$dir"
+          done
+          cd ..
+          ls -l release_files/
+
+      - name: Update "Nightly" Release
+        uses: andelf/nightly-release@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: nightly
+          name: "qView Nightly"
+          prerelease: true
+          body: |
+            Latest automatic build from the master branch. Might be broken.
+
+          files: release_files/*.zip
