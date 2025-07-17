@@ -24,6 +24,7 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     connect(ui->shortcutsTable, &QTableWidget::cellDoubleClicked, this, &QVOptionsDialog::shortcutCellDoubleClicked);
     connect(ui->bgColorCheckbox, &QCheckBox::stateChanged, this, &QVOptionsDialog::bgColorCheckboxStateChanged);
     connect(ui->scalingCheckbox, &QCheckBox::stateChanged, this, &QVOptionsDialog::scalingCheckboxStateChanged);
+    connect(ui->scrollZoomsComboBox, &QComboBox::currentIndexChanged, this, &QVOptionsDialog::scrollZoomsComboBoxCurrentIndexChanged);
 
     populateLanguages();
 
@@ -174,6 +175,8 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
     syncSpinBox(ui->scaleFactorSpinBox, "scalefactor", defaults, makeConnections);
     // scrollzoom
     syncComboBox(ui->scrollZoomsComboBox, "scrollzoom", defaults, makeConnections);
+    // fractionalzoom
+    syncCheckbox(ui->fractionalZoomCheckbox, "fractionalzoom", defaults, makeConnections);
     // cursorzoom
     syncCheckbox(ui->cursorZoomCheckbox, "cursorzoom", defaults, makeConnections);
     // cropmode
@@ -489,4 +492,10 @@ void QVOptionsDialog::languageComboBoxCurrentIndexChanged(int index)
         QMessageBox::information(this, tr("Restart Required"), tr("You must restart qView to change the language."));
         languageRestartMessageShown = true;
     }
+}
+
+void QVOptionsDialog::scrollZoomsComboBoxCurrentIndexChanged(int index)
+{
+    const bool zoomScrollEnabled = index != 2;
+    ui->fractionalZoomCheckbox->setEnabled(zoomScrollEnabled);
 }

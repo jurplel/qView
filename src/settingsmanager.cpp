@@ -163,6 +163,7 @@ void SettingsManager::initializeSettingsLibrary()
     settingsLibrary.insert("scalingtwoenabled", {true, {}});
     settingsLibrary.insert("scalefactor", {25, {}});
     settingsLibrary.insert("scrollzoom", {1, {}});
+    settingsLibrary.insert("fractionalzoom", {false, {}});
     settingsLibrary.insert("cursorzoom", {true, {}});
     settingsLibrary.insert("cropmode", {0, {}});
     settingsLibrary.insert("pastactualsizeenabled", {true, {}});
