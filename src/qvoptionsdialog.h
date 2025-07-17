@@ -55,6 +55,8 @@ private slots:
 
     void languageComboBoxCurrentIndexChanged(int index);
 
+    void scrollZoomsComboBoxCurrentIndexChanged(int index);
+
 private:
     Ui::QVOptionsDialog *ui;
 

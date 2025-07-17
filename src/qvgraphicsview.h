@@ -123,7 +123,9 @@ private:
     bool isScalingEnabled;
     bool isScalingTwoEnabled;
     bool isPastActualSizeEnabled;
-    bool isScrollZoomsEnabled;
+    int scrollZooms;
+    bool isFractionalZoomEnabled;
+
     bool isLoopFoldersEnabled;
     bool isCursorZoomEnabled;
     int cropMode;

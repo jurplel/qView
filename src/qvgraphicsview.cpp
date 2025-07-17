@@ -34,7 +34,8 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     isScalingEnabled = true;
     isScalingTwoEnabled = true;
     isPastActualSizeEnabled = true;
-    isScrollZoomsEnabled = true;
+    scrollZooms = 1;
+
     isLoopFoldersEnabled = true;
     isCursorZoomEnabled = true;
     cropMode = 0;
@@ -149,6 +150,18 @@ bool QVGraphicsView::event(QEvent *event)
             return true;
         }
     }
+    else if (event->type() == QEvent::NativeGesture) {
+        auto *nativeEvent = static_cast<QNativeGestureEvent*>(event);
+        if (nativeEvent->gestureType() == Qt::ZoomNativeGesture) {
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+    const QPoint eventPos = nativeEvent->position().toPoint();
+#else
+    const QPoint eventPos = nativeEvent->pos();
+#endif
+            zoom(nativeEvent->value()+1, eventPos);
+            return true;
+        }
+    }
     return QGraphicsView::event(event);
 }
 
@@ -162,15 +175,19 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
 #endif
 
     const bool modifierPressed = event->modifiers().testFlag(Qt::ControlModifier);
-    bool dontZoom = !isScrollZoomsEnabled;
+    bool dontZoom = scrollZooms == 2;
     if (modifierPressed)
     {
         dontZoom = !dontZoom;
     }
 
+bool touchDeviceDetected = false;
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    const bool isTouchDevice = event->device()->type() == QInputDevice::DeviceType::TouchPad || event->device()->type() == QInputDevice::DeviceType::TouchScreen;    \
-    if (isTouchDevice)
+    // Auto-detect touchpad
+    touchDeviceDetected = event->device()->type() == QInputDevice::DeviceType::TouchPad || event->device()->type() == QInputDevice::DeviceType::TouchScreen;
+    // Real touchpads are likely to exhibit these characteristics in empirical testing
+    touchDeviceDetected = touchDeviceDetected && event->phase() != Qt::NoScrollPhase;
+    if (touchDeviceDetected && scrollZooms == 1)
     {
         // If this is a touch device, override setting
         dontZoom = !modifierPressed;
@@ -203,9 +220,13 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
     if (yDelta == 0)
         return;
 
-    const qreal fractionalWheelClicks = qFabs(yDelta) / yScale;
     const qreal zoomAmountPerWheelClick = scaleFactor - 1.0;
-    qreal zoomFactor = 1.0 + (fractionalWheelClicks * zoomAmountPerWheelClick);
+    qreal zoomFactor = zoomAmountPerWheelClick;
+    if (isFractionalZoomEnabled || touchDeviceDetected) {
+        const qreal fractionalWheelClicks = qFabs(yDelta) / yScale;
+        zoomFactor *= fractionalWheelClicks;
+    }
+    zoomFactor += 1.0;
 
     if (yDelta < 0)
         zoomFactor = qPow(zoomFactor, -1);
@@ -728,8 +749,11 @@ void QVGraphicsView::settingsUpdated()
     //resize past actual size
     isPastActualSizeEnabled = settingsManager.getBoolean("pastactualsizeenabled");
 
-    //scrolling zoom
-    isScrollZoomsEnabled = settingsManager.getBoolean("scrollzoomsenabled");
+    //scroll zoom
+    scrollZooms = settingsManager.getInteger("scrollzoom");
+
+    //fractional zoom
+    isFractionalZoomEnabled = settingsManager.getBoolean("fractionalzoom");
 
     //cursor zoom
     isCursorZoomEnabled = settingsManager.getBoolean("cursorzoom");
