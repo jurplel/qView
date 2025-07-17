@@ -24,7 +24,6 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     connect(ui->shortcutsTable, &QTableWidget::cellDoubleClicked, this, &QVOptionsDialog::shortcutCellDoubleClicked);
     connect(ui->bgColorCheckbox, &QCheckBox::stateChanged, this, &QVOptionsDialog::bgColorCheckboxStateChanged);
     connect(ui->scalingCheckbox, &QCheckBox::stateChanged, this, &QVOptionsDialog::scalingCheckboxStateChanged);
-    connect(ui->scrollZoomsComboBox, &QComboBox::currentIndexChanged, this, &QVOptionsDialog::scrollZoomsComboBoxCurrentIndexChanged);
 
     populateLanguages();
 
@@ -77,6 +76,7 @@ QVOptionsDialog::QVOptionsDialog(QWidget *parent) :
     syncSettings(false, true);
     connect(ui->windowResizeComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &QVOptionsDialog::windowResizeComboBoxCurrentIndexChanged);
     connect(ui->langComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &QVOptionsDialog::languageComboBoxCurrentIndexChanged);
+    connect(ui->scrollZoomsComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &QVOptionsDialog::scrollZoomsComboBoxCurrentIndexChanged);
     syncShortcuts();
     updateButtonBox();
 }
