@@ -766,11 +766,11 @@ void QVGraphicsView::settingsUpdated()
     auto &settingsManager = qvApp->getSettingsManager();
 
     //filtering
-    isFilteringEnabled = settingsManager.getBoolean("filteringenabled");
+    isFilteringEnabled = settingsManager.getBool("filteringenabled");
     updateFilteringMode();
 
     //scaling
-    isScalingEnabled = settingsManager.getBoolean("scalingenabled");
+    isScalingEnabled = settingsManager.getBool("scalingenabled");
     if (!isScalingEnabled)
         makeUnscaled();
 
@@ -778,28 +778,28 @@ void QVGraphicsView::settingsUpdated()
     if (!isScalingEnabled)
         isScalingTwoEnabled = false;
     else
-        isScalingTwoEnabled = settingsManager.getBoolean("scalingtwoenabled");
+        isScalingTwoEnabled = settingsManager.getBool("scalingtwoenabled");
 
     //cropmode
-    cropMode = settingsManager.getInteger("cropmode");
+    cropMode = settingsManager.getInt("cropmode");
 
     //scalefactor
-    scaleFactor = settingsManager.getInteger("scalefactor")*0.01+1;
+    scaleFactor = settingsManager.getInt("scalefactor")*0.01+1;
 
     //resize past actual size
-    isPastActualSizeEnabled = settingsManager.getBoolean("pastactualsizeenabled");
+    isPastActualSizeEnabled = settingsManager.getBool("pastactualsizeenabled");
 
     //scroll zoom
-    scrollZooms = settingsManager.getInteger("scrollzoom");
+    scrollZooms = settingsManager.getInt("scrollzoom");
 
     //fractional zoom
-    isFractionalZoomEnabled = settingsManager.getBoolean("fractionalzoom");
+    isFractionalZoomEnabled = settingsManager.getBool("fractionalzoom");
 
     //cursor zoom
-    isCursorZoomEnabled = settingsManager.getBoolean("cursorzoom");
+    isCursorZoomEnabled = settingsManager.getBool("cursorzoom");
 
     //loop folders
-    isLoopFoldersEnabled = settingsManager.getBoolean("loopfoldersenabled");
+    isLoopFoldersEnabled = settingsManager.getBool("loopfoldersenabled");
 
     if (getCurrentFileDetails().isPixmapLoaded)
         resetScale();

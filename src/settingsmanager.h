@@ -31,9 +31,9 @@ public:
 
     const QVariant getSetting(const QString &key, bool defaults = false) const;
 
-    bool getBoolean(const QString &key, bool defaults = false) const;
+    bool getBool(const QString &key, bool defaults = false) const;
 
-    int getInteger(const QString &key, bool defaults = false) const;
+    int getInt(const QString &key, bool defaults = false) const;
 
     double getDouble(const QString &key, bool defaults = false) const;
 

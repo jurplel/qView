@@ -95,7 +95,7 @@ const QVariant SettingsManager::getSetting(const QString &key, bool defaults) co
     return QVariant();
 }
 
-bool SettingsManager::getBoolean(const QString &key, bool defaults) const
+bool SettingsManager::getBool(const QString &key, bool defaults) const
 {
     auto value = getSetting(key, defaults);
 
@@ -106,7 +106,7 @@ bool SettingsManager::getBoolean(const QString &key, bool defaults) const
     return false;
 }
 
-int SettingsManager::getInteger(const QString &key, bool defaults) const
+int SettingsManager::getInt(const QString &key, bool defaults) const
 {
     auto value = getSetting(key, defaults);
 
@@ -162,8 +162,7 @@ void SettingsManager::initializeSettingsLibrary()
     settingsLibrary.insert("scalingenabled", {true, {}});
     settingsLibrary.insert("scalingtwoenabled", {true, {}});
     settingsLibrary.insert("scalefactor", {25, {}});
-    settingsLibrary.insert("scrollzoom", {1, {}});
-    settingsLibrary.insert("fractionalzoom", {false, {}});
+    settingsLibrary.insert("scrollzoomsenabled", {true, {}});
     settingsLibrary.insert("cursorzoom", {true, {}});
     settingsLibrary.insert("cropmode", {0, {}});
     settingsLibrary.insert("pastactualsizeenabled", {true, {}});

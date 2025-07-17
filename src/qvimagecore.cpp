@@ -316,7 +316,7 @@ QList<QVImageCore::CompatibleFile> QVImageCore::getCompatibleFiles(const QString
     QDir::Filters filters = QDir::Files;
 
     auto &settingsManager = qvApp->getSettingsManager();
-    if (!settingsManager.getBoolean("skiphidden"))
+    if (!settingsManager.getBool("skiphidden"))
         filters |= QDir::Hidden;
 
     const QFileInfoList currentFolder = QDir(dirPath).entryInfoList(filters, QDir::Unsorted);
@@ -768,10 +768,10 @@ void QVImageCore::settingsUpdated()
     auto &settingsManager = qvApp->getSettingsManager();
 
     //loop folders
-    isLoopFoldersEnabled = settingsManager.getBoolean("loopfoldersenabled");
+    isLoopFoldersEnabled = settingsManager.getBool("loopfoldersenabled");
 
     //preloading mode
-    preloadingMode = settingsManager.getInteger("preloadingmode");
+    preloadingMode = settingsManager.getInt("preloadingmode");
     switch (preloadingMode) {
     case 1:
     {
@@ -786,13 +786,13 @@ void QVImageCore::settingsUpdated()
     }
 
     //sort mode
-    sortMode = settingsManager.getInteger("sortmode");
+    sortMode = settingsManager.getInt("sortmode");
 
     //sort ascending
-    sortDescending = settingsManager.getBoolean("sortdescending");
+    sortDescending = settingsManager.getBool("sortdescending");
 
     //allow mime content detection
-    allowMimeContentDetection = settingsManager.getBoolean("allowmimecontentdetection");
+    allowMimeContentDetection = settingsManager.getBool("allowmimecontentdetection");
 
     //update folder info to reflect new settings (e.g. sort order)
     updateFolderInfo();
@@ -800,9 +800,9 @@ void QVImageCore::settingsUpdated()
     bool changedImagePreprocessing = false;
 
     //colorspaceconversion
-    if (colorSpaceConversion != settingsManager.getInteger("colorspaceconversion"))
+    if (colorSpaceConversion != settingsManager.getInt("colorspaceconversion"))
     {
-        colorSpaceConversion = settingsManager.getInteger("colorspaceconversion");
+        colorSpaceConversion = settingsManager.getInt("colorspaceconversion");
         changedImagePreprocessing = true;
     }
 

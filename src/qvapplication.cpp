@@ -28,7 +28,7 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
 
     // Check for updates
     // TODO: move this to after first window show event
-    if (getSettingsManager().getBoolean("updatenotifications")) {
+    if (getSettingsManager().getBool("updatenotifications")) {
         checkUpdates(true);
     }
 
@@ -66,7 +66,7 @@ QVApplication::QVApplication(int &argc, char **argv) : QApplication(argc, argv)
     QVCocoaFunctions::setUserDefaults();
 #endif
 #ifdef Q_OS_MACOS
-    setQuitOnLastWindowClosed(getSettingsManager().getBoolean("quitonlastwindow"));
+    setQuitOnLastWindowClosed(getSettingsManager().getBool("quitonlastwindow"));
 #endif
 
     hideIncompatibleActions();
@@ -211,7 +211,7 @@ void QVApplication::checkedUpdates()
         aboutDialog->setLatestVersionNum(updateChecker.getLatestVersionNum());
     }
     else if (updateChecker.getLatestVersionNum() > VERSION &&
-             getSettingsManager().getBoolean("updatenotifications"))
+             getSettingsManager().getBool("updatenotifications"))
     {
         updateChecker.openDialog();
     }
