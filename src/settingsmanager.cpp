@@ -5,12 +5,63 @@
 #include <QLocale>
 #include <QCoreApplication>
 #include <QDir>
+#include <QMetaEnum>
 
 #include <QDebug>
 
+// Setting definition structure for initialization
+struct SettingDefinition {
+    SettingsManager::Setting setting;
+    QVariant defaultValue;
+    const char* key;
+};
+
+// Master list of all settings with their data and keys
+static const SettingDefinition settingDefinitions[] = {
+    // Window settings
+    {SettingsManager::Setting::BgColorEnabled, true, "bgcolorenabled"},
+    {SettingsManager::Setting::BgColor, "#212121", "bgcolor"},
+    {SettingsManager::Setting::TitleBarMode, 1, "titlebarmode"},
+    {SettingsManager::Setting::WindowResizeMode, 1, "windowresizemode"},
+    {SettingsManager::Setting::MinWindowResizedPercentage, 20, "minwindowresizedpercentage"},
+    {SettingsManager::Setting::MaxWindowResizedPercentage, 70, "maxwindowresizedpercentage"},
+    {SettingsManager::Setting::TitleBarAlwaysDark, true, "titlebaralwaysdark"},
+    {SettingsManager::Setting::QuitOnLastWindow, false, "quitonlastwindow"},
+    {SettingsManager::Setting::MenuBarEnabled, false, "menubarenabled"},
+    {SettingsManager::Setting::FullScreenDetails, false, "fullscreendetails"},
+    // Image settings
+    {SettingsManager::Setting::FilteringEnabled, true, "filteringenabled"},
+    {SettingsManager::Setting::ScalingEnabled, true, "scalingenabled"},
+    {SettingsManager::Setting::ScalingTwoEnabled, true, "scalingtwoenabled"},
+    {SettingsManager::Setting::ScaleFactor, 25, "scalefactor"},
+    {SettingsManager::Setting::ScrollZoom, 1, "scrollzoom"},
+    {SettingsManager::Setting::FractionalZoom, false, "fractionalzoom"},
+    {SettingsManager::Setting::CursorZoom, true, "cursorzoom"},
+    {SettingsManager::Setting::CropMode, 0, "cropmode"},
+    {SettingsManager::Setting::PastActualSizeEnabled, true, "pastactualsizeenabled"},
+    {SettingsManager::Setting::ColorSpaceConversion, 1, "colorspaceconversion"},
+    // Miscellaneous settings
+    {SettingsManager::Setting::Language, "system", "language"},
+    {SettingsManager::Setting::SortMode, 0, "sortmode"},
+    {SettingsManager::Setting::SortDescending, false, "sortdescending"},
+    {SettingsManager::Setting::PreloadingMode, 1, "preloadingmode"},
+    {SettingsManager::Setting::LoopFoldersEnabled, true, "loopfoldersenabled"},
+    {SettingsManager::Setting::SlideshowReversed, false, "slideshowreversed"},
+    {SettingsManager::Setting::SlideshowTimer, 5, "slideshowtimer"},
+    {SettingsManager::Setting::AfterDelete, 2, "afterdelete"},
+    {SettingsManager::Setting::AskDelete, true, "askdelete"},
+    {SettingsManager::Setting::AllowMimeContentDetection, false, "allowmimecontentdetection"},
+    {SettingsManager::Setting::SaveRecents, true, "saverecents"},
+    {SettingsManager::Setting::UpdateNotifications, false, "updatenotifications"},
+    {SettingsManager::Setting::SkipHidden, true, "skiphidden"}
+};
+
+// settingKeys is a file-static variable, it doesn't need to be a member
+static QVector<QString> settingKeys;
+
 SettingsManager::SettingsManager(QObject *parent) : QObject(parent)
 {
-    initializeSettingsLibrary();
+    initializeSettingDataCache();
     loadSettings();
     loadTranslation();
 }
@@ -67,30 +118,37 @@ void SettingsManager::loadSettings()
     settings.beginGroup("options");
     bool changed = false;
 
-    const auto keys = settingsLibrary.keys();
-    for (const auto &key : keys)
-    {
-         auto &setting = settingsLibrary[key];
-         if (setting.value != settings.value(key, setting.defaultValue))
-             changed = true;
+    // Get the meta enum for Setting
+    QMetaEnum metaEnum = QMetaEnum::fromType<Setting>();
+    Q_ASSERT(metaEnum.keyCount() == settingDataCache.size());
 
-         setting.value = settings.value(key, setting.defaultValue);
+    // Loop through all enum values and load from file
+    for (int i = 0; i < metaEnum.keyCount(); ++i) {
+        Setting setting = static_cast<Setting>(metaEnum.value(i));
+        SettingData &data = settingDataCache[i];
+        const QString &key = getSettingKey(setting);
+
+        QVariant newValue = settings.value(key, data.defaultValue);
+        if (data.value != newValue) {
+            changed = true;
+            data.value = newValue;
+        }
     }
 
     if (changed)
         emit settingsUpdated();
 }
 
+// Legacy string-based API - find setting by key and delegate to enum-based method
 const QVariant SettingsManager::getSetting(const QString &key, bool defaults) const
 {
-    auto value = settingsLibrary.value(key);
-
-    if (!defaults && !value.value.isNull())
-        return value.value;
-
-    if (!value.defaultValue.isNull())
-        return value.defaultValue;
-
+    // Find the setting enum that matches this key
+    for (const auto& def : settingDefinitions) {
+        if (QString(def.key) == key) {
+            return getSetting(def.setting, defaults);
+        }
+    }
+    
     qWarning() << "Error: Invalid settings key: " + key;
     return QVariant();
 }
@@ -98,87 +156,124 @@ const QVariant SettingsManager::getSetting(const QString &key, bool defaults) co
 bool SettingsManager::getBool(const QString &key, bool defaults) const
 {
     auto value = getSetting(key, defaults);
-
     if (value.canConvert<bool>())
         return value.toBool();
-
-    qWarning() << "Error: Can't convert setting key " + key + " to bool";
     return false;
 }
 
 int SettingsManager::getInt(const QString &key, bool defaults) const
 {
     auto value = getSetting(key, defaults);
-
     if (value.canConvert<int>())
         return value.toInt();
-
-    qWarning() << "Error: Can't convert setting key " + key + " to int";
     return 0;
 }
 
 double SettingsManager::getDouble(const QString &key, bool defaults) const
 {
     auto value = getSetting(key, defaults);
-
     if (value.canConvert<double>())
         return value.toDouble();
-
-    qWarning() << "Error: Can't convert setting key " + key + " to double";
-    return 0;
+    return 0.0;
 }
 
 const QString SettingsManager::getString(const QString &key, bool defaults) const
 {
     auto value = getSetting(key, defaults);
-
     if (value.canConvert<QString>())
         return value.toString();
-
-    qWarning() << "Error: Can't convert setting key " + key + " to string";
     return "";
 }
 
 bool SettingsManager::isDefault(const QString &key) const
 {
-    return getSetting(key) == getSetting(key, true);
+    // Find the setting enum that matches this key
+    for (const auto& def : settingDefinitions) {
+        if (QString(def.key) == key) {
+            return isDefault(def.setting);
+        }
+    }
+    return true; // Unknown keys are considered "default"
 }
 
-void SettingsManager::initializeSettingsLibrary()
+// Enum-based access methods
+const SettingsManager::SettingData &SettingsManager::getSettingData(Setting setting) const
 {
-    // Window
-    settingsLibrary.insert("bgcolorenabled", {true, {}});
-    settingsLibrary.insert("bgcolor", {"#212121", {}});
-    settingsLibrary.insert("titlebarmode", {1, {}});
-    settingsLibrary.insert("windowresizemode", {1, {}});
-    settingsLibrary.insert("minwindowresizedpercentage", {20, {}});
-    settingsLibrary.insert("maxwindowresizedpercentage", {70, {}});
-    settingsLibrary.insert("titlebaralwaysdark", {true, {}});
-    settingsLibrary.insert("quitonlastwindow", {false, {}});
-    settingsLibrary.insert("menubarenabled", {false, {}});
-    settingsLibrary.insert("fullscreendetails", {false, {}});
-    // Image
-    settingsLibrary.insert("filteringenabled", {true, {}});
-    settingsLibrary.insert("scalingenabled", {true, {}});
-    settingsLibrary.insert("scalingtwoenabled", {true, {}});
-    settingsLibrary.insert("scalefactor", {25, {}});
-    settingsLibrary.insert("scrollzoomsenabled", {true, {}});
-    settingsLibrary.insert("cursorzoom", {true, {}});
-    settingsLibrary.insert("cropmode", {0, {}});
-    settingsLibrary.insert("pastactualsizeenabled", {true, {}});
-    settingsLibrary.insert("colorspaceconversion", {1, {}});
-    // Miscellaneous
-    settingsLibrary.insert("language", {"system", {}});
-    settingsLibrary.insert("sortmode", {0, {}});
-    settingsLibrary.insert("sortdescending", {false, {}});
-    settingsLibrary.insert("preloadingmode", {1, {}});
-    settingsLibrary.insert("loopfoldersenabled", {true, {}});
-    settingsLibrary.insert("slideshowreversed", {false, {}});
-    settingsLibrary.insert("slideshowtimer", {5, {}});
-    settingsLibrary.insert("afterdelete", {2, {}});
-    settingsLibrary.insert("askdelete", {true, {}});
-    settingsLibrary.insert("allowmimecontentdetection", {false, {}});
-    settingsLibrary.insert("saverecents", {true, {}});
-    settingsLibrary.insert("updatenotifications", {false, {}});
-    settingsLibrary.insert("skiphidden", {true, {}});
+    static const SettingData empty;
+    int index = static_cast<int>(setting);
+    if (index >= 0 && index < settingDataCache.size()) {
+        return settingDataCache[index];
+    }
+    return empty;
+}
+
+const QString &SettingsManager::getSettingKey(Setting setting)
+{
+    static const QString empty;
+    int index = static_cast<int>(setting);
+    if (index >= 0 && index < settingKeys.size()) {
+        return settingKeys[index];
+    }
+    return empty;
+}
+
+const QVariant SettingsManager::getSetting(Setting setting, bool defaults) const
+{
+    const SettingData &data = getSettingData(setting);
+    if (!defaults && !data.value.isNull())
+        return data.value;
+    return data.defaultValue;
+}
+
+bool SettingsManager::getBool(Setting setting, bool defaults) const
+{
+    auto value = getSetting(setting, defaults);
+    if (value.canConvert<bool>())
+        return value.toBool();
+    return false;
+}
+
+int SettingsManager::getInt(Setting setting, bool defaults) const
+{
+    auto value = getSetting(setting, defaults);
+    if (value.canConvert<int>())
+        return value.toInt();
+    return 0;
+}
+
+double SettingsManager::getDouble(Setting setting, bool defaults) const
+{
+    auto value = getSetting(setting, defaults);
+    if (value.canConvert<double>())
+        return value.toDouble();
+    return 0.0;
+}
+
+const QString SettingsManager::getString(Setting setting, bool defaults) const
+{
+    auto value = getSetting(setting, defaults);
+    if (value.canConvert<QString>())
+        return value.toString();
+    return "";
+}
+
+bool SettingsManager::isDefault(Setting setting) const
+{
+    const SettingData &data = getSettingData(setting);
+    return data.value.isNull() || data.value == data.defaultValue;
+}
+
+void SettingsManager::initializeSettingDataCache() {
+    QMetaEnum metaEnum = QMetaEnum::fromType<SettingsManager::Setting>();
+    int enumCount = metaEnum.keyCount();
+
+    settingDataCache.resize(enumCount);
+    settingKeys.resize(enumCount);
+
+    // Fill vectors based on definitions
+    for (const auto& def : settingDefinitions) {
+        int index = static_cast<int>(def.setting);
+        settingDataCache[index] = {def.defaultValue, {}};
+        settingKeys[index] = def.key;
+    }
 }
