@@ -316,7 +316,7 @@ void MainWindow::fullscreenChanged()
         fullscreenAction->setText(isFullscreen ? tr("Exit F&ull Screen") : tr("Enter F&ull Screen"));
         fullscreenAction->setIcon(isFullscreen ? QIcon::fromTheme("view-restore") : QIcon::fromTheme("view-fullscreen"));
     }
-    ui->fullscreenLabel->setVisible(isFullscreen && qvApp->getSettingsManager().getBoolean("fullscreendetails"));
+    ui->fullscreenLabel->setVisible(isFullscreen && qvApp->getSettingsManager().getBool(SettingsManager::Setting::FullScreenDetails));
     if (!isFullscreen && storedTitlebarHidden)
     {
         setTitlebarHidden(true);
@@ -334,13 +334,13 @@ void MainWindow::settingsUpdated()
 {
     auto &settingsManager = qvApp->getSettingsManager();
 
-    buildWindowTitle();
+    updateWindowTitle();
 
-    //bgcolor
-    customBackgroundColor = settingsManager.getBoolean("bgcolorenabled") ? QColor(settingsManager.getString("bgcolor")) : QColor();
+    // Cache custom background color since we read it in paintEvent
+    customBackgroundColor = settingsManager.getBool(SettingsManager::Setting::BgColorEnabled) ? QColor(settingsManager.getString(SettingsManager::Setting::BgColor)) : QColor();
 
     // menubarenabled
-    bool menuBarEnabled = settingsManager.getBoolean("menubarenabled");
+    bool menuBarEnabled = settingsManager.getBool(SettingsManager::Setting::MenuBarEnabled);
 #ifdef Q_OS_MACOS
     // Menu bar is effectively always enabled on macOS
     menuBarEnabled = true;
@@ -349,16 +349,16 @@ void MainWindow::settingsUpdated()
 
 #ifdef COCOA_LOADED
     // titlebaralwaysdark
-    QVCocoaFunctions::setVibrancy(settingsManager.getBoolean("titlebaralwaysdark"), windowHandle());
+    QVCocoaFunctions::setVibrancy(settingsManager.getBool(SettingsManager::Setting::TitleBarAlwaysDark), windowHandle());
     // quitonlastwindow
-    qvApp->setQuitOnLastWindowClosed(settingsManager.getBoolean("quitonlastwindow"));
+    qvApp->setQuitOnLastWindowClosed(settingsManager.getBool(SettingsManager::Setting::QuitOnLastWindow));
 #endif
 
     //slideshow timer
-    slideshowTimer->setInterval(static_cast<int>(settingsManager.getDouble("slideshowtimer")*1000));
+    slideshowTimer->setInterval(static_cast<int>(settingsManager.getDouble(SettingsManager::Setting::SlideshowTimer)*1000));
 
 
-    ui->fullscreenLabel->setVisible(qvApp->getSettingsManager().getBoolean("fullscreendetails") && windowState().testFlag(Qt::WindowFullScreen));
+    ui->fullscreenLabel->setVisible(settingsManager.getBool(SettingsManager::Setting::FullScreenDetails) && windowState().testFlag(Qt::WindowFullScreen));
 
     setWindowSize();
 
@@ -396,7 +396,7 @@ void MainWindow::fileChanged()
 
     if (info->isVisible())
         refreshProperties();
-    buildWindowTitle();
+    updateWindowTitle();
     updateWindowFilePath();
 
     // repaint to handle error message
@@ -498,12 +498,12 @@ void MainWindow::refreshProperties()
     info->setInfo(getCurrentFileDetails().fileInfo, getCurrentFileDetails().baseImageSize.width(), getCurrentFileDetails().baseImageSize.height(), value4);
 }
 
-void MainWindow::buildWindowTitle()
+void MainWindow::updateWindowTitle()
 {
     QString newString = "qView";
     if (getCurrentFileDetails().fileInfo.isFile())
     {
-        switch (qvApp->getSettingsManager().getInteger("titlebarmode")) {
+        switch (qvApp->getSettingsManager().getInt(SettingsManager::Setting::TitleBarMode)) {
         case 1:
         {
             newString = getCurrentFileDetails().fileInfo.fileName();
@@ -601,7 +601,7 @@ void MainWindow::setWindowSize()
         return;
 
     //check if the program is configured to resize the window
-    int windowResizeMode = qvApp->getSettingsManager().getInteger("windowresizemode");
+    int windowResizeMode = qvApp->getSettingsManager().getInt(SettingsManager::Setting::WindowResizeMode);
     if (!(windowResizeMode == 2 || (windowResizeMode == 1 && justLaunchedWithImage)))
         return;
 
@@ -612,8 +612,8 @@ void MainWindow::setWindowSize()
         return;
 
 
-    qreal minWindowResizedPercentage = qvApp->getSettingsManager().getInteger("minwindowresizedpercentage")/100.0;
-    qreal maxWindowResizedPercentage = qvApp->getSettingsManager().getInteger("maxwindowresizedpercentage")/100.0;
+    qreal minWindowResizedPercentage = qvApp->getSettingsManager().getInt(SettingsManager::Setting::MinWindowResizedPercentage)/100.0;
+    qreal maxWindowResizedPercentage = qvApp->getSettingsManager().getInt(SettingsManager::Setting::MaxWindowResizedPercentage)/100.0;
 
 
     QSize imageSize = getCurrentFileDetails().loadedPixmapSize;
@@ -834,7 +834,7 @@ void MainWindow::showFileInfo()
 
 void MainWindow::askDeleteFile(bool permanent)
 {
-    if (!permanent && !qvApp->getSettingsManager().getBoolean("askdelete"))
+    if (!permanent && !qvApp->getSettingsManager().getBool(SettingsManager::Setting::AskDelete))
     {
         deleteFile(permanent);
         return;
@@ -929,7 +929,7 @@ void MainWindow::deleteFile(bool permanent)
         return;
     }
 
-    auto afterDelete = qvApp->getSettingsManager().getInteger("afterdelete");
+    auto afterDelete = qvApp->getSettingsManager().getInt(SettingsManager::Setting::AfterDelete);
     if (afterDelete > 1)
         nextFile();
     else if (afterDelete < 1)
@@ -1212,7 +1212,7 @@ void MainWindow::cancelSlideshow()
 
 void MainWindow::slideshowAction()
 {
-    if (qvApp->getSettingsManager().getBoolean("slideshowreversed"))
+    if (qvApp->getSettingsManager().getBool(SettingsManager::Setting::SlideshowReversed))
         previousFile();
     else
         nextFile();

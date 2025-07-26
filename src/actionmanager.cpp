@@ -39,7 +39,7 @@ ActionManager::~ActionManager()
 
 void ActionManager::settingsUpdated()
 {
-    isSaveRecentsEnabled = qvApp->getSettingsManager().getBoolean("saverecents");
+    isSaveRecentsEnabled = qvApp->getSettingsManager().getBool("saverecents");
 
     auto const recentsMenus = menuCloneLibrary.values("recents");
     for (const auto &recentsMenu : recentsMenus)

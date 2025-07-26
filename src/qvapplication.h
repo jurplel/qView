@@ -19,6 +19,11 @@
 
 #define qvApp (qobject_cast<QVApplication *>(QCoreApplication::instance()))	// global qvapplication object
 
+#define qvGetSettingBool(setting) qvApp->getSettingsManager().getBool(SettingsManager::Setting::setting)
+#define qvGetSettingInt(setting) qvApp->getSettingsManager().getInt(SettingsManager::Setting::setting)
+#define qvGetSettingDouble(setting) qvApp->getSettingsManager().getDouble(SettingsManager::Setting::setting)
+#define qvGetSettingString(setting) qvApp->getSettingsManager().getString(SettingsManager::Setting::setting)
+
 class QVApplication : public QApplication
 {
     Q_OBJECT

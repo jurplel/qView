@@ -124,11 +124,6 @@ private:
 
     QFutureWatcher<ReadData> loadFutureWatcher;
 
-    bool isLoopFoldersEnabled;
-    int preloadingMode;
-    int sortMode;
-    bool sortDescending;
-    bool allowMimeContentDetection;
     int colorSpaceConversion;
 
     static QCache<QString, ReadData> imageCache;

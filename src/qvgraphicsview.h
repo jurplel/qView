@@ -123,18 +123,6 @@ private:
 
     QGraphicsPixmapItem *loadedPixmapItem;
 
-    bool isFilteringEnabled;
-    bool isScalingEnabled;
-    bool isScalingTwoEnabled;
-    bool isPastActualSizeEnabled;
-    int scrollZooms;
-    bool isFractionalZoomEnabled;
-
-    bool isLoopFoldersEnabled;
-    bool isCursorZoomEnabled;
-    int cropMode;
-    qreal scaleFactor;
-
     constexpr static int MARGIN = -2;
     constexpr static qreal MAX_EXPENSIVE_SCALING_SIZE = 3;
 

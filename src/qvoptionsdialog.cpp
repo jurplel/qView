@@ -215,7 +215,7 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
 
 void QVOptionsDialog::syncCheckbox(QCheckBox *checkbox, const QString &key, bool defaults, bool makeConnection)
 {
-    auto val = qvApp->getSettingsManager().getBoolean(key, defaults);
+    auto val = qvApp->getSettingsManager().getBool(key, defaults);
     checkbox->setChecked(val);
     transientSettings.insert(key, val);
 
@@ -229,7 +229,7 @@ void QVOptionsDialog::syncCheckbox(QCheckBox *checkbox, const QString &key, bool
 
 void QVOptionsDialog::syncRadioButtons(QList<QRadioButton *> buttons, const QString &key, bool defaults, bool makeConnection)
 {
-    auto val = qvApp->getSettingsManager().getInteger(key, defaults);
+    auto val = qvApp->getSettingsManager().getInt(key, defaults);
     buttons.value(val)->setChecked(true);
     transientSettings.insert(key, val);
 
@@ -246,7 +246,7 @@ void QVOptionsDialog::syncRadioButtons(QList<QRadioButton *> buttons, const QStr
 
 void QVOptionsDialog::syncComboBox(QComboBox *comboBox, const QString &key, bool defaults, bool makeConnection)
 {
-    auto val = qvApp->getSettingsManager().getInteger(key, defaults);
+    auto val = qvApp->getSettingsManager().getInt(key, defaults);
     comboBox->setCurrentIndex(val);
     transientSettings.insert(key, val);
 
@@ -275,7 +275,7 @@ void QVOptionsDialog::syncComboBoxData(QComboBox *comboBox, const QString &key, 
 
 void QVOptionsDialog::syncSpinBox(QSpinBox *spinBox, const QString &key, bool defaults, bool makeConnection)
 {
-    auto val = qvApp->getSettingsManager().getInteger(key, defaults);
+    auto val = qvApp->getSettingsManager().getInt(key, defaults);
     spinBox->setValue(val);
     transientSettings.insert(key, val);
 
