@@ -1,4 +1,4 @@
-﻿#define MyAppName "qView"
+#define MyAppName "qView"
 #define MyAppPublisher "jurplel and qView contributors"
 #define MyAppURL "https://interversehq.com/qview/"
 #define MyAppExeName "qView.exe"
@@ -165,11 +165,13 @@ procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 begin
   if CurUninstallStep = usPostUninstall then
   begin
-    if MsgBox('Do you want to also delete saved settings?',
-      mbConfirmation, MB_YESNO) = IDYES
+    if SuppressibleMsgBox('Do you want to also delete saved settings?',
+      mbConfirmation, MB_YESNO, IDYES) = IDYES
     then
+    begin
       RegDeleteKeyIncludingSubkeys(HKEY_CURRENT_USER, 'Software\qView');
       RegDeleteKeyIncludingSubkeys(HKEY_LOCAL_MACHINE, 'Software\qView');
       RegDeleteKeyIncludingSubkeys(HKEY_LOCAL_MACHINE, 'Software\WOW6432node\qView');
     end;
+  end;
 end;
