@@ -26,7 +26,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="252"/>
         <source>&amp;View</source>
-        <translation>&amp;Ollar</translation>
+        <translation>&amp;Vista</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="276"/>
@@ -83,7 +83,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="676"/>
         <source>Re&amp;load File</source>
-        <translation type="unfinished"></translation>
+        <translation>Re&amp;cargar ficheiro</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="680"/>
@@ -131,7 +131,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="709"/>
         <source>Delete Permanently</source>
-        <translation type="unfinished"></translation>
+        <translation>Eliminar permanentemente</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="713"/>
@@ -166,17 +166,17 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="735"/>
         <source>Zoom &amp;Out</source>
-        <translation>&amp;Afastar</translation>
+        <translation>A&amp;fastar</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="739"/>
         <source>Reset &amp;Zoom</source>
-        <translation>Restablecer aproximación</translation>
+        <translation>Restablecer &amp;zoom</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="743"/>
         <source>Ori&amp;ginal Size</source>
-        <translation>&amp;Tamaño orixinal</translation>
+        <translation>Tamaño ori&amp;xinal</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="747"/>
@@ -191,7 +191,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="755"/>
         <source>&amp;Mirror</source>
-        <translation>&amp;Espello</translation>
+        <translation>Es&amp;pello</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="759"/>
@@ -201,7 +201,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="763"/>
         <source>Enter F&amp;ull Screen</source>
-        <translation>&amp;Pantalla chea</translation>
+        <translation>Pantalla c&amp;hea</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="767"/>
@@ -216,7 +216,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="775"/>
         <source>&amp;Next File</source>
-        <translation>&amp;Ficheiro seguinte</translation>
+        <translation>&amp;Seguinte ficheiro</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="779"/>
@@ -262,7 +262,7 @@
         <location filename="../src/actionmanager.cpp" line="812"/>
         <source>&amp;Settings</source>
         <extracomment>This is for the options dialog on windows</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Axustes</translation>
     </message>
     <message>
         <source>Option&amp;s</source>
@@ -283,18 +283,18 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="818"/>
         <source>Setting&amp;s...</source>
-        <translation type="unfinished"></translation>
+        <translation>Axuste&amp;s...</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="823"/>
         <source>&amp;About</source>
-        <translation>&amp;Sobre</translation>
+        <translation>&amp;Acerca de</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="826"/>
         <source>&amp;About qView</source>
         <extracomment>This is for the about dialog on mac</extracomment>
-        <translation>&amp;Sobre qview</translation>
+        <translation>&amp;Acerca de qview</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="830"/>
@@ -331,12 +331,12 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="242"/>
         <source>Exit F&amp;ull Screen</source>
-        <translation>Saír da pantalla ch&amp;ea</translation>
+        <translation>Saír da pantalla c&amp;hea</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="247"/>
         <source>Enter F&amp;ull Screen</source>
-        <translation>Modo pantalla ch&amp;ea</translation>
+        <translation>Modo pantalla c&amp;hea</translation>
     </message>
     <message>
         <source>Empty</source>
@@ -399,7 +399,7 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="792"/>
         <source>Are you sure you want to delete %1 permanently? This can&apos;t be undone.</source>
-        <translation type="unfinished"></translation>
+        <translation>Estás certo de que queres eliminar %1 permanentemente? Esta acción non se pode desfacer.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="799"/>
@@ -437,7 +437,9 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
         <source>Error occurred opening
 %3
 %2 (Error %1)</source>
-        <translation type="unfinished"></translation>
+        <translation>Produciuse un erro ao abrir
+%3
+%2 (Erro %1)</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="855"/>
@@ -467,7 +469,7 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="1097"/>
         <source>Res&amp;ume</source>
-        <translation>Rea&amp;nudar</translation>
+        <translation>Contin&amp;uar</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="1106"/>
@@ -508,7 +510,7 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
     <message>
         <location filename="../src/main.cpp" line="18"/>
         <source>file</source>
-        <translation>Ficheiro</translation>
+        <translation>ficheiro</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="18"/>
@@ -889,7 +891,7 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="273"/>
         <source>&amp;Bilinear filtering</source>
-        <translation>&amp;Filtrado bilinear</translation>
+        <translation>Filtrado &amp;bilinear</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="283"/>
@@ -899,7 +901,7 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="286"/>
         <source>&amp;Image scaling</source>
-        <translation>&amp;Escalado da imaxe</translation>
+        <translation>Escalado da &amp;imaxe</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="296"/>
@@ -930,7 +932,7 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="344"/>
         <source>Scrolling &amp;zooms</source>
-        <translation>&amp;Ampliar co desprazamento</translation>
+        <translation>&amp;Zoom coa roda do rato</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="367"/>
@@ -981,22 +983,22 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="457"/>
         <source>Color space conversion:</source>
-        <translation type="unfinished"></translation>
+        <translation>Conversión do espazo de cor:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="476"/>
         <source>Auto-detect</source>
-        <translation type="unfinished"></translation>
+        <translation>Autodetección</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="481"/>
         <source>sRGB</source>
-        <translation type="unfinished"></translation>
+        <translation>sRGB</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="486"/>
         <source>Display P3</source>
-        <translation type="unfinished"></translation>
+        <translation>Display P3</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="495"/>
@@ -1062,17 +1064,17 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="17"/>
         <source>Settings</source>
-        <translation type="unfinished">Axustes</translation>
+        <translation>Axustes</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="524"/>
         <source>Date Modified</source>
-        <translation type="unfinished"></translation>
+        <translation>Data de modificación</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="529"/>
         <source>Date Created</source>
-        <translation type="unfinished"></translation>
+        <translation>Data de creación</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="604"/>
@@ -1092,7 +1094,7 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="620"/>
         <source>&amp;Loop through folders</source>
-        <translation>&amp;Percorre os cartafoles</translation>
+        <translation>&amp;Percorre os cartafois</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="643"/>
@@ -1122,17 +1124,17 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="703"/>
         <source>Detect supported files in folder even if extension isn&apos;t recognized (may be slow with larger/network folders)</source>
-        <translation type="unfinished"></translation>
+        <translation>Detectar ficheiros compatíbeis no cartafol aínda que a extensión non sexa recoñecida (pode ser lento con cartafois grandes ou en rede)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="706"/>
         <source>Allow &amp;MIME content detection</source>
-        <translation type="unfinished"></translation>
+        <translation>Permitir a detección de contido &amp;MIME</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="713"/>
         <source>Save &amp;recent files</source>
-        <translation>Gardar &amp;ficheiros recentes</translation>
+        <translation>Gardar ficheiros &amp;recentes</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="720"/>
@@ -1148,13 +1150,13 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="727"/>
         <source>Skip hidden files when browsing to the next/previous file</source>
-        <translation type="unfinished"></translation>
+        <translation>Omitir ficheiros ocultos ao navegar ao ficheiro seguinte/anterior</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="730"/>
         <source>Skip hidden files</source>
         <extracomment>Don&apos;t view files with &apos;hidden&apos; attribute</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Omitir ficheiros ocultos</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="741"/>
@@ -1280,7 +1282,7 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
     <message>
         <location filename="../src/qvwelcomedialog.cpp" line="49"/>
         <source>&lt;ul&gt;&lt;li&gt;Right click to access the main menu&lt;/li&gt;&lt;li&gt;Drag the image to reposition it&lt;/li&gt;&lt;li&gt;Scroll to zoom in and out&lt;/li&gt;&lt;li&gt;Use arrow keys to switch files&lt;/li&gt;&lt;/ul&gt;</source>
-        <translation>&lt;ul&gt;&lt;li&gt;Prema co botón dereito para acceder ao menú principal&lt;/li&gt;&lt;li&gt;Arrastre a imaxe para reposicionala&lt;/li&gt;&lt;li&gt;Desprácese para ampliar e diminuír&lt;/li&gt;&lt;li&gt;Emprega as frechas para trocar ficheiros&lt;/li&gt;&lt;/ul&gt;</translation>
+        <translation>&lt;ul&gt;&lt;li&gt;Preme co botón dereito para acceder ao menú principal&lt;/li&gt;&lt;li&gt;Arrastra a imaxe para reposicionala&lt;/li&gt;&lt;li&gt;Despraza a roda do rato para ampliar ou reducir&lt;/li&gt;&lt;li&gt;Emprega as teclas de frecha para trocar de ficheiro&lt;/li&gt;&lt;/ul&gt;</translation>
     </message>
 </context>
 <context>
@@ -1298,7 +1300,7 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="47"/>
         <source>Reload File</source>
-        <translation type="unfinished"></translation>
+        <translation>Recargar ficheiro</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="48"/>
@@ -1358,7 +1360,7 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="75"/>
         <source>Delete Permanently</source>
-        <translation type="unfinished"></translation>
+        <translation>Eliminar permanentemente</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="80"/>
@@ -1463,7 +1465,7 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="115"/>
         <source>Settings</source>
-        <translation type="unfinished">Axustes</translation>
+        <translation>Axustes</translation>
     </message>
     <message>
         <source>Options</source>
