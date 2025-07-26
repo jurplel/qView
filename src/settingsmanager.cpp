@@ -199,12 +199,9 @@ bool SettingsManager::isDefault(const QString &key) const
 // Enum-based access methods
 const SettingsManager::SettingData &SettingsManager::getSettingData(Setting setting) const
 {
-    static const SettingData empty;
-    int index = static_cast<int>(setting);
-    if (index >= 0 && index < settingDataCache.size()) {
-        return settingDataCache[index];
-    }
-    return empty;
+    const int index = static_cast<int>(setting);
+    Q_ASSERT(index >= 0 && index < settingDataCache.size());
+    return settingDataCache[index];
 }
 
 const QString &SettingsManager::getSettingKey(Setting setting)

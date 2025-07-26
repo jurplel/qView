@@ -35,7 +35,7 @@ public:
 
     void refreshProperties();
 
-    void buildWindowTitle();
+    void updateWindowTitle();
 
     void updateWindowFilePath();
 
