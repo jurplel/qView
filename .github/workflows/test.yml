@@ -22,10 +22,10 @@ jobs:
         run: cmake -B build -DBUILD_TESTS=ON
 
       - name: Build
-        run: cmake --build build
+        run: cmake --build build --parallel
 
       - name: Run tests
-        run: ctest --test-dir build
+        run: xvfb-run --auto-servernum --server-args="-screen 0 1280x1024x24" ctest --test-dir build
 
   clang-tidy:
     name: Run clang-tidy
@@ -44,7 +44,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y clang-tidy
 
       - name: Configure CMake
-        run: cmake -B build -DENABLE_CLANG_TIDY=ON
+        run: cmake -B build -DENABLE_CLANG_TIDY=ON -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
 
       - name: Run clang-tidy
-        run: cmake --build build
+        run: cmake --build build --parallel
