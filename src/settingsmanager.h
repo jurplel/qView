@@ -2,6 +2,12 @@
 #define SETTINGSMANAGER_H
 
 #include <QVariant>
+#include <QVector>
+
+struct SettingData {
+    QVariant defaultValue;
+    QVariant value;
+};
 
 class SettingsManager : public QObject
 {
