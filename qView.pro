@@ -1,5 +1,5 @@
 TARGET = qView
-VERSION = 7.0
+VERSION = 7.1
 
 QT += core gui network widgets
 
@@ -157,4 +157,3 @@ lupdate_only {
 
 RESOURCES += \
     resources/resources.qrc
-
