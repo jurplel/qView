@@ -39,6 +39,8 @@ HEADERS += \
 
 !qv_disable_online_version_check:HEADERS += $$PWD/updatechecker.h
 
+CONFIG += link_pkgconfig
+PKGCONFIG += exiv2
 
 macx:!CONFIG(NO_COCOA):HEADERS += $$PWD/qvcocoafunctions.h
 win32:!CONFIG(NO_WIN32):HEADERS += $$PWD/qvwin32functions.h

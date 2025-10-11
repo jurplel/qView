@@ -48,6 +48,10 @@ jobs:
             qtArch: 'win32_msvc2019'
             osSuffix: '_32'
             buildArch: 'X86'
+
+    env:
+      EXIV2_VERSION: "0.28.5"
+
     runs-on: ${{ matrix.runner }}
     steps:
       - name: Set environment variables
@@ -63,6 +67,30 @@ jobs:
           fi
 
       - uses: actions/checkout@v4
+
+      - name: Install dependencies (macOS)
+        if: startsWith(matrix.runner, 'macos-')
+        run: |
+          brew update
+          brew install wget inih pkg-config
+
+      - name: Install dependencies (Linux)
+        if: startsWith(matrix.runner, 'ubuntu-')
+        run: |
+          sudo apt update
+          sudo apt install -y cmake wget libinih-dev pkg-config
+
+      - name: Install dependencies (exiv2)
+        run: |
+          wget https://github.com/Exiv2/exiv2/archive/refs/tags/v$EXIV2_VERSION.tar.gz
+          tar -xvzf v$EXIV2_VERSION.tar.gz
+          cd exiv2-$EXIV2_VERSION
+          mkdir build && cd build
+          cmake .. -DCMAKE_INSTALL_PREFIX=$PWD
+          make
+          # make install
+          echo "PKG_CONFIG_PATH=$PWD/lib/pkgconfig:$PKG_CONFIG_PATH" >> $GITHUB_ENV
+          echo "CXXFLAGS=`pkg-config --cflags exiv2`" >> $GITHUB_ENV
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
