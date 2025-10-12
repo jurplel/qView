@@ -36,6 +36,8 @@ public:
     static QString deleteFile(const QString &filePath);
 
     static QByteArray getIccProfileForWindow(const QWindow *window);
+
+    static QString getIccProfilePathForWindow(const QWindow *window);
 };
 
 #endif // QVCOCOAFUNCTIONS_H

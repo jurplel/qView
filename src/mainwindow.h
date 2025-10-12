@@ -9,6 +9,7 @@
 #include <QMainWindow>
 #include <QShortcut>
 #include <QNetworkAccessManager>
+#include <QFutureWatcher>
 #include <QStack>
 
 namespace Ui {

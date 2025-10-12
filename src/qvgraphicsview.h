@@ -9,6 +9,7 @@
 #include <QTimer>
 #include <QFileInfo>
 
+// TODO: move file handling out of this class
 class QVGraphicsView : public QGraphicsView
 {
     Q_OBJECT

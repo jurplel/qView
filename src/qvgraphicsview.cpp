@@ -297,6 +297,7 @@ void QVGraphicsView::loadFile(const QString &fileName)
 
 void QVGraphicsView::reloadFile()
 {
+    // TODO: Force reload of image, skip cache
     if (!getCurrentFileDetails().isPixmapLoaded)
         return;
 
@@ -569,6 +570,8 @@ void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
     }
     }
 
+    // TODO: Everything except drawing should ideally be in another thread,
+    // especially this I/O
     if (searchDirection != 0) {
         while (searchDirection == 1 && newIndex < fileList.size() - 1
                && !QFile::exists(fileList.value(newIndex).absoluteFilePath))

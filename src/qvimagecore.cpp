@@ -3,6 +3,7 @@
 #include "qvwin32functions.h"
 #include "qvcocoafunctions.h"
 #include "qvlinuxx11functions.h"
+#include "vipsreader.h"
 #include <cstring>
 #include <random>
 #include <QMessageBox>
@@ -15,21 +16,13 @@
 #include <QGuiApplication>
 #include <QScreen>
 
-QCache<QString, QVImageCore::ReadData> QVImageCore::imageCache;
-
 QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
 {
-// Set allocation limit to 8 GiB on Qt6
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    QImageReader::setAllocationLimit(8192);
-#endif
-
     currentRotation = 0;
 
     connect(&loadedMovie, &QMovie::updated, this, &QVImageCore::animatedFrameChanged);
 
-    connect(&loadFutureWatcher, &QFutureWatcher<ReadData>::finished, this,
-            [this]() { loadPixmap(loadFutureWatcher.result()); });
+
 
     largestDimension = 0;
     const auto screenList = QGuiApplication::screens();
@@ -46,8 +39,6 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
         }
     }
 
-    waitingOnLoad = false;
-
     // Connect to settings signal
     connect(&qvApp->getSettingsManager(), &SettingsManager::settingsUpdated, this,
             &QVImageCore::settingsUpdated);
@@ -56,10 +47,6 @@ QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
 
 void QVImageCore::loadFile(const QString &fileName, bool isReloading)
 {
-    if (waitingOnLoad) {
-        return;
-    }
-
     QString sanitaryFileName = fileName;
 
     // sanitize file name if necessary
@@ -83,120 +70,109 @@ void QVImageCore::loadFile(const QString &fileName, bool isReloading)
     setPaused(true);
 
     currentFileDetails.isLoadRequested = true;
-    waitingOnLoad = true;
+    // TODO: Cache color space? Expensive to get this on every loadFile call?
+    detectDisplayColorSpace();
 
-    QColorSpace targetColorSpace = getTargetColorSpace();
-    QString cacheKey = getPixmapCacheKey(sanitaryFileName, fileInfo.size(), targetColorSpace);
+    quint64 requestNumber = ++m_requestCounter;
 
-    // check if cached already before loading the long way
-    auto *cachedData = isReloading ? nullptr : QVImageCore::imageCache.take(cacheKey);
-    if (cachedData != nullptr) {
-        ReadData readData = *cachedData;
-        delete cachedData;
-        loadPixmap(readData);
-    }
-    // or see if the preloader is already working on it
-    else if (preloadFilesInProgress.contains(sanitaryFileName)) {
-        waitingOnPreloadFile = sanitaryFileName;
-    } else {
+    auto *watcher = new QFutureWatcher<std::unique_ptr<QVImageCore::ReadData>>(this);
+
+    connect(watcher, &QFutureWatcher<std::unique_ptr<QVImageCore::ReadData>>::finished, this, [this, watcher, requestNumber]() {
+        std::unique_ptr<QVImageCore::ReadData> readData = std::move(watcher->future().takeResult());
+
+        if (requestNumber > m_lastDisplayedCounter) {
+            loadPixmap(std::move(readData));
+
+            m_lastDisplayedCounter = requestNumber;
+        }
+
+        watcher->deleteLater();
+    });
+
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        loadFutureWatcher.setFuture(QtConcurrent::run(this, &QVImageCore::readFile,
-                                                      sanitaryFileName, targetColorSpace));
+    watcher->setFuture(QtConcurrent::run(this, &QVImageCore::readFile,
+                                         sanitaryFileName, targetColorSpace));
 #else
-        loadFutureWatcher.setFuture(QtConcurrent::run(&QVImageCore::readFile, this,
-                                                      sanitaryFileName, targetColorSpace));
+    watcher->setFuture(QtConcurrent::run(&QVImageCore::readFile, this,
+                                         sanitaryFileName));
 #endif
-    }
 }
 
-QVImageCore::ReadData QVImageCore::readFile(const QString &fileName,
-                                            const QColorSpace &targetColorSpace)
+std::unique_ptr<QVImageCore::ReadData> QVImageCore::readFile(const QString &fileName)
 {
-    QImageReader imageReader;
-    imageReader.setAutoTransform(true);
-
-    imageReader.setFileName(fileName);
-
     QImage readImage;
-    if (imageReader.format() == "svg" || imageReader.format() == "svgz") {
-        // Render vectors into a high resolution
-        QIcon icon;
-        icon.addFile(fileName);
-        readImage = icon.pixmap(largestDimension).toImage();
-        // If this fails, try reading the normal way so that a proper error message is given
-        if (readImage.isNull())
-            readImage = imageReader.read();
+    QSize imageSize;
+    int errorCode = 0;
+    QString errorString;
+
+    // Copy of shared pointer, so this file won't be deleted in another thread
+    // while vips is reading it
+    QSharedPointer<QTemporaryFile> targetIccFile = displayColorProfileFile;
+    QString targetIccFileName;
+    if (targetIccFile) {
+        targetIccFileName = targetIccFile->fileName();
+    }
+    auto result = VipsReader::read(fileName, targetIccFileName);
+    readImage = std::move(result.image);
+    errorString = std::move(result.error);
+
+    if (!readImage.isNull()) {
+        imageSize = readImage.size();
     } else {
-        readImage = imageReader.read();
+        errorCode = 1;
     }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
-    readImage.convertTo(QImage::Format::Format_ARGB32_Premultiplied);
-#else
-    readImage = readImage.convertToFormat(QImage::Format::Format_ARGB32_Premultiplied);
-#endif
-    // Handle color space information
-
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0) && QT_VERSION < QT_VERSION_CHECK(6, 7, 2)
-    // Work around Qt ICC profile parsing bug
-    if (!readImage.colorSpace().isValid() && !readImage.colorSpace().iccProfile().isEmpty()) {
-        QByteArray profileData = readImage.colorSpace().iccProfile();
-        if (removeTinyDataTagsFromIccProfile(profileData))
-            readImage.setColorSpace(QColorSpace::fromIccProfile(profileData));
-    }
-#endif
-
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
-    // Assume image is sRGB if it doesn't specify
-    if (!readImage.colorSpace().isValid())
-        readImage.setColorSpace(QColorSpace::SRgb);
-
-    // Convert image color space if we have a target that's different
-    if (targetColorSpace.isValid() && readImage.colorSpace() != targetColorSpace)
-        readImage.convertToColorSpace(targetColorSpace);
-#endif
+    // Should have been converted by libvips already
+    Q_ASSERT(readImage.format() == QImage::Format::Format_ARGB32_Premultiplied);
 
     QFileInfo fileInfo(fileName);
 
-    ReadData readData = { readImage,        fileInfo.absoluteFilePath(),
-                          fileInfo.size(),  imageReader.size(),
-                          targetColorSpace, {} };
+    ReadData readData = ReadData(
+        std::move(readImage),
+        fileInfo.absoluteFilePath(),
+        fileInfo.size(),
+        imageSize,
+        {}
+    );
 
-    if (readImage.isNull()) {
-        readData.errorData = { true, imageReader.error(), imageReader.errorString() };
+    if (readData.image.isNull())
+    {
+        readData.errorData = { true, errorCode, errorString };
     }
 
-    return readData;
+    return std::make_unique<ReadData>(std::move(readData));
 }
 
-void QVImageCore::loadPixmap(const ReadData &readData)
+void QVImageCore::preloadFile(const QString &fileName)
 {
-    if (readData.errorData.hasError) {
+    VipsReader::preload(fileName);
+}
+
+void QVImageCore::loadPixmap(std::unique_ptr<QVImageCore::ReadData> readData)
+{
+    if (readData->errorData.hasError) {
         currentFileDetails = getEmptyFileDetails();
-        currentFileDetails.errorData = readData.errorData;
+        currentFileDetails.errorData = readData->errorData;
     } else {
         currentFileDetails.errorData = {};
     }
 
     // Do this first so we can keep folder info even when loading errored files
-    currentFileDetails.fileInfo = QFileInfo(readData.absoluteFilePath);
+    currentFileDetails.fileInfo = QFileInfo(readData->absoluteFilePath);
     currentFileDetails.updateLoadedIndexInFolder();
     if (currentFileDetails.loadedIndexInFolder == -1)
         updateFolderInfo();
-
-    // Reset mechanism to avoid stalling while loading
-    waitingOnLoad = false;
 
     if (currentFileDetails.errorData.hasError) {
         loadEmptyPixmap();
         return;
     }
 
-    loadedPixmap = QPixmap::fromImage(matchCurrentRotation(readData.image));
+    loadedPixmap = QPixmap::fromImage(matchCurrentRotation(readData->image));
 
     // Set file details
     currentFileDetails.isPixmapLoaded = true;
-    currentFileDetails.baseImageSize = readData.imageSize;
+    currentFileDetails.baseImageSize = readData->imageSize;
     currentFileDetails.loadedPixmapSize = loadedPixmap.size();
     if (currentFileDetails.baseImageSize == QSize(-1, -1)) {
         qInfo() << "QImageReader::size gave an invalid size for "
@@ -205,9 +181,8 @@ void QVImageCore::loadPixmap(const ReadData &readData)
         currentFileDetails.baseImageSize = currentFileDetails.loadedPixmapSize;
     }
 
-    addToCache(std::move(readData));
-
     // Animation detection
+    // TODO: GIF is loaded with QImageReader/QMovie
     loadedMovie.setFormat("");
     loadedMovie.stop();
     loadedMovie.setFileName(currentFileDetails.fileInfo.absoluteFilePath());
@@ -231,7 +206,7 @@ void QVImageCore::loadPixmap(const ReadData &readData)
 
     emit fileChanged();
 
-    requestCaching();
+    requestPreloading();
 }
 
 void QVImageCore::closeImage()
@@ -417,25 +392,26 @@ void QVImageCore::updateFolderInfo(QString dirPath)
     };
 
     if (shouldSort) {
-        qDebug() << "Sorting folder";
         sortFn();
     } else {
-        qDebug() << "Not sorting folder";
     }
 
     // Set current file index variable
     currentFileDetails.updateLoadedIndexInFolder();
 }
 
-void QVImageCore::requestCaching()
+void QVImageCore::requestPreloading()
 {
+    // TODO: this makes no sense at all. Preloading amount should be decided
+    // dynamically based on available memory and size of surrounding files.
+    // added getMemoryUsage for this
     int preloadingMode = qvGetSettingInt(PreloadingMode);
     if (preloadingMode == 0) {
-        QVImageCore::imageCache.clear();
         return;
     }
 
-    QColorSpace targetColorSpace = getTargetColorSpace();
+    // TODO: Cache this? At least don't call it every preload!!
+    detectDisplayColorSpace();
 
     int preloadingDistance = 1;
 
@@ -447,7 +423,7 @@ void QVImageCore::requestCaching()
          i <= currentFileDetails.loadedIndexInFolder + preloadingDistance; i++) {
         int index = i;
 
-        // Don't try to cache the currently loaded image
+        // Don't try to preload the currently loaded image
         if (index == currentFileDetails.loadedIndexInFolder)
             continue;
 
@@ -459,7 +435,7 @@ void QVImageCore::requestCaching()
                 index = index + (currentFileDetails.folderFileInfoList.length());
         }
 
-        // if still out of range after looping, just cancel the cache for this index
+        // if still out of range after looping, just cancel the preload for this index
         if (index > currentFileDetails.folderFileInfoList.length() - 1 || index < 0
             || currentFileDetails.folderFileInfoList.isEmpty())
             continue;
@@ -467,90 +443,30 @@ void QVImageCore::requestCaching()
         QString filePath = currentFileDetails.folderFileInfoList[index].absoluteFilePath;
         filesToPreload.append(filePath);
 
-        requestCachingFile(filePath, targetColorSpace);
+        requestPreloadingFile(filePath);
     }
     lastFilesPreloaded = filesToPreload;
 }
 
-void QVImageCore::requestCachingFile(const QString &filePath, const QColorSpace &targetColorSpace)
+void QVImageCore::requestPreloadingFile(const QString &filePath)
 {
     QFile imgFile(filePath);
-    QString cacheKey = getPixmapCacheKey(filePath, imgFile.size(), targetColorSpace);
 
     // check if image is already loaded or requested
-    if (QVImageCore::imageCache.contains(cacheKey) || lastFilesPreloaded.contains(filePath))
-        return;
+    // TODO replace check
+    // if (QVImageCore::imageCache.contains(cacheKey) || lastFilesPreloaded.contains(filePath))
+    //     return;
 
-    if (imgFile.size() / 1024 > QVImageCore::imageCache.maxCost() / 2)
-        return;
+    // TODO replace limit
+    // if (imgFile.size() / 1024 > QVImageCore::imageCache.maxCost() / 2)
+    //     return;
 
-    preloadFilesInProgress.append(filePath);
-
-    auto *cacheFutureWatcher = new QFutureWatcher<ReadData>();
-    connect(cacheFutureWatcher, &QFutureWatcher<ReadData>::finished, this,
-            [cacheFutureWatcher, this]() {
-                const ReadData readData = cacheFutureWatcher->result();
-                if (waitingOnPreloadFile == readData.absoluteFilePath) {
-                    loadPixmap(readData);
-                    waitingOnPreloadFile = QString();
-                } else {
-                    addToCache(std::move(readData));
-                }
-                preloadFilesInProgress.removeAll(readData.absoluteFilePath);
-                cacheFutureWatcher->deleteLater();
-            });
-
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    cacheFutureWatcher->setFuture(
-            QtConcurrent::run(this, &QVImageCore::readFile, filePath, targetColorSpace));
-#else
-    cacheFutureWatcher->setFuture(
-            QtConcurrent::run(&QVImageCore::readFile, this, filePath, targetColorSpace));
-#endif
+    QThreadPool::globalInstance()->start(
+            [this, filePath]() { preloadFile(filePath); });
 }
 
-void QVImageCore::addToCache(const ReadData &&readData)
+void QVImageCore::detectDisplayColorSpace()
 {
-    if (readData.image.isNull())
-        return;
-
-    QString cacheKey = getPixmapCacheKey(readData.absoluteFilePath, readData.fileSize,
-                                         readData.targetColorSpace);
-    qint64 pixmapMemoryBytes = static_cast<qint64>(readData.image.width()) * readData.image.height()
-            * readData.image.depth() / 8;
-
-    qint64 pixmapMemoryKiB = qMax(pixmapMemoryBytes / 1024, 1LL);
-    QVImageCore::imageCache.insert(cacheKey, new ReadData(std::move(readData)), pixmapMemoryKiB);
-}
-
-QString QVImageCore::getPixmapCacheKey(const QString &absoluteFilePath, const qint64 &fileSize,
-                                       const QColorSpace &targetColorSpace)
-{
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
-    QString targetColorSpaceHash =
-            QCryptographicHash::hash(targetColorSpace.iccProfile(), QCryptographicHash::Md5)
-                    .toHex();
-#else
-    QString targetColorSpaceHash = "";
-#endif
-    return absoluteFilePath + "\n" + QString::number(fileSize) + "\n" + targetColorSpaceHash;
-}
-
-QColorSpace QVImageCore::getTargetColorSpace() const
-{
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
-    return colorSpaceConversion == 1    ? detectDisplayColorSpace()
-            : colorSpaceConversion == 2 ? QColorSpace::SRgb
-            : colorSpaceConversion == 3 ? QColorSpace::DisplayP3
-                                        : QColorSpace();
-#else
-    return {};
-#endif
-}
-
-QColorSpace QVImageCore::detectDisplayColorSpace() const
-{
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     QWindow *window = static_cast<QWidget *>(parent())->window()->windowHandle();
 
     QByteArray profileData;
@@ -565,60 +481,12 @@ QColorSpace QVImageCore::detectDisplayColorSpace() const
 #  endif
 
     if (!profileData.isEmpty()) {
-        QColorSpace colorSpace = QColorSpace::fromIccProfile(profileData);
-#  if QT_VERSION < QT_VERSION_CHECK(6, 7, 2)
-        if (!colorSpace.isValid() && removeTinyDataTagsFromIccProfile(profileData))
-            colorSpace = QColorSpace::fromIccProfile(profileData);
-#  endif
-        return colorSpace;
+        displayColorProfileFile.reset(new QTemporaryFile());
+        displayColorProfileFile->open();
+        displayColorProfileFile->write(profileData);
+        displayColorProfileFile->close();
     }
-#endif
-
-    return {};
 }
-
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0) && QT_VERSION < QT_VERSION_CHECK(6, 7, 2)
-// Workaround for QTBUG-125241
-bool QVImageCore::removeTinyDataTagsFromIccProfile(QByteArray &profile)
-{
-    const int offsetTagCount = 128;
-    const qsizetype length = profile.length();
-    qsizetype offset = offsetTagCount;
-    char *data = profile.data();
-    bool foundTinyData = false;
-    // read tag count
-    if (length - offset < 4)
-        return false;
-    quint32 tagCount = qFromBigEndian<quint32>(data + offset);
-    offset += 4;
-    // so we don't have to worry about overflows
-    if (tagCount > 99999)
-        return false;
-    // loop through tags
-    if (length - offset < qsizetype(tagCount * 12))
-        return false;
-    while (tagCount) {
-        tagCount -= 1;
-        const quint32 dataSize = qFromBigEndian<quint32>(data + offset + 8);
-        if (dataSize >= 12) {
-            // this tag is fine
-            offset += 12;
-            continue;
-        }
-        // qt will fail on this tag, remove it
-        foundTinyData = true;
-        if (tagCount) {
-            // shift subsequent tags back
-            std::memmove(data + offset, data + offset + 12, tagCount * 12);
-        }
-        // zero fill gap at end
-        std::memset(data + offset + (tagCount * 12), 0, 12);
-        // decrement tag count
-        qToBigEndian(qFromBigEndian<quint32>(data + offsetTagCount) - 1, data + offsetTagCount);
-    }
-    return foundTinyData;
-}
-#endif
 
 void QVImageCore::jumpToNextFrame()
 {
@@ -723,23 +591,7 @@ void QVImageCore::settingsUpdated()
     auto &settingsManager = qvApp->getSettingsManager();
 
     // preloading mode
-    // Cost is in KiB
-    switch (qvGetSettingInt(PreloadingMode)) {
-    case 0: {
-        QVImageCore::imageCache.setMaxCost(0);
-        break;
-    }
-    case 1: {
-        QVImageCore::imageCache.setMaxCost(256000);
-        break;
-    }
-    case 2: {
-        QVImageCore::imageCache.setMaxCost(2048000);
-        break;
-    }
-    default:
-        Q_ASSERT(false);
-    }
+    // TODO: Handle setting
 
     // update folder info to reflect new settings (e.g. sort order)
     updateFolderInfo();

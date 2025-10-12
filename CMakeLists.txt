@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
 project(qView VERSION 7.0 LANGUAGES CXX)
-
 # Optional test building
 option(BUILD_TESTS "Build tests" OFF)
 if(BUILD_TESTS)
@@ -46,6 +45,10 @@ else()
     find_package(Qt5 QUIET COMPONENTS LinguistTools)
 endif()
 
+# Vips image backend
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(VIPS REQUIRED IMPORTED_TARGET vips-cpp)
+
 # Source files
 set(PROJECT_SOURCES
     src/main.cpp
@@ -63,6 +66,7 @@ set(PROJECT_SOURCES
     src/actionmanager.cpp
     src/settingsmanager.cpp
     src/shortcutmanager.cpp
+    src/vipsreader.cpp
 )
 
 # Header files
@@ -81,7 +85,10 @@ set(PROJECT_HEADERS
     src/actionmanager.h
     src/settingsmanager.h
     src/shortcutmanager.h
+    src/vipsreader.h
 )
+
+
 
 # UI form files
 set(PROJECT_FORMS
@@ -140,6 +147,9 @@ endif()
 add_executable(${PROJECT_NAME} ${EXECUTABLE_TYPE} ${PROJECT_SOURCES} ${PROJECT_HEADERS} ${PROJECT_FORMS} ${PROJECT_RESOURCES})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Gui Qt${QT_VERSION_MAJOR}::Network Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Svg)
+
+# Link Vips
+target_link_libraries(${PROJECT_NAME} PRIVATE PkgConfig::VIPS)
 
 # Set the executable name to lowercase on Linux
 if(UNIX AND NOT APPLE)
