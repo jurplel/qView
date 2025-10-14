@@ -224,6 +224,16 @@
         <translation>&amp;Laatste bestand</translation>
     </message>
     <message>
+        <location filename="../src/actionmanager.cpp" line="780"/>
+        <source>Next Random File</source>
+        <translation>Volgend willekeurig bestand</translation>
+    </message>
+    <message>
+        <location filename="../src/actionmanager.cpp" line="784"/>
+        <source>Previous Random File</source>
+        <translation>Vorig willekeurig bestand</translation>
+    </message>
+    <message>
         <location filename="../src/actionmanager.cpp" line="783"/>
         <source>Save Frame &amp;As...</source>
         <translation>Beeld opslaan &amp;als...</translation>
@@ -1379,6 +1389,16 @@ Geen toestemming om te overschrijven of het bestand is alleen-lezen.</translatio
         <location filename="../src/shortcutmanager.cpp" line="83"/>
         <source>Last File</source>
         <translation>Laatste bestand</translation>
+    </message>
+    <message>
+        <location filename="../src/shortcutmanager.cpp" line="112"/>
+        <source>Next Random File</source>
+        <translation>Volgend willekeurig bestand</translation>
+    </message>
+    <message>
+        <location filename="../src/shortcutmanager.cpp" line="116"/>
+        <source>Previous Random File</source>
+        <translation>Vorig willekeurig bestand</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="84"/>

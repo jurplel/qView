@@ -224,6 +224,16 @@
         <translation>Síðasta Skrá</translation>
     </message>
     <message>
+        <location filename="../src/actionmanager.cpp" line="780"/>
+        <source>Next Random File</source>
+        <translation>Næsta handahófskennda skrá</translation>
+    </message>
+    <message>
+        <location filename="../src/actionmanager.cpp" line="784"/>
+        <source>Previous Random File</source>
+        <translation>Fyrri handahófskennda skrá</translation>
+    </message>
+    <message>
         <location filename="../src/actionmanager.cpp" line="783"/>
         <source>Save Frame &amp;As...</source>
         <translation>Vista Ramma Sem...</translation>
@@ -1397,6 +1407,16 @@ Engin skrifheimild eða skrá er skrifvarinn.</translation>
         <location filename="../src/shortcutmanager.cpp" line="83"/>
         <source>Last File</source>
         <translation>Síðasta Skrá</translation>
+    </message>
+    <message>
+        <location filename="../src/shortcutmanager.cpp" line="112"/>
+        <source>Next Random File</source>
+        <translation>Næsta handahófskennda skrá</translation>
+    </message>
+    <message>
+        <location filename="../src/shortcutmanager.cpp" line="116"/>
+        <source>Previous Random File</source>
+        <translation>Fyrri handahófskennda skrá</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="84"/>

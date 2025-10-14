@@ -103,6 +103,9 @@ public:
 
     void lastFile();
 
+    void nextRandomFile();
+    void previousRandomFile();
+
     void saveFrameAs();
 
     void pause();

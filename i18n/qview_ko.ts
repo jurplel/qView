@@ -224,6 +224,16 @@
         <translation>마지막 파일(&amp;T)</translation>
     </message>
     <message>
+        <location filename="../src/actionmanager.cpp" line="780"/>
+        <source>Next Random File</source>
+        <translation>다음 무작위 파일</translation>
+    </message>
+    <message>
+        <location filename="../src/actionmanager.cpp" line="784"/>
+        <source>Previous Random File</source>
+        <translation>이전 무작위 파일</translation>
+    </message>
+    <message>
         <location filename="../src/actionmanager.cpp" line="783"/>
         <source>Save Frame &amp;As...</source>
         <translation>프레임을 다른 이름으로 저장(&amp;A)...</translation>
@@ -1397,6 +1407,16 @@ No write permission or file is read-only.</source>
         <location filename="../src/shortcutmanager.cpp" line="83"/>
         <source>Last File</source>
         <translation>마지막 파일</translation>
+    </message>
+    <message>
+        <location filename="../src/shortcutmanager.cpp" line="112"/>
+        <source>Next Random File</source>
+        <translation>다음 무작위 파일</translation>
+    </message>
+    <message>
+        <location filename="../src/shortcutmanager.cpp" line="116"/>
+        <source>Previous Random File</source>
+        <translation>이전 무작위 파일</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="84"/>

@@ -567,6 +567,16 @@ void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
         searchDirection = -1;
         break;
     }
+    case GoToFileMode::nextrandom: {
+        randomGenerator.ensureParamsUpToDate(fileList.size());
+        newIndex = randomGenerator.nextIndex(newIndex);
+        break;
+    }
+    case GoToFileMode::previousrandom: {
+        randomGenerator.ensureParamsUpToDate(fileList.size());
+        newIndex = randomGenerator.previousIndex(newIndex);
+        break;
+    }
     }
 
     if (searchDirection != 0) {

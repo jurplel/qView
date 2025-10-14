@@ -224,6 +224,16 @@
         <translation>Utols&amp;ó fájlra</translation>
     </message>
     <message>
+        <location filename="../src/actionmanager.cpp" line="780"/>
+        <source>Next Random File</source>
+        <translation>Következő véletlen fájl</translation>
+    </message>
+    <message>
+        <location filename="../src/actionmanager.cpp" line="784"/>
+        <source>Previous Random File</source>
+        <translation>Előző véletlen fájl</translation>
+    </message>
+    <message>
         <location filename="../src/actionmanager.cpp" line="783"/>
         <source>Save Frame &amp;As...</source>
         <translation>K&amp;épkocka mentése másként...</translation>
@@ -1381,6 +1391,16 @@ Nincs írási jogosultságod vagy a fájl csak olvasható.</translation>
         <location filename="../src/shortcutmanager.cpp" line="83"/>
         <source>Last File</source>
         <translation>Ugrás az utolsó fájlra</translation>
+    </message>
+    <message>
+        <location filename="../src/shortcutmanager.cpp" line="112"/>
+        <source>Next Random File</source>
+        <translation>Következő véletlen fájl</translation>
+    </message>
+    <message>
+        <location filename="../src/shortcutmanager.cpp" line="116"/>
+        <source>Previous Random File</source>
+        <translation>Előző véletlen fájl</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="84"/>

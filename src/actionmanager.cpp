@@ -216,6 +216,9 @@ QMenuBar *ActionManager::buildMenuBar(QWidget *parent)
     addCloneOfAction(goMenu, "previousfile");
     addCloneOfAction(goMenu, "nextfile");
     addCloneOfAction(goMenu, "lastfile");
+    goMenu->addSeparator();
+    addCloneOfAction(goMenu, "nextrandomfile");
+    addCloneOfAction(goMenu, "previousrandomfile");
 
     menuBar->addMenu(goMenu);
     // End of go menu
@@ -613,6 +616,10 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
         relevantWindow->nextFile();
     } else if (key == "lastfile") {
         relevantWindow->lastFile();
+    } else if (key == "nextrandomfile") {
+        relevantWindow->nextRandomFile();
+    } else if (key == "previousrandomfile") {
+        relevantWindow->previousRandomFile();
     } else if (key == "saveframeas") {
         relevantWindow->saveFrameAs();
     } else if (key == "pause") {
@@ -769,6 +776,16 @@ void ActionManager::initializeActionLibrary()
     auto *lastFileAction = new QAction(QIcon::fromTheme("go-last"), tr("Las&t File"));
     lastFileAction->setData({ "folderdisable" });
     actionLibrary.insert("lastfile", lastFileAction);
+
+    auto *nextRandomFileAction =
+            new QAction(QIcon::fromTheme("media-playlist-shuffle"), tr("Next Random File"));
+    nextRandomFileAction->setData({ "folderdisable" });
+    actionLibrary.insert("nextrandomfile", nextRandomFileAction);
+
+    auto *previousRandomFileAction =
+            new QAction(QIcon::fromTheme("media-playlist-shuffle"), tr("Previous Random File"));
+    previousRandomFileAction->setData({ "folderdisable" });
+    actionLibrary.insert("previousrandomfile", previousRandomFileAction);
 
     auto *saveFrameAsAction =
             new QAction(QIcon::fromTheme("document-save-as"), tr("Save Frame &As..."));

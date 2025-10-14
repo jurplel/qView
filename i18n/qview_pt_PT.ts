@@ -224,6 +224,16 @@
         <translation>Úl&amp;timo ficheiro</translation>
     </message>
     <message>
+        <location filename="../src/actionmanager.cpp" line="780"/>
+        <source>Next Random File</source>
+        <translation>&amp;Próximo ficheiro aleatório</translation>
+    </message>
+    <message>
+        <location filename="../src/actionmanager.cpp" line="784"/>
+        <source>Previous Random File</source>
+        <translation>&amp;Ficheiro aleatório anterior</translation>
+    </message>
+    <message>
         <location filename="../src/actionmanager.cpp" line="783"/>
         <source>Save Frame &amp;As...</source>
         <translation>Guardar moldur&amp;a como...</translation>
@@ -1399,6 +1409,16 @@ Não tem permissão de escrita ou o ficheiro é apenas de leitura.</translation>
         <location filename="../src/shortcutmanager.cpp" line="83"/>
         <source>Last File</source>
         <translation>Último ficheiro</translation>
+    </message>
+    <message>
+        <location filename="../src/shortcutmanager.cpp" line="112"/>
+        <source>Next Random File</source>
+        <translation>Próximo ficheiro aleatório</translation>
+    </message>
+    <message>
+        <location filename="../src/shortcutmanager.cpp" line="116"/>
+        <source>Previous Random File</source>
+        <translation>Ficheiro aleatório anterior</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="84"/>

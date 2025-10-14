@@ -224,6 +224,16 @@
         <translation>&amp;Ostatni plik</translation>
     </message>
     <message>
+        <location filename="../src/actionmanager.cpp" line="780"/>
+        <source>Next Random File</source>
+        <translation>&amp;Następny losowy plik</translation>
+    </message>
+    <message>
+        <location filename="../src/actionmanager.cpp" line="784"/>
+        <source>Previous Random File</source>
+        <translation>&amp;Poprzedni losowy plik</translation>
+    </message>
+    <message>
         <location filename="../src/actionmanager.cpp" line="783"/>
         <source>Save Frame &amp;As...</source>
         <translation>Zapisz &amp;klatkę jako...</translation>
@@ -1403,6 +1413,16 @@ Brak uprawnień do zapisu lub plik jest tylko do odczytu.</translation>
         <location filename="../src/shortcutmanager.cpp" line="83"/>
         <source>Last File</source>
         <translation>Ostatni plik</translation>
+    </message>
+    <message>
+        <location filename="../src/shortcutmanager.cpp" line="112"/>
+        <source>Next Random File</source>
+        <translation>Następny losowy plik</translation>
+    </message>
+    <message>
+        <location filename="../src/shortcutmanager.cpp" line="116"/>
+        <source>Previous Random File</source>
+        <translation>Poprzedni losowy plik</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="84"/>

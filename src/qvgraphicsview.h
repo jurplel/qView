@@ -8,6 +8,7 @@
 #include <QDir>
 #include <QTimer>
 #include <QFileInfo>
+#include "qvrandom.h"
 
 class QVGraphicsView : public QGraphicsView
 {
@@ -19,7 +20,7 @@ public:
     enum class ScaleMode { resetScale, zoom };
     Q_ENUM(ScaleMode)
 
-    enum class GoToFileMode { constant, first, previous, next, last };
+    enum class GoToFileMode { constant, first, previous, next, last, nextrandom, previousrandom };
     Q_ENUM(GoToFileMode)
 
     QMimeData *getMimeData() const;
@@ -130,6 +131,8 @@ private:
     qreal zoomBasisScaleFactor;
 
     QVImageCore imageCore{ this };
+
+    QVRandom randomGenerator;
 
     QTimer *expensiveScaleTimerNew;
     QPointF centerPoint;
