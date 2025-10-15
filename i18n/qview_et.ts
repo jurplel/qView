@@ -224,6 +224,16 @@
         <translation>Vii&amp;mane fail</translation>
     </message>
     <message>
+        <location filename="../src/actionmanager.cpp" line="780"/>
+        <source>Next Random File</source>
+        <translation>Järgmine juhuslik fail</translation>
+    </message>
+    <message>
+        <location filename="../src/actionmanager.cpp" line="784"/>
+        <source>Previous Random File</source>
+        <translation>Eelmine juhuslik fail</translation>
+    </message>
+    <message>
         <location filename="../src/actionmanager.cpp" line="783"/>
         <source>Save Frame &amp;As...</source>
         <translation>Salvesta k&amp;aader kui...</translation>
@@ -1344,6 +1354,16 @@ No write permission or file is read-only.</source>
         <location filename="../src/shortcutmanager.cpp" line="83"/>
         <source>Last File</source>
         <translation>Viimane fail</translation>
+    </message>
+    <message>
+        <location filename="../src/shortcutmanager.cpp" line="112"/>
+        <source>Next Random File</source>
+        <translation>Järgmine juhuslik fail</translation>
+    </message>
+    <message>
+        <location filename="../src/shortcutmanager.cpp" line="116"/>
+        <source>Previous Random File</source>
+        <translation>Eelmine juhuslik fail</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="84"/>

@@ -224,6 +224,16 @@
         <translation>&amp;En Son Dosya</translation>
     </message>
     <message>
+        <location filename="../src/actionmanager.cpp" line="780"/>
+        <source>Next Random File</source>
+        <translation>Sonraki rastgele dosya</translation>
+    </message>
+    <message>
+        <location filename="../src/actionmanager.cpp" line="784"/>
+        <source>Previous Random File</source>
+        <translation>Önceki rastgele dosya</translation>
+    </message>
+    <message>
         <location filename="../src/actionmanager.cpp" line="783"/>
         <source>Save Frame &amp;As...</source>
         <translation>Kareyi &amp;Farklı Kaydet...</translation>
@@ -1379,6 +1389,16 @@ Yazma izni yok veya dosya salt okunur.</translation>
         <location filename="../src/shortcutmanager.cpp" line="83"/>
         <source>Last File</source>
         <translation>En Son Dosya</translation>
+    </message>
+    <message>
+        <location filename="../src/shortcutmanager.cpp" line="112"/>
+        <source>Next Random File</source>
+        <translation>Sonraki rastgele dosya</translation>
+    </message>
+    <message>
+        <location filename="../src/shortcutmanager.cpp" line="116"/>
+        <source>Previous Random File</source>
+        <translation>Önceki rastgele dosya</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="84"/>

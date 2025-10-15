@@ -1101,6 +1101,16 @@ void MainWindow::lastFile()
     graphicsView->goToFile(QVGraphicsView::GoToFileMode::last);
 }
 
+void MainWindow::nextRandomFile()
+{
+    graphicsView->goToFile(QVGraphicsView::GoToFileMode::nextrandom);
+}
+
+void MainWindow::previousRandomFile()
+{
+    graphicsView->goToFile(QVGraphicsView::GoToFileMode::previousrandom);
+}
+
 void MainWindow::saveFrameAs()
 {
     QSettings settings;

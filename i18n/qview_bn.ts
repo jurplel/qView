@@ -224,6 +224,16 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../src/actionmanager.cpp" line="780"/>
+        <source>Next Random File</source>
+        <translation>পরবর্তী র‌্যান্ডম ফাইল</translation>
+    </message>
+    <message>
+        <location filename="../src/actionmanager.cpp" line="784"/>
+        <source>Previous Random File</source>
+        <translation>পূর্ববর্তী র‌্যান্ডম ফাইল</translation>
+    </message>
+    <message>
         <location filename="../src/actionmanager.cpp" line="783"/>
         <source>Save Frame &amp;As...</source>
         <translation type="unfinished"></translation>
@@ -1343,6 +1353,16 @@ No write permission or file is read-only.</source>
         <location filename="../src/shortcutmanager.cpp" line="83"/>
         <source>Last File</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/shortcutmanager.cpp" line="112"/>
+        <source>Next Random File</source>
+        <translation>পরবর্তী র‌্যান্ডম ফাইল</translation>
+    </message>
+    <message>
+        <location filename="../src/shortcutmanager.cpp" line="116"/>
+        <source>Previous Random File</source>
+        <translation>পূর্ববর্তী র‌্যান্ডম ফাইল</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="84"/>

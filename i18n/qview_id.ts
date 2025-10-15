@@ -224,6 +224,16 @@
         <translation>File Ter&amp;akhir</translation>
     </message>
     <message>
+        <location filename="../src/actionmanager.cpp" line="780"/>
+        <source>Next Random File</source>
+        <translation>Berkas acak berikutnya</translation>
+    </message>
+    <message>
+        <location filename="../src/actionmanager.cpp" line="784"/>
+        <source>Previous Random File</source>
+        <translation>Berkas acak sebelumnya</translation>
+    </message>
+    <message>
         <location filename="../src/actionmanager.cpp" line="783"/>
         <source>Save Frame &amp;As...</source>
         <translation>Simpan Bingkai &amp;Sebagai...</translation>
@@ -1379,6 +1389,16 @@ Tidak ada izin tulis atau berkas hanya dapat dibaca.</translation>
         <location filename="../src/shortcutmanager.cpp" line="83"/>
         <source>Last File</source>
         <translation>Berkas Terakhir</translation>
+    </message>
+    <message>
+        <location filename="../src/shortcutmanager.cpp" line="112"/>
+        <source>Next Random File</source>
+        <translation>Berkas acak berikutnya</translation>
+    </message>
+    <message>
+        <location filename="../src/shortcutmanager.cpp" line="116"/>
+        <source>Previous Random File</source>
+        <translation>Berkas acak sebelumnya</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="84"/>

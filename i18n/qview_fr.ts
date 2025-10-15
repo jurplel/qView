@@ -224,6 +224,16 @@
         <translation>Der&amp;nier fichier</translation>
     </message>
     <message>
+        <location filename="../src/actionmanager.cpp" line="780"/>
+        <source>Next Random File</source>
+        <translation>Fichier aléatoire suivant</translation>
+    </message>
+    <message>
+        <location filename="../src/actionmanager.cpp" line="784"/>
+        <source>Previous Random File</source>
+        <translation>Fichier aléatoire précédent</translation>
+    </message>
+    <message>
         <location filename="../src/actionmanager.cpp" line="783"/>
         <source>Save Frame &amp;As...</source>
         <translation>Enregistrer l&apos;écran &amp;sous…</translation>
@@ -1399,6 +1409,16 @@ Pas d&apos;autorisation d&apos;écriture ou le fichier est en lecture seule.</tr
         <location filename="../src/shortcutmanager.cpp" line="83"/>
         <source>Last File</source>
         <translation>Dernier fichier</translation>
+    </message>
+    <message>
+        <location filename="../src/shortcutmanager.cpp" line="112"/>
+        <source>Next Random File</source>
+        <translation>Fichier aléatoire suivant</translation>
+    </message>
+    <message>
+        <location filename="../src/shortcutmanager.cpp" line="116"/>
+        <source>Previous Random File</source>
+        <translation>Fichier aléatoire précédent</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="84"/>

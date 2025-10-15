@@ -224,6 +224,16 @@
         <translation>Úl&amp;timo archivo</translation>
     </message>
     <message>
+        <location filename="../src/actionmanager.cpp" line="780"/>
+        <source>Next Random File</source>
+        <translation>Siguiente archivo aleatorio</translation>
+    </message>
+    <message>
+        <location filename="../src/actionmanager.cpp" line="784"/>
+        <source>Previous Random File</source>
+        <translation>Archivo aleatorio anterior</translation>
+    </message>
+    <message>
         <location filename="../src/actionmanager.cpp" line="783"/>
         <source>Save Frame &amp;As...</source>
         <translation>&amp;Guardar el fotograma como...</translation>
@@ -1391,6 +1401,16 @@ No tiene permiso de escritura o el archivo es de solo lectura.</translation>
         <location filename="../src/shortcutmanager.cpp" line="83"/>
         <source>Last File</source>
         <translation>Último archivo</translation>
+    </message>
+    <message>
+        <location filename="../src/shortcutmanager.cpp" line="112"/>
+        <source>Next Random File</source>
+        <translation>Siguiente archivo aleatorio</translation>
+    </message>
+    <message>
+        <location filename="../src/shortcutmanager.cpp" line="116"/>
+        <source>Previous Random File</source>
+        <translation>Archivo aleatorio anterior</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="84"/>

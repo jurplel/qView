@@ -224,6 +224,16 @@
         <translation>&amp;Sista filen</translation>
     </message>
     <message>
+        <location filename="../src/actionmanager.cpp" line="780"/>
+        <source>Next Random File</source>
+        <translation>Nästa slumpmässiga fil</translation>
+    </message>
+    <message>
+        <location filename="../src/actionmanager.cpp" line="784"/>
+        <source>Previous Random File</source>
+        <translation>Föregående slumpmässiga fil</translation>
+    </message>
+    <message>
         <location filename="../src/actionmanager.cpp" line="783"/>
         <source>Save Frame &amp;As...</source>
         <translation>Spara bildruta &amp;som...</translation>
@@ -1381,6 +1391,16 @@ Ingen skrivbehörighet eller filen är skrivskyddad.</translation>
         <location filename="../src/shortcutmanager.cpp" line="83"/>
         <source>Last File</source>
         <translation>Sista filen</translation>
+    </message>
+    <message>
+        <location filename="../src/shortcutmanager.cpp" line="112"/>
+        <source>Next Random File</source>
+        <translation>Nästa slumpmässiga fil</translation>
+    </message>
+    <message>
+        <location filename="../src/shortcutmanager.cpp" line="116"/>
+        <source>Previous Random File</source>
+        <translation>Föregående slumpmässiga fil</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="84"/>

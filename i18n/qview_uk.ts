@@ -224,6 +224,16 @@
         <translation>Остан&amp;ній файл</translation>
     </message>
     <message>
+        <location filename="../src/actionmanager.cpp" line="780"></location>
+        <source>Next Random File</source>
+        <translation>Наступний випадковий файл</translation>
+    </message>
+    <message>
+        <location filename="../src/actionmanager.cpp" line="784"></location>
+        <source>Previous Random File</source>
+        <translation>Попередній випадковий файл</translation>
+    </message>
+    <message>
         <location filename="../src/actionmanager.cpp" line="783"></location>
         <source>Save Frame &amp;As...</source>
         <translation>Зберегти кадр &amp;як...</translation>
@@ -1381,6 +1391,16 @@ No write permission or file is read-only.</source>
         <location filename="../src/shortcutmanager.cpp" line="83"></location>
         <source>Last File</source>
         <translation>Останній файл</translation>
+    </message>
+    <message>
+        <location filename="../src/shortcutmanager.cpp" line="112"></location>
+        <source>Next Random File</source>
+        <translation>Наступний випадковий файл</translation>
+    </message>
+    <message>
+        <location filename="../src/shortcutmanager.cpp" line="116"></location>
+        <source>Previous Random File</source>
+        <translation>Попередній випадковий файл</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="84"></location>

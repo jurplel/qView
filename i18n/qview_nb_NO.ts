@@ -224,6 +224,16 @@
         <translation>Sis&amp;te fil</translation>
     </message>
     <message>
+        <location filename="../src/actionmanager.cpp" line="780"/>
+        <source>Next Random File</source>
+        <translation>Neste tilfeldig fil</translation>
+    </message>
+    <message>
+        <location filename="../src/actionmanager.cpp" line="784"/>
+        <source>Previous Random File</source>
+        <translation>Forrige tilfeldig fil</translation>
+    </message>
+    <message>
         <location filename="../src/actionmanager.cpp" line="783"/>
         <source>Save Frame &amp;As...</source>
         <translation>Lagre ramme &amp;som …</translation>
@@ -1397,6 +1407,16 @@ Ingen skrivetilgang, eller så er filen skrivebeskyttet.</translation>
         <location filename="../src/shortcutmanager.cpp" line="83"/>
         <source>Last File</source>
         <translation>Siste fil</translation>
+    </message>
+    <message>
+        <location filename="../src/shortcutmanager.cpp" line="112"/>
+        <source>Next Random File</source>
+        <translation>Neste tilfeldig fil</translation>
+    </message>
+    <message>
+        <location filename="../src/shortcutmanager.cpp" line="116"/>
+        <source>Previous Random File</source>
+        <translation>Forrige tilfeldig fil</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="84"/>

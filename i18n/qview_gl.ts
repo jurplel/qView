@@ -224,6 +224,16 @@
         <translation>Derradei&amp;ro ficheiro</translation>
     </message>
     <message>
+        <location filename="../src/actionmanager.cpp" line="780"/>
+        <source>Next Random File</source>
+        <translation>Seguinte ficheiro aleatorio</translation>
+    </message>
+    <message>
+        <location filename="../src/actionmanager.cpp" line="784"/>
+        <source>Previous Random File</source>
+        <translation>Ficheiro aleatorio anterior</translation>
+    </message>
+    <message>
         <location filename="../src/actionmanager.cpp" line="783"/>
         <source>Save Frame &amp;As...</source>
         <translation>&amp;Gardar o fotograma como...</translation>
@@ -1381,6 +1391,16 @@ Sen permiso de escritura ou o ficheiro é de só lectura.</translation>
         <location filename="../src/shortcutmanager.cpp" line="83"/>
         <source>Last File</source>
         <translation>Derradeiro ficheiro</translation>
+    </message>
+    <message>
+        <location filename="../src/shortcutmanager.cpp" line="112"/>
+        <source>Next Random File</source>
+        <translation>Seguinte ficheiro aleatorio</translation>
+    </message>
+    <message>
+        <location filename="../src/shortcutmanager.cpp" line="116"/>
+        <source>Previous Random File</source>
+        <translation>Ficheiro aleatorio anterior</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="84"/>
