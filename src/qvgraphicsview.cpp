@@ -332,26 +332,32 @@ void QVGraphicsView::zoom(qreal scaleFactor, const QPoint &pos)
 
     updateFilteringMode();
 
-    if (pos != lastZoomEventPos) {
-        lastZoomEventPos = pos;
+    QPoint targetPos = pos;
+
+    if (targetPos == QPoint(-1, -1)) {
+        int viewCenterX = viewport()->width() / 2;
+        int viewCenterY = viewport()->height() / 2;
+        targetPos = QPoint(viewCenterX, viewCenterY);
+    }
+
+    if (targetPos != lastZoomEventPos) {
+        lastZoomEventPos = targetPos;
         lastZoomRoundingError = QPointF();
     }
-    const QPointF scenePos = mapToScene(pos) - lastZoomRoundingError;
+    const QPointF scenePos = mapToScene(targetPos) - lastZoomRoundingError;
 
     zoomBasisScaleFactor *= scaleFactor;
     setTransform(QTransform(zoomBasis).scale(zoomBasisScaleFactor, zoomBasisScaleFactor));
     absoluteTransform.scale(scaleFactor, scaleFactor);
 
-    // If we are zooming in, we have a point to zoom towards, the mouse is on top of the viewport,
-    // and cursor zooming is enabled
-    if (currentScale > 1.00001 && pos != QPoint(-1, -1) && underMouse()
-        && qvGetSettingBool(CursorZoom)) {
+    // If we are zooming in and cursor zooming is enabled
+    if (currentScale > 1.00001 && qvGetSettingBool(CursorZoom)) {
         const QPointF p1mouse = mapFromScene(scenePos);
-        const QPointF move = p1mouse - pos;
+        const QPointF move = p1mouse - targetPos;
         horizontalScrollBar()->setValue(horizontalScrollBar()->value()
                                         + (move.x() * (isRightToLeft() ? -1 : 1)));
         verticalScrollBar()->setValue(verticalScrollBar()->value() + move.y());
-        lastZoomRoundingError = mapToScene(pos) - scenePos;
+        lastZoomRoundingError = mapToScene(targetPos) - scenePos;
     } else {
         centerOn(loadedPixmapItem);
     }
