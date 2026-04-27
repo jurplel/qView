@@ -109,6 +109,14 @@ void ShortcutManager::initializeShortcutsList()
                            {} });
     shortcutsList.append(
             { tr("Last File"), "lastfile", QStringList(QKeySequence(Qt::Key_End).toString()), {} });
+    shortcutsList.append({ tr("Cycle Sort Files By"), "cyclesortmode", {}, {} });
+    shortcutsList.append({ tr("Toggle Sort Order"), "togglesortorder", {}, {} });
+    shortcutsList.append({ tr("Sort by Name"), "sortmode0", {}, {} });
+    shortcutsList.append({ tr("Sort by Date Modified"), "sortmode1", {}, {} });
+    shortcutsList.append({ tr("Sort by Date Created"), "sortmode2", {}, {} });
+    shortcutsList.append({ tr("Sort by Size"), "sortmode3", {}, {} });
+    shortcutsList.append({ tr("Sort by Type"), "sortmode4", {}, {} });
+    shortcutsList.append({ tr("Sort Randomly"), "sortmode5", {}, {} });
     shortcutsList.append(
             { tr("Zoom In"), "zoomin", keyBindingsToStringList(QKeySequence::ZoomIn), {} });
     // Allow zooming with Ctrl + plus like a regular person (without holding shift)
