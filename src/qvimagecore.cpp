@@ -332,9 +332,9 @@ void QVImageCore::updateFolderInfo(QString dirPath)
             return;
     }
 
-    currentFileDetails.folderFileInfoList = getCompatibleFiles(dirPath);
+    const QList<CompatibleFile> compatibleFiles = getCompatibleFiles(dirPath);
 
-    DirInfo dirInfo = { dirPath, currentFileDetails.folderFileInfoList.count(),
+    DirInfo dirInfo = { dirPath, compatibleFiles.count(),
                         qvGetSettingInt(SortMode), qvGetSettingBool(SortDescending) };
     // If the current folder changed since the last image, assign a new seed for random sorting
     const bool shouldSort = lastDirInfo != dirInfo;
@@ -417,6 +417,10 @@ void QVImageCore::updateFolderInfo(QString dirPath)
     };
 
     if (shouldSort) {
+        currentFileDetails.folderFileInfoList = compatibleFiles;
+        sortFn();
+    } else if (dirInfo.sortMode != 5) {
+        currentFileDetails.folderFileInfoList = compatibleFiles;
         sortFn();
     }
 

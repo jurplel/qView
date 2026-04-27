@@ -79,6 +79,17 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     slideshowTimer = new QTimer(this);
     connect(slideshowTimer, &QTimer::timeout, this, &MainWindow::slideshowAction);
 
+    // Timer for temporary on-screen messages
+    osdTimer = new QTimer(this);
+    osdTimer->setSingleShot(true);
+    osdTimer->setInterval(1500);
+    connect(osdTimer, &QTimer::timeout, this, [this] {
+        updateWindowTitle();
+        ui->fullscreenLabel->setVisible(
+                qvApp->getSettingsManager().getBool(SettingsManager::Setting::FullScreenDetails)
+                && windowState().testFlag(Qt::WindowFullScreen));
+    });
+
     // Context menu
     auto &actionManager = qvApp->getActionManager();
 
@@ -1046,6 +1057,77 @@ void MainWindow::nextFile()
 void MainWindow::lastFile()
 {
     graphicsView->goToFile(QVGraphicsView::GoToFileMode::last);
+}
+
+void MainWindow::cycleSortMode()
+{
+    constexpr int sortModeCount = 6;
+    const int sortMode = qvApp->getSettingsManager().getInt(SettingsManager::Setting::SortMode);
+    setSortMode((sortMode + 1) % sortModeCount);
+}
+
+void MainWindow::toggleSortOrder()
+{
+    QSettings settings;
+    settings.beginGroup("options");
+    settings.setValue("sortdescending",
+                      !qvApp->getSettingsManager().getBool(
+                              SettingsManager::Setting::SortDescending));
+    qvApp->getSettingsManager().loadSettings();
+    showSortOSD();
+}
+
+void MainWindow::setSortMode(int sortMode)
+{
+    constexpr int sortModeCount = 6;
+    if (sortMode < 0 || sortMode >= sortModeCount)
+        return;
+    if (sortMode == qvApp->getSettingsManager().getInt(SettingsManager::Setting::SortMode))
+        return;
+
+    QSettings settings;
+    settings.beginGroup("options");
+    settings.setValue("sortmode", sortMode);
+    qvApp->getSettingsManager().loadSettings();
+    showSortOSD();
+}
+
+void MainWindow::showSortOSD()
+{
+    const auto &settingsManager = qvApp->getSettingsManager();
+    showOSDMessage(tr("Sort: %1 (%2)")
+                           .arg(sortModeName(settingsManager.getInt(
+                                        SettingsManager::Setting::SortMode)),
+                                settingsManager.getBool(SettingsManager::Setting::SortDescending)
+                                        ? tr("Descending")
+                                        : tr("Ascending")));
+}
+
+void MainWindow::showOSDMessage(const QString &message)
+{
+    ui->fullscreenLabel->setText(message);
+    ui->fullscreenLabel->setVisible(true);
+    osdTimer->start();
+}
+
+QString MainWindow::sortModeName(int sortMode) const
+{
+    switch (sortMode) {
+    case 0:
+        return tr("Name");
+    case 1:
+        return tr("Date Modified");
+    case 2:
+        return tr("Date Created");
+    case 3:
+        return tr("Size");
+    case 4:
+        return tr("Type");
+    case 5:
+        return tr("Random");
+    default:
+        return tr("Unknown");
+    }
 }
 
 void MainWindow::saveFrameAs()

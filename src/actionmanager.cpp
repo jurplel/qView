@@ -609,6 +609,12 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
         relevantWindow->nextFile();
     } else if (key == "lastfile") {
         relevantWindow->lastFile();
+    } else if (key == "cyclesortmode") {
+        relevantWindow->cycleSortMode();
+    } else if (key == "togglesortorder") {
+        relevantWindow->toggleSortOrder();
+    } else if (key.startsWith("sortmode")) {
+        relevantWindow->setSortMode(key.mid(8).toInt());
     } else if (key == "saveframeas") {
         relevantWindow->saveFrameAs();
     } else if (key == "pause") {
@@ -765,6 +771,38 @@ void ActionManager::initializeActionLibrary()
     auto *lastFileAction = new QAction(QIcon::fromTheme("go-last"), tr("Las&t File"));
     lastFileAction->setData({ "folderdisable" });
     actionLibrary.insert("lastfile", lastFileAction);
+
+    auto *cycleSortModeAction = new QAction(tr("Cycle Sort Files By"));
+    cycleSortModeAction->setData({ "folderdisable" });
+    actionLibrary.insert("cyclesortmode", cycleSortModeAction);
+
+    auto *toggleSortOrderAction = new QAction(tr("Toggle Sort Order"));
+    toggleSortOrderAction->setData({ "folderdisable" });
+    actionLibrary.insert("togglesortorder", toggleSortOrderAction);
+
+    auto *sortByNameAction = new QAction(tr("Sort by Name"));
+    sortByNameAction->setData({ "folderdisable" });
+    actionLibrary.insert("sortmode0", sortByNameAction);
+
+    auto *sortByDateModifiedAction = new QAction(tr("Sort by Date Modified"));
+    sortByDateModifiedAction->setData({ "folderdisable" });
+    actionLibrary.insert("sortmode1", sortByDateModifiedAction);
+
+    auto *sortByDateCreatedAction = new QAction(tr("Sort by Date Created"));
+    sortByDateCreatedAction->setData({ "folderdisable" });
+    actionLibrary.insert("sortmode2", sortByDateCreatedAction);
+
+    auto *sortBySizeAction = new QAction(tr("Sort by Size"));
+    sortBySizeAction->setData({ "folderdisable" });
+    actionLibrary.insert("sortmode3", sortBySizeAction);
+
+    auto *sortByTypeAction = new QAction(tr("Sort by Type"));
+    sortByTypeAction->setData({ "folderdisable" });
+    actionLibrary.insert("sortmode4", sortByTypeAction);
+
+    auto *sortRandomAction = new QAction(tr("Sort Randomly"));
+    sortRandomAction->setData({ "folderdisable" });
+    actionLibrary.insert("sortmode5", sortRandomAction);
 
     auto *saveFrameAsAction =
             new QAction(QIcon::fromTheme("document-save-as"), tr("Save Frame &As..."));

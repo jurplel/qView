@@ -99,6 +99,12 @@ public:
 
     void lastFile();
 
+    void cycleSortMode();
+
+    void toggleSortOrder();
+
+    void setSortMode(int sortMode);
+
     void saveFrameAs();
 
     void pause();
@@ -157,6 +163,12 @@ protected slots:
     void shortcutsUpdated();
 
 private:
+    void showSortOSD();
+
+    void showOSDMessage(const QString &message);
+
+    QString sortModeName(int sortMode) const;
+
     Ui::MainWindow *ui;
     QVGraphicsView *graphicsView;
 
@@ -164,6 +176,8 @@ private:
     QMenu *virtualMenu;
 
     QTimer *slideshowTimer;
+
+    QTimer *osdTimer;
 
     QShortcut *escShortcut;
 
