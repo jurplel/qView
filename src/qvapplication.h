@@ -40,8 +40,10 @@ public:
     bool event(QEvent *event) override;
 
     static void openFile(MainWindow *window, const QString &file, bool resize = true);
+    static void openFileSequence(MainWindow *window, const QStringList &files, bool resize = true);
 
     static void openFile(const QString &file, bool resize = true);
+    static void openFileSequence(const QStringList &files, bool resize = true);
 
     static void pickFile(MainWindow *parent = nullptr);
 

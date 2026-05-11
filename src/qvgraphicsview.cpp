@@ -12,6 +12,7 @@
 #include <QtMath>
 #include <QGestureEvent>
 #include <QScrollBar>
+#include <QTextStream>
 
 QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 {
@@ -335,7 +336,24 @@ void QVGraphicsView::loadMimeData(const QMimeData *mimeData)
 
 void QVGraphicsView::loadFile(const QString &fileName)
 {
+    imageCore.clearCustomFileList();
     imageCore.loadFile(fileName);
+}
+
+void QVGraphicsView::loadFileSequence(const QStringList &paths)
+{
+    QStringList warnings;
+    const auto fileList = imageCore.getCompatibleFilesForInputs(paths, &warnings);
+
+    QTextStream errorStream(stderr);
+    for (const QString &warning : warnings)
+        errorStream << "qView: " << warning << Qt::endl;
+
+    if (fileList.isEmpty())
+        return;
+
+    imageCore.setCustomFileList(fileList);
+    imageCore.loadFile(fileList.constFirst().absoluteFilePath);
 }
 
 void QVGraphicsView::reloadFile()
@@ -560,7 +578,9 @@ void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
         // Make sure the file still exists because if it disappears from the file listing we'll lose
         // track of our index within the folder. Use the static 'exists' method to avoid caching.
         // If we skip updating now, flag it for retry later once we locate a new file.
-        if (QFile::exists(getCurrentFileDetails().fileInfo.absoluteFilePath()))
+        if (imageCore.hasCustomFileList())
+            imageCore.updateFolderInfo();
+        else if (QFile::exists(getCurrentFileDetails().fileInfo.absoluteFilePath()))
             imageCore.updateFolderInfo();
         else
             shouldRetryFolderInfoUpdate = true;
@@ -627,7 +647,7 @@ void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
         || nextImageFilePath == getCurrentFileDetails().fileInfo.absoluteFilePath())
         return;
 
-    if (shouldRetryFolderInfoUpdate) {
+    if (shouldRetryFolderInfoUpdate && !imageCore.hasCustomFileList()) {
         // If the user just deleted a file through qView, closeImage will have been called which
         // empties currentFileDetails.fileInfo. In this case updateFolderInfo can't infer the
         // directory from fileInfo like it normally does, so we'll explicity pass in the folder
@@ -635,7 +655,7 @@ void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
         imageCore.updateFolderInfo(QFileInfo(nextImageFilePath).path());
     }
 
-    loadFile(nextImageFilePath);
+    imageCore.loadFile(nextImageFilePath);
 }
 
 void QVGraphicsView::fitInViewMarginless(const QRectF &rect)

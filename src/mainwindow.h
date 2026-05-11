@@ -122,6 +122,7 @@ public:
 
 public slots:
     void openFile(const QString &fileName);
+    void openFileSequence(const QStringList &fileNames);
 
     void toggleSlideshow();
 

@@ -97,11 +97,24 @@ void QVApplication::openFile(MainWindow *window, const QString &file, bool resiz
     window->openFile(file);
 }
 
+void QVApplication::openFileSequence(MainWindow *window, const QStringList &files, bool resize)
+{
+    window->setJustLaunchedWithImage(resize);
+    window->openFileSequence(files);
+}
+
 void QVApplication::openFile(const QString &file, bool resize)
 {
     auto *window = qvApp->getMainWindow(true);
 
     QVApplication::openFile(window, file, resize);
+}
+
+void QVApplication::openFileSequence(const QStringList &files, bool resize)
+{
+    auto *window = qvApp->getMainWindow(true);
+
+    QVApplication::openFileSequence(window, files, resize);
 }
 
 void QVApplication::pickFile(MainWindow *parent)

@@ -3,6 +3,32 @@
 #include "qvwin32functions.h"
 
 #include <QCommandLineParser>
+#include <QTextStream>
+
+QStringList expandStandardInputPaths(const QStringList &paths)
+{
+    QStringList expandedPaths;
+    QTextStream inputStream(stdin, QIODevice::ReadOnly);
+    QTextStream errorStream(stderr);
+
+    for (const QString &path : paths) {
+        if (path != "-") {
+            expandedPaths.append(path);
+            continue;
+        }
+
+        while (!inputStream.atEnd()) {
+            const QString line = inputStream.readLine();
+            if (!line.isEmpty())
+                expandedPaths.append(line);
+        }
+
+        if (inputStream.status() != QTextStream::Ok)
+            errorStream << "qView: Failed to read paths from standard input" << Qt::endl;
+    }
+
+    return expandedPaths;
+}
 
 int main(int argc, char *argv[])
 {
@@ -17,7 +43,10 @@ int main(int argc, char *argv[])
     QCommandLineParser parser;
     parser.addHelpOption();
     parser.addVersionOption();
-    parser.addPositionalArgument(QObject::tr("file"), QObject::tr("The file to open."));
+    parser.addPositionalArgument(QObject::tr("file"),
+                                 QObject::tr("The file(s) or directories to open. Use - to read "
+                                             "line-delimited paths from standard input."),
+                                 QObject::tr("[file ...]"));
 #if defined Q_OS_WIN && WIN32_LOADED && QT_VERSION < QT_VERSION_CHECK(6, 7, 2)
     // Workaround for unicode characters getting mangled in certain cases. To support unicode
     // arguments on Windows, QCoreApplication normally ignores argv and gets them from the Windows
@@ -32,8 +61,9 @@ int main(int argc, char *argv[])
 #endif
 
     auto *window = QVApplication::newWindow();
-    if (!parser.positionalArguments().isEmpty())
-        QVApplication::openFile(window, parser.positionalArguments().constFirst(), true);
+    const QStringList inputPaths = expandStandardInputPaths(parser.positionalArguments());
+    if (!inputPaths.isEmpty())
+        QVApplication::openFileSequence(window, inputPaths, true);
 
     return QApplication::exec();
 }

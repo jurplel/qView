@@ -14,6 +14,88 @@
 #include <QIcon>
 #include <QGuiApplication>
 #include <QScreen>
+#include <QHash>
+#include <QSet>
+
+namespace {
+QString sanitizeLocalPath(const QString &path)
+{
+    QUrl url(path);
+    if (url.isLocalFile())
+        return url.toLocalFile();
+    return path;
+}
+
+void sortCompatibleFiles(QList<QVImageCore::CompatibleFile> *fileList,
+                         const QVImageCore::DirInfo &dirInfo)
+{
+    switch (dirInfo.sortMode) {
+    case 0: {
+        QCollator collator;
+        collator.setNumericMode(true);
+        std::sort(fileList->begin(), fileList->end(),
+                  [&](const QVImageCore::CompatibleFile &file1,
+                      const QVImageCore::CompatibleFile &file2) {
+                      if (dirInfo.sortDescending)
+                          return collator.compare(file1.fileName, file2.fileName) > 0;
+                      else
+                          return collator.compare(file1.fileName, file2.fileName) < 0;
+                  });
+        break;
+    }
+    case 1:
+        std::sort(fileList->begin(), fileList->end(),
+                  [&](const QVImageCore::CompatibleFile &file1,
+                      const QVImageCore::CompatibleFile &file2) {
+                      if (dirInfo.sortDescending)
+                          return file1.lastModified < file2.lastModified;
+                      else
+                          return file1.lastModified > file2.lastModified;
+                  });
+        break;
+    case 2:
+        std::sort(fileList->begin(), fileList->end(),
+                  [&](const QVImageCore::CompatibleFile &file1,
+                      const QVImageCore::CompatibleFile &file2) {
+                      if (dirInfo.sortDescending)
+                          return file1.lastCreated < file2.lastCreated;
+                      else
+                          return file1.lastCreated > file2.lastCreated;
+                  });
+        break;
+    case 3:
+        std::sort(fileList->begin(), fileList->end(),
+                  [&](const QVImageCore::CompatibleFile &file1,
+                      const QVImageCore::CompatibleFile &file2) {
+                      if (dirInfo.sortDescending)
+                          return file1.size < file2.size;
+                      else
+                          return file1.size > file2.size;
+                  });
+        break;
+    case 4: {
+        QCollator collator;
+        std::sort(fileList->begin(), fileList->end(),
+                  [&](const QVImageCore::CompatibleFile &file1,
+                      const QVImageCore::CompatibleFile &file2) {
+                      if (dirInfo.sortDescending)
+                          return collator.compare(file1.mimeType, file2.mimeType) > 0;
+                      else
+                          return collator.compare(file1.mimeType, file2.mimeType) < 0;
+                  });
+        break;
+    }
+    case 5:
+        std::shuffle(fileList->begin(), fileList->end(),
+                     std::default_random_engine(
+                             std::chrono::system_clock::now().time_since_epoch().count()));
+        break;
+    default:
+        Q_ASSERT(false);
+        break;
+    }
+}
+}
 
 QCache<QString, QVImageCore::ReadData> QVImageCore::imageCache;
 
@@ -60,12 +142,7 @@ void QVImageCore::loadFile(const QString &fileName, bool isReloading)
         return;
     }
 
-    QString sanitaryFileName = fileName;
-
-    // sanitize file name if necessary
-    QUrl sanitaryUrl = QUrl(fileName);
-    if (sanitaryUrl.isLocalFile())
-        sanitaryFileName = sanitaryUrl.toLocalFile();
+    QString sanitaryFileName = sanitizeLocalPath(fileName);
 
     QFileInfo fileInfo(sanitaryFileName);
     sanitaryFileName = fileInfo.absoluteFilePath();
@@ -322,8 +399,83 @@ QList<QVImageCore::CompatibleFile> QVImageCore::getCompatibleFiles(const QString
     return fileList;
 }
 
+QList<QVImageCore::CompatibleFile>
+QVImageCore::getCompatibleFilesForInputs(const QStringList &paths, QStringList *warnings) const
+{
+    QList<CompatibleFile> fileList;
+    QHash<QString, QList<CompatibleFile>> compatibleFilesByDir;
+    QSet<QString> seenPaths;
+
+    const auto sortedCompatibleFilesForDir = [&](const QString &dirPath) {
+        if (!compatibleFilesByDir.contains(dirPath)) {
+            auto files = getCompatibleFiles(dirPath);
+            const DirInfo dirInfo = { dirPath, files.count(), qvGetSettingInt(SortMode),
+                                      qvGetSettingBool(SortDescending) };
+            sortCompatibleFiles(&files, dirInfo);
+            compatibleFilesByDir.insert(dirPath, files);
+        }
+        return compatibleFilesByDir.value(dirPath);
+    };
+
+    const auto appendCompatibleFile = [&](const CompatibleFile &compatibleFile) {
+        const QString normalizedPath =
+                compatibleFile.absoluteFilePath.normalized(QString::NormalizationForm_D);
+        if (seenPaths.contains(normalizedPath))
+            return;
+
+        seenPaths.insert(normalizedPath);
+        fileList.append(compatibleFile);
+    };
+
+    for (const QString &path : paths) {
+        const QString sanitaryPath = sanitizeLocalPath(path);
+        const QFileInfo fileInfo(sanitaryPath);
+        const QString absoluteFilePath = fileInfo.absoluteFilePath();
+
+        if (!fileInfo.exists()) {
+            if (warnings)
+                warnings->append(QObject::tr("Skipping missing path: %1").arg(path));
+            continue;
+        }
+
+        if (fileInfo.isDir()) {
+            const auto compatibleFiles = sortedCompatibleFilesForDir(absoluteFilePath);
+            if (compatibleFiles.isEmpty() && warnings)
+                warnings->append(QObject::tr("Skipping directory with no supported images: %1")
+                                         .arg(path));
+            for (const auto &compatibleFile : compatibleFiles)
+                appendCompatibleFile(compatibleFile);
+            continue;
+        }
+
+        const auto compatibleFiles = sortedCompatibleFilesForDir(fileInfo.absolutePath());
+        bool matched = false;
+        for (const auto &compatibleFile : compatibleFiles) {
+            const QString candidatePath =
+                    compatibleFile.absoluteFilePath.normalized(QString::NormalizationForm_D);
+            const QString targetPath = absoluteFilePath.normalized(QString::NormalizationForm_D);
+            if (candidatePath.compare(targetPath, Qt::CaseInsensitive) == 0
+                && QFileInfo(compatibleFile.absoluteFilePath) == fileInfo) {
+                appendCompatibleFile(compatibleFile);
+                matched = true;
+                break;
+            }
+        }
+
+        if (!matched && warnings)
+            warnings->append(QObject::tr("Skipping unsupported file: %1").arg(path));
+    }
+
+    return fileList;
+}
+
 void QVImageCore::updateFolderInfo(QString dirPath)
 {
+    if (usingCustomFileList) {
+        currentFileDetails.updateLoadedIndexInFolder();
+        return;
+    }
+
     if (dirPath.isEmpty()) {
         dirPath = currentFileDetails.fileInfo.path();
 
@@ -340,88 +492,27 @@ void QVImageCore::updateFolderInfo(QString dirPath)
     const bool shouldSort = lastDirInfo != dirInfo;
     lastDirInfo = dirInfo;
 
-    const auto sortFn = [&]() {
-        // Sorting
-        switch (dirInfo.sortMode) {
-        case 0: {
-            // Natural sorting
-            QCollator collator;
-            collator.setNumericMode(true);
-            std::sort(currentFileDetails.folderFileInfoList.begin(),
-                      currentFileDetails.folderFileInfoList.end(),
-                      [&](const CompatibleFile &file1, const CompatibleFile &file2) {
-                          if (dirInfo.sortDescending)
-                              return collator.compare(file1.fileName, file2.fileName) > 0;
-                          else
-                              return collator.compare(file1.fileName, file2.fileName) < 0;
-                      });
-            break;
-        }
-        case 1:
-            // Date modified
-            std::sort(currentFileDetails.folderFileInfoList.begin(),
-                      currentFileDetails.folderFileInfoList.end(),
-                      [&](const CompatibleFile &file1, const CompatibleFile &file2) {
-                          if (dirInfo.sortDescending)
-                              return file1.lastModified < file2.lastModified;
-                          else
-                              return file1.lastModified > file2.lastModified;
-                      });
-            break;
-        case 2:
-            // Date created
-            std::sort(currentFileDetails.folderFileInfoList.begin(),
-                      currentFileDetails.folderFileInfoList.end(),
-                      [&](const CompatibleFile &file1, const CompatibleFile &file2) {
-                          if (dirInfo.sortDescending)
-                              return file1.lastCreated < file2.lastCreated;
-                          else
-                              return file1.lastCreated > file2.lastCreated;
-                      });
-            break;
-        case 3:
-            // Size
-            std::sort(currentFileDetails.folderFileInfoList.begin(),
-                      currentFileDetails.folderFileInfoList.end(),
-                      [&](const CompatibleFile &file1, const CompatibleFile &file2) {
-                          if (dirInfo.sortDescending)
-                              return file1.size < file2.size;
-                          else
-                              return file1.size > file2.size;
-                      });
-            break;
-        case 4: {
-            // Type
-            QCollator collator;
-            std::sort(currentFileDetails.folderFileInfoList.begin(),
-                      currentFileDetails.folderFileInfoList.end(),
-                      [&](const CompatibleFile &file1, const CompatibleFile &file2) {
-                          if (dirInfo.sortDescending)
-                              return collator.compare(file1.mimeType, file2.mimeType) > 0;
-                          else
-                              return collator.compare(file1.mimeType, file2.mimeType) < 0;
-                      });
-            break;
-        }
-        case 5:
-            // Random
-            std::shuffle(currentFileDetails.folderFileInfoList.begin(),
-                         currentFileDetails.folderFileInfoList.end(),
-                         std::default_random_engine(
-                                 std::chrono::system_clock::now().time_since_epoch().count()));
-            break;
-        default:
-            Q_ASSERT(false);
-            break;
-        }
-    };
-
-    if (shouldSort) {
-        sortFn();
-    }
+    if (shouldSort)
+        sortCompatibleFiles(&currentFileDetails.folderFileInfoList, dirInfo);
 
     // Set current file index variable
     currentFileDetails.updateLoadedIndexInFolder();
+}
+
+void QVImageCore::setCustomFileList(const QList<CompatibleFile> &fileList)
+{
+    usingCustomFileList = true;
+    currentFileDetails.folderFileInfoList = fileList;
+    currentFileDetails.updateLoadedIndexInFolder();
+}
+
+void QVImageCore::clearCustomFileList()
+{
+    if (!usingCustomFileList)
+        return;
+
+    usingCustomFileList = false;
+    updateFolderInfo();
 }
 
 void QVImageCore::requestCaching()

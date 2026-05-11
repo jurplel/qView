@@ -25,6 +25,7 @@ public:
     QMimeData *getMimeData() const;
     void loadMimeData(const QMimeData *mimeData);
     void loadFile(const QString &fileName);
+    void loadFileSequence(const QStringList &paths);
 
     void reloadFile();
 

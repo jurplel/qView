@@ -326,6 +326,12 @@ void MainWindow::openFile(const QString &fileName)
     cancelSlideshow();
 }
 
+void MainWindow::openFileSequence(const QStringList &fileNames)
+{
+    graphicsView->loadFileSequence(fileNames);
+    cancelSlideshow();
+}
+
 void MainWindow::settingsUpdated()
 {
     auto &settingsManager = qvApp->getSettingsManager();

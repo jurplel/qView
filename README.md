@@ -26,3 +26,8 @@
 <p align=center>
     <img alt="Screenshot" src="https://interversehq.com/qview/assets/img/screenshot3.png">
 </p>
+
+## Command-line input
+
+qView can open multiple files and directories as one navigation sequence. It also accepts `-` to
+read line-delimited paths from standard input. See [docs/cli-input.md](docs/cli-input.md).

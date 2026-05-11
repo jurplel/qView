@@ -10,6 +10,7 @@
 #include <QTimer>
 #include <QCache>
 #include <QElapsedTimer>
+#include <QStringList>
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
 #  include <QColorSpace>
@@ -88,7 +89,12 @@ public:
     void loadPixmap(const ReadData &readData);
     void closeImage();
     QList<CompatibleFile> getCompatibleFiles(const QString &dirPath) const;
+    QList<CompatibleFile> getCompatibleFilesForInputs(const QStringList &paths,
+                                                      QStringList *warnings = nullptr) const;
     void updateFolderInfo(QString dirPath = QString());
+    void setCustomFileList(const QList<CompatibleFile> &fileList);
+    void clearCustomFileList();
+    bool hasCustomFileList() const { return usingCustomFileList; }
     void requestCaching();
     void requestCachingFile(const QString &filePath, const QColorSpace &targetColorSpace);
     void addToCache(const ReadData &&readImageAndFileInfo);
@@ -152,6 +158,7 @@ private:
     int largestDimension;
 
     bool waitingOnLoad;
+    bool usingCustomFileList = false;
 };
 
 #endif // QVIMAGECORE_H
