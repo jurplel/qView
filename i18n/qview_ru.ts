@@ -105,13 +105,13 @@
         <location filename="../src/actionmanager.cpp" line="690"/>
         <source>Show in E&amp;xplorer</source>
         <extracomment>Open containing folder on windows</extracomment>
-        <translation>Показать в E&amp;xplorer</translation>
+        <translation>Показать в Про&amp;воднике</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="693"/>
         <source>Show in &amp;Finder</source>
         <extracomment>Open containing folder on macOS</extracomment>
-        <translation>Показать в &amp;Finder</translation>
+        <translation>Пок&amp;азать в Finder</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="698"/>
@@ -399,17 +399,17 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/mainwindow.cpp" line="792"/>
         <source>Are you sure you want to delete %1 permanently? This can&apos;t be undone.</source>
-        <translation>Вы уверены, что хотите удалить %1 безвозвратно? Это действие не может быть отменено.</translation>
+        <translation>Уверены, что хотите удалить %1 безвозвратно? Это действие нельзя отменить.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="799"/>
         <source>Are you sure you want to move %1 to the Trash?</source>
-        <translation>Вы уверены, что хотите переместить %1 в корзину?</translation>
+        <translation>Уверены, что хотите убрать %1 в корзину?</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="797"/>
         <source>Are you sure you want to move %1 to the Recycle Bin?</source>
-        <translation>Вы уверены, что хотите переместить %1 в Recycle Bin?</translation>
+        <translation>Уверены, что хотите убрать %1 в корзину?</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="310"/>
@@ -874,7 +874,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="232"/>
         <source>Show menubar</source>
-        <translation>Показать панель меню</translation>
+        <translation>Показывать панель меню</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="239"/>
@@ -884,7 +884,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="242"/>
         <source>Show titlebar text in fullscreen</source>
-        <translation>Показать текст заголовка в полноэкранном режиме</translation>
+        <translation>Показывать текст заголовка в полноэкранном режиме</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="249"/>
@@ -1122,7 +1122,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="651"/>
         <source>Forward</source>
-        <translation>Вперед</translation>
+        <translation>Вперёд</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="656"/>
@@ -1189,7 +1189,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="751"/>
         <source>Move Forward</source>
-        <translation>Вперед</translation>
+        <translation>Вперёд</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="759"/>
@@ -1328,7 +1328,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="51"/>
         <source>Show in Explorer</source>
-        <translation>Показать в Explorer</translation>
+        <translation>Показать в Проводнике</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="53"/>
