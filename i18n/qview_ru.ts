@@ -41,7 +41,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="312"/>
         <source>Open &amp;Recent</source>
-        <translation>Открыть &amp;последние</translation>
+        <translation>От&amp;крыть недавние</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="322"/>
@@ -141,7 +141,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="715"/>
         <source>&amp;Undo Delete</source>
-        <translation>&amp;Восстановить</translation>
+        <translation>Отменить уда&amp;ление</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="720"/>
@@ -176,7 +176,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="743"/>
         <source>Ori&amp;ginal Size</source>
-        <translation>&amp;Оригинальный размер</translation>
+        <translation>&amp;Исходный размер</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="747"/>
@@ -211,7 +211,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="771"/>
         <source>Previous Fi&amp;le</source>
-        <translation>Предыдущий ф&amp;айл</translation>
+        <translation>Пре&amp;дыдущий файл</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="775"/>
@@ -1418,7 +1418,7 @@ No write permission or file is read-only.</source>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="91"/>
         <source>Original Size</source>
-        <translation>Оригинальный размер</translation>
+        <translation>Исходный размер</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="92"/>
