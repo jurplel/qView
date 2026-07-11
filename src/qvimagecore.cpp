@@ -3,7 +3,12 @@
 #include "qvwin32functions.h"
 #include "qvcocoafunctions.h"
 #include "qvlinuxx11functions.h"
+#ifdef Q_OS_MACOS
+#include <sys/mman.h>
+#include <unistd.h>
+#endif
 #include <cstring>
+#include <memory>
 #include <random>
 #include <QMessageBox>
 #include <QDir>
@@ -16,6 +21,48 @@
 #include <QScreen>
 
 QCache<QString, QVImageCore::ReadData> QVImageCore::imageCache;
+
+#ifdef Q_OS_MACOS
+// macOS libmalloc never returns freed large (>128 KB) blocks to the kernel on its own.
+// They accumulate as dirty private pages in MALLOC_LARGE (empty) regions and can trigger
+// the kernel watchdog under sustained memory pressure.
+// madvise(MADV_FREE_REUSABLE) converts them to MALLOC_LARGE_REUSABLE, making the pages
+// eligible for kernel reclamation. Must be called BEFORE free() (i.e. before ~QImage()).
+//
+// CRITICAL: only ever madvise a buffer we EXCLUSIVELY own (refcount == 1). QImage is
+// copy-on-write and Qt's raster backend shares the pixel buffer aggressively:
+// QPixmap::fromImage() takes over the source buffer and QPixmap::toImage() hands back a
+// shallow copy (see qpixmap_raster.cpp). As a result a cached ReadData::image is routinely
+// still referenced by loadedPixmap. Marking a *shared* buffer REUSABLE would let the kernel
+// purge pages that are still live, corrupting the displayed or cached image (black/garbled)
+// on next access. isDetached() (== d->ref == 1) is the guarantee that we are the sole owner.
+static void madviseBeforeFree(const QImage &img)
+{
+    if (!img.isDetached())
+        return;
+    const uchar *bits = img.constBits();
+    qsizetype bytes = img.sizeInBytes();
+    // Buffers below 1 MiB are left to libmalloc's own size-capped large-entry
+    // cache; a syscall per small free doesn't pay for itself.
+    if (!bits || bytes <= 1024 * 1024)
+        return;
+    auto start = reinterpret_cast<uintptr_t>(bits);
+    // Large malloc blocks are page-aligned. If an unaligned pointer ever shows
+    // up here (an image wrapping foreign memory), skip it — rounding down would
+    // extend the madvise range into a neighboring live allocation. The kernel
+    // page-rounds the length itself.
+    if (start & static_cast<uintptr_t>(getpagesize() - 1))
+        return;
+    madvise(reinterpret_cast<void *>(start), static_cast<size_t>(bytes), MADV_FREE_REUSABLE);
+}
+#endif
+
+QVImageCore::ReadData::~ReadData()
+{
+#ifdef Q_OS_MACOS
+    madviseBeforeFree(image);
+#endif
+}
 
 QVImageCore::QVImageCore(QObject *parent) : QObject(parent)
 {
@@ -89,11 +136,10 @@ void QVImageCore::loadFile(const QString &fileName, bool isReloading)
     QString cacheKey = getPixmapCacheKey(sanitaryFileName, fileInfo.size(), targetColorSpace);
 
     // check if cached already before loading the long way
-    auto *cachedData = isReloading ? nullptr : QVImageCore::imageCache.take(cacheKey);
+    std::unique_ptr<ReadData> cachedData(isReloading ? nullptr
+                                                     : QVImageCore::imageCache.take(cacheKey));
     if (cachedData != nullptr) {
-        ReadData readData = *cachedData;
-        delete cachedData;
-        loadPixmap(readData);
+        loadPixmap(std::move(*cachedData));
     }
     // or see if the preloader is already working on it
     else if (preloadFilesInProgress.contains(sanitaryFileName)) {
@@ -169,7 +215,7 @@ QVImageCore::ReadData QVImageCore::readFile(const QString &fileName,
     return readData;
 }
 
-void QVImageCore::loadPixmap(const ReadData &readData)
+void QVImageCore::loadPixmap(ReadData readData)
 {
     if (readData.errorData.hasError) {
         currentFileDetails = getEmptyFileDetails();
@@ -192,7 +238,17 @@ void QVImageCore::loadPixmap(const ReadData &readData)
         return;
     }
 
-    loadedPixmap = QPixmap::fromImage(matchCurrentRotation(readData.image));
+    QImage displayImage = matchCurrentRotation(readData.image);
+    loadedPixmap = QPixmap::fromImage(displayImage);
+#ifdef Q_OS_MACOS
+    // The outgoing image just lost its QPixmap reference in the assignment
+    // above; lastDisplayedImage is now its final handle. If the image cache no
+    // longer co-owns the buffer (preloading disabled, oversized insert reject,
+    // rotated copy, entry already evicted), the isDetached() gate inside lets
+    // it be marked kernel-reclaimable before the assignment below frees it.
+    madviseBeforeFree(lastDisplayedImage);
+#endif
+    lastDisplayedImage = displayImage;
 
     // Set file details
     currentFileDetails.isPixmapLoaded = true;
@@ -243,6 +299,10 @@ void QVImageCore::closeImage()
 void QVImageCore::loadEmptyPixmap()
 {
     loadedPixmap = QPixmap();
+#ifdef Q_OS_MACOS
+    madviseBeforeFree(lastDisplayedImage);
+#endif
+    lastDisplayedImage = QImage();
     loadedMovie.stop();
     loadedMovie.setFileName("");
 
@@ -486,14 +546,15 @@ void QVImageCore::requestCachingFile(const QString &filePath, const QColorSpace 
     auto *cacheFutureWatcher = new QFutureWatcher<ReadData>();
     connect(cacheFutureWatcher, &QFutureWatcher<ReadData>::finished, this,
             [cacheFutureWatcher, this]() {
-                const ReadData readData = cacheFutureWatcher->result();
-                if (waitingOnPreloadFile == readData.absoluteFilePath) {
-                    loadPixmap(readData);
+                ReadData readData = cacheFutureWatcher->result();
+                const QString filePath = readData.absoluteFilePath;
+                if (waitingOnPreloadFile == filePath) {
+                    loadPixmap(std::move(readData));
                     waitingOnPreloadFile = QString();
                 } else {
                     addToCache(std::move(readData));
                 }
-                preloadFilesInProgress.removeAll(readData.absoluteFilePath);
+                preloadFilesInProgress.removeAll(filePath);
                 cacheFutureWatcher->deleteLater();
             });
 
@@ -506,7 +567,7 @@ void QVImageCore::requestCachingFile(const QString &filePath, const QColorSpace 
 #endif
 }
 
-void QVImageCore::addToCache(const ReadData &&readData)
+void QVImageCore::addToCache(ReadData &&readData)
 {
     if (readData.image.isNull())
         return;
@@ -659,6 +720,10 @@ void QVImageCore::rotateImage(int rotation)
     }
 
     loadedPixmap.convertFromImage(transformedImage);
+#ifdef Q_OS_MACOS
+    madviseBeforeFree(lastDisplayedImage);
+#endif
+    lastDisplayedImage = transformedImage;
 
     currentFileDetails.loadedPixmapSize = QSize(loadedPixmap.width(), loadedPixmap.height());
     emit updateLoadedPixmapItem();
