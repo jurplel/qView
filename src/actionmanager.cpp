@@ -426,9 +426,12 @@ void ActionManager::updateRecentsMenu()
                 QFileIconProvider provider;
                 QIcon icon = provider.icon(fileInfo);
 #  ifdef Q_OS_MACOS
-                // Workaround for native menu slowness
-                if (!fileInfo.suffix().isEmpty())
-                    icon = getCacheableIcon("filetype:" + fileInfo.suffix(), icon);
+                // Workaround for native menu slowness; also required so no full-size native icon
+                // ever reaches a menu item (see getCacheableMenuIcon)
+                const QString cacheKey = !fileInfo.suffix().isEmpty()
+                        ? "filetype:" + fileInfo.suffix()
+                        : "filepath:" + recent.filePath;
+                icon = getCacheableMenuIcon(cacheKey, icon);
 #  endif
                 action->setIcon(icon);
 #endif
@@ -853,7 +856,7 @@ void ActionManager::initializeActionLibrary()
     }
 }
 
-QIcon ActionManager::getCacheableIcon(const QString &cacheKey, const QIcon &icon)
+QIcon ActionManager::getCacheableMenuIcon(const QString &cacheKey, const QIcon &icon)
 {
     static QMutex mutex;
     static QCache<QString, QIcon> cache;
@@ -863,9 +866,16 @@ QIcon ActionManager::getCacheableIcon(const QString &cacheKey, const QIcon &icon
         cacheEntry = new QIcon();
         // Depending on the source icon's implementation (e.g. if it's backed by a file engine), it
         // may not allow pixmap caching, so get a pixmap of each size once and copy it to a generic
-        // QIcon
-        for (const auto &iconSize : icon.availableSizes())
-            cacheEntry->addPixmap(icon.pixmap(iconSize));
+        // QIcon.
+        //
+        // Only materialize the sizes a menu actually renders (16 pt; 32 px covers retina). Native
+        // file/app icons carry reps up to 1024×1024, and QCocoaMenuItem materializes every size of
+        // the QIcon into the NSMenuItem's NSImage (~8 MB per item at full size). Combined with
+        // Qt's QCocoaMenuItem<->QCocoaNSMenuItem reference cycle, which keeps each closed window's
+        // native menu tree alive (Qt 6.11 still), full-size icons accumulate without bound —
+        // gigabytes of footprint after a week of opening and closing windows.
+        for (const int iconSize : { 16, 32 })
+            cacheEntry->addPixmap(icon.pixmap(iconSize, iconSize));
     }
     QIcon cacheableIcon = *cacheEntry;
     cache.insert(cacheKey, cacheEntry);

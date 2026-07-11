@@ -271,7 +271,7 @@ QList<OpenWith::OpenWithItem> QVCocoaFunctions::getOpenWithItems(const QString &
 
         QFileIconProvider fiProvider;
         QIcon icon = fiProvider.icon(QFileInfo(QString::fromNSString(absolutePath)));
-        openWithItem.icon = ActionManager::getCacheableIcon(
+        openWithItem.icon = ActionManager::getCacheableMenuIcon(
                 "application:" + QString::fromNSString(appId), icon);
 
         // If the program is the default program, save it to add to the beginning after sorting
