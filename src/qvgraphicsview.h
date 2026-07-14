@@ -19,7 +19,7 @@ public:
     enum class ScaleMode { resetScale, zoom };
     Q_ENUM(ScaleMode)
 
-    enum class GoToFileMode { constant, first, previous, next, last };
+    enum class GoToFileMode { constant, first, previous, next, last, random };
     Q_ENUM(GoToFileMode)
 
     QMimeData *getMimeData() const;
