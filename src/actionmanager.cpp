@@ -482,6 +482,9 @@ QMenu *ActionManager::buildOpenWithMenu(QWidget *parent)
 
 void ActionManager::actionTriggered(QAction *triggeredAction)
 {
+    if (!triggeredAction)
+        return;
+
     auto key = triggeredAction->data().toStringList().first();
 
     // For some actions, do not look for a relevant window
@@ -508,17 +511,14 @@ void ActionManager::actionTriggered(QAction *triggeredAction)
 
 void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *relevantWindow)
 {
+    if (!triggeredAction)
+        return;
+
     // Conditions that will work with a nullptr window passed
     auto key = triggeredAction->data().toStringList().first();
 
     if (key == "quit") {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        // Workaround to allow for a graceful exit (e.g. fire window close events)
-        // since QCoreApplication::quit can't accomplish this prior to Qt 6
-        qGuiApp->postEvent(qGuiApp, new QEvent(QEvent::Quit));
-#else
-        QCoreApplication::quit();
-#endif
+        requestApplicationQuit();
     } else if (key == "newwindow") {
         qvApp->newWindow();
     } else if (key == "open") {
@@ -624,6 +624,17 @@ void ActionManager::actionTriggered(QAction *triggeredAction, MainWindow *releva
     } else if (key == "slideshow") {
         relevantWindow->toggleSlideshow();
     }
+}
+
+void ActionManager::requestApplicationQuit()
+{
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    // Workaround to allow for a graceful exit (e.g. fire window close events)
+    // since QCoreApplication::quit can't accomplish this prior to Qt 6
+    qGuiApp->postEvent(qGuiApp, new QEvent(QEvent::Quit));
+#else
+    QCoreApplication::quit();
+#endif
 }
 
 void ActionManager::initializeActionLibrary()

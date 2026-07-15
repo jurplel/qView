@@ -127,6 +127,8 @@ public:
 
     static void actionTriggered(QAction *triggeredAction, MainWindow *relevantWindow);
 
+    static void requestApplicationQuit();
+
     static QIcon getCacheableIcon(const QString &cacheKey, const QIcon &icon);
 
     const QList<SRecent> &getRecentsList() const { return recentsList; }

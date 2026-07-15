@@ -20,6 +20,12 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    enum class EscapeAction
+    {
+        ExitFullScreen,
+        QuitApplication
+    };
+
     struct DeletedPaths
     {
         QString pathInTrash;
@@ -28,6 +34,8 @@ public:
 
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override;
+
+    static EscapeAction escapeActionForWindowState(Qt::WindowStates state) noexcept;
 
     void requestPopulateOpenWithMenu();
 
@@ -152,9 +160,12 @@ protected:
 
     void fullscreenChanged();
 
+    virtual void requestApplicationExit();
+
 protected slots:
     void settingsUpdated();
     void shortcutsUpdated();
+    void handleEscapeShortcut();
 
 private:
     Ui::MainWindow *ui;
@@ -166,6 +177,8 @@ private:
     QTimer *slideshowTimer;
 
     QShortcut *escShortcut;
+
+    bool applicationExitRequested = false;
 
     QVInfoDialog *info;
 

@@ -81,9 +81,47 @@ target_compile_definitions(actionmanagertests PRIVATE
     QT_NO_FOREACH
 )
 
-if(NOT QV_DISABLE_ONLINE_VERSION_CHECK)
+if(QV_DISABLE_ONLINE_VERSION_CHECK)
     target_compile_definitions(actionmanagertests PRIVATE QV_DISABLE_ONLINE_VERSION_CHECK)
 endif()
 
-# Add the test
-add_test(NAME ActionManagerTests COMMAND actionmanagertests)
+# Register focused test layers while sharing one application test binary.
+add_test(NAME Unit.EscapeKeyDecision
+    COMMAND actionmanagertests testEscapeActionForWindowState)
+add_test(NAME Unit.ActionManagerInputValidation
+    COMMAND actionmanagertests testNullActionIsIgnored)
+add_test(NAME Integration.EscapeKeyWindow
+    COMMAND actionmanagertests
+        testEscapeShortcutConfiguration
+        testEscapeInNormalModeRequestsExitOnce
+        testEscapeInFullScreenRestoresWindow
+        testEscapeConflictDisablesDedicatedShortcut)
+add_test(NAME Regression.ActionManagerCloneLifecycle
+    COMMAND actionmanagertests testClonedActionsUntracked)
+
+set_tests_properties(
+    Unit.EscapeKeyDecision
+    Unit.ActionManagerInputValidation
+    Integration.EscapeKeyWindow
+    Regression.ActionManagerCloneLifecycle
+    PROPERTIES
+        TIMEOUT 30
+)
+
+if(APPLE AND NOT NO_COCOA)
+    set(QV_TEST_QPA_PLATFORM "cocoa")
+else()
+    set(QV_TEST_QPA_PLATFORM "offscreen")
+endif()
+set_tests_properties(
+    Unit.EscapeKeyDecision
+    Unit.ActionManagerInputValidation
+    Integration.EscapeKeyWindow
+    Regression.ActionManagerCloneLifecycle
+    PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=${QV_TEST_QPA_PLATFORM}"
+)
+
+set_tests_properties(Unit.EscapeKeyDecision Unit.ActionManagerInputValidation
+    PROPERTIES LABELS "unit")
+set_tests_properties(Integration.EscapeKeyWindow PROPERTIES LABELS "integration")
+set_tests_properties(Regression.ActionManagerCloneLifecycle PROPERTIES LABELS "regression")

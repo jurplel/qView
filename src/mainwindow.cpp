@@ -64,10 +64,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     // Initialize escape shortcut
     escShortcut = new QShortcut(Qt::Key_Escape, this);
-    connect(escShortcut, &QShortcut::activated, this, [this]() {
-        if (windowState().testFlag(Qt::WindowFullScreen))
-            toggleFullScreen();
-    });
+    escShortcut->setObjectName("escapeShortcut");
+    escShortcut->setAutoRepeat(false);
+    connect(escShortcut, &QShortcut::activated, this, &MainWindow::handleEscapeShortcut);
 
     // Enable drag&dropping
     setAcceptDrops(true);
@@ -165,6 +164,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+MainWindow::EscapeAction MainWindow::escapeActionForWindowState(Qt::WindowStates state) noexcept
+{
+    return state.testFlag(Qt::WindowFullScreen) ? EscapeAction::ExitFullScreen
+                                                : EscapeAction::QuitApplication;
 }
 
 bool MainWindow::event(QEvent *event)
@@ -320,6 +325,11 @@ void MainWindow::fullscreenChanged()
             && qvApp->getSettingsManager().getBool(SettingsManager::Setting::FullScreenDetails));
 }
 
+void MainWindow::requestApplicationExit()
+{
+    ActionManager::requestApplicationQuit();
+}
+
 void MainWindow::openFile(const QString &fileName)
 {
     graphicsView->loadFile(fileName);
@@ -371,7 +381,7 @@ void MainWindow::settingsUpdated()
 
 void MainWindow::shortcutsUpdated()
 {
-    // If esc is not used in a shortcut, let it exit fullscreen
+    // Preserve user-defined Escape bindings by disabling the dedicated window shortcut.
     escShortcut->setKey(Qt::Key_Escape);
 
     const auto &actionLibrary = qvApp->getActionManager().getActionLibrary();
@@ -381,6 +391,21 @@ void MainWindow::shortcutsUpdated()
             break;
         }
     }
+}
+
+void MainWindow::handleEscapeShortcut()
+{
+    if (escapeActionForWindowState(windowState()) == EscapeAction::ExitFullScreen) {
+        toggleFullScreen();
+        return;
+    }
+
+    // A held key and duplicate shortcut events must not initiate shutdown more than once.
+    if (applicationExitRequested)
+        return;
+
+    applicationExitRequested = true;
+    requestApplicationExit();
 }
 
 void MainWindow::openRecent(int i)
