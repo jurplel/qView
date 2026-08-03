@@ -221,7 +221,7 @@ if(DEFINED NIGHTLY)
 endif()
 
 # Handle translations
-if(Qt${QT_VERSION_MAJOR}_LinguistTools_FOUND)
+if(Qt${QT_VERSION_MAJOR}LinguistTools_FOUND)
     message(STATUS "LinguistTools found, building translations.")
     file(GLOB TRANSLATIONS "i18n/qview_*.ts")
     if(QT_VERSION_MAJOR EQUAL 5)
