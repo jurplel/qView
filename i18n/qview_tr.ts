@@ -83,7 +83,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="676"/>
         <source>Re&amp;load File</source>
-        <translation>Dosyayı Yeniden Yükle</translation>
+        <translation>Dosyayı Yeniden &amp;Yükle</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="680"/>
@@ -105,7 +105,7 @@
         <location filename="../src/actionmanager.cpp" line="690"/>
         <source>Show in E&amp;xplorer</source>
         <extracomment>Open containing folder on windows</extracomment>
-        <translation>&amp;Explorer&apos;da Göster</translation>
+        <translation>&amp;Dosya gezgininde Göster</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="693"/>
@@ -176,7 +176,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="743"/>
         <source>Ori&amp;ginal Size</source>
-        <translation>Özgün &amp;Boyut</translation>
+        <translation>Orijinal &amp;Boyut</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="747"/>
