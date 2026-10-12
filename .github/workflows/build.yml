@@ -102,7 +102,7 @@ jobs:
 
   nightly-release:
     needs: build
-    if: github.ref_name == 'master' && github.event_name == 'push'
+    if: github.ref_name == 'main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - name: Download all artifacts
@@ -132,6 +132,6 @@ jobs:
           name: "qView Nightly"
           prerelease: true
           body: |
-            Latest automatic build from the master branch. Might be broken.
+            Latest automatic build from the main branch. Might be broken.
 
           files: release_files/*.zip

@@ -46,21 +46,21 @@ jobs:
       - name: Run clang-tidy
         run: ./build.sh --tidy
 
-    format:
-      name: Run clang-format
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v4
+  format:
+    name: Run clang-format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-        - name: Install Qt
-          uses: jurplel/install-qt-action@v4
-          with:
-            version: '6.8'
-            cache: true
-            modules: 'qtimageformats'
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.8'
+          cache: true
+          modules: 'qtimageformats'
 
-        - name: Install clang-format
-          run: sudo apt-get update && sudo apt-get install -y clang-format
+      - name: Install clang-format
+        run: sudo apt-get update && sudo apt-get install -y clang-format
 
-        - name: Run clang-format
-          run: ./build.sh --format-check
+      - name: Run clang-format
+        run: ./build.sh --format-check
