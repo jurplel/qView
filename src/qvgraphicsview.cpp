@@ -69,10 +69,15 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 void QVGraphicsView::resizeEvent(QResizeEvent *event)
 {
     QGraphicsView::resizeEvent(event);
-    if (!isOriginalSize)
-        resetScale();
-    else
-        centerOn(loadedPixmapItem);
+
+    // Qt re-sends this on reparenting and re-showing, which shouldn't count as
+    // the user resizing the window
+    if (event->size() == event->oldSize())
+        return;
+
+    // Original size is a one-shot rather than a sticky mode, so a window resize
+    // always puts the image back to fitting the new viewport
+    resetScale();
 }
 
 void QVGraphicsView::dropEvent(QDropEvent *event)
