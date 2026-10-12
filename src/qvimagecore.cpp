@@ -337,7 +337,8 @@ void QVImageCore::updateFolderInfo(QString dirPath)
     DirInfo dirInfo = { dirPath, currentFileDetails.folderFileInfoList.count(),
                         qvGetSettingInt(SortMode), qvGetSettingBool(SortDescending) };
     // If the current folder changed since the last image, assign a new seed for random sorting
-    const bool shouldSort = lastDirInfo != dirInfo;
+    if (lastDirInfo != dirInfo)
+        randomSortSeed = std::chrono::system_clock::now().time_since_epoch().count();
     lastDirInfo = dirInfo;
 
     const auto sortFn = [&]() {
@@ -407,8 +408,7 @@ void QVImageCore::updateFolderInfo(QString dirPath)
             // Random
             std::shuffle(currentFileDetails.folderFileInfoList.begin(),
                          currentFileDetails.folderFileInfoList.end(),
-                         std::default_random_engine(
-                                 std::chrono::system_clock::now().time_since_epoch().count()));
+                         std::default_random_engine(randomSortSeed));
             break;
         default:
             Q_ASSERT(false);
@@ -416,9 +416,7 @@ void QVImageCore::updateFolderInfo(QString dirPath)
         }
     };
 
-    if (shouldSort) {
-        sortFn();
-    }
+    sortFn();
 
     // Set current file index variable
     currentFileDetails.updateLoadedIndexInFolder();
