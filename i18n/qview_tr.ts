@@ -83,7 +83,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="676"/>
         <source>Re&amp;load File</source>
-        <translation>Dosyayı Yeniden Yükle</translation>
+        <translation>Dosyayı Yeniden &amp;Yükle</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="680"/>
@@ -105,7 +105,7 @@
         <location filename="../src/actionmanager.cpp" line="690"/>
         <source>Show in E&amp;xplorer</source>
         <extracomment>Open containing folder on windows</extracomment>
-        <translation>&amp;Explorer&apos;da Göster</translation>
+        <translation>&amp;Dosya gezgininde Göster</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="693"/>
@@ -176,7 +176,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="743"/>
         <source>Ori&amp;ginal Size</source>
-        <translation>Özgün &amp;Boyut</translation>
+        <translation>Orijinal &amp;Boyut</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="747"/>
@@ -294,7 +294,7 @@
         <location filename="../src/actionmanager.cpp" line="826"/>
         <source>&amp;About qView</source>
         <extracomment>This is for the about dialog on mac</extracomment>
-        <translation>QView &amp;Hakkında</translation>
+        <translation>qView &amp;Hakkında</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="830"/>
@@ -437,7 +437,9 @@ Yazma izni yok veya dosya salt okunur.</translation>
         <source>Error occurred opening
 %3
 %2 (Error %1)</source>
-        <translation type="unfinished"></translation>
+        <translation>%3
+açılırken hata oluştu
+%2 (Hata %1)</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="855"/>
@@ -996,7 +998,7 @@ Yazma izni yok veya dosya salt okunur.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="486"/>
         <source>Display P3</source>
-        <translation type="unfinished"></translation>
+        <translation>Display P3</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="495"/>
