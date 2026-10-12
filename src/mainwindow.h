@@ -99,6 +99,8 @@ public:
 
     void lastFile();
 
+    void randomFile();
+
     void saveFrameAs();
 
     void pause();

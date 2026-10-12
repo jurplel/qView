@@ -3,6 +3,7 @@
 #include "qvinfodialog.h"
 #include "qvcocoafunctions.h"
 #include "settingsmanager.h"
+#include <QRandomGenerator>
 #include <QWheelEvent>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
@@ -608,6 +609,18 @@ void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
     case GoToFileMode::last: {
         newIndex = fileList.size() - 1;
         searchDirection = -1;
+        break;
+    }
+    case GoToFileMode::random: {
+        if (fileList.size() > 1) {
+            int randomIndex;
+            do {
+                randomIndex = QRandomGenerator::global()->bounded(
+                        int(fileList.size()));
+            } while (randomIndex == newIndex);
+            newIndex = randomIndex;
+        }
+        searchDirection = 1;
         break;
     }
     }
