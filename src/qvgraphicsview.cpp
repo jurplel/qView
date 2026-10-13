@@ -249,6 +249,7 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
     bool touchDeviceDetected = false;
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     // Auto-detect touchpad
+    /*
     touchDeviceDetected = event->device()->type() == QInputDevice::DeviceType::TouchPad
             || event->device()->type() == QInputDevice::DeviceType::TouchScreen;
     // Real touchpads are likely to exhibit these characteristics in empirical testing
@@ -256,7 +257,18 @@ void QVGraphicsView::wheelEvent(QWheelEvent *event)
     if (touchDeviceDetected && qvGetSettingInt(ScrollZoom) == 1) {
         // If this is a touch device, override setting
         dontZoom = !modifierPressed;
-    }
+    }*/
+    bool isRealMouseWheel = (event->angleDelta().manhattanLength() % 120 == 0)
+            && event->modifiers() == Qt::NoModifier
+            && event->phase() == Qt::NoScrollPhase;
+
+    // Real mouse wheel OR Ctrl/Shift modifier -> zoom in/out
+    if(isRealMouseWheel || (event->modifiers() & (Qt::ControlModifier | Qt::ShiftModifier)))
+        dontZoom = false;
+    // Touchpad two-finger scroll -> scroll only
+    else
+        dontZoom = true;
+
 #endif
 
     if (dontZoom) {
