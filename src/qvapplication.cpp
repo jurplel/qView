@@ -1,6 +1,7 @@
 #include "qvapplication.h"
 #include "qvoptionsdialog.h"
 #include "qvcocoafunctions.h"
+#include "qvipcserver.h"
 #include "updatechecker.h"
 
 #include <QFileOpenEvent>
@@ -370,6 +371,48 @@ void QVApplication::defineFilterLists()
     // Build name filter list for file dialogs
     nameFilterList << filterString;
     nameFilterList << tr("All Files") + " (*)";
+}
+
+bool QVApplication::startIpcServer(const QString &serverName)
+{
+    ipcServer.reset(new QVIPCServer(this));
+    if (ipcServer->listen(serverName)) {
+        qInfo() << "qView IPC server listening on" << ipcServer->serverName();
+        return true;
+    }
+
+    qWarning() << "Could not listen on qView IPC server" << serverName;
+    ipcServer.reset();
+    return false;
+}
+
+QString QVApplication::currentFilePath() const
+{
+    auto pathForWindow = [](const MainWindow *window) {
+        if (!window)
+            return QString();
+
+        const auto &fileDetails = window->getCurrentFileDetails();
+        if (!fileDetails.isLoadRequested)
+            return QString();
+
+        return fileDetails.fileInfo.absoluteFilePath();
+    };
+
+    for (const auto &window : lastActiveWindows) {
+        const QString path = pathForWindow(window);
+        if (!path.isEmpty())
+            return path;
+    }
+
+    const auto topLevelWidgets = QApplication::topLevelWidgets();
+    for (const auto &widget : topLevelWidgets) {
+        const QString path = pathForWindow(qobject_cast<MainWindow *>(widget));
+        if (!path.isEmpty())
+            return path;
+    }
+
+    return QString();
 }
 
 void QVApplication::ensureFontLoaded(const QString &path)
