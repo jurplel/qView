@@ -19,11 +19,11 @@ do
     case $arg in
         --format)
         clang-format -i **/*.cpp **/*.h **/*.mm
-        exit 0
+        exit $?
         ;;
         --format-check)
         clang-format -i **/*.cpp **/*.h **/*.mm --dry-run -Werror
-        exit 0
+        exit $?
         ;;
         --tidy)
         CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_CXX_CLANG_TIDY=clang-tidy"
