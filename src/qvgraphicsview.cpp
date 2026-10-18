@@ -127,7 +127,7 @@ void QVGraphicsView::createNavigationButtons()
             "QToolButton:disabled { background-color: rgba(0, 0, 0, 40); }");
 
     auto createButton = [&](bool pointsLeft, const QString &toolTip) {
-        auto *button = new QToolButton(viewport());
+        auto *button = new QToolButton(this);
         button->setIcon(createChevronIcon(pointsLeft));
         button->setIconSize(QSize(24, 24));
         button->setFixedSize(44, 44);
@@ -270,7 +270,7 @@ void QVGraphicsView::positionNavigationButtons()
     if (!previousButton || !nextButton)
         return;
 
-    const QRect area = viewport()->rect();
+    const QRect area = rect();
     const int margin = 16;
     const int verticalCenter = area.center().y();
 
