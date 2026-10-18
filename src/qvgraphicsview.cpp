@@ -13,6 +13,52 @@
 #include <QtMath>
 #include <QGestureEvent>
 #include <QScrollBar>
+#include <QApplication>
+#include <QCursor>
+#include <QGraphicsOpacityEffect>
+#include <QPainter>
+#include <QPainterPath>
+#include <QParallelAnimationGroup>
+#include <QPropertyAnimation>
+#include <QToolButton>
+
+namespace {
+QIcon createChevronIcon(bool pointsLeft)
+{
+    const int logicalSize = 24;
+    const qreal pixelRatio = qApp->devicePixelRatio();
+    QPixmap pixmap(qRound(logicalSize * pixelRatio), qRound(logicalSize * pixelRatio));
+    pixmap.fill(Qt::transparent);
+    pixmap.setDevicePixelRatio(pixelRatio);
+
+    QPainter painter(&pixmap);
+    painter.setRenderHint(QPainter::Antialiasing);
+
+    QPen pen(Qt::white);
+    pen.setWidthF(2.4);
+    pen.setCapStyle(Qt::RoundCap);
+    pen.setJoinStyle(Qt::RoundJoin);
+    painter.setPen(pen);
+
+    const qreal center = logicalSize / 2.0;
+    const qreal halfWidth = 4.0;
+    const qreal halfHeight = 6.5;
+
+    QPainterPath path;
+    if (pointsLeft) {
+        path.moveTo(center + halfWidth, center - halfHeight);
+        path.lineTo(center - halfWidth, center);
+        path.lineTo(center + halfWidth, center + halfHeight);
+    } else {
+        path.moveTo(center - halfWidth, center - halfHeight);
+        path.lineTo(center + halfWidth, center);
+        path.lineTo(center - halfWidth, center + halfHeight);
+    }
+    painter.drawPath(path);
+
+    return QIcon(pixmap);
+}
+}
 
 QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 {
@@ -63,6 +109,176 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
     connect(&qvApp->getSettingsManager(), &SettingsManager::settingsUpdated, this,
             &QVGraphicsView::settingsUpdated);
     settingsUpdated();
+
+    createNavigationButtons();
+    connect(this, &QVGraphicsView::fileChanged, this, &QVGraphicsView::updateNavigationButtons);
+}
+
+void QVGraphicsView::createNavigationButtons()
+{
+    const QString buttonStyle = QStringLiteral(
+            "QToolButton {"
+            "  background-color: rgba(0, 0, 0, 96);"
+            "  border: 1px solid rgba(255, 255, 255, 40);"
+            "  border-radius: 22px;"
+            "}"
+            "QToolButton:hover { background-color: rgba(0, 0, 0, 150); }"
+            "QToolButton:pressed { background-color: rgba(0, 0, 0, 190); }"
+            "QToolButton:disabled { background-color: rgba(0, 0, 0, 40); }");
+
+    auto createButton = [&](bool pointsLeft, const QString &toolTip) {
+        auto *button = new QToolButton(viewport());
+        button->setIcon(createChevronIcon(pointsLeft));
+        button->setIconSize(QSize(24, 24));
+        button->setFixedSize(44, 44);
+        button->setCursor(Qt::PointingHandCursor);
+        button->setFocusPolicy(Qt::NoFocus);
+        button->setToolTip(toolTip);
+        button->setAccessibleName(toolTip);
+        button->setStyleSheet(buttonStyle);
+        button->hide();
+        return button;
+    };
+
+    previousButton = createButton(true, tr("Previous File"));
+    nextButton = createButton(false, tr("Next File"));
+
+    previousButtonOpacity = new QGraphicsOpacityEffect(previousButton);
+    previousButtonOpacity->setOpacity(0);
+    previousButton->setGraphicsEffect(previousButtonOpacity);
+    nextButtonOpacity = new QGraphicsOpacityEffect(nextButton);
+    nextButtonOpacity->setOpacity(0);
+    nextButton->setGraphicsEffect(nextButtonOpacity);
+
+    navigationFadeAnimation = new QParallelAnimationGroup(this);
+    previousButtonFade = new QPropertyAnimation(previousButtonOpacity, "opacity");
+    nextButtonFade = new QPropertyAnimation(nextButtonOpacity, "opacity");
+    navigationFadeAnimation->addAnimation(previousButtonFade);
+    navigationFadeAnimation->addAnimation(nextButtonFade);
+    previousButtonFade->setDuration(160);
+    nextButtonFade->setDuration(160);
+    previousButtonFade->setEasingCurve(QEasingCurve::InOutQuad);
+    nextButtonFade->setEasingCurve(QEasingCurve::InOutQuad);
+    connect(navigationFadeAnimation, &QParallelAnimationGroup::finished, this, [this] {
+        if (navigationButtonTargetOpacity > 0.0)
+            return;
+        previousButton->hide();
+        nextButton->hide();
+        previousButton->setAttribute(Qt::WA_TransparentForMouseEvents, true);
+        nextButton->setAttribute(Qt::WA_TransparentForMouseEvents, true);
+    });
+
+    navigationHideTimer = new QTimer(this);
+    navigationHideTimer->setSingleShot(true);
+    navigationHideTimer->setInterval(350);
+    connect(navigationHideTimer, &QTimer::timeout, this, [this] {
+        if (!isCursorOverViewport())
+            hideNavigationButtons();
+    });
+
+    viewport()->installEventFilter(this);
+    previousButton->installEventFilter(this);
+    nextButton->installEventFilter(this);
+
+    connect(previousButton, &QToolButton::clicked, this,
+            [this] { goToFile(GoToFileMode::previous); });
+    connect(nextButton, &QToolButton::clicked, this,
+            [this] { goToFile(GoToFileMode::next); });
+}
+
+void QVGraphicsView::updateNavigationButtons()
+{
+    if (!previousButton || !nextButton)
+        return;
+
+    const auto &fileDetails = getCurrentFileDetails();
+    const bool imageVisible = fileDetails.isPixmapLoaded || fileDetails.isMovieLoaded;
+    const int fileCount = fileDetails.folderFileInfoList.size();
+    navigationButtonsAvailable =
+            qvGetSettingBool(ShowNavigationButtons) && imageVisible && fileCount > 1;
+
+    if (!navigationButtonsAvailable) {
+        navigationHideTimer->stop();
+        navigationFadeAnimation->stop();
+        previousButtonOpacity->setOpacity(0);
+        nextButtonOpacity->setOpacity(0);
+        previousButton->hide();
+        nextButton->hide();
+        return;
+    }
+
+    const bool loopFolders = qvGetSettingBool(LoopFoldersEnabled);
+    const int index = fileDetails.loadedIndexInFolder;
+    previousButton->setEnabled(loopFolders || index > 0);
+    nextButton->setEnabled(loopFolders || index < fileCount - 1);
+
+    positionNavigationButtons();
+    if (isCursorOverViewport())
+        showNavigationButtons();
+    else if (previousButton->isVisible())
+        hideNavigationButtons();
+}
+
+void QVGraphicsView::showNavigationButtons()
+{
+    if (!navigationButtonsAvailable)
+        return;
+
+    navigationHideTimer->stop();
+
+    if (!previousButton->isVisible()) {
+        previousButton->setAttribute(Qt::WA_TransparentForMouseEvents, false);
+        nextButton->setAttribute(Qt::WA_TransparentForMouseEvents, false);
+        previousButton->show();
+        nextButton->show();
+    }
+
+    fadeNavigationButtons(1.0);
+}
+
+void QVGraphicsView::hideNavigationButtons()
+{
+    navigationHideTimer->stop();
+    if (!previousButton->isVisible())
+        return;
+
+    previousButton->setAttribute(Qt::WA_TransparentForMouseEvents, true);
+    nextButton->setAttribute(Qt::WA_TransparentForMouseEvents, true);
+    fadeNavigationButtons(0.0);
+}
+
+void QVGraphicsView::fadeNavigationButtons(qreal targetOpacity)
+{
+    navigationButtonTargetOpacity = targetOpacity;
+    navigationFadeAnimation->stop();
+
+    previousButtonFade->setStartValue(previousButtonOpacity->opacity());
+    previousButtonFade->setEndValue(targetOpacity);
+    nextButtonFade->setStartValue(nextButtonOpacity->opacity());
+    nextButtonFade->setEndValue(targetOpacity);
+
+    navigationFadeAnimation->start();
+}
+
+bool QVGraphicsView::isCursorOverViewport() const
+{
+    return viewport()->rect().contains(viewport()->mapFromGlobal(QCursor::pos()));
+}
+
+void QVGraphicsView::positionNavigationButtons()
+{
+    if (!previousButton || !nextButton)
+        return;
+
+    const QRect area = viewport()->rect();
+    const int margin = 16;
+    const int verticalCenter = area.center().y();
+
+    previousButton->move(margin, verticalCenter - previousButton->height() / 2);
+    nextButton->move(area.right() - nextButton->width() - margin + 1,
+                     verticalCenter - nextButton->height() / 2);
+    previousButton->raise();
+    nextButton->raise();
 }
 
 // Events
@@ -74,6 +290,20 @@ void QVGraphicsView::resizeEvent(QResizeEvent *event)
         resetScale();
     else
         centerOn(loadedPixmapItem);
+    positionNavigationButtons();
+}
+
+bool QVGraphicsView::eventFilter(QObject *watched, QEvent *event)
+{
+    if (watched == viewport() || watched == previousButton || watched == nextButton) {
+        if (event->type() == QEvent::Enter) {
+            navigationHideTimer->stop();
+            showNavigationButtons();
+        } else if (event->type() == QEvent::Leave && !isCursorOverViewport()) {
+            navigationHideTimer->start();
+        }
+    }
+    return QGraphicsView::eventFilter(watched, event);
 }
 
 void QVGraphicsView::dropEvent(QDropEvent *event)
@@ -784,6 +1014,7 @@ void QVGraphicsView::settingsUpdated()
 {
     if (getCurrentFileDetails().isPixmapLoaded)
         resetScale();
+    updateNavigationButtons();
 }
 
 void QVGraphicsView::closeImage()
