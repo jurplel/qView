@@ -243,8 +243,7 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
     // skiphidden
     syncCheckbox(ui->skipHiddenCheckbox, "skiphidden", defaults, makeConnections);
     // shownavigationbuttons
-    syncCheckbox(ui->navigationButtonsCheckbox, "shownavigationbuttons", defaults,
-                 makeConnections);
+    syncCheckbox(ui->navigationButtonsCheckbox, "shownavigationbuttons", defaults, makeConnections);
 }
 
 void QVOptionsDialog::syncCheckbox(QCheckBox *checkbox, const QString &key, bool defaults,

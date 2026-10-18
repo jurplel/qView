@@ -58,7 +58,7 @@ QIcon createChevronIcon(bool pointsLeft)
 
     return QIcon(pixmap);
 }
-}
+} // namespace
 
 QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 {
@@ -116,15 +116,15 @@ QVGraphicsView::QVGraphicsView(QWidget *parent) : QGraphicsView(parent)
 
 void QVGraphicsView::createNavigationButtons()
 {
-    const QString buttonStyle = QStringLiteral(
-            "QToolButton {"
-            "  background-color: rgba(0, 0, 0, 96);"
-            "  border: 1px solid rgba(255, 255, 255, 40);"
-            "  border-radius: 22px;"
-            "}"
-            "QToolButton:hover { background-color: rgba(0, 0, 0, 150); }"
-            "QToolButton:pressed { background-color: rgba(0, 0, 0, 190); }"
-            "QToolButton:disabled { background-color: rgba(0, 0, 0, 40); }");
+    const QString buttonStyle =
+            QStringLiteral("QToolButton {"
+                           "  background-color: rgba(0, 0, 0, 96);"
+                           "  border: 1px solid rgba(255, 255, 255, 40);"
+                           "  border-radius: 22px;"
+                           "}"
+                           "QToolButton:hover { background-color: rgba(0, 0, 0, 150); }"
+                           "QToolButton:pressed { background-color: rgba(0, 0, 0, 190); }"
+                           "QToolButton:disabled { background-color: rgba(0, 0, 0, 40); }");
 
     auto createButton = [&](bool pointsLeft, const QString &toolTip) {
         auto *button = new QToolButton(this);
@@ -182,8 +182,7 @@ void QVGraphicsView::createNavigationButtons()
 
     connect(previousButton, &QToolButton::clicked, this,
             [this] { goToFile(GoToFileMode::previous); });
-    connect(nextButton, &QToolButton::clicked, this,
-            [this] { goToFile(GoToFileMode::next); });
+    connect(nextButton, &QToolButton::clicked, this, [this] { goToFile(GoToFileMode::next); });
 }
 
 void QVGraphicsView::updateNavigationButtons()
