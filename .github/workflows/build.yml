@@ -117,7 +117,7 @@ jobs:
         run: |
           mkdir release_files
           cd artifacts
-          for dir in */ a; do
+          for dir in */; do
             zip -r "../release_files/$(basename "$dir").zip" "$dir"
           done
           cd ..
