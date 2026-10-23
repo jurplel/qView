@@ -9,6 +9,11 @@
 #include <QTimer>
 #include <QFileInfo>
 
+class QToolButton;
+class QGraphicsOpacityEffect;
+class QPropertyAnimation;
+class QParallelAnimationGroup;
+
 class QVGraphicsView : public QGraphicsView
 {
     Q_OBJECT
@@ -91,6 +96,8 @@ protected:
 
     bool event(QEvent *event) override;
 
+    bool eventFilter(QObject *watched, QEvent *event) override;
+
     void fitInViewMarginless(const QRectF &rect);
     void fitInViewMarginless(const QGraphicsItem *item);
 
@@ -108,6 +115,14 @@ private slots:
     void updateLoadedPixmapItem();
 
 private:
+    void createNavigationButtons();
+    void updateNavigationButtons();
+    void positionNavigationButtons();
+    void showNavigationButtons();
+    void hideNavigationButtons();
+    void fadeNavigationButtons(qreal targetOpacity);
+    bool isCursorOverViewport() const;
+
     void updateFilteringMode();
 
     QGraphicsPixmapItem *loadedPixmapItem;
@@ -136,5 +151,16 @@ private:
     Qt::MouseButton mousePressButton;
     Qt::KeyboardModifiers mousePressModifiers;
     QPoint mousePressPosition;
+
+    QToolButton *previousButton = nullptr;
+    QToolButton *nextButton = nullptr;
+    QGraphicsOpacityEffect *previousButtonOpacity = nullptr;
+    QGraphicsOpacityEffect *nextButtonOpacity = nullptr;
+    QPropertyAnimation *previousButtonFade = nullptr;
+    QPropertyAnimation *nextButtonFade = nullptr;
+    QParallelAnimationGroup *navigationFadeAnimation = nullptr;
+    QTimer *navigationHideTimer = nullptr;
+    bool navigationButtonsAvailable = false;
+    qreal navigationButtonTargetOpacity = 0.0;
 };
 #endif // QVGRAPHICSVIEW_H

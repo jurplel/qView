@@ -1181,6 +1181,16 @@ No write permission or file is read-only.</source>
         <translation>跳过隐藏文件</translation>
     </message>
     <message>
+        <location filename="../src/qvoptionsdialog.ui" line="984"/>
+        <source>Show previous/next file buttons over the image when hovering</source>
+        <translation>悬停时在图片上显示上一张/下一张按钮</translation>
+    </message>
+    <message>
+        <location filename="../src/qvoptionsdialog.ui" line="987"/>
+        <source>Show navigation buttons</source>
+        <translation>显示导航按钮</translation>
+    </message>
+    <message>
         <location filename="../src/qvoptionsdialog.ui" line="741"/>
         <source>Move Back</source>
         <translation>后退</translation>
@@ -1557,6 +1567,19 @@ No write permission or file is read-only.</source>
 You can reenable them in the options dialog.</source>
         <translation>已禁用更新通知.
 你可以在选项中重新启用它们.</translation>
+    </message>
+</context>
+<context>
+    <name>QVGraphicsView</name>
+    <message>
+        <location filename="../src/qvgraphicsview.cpp" line="139"/>
+        <source>Previous File</source>
+        <translation>上一张</translation>
+    </message>
+    <message>
+        <location filename="../src/qvgraphicsview.cpp" line="140"/>
+        <source>Next File</source>
+        <translation>下一张</translation>
     </message>
 </context>
 </TS>
