@@ -11,6 +11,7 @@
 #include "qvwelcomedialog.h"
 
 #include <QApplication>
+#include <QScopedPointer>
 #include <QRegularExpression>
 
 #if defined(qvApp)
@@ -28,6 +29,8 @@
     qvApp->getSettingsManager().getDouble(SettingsManager::Setting::setting)
 #define qvGetSettingString(setting) \
     qvApp->getSettingsManager().getString(SettingsManager::Setting::setting)
+
+class QVIPCServer;
 
 class QVApplication : public QApplication
 {
@@ -87,6 +90,10 @@ public:
 
     void ensureFontLoaded(const QString &path);
 
+    bool startIpcServer(const QString &serverName);
+
+    QString currentFilePath() const;
+
     static QIcon iconFromFont(const QString &fontFamily, const QChar &codePoint, const int pixelSize, const qreal pixelRatio);
 
     static qreal getPerceivedBrightness(const QColor &color);
@@ -116,6 +123,8 @@ private:
 #endif // QV_DISABLE_ONLINE_VERSION_CHECK
 
     QSet<QString> loadedFontPaths;
+
+    QScopedPointer<QVIPCServer> ipcServer;
 };
 
 #endif // QVAPPLICATION_H
