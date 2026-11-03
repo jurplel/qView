@@ -164,6 +164,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
 MainWindow::~MainWindow()
 {
+    // The "Open With" task captures this window; it must not outlive it.
+    openWithFutureWatcher.waitForFinished();
     delete ui;
 }
 
@@ -440,10 +442,9 @@ void MainWindow::disableActions()
 
 void MainWindow::requestPopulateOpenWithMenu()
 {
-    openWithFutureWatcher.setFuture(QtConcurrent::run([&] {
-        const auto &curFilePath = getCurrentFileDetails().fileInfo.absoluteFilePath();
-        return OpenWith::getOpenWithItems(curFilePath);
-    }));
+    const QString curFilePath = getCurrentFileDetails().fileInfo.absoluteFilePath();
+    openWithFutureWatcher.setFuture(QtConcurrent::run(
+            [curFilePath] { return OpenWith::getOpenWithItems(curFilePath); }));
 }
 
 void MainWindow::populateOpenWithMenu(const QList<OpenWith::OpenWithItem> openWithItems)

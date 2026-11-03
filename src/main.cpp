@@ -3,6 +3,7 @@
 #include "qvwin32functions.h"
 
 #include <QCommandLineParser>
+#include <QThreadPool>
 
 int main(int argc, char *argv[])
 {
@@ -35,5 +36,8 @@ int main(int argc, char *argv[])
     if (!parser.positionalArguments().isEmpty())
         QVApplication::openFile(window, parser.positionalArguments().constFirst(), true);
 
-    return QApplication::exec();
+    const int ret = QApplication::exec();
+    // Background tasks create QPixmaps; they must finish while the application object still exists.
+    QThreadPool::globalInstance()->waitForDone();
+    return ret;
 }
