@@ -164,8 +164,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
 MainWindow::~MainWindow()
 {
-    // The "Open With" task captures this window; it must not outlive it.
-    openWithFutureWatcher.waitForFinished();
     delete ui;
 }
 
