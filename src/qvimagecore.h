@@ -79,19 +79,31 @@ public:
         QSize imageSize;
         QColorSpace targetColorSpace;
         ErrorData errorData;
+
+        // The user-declared destructor would suppress the implicit move members,
+        // silently turning every std::move(ReadData) into a copy. Default them all
+        // explicitly so moves really move (the destructor's madvise logic relies on
+        // sole ownership). All =default at first declaration, so ReadData remains
+        // a C++14 aggregate and brace-initialization keeps working.
+        ReadData() = default;
+        ReadData(const ReadData &) = default;
+        ReadData(ReadData &&) = default;
+        ReadData &operator=(const ReadData &) = default;
+        ReadData &operator=(ReadData &&) = default;
+        ~ReadData();
     };
 
     explicit QVImageCore(QObject *parent = nullptr);
 
     void loadFile(const QString &fileName, bool isReloading = false);
     ReadData readFile(const QString &fileName, const QColorSpace &targetColorSpace);
-    void loadPixmap(const ReadData &readData);
+    void loadPixmap(ReadData readData);
     void closeImage();
     QList<CompatibleFile> getCompatibleFiles(const QString &dirPath) const;
     void updateFolderInfo(QString dirPath = QString());
     void requestCaching();
     void requestCachingFile(const QString &filePath, const QColorSpace &targetColorSpace);
-    void addToCache(const ReadData &&readImageAndFileInfo);
+    void addToCache(ReadData &&readImageAndFileInfo);
     static QString getPixmapCacheKey(const QString &absoluteFilePath, const qint64 &fileSize,
                                      const QColorSpace &targetColorSpace);
     QColorSpace getTargetColorSpace() const;
@@ -132,6 +144,11 @@ protected:
 
 private:
     QPixmap loadedPixmap;
+    // Shares (COW) the pixel buffer currently shown by loadedPixmap. When the
+    // pixmap is replaced this is the handle through which the outgoing buffer
+    // gets marked kernel-reclaimable (madvise) right before its final release —
+    // covering buffers the image cache never owns or has already dropped.
+    QImage lastDisplayedImage;
     QMovie loadedMovie;
 
     FileDetails currentFileDetails;
