@@ -1119,6 +1119,16 @@ No write permission or file is read-only.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../src/qvoptionsdialog.ui" line="984"/>
+        <source>Show previous/next file buttons over the image when hovering</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/qvoptionsdialog.ui" line="987"/>
+        <source>Show navigation buttons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../src/qvoptionsdialog.ui" line="741"/>
         <source>Move Back</source>
         <translation type="unfinished"></translation>
@@ -1487,6 +1497,19 @@ No write permission or file is read-only.</source>
         <location filename="../src/updatechecker.cpp" line="112"/>
         <source>Update notifications on startup have been disabled.
 You can reenable them in the options dialog.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QVGraphicsView</name>
+    <message>
+        <location filename="../src/qvgraphicsview.cpp" line="139"/>
+        <source>Previous File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/qvgraphicsview.cpp" line="140"/>
+        <source>Next File</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
