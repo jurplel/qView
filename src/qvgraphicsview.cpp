@@ -626,12 +626,29 @@ void QVGraphicsView::goToFile(const GoToFileMode &mode, int index)
     }
 
     if (searchDirection != 0) {
-        while (searchDirection == 1 && newIndex < fileList.size() - 1
-               && !QFile::exists(fileList.value(newIndex).absoluteFilePath))
-            newIndex++;
-        while (searchDirection == -1 && newIndex > 0
-               && !QFile::exists(fileList.value(newIndex).absoluteFilePath))
-            newIndex--;
+        const bool canWrap = qvGetSettingBool(LoopFoldersEnabled)
+                && (mode == GoToFileMode::previous || mode == GoToFileMode::next);
+        bool foundExistingFile = false;
+        for (int checkedFiles = 0; checkedFiles < fileList.size(); checkedFiles++) {
+            if (newIndex < 0 || newIndex >= fileList.size())
+                break;
+
+            if (QFile::exists(fileList.value(newIndex).absoluteFilePath)) {
+                foundExistingFile = true;
+                break;
+            }
+
+            newIndex += searchDirection;
+            if (canWrap) {
+                if (newIndex >= fileList.size())
+                    newIndex = 0;
+                else if (newIndex < 0)
+                    newIndex = fileList.size() - 1;
+            }
+        }
+
+        if (!foundExistingFile)
+            return;
     }
 
     const QString nextImageFilePath = fileList.value(newIndex).absoluteFilePath;
