@@ -47,9 +47,11 @@ public:
 
     static void pickUrl(MainWindow *parnet = nullptr);
 
-    static MainWindow *newWindow();
+    static MainWindow *newWindow(bool showNow = true);
 
     MainWindow *getMainWindow(bool shouldBeEmpty);
+
+    void showWhenActivated(MainWindow *window);
 
     void checkUpdates(bool isStartupCheck);
 
@@ -110,6 +112,8 @@ private:
     QPointer<QVOptionsDialog> optionsDialog;
     QPointer<QVWelcomeDialog> welcomeDialog;
     QPointer<QVAboutDialog> aboutDialog;
+
+    QPointer<MainWindow> windowToShowWhenActivated;
 
 #ifndef QV_DISABLE_ONLINE_VERSION_CHECK
     UpdateChecker updateChecker;

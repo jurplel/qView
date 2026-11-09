@@ -402,6 +402,12 @@ void MainWindow::fileChanged()
 
     // repaint to handle error message
     update();
+
+    // Windows opened for a file start hidden so they appear already sized for the image
+    if (!isVisible()) {
+        show();
+        raise();
+    }
 }
 
 void MainWindow::disableActions()
@@ -603,7 +609,9 @@ void MainWindow::setWindowSize()
     QRect oldRect = geometry();
     resize(imageSize + extraWidgetsSize);
     QRect newRect = geometry();
-    newRect.moveCenter(oldRect.center());
+    // A window that is not shown yet still has the geometry restored from the last run, so center
+    // it on the screen instead
+    newRect.moveCenter(isVisible() ? oldRect.center() : currentScreen->availableGeometry().center());
 
     // Ensure titlebar is not above or below the available screen area
     const QRect availableScreenRect = currentScreen->availableGeometry();
