@@ -85,8 +85,19 @@ bool QVApplication::event(QEvent *event)
         openFile(getMainWindow(true), openEvent->file());
     } else if (event->type() == QEvent::ApplicationStateChange) {
         auto *stateEvent = static_cast<QApplicationStateChangeEvent *>(event);
-        if (stateEvent->applicationState() == Qt::ApplicationActive)
+        if (stateEvent->applicationState() == Qt::ApplicationActive) {
             settingsManager.loadSettings();
+
+            // A file opened from Finder arrives as a FileOpen event before the application first
+            // becomes active, so by now the window is either loading it or should be shown empty
+            if (windowToShowWhenActivated) {
+                if (!windowToShowWhenActivated->getCurrentFileDetails().isLoadRequested) {
+                    windowToShowWhenActivated->show();
+                    windowToShowWhenActivated->raise();
+                }
+                windowToShowWhenActivated = nullptr;
+            }
+        }
     }
     return QApplication::event(event);
 }
@@ -136,11 +147,13 @@ void QVApplication::pickFile(MainWindow *parent)
     fileDialog->show();
 }
 
-MainWindow *QVApplication::newWindow()
+MainWindow *QVApplication::newWindow(bool showNow)
 {
     auto *w = new MainWindow();
-    w->show();
-    w->raise();
+    if (showNow) {
+        w->show();
+        w->raise();
+    }
 
     return w;
 }
@@ -177,8 +190,19 @@ MainWindow *QVApplication::getMainWindow(bool shouldBeEmpty)
     }
 
     // If there are no valid ones, make a new one.
-    auto *window = newWindow();
+    // A window created to receive a file stays hidden until the image is loaded and sized
+    auto *window = newWindow(!shouldBeEmpty);
     return window;
+}
+
+void QVApplication::showWhenActivated(MainWindow *window)
+{
+#ifdef Q_OS_MACOS
+    windowToShowWhenActivated = window;
+#else
+    window->show();
+    window->raise();
+#endif
 }
 
 void QVApplication::checkUpdates(bool isStartupCheck)

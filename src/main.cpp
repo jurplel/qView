@@ -32,9 +32,12 @@ int main(int argc, char *argv[])
     parser.process(app);
 #endif
 
-    auto *window = QVApplication::newWindow();
+    // Keep the first window hidden until the image is loaded and the window is sized for it
+    auto *window = QVApplication::newWindow(false);
     if (!parser.positionalArguments().isEmpty())
         QVApplication::openFile(window, parser.positionalArguments().constFirst(), true);
+    else
+        app.showWhenActivated(window);
 
     const int ret = QApplication::exec();
     // Background tasks create QPixmaps; they must finish while the application object still exists.
