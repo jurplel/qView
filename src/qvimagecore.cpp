@@ -123,6 +123,9 @@ QVImageCore::ReadData QVImageCore::readFile(const QString &fileName,
         QIcon icon;
         icon.addFile(fileName);
         readImage = icon.pixmap(largestDimension).toImage();
+        // QIcon renders at the screen's device pixel ratio (e.g. 2 on Retina); treat the result
+        // as plain pixels so later rescaling doesn't halve its logical size
+        readImage.setDevicePixelRatio(1.0);
         // If this fails, try reading the normal way so that a proper error message is given
         if (readImage.isNull())
             readImage = imageReader.read();
