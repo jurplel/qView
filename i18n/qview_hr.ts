@@ -899,7 +899,7 @@ Nedostaje dozvola za pisanje ili je datoteka samo-za-čitanje.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="263"/>
         <source>Scaling:</source>
-        <translation>Povećanje:</translation>
+        <translation>Uvećanje:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="270"/>
@@ -919,17 +919,17 @@ Nedostaje dozvola za pisanje ili je datoteka samo-za-čitanje.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="286"/>
         <source>&amp;Image scaling</source>
-        <translation>&amp;Povečanje slike</translation>
+        <translation>&amp;Uvećanje slike</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="296"/>
         <source>Choose whether or not the image continues to be scaled when zooming above the window size (can be laggier with large images)</source>
-        <translation>Odaberi hoće li se slika i dalje povečavati prilikom uvećanja prikaza većeg od veličine prozora (može biti sporije s velikim slikama)</translation>
+        <translation>Odaberi hoće li se ili neće slika i dalje uvećavati prilikom uvećanja većeg od veličine prozora (može biti sporije s velikim slikama)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="299"/>
         <source>&amp;Scaling above window size</source>
-        <translation>&amp;Povečanje veće od veličine prozora</translation>
+        <translation>&amp;Uvećanje veće od veličine prozora</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="309"/>
@@ -950,12 +950,12 @@ Nedostaje dozvola za pisanje ili je datoteka samo-za-čitanje.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="344"/>
         <source>Scrolling &amp;zooms</source>
-        <translation>&amp;Zumiranja klizanjem</translation>
+        <translation>&amp;Uvećanja klizanjem</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="367"/>
         <source>Stop the image from going past its actual size when resizing the window - you can still zoom past it though</source>
-        <translation>Zaustavi prijelaz slike više od njezine stvarne veličine prilikom mijenjanja veličine prozora – još uvijek je možeš uvećati više</translation>
+        <translation>Spriječi da slika premaši njezinu stvarnu veličinu prilikom mijenjanja veličine prozora – još uvijek je možeš uvećati više</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="370"/>
@@ -991,7 +991,7 @@ Nedostaje dozvola za pisanje ili je datoteka samo-za-čitanje.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="431"/>
         <source>Choose whether or not zooming in and out above 100% zoom will zoom towards the cursor</source>
-        <translation>Odaberi hoće li uvećavanje ili smanjivanje prikaza iznad 100&#xa0;% prilagoditi uvećanje prema kurzoru</translation>
+        <translation>Odaberi hoće li ili neće uvećavanje ili smanjivanje prikaza iznad 100&#xa0;% uvećati prema kursoru</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="434"/>
