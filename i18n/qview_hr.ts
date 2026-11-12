@@ -83,7 +83,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="676"/>
         <source>Re&amp;load File</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Ponovo učitaj datoteku</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="680"/>
@@ -131,7 +131,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="709"/>
         <source>Delete Permanently</source>
-        <translation type="unfinished"></translation>
+        <translation>Izbriši zauvijek</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="713"/>
@@ -262,7 +262,7 @@
         <location filename="../src/actionmanager.cpp" line="812"/>
         <source>&amp;Settings</source>
         <extracomment>This is for the options dialog on windows</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Postavke</translation>
     </message>
     <message>
         <source>Option&amp;s</source>
@@ -283,7 +283,7 @@
     <message>
         <location filename="../src/actionmanager.cpp" line="818"/>
         <source>Setting&amp;s...</source>
-        <translation type="unfinished"></translation>
+        <translation>Po&amp;stavke …</translation>
     </message>
     <message>
         <location filename="../src/actionmanager.cpp" line="823"/>
@@ -399,7 +399,7 @@ Nedostaje dozvola za pisanje ili je datoteka samo-za-čitanje.</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="792"/>
         <source>Are you sure you want to delete %1 permanently? This can&apos;t be undone.</source>
-        <translation type="unfinished"></translation>
+        <translation>Stvarno želiš zauvijek izbrisati %1? Ovo je nepovratna radnja.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="799"/>
@@ -416,7 +416,9 @@ Nedostaje dozvola za pisanje ili je datoteka samo-za-čitanje.</translation>
         <source>Error occurred opening
 %3
 %2 (Error %1)</source>
-        <translation type="unfinished"></translation>
+        <translation>Greška pri otvaranju
+%3
+%2 (Greška %1)</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="803"/>
@@ -444,7 +446,7 @@ Nedostaje dozvola za pisanje ili je datoteka samo-za-čitanje.</translation>
         <location filename="../src/mainwindow.cpp" line="935"/>
         <source>This program was compiled with an old version of Qt and this feature is not available.
 If you see this message, please report a bug!</source>
-        <translation>Ovaj je program sastavljen sa starom verzijom QT-a i ova funkcija nije dostupna.
+        <translation>Ovaj je program sastavljen sa starom verzijom Qt-a i ova funkcija nije dostupna.
 Ako vidiš ovu poruku, prijavi grešku!</translation>
     </message>
     <message>
@@ -550,7 +552,7 @@ Nedostaje dozvola za pisanje ili je datoteka samo-za-čitanje.</translation>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="62"/>
         <source>Built with Qt %1 (%2)&lt;br&gt;Source code available under GPLv3 on &lt;a style=&quot;color: #03A9F4; text-decoration:none;&quot; href=&quot;https://github.com/jurplel/qView&quot;&gt;GitHub&lt;/a&gt;&lt;br&gt;Icon glyph created by Guilhem from the Noun Project&lt;br&gt;Copyright © %3 jurplel and qView contributors</source>
-        <translation>Izgrađen s Qt %1 (%2)&lt;br&gt;Izvorni kod licenziran pod GPLv3 na &lt;a style=&quot;color: #03A9F4; text-decoration:none;&quot; href=&quot;https://github.com/jurplel/qView&quot;&gt;GitHubu&lt;/a&gt;&lt;br&gt;Autor znaka ikone je Guilhem iz projekta Noun &lt;br&gt;Autorska prava © %3 jurplel i qView doprinosioci</translation>
+        <translation>Izgrađeno s Qt %1 (%2)&lt;br&gt;Izvorni kod licenziran pod GPLv3 na &lt;a style=&quot;color: #03A9F4; text-decoration:none;&quot; href=&quot;https://github.com/jurplel/qView&quot;&gt;GitHubu&lt;/a&gt;&lt;br&gt;Autor znaka ikone je Guilhem iz projekta Noun &lt;br&gt;Autorska prava © %3 jurplel i qView doprinosioci</translation>
     </message>
     <message>
         <location filename="../src/qvaboutdialog.cpp" line="93"/>
@@ -897,7 +899,7 @@ Nedostaje dozvola za pisanje ili je datoteka samo-za-čitanje.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="263"/>
         <source>Scaling:</source>
-        <translation>Povećanje:</translation>
+        <translation>Uvećanje:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="270"/>
@@ -917,17 +919,17 @@ Nedostaje dozvola za pisanje ili je datoteka samo-za-čitanje.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="286"/>
         <source>&amp;Image scaling</source>
-        <translation>&amp;Povečanje slike</translation>
+        <translation>&amp;Uvećanje slike</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="296"/>
         <source>Choose whether or not the image continues to be scaled when zooming above the window size (can be laggier with large images)</source>
-        <translation>Odaberi hoće li se slika i dalje povečavati prilikom uvećanja prikaza većeg od veličine prozora (može biti sporije s velikim slikama)</translation>
+        <translation>Odaberi hoće li se ili neće slika i dalje uvećavati prilikom uvećanja većeg od veličine prozora (može biti sporije s velikim slikama)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="299"/>
         <source>&amp;Scaling above window size</source>
-        <translation>&amp;Povečanje veće od veličine prozora</translation>
+        <translation>&amp;Uvećanje veće od veličine prozora</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="309"/>
@@ -948,12 +950,12 @@ Nedostaje dozvola za pisanje ili je datoteka samo-za-čitanje.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="344"/>
         <source>Scrolling &amp;zooms</source>
-        <translation>Klizanje &amp;uvećava prikaz</translation>
+        <translation>&amp;Uvećanja klizanjem</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="367"/>
         <source>Stop the image from going past its actual size when resizing the window - you can still zoom past it though</source>
-        <translation>Zaustavi prijelaz slike više od njezine stvarne veličine prilikom mijenjanja veličine prozora – još uvijek je možeš uvećati više</translation>
+        <translation>Spriječi da slika premaši njezinu stvarnu veličinu prilikom mijenjanja veličine prozora – još uvijek je možeš uvećati više</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="370"/>
@@ -989,7 +991,7 @@ Nedostaje dozvola za pisanje ili je datoteka samo-za-čitanje.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="431"/>
         <source>Choose whether or not zooming in and out above 100% zoom will zoom towards the cursor</source>
-        <translation>Odaberi hoće li uvećavanje ili smanjivanje prikaza iznad 100&#xa0;% prilagoditi uvećanje prema kurzoru</translation>
+        <translation>Odaberi hoće li ili neće uvećavanje ili smanjivanje prikaza iznad 100&#xa0;% uvećati prema kursoru</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="434"/>
@@ -999,22 +1001,22 @@ Nedostaje dozvola za pisanje ili je datoteka samo-za-čitanje.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="457"/>
         <source>Color space conversion:</source>
-        <translation type="unfinished"></translation>
+        <translation>Konverzija prostora boja:</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="476"/>
         <source>Auto-detect</source>
-        <translation type="unfinished"></translation>
+        <translation>Otrkij automatski</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="481"/>
         <source>sRGB</source>
-        <translation type="unfinished"></translation>
+        <translation>sRGB</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="486"/>
         <source>Display P3</source>
-        <translation type="unfinished"></translation>
+        <translation>Display P3</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="495"/>
@@ -1080,17 +1082,17 @@ Nedostaje dozvola za pisanje ili je datoteka samo-za-čitanje.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="17"/>
         <source>Settings</source>
-        <translation type="unfinished">Postavke</translation>
+        <translation>Postavke</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="524"/>
         <source>Date Modified</source>
-        <translation type="unfinished"></translation>
+        <translation>Datum promjene</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="529"/>
         <source>Date Created</source>
-        <translation type="unfinished"></translation>
+        <translation>Datum stvaranja</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="604"/>
@@ -1140,12 +1142,12 @@ Nedostaje dozvola za pisanje ili je datoteka samo-za-čitanje.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="703"/>
         <source>Detect supported files in folder even if extension isn&apos;t recognized (may be slow with larger/network folders)</source>
-        <translation type="unfinished"></translation>
+        <translation>Otkrivanje podržanih datoteka u mapi čak i ako se proširenje ne prepozna (može biti sporo s većim/mrežnim mapama)</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="706"/>
         <source>Allow &amp;MIME content detection</source>
-        <translation type="unfinished"></translation>
+        <translation>Dozvoli otkrivanje &amp;MIME sadržaja</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="713"/>
@@ -1166,13 +1168,13 @@ Nedostaje dozvola za pisanje ili je datoteka samo-za-čitanje.</translation>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="727"/>
         <source>Skip hidden files when browsing to the next/previous file</source>
-        <translation type="unfinished"></translation>
+        <translation>Preskoči skrivene datoteke prilikom pregledavanja sljedeće/prethodne datoteke</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="730"/>
         <source>Skip hidden files</source>
         <extracomment>Don&apos;t view files with &apos;hidden&apos; attribute</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Preskoči skrivene datoteke</translation>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="741"/>
@@ -1316,7 +1318,7 @@ Nedostaje dozvola za pisanje ili je datoteka samo-za-čitanje.</translation>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="47"/>
         <source>Reload File</source>
-        <translation type="unfinished"></translation>
+        <translation>Ponovo učitaj datoteku</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="48"/>
@@ -1376,7 +1378,7 @@ Nedostaje dozvola za pisanje ili je datoteka samo-za-čitanje.</translation>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="75"/>
         <source>Delete Permanently</source>
-        <translation type="unfinished"></translation>
+        <translation>Izbriši zauvijek</translation>
     </message>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="80"/>
@@ -1481,7 +1483,7 @@ Nedostaje dozvola za pisanje ili je datoteka samo-za-čitanje.</translation>
     <message>
         <location filename="../src/shortcutmanager.cpp" line="115"/>
         <source>Settings</source>
-        <translation type="unfinished">Postavke</translation>
+        <translation>Postavke</translation>
     </message>
     <message>
         <source>Options</source>
