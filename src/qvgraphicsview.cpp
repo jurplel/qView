@@ -23,10 +23,9 @@
 #include <QToolButton>
 
 namespace {
-QIcon createChevronIcon(bool pointsLeft)
+QIcon createChevronIcon(bool pointsLeft, qreal pixelRatio)
 {
     const int logicalSize = 24;
-    const qreal pixelRatio = qApp->devicePixelRatio();
     QPixmap pixmap(qRound(logicalSize * pixelRatio), qRound(logicalSize * pixelRatio));
     pixmap.fill(Qt::transparent);
     pixmap.setDevicePixelRatio(pixelRatio);
@@ -128,7 +127,7 @@ void QVGraphicsView::createNavigationButtons()
 
     auto createButton = [&](bool pointsLeft, const QString &toolTip) {
         auto *button = new QToolButton(this);
-        button->setIcon(createChevronIcon(pointsLeft));
+        button->setIcon(createChevronIcon(pointsLeft, button->devicePixelRatioF()));
         button->setIconSize(QSize(24, 24));
         button->setFixedSize(44, 44);
         button->setCursor(Qt::PointingHandCursor);
@@ -185,6 +184,15 @@ void QVGraphicsView::createNavigationButtons()
     connect(nextButton, &QToolButton::clicked, this, [this] { goToFile(GoToFileMode::next); });
 }
 
+void QVGraphicsView::updateNavigationButtonIcons()
+{
+    if (!previousButton || !nextButton)
+        return;
+
+    previousButton->setIcon(createChevronIcon(true, previousButton->devicePixelRatioF()));
+    nextButton->setIcon(createChevronIcon(false, nextButton->devicePixelRatioF()));
+}
+
 void QVGraphicsView::updateNavigationButtons()
 {
     if (!previousButton || !nextButton)
@@ -199,6 +207,7 @@ void QVGraphicsView::updateNavigationButtons()
     if (!navigationButtonsAvailable) {
         navigationHideTimer->stop();
         navigationFadeAnimation->stop();
+        navigationButtonTargetOpacity = 0.0;
         previousButtonOpacity->setOpacity(0);
         nextButtonOpacity->setOpacity(0);
         previousButton->hide();
@@ -225,9 +234,9 @@ void QVGraphicsView::showNavigationButtons()
 
     navigationHideTimer->stop();
 
+    previousButton->setAttribute(Qt::WA_TransparentForMouseEvents, false);
+    nextButton->setAttribute(Qt::WA_TransparentForMouseEvents, false);
     if (!previousButton->isVisible()) {
-        previousButton->setAttribute(Qt::WA_TransparentForMouseEvents, false);
-        nextButton->setAttribute(Qt::WA_TransparentForMouseEvents, false);
         previousButton->show();
         nextButton->show();
     }
@@ -457,6 +466,10 @@ bool QVGraphicsView::event(QEvent *event)
             zoom(nativeEvent->value() + 1, eventPos);
             return true;
         }
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 6, 0))
+    } else if (event->type() == QEvent::DevicePixelRatioChange) {
+        updateNavigationButtonIcons();
+#endif
     }
     return QGraphicsView::event(event);
 }

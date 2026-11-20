@@ -1125,7 +1125,7 @@ No write permission or file is read-only.</source>
     </message>
     <message>
         <location filename="../src/qvoptionsdialog.ui" line="987"/>
-        <source>Show navigation buttons</source>
+        <source>Show &amp;navigation buttons</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

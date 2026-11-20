@@ -984,7 +984,7 @@
              <string>Show previous/next file buttons over the image when hovering</string>
             </property>
             <property name="text">
-             <string>Show navigation buttons</string>
+             <string>Show &amp;navigation buttons</string>
             </property>
             <property name="checked">
              <bool>false</bool>

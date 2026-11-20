@@ -116,6 +116,7 @@ private slots:
 
 private:
     void createNavigationButtons();
+    void updateNavigationButtonIcons();
     void updateNavigationButtons();
     void positionNavigationButtons();
     void showNavigationButtons();
