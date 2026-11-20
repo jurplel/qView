@@ -52,7 +52,8 @@ public:
         AllowMimeContentDetection,
         SaveRecents,
         UpdateNotifications,
-        SkipHidden
+        SkipHidden,
+        ShowNavigationButtons
     };
     Q_ENUM(Setting)
 
