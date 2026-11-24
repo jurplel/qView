@@ -7,6 +7,7 @@
 #include <QCollator>
 
 #import <Cocoa/Cocoa.h>
+#import <objc/runtime.h>
 
 static void fixNativeMenuEccentricities(QMenu *menu, NSMenu *nativeMenu)
 {
@@ -315,4 +316,64 @@ QByteArray QVCocoaFunctions::getIccProfileForWindow(const QWindow *window)
         }
     }
     return {};
+}
+
+// Associate the blur view with Qt's native view.
+static char kBlurViewKey;
+void QVCocoaFunctions::setMacWindowBlur(const QWindow *window, const bool enable)
+{
+    NSView *content = reinterpret_cast<NSView *>(window->winId());
+    NSWindow *nsWindow = content.window;
+    NSVisualEffectView *blur = 
+        (NSVisualEffectView *)objc_getAssociatedObject(content, &kBlurViewKey);
+
+    // Disable blur.
+    if (!enable) {
+        if (blur) {
+            [blur removeFromSuperview];
+
+            objc_setAssociatedObject(
+                content, &kBlurViewKey, nil,
+                OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        }
+        return;
+    }
+
+    // Add the blur view only when Qt's native view is the window's content view.
+    if (nsWindow.contentView != content)
+        return;
+
+    // Parent view managed by AppKit.
+    NSView *parent = content.superview;
+
+    if (!parent)
+        return;
+
+    // Reuse the blur view until blur is disabled.
+    if (!blur) {
+        blur = [[NSVisualEffectView alloc]
+            initWithFrame:content.frame];
+
+        blur.material = NSVisualEffectMaterialUnderWindowBackground;
+        blur.blendingMode = NSVisualEffectBlendingModeBehindWindow;
+        blur.state = NSVisualEffectStateActive;
+        blur.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+
+        objc_setAssociatedObject(
+            content, &kBlurViewKey, blur,
+            OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+
+        [blur release];
+    }
+
+    // Match the Qt view's frame.
+    blur.frame = content.frame;
+
+    // Insert blur behind Qt's native view.
+    if (blur.superview != parent)
+        [blur removeFromSuperview];
+
+    [parent addSubview:blur
+            positioned:NSWindowBelow
+            relativeTo:content];
 }

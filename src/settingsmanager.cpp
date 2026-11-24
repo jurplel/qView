@@ -32,6 +32,7 @@ static const SettingDefinition settingDefinitions[] = {
     { SettingsManager::Setting::MenuBarEnabled, false, "menubarenabled" },
     { SettingsManager::Setting::FullScreenDetails, false, "fullscreendetails" },
     { SettingsManager::Setting::CtrlDragWindow, false, "ctrldragwindow" },
+    { SettingsManager::Setting::BackgroundBlurEnabled, false, "backgroundblurenabled" },
     // Image settings
     { SettingsManager::Setting::FilteringEnabled, true, "filteringenabled" },
     { SettingsManager::Setting::ScalingEnabled, true, "scalingenabled" },
@@ -129,6 +130,10 @@ void SettingsManager::loadSettings()
         const QString &key = getSettingKey(setting);
 
         QVariant newValue = settings.value(key, data.defaultValue);
+#ifndef COCOA_LOADED
+        if (setting == Setting::BackgroundBlurEnabled)
+            newValue = false;
+#endif
         if (data.value != newValue) {
             changed = true;
             data.value = newValue;

@@ -28,6 +28,7 @@ public:
         MenuBarEnabled,
         FullScreenDetails,
         CtrlDragWindow,
+        BackgroundBlurEnabled,
         // Image settings
         FilteringEnabled,
         ScalingEnabled,
