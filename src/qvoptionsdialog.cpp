@@ -189,10 +189,10 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
     // ctrldragwindow
     syncCheckbox(ui->ctrlDragCheckbox, "ctrldragwindow", defaults, makeConnections);
 #ifdef COCOA_LOADED
-    syncCheckbox(ui->BackgroundBlurEnabled, "backgroundblurenabled", defaults, makeConnections);
+    syncCheckbox(ui->backgroundBlurEnabled, "backgroundblurenabled", defaults, makeConnections);
 #else
-    ui->BackgroundBlurEnabled->setChecked(false);
-    ui->BackgroundBlurEnabled->setEnabled(false);
+    ui->backgroundBlurEnabled->setChecked(false);
+    ui->backgroundBlurEnabled->setEnabled(false);
 #endif
     // menubarenabled
     syncCheckbox(ui->menubarCheckbox, "menubarenabled", defaults, makeConnections);

@@ -343,7 +343,7 @@
            </widget>
           </item>
           <item row="16" column="1">
-           <widget class="QCheckBox" name="blurBackgroundEnabled">
+           <widget class="QCheckBox" name="backgroundBlurEnabled">
             <property name="toolTip">
              <string>macOS only, applies when “Background color” is unchecked.</string>
             </property>
