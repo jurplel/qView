@@ -3,6 +3,7 @@
 #include "qvapplication.h"
 #include "qvcocoafunctions.h"
 #include "qvrenamedialog.h"
+#include "qvexifpanel.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -32,6 +33,7 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QTemporaryFile>
+#include <QSplitter>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -50,8 +52,19 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     storedWindowState = Qt::WindowNoState;
 
     // Initialize graphicsviewkDefaultBufferAlignment
-    graphicsView = new QVGraphicsView(this);
-    centralWidget()->layout()->addWidget(graphicsView);
+    contentSplitter = new QSplitter(this);
+    contentSplitter->setOrientation(Qt::Horizontal);
+    contentSplitter->setChildrenCollapsible(false);
+
+    exifPanel = new QVExifPanel(contentSplitter);
+    contentSplitter->addWidget(exifPanel);
+    exifPanel->hide();
+
+    graphicsView = new QVGraphicsView(contentSplitter);
+    contentSplitter->addWidget(graphicsView);
+    contentSplitter->setStretchFactor(0, 0);
+    contentSplitter->setStretchFactor(1, 1);
+    centralWidget()->layout()->addWidget(contentSplitter);
 
     // Hide fullscreen label by default
     ui->fullscreenLabel->hide();
@@ -68,6 +81,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         if (windowState().testFlag(Qt::WindowFullScreen))
             toggleFullScreen();
     });
+
+    exifShortcut = new QShortcut(Qt::Key_Tab, this);
+    exifShortcut->setContext(Qt::WindowShortcut);
+    exifShortcut->setAutoRepeat(false);
+    connect(exifShortcut, &QShortcut::activated, this, &MainWindow::toggleExifPanel);
 
     // Enable drag&dropping
     setAcceptDrops(true);
@@ -397,6 +415,8 @@ void MainWindow::fileChanged()
 
     if (info->isVisible())
         refreshProperties();
+    if (exifPanel->isVisible())
+        refreshExifPanel();
     updateWindowTitle();
     updateWindowFilePath();
 
@@ -485,6 +505,27 @@ void MainWindow::refreshProperties()
                   getCurrentFileDetails().baseImageSize.height(), value4);
 }
 
+void MainWindow::toggleExifPanel()
+{
+    if (exifPanel->isVisible()) {
+        exifPanel->hide();
+        graphicsView->setFocus(Qt::TabFocusReason);
+        return;
+    }
+
+    exifPanel->show();
+    refreshExifPanel();
+
+    const int panelWidth = qBound(240, contentSplitter->width() / 3, 360);
+    contentSplitter->setSizes({ panelWidth, qMax(1, contentSplitter->width() - panelWidth) });
+    graphicsView->setFocus(Qt::TabFocusReason);
+}
+
+void MainWindow::refreshExifPanel()
+{
+    exifPanel->setFilePath(getCurrentFileDetails().fileInfo.absoluteFilePath());
+}
+
 void MainWindow::updateWindowTitle()
 {
     QString newString = "qView";
@@ -569,6 +610,9 @@ void MainWindow::setWindowSize()
         currentScreen = QGuiApplication::screens().at(0);
 
     QSize extraWidgetsSize{ 0, 0 };
+
+    if (exifPanel->isVisible())
+        extraWidgetsSize.rwidth() += exifPanel->width();
 
     if (menuBar()->isVisible())
         extraWidgetsSize.rheight() += menuBar()->height();

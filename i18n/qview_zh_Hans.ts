@@ -1559,4 +1559,35 @@ You can reenable them in the options dialog.</source>
 你可以在选项中重新启用它们.</translation>
     </message>
 </context>
+<context>
+    <name>QVExifPanel</name>
+    <message>
+        <source>EXIF</source>
+        <translation>EXIF</translation>
+    </message>
+    <message>
+        <source>Open an image to view EXIF information.</source>
+        <translation>打开图片以查看 EXIF 信息。</translation>
+    </message>
+    <message>
+        <source>Property</source>
+        <translation>属性</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation>值</translation>
+    </message>
+    <message>
+        <source>No EXIF information found.</source>
+        <translation>未找到 EXIF 信息。</translation>
+    </message>
+    <message>
+        <source>%1 EXIF fields</source>
+        <translation>%1 个 EXIF 字段</translation>
+    </message>
+    <message>
+        <source>Unable to read EXIF information: %1</source>
+        <translation>无法读取 EXIF 信息：%1</translation>
+    </message>
+</context>
 </TS>

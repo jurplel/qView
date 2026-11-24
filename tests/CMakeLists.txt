@@ -17,6 +17,7 @@ set(TEST_SOURCES
     ../src/qvwelcomedialog.cpp
     ../src/qvinfodialog.cpp
     ../src/qvimagecore.cpp
+    ../src/qvexifpanel.cpp
     ../src/qvshortcutdialog.cpp
     ../src/actionmanager.cpp
     ../src/settingsmanager.cpp
@@ -61,6 +62,7 @@ target_link_libraries(actionmanagertests PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets 
     Qt${QT_VERSION_MAJOR}::Svg 
     Qt${QT_VERSION_MAJOR}::Test
+    Exiv2::exiv2lib
 )
 
 # Platform-specific libraries

@@ -15,6 +15,9 @@ namespace Ui {
 class MainWindow;
 }
 
+class QVExifPanel;
+class QSplitter;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -159,8 +162,13 @@ protected slots:
     void shortcutsUpdated();
 
 private:
+    void toggleExifPanel();
+    void refreshExifPanel();
+
     Ui::MainWindow *ui;
     QVGraphicsView *graphicsView;
+    QVExifPanel *exifPanel;
+    QSplitter *contentSplitter;
 
     QMenu *contextMenu;
     QMenu *virtualMenu;
@@ -168,6 +176,7 @@ private:
     QTimer *slideshowTimer;
 
     QShortcut *escShortcut;
+    QShortcut *exifShortcut;
 
     QVInfoDialog *info;
 
