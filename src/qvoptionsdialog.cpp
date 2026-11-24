@@ -188,6 +188,12 @@ void QVOptionsDialog::syncSettings(bool defaults, bool makeConnections)
     syncCheckbox(ui->quitOnLastWindowCheckbox, "quitonlastwindow", defaults, makeConnections);
     // ctrldragwindow
     syncCheckbox(ui->ctrlDragCheckbox, "ctrldragwindow", defaults, makeConnections);
+#ifdef COCOA_LOADED
+    syncCheckbox(ui->BackgroundBlurEnabled, "backgroundblurenabled", defaults, makeConnections);
+#else
+    ui->BackgroundBlurEnabled->setChecked(false);
+    ui->BackgroundBlurEnabled->setEnabled(false);
+#endif
     // menubarenabled
     syncCheckbox(ui->menubarCheckbox, "menubarenabled", defaults, makeConnections);
     // fullscreendetails

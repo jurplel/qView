@@ -40,6 +40,8 @@ public:
     static QString deleteFile(const QString &filePath);
 
     static QByteArray getIccProfileForWindow(const QWindow *window);
+
+    static void setMacWindowBlur(const QWindow *window, const bool enable);
 };
 
 #endif // QVCOCOAFUNCTIONS_H

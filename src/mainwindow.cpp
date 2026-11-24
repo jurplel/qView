@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "settingsmanager.h"
 #include "ui_mainwindow.h"
 #include "qvapplication.h"
 #include "qvcocoafunctions.h"
@@ -38,6 +39,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->setupUi(this);
     setAttribute(Qt::WA_DeleteOnClose);
     setAttribute(Qt::WA_OpaquePaintEvent);
+// The background blur on mac needs this setting, if on other platforms or Cocoa 
+// isdisabled, it doesn't need this setting.
+#ifdef COCOA_LOADED
+    setAttribute(Qt::WA_TranslucentBackground);
+#endif
 
 #if defined COCOA_LOADED && QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
     // Allow the titlebar to overlap widgets with full size content view
@@ -199,9 +205,18 @@ void MainWindow::showEvent(QShowEvent *event)
     // further processing after the window is shown, hence the timer here to queue this on the
     // event loop and run after that processing happens.
     QTimer::singleShot(
-            0, this, [this]() { QVCocoaFunctions::setFullSizeContentView(windowHandle(), true); });
+        0, this, [this]() { QVCocoaFunctions::setFullSizeContentView(windowHandle(), true); });
 #endif
 
+#ifdef COCOA_LOADED
+    // Apply current background blur setting, like setting of "setFullSizeContentView" upper, 
+    // it needs "singleShot" to ensure it's well set.
+    QTimer::singleShot(
+        0, this, [this]() { 
+            bool backgroundBlurEnabled = qvApp->getSettingsManager().getBool(SettingsManager::Setting::BackgroundBlurEnabled);
+            QVCocoaFunctions::setMacWindowBlur(windowHandle(), backgroundBlurEnabled); 
+        });
+#endif
     if (!menuBar()->sizeHint().isEmpty()) {
         ui->fullscreenLabel->setMargin(0);
         ui->fullscreenLabel->setMinimumHeight(menuBar()->sizeHint().height());
@@ -276,16 +291,22 @@ void MainWindow::paintEvent(QPaintEvent *event)
     // titlebar due to full size content view.
     const int unobscuredViewportY = qMax(getTitlebarOverlap(), viewportY);
 
-    // Erase the area above the viewport, i.e. fill it with the painter's default color.
-    const QRect headerRect = QRect(0, 0, width(), viewportY);
-    if (headerRect.isValid()) {
-        painter.eraseRect(headerRect);
-    }
+    // Skip painting the background when blur is enabled and the custom background color 
+    // is disabled. 
+    bool backgroundBlurEnabled = qvApp->getSettingsManager().getBool(SettingsManager::Setting::BackgroundBlurEnabled);
+    bool bgColorEnabled = qvApp->getSettingsManager().getBool(SettingsManager::Setting::BgColorEnabled);
+    if (!backgroundBlurEnabled || bgColorEnabled) {
+        // Erase the area above the viewport, i.e. fill it with the painter's default color.
+        const QRect headerRect = QRect(0, 0, width(), viewportY);
+        if (headerRect.isValid()) {
+            painter.eraseRect(headerRect);
+        }
 
-    // Fill the viewport with the background color.
-    const QRect viewportRect = rect().adjusted(0, viewportY, 0, 0);
-    if (viewportRect.isValid()) {
-        painter.fillRect(viewportRect, backgroundColor);
+        // Fill the viewport with the background color.
+        const QRect viewportRect = rect().adjusted(0, viewportY, 0, 0);
+        if (viewportRect.isValid()) {
+            painter.fillRect(viewportRect, backgroundColor);
+        }
     }
 
     // If there's an error message, draw it centered inside the unobscured area of the viewport.
@@ -350,6 +371,8 @@ void MainWindow::settingsUpdated()
     QVCocoaFunctions::setVibrancy(
             settingsManager.getBool(SettingsManager::Setting::HideTitlebar),
             settingsManager.getBool(SettingsManager::Setting::ForceDarkMode), windowHandle());
+    // set blur background if enabled.
+    QVCocoaFunctions::setMacWindowBlur(windowHandle(), settingsManager.getBool(SettingsManager::Setting::BackgroundBlurEnabled));
     // quitonlastwindow
     qvApp->setQuitOnLastWindowClosed(
             settingsManager.getBool(SettingsManager::Setting::QuitOnLastWindow));

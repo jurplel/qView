@@ -49,3 +49,6 @@ build/*
 
 *.qm
 .qm
+
+# clangd
+.cache/

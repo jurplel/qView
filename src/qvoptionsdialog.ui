@@ -3,7 +3,7 @@
  <class>QVOptionsDialog</class>
  <widget class="QDialog" name="QVOptionsDialog">
   <property name="windowModality">
-   <enum>Qt::NonModal</enum>
+   <enum>Qt::WindowModality::NonModal</enum>
   </property>
   <property name="geometry">
    <rect>
@@ -52,7 +52,7 @@
         </size>
        </property>
        <property name="horizontalScrollBarPolicy">
-        <enum>Qt::ScrollBarAlwaysOff</enum>
+        <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
        </property>
       </widget>
      </item>
@@ -71,7 +71,7 @@
            <x>0</x>
            <y>0</y>
            <width>482</width>
-           <height>360</height>
+           <height>429</height>
           </rect>
          </property>
          <property name="sizePolicy">
@@ -82,13 +82,13 @@
          </property>
          <layout class="QFormLayout" name="windowLayout">
           <property name="fieldGrowthPolicy">
-           <enum>QFormLayout::FieldsStayAtSizeHint</enum>
+           <enum>QFormLayout::FieldGrowthPolicy::FieldsStayAtSizeHint</enum>
           </property>
           <property name="labelAlignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
           </property>
           <property name="formAlignment">
-           <set>Qt::AlignHCenter|Qt::AlignTop</set>
+           <set>Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignTop</set>
           </property>
           <property name="leftMargin">
            <number>10</number>
@@ -115,7 +115,7 @@
           <item row="0" column="1">
            <widget class="QPushButton" name="bgColorButton">
             <property name="focusPolicy">
-             <enum>Qt::NoFocus</enum>
+             <enum>Qt::FocusPolicy::NoFocus</enum>
             </property>
            </widget>
           </item>
@@ -163,7 +163,7 @@
           <item row="5" column="1">
            <spacer name="horizontalSpacer_4">
             <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+             <enum>Qt::Orientation::Horizontal</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
@@ -272,7 +272,7 @@
           <item row="9" column="1">
            <spacer name="horizontalSpacer_3">
             <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+             <enum>Qt::Orientation::Horizontal</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
@@ -342,6 +342,16 @@
             </property>
            </widget>
           </item>
+          <item row="16" column="1">
+           <widget class="QCheckBox" name="blurBackgroundEnabled">
+            <property name="toolTip">
+             <string>macOS only, applies when “Background color” is unchecked.</string>
+            </property>
+            <property name="text">
+             <string>Window background blur</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </widget>
@@ -354,8 +364,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>482</width>
-           <height>297</height>
+           <width>365</width>
+           <height>333</height>
           </rect>
          </property>
          <property name="sizePolicy">
@@ -366,13 +376,13 @@
          </property>
          <layout class="QFormLayout" name="imageLayout">
           <property name="fieldGrowthPolicy">
-           <enum>QFormLayout::FieldsStayAtSizeHint</enum>
+           <enum>QFormLayout::FieldGrowthPolicy::FieldsStayAtSizeHint</enum>
           </property>
           <property name="labelAlignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
           </property>
           <property name="formAlignment">
-           <set>Qt::AlignHCenter|Qt::AlignTop</set>
+           <set>Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignTop</set>
           </property>
           <property name="leftMargin">
            <number>10</number>
@@ -435,7 +445,7 @@
           <item row="3" column="1">
            <spacer name="horizontalSpacer_2">
             <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+             <enum>Qt::Orientation::Horizontal</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
@@ -538,7 +548,7 @@
           <item row="8" column="1">
            <spacer name="horizontalSpacer">
             <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+             <enum>Qt::Orientation::Horizontal</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
@@ -602,7 +612,7 @@
           <item row="11" column="1">
            <spacer name="horizontalSpacer_9">
             <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+             <enum>Qt::Orientation::Horizontal</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
@@ -661,7 +671,7 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>482</width>
+           <width>349</width>
            <height>467</height>
           </rect>
          </property>
@@ -673,13 +683,13 @@
          </property>
          <layout class="QFormLayout" name="miscLayout">
           <property name="fieldGrowthPolicy">
-           <enum>QFormLayout::FieldsStayAtSizeHint</enum>
+           <enum>QFormLayout::FieldGrowthPolicy::FieldsStayAtSizeHint</enum>
           </property>
           <property name="labelAlignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
           </property>
           <property name="formAlignment">
-           <set>Qt::AlignHCenter|Qt::AlignTop</set>
+           <set>Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignTop</set>
           </property>
           <property name="leftMargin">
            <number>10</number>
@@ -764,7 +774,7 @@
           <item row="4" column="1">
            <spacer name="horizontalSpacer_6">
             <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+             <enum>Qt::Orientation::Horizontal</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
@@ -825,7 +835,7 @@
           <item row="7" column="1">
            <spacer name="horizontalSpacer_5">
             <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+             <enum>Qt::Orientation::Horizontal</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
@@ -885,7 +895,7 @@
           <item row="10" column="1">
            <spacer name="horizontalSpacer_7">
             <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+             <enum>Qt::Orientation::Horizontal</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
@@ -934,7 +944,7 @@
           <item row="13" column="1">
            <spacer name="horizontalSpacer_8">
             <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+             <enum>Qt::Orientation::Horizontal</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
@@ -998,16 +1008,16 @@
          <item>
           <widget class="QTableWidget" name="shortcutsTable">
            <property name="editTriggers">
-            <set>QAbstractItemView::NoEditTriggers</set>
+            <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
            </property>
            <property name="alternatingRowColors">
             <bool>true</bool>
            </property>
            <property name="selectionMode">
-            <enum>QAbstractItemView::SingleSelection</enum>
+            <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
            </property>
            <property name="selectionBehavior">
-            <enum>QAbstractItemView::SelectRows</enum>
+            <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
            </property>
            <property name="showGrid">
             <bool>false</bool>
@@ -1054,13 +1064,13 @@
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::FocusPolicy::NoFocus</enum>
      </property>
      <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+      <enum>Qt::Orientation::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::Ok|QDialogButtonBox::RestoreDefaults</set>
+      <set>QDialogButtonBox::StandardButton::Apply|QDialogButtonBox::StandardButton::Cancel|QDialogButtonBox::StandardButton::Ok|QDialogButtonBox::StandardButton::RestoreDefaults</set>
      </property>
     </widget>
    </item>
