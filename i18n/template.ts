@@ -1490,4 +1490,35 @@ You can reenable them in the options dialog.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
+<context>
+    <name>QVExifPanel</name>
+    <message>
+        <source>EXIF</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open an image to view EXIF information.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Property</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No EXIF information found.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 EXIF fields</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unable to read EXIF information: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
 </TS>

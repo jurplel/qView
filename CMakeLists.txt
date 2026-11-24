@@ -46,6 +46,40 @@ else()
     find_package(Qt5 QUIET COMPONENTS LinguistTools)
 endif()
 
+include(FetchContent)
+if(POLICY CMP0135)
+    cmake_policy(SET CMP0135 NEW)
+endif()
+
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libraries" FORCE)
+set(EXIV2_ENABLE_XMP OFF CACHE BOOL "Build with XMP metadata support" FORCE)
+set(EXIV2_ENABLE_EXTERNAL_XMP OFF CACHE BOOL "Use external version of XMP" FORCE)
+set(EXIV2_ENABLE_PNG OFF CACHE BOOL "Build with PNG support" FORCE)
+set(EXIV2_ENABLE_NLS OFF CACHE BOOL "Build native language support" FORCE)
+set(EXIV2_ENABLE_WEBREADY OFF CACHE BOOL "Build webready support" FORCE)
+set(EXIV2_ENABLE_CURL OFF CACHE BOOL "Use libcurl" FORCE)
+set(EXIV2_ENABLE_BMFF ON CACHE BOOL "Build with BMFF support" FORCE)
+set(EXIV2_ENABLE_BROTLI OFF CACHE BOOL "Use Brotli" FORCE)
+set(EXIV2_ENABLE_VIDEO OFF CACHE BOOL "Build video support" FORCE)
+set(EXIV2_ENABLE_INIH OFF CACHE BOOL "Use inih library" FORCE)
+set(EXIV2_BUILD_SAMPLES OFF CACHE BOOL "Build Exiv2 samples" FORCE)
+set(EXIV2_BUILD_EXIV2_COMMAND OFF CACHE BOOL "Build Exiv2 command-line executable" FORCE)
+set(EXIV2_BUILD_UNIT_TESTS OFF CACHE BOOL "Build Exiv2 unit tests" FORCE)
+set(EXIV2_BUILD_FUZZ_TESTS OFF CACHE BOOL "Build Exiv2 fuzz tests" FORCE)
+set(EXIV2_BUILD_DOC OFF CACHE BOOL "Build Exiv2 documentation" FORCE)
+set(EXIV2_ENABLE_FILESYSTEM_ACCESS ON CACHE BOOL "Build with filesystem access" FORCE)
+
+FetchContent_Declare(
+    exiv2
+    URL https://github.com/Exiv2/exiv2/archive/refs/tags/v0.28.5.tar.gz
+    URL_HASH SHA256=e1671f744e379a87ba0c984617406fdf8c0ad0c594e5122f525b2fb7c28d394d
+)
+FetchContent_MakeAvailable(exiv2)
+target_include_directories(exiv2lib SYSTEM PUBLIC $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}>)
+target_compile_definitions(exiv2lib PUBLIC exiv2lib_STATIC)
+target_compile_definitions(exiv2lib_int PUBLIC exiv2lib_STATIC)
+set_target_properties(exiv2lib exiv2lib_int PROPERTIES CXX_CLANG_TIDY "" C_CLANG_TIDY "")
+
 # Source files
 set(PROJECT_SOURCES
     src/main.cpp
@@ -59,6 +93,7 @@ set(PROJECT_SOURCES
     src/qvwelcomedialog.cpp
     src/qvinfodialog.cpp
     src/qvimagecore.cpp
+    src/qvexifpanel.cpp
     src/qvshortcutdialog.cpp
     src/actionmanager.cpp
     src/settingsmanager.cpp
@@ -77,6 +112,7 @@ set(PROJECT_HEADERS
     src/qvwelcomedialog.h
     src/qvinfodialog.h
     src/qvimagecore.h
+    src/qvexifpanel.h
     src/qvshortcutdialog.h
     src/actionmanager.h
     src/settingsmanager.h
@@ -140,6 +176,7 @@ endif()
 add_executable(${PROJECT_NAME} ${EXECUTABLE_TYPE} ${PROJECT_SOURCES} ${PROJECT_HEADERS} ${PROJECT_FORMS} ${PROJECT_RESOURCES})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Gui Qt${QT_VERSION_MAJOR}::Network Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Svg)
+target_link_libraries(${PROJECT_NAME} PRIVATE Exiv2::exiv2lib)
 
 # Set the executable name to lowercase on Linux
 if(UNIX AND NOT APPLE)
