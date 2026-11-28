@@ -355,6 +355,12 @@ void MainWindow::settingsUpdated()
             settingsManager.getBool(SettingsManager::Setting::QuitOnLastWindow));
 #endif
 
+#if defined(COCOA_LOADED) && QT_VERSION >= QT_VERSION_CHECK(6, 9, 0)
+    bool hideTitlebar = settingsManager.getBool(SettingsManager::Setting::HideTitlebar);
+    windowHandle()->setFlag(Qt::ExpandedClientAreaHint, true);
+    windowHandle()->setFlag(Qt::NoTitleBarBackgroundHint, hideTitlebar);
+#endif
+
     // slideshow timer
     slideshowTimer->setInterval(static_cast<int>(
             settingsManager.getDouble(SettingsManager::Setting::SlideshowTimer) * 1000));
